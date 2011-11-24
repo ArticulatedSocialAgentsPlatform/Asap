@@ -2,6 +2,7 @@
 /**/lib
 /**/lib
 /**/test/lib
+/**/test/report
 /**/dist
 /**/privateprops
 /**/.classpath
