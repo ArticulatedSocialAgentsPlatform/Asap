@@ -1,0 +1,46 @@
+<ivy-module version="2.0">
+   <info organisation="Asap" module="AsapRealizerTester"/>
+   <configurations>
+      <include file="${ivy.settings.dir}/configurations.xml"/>
+   </configurations>
+   <dependencies>
+      <dependency org="HMI"      name="HmiAnimation"       rev="latest.${resolve.status}"  />
+      <dependency org="HMI"      name="HmiTTS"             rev="latest.${resolve.status}"  />
+      <dependency org="HMI"      name="HmiTTSMary"         rev="latest.${resolve.status}"  />
+      <dependency org="HMI"      name="HmiTTSSapi5"        rev="latest.${resolve.status}"  />
+      <dependency org="HMI"      name="HmiNeurophysics"    rev="latest.${resolve.status}"  />
+      <dependency org="HMI"      name="HmiDebug"           transitive="false" rev="latest.${resolve.status}"  />
+      <dependency org="HMI"      name="HmiGraphics"        transitive="false" rev="latest.${resolve.status}"  />
+      <dependency org="HMI"      name="HmiFaceGraphics"    transitive="false" rev="latest.${resolve.status}"  />
+      <dependency org="HMI"      name="HmiElckerlyc"       transitive="false" rev="latest.${resolve.status}"  />
+      <dependency org="HMI"      name="HmiRealizerTester"    transitive="false" rev="latest.${resolve.status}"  />
+      <dependency org="HMI"      name="HmiBML"             rev="latest.${resolve.status}"  />
+      <dependency org="Asap"     name="AsapBML"            rev="latest.${resolve.status}"  />
+      <dependency org="HMI"      name="HmiXml"             rev="latest.${resolve.status}"  />
+      <dependency org="HMI"      name="HmiUtil"            rev="latest.${resolve.status}"  />
+
+      <dependency org="odejava"  name="odejava"            rev="latest.release"  />   
+      <dependency org="Sun" name="jogl" rev="latest.release"  />                                 
+      
+      
+      <dependency org="jcip"     name="jcip-annotations"   rev="latest.release"  />   
+      <dependency org="HMI"      name="HmiTTSnative"       rev="latest.${resolve.status}"  />
+      
+      <dependency org="lwjgl"    name="lwjgl"            rev="latest.release"  />   
+      <dependency org="Sun"      name="jlfgr"              rev="latest.release"  />   
+      <dependency org="singularsystems"   name="jep"       rev="latest.release"  />   
+      <dependency org="slf4j"    name="slf4j-api"          rev="latest.release"  />   
+      <dependency org="slf4j"    name="log4j-over-slf4j"   rev="latest.release"  />   
+      <dependency org="slf4j"    name="jul-to-slf4j"       rev="latest.release"  />   
+      <dependency org="slf4j"    name="jcl-over-slf4j"     rev="latest.release"  />   
+      <dependency org="logback"  name="logback-classic"    rev="latest.release"  />   
+      <dependency org="logback"  name="logback-core"       rev="latest.release"  />   
+      <dependency org="google"   name="guava"                rev="latest.release"  />
+      <dependency org="junit"    name="junit"                rev="latest.release" />
+      <dependency org="hamcrest" name="hamcrest-all"         rev="latest.release"  />
+      <dependency org="bml" name="realizertester"         rev="latest.release"  />
+      <dependency org="HMI"      transitive="false" name="HmiTestUtil"        rev="latest.release"/>
+      <dependency org="lwjgl" name="lwjgl" rev="latest.release"  />
+
+   </dependencies>
+</ivy-module>

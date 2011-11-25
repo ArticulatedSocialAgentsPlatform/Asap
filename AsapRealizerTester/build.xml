@@ -1,4 +1,4 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<project name="AsapBML"  default="run">
+<project name="HmiEnvironment"  default="run">
    <import file="../../SoaShared/ant/build.xml" />
 </project>

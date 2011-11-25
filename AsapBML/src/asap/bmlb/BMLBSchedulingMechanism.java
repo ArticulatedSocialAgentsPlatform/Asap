@@ -3,6 +3,10 @@ package asap.bmlb;
 import hmi.bml.core.SchedulingMechanism;
 import hmi.bml.ext.bmlt.BMLTSchedulingMechanism;
 
+/**
+ * The scheduling mechanisms used in BMLB
+ * @author hvanwelbergen
+ */
 public enum BMLBSchedulingMechanism implements SchedulingMechanism
 {
     UNKNOWN, REPLACE, MERGE, APPEND, APPEND_AFTER, CHUNK_AFTER;

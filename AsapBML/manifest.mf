@@ -1,0 +1,10 @@
+Manifest-Version: 1.0
+Main-Class: hmi.bml.reader.Info
+
+Name: asap/bmlb/
+Specification-Title:    AsapBML
+Specification-Version:  0.2.1
+Specification-Vendor:   Asap
+Implementation-Title:   AsapBML
+Implementation-Version: November 22 2011  03:16 PM
+Implementation-Vendor:  HMI
