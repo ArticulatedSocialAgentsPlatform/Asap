@@ -17,7 +17,11 @@ import hmi.elckerlyc.scheduler.BMLScheduler;
 import hmi.elckerlyc.scheduler.SchedulingHandler;
 import hmi.elckerlyc.scheduler.SchedulingStrategy;
 
-
+/**
+ * Creates BMLT blocks and handles the first part of the BMLT state machine 
+ * @author hvanwelbergen
+ *
+ */
 public class BMLBandTSchedulingHandler implements SchedulingHandler
 {
 private final SchedulingStrategy strategy;

@@ -26,6 +26,11 @@ import org.slf4j.LoggerFactory;
 import asap.realizertester.AbstractASAPRealizerTest;
 import hmi.environment.*;
 
+/**
+ * Integration test cases for the AsapRealizer
+ * @author hvanwelbergen
+ *
+ */
 public class PersistentFixtureAsapRealizerTest extends AbstractASAPRealizerTest
 {
     private static ElckerlycEnvironment staticEnvironment;
