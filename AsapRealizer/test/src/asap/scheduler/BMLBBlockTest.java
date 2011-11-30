@@ -7,7 +7,7 @@ import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 import hmi.elckerlyc.planunit.TimedPlanUnitState;
 import hmi.elckerlyc.scheduler.BMLScheduler;
-import hmi.bml.BMLSync;
+import hmi.bml.BMLGestureSync;
 import java.util.HashSet;
 
 import org.junit.Test;
@@ -85,7 +85,7 @@ public class BMLBBlockTest
         BMLBBlock block = new BMLBBlock(BLOCKID, mockScheduler);
         block.setState(TimedPlanUnitState.IN_EXEC);
         when(mockScheduler.getBehaviours(BLOCKID)).thenReturn(Sets.newHashSet("beh1"));
-        block.behaviorProgress("beh1", BMLSync.END.getId());
+        block.behaviorProgress("beh1", BMLGestureSync.END.getId());
         block.update(EMPTY_UPDATE_MAP);
         assertEquals(TimedPlanUnitState.DONE, block.getState());
         verify(mockScheduler, times(1)).blockStopFeedback(BLOCKID);
@@ -97,7 +97,7 @@ public class BMLBBlockTest
         BMLBBlock block = new BMLBBlock(BLOCKID, mockScheduler);
         block.setState(TimedPlanUnitState.IN_EXEC);
         when(mockScheduler.getBehaviours(BLOCKID)).thenReturn(Sets.newHashSet("beh1"));
-        block.behaviorProgress("beh1", BMLSync.RELAX.getId());
+        block.behaviorProgress("beh1", BMLGestureSync.RELAX.getId());
         block.update(EMPTY_UPDATE_MAP);        
         assertEquals(TimedPlanUnitState.SUBSIDING, block.getState());
     }
@@ -108,7 +108,7 @@ public class BMLBBlockTest
         BMLBBlock block = new BMLBBlock(BLOCKID, mockScheduler);
         block.setState(TimedPlanUnitState.SUBSIDING);
         when(mockScheduler.getBehaviours(BLOCKID)).thenReturn(Sets.newHashSet("beh1"));
-        block.behaviorProgress("beh1", BMLSync.END.getId());
+        block.behaviorProgress("beh1", BMLGestureSync.END.getId());
         block.update(EMPTY_UPDATE_MAP);
         assertEquals(TimedPlanUnitState.DONE, block.getState());
         verify(mockScheduler, times(1)).blockStopFeedback(BLOCKID);
