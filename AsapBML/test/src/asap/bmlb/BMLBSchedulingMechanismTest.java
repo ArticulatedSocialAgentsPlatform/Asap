@@ -13,8 +13,8 @@ import org.junit.Test;
  */
 public class BMLBSchedulingMechanismTest
 {
-    BMLBBMLBehaviorAttributes bbmltExt = new BMLBBMLBehaviorAttributes();
-    BehaviourBlock block = new BehaviourBlock(bbmltExt);
+    BMLBBMLBehaviorAttributes bbmlbExt = new BMLBBMLBehaviorAttributes();
+    BehaviourBlock block = new BehaviourBlock(bbmlbExt);
     
     @Test 
     public void testMerge()
@@ -30,6 +30,6 @@ public class BMLBSchedulingMechanismTest
         String bmlString = "<bml id=\"bml1\" scheduling=\"chunk-after(bml2,bml3)\"/>";        
         block.readXML(bmlString);
         assertEquals(BMLBSchedulingMechanism.CHUNK_AFTER, block.getSchedulingMechanism());
-        assertThat(bbmltExt.getChunkAfterList(), hasItems("bml2", "bml3"));
+        assertThat(bbmlbExt.getChunkAfterList(), hasItems("bml2", "bml3"));
     }
 }

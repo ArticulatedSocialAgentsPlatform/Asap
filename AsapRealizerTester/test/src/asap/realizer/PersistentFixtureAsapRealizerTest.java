@@ -132,7 +132,7 @@ public class PersistentFixtureAsapRealizerTest extends AbstractASAPRealizerTest
         // vHuman = staticEnvironment.loadVirtualHuman("Humanoids/blueguy", "blueguyvhloader_sapi_testing.xml", "TestAvatar");
 
         // vHuman = staticEnvironment.loadVirtualHuman("Humanoids/armandia", "armandiavhloader_sapi_testing.xml", "TestAvatar");
-        vHuman = staticEnvironment.loadVirtualHuman("Humanoids/armandia", "vhloadermaryttsrealizertester.xml", "TestAvatar");
+        vHuman = staticEnvironment.loadVirtualHuman("Humanoids/armandia", "vhloadermaryttsasaprealizertester.xml", "TestAvatar");
 
         logger.debug("Finished setup");
     }
