@@ -1,13 +1,13 @@
 package asap.bmlb;
 
-import hmi.bml.core.SchedulingMechanism;
+import hmi.bml.core.BMLBlockComposition;
 import hmi.bml.ext.bmlt.BMLTSchedulingMechanism;
 
 /**
  * The scheduling mechanisms used in BMLB
  * @author hvanwelbergen
  */
-public enum BMLBSchedulingMechanism implements SchedulingMechanism
+public enum BMLBComposition implements BMLBlockComposition
 {
     UNKNOWN, REPLACE, MERGE, APPEND, APPEND_AFTER, CHUNK_AFTER;
     
@@ -21,14 +21,14 @@ public enum BMLBSchedulingMechanism implements SchedulingMechanism
         }        
     }
     
-    public static BMLBSchedulingMechanism convert(SchedulingMechanism mech)
+    public static BMLBComposition convert(BMLBlockComposition mech)
     {
         return parse(mech.getNameStart());
     }
     
-    public static BMLBSchedulingMechanism parse(String input)
+    public static BMLBComposition parse(String input)
     {
-        for(BMLBSchedulingMechanism mech: BMLBSchedulingMechanism.values())
+        for(BMLBComposition mech: BMLBComposition.values())
         {
             if(mech.getNameStart().equals(input))
             {

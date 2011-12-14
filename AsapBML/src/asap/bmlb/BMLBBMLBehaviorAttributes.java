@@ -6,9 +6,9 @@ import java.util.HashSet;
 import java.util.Set;
 
 import hmi.bml.core.BMLBehaviorAttributeExtension;
+import hmi.bml.core.BMLBlockComposition;
 import hmi.bml.core.BehaviourBlock;
-import hmi.bml.core.CoreSchedulingMechanism;
-import hmi.bml.core.SchedulingMechanism;
+import hmi.bml.core.CoreComposition;
 import hmi.util.StringUtil;
 import hmi.xml.XMLScanException;
 import hmi.xml.XMLTokenizer;
@@ -46,13 +46,13 @@ public class BMLBBMLBehaviorAttributes implements BMLBehaviorAttributeExtension
     }
 
     @Override
-    public SchedulingMechanism handleSchedulingMechanism(String sm)
+    public BMLBlockComposition handleComposition(String sm)
     {
         if (sm.startsWith("chunk-after"))
         {
             getParameterList(sm, chunkAfterList);
-            return BMLBSchedulingMechanism.CHUNK_AFTER;
+            return BMLBComposition.CHUNK_AFTER;
         }        
-        return CoreSchedulingMechanism.UNKNOWN;
+        return CoreComposition.UNKNOWN;
     }   
 }

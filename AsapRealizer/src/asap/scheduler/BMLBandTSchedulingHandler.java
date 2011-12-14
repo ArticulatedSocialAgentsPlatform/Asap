@@ -46,7 +46,7 @@ private final SchedulingStrategy strategy;
             logger.debug("interrupting {}", bmlId);
             scheduler.interruptBlock(bmlId);
         }
-        switch (BMLBSchedulingMechanism.parse(bb.getSchedulingMechanism().getNameStart()))
+        switch (BMLBComposition.parse(bb.getSchedulingMechanism().getNameStart()))
         {
         case REPLACE:
             scheduler.reset();
@@ -89,7 +89,7 @@ private final SchedulingStrategy strategy;
         }
         else
         {
-            switch (BMLBSchedulingMechanism.parse(bb.getSchedulingMechanism().getNameStart()))
+            switch (BMLBComposition.parse(bb.getSchedulingMechanism().getNameStart()))
             {
             case REPLACE:
             case MERGE:

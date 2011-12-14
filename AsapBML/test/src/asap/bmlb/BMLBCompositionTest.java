@@ -11,7 +11,7 @@ import org.junit.Test;
  *  
  * @author hvanwelbergen
  */
-public class BMLBSchedulingMechanismTest
+public class BMLBCompositionTest
 {
     BMLBBMLBehaviorAttributes bbmlbExt = new BMLBBMLBehaviorAttributes();
     BehaviourBlock block = new BehaviourBlock(bbmlbExt);
@@ -21,15 +21,15 @@ public class BMLBSchedulingMechanismTest
     {
         String bmlString = "<bml id=\"bml1\"/>";
         block.readXML(bmlString);
-        assertEquals(BMLBSchedulingMechanism.MERGE, BMLBSchedulingMechanism.convert(block.getSchedulingMechanism()));
+        assertEquals(BMLBComposition.MERGE, BMLBComposition.convert(block.getSchedulingMechanism()));
     }
     
     @Test
     public void testChunkAfter()
     {
-        String bmlString = "<bml id=\"bml1\" scheduling=\"chunk-after(bml2,bml3)\"/>";        
+        String bmlString = "<bml id=\"bml1\" composition=\"chunk-after(bml2,bml3)\"/>";        
         block.readXML(bmlString);
-        assertEquals(BMLBSchedulingMechanism.CHUNK_AFTER, block.getSchedulingMechanism());
+        assertEquals(BMLBComposition.CHUNK_AFTER, block.getSchedulingMechanism());
         assertThat(bbmlbExt.getChunkAfterList(), hasItems("bml2", "bml3"));
     }
 }

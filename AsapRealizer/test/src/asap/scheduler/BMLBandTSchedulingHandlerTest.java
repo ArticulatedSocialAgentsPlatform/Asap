@@ -87,7 +87,7 @@ public class BMLBandTSchedulingHandlerTest
     @SuppressWarnings("unchecked")    
     public void testAppendAfter()
     {
-        BehaviourBlock bb = createBehaviourBlock("bml1","scheduling=\"append-after(bml2,bml3)\"");
+        BehaviourBlock bb = createBehaviourBlock("bml1","composition=\"append-after(bml2,bml3)\"");
         when(mockScheduler.getBMLBlocks()).thenReturn(ImmutableSet.of("bml2","bml3"));
         when(mockScheduler.predictEndTime((Set<String>)any())).thenReturn(3d);
         handler.schedule(bb, mockScheduler);       
@@ -105,7 +105,7 @@ public class BMLBandTSchedulingHandlerTest
     @Test
     public void testAppendAfterFinishedBlocks()
     {
-        BehaviourBlock bb = createBehaviourBlock("bml1","scheduling=\"append-after(bml2,bml3)\"");
+        BehaviourBlock bb = createBehaviourBlock("bml1","composition=\"append-after(bml2,bml3)\"");
         handler.schedule(bb, mockScheduler);        
         
         BMLBlock block = captureBMLBlock();
@@ -121,7 +121,7 @@ public class BMLBandTSchedulingHandlerTest
     @SuppressWarnings("unchecked")    
     public void testChunkAfter()
     {
-        BehaviourBlock bb = createBehaviourBlock("bml1","scheduling=\"chunk-after(bml2,bml3)\"");
+        BehaviourBlock bb = createBehaviourBlock("bml1","composition=\"chunk-after(bml2,bml3)\"");
         when(mockScheduler.getBMLBlocks()).thenReturn(ImmutableSet.of("bml2","bml3"));
         when(mockScheduler.predictSubsidingTime((Set<String>)any())).thenReturn(3d);
         handler.schedule(bb, mockScheduler);   
