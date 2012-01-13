@@ -1,0 +1,232 @@
+/*******************************************************************************
+ * Copyright (C) 2009 Human Media Interaction, University of Twente, the Netherlands
+ * 
+ * This file is part of the Elckerlyc BML realizer.
+ * 
+ * Elckerlyc is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
+ * 
+ * Elckerlyc is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ * 
+ * You should have received a copy of the GNU General Public License
+ * along with Elckerlyc.  If not, see http://www.gnu.org/licenses/.
+ ******************************************************************************/
+package asap.animationengine.noise;
+
+import hmi.animation.*;
+import hmi.math.*;
+import hmi.elckerlyc.feedback.FeedbackManager;
+import hmi.elckerlyc.planunit.KeyPosition;
+import hmi.elckerlyc.planunit.KeyPositionManager;
+import hmi.elckerlyc.planunit.KeyPositionManagerImpl;
+import hmi.elckerlyc.planunit.ParameterNotFoundException;
+import hmi.elckerlyc.BMLBlockPeg;
+import java.util.*;
+
+import asap.animationengine.AnimationPlayer;
+import asap.animationengine.motionunit.*;
+
+
+
+/**
+ * Motion unit for applying perlin noise to a set of joints.
+ * parameters: 
+    joint, 
+    offsetx, offsety, offsetz, (default -0.5, -0.5, -0.5)
+    basefreqx, basefreqz, basefreqz, (default 1,1,1)
+    baseamplitudex, baseamplitudey, baseamplitudez, (default 1,1,1)
+    persistencex, persistencey, persistencez, (default 0.5,0.5,0.5)
+    
+      //basefreq geeft iets aan over de snelheid waarmee de noise loopt.
+      //baseamplitude geeft de amplitude in radialen
+      //offset geeft de offsetangle in radialen
+      //persistence geeft iets aan over de verhouding hoge en lage frequenties. we gebruiken overigens maar 4 octaven 
+      //(zie ook uitleg hugo elias http://freespace.virgin.net/hugo.elias/models/m_perlin.htm )
+ *     
+ * @author Dennis Reidsma
+ * 
+ */
+public class PerlinNoiseMU implements NoiseMU
+{
+    private HashMap<String, String> parameters = new HashMap<String, String>(); // name => value set
+    private KeyPositionManager keyPositionManager = new KeyPositionManagerImpl();
+    private PerlinNoise pnx1 = new PerlinNoise(1024,0,1);    
+    /*
+    private PerlinNoise pnx2 = new PerlinNoise(1024,0,1);    
+    private PerlinNoise pnx3 = new PerlinNoise(1024,0,1);    
+    private PerlinNoise pnx4 = new PerlinNoise(1024,0,1);
+    */    
+    private PerlinNoise pny1 = new PerlinNoise(1024,0,1);    
+    /*
+    private PerlinNoise pny2 = new PerlinNoise(1024,0,1);    
+    private PerlinNoise pny3 = new PerlinNoise(1024,0,1);    
+    private PerlinNoise pny4 = new PerlinNoise(1024,0,1);    
+    */
+    private PerlinNoise pnz1 = new PerlinNoise(1024,0,1);    
+    /*
+    private PerlinNoise pnz2 = new PerlinNoise(1024,0,1);    
+    private PerlinNoise pnz3 = new PerlinNoise(1024,0,1);    
+    private PerlinNoise pnz4 = new PerlinNoise(1024,0,1);    
+    */
+    
+    protected AnimationPlayer player;
+    float[] q = new float[4];
+
+    @Override
+    public void addKeyPosition(KeyPosition kp)
+    {
+        keyPositionManager.addKeyPosition(kp);
+    }
+
+    @Override
+    public List<KeyPosition> getKeyPositions()
+    {
+        return keyPositionManager.getKeyPositions();
+    }
+
+    @Override
+    public void setKeyPositions(List<KeyPosition> p)
+    {
+        keyPositionManager.setKeyPositions(p);
+    }
+
+    @Override
+    public void removeKeyPosition(String id)
+    {
+        keyPositionManager.removeKeyPosition(id);
+    }
+
+    @Override
+    public KeyPosition getKeyPosition(String name)
+    {
+        return keyPositionManager.getKeyPosition(name);
+    }
+
+    public PerlinNoiseMU()
+    {
+      setParameterValue("joint",Hanim.skullbase);
+      setFloatParameterValue("offsetx",-0.1f);
+      setFloatParameterValue("offsety",0f);
+      setFloatParameterValue("offsetz",0f);
+      setFloatParameterValue("basefreqx",1f);
+      setFloatParameterValue("basefreqy",1f);
+      setFloatParameterValue("basefreqz",1f);
+      setFloatParameterValue("baseamplitudex",0.5f);
+      setFloatParameterValue("baseamplitudey",0f);
+      setFloatParameterValue("baseamplitudez",0f);
+      setFloatParameterValue("persistencex",0.5f);
+      setFloatParameterValue("persistencey",0.5f);
+      setFloatParameterValue("persistencez",0.5f);
+    }
+
+
+    @Override
+    public double getPreferedDuration()
+    {
+        return 1;
+    }
+
+    @Override
+    public void play(double t) throws MUPlayException
+    {
+      try
+      {
+          
+        float rotxRad =   getFloatParameterValue("offsetx")
+                         + getFloatParameterValue("baseamplitudex")*pnx1.noise((float)t*getFloatParameterValue("basefreqx"));
+                         // + baseamplitudex*persistence*pnx2.noise((float)currentTime*basefreqx*2)     
+                         // + baseamplitudex*persistence*persistence*pnx3.noise((float)currentTime*basefreqx*4)     
+                         // + baseamplitudex*persistence*persistence*persistence*pnx4.noise((float)currentTime*basefreqx*8)     
+        float rotyRad =   getFloatParameterValue("offsety")
+                         + getFloatParameterValue("baseamplitudey")*pny1.noise((float)t*getFloatParameterValue("basefreqy"));
+        float rotzRad =   getFloatParameterValue("offsetz")
+                         + getFloatParameterValue("baseamplitudez")*pnz1.noise((float)t*getFloatParameterValue("basefreqz"));
+        Quat4f.setFromRollPitchYaw(q, rotzRad, rotxRad, rotyRad);
+        player.getVNext().getPart(getParameterValue("joint")).setRotation(q);
+      }
+      catch (Exception ex)
+      {
+        throw new MUPlayException(ex.getMessage(), this);
+      }
+    }
+
+    @Override
+    public void setFloatParameterValue(String name, float value)
+    {
+        parameters.put(name, "" + value);
+//        System.out.println("param" +name+","+value);
+    }
+
+    @Override
+    public void setParameterValue(String name, String value)
+    {
+        parameters.put(name, value);
+        //System.out.println("param" +name+","+value);
+    }
+
+    @Override
+    public String getParameterValue(String name) throws ParameterNotFoundException
+    {
+        if (parameters.get(name) == null)
+        {
+            throw new ParameterNotFoundException(name);
+        }
+        else
+            return parameters.get(name);
+
+    }
+
+    @Override
+    public float getFloatParameterValue(String name) throws ParameterNotFoundException
+    {
+        if (parameters.get(name) == null)
+        {
+            throw new ParameterNotFoundException(name);
+        }
+        float value = 0;
+        try
+        {
+            value = Float.parseFloat(parameters.get(name));
+        }
+        catch (NumberFormatException ex)
+        {
+            throw new ParameterNotFoundException(name);
+        }
+        return value;
+    }
+
+    @Override
+    public TimedMotionUnit createTMU(FeedbackManager bbm, BMLBlockPeg bbPeg, String bmlId, String id)
+    {
+        return new NoiseTMU(bbm, bbPeg, bmlId, id, this);
+    }
+
+    @Override
+    public MotionUnit copy(AnimationPlayer p)
+    {
+        HashMap<String, String> newparam = new HashMap<String, String> ();
+        newparam.putAll(parameters);
+        PerlinNoiseMU pmu = new PerlinNoiseMU();
+        pmu.parameters = newparam;
+        pmu.player = p;
+        return pmu;
+    }
+
+    @Override
+    public String getReplacementGroup()
+    {
+        try
+        {
+            return getParameterValue("replacementgroup");
+        }
+        catch (ParameterNotFoundException e)
+        {
+            return null;
+        }
+    }
+}
