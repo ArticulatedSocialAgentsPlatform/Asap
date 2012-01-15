@@ -8,7 +8,7 @@
       <dependency org="HMI"     name="HmiMath"      rev="latest.${resolve.status}"    />
 
       <!-- dependency should be removed later on -->
-      <dependency org="HMI"     name="HmiPhysics"                rev="latest.${resolve.status}"  />
+      <dependency org="HMI"     name="HmiPhysics"            transitive="false" rev="latest.${resolve.status}"  />
       <dependency org="jcip"    name="jcip-annotations"      rev="latest.release"  />
       <dependency org="lombok"  name="lombok"      rev="latest.release"  />
       <dependency org="google"			name="guava" rev="latest.release"  />
