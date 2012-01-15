@@ -2,42 +2,9 @@
    <info organisation="Asap" module="ASAPRealizerTest"/>
    <dependencies>
       <dependency org="junit"    name="junit"              rev="latest.release"  />
-      <dependency org="junit"    name="cpsuite"              rev="latest.release"  />
-      <dependency org="google"    name="junit-ext"              rev="latest.release"  />
       <dependency org="mockito"   name="mockito-all"            rev="latest.release"  />
       <dependency org="jboss"			name="javassist" rev="latest.release"  />
       <dependency org="powermock"			name="powermock-mockito" rev="latest.release"  />
-      <dependency org="hamcrest" name="hamcrest-all"       rev="latest.release"  />
-      <dependency org="odejava" name="odejava"       rev="latest.release"  />
-      <dependency org="HMI"      transitive="false" name="HmiTestUtil"        rev="latest.{$resolve.status}"  />
-      <dependency org="HMI"      transitive="false" name="HmiElckerlycTestUtil"        rev="latest.{$resolve.status}"  />
-      <dependency org="HMI"      name="HmiGraphics" transitive="false" rev="latest.{$resolve.status}"  />
-      <dependency org="HMI"      name="HmiMath" rev="latest.{$resolve.status}"  />
-      <dependency org="HMI"      name="HmiAnimation" rev="latest.{$resolve.status}"  />
-      <dependency org="HMI"      name="HmiSpeechEngine" rev="latest.{$resolve.status}"  />
-      <dependency org="HMI"      name="HmiFaceEngine" rev="latest.{$resolve.status}"  />
-      <dependency org="HMI"      name="HmiAnimationEngine" rev="latest.{$resolve.status}"  />
-      <dependency org="HMI"   name="HmiAudioEngine" rev="latest.${resolve.status}"   />
-
-      <dependency org="logback" name="logback-classic"     rev="latest.release"  />
-      <dependency org="logback" name="logback-core"        rev="latest.release"  />
-
-      <!--dependency org="slf4j"   name="log4j-over-slf4j"      rev="latest.release"  />
-      <dependency org="slf4j"   name="jul-to-slf4j"          rev="latest.release"  />
-      <dependency org="slf4j"   name="jcl-over-slf4j"        rev="latest.release"  /-->
-
-      <!-- for tests with SAPI -->
-      <dependency org="HMI"      name="HmiTTSnative"        rev="latest.{$resolve.status}"  />
-
-      <!-- for tests with MaryTTS -->
-      <dependency org="slf4j"   name="log4j-over-slf4j"      rev="latest.release"  />
-      <dependency org="dfki"   name="mary-common"    rev="latest.release"  />
-      <dependency org="apache" name="commons-collections" rev="latest.release"  />
-      <dependency org="opennlp" name="opennlp-tools" rev="latest.release"  />
-      <dependency org="opennlp" name="maxent" rev="latest.release"  />
-      <dependency org="freetts" name="freetts" rev="latest.release"  />
-      <dependency org="gnu" name="trove" rev="latest.release"  />
-      <dependency org="hsqldb" name="hsqldb" rev="latest.release"  />
-      <dependency org="Jama" name="Jama" rev="latest.release"  />
+      <dependency org="hamcrest" name="hamcrest-all"       rev="latest.release"  />      
    </dependencies>
 </ivy-module>

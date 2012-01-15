@@ -6,6 +6,7 @@
       <dependency org="HMI"     name="HmiUtil"      rev="latest.${resolve.status}"    />
       <dependency org="HMI"     name="HmiXml"      rev="latest.${resolve.status}"    />
       <dependency org="HMI"     name="HmiMath"      rev="latest.${resolve.status}"    />
+	  <dependency org="HMI"     name="HmiElckerlyc" transitive="false"     rev="latest.${resolve.status}"    />
 
       <!-- dependency should be removed later on -->
       <dependency org="HMI"     name="HmiPhysics"            transitive="false" rev="latest.${resolve.status}"  />
