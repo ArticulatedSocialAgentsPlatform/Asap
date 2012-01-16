@@ -55,7 +55,6 @@ public class AnimationPlayer implements Player
     private VJoint vPrev;
     private VJoint vCurr;
     private VJoint vNext;
-    private VJoint vPredict;
     private PhysicalHumanoid pHuman;
 
     private VObjectTransformCopier votcCurrToPrev;
@@ -385,14 +384,6 @@ public class AnimationPlayer implements Player
     public VJoint getVCurr()
     {
         return vCurr;
-    }
-
-    /**
-     * Get the predicted joint rotation
-     */
-    public VJoint getVPredict()
-    {
-        return vPredict;
     }
 
     /**
