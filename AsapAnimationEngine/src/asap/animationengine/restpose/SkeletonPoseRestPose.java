@@ -14,7 +14,6 @@ import java.util.List;
 import java.util.Set;
 
 import asap.animationengine.AnimationPlayer;
-import asap.animationengine.motionunit.MotionUnit;
 import asap.animationengine.motionunit.TimedMotionUnit;
 import asap.animationengine.transitions.SlerpTransitionToPoseMU;
 import asap.animationengine.transitions.TransitionMU;

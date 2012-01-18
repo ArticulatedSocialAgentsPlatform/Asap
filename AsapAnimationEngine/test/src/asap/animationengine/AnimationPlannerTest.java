@@ -16,7 +16,6 @@ import hmi.elckerlyc.TimePeg;
 import hmi.elckerlyc.feedback.FeedbackManager;
 import hmi.elckerlyc.feedback.FeedbackManagerImpl;
 import hmi.elckerlyc.planunit.PlanManager;
-import hmi.elckerlyc.planunit.TimedPlanUnit;
 import hmi.elckerlyc.scheduler.BMLBlockManager;
 import hmi.elckerlyc.scheduler.TimePegAndConstraint;
 import hmi.elckerlyc.util.KeyPositionMocker;
@@ -61,7 +60,7 @@ public class AnimationPlannerTest
     private PlannerTests plannerTests;
     private static final String BMLID = "bml1";
     private final BMLBlockPeg bbPeg = new BMLBlockPeg("Peg1", 0.3);
-    private final PlanManager planManager = new PlanManager();
+    private final PlanManager<TimedMotionUnit> planManager = new PlanManager<TimedMotionUnit>();
 
     @Before
     public void setup()
@@ -107,7 +106,7 @@ public class AnimationPlannerTest
         ArrayList<TimePegAndConstraint> sacs = new ArrayList<TimePegAndConstraint>();
         TimePeg sp = new TimePeg(bbPeg);
         sacs.add(new TimePegAndConstraint("start", sp, new Constraint(), 0, false));
-        TimedPlanUnit pu = animationPlanner.resolveSynchs(bbPeg, beh, sacs);
+        TimedMotionUnit pu = animationPlanner.resolveSynchs(bbPeg, beh, sacs);
         animationPlanner.addBehaviour(bbPeg, beh, sacs, pu);
         assertThat(planManager.getBehaviours(BMLID), IsIterableContainingInOrder.contains("nod1"));        
     }
@@ -121,7 +120,7 @@ public class AnimationPlannerTest
         TimePeg sp = new TimePeg(bbPeg);
         sacs.add(new TimePegAndConstraint("start", sp, new Constraint(), 0, false));
 
-        TimedPlanUnit pu = animationPlanner.resolveSynchs(bbPeg, beh, sacs);
+        TimedMotionUnit pu = animationPlanner.resolveSynchs(bbPeg, beh, sacs);
         assertEquals(0.3, sp.getGlobalValue(), 0.0001);
         animationPlanner.addBehaviour(bbPeg, beh, sacs, pu);
         assertEquals(0.3, pu.getStartTime(), 0.0001);

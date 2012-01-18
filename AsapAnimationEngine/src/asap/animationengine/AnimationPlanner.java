@@ -22,7 +22,6 @@ import hmi.elckerlyc.*;
 import hmi.elckerlyc.feedback.FeedbackManager;
 import hmi.elckerlyc.planunit.KeyPosition;
 import hmi.elckerlyc.planunit.PlanManager;
-import hmi.elckerlyc.planunit.TimedPlanUnit;
 import hmi.elckerlyc.scheduler.LinearStretchResolver;
 import hmi.elckerlyc.scheduler.TimePegAndConstraint;
 import hmi.elckerlyc.scheduler.UniModalResolver;
@@ -49,13 +48,13 @@ import hmi.bml.ext.bmlt.BMLTNoiseBehaviour;
  * 
  * @author welberge
  */
-public class AnimationPlanner extends AbstractPlanner
+public class AnimationPlanner extends AbstractPlanner<TimedMotionUnit>
 {
     private final AnimationPlayer player;
     private GestureBinding gestureBinding;
     private final UniModalResolver resolver;
 
-    public AnimationPlanner(FeedbackManager bfm, AnimationPlayer p, GestureBinding g, PlanManager planManager)
+    public AnimationPlanner(FeedbackManager bfm, AnimationPlayer p, GestureBinding g, PlanManager<TimedMotionUnit> planManager)
     {
         super(bfm,planManager);
         gestureBinding = g;        
@@ -74,12 +73,11 @@ public class AnimationPlanner extends AbstractPlanner
      */
     @Override
     public List<SyncAndTimePeg> addBehaviour(BMLBlockPeg bbPeg, Behaviour b, List<TimePegAndConstraint> sacs,
-            TimedPlanUnit planElement) throws BehaviourPlanningException
+            TimedMotionUnit tmu) throws BehaviourPlanningException
     {
         List<SyncAndTimePeg> satps = new ArrayList<SyncAndTimePeg>();
-        TimedMotionUnit tmu;
-
-        if (planElement == null)
+        
+        if (tmu == null)
         {
             List<TimedMotionUnit> tmus = gestureBinding.getMotionUnit(bbPeg, b, player);
             if (tmus.isEmpty())
@@ -90,11 +88,7 @@ public class AnimationPlanner extends AbstractPlanner
             // for now, just add the first
             tmu = tmus.get(0);
         }
-        else
-        {
-            tmu = (TimedMotionUnit) planElement;
-        }
-
+        
         // apply syncs to tmu
         tmu.resolveDefaultBMLKeyPositions();
         linkSynchs(tmu, sacs);

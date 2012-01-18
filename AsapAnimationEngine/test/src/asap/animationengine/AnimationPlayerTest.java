@@ -47,7 +47,7 @@ public class AnimationPlayerTest
     private BMLBlockManager mockBMLBlockManager = mock(BMLBlockManager.class);
     private FeedbackManager fbManager = new FeedbackManagerImpl(mockBMLBlockManager,"character1");
     
-    private PlanManager planManager = new PlanManager();
+    private PlanManager<TimedMotionUnit> planManager = new PlanManager<TimedMotionUnit>();
     
     @Before
     public void setup()
@@ -61,7 +61,7 @@ public class AnimationPlayerTest
         animationPlayer = new AnimationPlayer(HanimBody.getLOA1HanimBody(),
                 HanimBody.getLOA1HanimBody(), HanimBody.getLOA1HanimBody(),
                 m, 0.01f,
-                new SingleThreadedPlanPlayer(fbManager,planManager)                
+                new SingleThreadedPlanPlayer<TimedMotionUnit>(fbManager,planManager)                
                 );
         beList = new ArrayList<BMLExceptionFeedback>();
         fbManager.addExceptionListener(new ListBMLExceptionListener(beList));

@@ -38,8 +38,8 @@ public class AnimationPlannerSpeechTest
     private FeedbackManager mockBmlFeedbackManager = mock(FeedbackManager.class);
     
     private AnimationPlanner animationPlanner;
-    PlanManager planManager = new PlanManager();
-    DefaultEngine animationEngine;
+    PlanManager<TimedMotionUnit> planManager = new PlanManager<TimedMotionUnit>();
+    DefaultEngine<TimedMotionUnit> animationEngine;
     
     @Before
     public void setup()
@@ -50,13 +50,13 @@ public class AnimationPlannerSpeechTest
         m.add(ms);        
         AnimationPlayer ap = new AnimationPlayer(HanimBody.getLOA1HanimBody(), HanimBody.getLOA1HanimBody(),
                 HanimBody.getLOA1HanimBody(), m, 0.001f,
-                new SingleThreadedPlanPlayer(mockBmlFeedbackManager,planManager)                
+                new SingleThreadedPlanPlayer<TimedMotionUnit>(mockBmlFeedbackManager,planManager)                
                 );
 
         animationPlanner = new AnimationPlanner(mockBmlFeedbackManager,ap, mockBinding, planManager);
         List<TimedMotionUnit> visemeMUs = new ArrayList<TimedMotionUnit>();
 
-        animationEngine = new DefaultEngine(animationPlanner, ap, planManager);
+        animationEngine = new DefaultEngine<TimedMotionUnit>(animationPlanner, ap, planManager);
         
         TimedMotionUnit tmu = new TimedMotionUnit(mockBmlFeedbackManager, bbPeg, "bml1", "speech1", mockUnit1);
         visemeMUs.add(tmu);
