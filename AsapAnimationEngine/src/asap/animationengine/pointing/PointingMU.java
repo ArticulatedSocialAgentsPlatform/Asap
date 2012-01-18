@@ -19,6 +19,9 @@
 package asap.animationengine.pointing;
 
 import java.util.List;
+import java.util.Set;
+
+import com.google.common.collect.ImmutableSet;
 
 import asap.animationengine.AnimationPlayer;
 import asap.animationengine.motionunit.MUPlayException;
@@ -335,4 +338,19 @@ public class PointingMU implements MotionUnit
         // allow 2 pointing mu's to be active
         return null;
     }
+    
+    
+    private static final Set<String>PHJOINTS = ImmutableSet.of(); 
+    
+    @Override
+    public Set<String> getPhysicalJoints()
+    {
+        return PHJOINTS;
+    }
+
+    @Override
+    public Set<String> getKinematicJoints()
+    {
+        return ImmutableSet.of(vjShoulder.getSid(), vjElbow.getSid());
+    }  
 }

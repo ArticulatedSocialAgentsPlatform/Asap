@@ -30,6 +30,7 @@ import hmi.elckerlyc.planunit.TimedAbstractPlanUnit;
 import hmi.elckerlyc.planunit.PlanUnitTimeManager;
 
 import java.util.ArrayList;
+import java.util.Set;
 import lombok.Delegate;
 
 import hmi.bml.feedback.BMLSyncPointProgressFeedback;
@@ -48,7 +49,9 @@ public class TimedMotionUnit extends TimedAbstractPlanUnit
     
     @Delegate
     private final PlanUnitTimeManager puTimeManager;
-
+    public Set<String> getKinematicJoints(){return mu.getKinematicJoints();}
+    public Set<String> getPhysicalJoints(){return mu.getPhysicalJoints();};
+    
     /**
      * Constructor
      * @param bmlBlockPeg

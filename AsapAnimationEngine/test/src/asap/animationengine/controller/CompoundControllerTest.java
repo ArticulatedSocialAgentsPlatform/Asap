@@ -9,8 +9,11 @@ import org.junit.Before;
 import org.junit.Test;
 
 import asap.animationengine.controller.CompoundController;
-import static org.hamcrest.collection.IsArrayContaining.*;
 import static org.mockito.Mockito.*;
+import static org.hamcrest.MatcherAssert.assertThat;
+import static org.hamcrest.collection.IsIterableContainingInAnyOrder.*;
+
+
 /**
  * Unit testcase for CompoundController
  * @author Herwin
@@ -75,13 +78,8 @@ public class CompoundControllerTest
     @Test
     public void testGetJointIDs()
     {
-        assertThat(compoundController.getRequiredJointIDs(),hasItemInArray("l_elbow"));
-        assertEquals(1,compoundController.getRequiredJointIDs().length);
-        
-        assertThat(compoundController.getDesiredJointIDs(),hasItemInArray("l_wrist"));
-        assertThat(compoundController.getDesiredJointIDs(),hasItemInArray("l_thumb1"));        
-        assertThat(compoundController.getDesiredJointIDs(),hasItemInArray("l_elbow"));
-        assertEquals(3,compoundController.getDesiredJointIDs().length);        
+        assertThat(compoundController.getRequiredJointIDs(),containsInAnyOrder("l_elbow"));
+        assertThat(compoundController.getDesiredJointIDs(),containsInAnyOrder("l_wrist","l_thumb1","l_elbow"));                
     }
     
     @Test

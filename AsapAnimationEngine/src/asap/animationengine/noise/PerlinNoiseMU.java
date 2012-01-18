@@ -28,6 +28,10 @@ import hmi.elckerlyc.planunit.ParameterNotFoundException;
 import hmi.elckerlyc.BMLBlockPeg;
 import java.util.*;
 
+import lombok.extern.slf4j.Slf4j;
+
+import com.google.common.collect.ImmutableSet;
+
 import asap.animationengine.AnimationPlayer;
 import asap.animationengine.motionunit.*;
 
@@ -51,6 +55,7 @@ import asap.animationengine.motionunit.*;
  * @author Dennis Reidsma
  * 
  */
+@Slf4j
 public class PerlinNoiseMU implements NoiseMU
 {
     private HashMap<String, String> parameters = new HashMap<String, String>(); // name => value set
@@ -229,4 +234,27 @@ public class PerlinNoiseMU implements NoiseMU
             return null;
         }
     }
+    
+    private static final Set<String>PHJOINTS = ImmutableSet.of(); 
+    @Override
+    public Set<String> getPhysicalJoints()
+    {
+        return PHJOINTS;
+    }
+
+    @Override
+    public Set<String> getKinematicJoints()
+    {
+        try
+        {
+            String jointName = getParameterValue("joint");
+            return ImmutableSet.of(jointName);
+        }
+        catch (ParameterNotFoundException e)
+        {
+            log.warn("No joint set for PerlinNoiseMU, ParameterNotFoundException",e);            
+        }
+        return ImmutableSet.of();
+        
+    } 
 }

@@ -17,6 +17,10 @@ package asap.animationengine.gaze;
  * You should have received a copy of the GNU General Public License
  * along with Elckerlyc.  If not, see http://www.gnu.org/licenses/.
  ******************************************************************************/
+import java.util.Set;
+
+import com.google.common.collect.ImmutableSet;
+
 import asap.animationengine.AnimationPlayer;
 import asap.animationengine.motionunit.MUPlayException;
 import asap.animationengine.motionunit.TimedMotionUnit;
@@ -115,4 +119,12 @@ public class EyeGazeMU extends GazeMU
         rEye.setRotation(qRight);        
         lEye.setRotation(qLeft);                
     }        
+    
+    private static final Set<String>KINJOINTS = ImmutableSet.of(Hanim.l_eyeball_joint, Hanim.r_eyeball_joint);    
+    
+    @Override
+    public Set<String> getKinematicJoints()
+    {
+        return KINJOINTS;        
+    }  
 }

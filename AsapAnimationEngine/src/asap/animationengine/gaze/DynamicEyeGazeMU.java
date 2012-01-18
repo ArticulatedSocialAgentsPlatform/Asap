@@ -18,6 +18,10 @@
  ******************************************************************************/
 package asap.animationengine.gaze;
 
+import java.util.Set;
+
+import com.google.common.collect.ImmutableSet;
+
 import asap.animationengine.AnimationPlayer;
 import asap.animationengine.motionunit.MUPlayException;
 import hmi.animation.Hanim;
@@ -111,4 +115,12 @@ public class DynamicEyeGazeMU extends DynamicGazeMU
         lEye.setRotation(qGazeL);
         rEye.setRotation(qGazeR);
     }
+    
+    private static final Set<String>KINJOINTS = ImmutableSet.of(Hanim.l_eyeball_joint, Hanim.r_eyeball_joint);   
+    
+    @Override
+    public Set<String> getKinematicJoints()
+    {
+        return KINJOINTS;        
+    } 
 }

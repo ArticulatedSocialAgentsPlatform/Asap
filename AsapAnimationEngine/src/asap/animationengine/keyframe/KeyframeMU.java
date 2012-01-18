@@ -28,6 +28,8 @@ import hmi.elckerlyc.BMLBlockPeg;
 import java.util.*;
 import java.util.Map.Entry;
 
+import com.google.common.collect.ImmutableSet;
+
 import asap.animationengine.AnimationPlayer;
 import asap.animationengine.motionunit.*;
 
@@ -253,4 +255,18 @@ public class KeyframeMU implements MotionUnit
             return null;
         }
     }
+    
+    private static final Set<String>PHJOINTS = ImmutableSet.of(); 
+    
+    @Override
+    public Set<String> getPhysicalJoints()
+    {
+        return PHJOINTS;
+    }
+
+    @Override
+    public Set<String> getKinematicJoints()
+    {
+        return ImmutableSet.copyOf(currentIp.getPartIds());
+    } 
 }

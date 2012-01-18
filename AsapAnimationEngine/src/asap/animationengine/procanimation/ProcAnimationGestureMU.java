@@ -15,9 +15,12 @@ import hmi.util.StringUtil;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Set;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+
+import com.google.common.collect.ImmutableSet;
 
 import asap.animationengine.AnimationPlayer;
 import asap.animationengine.motionunit.MUPlayException;
@@ -341,4 +344,18 @@ public class ProcAnimationGestureMU implements GestureUnit
     {
         resource = r;
     }
+    
+    private static final Set<String> PHJOINTS = ImmutableSet.of();
+
+    @Override
+    public Set<String> getPhysicalJoints()
+    {
+        return PHJOINTS;
+    }
+
+    @Override
+    public Set<String> getKinematicJoints()
+    {
+        return gestureUnit.getKinematicJoints();
+    } 
 }

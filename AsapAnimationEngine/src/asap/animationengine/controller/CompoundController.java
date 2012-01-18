@@ -24,6 +24,8 @@ import hmi.xml.*;
 import java.util.*;
 import java.io.*;
 
+import com.google.common.collect.ImmutableSet;
+
 /**
  * A physical controller that is a compound of several other controllers.
  * XML writing functionality is not implemented.
@@ -67,15 +69,15 @@ public class CompoundController extends XMLStructureAdapter implements PhysicalC
     }
 
     @Override
-    public String[] getRequiredJointIDs()
+    public Set<String> getRequiredJointIDs()
     {
-        return jointIDs;
+        return ImmutableSet.copyOf(jointIDs);        
     }
 
     @Override
-    public String[] getDesiredJointIDs()
+    public Set<String> getDesiredJointIDs()
     {
-        return desJointIDs;
+        return ImmutableSet.copyOf(desJointIDs);
     }
 
     public CompoundController()
@@ -344,6 +346,13 @@ public class CompoundController extends XMLStructureAdapter implements PhysicalC
     public String getXMLTag()
     {
         return XMLTAG;
+    }
+
+    @Override
+    public Set<String> getJoints()
+    {
+        // TODO Auto-generated method stub
+        return null;
     }
 
 }

@@ -56,9 +56,10 @@ public class AnimationPlanPlayer implements PlanPlayer
         //sort by priority
         Collections.sort(playingPlanUnits, new PlanUnitPriorityComparator());
         
-        for (TimedPlanUnit pu : playingPlanUnits)
+        for (TimedMotionUnit tmu : playingPlanUnits)
         {
-            tpuPlayer.playUnit(pu, t);            
+            
+            tpuPlayer.playUnit(tmu, t);            
         }
         tpuPlayer.handlePlayExceptions(t,fbManager);
         tpuPlayer.handleStopExceptions(t);

@@ -18,6 +18,7 @@
  ******************************************************************************/
 package asap.animationengine.controller;
 
+import hmi.animation.VJoint;
 import hmi.elckerlyc.BMLBlockPeg;
 import hmi.elckerlyc.feedback.FeedbackManager;
 import hmi.elckerlyc.planunit.InvalidParameterException;
@@ -30,7 +31,14 @@ import hmi.physics.controller.ControllerParameterException;
 import hmi.physics.controller.ControllerParameterNotFoundException;
 import hmi.physics.controller.PhysicalController;
 
+import java.util.Collection;
 import java.util.List;
+import java.util.Set;
+
+import com.google.common.base.Function;
+import com.google.common.collect.Collections2;
+import com.google.common.collect.ImmutableSet;
+import com.google.common.collect.Sets;
 
 import asap.animationengine.AnimationPlayer;
 import asap.animationengine.motionunit.*;
@@ -206,5 +214,16 @@ public class ControllerMU implements MotionUnit
         keyPositionManager.removeKeyPosition(id);
     }
 
-    
+    private static final Set<String> KINJOINTS = ImmutableSet.of();
+    @Override
+    public Set<String> getKinematicJoints()    
+    {
+        return KINJOINTS;
+    }
+
+    @Override
+    public Set<String> getPhysicalJoints()
+    {
+        return controller.getJoints();        
+    } 
 }

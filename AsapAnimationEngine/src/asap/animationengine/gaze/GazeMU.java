@@ -20,6 +20,8 @@ package asap.animationengine.gaze;
 
 import java.util.*;
 
+import com.google.common.collect.ImmutableSet;
+
 import asap.animationengine.AnimationPlayer;
 import asap.animationengine.motionunit.*;
 
@@ -452,5 +454,27 @@ public class GazeMU implements MotionUnit
     public void removeKeyPosition(String id)
     {
         keyPositionManager.removeKeyPosition(id);
+    }
+
+    private static final Set<String>PHJOINTS = ImmutableSet.of(); 
+    private static final Set<String>KINJOINTSALL = ImmutableSet.of(Hanim.skullbase, Hanim.l_eyeball_joint, Hanim.r_eyeball_joint);    
+    private static final Set<String>KINJOINTSNECK = ImmutableSet.of(Hanim.skullbase);
+    @Override
+    public Set<String> getPhysicalJoints()
+    {
+        return PHJOINTS;
+    }
+
+    @Override
+    public Set<String> getKinematicJoints()
+    {
+        if(lEye == null || rEye == null)
+        {
+            return KINJOINTSALL;
+        }
+        else
+        {
+            return KINJOINTSNECK;
+        }
     }    
 }

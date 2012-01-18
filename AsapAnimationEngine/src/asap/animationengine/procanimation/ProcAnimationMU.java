@@ -37,11 +37,14 @@ import java.util.concurrent.atomic.AtomicReference;
 import org.nfunk.jep.*;
 import org.lsmp.djep.xjep.*;
 
+import com.google.common.base.Function;
+import com.google.common.collect.Collections2;
+import com.google.common.collect.ImmutableSet;
+
 import asap.animationengine.AnimationPlayer;
 import asap.animationengine.keyframe.KeyframeMU;
 import asap.animationengine.motionunit.MotionUnit;
 import asap.animationengine.motionunit.TimedMotionUnit;
-
 
 /**
  * Generic procedural animation package Animation is described as end effector path, joint rotation path and/or joint positions at key times
@@ -101,6 +104,7 @@ public class ProcAnimationMU extends XMLStructureAdapter implements MotionUnit
     private KeyPositionManager keyPositionManager = new KeyPositionManagerImpl();
 
     private AtomicReference<String> replacementGroup = new AtomicReference<String>();
+
     /**
      * Constructor
      */
@@ -586,16 +590,11 @@ public class ProcAnimationMU extends XMLStructureAdapter implements MotionUnit
             if (eff.getTarget().equals(name))
             {
                 remove.add(eff);
-                if (eff == rootEff)
-                    rootEff = null;
-                if (eff == rightFootEff)
-                    rightFootEff = null;
-                if (eff == rightHandEff)
-                    rightHandEff = null;
-                if (eff == leftFootEff)
-                    leftFootEff = null;
-                if (eff == leftHandEff)
-                    leftHandEff = null;
+                if (eff == rootEff) rootEff = null;
+                if (eff == rightFootEff) rightFootEff = null;
+                if (eff == rightHandEff) rightHandEff = null;
+                if (eff == leftFootEff) leftFootEff = null;
+                if (eff == leftHandEff) leftHandEff = null;
             }
         }
         endeffector.removeAll(remove);
@@ -795,24 +794,16 @@ public class ProcAnimationMU extends XMLStructureAdapter implements MotionUnit
             boolean found = false;
             for (KeyframeMU kmu : keyFrameMUs)
             {
-                if (kmu.getJoints().contains(v.getSid()))
-                    found = true;
+                if (kmu.getJoints().contains(v.getSid())) found = true;
             }
-            if (found)
-                continue;
+            if (found) continue;
 
-            if (rotations.get(v.getSid()) != null)
-                continue;
-            if (keyframes.get(v.getSid()) != null)
-                continue;
-            if ((v.getSid() == Hanim.r_shoulder || v.getSid() == Hanim.r_elbow) && rightHandEff != null)
-                continue;
-            if ((v.getSid() == Hanim.l_shoulder || v.getSid() == Hanim.l_elbow) && leftHandEff != null)
-                continue;
-            if ((v.getSid() == Hanim.r_hip || v.getSid() == Hanim.r_knee || v.getSid() == Hanim.r_ankle) && rightFootEff != null)
-                continue;
-            if ((v.getSid() == Hanim.l_hip || v.getSid() == Hanim.l_knee || v.getSid() == Hanim.l_ankle) && leftFootEff != null)
-                continue;
+            if (rotations.get(v.getSid()) != null) continue;
+            if (keyframes.get(v.getSid()) != null) continue;
+            if ((v.getSid() == Hanim.r_shoulder || v.getSid() == Hanim.r_elbow) && rightHandEff != null) continue;
+            if ((v.getSid() == Hanim.l_shoulder || v.getSid() == Hanim.l_elbow) && leftHandEff != null) continue;
+            if ((v.getSid() == Hanim.r_hip || v.getSid() == Hanim.r_knee || v.getSid() == Hanim.r_ankle) && rightFootEff != null) continue;
+            if ((v.getSid() == Hanim.l_hip || v.getSid() == Hanim.l_knee || v.getSid() == Hanim.l_ankle) && leftFootEff != null) continue;
             deleteList.add(v);
         }
 
@@ -832,28 +823,30 @@ public class ProcAnimationMU extends XMLStructureAdapter implements MotionUnit
         bodyParts.removeAll(deleteList);
         sortBodyParts();
     }
-    
+
     private void sortBodyParts()
     {
-        Collections.sort(bodyParts,new Comparator<VJoint>(){
+        Collections.sort(bodyParts, new Comparator<VJoint>()
+        {
 
             @Override
             public int compare(VJoint vj1, VJoint vj2)
             {
                 int pl1 = body.getHuman().getPath(vj1).size();
                 int pl2 = body.getHuman().getPath(vj2).size();
-                if(pl1<pl2)
+                if (pl1 < pl2)
                 {
                     return -1;
                 }
-                else if (pl2<pl1)
+                else if (pl2 < pl1)
                 {
                     return 1;
                 }
                 else return 0;
-            }});
+            }
+        });
     }
-    
+
     private void findMissingParameters()
     {
         @SuppressWarnings("rawtypes")
@@ -1184,7 +1177,7 @@ public class ProcAnimationMU extends XMLStructureAdapter implements MotionUnit
         body = new IKBody(vNext);
         setup(getParameters(), body);
     }
-    
+
     /**
      * Creates a copy of this ProcAnimation and links is to VJoint v
      */
@@ -1290,7 +1283,8 @@ public class ProcAnimationMU extends XMLStructureAdapter implements MotionUnit
                 // no need to add empty rotations
                 if (!(rot.getRotationFormula(0) == null && rot.getRotationFormula(1) == null && rot.getRotationFormula(2) == null))
                 {
-                    if (!(rot.getRotationFormula(0).equals("") && rot.getRotationFormula(1).equals("") && rot.getRotationFormula(2).equals("")))
+                    if (!(rot.getRotationFormula(0).equals("") && rot.getRotationFormula(1).equals("") && rot.getRotationFormula(2).equals(
+                            "")))
                     {
                         rotations.put(rot.getTarget(), rot);
                     }
@@ -1374,7 +1368,7 @@ public class ProcAnimationMU extends XMLStructureAdapter implements MotionUnit
     }
 
     @Override
-    public void setParameterValue(String name, String value)throws ParameterException
+    public void setParameterValue(String name, String value) throws ParameterException
     {
         if (name.equals("mirror"))
         {
@@ -1393,17 +1387,17 @@ public class ProcAnimationMU extends XMLStructureAdapter implements MotionUnit
             }
             filterBodyParts();
         }
-        else if(name.equals("replacementgroup"))
+        else if (name.equals("replacementgroup"))
         {
             replacementGroup.set(value);
         }
-        else if(StringUtil.isNumeric(value))
+        else if (StringUtil.isNumeric(value))
         {
             setFloatParameterValue(name, Float.parseFloat(value));
         }
         else
         {
-            throw new InvalidParameterException(name,value);
+            throw new InvalidParameterException(name, value);
         }
     }
 
@@ -1412,8 +1406,7 @@ public class ProcAnimationMU extends XMLStructureAdapter implements MotionUnit
     {
         for (Parameter p : getParameters())
         {
-            if (p.getSid().equals(name))
-                return "" + p.getValue();
+            if (p.getSid().equals(name)) return "" + p.getValue();
         }
         throw new ParameterNotFoundException(name);
     }
@@ -1423,8 +1416,7 @@ public class ProcAnimationMU extends XMLStructureAdapter implements MotionUnit
     {
         for (Parameter p : getParameters())
         {
-            if (p.getSid().equals(name))
-                return (float) p.getValue();
+            if (p.getSid().equals(name)) return (float) p.getValue();
         }
         throw new ParameterNotFoundException(name);
     }
@@ -1438,6 +1430,28 @@ public class ProcAnimationMU extends XMLStructureAdapter implements MotionUnit
     @Override
     public String getReplacementGroup()
     {
-        return replacementGroup.get();        
+        return replacementGroup.get();
     }
+
+    private static final Set<String> PHJOINTS = ImmutableSet.of();
+
+    @Override
+    public Set<String> getPhysicalJoints()
+    {
+        return PHJOINTS;
+    }
+
+    @Override
+    public Set<String> getKinematicJoints()
+    {
+        Collection<String> joints = Collections2.transform(bodyParts, new Function<VJoint, String>()
+        {
+            @Override
+            public String apply(VJoint joint)
+            {
+                return joint.getSid();
+            }
+        });
+        return ImmutableSet.copyOf(joints);
+    }    
 }

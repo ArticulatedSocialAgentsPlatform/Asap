@@ -7,6 +7,9 @@ import hmi.elckerlyc.BMLBlockPeg;
 import hmi.elckerlyc.feedback.FeedbackManager;
 
 import java.util.List;
+import java.util.Set;
+
+import com.google.common.collect.ImmutableSet;
 
 import asap.animationengine.AnimationPlayer;
 import asap.animationengine.motionunit.MUPlayException;
@@ -95,5 +98,17 @@ public class StubMotionUnit implements MotionUnit
     public float getFloatParameterValue(String name)
     {
         return 0;
+    }
+
+    @Override
+    public Set<String> getPhysicalJoints()
+    {
+        return ImmutableSet.of();
+    }
+
+    @Override
+    public Set<String> getKinematicJoints()
+    {
+        return ImmutableSet.of();
     }
 }

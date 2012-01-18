@@ -18,6 +18,8 @@
  ******************************************************************************/
 package asap.animationengine.motionunit;
 
+import java.util.Set;
+
 import asap.animationengine.AnimationPlayer;
 import hmi.elckerlyc.BMLBlockPeg;
 import hmi.elckerlyc.feedback.FeedbackManager;
@@ -36,6 +38,8 @@ public interface MotionUnit extends KeyPositionManager
     String getParameterValue(String name)throws ParameterException;
     float getFloatParameterValue(String name)throws ParameterException;
    
+    Set<String> getPhysicalJoints();
+    Set<String> getKinematicJoints();
     
     /**
      * Executes the motion unit, typically by rotating some VJoints

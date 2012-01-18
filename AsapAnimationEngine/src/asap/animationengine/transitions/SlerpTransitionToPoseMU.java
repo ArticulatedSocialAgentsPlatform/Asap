@@ -20,6 +20,11 @@ package asap.animationengine.transitions;
 
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.Set;
+
+import com.google.common.base.Function;
+import com.google.common.collect.Collections2;
+import com.google.common.collect.ImmutableSet;
 
 import asap.animationengine.AnimationPlayer;
 
@@ -160,4 +165,26 @@ public class SlerpTransitionToPoseMU extends TransitionMU
     {
 
     }
+    
+    private static final Set<String> PHJOINTS = ImmutableSet.of();
+
+    @Override
+    public Set<String> getPhysicalJoints()
+    {
+        return PHJOINTS;
+    }
+
+    @Override
+    public Set<String> getKinematicJoints()
+    {
+        Collection<String> j = Collections2.transform(joints, new Function<VJoint, String>()
+        {
+            @Override
+            public String apply(VJoint joint)
+            {
+                return joint.getSid();
+            }
+        });
+        return ImmutableSet.copyOf(j);
+    } 
 }
