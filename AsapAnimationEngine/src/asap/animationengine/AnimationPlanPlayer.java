@@ -9,8 +9,10 @@ import java.util.Set;
 import com.google.common.collect.Sets;
 
 import asap.animationengine.motionunit.TimedMotionUnit;
+import asap.animationengine.restpose.RestPose;
 import asap.planunit.PlanUnitPriorityComparator;
 
+import hmi.bml.feedback.BMLExceptionListener;
 import hmi.elckerlyc.feedback.FeedbackManager;
 import hmi.elckerlyc.planunit.PlanManager;
 import hmi.elckerlyc.planunit.PlanPlayer;
@@ -25,13 +27,18 @@ public class AnimationPlanPlayer implements PlanPlayer
     private final PlanManager<TimedMotionUnit> planManager;
     private final FeedbackManager fbManager;
     private final TimedPlanUnitPlayer tpuPlayer;
-
-    public AnimationPlanPlayer(FeedbackManager fbm, PlanManager<TimedMotionUnit> planManager, TimedPlanUnitPlayer tpuCallback)
+    private final RestPose defaultRestPose;
+    private RestPose currentRestPose;
+    
+    
+    public AnimationPlanPlayer(RestPose defaultRestPose, FeedbackManager fbm, PlanManager<TimedMotionUnit> planManager, TimedPlanUnitPlayer tpuCallback)
     {
         defPlayer = new SingleThreadedPlanPlayer<TimedMotionUnit>(fbm, planManager, tpuCallback);
         fbManager = fbm;
         tpuPlayer = tpuCallback;
         this.planManager = planManager;
+        this.defaultRestPose = defaultRestPose;
+        currentRestPose = defaultRestPose;
     }
 
     @Override
@@ -45,40 +52,63 @@ public class AnimationPlanPlayer implements PlanPlayer
         playingPlanUnits.clear();
         tmuRemove.clear();
 
-        // check which units should be playing
+        
+      //check which units should be playing
         for (TimedMotionUnit tmu : planManager.getPlanUnits())
         {
             if (t >= tmu.getStartTime() && (tmu.isPlaying() || tmu.isLurking()))
             {
-                if (Sets.intersection(tmu.getKinematicJoints(), kinematicJoints).isEmpty()
-                        && Sets.intersection(tmu.getKinematicJoints(), physicalJoints).isEmpty()
-                        && Sets.intersection(tmu.getPhysicalJoints(), kinematicJoints).isEmpty())
-                {
-                    playingPlanUnits.add(tmu);
-                    kinematicJoints.addAll(tmu.getKinematicJoints());
-                    physicalJoints.addAll(tmu.getPhysicalJoints());
-                }
-                else
-                {
-                    //TODO: drop tmu, create transition
-                }
+                playingPlanUnits.add(tmu);
             }
         }
-
         // sort by priority
-        Collections.sort(playingPlanUnits, new PlanUnitPriorityComparator());
-
-        for (TimedMotionUnit tmu : playingPlanUnits)
-        {
-            tpuPlayer.playUnit(tmu, t);
-        }
+        Collections.sort(playingPlanUnits, new PlanUnitPriorityComparator());        
+        
+        //playback        
+        List<TimedMotionUnit> tmuAdd = playback(t, tmuRemove, playingPlanUnits, physicalJoints, kinematicJoints);
+        planManager.addPlanUnits(tmuAdd);
+        
         tpuPlayer.handlePlayExceptions(t, fbManager);
         tpuPlayer.handleStopExceptions(t);
         for (TimedPlanUnit tmuR : tmuRemove)
         {
             tpuPlayer.stopUnit(tmuR, t);
-        }
+        }        
         planManager.removeFinishedPlanUnits();
+        currentRestPose.play(t, kinematicJoints,physicalJoints);
+    }
+
+    private List<TimedMotionUnit> playback(double t, List<TimedMotionUnit> tmuRemove, List<TimedMotionUnit> playingPlanUnits, Set<String> physicalJoints,
+            Set<String> kinematicJoints)
+    {
+        List<TimedMotionUnit> tmuAdd = new ArrayList<TimedMotionUnit>();
+        for (TimedMotionUnit tmu : playingPlanUnits)
+        {
+            if (Sets.intersection(tmu.getKinematicJoints(), kinematicJoints).isEmpty()
+                    && Sets.intersection(tmu.getKinematicJoints(), physicalJoints).isEmpty()
+                    && Sets.intersection(tmu.getPhysicalJoints(), kinematicJoints).isEmpty())
+            {
+                tpuPlayer.playUnit(tmu, t);
+                kinematicJoints.addAll(tmu.getKinematicJoints());
+                physicalJoints.addAll(tmu.getPhysicalJoints());
+            }
+            else
+            {
+                Set<String> cleanup = new HashSet<String>(tmu.getKinematicJoints());
+                cleanup.removeAll(kinematicJoints);
+                cleanup.addAll(tmu.getPhysicalJoints());
+                cleanup.removeAll(physicalJoints);
+                TimedMotionUnit tmuCleanup = this.currentRestPose.createTransitionToRest(cleanup, t, tmu.getBMLId(), 
+                        tmu.getId()+"-cleanup", tmu.getBMLBlockPeg());                
+                tmuRemove.add(tmu);
+                tmuAdd.add(tmuCleanup);                
+            }            
+        }
+        if(!tmuAdd.isEmpty())
+        {
+            tmuAdd.addAll(playback(t, tmuRemove, tmuAdd, physicalJoints, kinematicJoints));
+        }
+        return tmuAdd;
     }
 
     @Override
@@ -96,6 +126,7 @@ public class AnimationPlanPlayer implements PlanPlayer
     @Override
     public void reset(double time)
     {
+        currentRestPose = defaultRestPose;
         defPlayer.reset(time);
     }
 
@@ -103,7 +134,6 @@ public class AnimationPlanPlayer implements PlanPlayer
     public void setBMLBlockState(String bmlId, TimedPlanUnitState state)
     {
         defPlayer.setBMLBlockState(bmlId, state);
-
     }
 
     @Override
@@ -111,5 +141,9 @@ public class AnimationPlanPlayer implements PlanPlayer
     {
         defPlayer.shutdown();
     }
-
+    
+    public void addExceptionListener(BMLExceptionListener ws)
+    {
+        defPlayer.addExceptionListener(ws);
+    }
 }

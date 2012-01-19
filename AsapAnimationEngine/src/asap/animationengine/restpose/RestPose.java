@@ -4,6 +4,7 @@ import hmi.elckerlyc.BMLBlockPeg;
 
 import java.util.Set;
 
+import asap.animationengine.AnimationPlayer;
 import asap.animationengine.motionunit.TimedMotionUnit;
 
 /**
@@ -15,10 +16,11 @@ import asap.animationengine.motionunit.TimedMotionUnit;
  */
 public interface RestPose
 {
+    void setAnimationPlayer(AnimationPlayer player);
     /**
-     * Play the rest pose at time time, on jointset joints     
+     * Play the rest pose at time time, given the kinematicJoints and physicalJoint that are in use     
      */
-    void play(double time, Set<String>joints);
+    void play(double time, Set<String>kinematicJoints, Set<String>physicalJoints);
     
     /**
      * Create a transition TMU that moves the joints from their current position 

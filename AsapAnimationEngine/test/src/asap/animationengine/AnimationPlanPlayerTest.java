@@ -3,6 +3,7 @@ package asap.animationengine;
 import static org.junit.Assert.*;
 
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
 
 import hmi.elckerlyc.planunit.KeyPosition;
@@ -12,8 +13,8 @@ import hmi.elckerlyc.BMLBlockPeg;
 import hmi.elckerlyc.TimePeg;
 import hmi.elckerlyc.feedback.FeedbackManager;
 import hmi.elckerlyc.feedback.FeedbackManagerImpl;
+import hmi.elckerlyc.planunit.DefaultTimedPlanUnitPlayer;
 import hmi.elckerlyc.planunit.PlanManager;
-import hmi.elckerlyc.planunit.SingleThreadedPlanPlayer;
 import hmi.elckerlyc.planunit.TimedPlanUnitState;
 import hmi.elckerlyc.scheduler.BMLBlockManager;
 import hmi.bml.feedback.ListBMLExceptionListener;
@@ -24,15 +25,22 @@ import org.junit.runner.RunWith;
 import org.powermock.core.classloader.annotations.PrepareForTest;
 import org.powermock.modules.junit4.PowerMockRunner;
 
+import com.google.common.collect.ImmutableSet;
+
 import asap.animationengine.motionunit.MUPlayException;
 import asap.animationengine.motionunit.MotionUnit;
 import asap.animationengine.motionunit.TimedMotionUnit;
+import asap.animationengine.restpose.RestPose;
 import asap.animationengine.transitions.TransitionMU;
 import asap.animationengine.transitions.TransitionTMU;
 
 import static org.mockito.Mockito.*;
 import static org.mockito.AdditionalMatchers.*;
 import static hmi.elckerlyc.util.KeyPositionMocker.*;
+
+import static org.hamcrest.MatcherAssert.assertThat;
+import static org.hamcrest.collection.IsIterableContainingInAnyOrder.*;
+
 
 /**
  * Unit test cases for a PlanPlayer using TimedMotionUnits
@@ -51,18 +59,20 @@ public class AnimationPlanPlayerTest
     private List<BMLSyncPointProgressFeedback> fbList = new ArrayList<BMLSyncPointProgressFeedback>();
     private List<BMLExceptionFeedback> exList = new ArrayList<BMLExceptionFeedback>();
     private BMLBlockManager mockBmlBlockManager = mock(BMLBlockManager.class);
+    private RestPose mockRestPose = mock(RestPose.class);
     private FeedbackManager fbManager = new FeedbackManagerImpl(mockBmlBlockManager, "character1");
 
     PlanManager<TimedMotionUnit> planManager = new PlanManager<TimedMotionUnit>();
 
     private ListFeedbackListener fbl;
-    private SingleThreadedPlanPlayer<TimedMotionUnit> app;
+    private AnimationPlanPlayer app;   
+    
 
     @Before
     public void setup()
     {
         fbl = new ListFeedbackListener(fbList);
-        app = new SingleThreadedPlanPlayer<TimedMotionUnit>(fbManager, planManager);
+        app = new AnimationPlanPlayer(mockRestPose,fbManager, planManager, new DefaultTimedPlanUnitPlayer());
         app.addExceptionListener(new ListBMLExceptionListener(exList));
         fbManager.addFeedbackListener(fbl);
     }
@@ -171,9 +181,11 @@ public class AnimationPlanPlayerTest
         tmu2.setTimePeg("start", tpStart2);
         tmu1.setState(TimedPlanUnitState.LURKING);
         tmu2.setState(TimedPlanUnitState.LURKING);
-
+        tmu1.setPriority(2);
+        tmu2.setPriority(1);
+        
         app.play(0);
-        assertTrue(exList.size() == 0);
+        assertEquals(0,exList.size());
         assertTrue(tmu1.getState() == TimedPlanUnitState.IN_EXEC);
         assertTrue(tmu2.getState() == TimedPlanUnitState.LURKING);
         assertTrue(fbList.size() == 1);
@@ -297,145 +309,45 @@ public class AnimationPlanPlayerTest
         verify(muMock1, atLeastOnce()).getKeyPosition("end");
         verify(muMock1, times(1)).play(eq(0.5, 0.01));
     }
-
+    
     @Test
-    public void testPlay2FullyOverlappingTmus() throws MUPlayException
+    public void testPriority() throws MUPlayException
     {
-        // Plays two motion units on the same replacement group that overlap
-        // each-other completely.
-        // Check for warning and that state changes and play only occur in the
-        // non-dropped unit
         TimedMotionUnit tmu1 = createMotionUnit("behaviour1", "bml1", muMock1);
-        planManager.addPlanUnit(tmu1);
-
-        TimedMotionUnit tmu2 = createMotionUnit("behaviour2", "bml1", muMock2);
-        planManager.addPlanUnit(tmu2);
-
+        when(muMock1.getKinematicJoints()).thenReturn(ImmutableSet.of("r_shoulder","r_wrist"));
+        when(muMock1.getPhysicalJoints()).thenReturn(new HashSet<String>());
+        TimePeg tpStart = new TimePeg(BMLBlockPeg.GLOBALPEG);
+        tpStart.setGlobalValue(0);
+        TimePeg tpEnd = new TimePeg(BMLBlockPeg.GLOBALPEG);
+        tpEnd.setGlobalValue(1);
         stubKeyPositions(muMock1, new KeyPosition("start", 0, 1), new KeyPosition("end", 1, 1));
-        stubKeyPositions(muMock2, new KeyPosition("start", 0, 1), new KeyPosition("end", 1, 1));
-        when(muMock1.getReplacementGroup()).thenReturn("rep1");
-        when(muMock2.getReplacementGroup()).thenReturn("rep1");
-
-        TimePeg tpStart1 = new TimePeg(BMLBlockPeg.GLOBALPEG);
-        tpStart1.setGlobalValue(0);
-        TimePeg tpStart2 = new TimePeg(BMLBlockPeg.GLOBALPEG);
-        tpStart2.setGlobalValue(0);
-        tmu1.setTimePeg("start", tpStart1);
-        tmu2.setTimePeg("start", tpStart2);
+        tmu1.setTimePeg("start", tpStart);
+        tmu1.setTimePeg("end", tpEnd);
         tmu1.setState(TimedPlanUnitState.LURKING);
-        tmu2.setState(TimedPlanUnitState.LURKING);
-
-        app.play(0);
-        assertTrue(exList.size() == 1);
-        TimedMotionUnit tmuSucceed = tmu1;
-        TimedMotionUnit tmuFailed = tmu2;
-        if (exList.get(0).failedBehaviours.contains(tmu1.getId()))
-        {
-            tmuFailed = tmu1;
-            tmuSucceed = tmu2;
-        }
-        assertTrue(tmuSucceed.getState() == TimedPlanUnitState.IN_EXEC);
-        assertTrue(tmuFailed.getState() == TimedPlanUnitState.DONE);
-
-        assertTrue(fbList.get(0).behaviorId.equals(tmuSucceed.getId()));
-        assertTrue(fbList.get(0).bmlId.equals(tmuSucceed.getBMLId()));
-        assertTrue(fbList.get(0).syncId.equals("start"));
-        assertTrue(fbList.get(0).timeStamp == 0);
-
-        // verify that the succeeding motion unit was run once and the dropped
-        // one was not
-        final int muMock1PlayTimes;
-        final int muMock2PlayTimes;
-        if (tmuSucceed.getMotionUnit() == muMock1)
-        {
-            muMock1PlayTimes = 1;
-            muMock2PlayTimes = 0;
-        }
-        else
-        {
-            muMock2PlayTimes = 1;
-            muMock1PlayTimes = 0;
-        }
-        verify(muMock1, times(muMock1PlayTimes)).play(0);
-        verify(muMock2, times(muMock2PlayTimes)).play(0);
-        verify(muMock1, atLeastOnce()).getKeyPosition("start");
-        verify(muMock2, atLeastOnce()).getKeyPosition("start");
-    }
-
-    @Test
-    public void testPlay2OverlappingTmus() throws MUPlayException
-    {
-        // Plays two motion units on the same replacement group that overlap
-        // each-other partly.
-        // tmu1 is persistent and runs from t=0
-        // tmu2 runs from 0 to 2
-        // Check for warnings, state changes, play calls
-        TimedMotionUnit tmu1 = createMotionUnit("behaviour1", "bml1", muMock1);
+        tmu1.setPriority(50);
         planManager.addPlanUnit(tmu1);
-
+        
         TimedMotionUnit tmu2 = createMotionUnit("behaviour2", "bml1", muMock2);
-        planManager.addPlanUnit(tmu2);
-
-        stubKeyPositions(muMock1, new KeyPosition("start", 0, 1), new KeyPosition("end", 1, 1));
-        stubKeyPositions(muMock2, new KeyPosition("start", 0, 1), new KeyPosition("end", 1, 1));
-        when(muMock1.getReplacementGroup()).thenReturn("rep1");
-        when(muMock2.getReplacementGroup()).thenReturn("rep1");
-
-        TimePeg tpStart1 = new TimePeg(BMLBlockPeg.GLOBALPEG);
-        tpStart1.setGlobalValue(0);
+        when(muMock2.getKinematicJoints()).thenReturn(ImmutableSet.of("r_shoulder"));
+        when(muMock2.getPhysicalJoints()).thenReturn(new HashSet<String>());
         TimePeg tpStart2 = new TimePeg(BMLBlockPeg.GLOBALPEG);
         tpStart2.setGlobalValue(0);
         TimePeg tpEnd2 = new TimePeg(BMLBlockPeg.GLOBALPEG);
-        tpEnd2.setGlobalValue(1);
-        tmu1.setTimePeg("start", tpStart1);
+        tpEnd2.setGlobalValue(2);
+        stubKeyPositions(muMock2, new KeyPosition("start", 0, 1), new KeyPosition("end", 1, 1));
         tmu2.setTimePeg("start", tpStart2);
         tmu2.setTimePeg("end", tpEnd2);
-        tmu1.setState(TimedPlanUnitState.LURKING);
+        tmu2.setPriority(100);
         tmu2.setState(TimedPlanUnitState.LURKING);
-
+        planManager.addPlanUnit(tmu2);
+        
+        TimedMotionUnit mockTmu = mock(TimedMotionUnit.class);
+        when(mockTmu.getKinematicJoints()).thenReturn(ImmutableSet.of("r_wrist"));
+        when(mockTmu.getPhysicalJoints()).thenReturn(new HashSet<String>());
+        when(mockTmu.getState()).thenReturn(TimedPlanUnitState.LURKING);
+        when(mockRestPose.createTransitionToRest(eq(ImmutableSet.of("r_wrist")), anyDouble(), 
+                eq("bml1"), eq("behaviour1-cleanup"), eq(BMLBlockPeg.GLOBALPEG))).thenReturn(mockTmu);
         app.play(0);
-        assertTrue(exList.size() == 0);
-        assertEquals(TimedPlanUnitState.LURKING, tmu1.getState());
-        assertEquals(TimedPlanUnitState.IN_EXEC, tmu2.getState());
-        assertTrue(fbList.size() == 1);
-        assertTrue(fbList.get(0).behaviorId.equals("behaviour2"));
-        assertTrue(fbList.get(0).bmlId.equals("bml1"));
-        assertTrue(fbList.get(0).syncId.equals("start"));
-        assertTrue(fbList.get(0).timeStamp == 0);
-
-        app.play(2);
-        assertTrue(exList.size() == 0);
-        assertEquals(TimedPlanUnitState.IN_EXEC, tmu1.getState());
-        assertEquals(TimedPlanUnitState.DONE, tmu2.getState());
-        assertEquals(3, fbList.size());
-        int i1 = 1;
-        int i2 = 2;
-        if (fbList.get(1).behaviorId.equals("behaviour1"))
-        {
-            i1 = 1;
-            i2 = 2;
-        }
-        else if (fbList.get(1).behaviorId.equals("behaviour2"))
-        {
-            i1 = 2;
-            i2 = 1;
-        }
-        else
-        {
-            assertTrue(false);
-        }
-        assertTrue(fbList.get(i1).behaviorId.equals("behaviour1"));
-        assertTrue(fbList.get(i1).bmlId.equals("bml1"));
-        assertTrue(fbList.get(i1).syncId.equals("start"));
-        assertTrue(fbList.get(i1).timeStamp == 2);
-        assertTrue(fbList.get(i2).behaviorId.equals("behaviour2"));
-        assertTrue(fbList.get(i2).bmlId.equals("bml1"));
-        assertTrue(fbList.get(i2).syncId.equals("end"));
-        assertTrue(fbList.get(i2).timeStamp == 2);
-
-        verify(muMock1, atLeastOnce()).getKeyPosition("start");
-        verify(muMock2, atLeastOnce()).getKeyPosition("start");
-        verify(muMock1, times(1)).play(0);
-        verify(muMock2, times(1)).play(0);
+        assertThat(planManager.getPlanUnits(),containsInAnyOrder(tmu2,mockTmu));
     }
 }
