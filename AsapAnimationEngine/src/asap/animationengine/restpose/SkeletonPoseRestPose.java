@@ -8,6 +8,7 @@ import hmi.elckerlyc.TimePeg;
 import hmi.elckerlyc.feedback.FeedbackManager;
 import hmi.elckerlyc.planunit.KeyPosition;
 import hmi.elckerlyc.planunit.TimedPlanUnitState;
+import hmi.math.Quat4f;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -25,21 +26,48 @@ import asap.animationengine.transitions.TransitionTMU;
  */
 public class SkeletonPoseRestPose implements RestPose
 {
-    private final AnimationPlayer player;
-    private final VJoint poseTree;
+    private AnimationPlayer player;
+    private VJoint poseTree;
     private final FeedbackManager feedbackManager;
+    private SkeletonPose pose;
+    
+    public SkeletonPoseRestPose(FeedbackManager bbf)
+    {
+        feedbackManager = bbf;
+    }
+    
+    public SkeletonPoseRestPose(SkeletonPose pose,FeedbackManager bbf)
+    {
+        this.pose = pose;
+        feedbackManager = bbf;
+    }
     
     public SkeletonPoseRestPose(SkeletonPose pose, AnimationPlayer player,FeedbackManager bbf)
     {
-        this.player = player;
-        feedbackManager = bbf;
+        this(pose,bbf);
+        setAnimationPlayer(player);        
+    }
+    
+    public void setAnimationPlayer(AnimationPlayer player)
+    {
+        this.player = player;        
         poseTree = player.getVCurr().copyTree("rest-");
-        pose.setTargets(poseTree.getParts().toArray(new VJoint[0]));
-        pose.setToTarget();
+        if(pose!=null)
+        {
+            pose.setTargets(poseTree.getParts().toArray(new VJoint[0]));
+            pose.setToTarget();
+        }
+        else
+        {
+            for(VJoint vj: poseTree.getParts())
+            {
+                vj.setRotation(Quat4f.getIdentity());
+            }
+        }
     }
     
     @Override
-    public void play(double time, Set<String> joints)
+    public void play(double time, Set<String> kinematicJoints, Set<String> physicalJoints)
     {
                 
     }
