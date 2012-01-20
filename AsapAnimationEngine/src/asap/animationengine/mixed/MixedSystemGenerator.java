@@ -9,6 +9,7 @@ import hmi.math.Vec3f;
 import hmi.physics.PhysicalHumanoid;
 import hmi.physics.PhysicalSegment;
 import hmi.physics.inversedynamics.IDSegment;
+import hmi.physics.mixed.MixedSystem;
 
 public class MixedSystemGenerator
 {

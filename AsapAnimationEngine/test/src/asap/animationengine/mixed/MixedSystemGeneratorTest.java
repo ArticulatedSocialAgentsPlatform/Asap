@@ -10,6 +10,7 @@ import hmi.animation.Hanim;
 import hmi.animation.VJoint;
 import hmi.physics.PhysicalHumanoid;
 import hmi.physics.assembler.PhysicalHumanoidAssembler;
+import hmi.physics.mixed.MixedSystem;
 import hmi.physics.ode.OdeHumanoid;
 import hmi.testutil.animation.HanimBody;
 import hmi.util.Resources;
@@ -21,7 +22,6 @@ import org.odejava.HashSpace;
 import org.odejava.Odejava;
 import org.odejava.World;
 
-import asap.animationengine.mixed.MixedSystem;
 import asap.animationengine.mixed.MixedSystemGenerator;
 
 /**

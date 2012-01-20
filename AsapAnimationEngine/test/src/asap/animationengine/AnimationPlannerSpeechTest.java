@@ -8,6 +8,7 @@ import hmi.elckerlyc.feedback.FeedbackManager;
 import hmi.elckerlyc.planunit.PlanManager;
 import hmi.elckerlyc.planunit.SingleThreadedPlanPlayer;
 import hmi.physics.PhysicalHumanoid;
+import hmi.physics.mixed.MixedSystem;
 import hmi.testutil.animation.HanimBody;
 
 import java.util.ArrayList;
@@ -19,7 +20,6 @@ import org.junit.Test;
 import asap.animationengine.AnimationPlanner;
 import asap.animationengine.AnimationPlayer;
 import asap.animationengine.gesturebinding.GestureBinding;
-import asap.animationengine.mixed.MixedSystem;
 import asap.animationengine.motionunit.MotionUnit;
 import asap.animationengine.motionunit.TimedMotionUnit;
 

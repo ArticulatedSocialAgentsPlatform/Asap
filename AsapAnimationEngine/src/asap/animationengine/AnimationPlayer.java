@@ -19,6 +19,7 @@
 package asap.animationengine;
 
 import java.util.ArrayList;
+import java.util.List;
 
 import net.jcip.annotations.GuardedBy;
 
@@ -26,7 +27,6 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import asap.animationengine.mixed.MixedPlayer;
-import asap.animationengine.mixed.MixedSystem;
 
 
 import hmi.animation.Hanim;
@@ -42,6 +42,8 @@ import hmi.physics.PhysicalJoint;
 import hmi.physics.PhysicalSegment;
 import hmi.physics.PhysicsSync;
 import hmi.physics.controller.PhysicalController;
+import hmi.physics.mixed.MixedAnimationPlayer;
+import hmi.physics.mixed.MixedSystem;
 
 /**
  * Manages the execution of a plan containing TimedMotionUnits. The AnimationPlayer is different from the DefaultPlayer in that the TimedMotionUnits
@@ -50,7 +52,7 @@ import hmi.physics.controller.PhysicalController;
  * 
  * @author Herwin
  */
-public class AnimationPlayer implements Player
+public class AnimationPlayer implements Player, MixedAnimationPlayer
 {
     private VJoint vPrev;
     private VJoint vCurr;
@@ -62,11 +64,11 @@ public class AnimationPlayer implements Player
     private boolean prevValid;
     
     @GuardedBy("this")
-    private ArrayList<PhysicalController> controllers = new ArrayList<PhysicalController>();
+    private List<PhysicalController> controllers = new ArrayList<PhysicalController>();
     
     private final PlanPlayer app;    
 
-    private ArrayList<MixedSystem> mSystems;
+    private List<MixedSystem> mSystems;
     private MixedPlayer mPlayer;
     private float stepTime;
 
@@ -77,12 +79,12 @@ public class AnimationPlayer implements Player
     protected WorldObjectManager woManager;
     private Logger logger = LoggerFactory.getLogger(AnimationPlayer.class.getName());
 
-    public AnimationPlayer(VJoint vP, VJoint vC, VJoint vN, ArrayList<MixedSystem> m, float h, PlanPlayer planPlayer)
+    public AnimationPlayer(VJoint vP, VJoint vC, VJoint vN, List<MixedSystem> m, float h, PlanPlayer planPlayer)
     {
         this(vP, vC, vN, m, h, null, planPlayer);
     }
 
-    public AnimationPlayer(VJoint vP, VJoint vC, VJoint vN, ArrayList<MixedSystem> m, float h, WorldObjectManager wom,
+    public AnimationPlayer(VJoint vP, VJoint vC, VJoint vN, List<MixedSystem> m, float h, WorldObjectManager wom,
             PlanPlayer planPlayer)
     {
         vPrev = vP;
@@ -405,7 +407,7 @@ public class AnimationPlayer implements Player
     /**
      * @return the mSystems
      */
-    public ArrayList<MixedSystem> getMixedSystems()
+    public List<MixedSystem> getMixedSystems()
     {
         return mSystems;
     }

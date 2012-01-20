@@ -25,6 +25,8 @@ import hmi.animation.*;
 import hmi.math.*;
 import hmi.physics.*;
 import hmi.physics.inversedynamics.*;
+import hmi.physics.mixed.Branch;
+import hmi.physics.mixed.MixedSystem;
 
 public class MixedPlayer
 {

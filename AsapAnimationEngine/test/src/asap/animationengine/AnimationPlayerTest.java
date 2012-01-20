@@ -11,6 +11,7 @@ import hmi.elckerlyc.planunit.TimedPlanUnitState;
 import hmi.elckerlyc.scheduler.BMLBlockManager;
 import hmi.bml.feedback.ListBMLExceptionListener;
 import hmi.physics.PhysicalHumanoid;
+import hmi.physics.mixed.MixedSystem;
 import hmi.testutil.animation.HanimBody;
 
 import java.util.ArrayList;
@@ -23,7 +24,6 @@ import org.powermock.core.classloader.annotations.PrepareForTest;
 import org.powermock.modules.junit4.PowerMockRunner;
 
 import asap.animationengine.AnimationPlayer;
-import asap.animationengine.mixed.MixedSystem;
 import asap.animationengine.motionunit.TimedMotionUnit;
 import static org.powermock.api.mockito.PowerMockito.*;
 import static org.mockito.Mockito.times;

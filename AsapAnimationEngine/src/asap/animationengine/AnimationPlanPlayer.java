@@ -94,6 +94,11 @@ public class AnimationPlanPlayer implements PlanPlayer
             }
             else
             {
+                if(tmu.isLurking())
+                {
+                    fbManager.puException(tmu,"Dropping "+ tmu.getBMLId() + ":" + tmu.getId() + 
+                            "for higher priority behaviors before it was even started", t);
+                }
                 Set<String> cleanup = new HashSet<String>(tmu.getKinematicJoints());
                 cleanup.removeAll(kinematicJoints);
                 cleanup.addAll(tmu.getPhysicalJoints());

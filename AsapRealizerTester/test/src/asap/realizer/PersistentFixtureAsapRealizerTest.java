@@ -19,6 +19,7 @@ import org.junit.After;
 import org.junit.Before;
 import org.junit.BeforeClass;
 import org.junit.AfterClass;
+import org.junit.Ignore;
 import org.junit.Test;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -121,17 +122,7 @@ public class PersistentFixtureAsapRealizerTest extends AbstractASAPRealizerTest
             }
         };
         staticEnvironment.init();
-
         staticEnvironment.startAll();
-
-        // Resources("Humanoids/blueguy"),"spec_blueguy_hmi_mary.xml","TestAvatar");
-        // vHuman = staticEnvironment.loadVirtualHuman(new Resources("Humanoids/armandia"), "spec_enterface.xml", "TestAvatar");
-        // vHuman = staticEnvironment.loadVirtualHuman(new Resources("Humanoids/blueguy"),"spec_blueguy_hmi_mary.xml","TestAvatar");
-        // vHuman = staticEnvironment.loadVirtualHuman(new Resources("Humanoids/blueguy"), "spec_blueguy_hmi_sapi_WAVTTS.xml", "TestAvatar");
-        // vHuman = staticEnvironment.loadVirtualHuman("Humanoids/blueguy", "blueguyvhloader_mary.xml", "TestAvatar");
-        // vHuman = staticEnvironment.loadVirtualHuman("Humanoids/blueguy", "blueguyvhloader_sapi_testing.xml", "TestAvatar");
-
-        // vHuman = staticEnvironment.loadVirtualHuman("Humanoids/armandia", "armandiavhloader_sapi_testing.xml", "TestAvatar");
         vHuman = staticEnvironment.loadVirtualHuman("Humanoids/armandia", "vhloadermaryttsasaprealizertester.xml", "TestAvatar");
 
         logger.debug("Finished setup");
@@ -151,14 +142,21 @@ public class PersistentFixtureAsapRealizerTest extends AbstractASAPRealizerTest
         clearFeedbackLists();
     }
 
+    @Override
+    @Ignore
+    public void testTransition()    //transition behaviors are now deprecated
+    {
+        
+    }
+    
     @Test
     public void testTemporaryInvalidTimingInAppend() throws InterruptedException, IOException
     {
         String bmlString1 = "<bml id=\"bml1\" xmlns:bmlt=\"http://hmi.ewi.utwente.nl/bmlt\" bmlt:preplan=\"true\"><speech id=\"sp1\"><text>Hello</text></speech></bml>";
-        String bmlString2 = "<bml id=\"bml2\" scheduling=\"append\"><wait id=\"w1\" start=\"0\" end=\"anticipators:dummyanticipator:dummy1\"/></bml>";
-        String bmlString3 = "<bml id=\"bml3\" scheduling=\"append\"><speech id=\"sp1\"><text>Hello hello hello hello hello hello </text></speech></bml>";
-        String bmlString4 = "<bml id=\"bml4\" scheduling=\"append\"><wait id=\"w1\" start=\"0\" end=\"anticipators:dummyanticipator:dummy2\"/></bml>";
-        String bmlString5 = "<bml id=\"bml5\" scheduling=\"append\"><speech id=\"sp1\"><text>Hello hello hello hello hello hello </text></speech></bml>";
+        String bmlString2 = "<bml id=\"bml2\" composition=\"append\"><wait id=\"w1\" start=\"0\" end=\"anticipators:dummyanticipator:dummy1\"/></bml>";
+        String bmlString3 = "<bml id=\"bml3\" composition=\"append\"><speech id=\"sp1\"><text>Hello hello hello hello hello hello </text></speech></bml>";
+        String bmlString4 = "<bml id=\"bml4\" composition=\"append\"><wait id=\"w1\" start=\"0\" end=\"anticipators:dummyanticipator:dummy2\"/></bml>";
+        String bmlString5 = "<bml id=\"bml5\" composition=\"append\"><speech id=\"sp1\"><text>Hello hello hello hello hello hello </text></speech></bml>";
         String bmlString6 = "<bml id=\"bml6\" xmlns:bmlt=\"http://hmi.ewi.utwente.nl/bmlt\" bmlt:onStart=\"bml1\"></bml>";
         realizerPort.performBML(bmlString1);
         realizerPort.performBML(bmlString2);
@@ -185,7 +183,7 @@ public class PersistentFixtureAsapRealizerTest extends AbstractASAPRealizerTest
     @After
     public void teardownEnvironment() throws InterruptedException
     {
-        realizerPort.performBML("<bml id=\"cleanup\" scheduling=\"replace\"/>");
+        realizerPort.performBML("<bml id=\"cleanup\" composition=\"replace\"/>");
         waitForBMLEndFeedback("cleanup");
     }
 

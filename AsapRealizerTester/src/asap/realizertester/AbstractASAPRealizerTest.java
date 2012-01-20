@@ -9,7 +9,6 @@ import org.junit.Test;
 public abstract class AbstractASAPRealizerTest extends AbstractElckerlycRealizerTest
 {
     @Test
-    //@Ignore
     public void testChunk() throws InterruptedException, IOException
     {
         String bmlString1 = readTestFile("asap/chunking/firstchunk.xml");
