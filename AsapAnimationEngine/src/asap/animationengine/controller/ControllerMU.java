@@ -32,7 +32,6 @@ import hmi.physics.controller.PhysicalController;
 
 import java.util.List;
 import java.util.Set;
-
 import com.google.common.collect.ImmutableSet;
 import asap.animationengine.AnimationPlayer;
 import asap.animationengine.motionunit.*;
