@@ -1,19 +1,24 @@
 package asap.animationengine.mixed;
 
+import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
 
 import hmi.animation.Hanim;
 import hmi.animation.VJoint;
-import hmi.math.Vec3f;
 import hmi.physics.PhysicalHumanoid;
 import hmi.physics.PhysicalSegment;
+import hmi.physics.assembler.IDBranchAssembler;
+import hmi.physics.assembler.IDSegmentAssembler;
+import hmi.physics.assembler.MixedSystemAssembler;
+import hmi.physics.assembler.PhysicalHumanoidAssembler;
+import hmi.physics.assembler.PhysicalSegmentAssembler;
+import hmi.physics.inversedynamics.IDBranch;
 import hmi.physics.inversedynamics.IDSegment;
 import hmi.physics.mixed.MixedSystem;
 
 public class MixedSystemGenerator
 {
-    //private static final Logger logger = LoggerFactory.getLogger(MixedSystemGenerator.class.getName());
     private final PhysicalHumanoid fullBodyPh;
     private final float gravity[];    
     
@@ -23,7 +28,7 @@ public class MixedSystemGenerator
         gravity = g;        
     }
     
-    private void addPhysicalSegments(String jointName, PhysicalHumanoid pHuman, VJoint human)
+    private void addPhysicalSegments(String jointName, PhysicalHumanoid pHuman, VJoint human,PhysicalHumanoidAssembler pha)
     {
         List<VJoint> path = human.getPath(human.getPart(jointName));
         for(VJoint vj:path)
@@ -34,75 +39,134 @@ public class MixedSystemGenerator
                 if(ps!=null)
                 {
                     PhysicalSegment newSeg = fullBodyPh.createSegment(pHuman.getId()+"-"+ps.getSid(),ps.getSid());
+                    PhysicalSegmentAssembler psa = new PhysicalSegmentAssembler(human, pHuman, ps);
                     newSeg.set(ps);
-                    pHuman.addSegment(newSeg);
+                    psa.startJoint = human.getPartById(ps.getSid());
+                    psa.endJoints = findEndJoints(human.getPartBySid(ps.getSid()));
+                    pha.addPhysicalSegmentAssembler(psa);                    
                 }
             }
         }  
     }
     
-    private PhysicalSegment getParent(PhysicalSegment ph, VJoint human)
+    private PhysicalSegment getParent(PhysicalSegment ps, VJoint human)
     {
-        VJoint vj = human.getPart(ph.getSid());
+        return getParent(ps, fullBodyPh, human);        
+    }
+    
+    private PhysicalSegment getParent(PhysicalSegment ps, PhysicalHumanoid ph, VJoint human)
+    {
+        VJoint vj = human.getPart(ps.getSid());
         VJoint parent = vj.getParent();
-        while(fullBodyPh.getSegment(parent.getSid())==null)
+        while(ph.getSegment(parent.getSid())==null)
         {
             parent = parent.getParent();            
         }
-        return fullBodyPh.getSegment(parent.getSid());
+        return ph.getSegment(parent.getSid());
+    }
+    
+    private List<String> findPathToPhuman(PhysicalSegment ps, PhysicalHumanoid ph,VJoint human)
+    {
+        List<String> path = new ArrayList<String>();
+        PhysicalSegment pIter = ps;                
+        while(ph.getSegment(pIter.getSid())==null)
+        {
+            path.add(0,pIter.getSid());
+            pIter = getParent(pIter,human);
+        }
+        return path;
+    }
+    
+    private List<VJoint> findEndJoints(VJoint vj)
+    {
+        List<VJoint> endJoints = new ArrayList<VJoint>();
+        for(VJoint vjChild:vj.getChildren())
+        {
+            if(fullBodyPh.getSegment(vjChild.getSid())!=null)
+            {
+                endJoints.add(vjChild);
+            }
+            else
+            {
+                endJoints.addAll(findEndJoints(vjChild));
+            }
+        }
+        return endJoints;
     }
     
     public MixedSystem generateMixedSystem(String phId, Collection<String> requiredJoints, Collection<String>desiredJoints,VJoint human)
     {
         PhysicalHumanoid pHuman = fullBodyPh.createNew(phId);
+        MixedSystem ms = new MixedSystem(gravity,pHuman);
+        MixedSystemAssembler msa = new MixedSystemAssembler(human,pHuman,ms);        
+        PhysicalHumanoidAssembler pha = msa.pha;
+        
         PhysicalSegment rootSegment = fullBodyPh.createSegment(phId+"-HumanoidRoot", Hanim.HumanoidRoot);
+        PhysicalSegmentAssembler psaRoot = new PhysicalSegmentAssembler(human, pHuman, rootSegment);
+        psaRoot.setRoot(true);        
         rootSegment.set(fullBodyPh.getRootSegment());
-        pHuman.addRootSegment(rootSegment);
+        psaRoot.startJoint = human.getPartBySid(Hanim.HumanoidRoot);
+        psaRoot.endJoints = findEndJoints(human.getPartBySid(Hanim.HumanoidRoot));
+        pha.setRootSegmentAssembler(psaRoot);
         
         for(String jointName:requiredJoints)
         {
-            addPhysicalSegments(jointName, pHuman, human);
+            addPhysicalSegments(jointName, pHuman, human,pha);
         }        
         for(String jointName:desiredJoints)
         {
-            addPhysicalSegments(jointName, pHuman, human);
+            addPhysicalSegments(jointName, pHuman, human,pha);
         }
+        pha.setupJoints(Hanim.HumanoidRoot);
         
-        //hook up physical joints
-        for(PhysicalSegment ps:pHuman.getSegments())
-        {
-            if(ps.equals(rootSegment))continue;
-            PhysicalSegment parent = getParent(ps,human);
-            //PhysicalSegment ps1 = fullBodyPh.getSegment(ps.getSid());
-            float center[] = Vec3f.getVec3f();
-            ps.getTranslation(center);
-            Vec3f.add(center, ps.startJointOffset);
-            pHuman.setupJoint(ps.getSid(),parent,ps,center);
-        }        
-        MixedSystem ms = new MixedSystem(gravity,pHuman);
         
+        List<List<String>> branches = new ArrayList<List<String>>();        
         //find Branches
-        
-        
-        //create IDBranches containing IDSegments for all remaining physical segments
         for(PhysicalSegment ps:fullBodyPh.getSegments())
         {
-            if(pHuman.getSegment(ps.getSid())!=null)continue;
-            IDSegment idSeg = new IDSegment();
-            idSeg.mass = ps.box.getMass();
+            if(pHuman.getSegment(ps.getSid())!=null)continue;   //segment is in pHuman
+            List<String> path = findPathToPhuman(ps, pHuman, human);
             
-            float jointPos[] = Vec3f.getVec3f();
-            human.getPart(ps.getSid()).getPathTranslation(human.getParent(), jointPos);
-            ps.getTranslation(idSeg.com);
-            Vec3f.sub(idSeg.com, jointPos);
-            
-            ps.box.getInertiaTensor(idSeg.I);
-            
-            idSeg.name = ps.getSid();            
-            
-            //TODO: create IDBranches, set idseg translations
-            //IDBranch idBranch = new IDBranch();
+            boolean insert = true;
+            for(List<String> branch:branches)
+            {
+                if(branch.containsAll(path))
+                {
+                    insert = false;
+                    break;
+                }
+                else if(path.containsAll(branch))
+                {
+                    branch.clear();
+                    branch.addAll(path);
+                    insert = false;
+                    break;
+                }
+            }
+            if(insert)branches.add(path);
         }
+        
+        for(List<String> branch:branches)
+        {
+            IDBranch b = new IDBranch();
+            IDBranchAssembler ba = new IDBranchAssembler(human,b);
+            
+            IDSegment psRoot = new IDSegment();
+            IDSegmentAssembler psaIDRoot = new IDSegmentAssembler(human,psRoot);
+            psaIDRoot.setRoot(true);
+            psaIDRoot.createFromPhysicalSegment(fullBodyPh.getSegment(branch.get(0)));            
+            ba.setRootSegmentAssembler(psaIDRoot);
+            branch.remove(0);
+            
+            for(String idseg:branch)
+            {
+                IDSegment ps = new IDSegment();
+                IDSegmentAssembler psa = new IDSegmentAssembler(human,ps);
+                psaIDRoot.createFromPhysicalSegment(fullBodyPh.getSegment(idseg));
+                ba.addPhysicalSegmentAssembler(psa);    
+            }
+        }
+        msa.setup();
         return ms;
     }
 }
