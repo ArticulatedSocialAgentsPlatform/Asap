@@ -26,6 +26,7 @@ import asap.animationengine.AnimationPlayer;
 import asap.animationengine.motionunit.MUPlayException;
 import asap.animationengine.motionunit.TimedMotionUnit;
 import asap.animationengine.transitions.SlerpTransitionToPoseMU;
+import asap.planunit.Priority;
 
 
 /**
@@ -45,6 +46,12 @@ public class ProcAnimationGestureMU implements GestureUnit
     private Resources resource;
     private double preStrokeHoldDuration = 0;
     private double postStrokeHoldDuration = 0;
+    private int priority = Priority.GESTURE;
+    
+    public int getPriority()
+    {
+        return priority;
+    }
 
     private boolean inGesturePhase(String syncId)
     {
@@ -234,7 +241,7 @@ public class ProcAnimationGestureMU implements GestureUnit
         double relaxTime = keyPositionManager.getKeyPosition(BMLGestureSync.RELAX.getId()).time;
 
         double strokeEndTime = keyPositionManager.getKeyPosition(BMLGestureSync.STROKE_END.getId()).time;
-        // double strokeDuration = strokeEndTime-strokeStartTime;
+        
         double relaxDuration = 1 - relaxTime;
         logger.debug("time: {}", t);
 
@@ -246,11 +253,11 @@ public class ProcAnimationGestureMU implements GestureUnit
         else if (t > relaxTime)
         {
             relaxUnit.play((t - relaxTime) / relaxDuration);
+            priority = Priority.GESTURE_RETRACTION;
             logger.debug("relaxUnit.play: {}", (t - relaxTime) / relaxDuration);
         }
         else if (t > strokeStartTime && t < strokeEndTime)
         {
-            // gestureUnit.play( (t-strokeStartTime)/strokeDuration);
             gestureUnit.play(t);
             logger.debug("gestureUnit.play: {}", t);
         }
@@ -295,9 +302,7 @@ public class ProcAnimationGestureMU implements GestureUnit
 
     public void setupTransitionUnits()
     {
-        // System.out.println("Starting Starting Starting Starting Starting  ");
         int i = 0;
-
         float[] startPose = new float[gestureUnit.getControlledJoints().size() * 4];
         float[] strokeStartPose = new float[gestureUnit.getControlledJoints().size() * 4];
         float[] relaxStartPose = new float[gestureUnit.getControlledJoints().size() * 4];

@@ -60,7 +60,7 @@ public class BMLBBlock extends AbstractBMLBlock
         else if(state.get() == TimedPlanUnitState.IN_EXEC || state.get() == TimedPlanUnitState.SUBSIDING)
         {
             updateFromExecOrSubSiding();
-        }
+        }        
     }
     
     private void activateOnStartBlocks()
@@ -93,23 +93,28 @@ public class BMLBBlock extends AbstractBMLBlock
         {
             if (!allBlocks.get(cuId).isSubsidingOrDone())
             {
+                logger.debug("{} waiting for subsiding at {}",bmlId,scheduler.getSchedulingTime());
                 return;
             }
         }
-        scheduler.startBlock(bmlId);    
+        logger.debug("{} started at {}",bmlId,scheduler.getSchedulingTime());
+        scheduler.startBlock(bmlId);        
     }   
     
     private void updateFromExecOrSubSiding()
     {
-        if(isSubsiding())
+        if(getState()!=TimedPlanUnitState.SUBSIDING && isSubsiding())
         {
             state.set(TimedPlanUnitState.SUBSIDING);
+            scheduler.updateBMLBlocks();
+            return;
         }
-        if (isFinished())
+        if (getState()!=TimedPlanUnitState.DONE && isFinished())
         {
             logger.debug("bml block {} finished", bmlId);            
-            finish();                        
-        }
+            finish();
+            return;
+        }        
     }    
 
 }

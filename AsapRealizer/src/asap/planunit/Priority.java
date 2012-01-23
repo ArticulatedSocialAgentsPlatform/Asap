@@ -1,0 +1,12 @@
+package asap.planunit;
+
+/**
+ * Constants for timedplanunit priority.  
+ * @author hvanwelbergen
+ */
+public class Priority
+{
+    private Priority(){}
+    public static final int GESTURE = 100;
+    public static final int GESTURE_RETRACTION = 25;
+}

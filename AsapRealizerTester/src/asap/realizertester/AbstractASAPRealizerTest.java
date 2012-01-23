@@ -1,6 +1,7 @@
 package asap.realizertester;
 
 
+import hmi.bml.core.GestureBehaviour;
 import hmi.realizertester.AbstractElckerlycRealizerTest;
 
 import java.io.IOException;
@@ -20,6 +21,29 @@ public abstract class AbstractASAPRealizerTest extends AbstractElckerlycRealizer
         waitForBMLEndFeedback("bml1");
         waitForBMLEndFeedback("bml2");
         
+        assertBlockStartAndStopFeedbacks("bml1","bml2");
+        assertNoDuplicateFeedbacks();
+        assertAllBMLSyncsInBMLOrder("bml1", "g1", GestureBehaviour.getDefaultSyncPoints());
+        assertAllBMLSyncsInBMLOrder("bml2", "g1", GestureBehaviour.getDefaultSyncPoints());
         
+        assertLinkedSyncs("bml1", "g1", "relax", "bml2", "g1", "start");
+        //assertLinkedSyncs("bml1", "g1", "end", "bml2", "g1", "start");
+    }
+    
+    @Test
+    public void testChunkConflictResolution() throws InterruptedException, IOException
+    {
+        String bmlString1 = readTestFile("asap/chunkingconflictres/firstchunk.xml");
+        String bmlString2 = readTestFile("asap/chunkingconflictres/secondchunk.xml");
+        
+        realizerPort.performBML(bmlString1);
+        realizerPort.performBML(bmlString2);
+        
+        waitForBMLEndFeedback("bml1");
+        waitForBMLEndFeedback("bml2");
+        
+        assertBlockStartAndStopFeedbacks("bml1","bml2");
+        assertNoDuplicateFeedbacks();
+        assertLinkedSyncs("bml1", "g1", "relax", "bml2", "g1", "start");
     }
 }

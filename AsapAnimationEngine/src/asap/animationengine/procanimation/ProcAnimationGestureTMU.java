@@ -1,6 +1,8 @@
 package asap.animationengine.procanimation;
 
+import asap.animationengine.motionunit.TMUPlayException;
 import asap.animationengine.motionunit.TimedMotionUnit;
+import asap.planunit.Priority;
 import hmi.elckerlyc.BMLBlockPeg;
 import hmi.elckerlyc.TimedPlanUnitPlayException;
 import hmi.elckerlyc.feedback.FeedbackManager;
@@ -16,6 +18,7 @@ public class ProcAnimationGestureTMU extends TimedMotionUnit
     public ProcAnimationGestureTMU(FeedbackManager bbf, BMLBlockPeg bmlBlockPeg, String bmlId, String id, ProcAnimationGestureMU m)
     {
         super(bbf, bmlBlockPeg, bmlId, id, m);
+        setPriority(Priority.GESTURE);
         mu = m;        
     }
     
@@ -24,5 +27,12 @@ public class ProcAnimationGestureTMU extends TimedMotionUnit
     {
         mu.setupTransitionUnits();
         super.startUnit(time);
+    }
+    
+    @Override
+    public void playUnit(double time) throws TMUPlayException
+    {
+        super.playUnit(time);
+        setPriority(mu.getPriority());
     }
 }
