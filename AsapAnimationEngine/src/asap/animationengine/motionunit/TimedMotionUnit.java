@@ -48,7 +48,7 @@ public class TimedMotionUnit extends TimedAbstractPlanUnit
     protected ArrayList<KeyPosition> progressHandled = new ArrayList<KeyPosition>();
     
     @Delegate
-    private final PlanUnitTimeManager puTimeManager;
+    protected final PlanUnitTimeManager puTimeManager;
     public Set<String> getKinematicJoints(){return mu.getKinematicJoints();}
     public Set<String> getPhysicalJoints(){return mu.getPhysicalJoints();};
     
