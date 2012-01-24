@@ -1,0 +1,10 @@
+Manifest-Version: 1.0
+Main-Class: asap.realizertester.Info
+
+Name: asap/asaprealizertester/
+Specification-Title:    AsapRealizerTester
+Specification-Version:  0.1
+Specification-Vendor:   Asap
+Implementation-Title:   AsapRealizerTester
+Implementation-Version: January 24 2012  02:58 PM
+Implementation-Vendor:  Asap

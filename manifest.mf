@@ -1,0 +1,10 @@
+Manifest-Version: 1.0
+Main-Class: asap.Info
+
+Name: asap/
+Specification-Title:    Asap
+Specification-Version:  0.1
+Specification-Vendor:   Asap
+Implementation-Title:   Asap
+Implementation-Version: January 29 2008  12:38 AM
+Implementation-Vendor:  Asap
