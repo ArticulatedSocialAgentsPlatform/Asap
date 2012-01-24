@@ -1,0 +1,91 @@
+<project name="HMI-ALL" default="build" basedir="." >   
+ 
+ <filelist id="rebuildList" dir="${shared.project.root}" files="${rebuild.list}" />
+   
+   <target name="resolveAll">
+    <antcall target="Ivy.resolve"/>
+    <delegate target="resolve" list="rebuildList" verbose="true"/>
+   </target>
+   <!-- targets: -->
+   <target name="buildAll" depends="cleanAll, compileAll" description="cleanAll, compileAll"/>  
+  
+   <target name="compileAll"  description="compile HMI projects">     
+    <antcall target="Core.compile"/>
+    <delegate target="compile" list="rebuildList" verbose="true"/>
+   </target>
+   
+   <target name="compilelistAll">
+    <antcall target="Core.compile"/>
+    <delegate target="compilelist" list="rebuildList" verbose="true"/>     
+   </target> 
+    
+   <target name="cleanAll"  description="cleans HMI projects">     
+        <antcall target="Core.clean"/> <!-- JavaProjects.clean is the clean target from  (.../JavaProjects/)ant/build-impl.xml -->
+        <delegate target="clean" list="rebuildList" verbose="true"/>
+   </target>
+ 
+   <target name="compile-testsAll"  description="Runs junit tests on all HMI projects">     
+        <!--antcall target="Core.junit"/--> 
+        <delegate target="compile-tests" list="rebuildList"/>
+   </target>
+    
+   <target name="junitAll"  description="Runs junit tests on all HMI projects">     
+        <!--antcall target="Core.junit"/--> 
+        <delegate target="-junit" list="rebuildList"/>
+   </target>
+ 
+    <target name="junitreportAll"  description="Runs junit tests on all HMI projects">     
+        <!--antcall target="Core.junit"/--> 
+        <delegate target="junitreport" list="rebuildList"/>
+   </target>
+   
+   <target name="findbugsAll"  description="Runs findbugs on all HMI projects">     
+        <delegate target="findbugsxml" list="rebuildList"/>
+   </target>
+
+   <target name="cpdAll"  description="Runs the code duplication checker on all HMI projects">     
+        <delegate target="cpd" list="rebuildList"/>
+   </target>
+
+   <target name="checkstyleAll"  description="Runs checkstyle on all HMI projects">     
+        <delegate target="checkstylexml" list="rebuildList"/>
+   </target>
+
+   <target name="docall" description="Generate integrated Javadoc for all HMI/* projects">     
+        <javadoc source="1.6" 
+            destdir="${javadoc.dir}"
+            Overview="javadoc-overview.html" 
+            doctitle="API Documentation for Asap packages, including the Asap Realizer"
+            private="true" 
+            use="true"
+            author="true"
+            link="http://java.sun.com/javase/6/docs/api/"
+            breakiterator="yes"
+        > 
+            <classpath refid="javac-classpath"/>
+                <group title="AsapBML" packages="asap.bml*"/>
+                <group title="AsapRealizer" packages="asap.realizer"/>
+                <group title="AsapAnimationEngine" packages="asap.animationengine*"/>
+                <group title="AsapRealizerTester" packages="asap.realizertester*"/>
+                <sourcepath>
+                    <pathelement path="AsapBML/src/"/>
+                    <pathelement path="AsapRealizer/src/"/>
+                    <pathelement path="AsapAnimationEngine/src/"/>
+                    <pathelement path="AsapRealizerTester/src/"/>
+                </sourcepath>
+        </javadoc>
+        <mkdir dir="${dist.dir}"/>
+	     <zip basedir="${javadoc.dir}" destfile="${dist.dir}/javadoc.zip" />
+    </target>
+    
+    <target name="javancssAll" description="Generate a javancs report">
+      <mkdir dir="${build.classes.dir}"/>
+      <javancss srcdir="."
+            generateReport="true"
+            format="xml"
+             outputfile="${build.classes.dir}/javancss_metrics.xml"
+            abortOnFail="false"
+            includes="**/*.java"
+            />
+    </target> 
+</project>
