@@ -106,14 +106,12 @@ public class BMLBBlock extends AbstractBMLBlock
         if(getState()!=TimedPlanUnitState.SUBSIDING && isSubsiding())
         {
             state.set(TimedPlanUnitState.SUBSIDING);
-            scheduler.updateBMLBlocks();
-            return;
+            scheduler.updateBMLBlocks();            
         }
         if (getState()!=TimedPlanUnitState.DONE && isFinished())
         {
             logger.debug("bml block {} finished", bmlId);            
-            finish();
-            return;
+            finish();            
         }        
     }    
 

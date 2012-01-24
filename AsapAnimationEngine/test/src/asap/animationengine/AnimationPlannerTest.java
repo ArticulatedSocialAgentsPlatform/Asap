@@ -57,7 +57,7 @@ public class AnimationPlannerTest
     private BMLBlockManager mockBmlBlockManager = mock(BMLBlockManager.class);
     protected FeedbackManager fbManager = new FeedbackManagerImpl(mockBmlBlockManager,"character1");
     private AnimationPlanner animationPlanner;
-    private PlannerTests plannerTests;
+    private PlannerTests<TimedMotionUnit> plannerTests;
     private static final String BMLID = "bml1";
     private final BMLBlockPeg bbPeg = new BMLBlockPeg("Peg1", 0.3);
     private final PlanManager<TimedMotionUnit> planManager = new PlanManager<TimedMotionUnit>();
@@ -66,7 +66,7 @@ public class AnimationPlannerTest
     public void setup()
     {
         animationPlanner = new AnimationPlanner(fbManager, mockPlayer, mockBinding, planManager);
-        plannerTests = new PlannerTests(animationPlanner, bbPeg);
+        plannerTests = new PlannerTests<TimedMotionUnit>(animationPlanner, bbPeg);
 
         TimedMotionUnit tmu = new TimedMotionUnit(fbManager, bbPeg, BMLID, "nod1", mockUnit);
         KeyPositionMocker.stubKeyPositions(mockUnit, new KeyPosition("start", 0, 1), new KeyPosition("end", 1, 1));

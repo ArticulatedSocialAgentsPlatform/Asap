@@ -3,8 +3,8 @@ Main-Class: asap.realizer.Info
 
 Name: asap/bmlb/
 Specification-Title:    AsapRealizer
-Specification-Version:  0.1
+Specification-Version:  0.3
 Specification-Vendor:   Asap
 Implementation-Title:   AsapRealizer
-Implementation-Version: December 20 2011  05:44 PM
+Implementation-Version: January 24 2012  02:58 PM
 Implementation-Vendor:  Asap

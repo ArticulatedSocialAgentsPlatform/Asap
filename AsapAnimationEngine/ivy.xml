@@ -3,9 +3,13 @@
    <dependencies>
       <dependency org="HMI"     name="HmiBML"           rev="latest.${resolve.status}"    />
       <dependency org="Asap"     name="AsapBML"           rev="latest.${resolve.status}"    />
+      <dependency org="Asap"     name="AsapRealizer"           rev="latest.${resolve.status}"    />
       <dependency org="HMI"     name="HmiElckerlyc"           rev="latest.${resolve.status}"    />
+      <dependency org="HMI"     name="HmiEnvironment"           rev="latest.${resolve.status}"    />
       <dependency org="HMI"     name="HmiUtil"           rev="latest.${resolve.status}"    />
       <dependency org="HMI"     name="HmiXml"            rev="latest.${resolve.status}"    />
+      <dependency org="HMI"     name="HmiPhysics"            rev="latest.${resolve.status}"    />
+      <dependency org="HMI"     name="HmiAnimationEngine"            rev="latest.${resolve.status}"    />
       <dependency org="google"  name="guava"             rev="latest.release"    />
       <dependency org="lombok"  name="lombok"            rev="latest.release"    />
       <dependency org="jcip"    name="jcip-annotations"  rev="latest.release"  />
