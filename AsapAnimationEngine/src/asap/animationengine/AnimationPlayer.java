@@ -27,14 +27,12 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import asap.animationengine.mixed.MixedPlayer;
-
-
+import asap.animationengine.restpose.RestPose;
 import hmi.animation.Hanim;
 import hmi.animation.SkeletonPose;
 import hmi.animation.VJoint;
 import hmi.animation.VObjectTransformCopier;
 import hmi.elckerlyc.Player;
-import hmi.elckerlyc.planunit.PlanPlayer;
 import hmi.elckerlyc.planunit.TimedPlanUnitState;
 import hmi.elckerlyc.world.WorldObjectManager;
 import hmi.physics.PhysicalHumanoid;
@@ -66,7 +64,7 @@ public class AnimationPlayer implements Player, MixedAnimationPlayer
     @GuardedBy("this")
     private List<PhysicalController> controllers = new ArrayList<PhysicalController>();
     
-    private final PlanPlayer app;    
+    private final AnimationPlanPlayer app;    
 
     private List<MixedSystem> mSystems;
     private MixedPlayer mPlayer;
@@ -79,13 +77,18 @@ public class AnimationPlayer implements Player, MixedAnimationPlayer
     protected WorldObjectManager woManager;
     private Logger logger = LoggerFactory.getLogger(AnimationPlayer.class.getName());
 
-    public AnimationPlayer(VJoint vP, VJoint vC, VJoint vN, List<MixedSystem> m, float h, PlanPlayer planPlayer)
+    public RestPose getRestPose()
+    {
+        return app.getRestPose();
+    }
+    
+    public AnimationPlayer(VJoint vP, VJoint vC, VJoint vN, List<MixedSystem> m, float h, AnimationPlanPlayer planPlayer)
     {
         this(vP, vC, vN, m, h, null, planPlayer);
     }
 
     public AnimationPlayer(VJoint vP, VJoint vC, VJoint vN, List<MixedSystem> m, float h, WorldObjectManager wom,
-            PlanPlayer planPlayer)
+            AnimationPlanPlayer planPlayer)
     {
         vPrev = vP;
         vCurr = vC;

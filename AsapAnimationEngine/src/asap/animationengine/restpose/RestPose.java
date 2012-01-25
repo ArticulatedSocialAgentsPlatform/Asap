@@ -5,6 +5,7 @@ import hmi.elckerlyc.BMLBlockPeg;
 import java.util.Set;
 
 import asap.animationengine.AnimationPlayer;
+import asap.animationengine.motionunit.MotionUnit;
 import asap.animationengine.motionunit.TimedMotionUnit;
 
 /**
@@ -35,4 +36,10 @@ public interface RestPose
      */
     TimedMotionUnit createTransitionToRest(Set<String>joints, double startTime, double duration, 
             String bmlId, String id, BMLBlockPeg bmlBlockPeg);
+    
+    /**
+     * Create a MotionUnit that moves the joints from their current position 
+     * to a position dictated by this resting pose.  
+     */
+    MotionUnit createTransitionToRest(Set<String>joints);
 }

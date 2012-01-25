@@ -199,7 +199,7 @@ public class AnimationEngineLoader implements EngineLoader
             pose = new SkeletonPoseRestPose(theRealizerLoader.getElckerlycRealizer()
                     .getFeedbackManager());
         }
-        PlanPlayer animationPlanPlayer = new AnimationPlanPlayer(pose,theRealizerLoader.getElckerlycRealizer()
+        AnimationPlanPlayer animationPlanPlayer = new AnimationPlanPlayer(pose,theRealizerLoader.getElckerlycRealizer()
                 .getFeedbackManager(), animationPlanManager, new DefaultTimedPlanUnitPlayer());
         
         //public AnimationPlayer(VJoint vP, VJoint vC, VJoint vN, ArrayList<MixedSystem> m, float h, WorldObjectManager wom,

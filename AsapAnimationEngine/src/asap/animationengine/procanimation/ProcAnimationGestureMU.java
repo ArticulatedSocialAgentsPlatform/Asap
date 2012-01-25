@@ -14,24 +14,28 @@ import hmi.util.StringUtil;
 
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.List;
 import java.util.Set;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import com.google.common.base.Function;
+import com.google.common.collect.Collections2;
 import com.google.common.collect.ImmutableSet;
 
 import asap.animationengine.AnimationPlayer;
 import asap.animationengine.motionunit.MUPlayException;
+import asap.animationengine.motionunit.MotionUnit;
 import asap.animationengine.motionunit.TimedMotionUnit;
 import asap.animationengine.transitions.SlerpTransitionToPoseMU;
 import asap.planunit.Priority;
 
-
 /**
- * Wraps a ProcAnimationMU inbetween two slerp transitions, starts and ends in the same pose
- * The ProcAnimation is played between its start and end
+ * Wraps a ProcAnimationMU inbetween a slerp transitions, and an automatically generated (by the restpose)
+ * relax controller
+ * The ProcAnimation is played between its strokeStart and strokeEnd
  * @author Herwin
  */
 public class ProcAnimationGestureMU implements GestureUnit
@@ -40,14 +44,15 @@ public class ProcAnimationGestureMU implements GestureUnit
     private ProcAnimationMU gestureUnit = new ProcAnimationMU();
     private KeyPositionManager keyPositionManager = new KeyPositionManagerImpl();
     private SlerpTransitionToPoseMU prepUnit;
-    private SlerpTransitionToPoseMU relaxUnit;
+    private MotionUnit relaxUnit;
     private VJoint vStart;
     private VJoint vNext;
     private Resources resource;
     private double preStrokeHoldDuration = 0;
     private double postStrokeHoldDuration = 0;
     private int priority = Priority.GESTURE;
-    
+    private AnimationPlayer aniPlayer;
+
     public int getPriority()
     {
         return priority;
@@ -55,8 +60,8 @@ public class ProcAnimationGestureMU implements GestureUnit
 
     private boolean inGesturePhase(String syncId)
     {
-        return !(syncId.equals(BMLGestureSync.START.getId()) || syncId.equals(BMLGestureSync.END.getId()) || syncId.equals(BMLGestureSync.READY.getId()) || syncId
-                .equals(BMLGestureSync.RELAX.getId()));
+        return !(syncId.equals(BMLGestureSync.START.getId()) || syncId.equals(BMLGestureSync.END.getId())
+                || syncId.equals(BMLGestureSync.READY.getId()) || syncId.equals(BMLGestureSync.RELAX.getId()));
     }
 
     @Override
@@ -89,6 +94,7 @@ public class ProcAnimationGestureMU implements GestureUnit
         vStart = ap.getVCurr();
         vNext = ap.getVNext();
         gestureUnit.setup(vNext);
+        aniPlayer = ap;
     }
 
     public void setVStartJoint(VJoint vj)
@@ -241,7 +247,7 @@ public class ProcAnimationGestureMU implements GestureUnit
         double relaxTime = keyPositionManager.getKeyPosition(BMLGestureSync.RELAX.getId()).time;
 
         double strokeEndTime = keyPositionManager.getKeyPosition(BMLGestureSync.STROKE_END.getId()).time;
-        
+
         double relaxDuration = 1 - relaxTime;
         logger.debug("time: {}", t);
 
@@ -339,9 +345,20 @@ public class ProcAnimationGestureMU implements GestureUnit
         }
 
         prepUnit = new SlerpTransitionToPoseMU(gestureUnit.getControlledJoints(), startPoseJoint, strokeStartPose);
-        relaxUnit = new SlerpTransitionToPoseMU(gestureUnit.getControlledJoints(), startPoseJoint, startPose);
         prepUnit.setStartPose();
-        relaxUnit.setStartPose(relaxStartPose);
+    }
+
+    public void setupRelaxUnit()
+    {
+        Collection<String> j = Collections2.transform(gestureUnit.getControlledJoints(), new Function<VJoint, String>()
+        {
+            @Override
+            public String apply(VJoint joint)
+            {
+                return joint.getSid();
+            }
+        });
+        relaxUnit = aniPlayer.getRestPose().createTransitionToRest(ImmutableSet.copyOf(j));
     }
 
     @Override
@@ -349,7 +366,7 @@ public class ProcAnimationGestureMU implements GestureUnit
     {
         resource = r;
     }
-    
+
     private static final Set<String> PHJOINTS = ImmutableSet.of();
 
     @Override
@@ -362,5 +379,5 @@ public class ProcAnimationGestureMU implements GestureUnit
     public Set<String> getKinematicJoints()
     {
         return gestureUnit.getKinematicJoints();
-    } 
+    }
 }

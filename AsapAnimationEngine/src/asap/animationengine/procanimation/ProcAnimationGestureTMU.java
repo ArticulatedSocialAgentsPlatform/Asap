@@ -52,6 +52,14 @@ public class ProcAnimationGestureTMU extends TimedMotionUnit
     }
     
     @Override
+    protected void relaxUnit(double time) throws TimedPlanUnitPlayException
+    {
+        super.relaxUnit(time);
+        mu.setupRelaxUnit();
+    }
+    
+    
+    @Override
     public void stopUnit(double time)
     {
         super.stopUnit(time);

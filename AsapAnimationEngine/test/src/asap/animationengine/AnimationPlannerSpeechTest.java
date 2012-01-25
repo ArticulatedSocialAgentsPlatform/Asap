@@ -5,8 +5,8 @@ import static org.mockito.Mockito.*;
 import hmi.elckerlyc.BMLBlockPeg;
 import hmi.elckerlyc.DefaultEngine;
 import hmi.elckerlyc.feedback.FeedbackManager;
+import hmi.elckerlyc.planunit.DefaultTimedPlanUnitPlayer;
 import hmi.elckerlyc.planunit.PlanManager;
-import hmi.elckerlyc.planunit.SingleThreadedPlanPlayer;
 import hmi.physics.PhysicalHumanoid;
 import hmi.physics.mixed.MixedSystem;
 import hmi.testutil.animation.HanimBody;
@@ -22,6 +22,7 @@ import asap.animationengine.AnimationPlayer;
 import asap.animationengine.gesturebinding.GestureBinding;
 import asap.animationengine.motionunit.MotionUnit;
 import asap.animationengine.motionunit.TimedMotionUnit;
+import asap.animationengine.restpose.SkeletonPoseRestPose;
 
 /**
  * Tests if visemeunits are properly added and removed from the animation plan
@@ -36,46 +37,46 @@ public class AnimationPlannerSpeechTest
     private GestureBinding mockBinding = mock(GestureBinding.class);
     private PhysicalHumanoid mockPh = mock(PhysicalHumanoid.class);
     private FeedbackManager mockBmlFeedbackManager = mock(FeedbackManager.class);
-    
+
     private AnimationPlanner animationPlanner;
     PlanManager<TimedMotionUnit> planManager = new PlanManager<TimedMotionUnit>();
     DefaultEngine<TimedMotionUnit> animationEngine;
-    
+
     @Before
     public void setup()
     {
         final BMLBlockPeg bbPeg = new BMLBlockPeg("Peg1", 0.3);
         ArrayList<MixedSystem> m = new ArrayList<MixedSystem>();
         MixedSystem ms = new MixedSystem(new float[] { 0, -9.8f, 0 }, mockPh);
-        m.add(ms);        
-        AnimationPlayer ap = new AnimationPlayer(HanimBody.getLOA1HanimBody(), HanimBody.getLOA1HanimBody(),
-                HanimBody.getLOA1HanimBody(), m, 0.001f,
-                new SingleThreadedPlanPlayer<TimedMotionUnit>(mockBmlFeedbackManager,planManager)                
-                );
+        m.add(ms);
+        AnimationPlayer ap = new AnimationPlayer(HanimBody.getLOA1HanimBody(), HanimBody.getLOA1HanimBody(), HanimBody.getLOA1HanimBody(),
+                m, 0.001f,
+                new AnimationPlanPlayer(new SkeletonPoseRestPose(mockBmlFeedbackManager), mockBmlFeedbackManager, planManager,
+                        new DefaultTimedPlanUnitPlayer()));
 
-        animationPlanner = new AnimationPlanner(mockBmlFeedbackManager,ap, mockBinding, planManager);
+        animationPlanner = new AnimationPlanner(mockBmlFeedbackManager, ap, mockBinding, planManager);
         List<TimedMotionUnit> visemeMUs = new ArrayList<TimedMotionUnit>();
 
         animationEngine = new DefaultEngine<TimedMotionUnit>(animationPlanner, ap, planManager);
-        
+
         TimedMotionUnit tmu = new TimedMotionUnit(mockBmlFeedbackManager, bbPeg, "bml1", "speech1", mockUnit1);
         visemeMUs.add(tmu);
         tmu = new TimedMotionUnit(mockBmlFeedbackManager, bbPeg, "bml1", "speech1", mockUnit2);
         tmu.setSubUnit(true);
         visemeMUs.add(tmu);
-        
+
         tmu = new TimedMotionUnit(mockBmlFeedbackManager, bbPeg, "bml1", "speech1", mockUnit3);
         visemeMUs.add(tmu);
         tmu.setSubUnit(true);
-        
+
         tmu = new TimedMotionUnit(mockBmlFeedbackManager, bbPeg, "bml1", "speech1", mockUnit4);
         visemeMUs.add(tmu);
         tmu.setSubUnit(true);
-        
-        for(TimedMotionUnit vis:visemeMUs)
+
+        for (TimedMotionUnit vis : visemeMUs)
         {
             vis.setSubUnit(true);
-            planManager.addPlanUnit(vis);            
+            planManager.addPlanUnit(vis);
         }
     }
 
@@ -88,8 +89,8 @@ public class AnimationPlannerSpeechTest
     @Test
     public void testRemoveSpeech()
     {
-        animationEngine.interruptBehaviour("bml1","speech1",0);
+        animationEngine.interruptBehaviour("bml1", "speech1", 0);
         assertEquals(0, animationEngine.getBehaviours("bml1").size());
-        assertEquals(0, planManager.getBehaviours("bml1").size());        
+        assertEquals(0, planManager.getBehaviours("bml1").size());
     }
 }

@@ -81,6 +81,22 @@ public class SkeletonPoseRestPose implements RestPose
     @Override
     public TimedMotionUnit createTransitionToRest(Set<String> joints, double startTime, double duration, String bmlId, String id, BMLBlockPeg bmlBlockPeg)
     {
+        TransitionMU mu = createTransitionToRest(joints);
+        mu.addKeyPosition(new KeyPosition("start",0));
+        mu.addKeyPosition(new KeyPosition("end",1));
+        TimedMotionUnit tmu = new TransitionTMU(feedbackManager, bmlBlockPeg, bmlId, id, mu);
+        TimePeg startPeg = new TimePeg(bmlBlockPeg);
+        startPeg.setGlobalValue(startTime);
+        tmu.setTimePeg("start", startPeg);
+        TimePeg endPeg = new OffsetPeg(startPeg,duration);
+        tmu.setTimePeg("end", endPeg);
+        tmu.setState(TimedPlanUnitState.LURKING);
+        return tmu;
+    }
+
+    @Override
+    public TransitionMU createTransitionToRest(Set<String> joints)
+    {
         float rotations[]=new float[joints.size()*4];
         int i=0;
         List<VJoint> targetJoints = new ArrayList<VJoint>();
@@ -94,16 +110,8 @@ public class SkeletonPoseRestPose implements RestPose
             i+=4;
         }
         TransitionMU mu = new SlerpTransitionToPoseMU(targetJoints, startJoints, rotations);
-        mu.addKeyPosition(new KeyPosition("start",0));
-        mu.addKeyPosition(new KeyPosition("end",1));
-        TimedMotionUnit tmu = new TransitionTMU(feedbackManager, bmlBlockPeg, bmlId, id, mu);
-        TimePeg startPeg = new TimePeg(bmlBlockPeg);
-        startPeg.setGlobalValue(startTime);
-        tmu.setTimePeg("start", startPeg);
-        TimePeg endPeg = new OffsetPeg(startPeg,duration);
-        tmu.setTimePeg("end", endPeg);
-        tmu.setState(TimedPlanUnitState.LURKING);
-        return tmu;
+        mu.setStartPose();
+        return mu;
     }
 
 }

@@ -31,6 +31,11 @@ public class AnimationPlanPlayer implements PlanPlayer
     private RestPose currentRestPose;
     
     
+    public RestPose getRestPose()
+    {
+        return currentRestPose;
+    }
+
     public AnimationPlanPlayer(RestPose defaultRestPose, FeedbackManager fbm, PlanManager<TimedMotionUnit> planManager, TimedPlanUnitPlayer tpuCallback)
     {
         defPlayer = new SingleThreadedPlanPlayer<TimedMotionUnit>(fbm, planManager, tpuCallback);

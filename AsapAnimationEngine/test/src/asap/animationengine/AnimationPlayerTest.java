@@ -5,8 +5,8 @@ import hmi.bml.feedback.BMLExceptionFeedback;
 import hmi.elckerlyc.TimedPlanUnitPlayException;
 import hmi.elckerlyc.feedback.FeedbackManager;
 import hmi.elckerlyc.feedback.FeedbackManagerImpl;
+import hmi.elckerlyc.planunit.DefaultTimedPlanUnitPlayer;
 import hmi.elckerlyc.planunit.PlanManager;
-import hmi.elckerlyc.planunit.SingleThreadedPlanPlayer;
 import hmi.elckerlyc.planunit.TimedPlanUnitState;
 import hmi.elckerlyc.scheduler.BMLBlockManager;
 import hmi.bml.feedback.ListBMLExceptionListener;
@@ -25,6 +25,7 @@ import org.powermock.modules.junit4.PowerMockRunner;
 
 import asap.animationengine.AnimationPlayer;
 import asap.animationengine.motionunit.TimedMotionUnit;
+import asap.animationengine.restpose.SkeletonPoseRestPose;
 import static org.powermock.api.mockito.PowerMockito.*;
 import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
@@ -61,7 +62,8 @@ public class AnimationPlayerTest
         animationPlayer = new AnimationPlayer(HanimBody.getLOA1HanimBody(),
                 HanimBody.getLOA1HanimBody(), HanimBody.getLOA1HanimBody(),
                 m, 0.01f,
-                new SingleThreadedPlanPlayer<TimedMotionUnit>(fbManager,planManager)                
+                new AnimationPlanPlayer(new SkeletonPoseRestPose(fbManager), fbManager, planManager,
+                        new DefaultTimedPlanUnitPlayer())                
                 );
         beList = new ArrayList<BMLExceptionFeedback>();
         fbManager.addExceptionListener(new ListBMLExceptionListener(beList));
