@@ -1,13 +1,17 @@
 package asap.animationengine.procanimation;
 
+import java.util.Set;
+
 import org.junit.runner.RunWith;
 import org.powermock.core.classloader.annotations.PrepareForTest;
 import org.powermock.modules.junit4.PowerMockRunner;
 
 import asap.animationengine.AnimationPlayer;
+import asap.animationengine.motionunit.MotionUnit;
 import asap.animationengine.procanimation.ProcAnimationGestureMU;
 import asap.animationengine.procanimation.ProcAnimationGestureTMU;
 import asap.animationengine.procanimation.ProcAnimationMU;
+import asap.animationengine.restpose.RestPose;
 
 import hmi.animation.VJoint;
 import hmi.elckerlyc.planunit.KeyPosition;
@@ -19,6 +23,7 @@ import hmi.elckerlyc.planunit.TimedPlanUnit;
 import hmi.elckerlyc.scheduler.BMLBlockManager;
 import hmi.elckerlyc.util.TimePegUtil;
 import hmi.testutil.animation.HanimBody;
+import static org.mockito.Matchers.any;
 import static org.mockito.Mockito.*;
 /**
  * Unit test cases for ProcAnimationGestureTMUs
@@ -32,6 +37,7 @@ public class ProcAnimationGestureTMUTest extends AbstractTimedPlanUnitTest
     private ProcAnimationMU mockProcAnimation = mock(ProcAnimationMU.class);
     private AnimationPlayer mockAnimationPlayer = mock(AnimationPlayer.class);
 
+    @SuppressWarnings("unchecked")
     @Override
     protected TimedPlanUnit setupPlanUnit(FeedbackManager bfm, BMLBlockPeg bbPeg, String id, String bmlId, double startTime)
     {
@@ -42,6 +48,14 @@ public class ProcAnimationGestureTMUTest extends AbstractTimedPlanUnitTest
         when(mockAnimationPlayer.getVCurr()).thenReturn(vCurr);
         when(mockAnimationPlayer.getVNext()).thenReturn(vNext);
         when(mockProcAnimation.copy((VJoint)any())).thenReturn(mockProcAnimation);
+        
+        
+        RestPose mockRestPose = mock(RestPose.class);
+        MotionUnit mockRelaxMU = mock(MotionUnit.class);
+        when(mockAnimationPlayer.getRestPose()).thenReturn(mockRestPose);        
+        when(mockRestPose.createTransitionToRest((Set<String>)any())).thenReturn(mockRelaxMU);
+        
+        
         mu.addKeyPosition(new KeyPosition(BMLGestureSync.STROKE_START.getId(), 0.2, 1.0));
         mu.addKeyPosition(new KeyPosition(BMLGestureSync.STROKE_END.getId(), 0.8, 1.0));
         mu.setAnimationPlayer(mockAnimationPlayer);

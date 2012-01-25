@@ -3,13 +3,17 @@ package asap.animationengine.procanimation;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
 
+import java.util.Set;
+
 import org.junit.Before;
 import org.junit.Test;
 
 import asap.animationengine.AnimationPlayer;
 import asap.animationengine.motionunit.MUPlayException;
+import asap.animationengine.motionunit.MotionUnit;
 import asap.animationengine.procanimation.ProcAnimationGestureMU;
 import asap.animationengine.procanimation.ProcAnimationMU;
+import asap.animationengine.restpose.RestPose;
 
 import hmi.animation.VJoint;
 import hmi.elckerlyc.planunit.KeyPosition;
@@ -17,6 +21,8 @@ import hmi.bml.BMLGestureSync;
 import hmi.math.Quat4f;
 import hmi.testutil.animation.HanimBody;
 import static hmi.testutil.math.Quat4fTestUtil.*;
+import static org.mockito.Mockito.*;
+
 public class ProcAnimationGestureMUTest
 {
     private AnimationPlayer mockAnimationPlayer = mock(AnimationPlayer.class);    
@@ -89,9 +95,15 @@ public class ProcAnimationGestureMUTest
         assertQuat4fRotationEquivalent(0.0f,0.7071068f,0.7071068f,0.0f,q,0.01f);
     }
     
+    @SuppressWarnings("unchecked")
     @Test
     public void testPlayEnd() throws MUPlayException
     {
+        RestPose mockRestPose = mock(RestPose.class);
+        MotionUnit mockRelaxMU = mock(MotionUnit.class);
+        when(mockAnimationPlayer.getRestPose()).thenReturn(mockRestPose);        
+        when(mockRestPose.createTransitionToRest((Set<String>)any())).thenReturn(mockRelaxMU);
+        pag.setupRelaxUnit();
         pag.play(1);
         float q[]=Quat4f.getQuat4f();
         vNext.getPart("r_wrist").getRotation(q);

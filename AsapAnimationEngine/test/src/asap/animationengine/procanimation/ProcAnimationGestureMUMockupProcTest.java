@@ -1,5 +1,7 @@
 package asap.animationengine.procanimation;
 
+import java.util.Set;
+
 import hmi.animation.VJoint;
 import hmi.elckerlyc.planunit.KeyPosition;
 import hmi.bml.BMLGestureSync;
@@ -14,11 +16,14 @@ import org.junit.Test;
 
 import asap.animationengine.AnimationPlayer;
 import asap.animationengine.motionunit.MUPlayException;
+import asap.animationengine.motionunit.MotionUnit;
 import asap.animationengine.motionunit.TimedMotionUnit;
 import asap.animationengine.procanimation.ProcAnimationGestureMU;
 import asap.animationengine.procanimation.ProcAnimationMU;
+import asap.animationengine.restpose.RestPose;
 
 import static org.junit.Assert.*;
+import static org.mockito.Matchers.any;
 import static org.mockito.Mockito.*;
 import static org.mockito.AdditionalMatchers.*;
 import static hmi.elckerlyc.util.TimePegUtil.*;
@@ -37,6 +42,7 @@ public class ProcAnimationGestureMUMockupProcTest
     private VJoint vCurr;
     private ProcAnimationGestureMU pag;
     
+    @SuppressWarnings("unchecked")
     @Before
     public void setup()
     {
@@ -55,6 +61,12 @@ public class ProcAnimationGestureMUMockupProcTest
         pag.addKeyPosition(new KeyPosition(BMLGestureSync.RELAX.getId(), 0.8, 1.0));
         pag.setAnimationPlayer(mockAnimationPlayer);
         pag.setupTransitionUnits();
+        
+        RestPose mockRestPose = mock(RestPose.class);
+        MotionUnit mockRelaxMU = mock(MotionUnit.class);
+        when(mockAnimationPlayer.getRestPose()).thenReturn(mockRestPose);        
+        when(mockRestPose.createTransitionToRest((Set<String>)any())).thenReturn(mockRelaxMU);
+        pag.setupRelaxUnit();
     }
     
     @Test
