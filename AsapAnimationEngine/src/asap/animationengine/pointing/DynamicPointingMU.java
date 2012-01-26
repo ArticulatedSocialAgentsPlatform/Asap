@@ -19,6 +19,7 @@
 package asap.animationengine.pointing;
 
 import asap.animationengine.AnimationPlayer;
+import asap.animationengine.motionunit.MUPlayException;
 import hmi.animation.AnalyticalIKSolver;
 import hmi.math.Quat4f;
 
@@ -46,7 +47,7 @@ public class DynamicPointingMU extends PointingMU
     }
     
     @Override
-    public void play(double t)
+    public void play(double t) throws MUPlayException
     {
         woTarget.getTranslation(vecTemp, null);
         AnalyticalIKSolver.translateToLocalSystem(null, vjShoulder, vecTemp, vecTemp2);        
@@ -65,11 +66,7 @@ public class DynamicPointingMU extends PointingMU
         }
         else if(t>0.75)
         {
-            float tManip = (float)tmp.manip((t-0.75)/0.25);
-            Quat4f.interpolate(qTemp, qShoulder,Quat4f.getIdentity(), tManip);
-            vjShoulder.setRotation(qTemp);
-            Quat4f.interpolate(qTemp, qElbow,Quat4f.getIdentity(), tManip);
-            vjElbow.setRotation(qTemp);
+            relaxUnit.play( (t-0.75)/0.25 );            
         }
         else
         {

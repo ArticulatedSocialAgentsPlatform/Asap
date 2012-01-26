@@ -31,6 +31,10 @@ import hmi.elckerlyc.TimedPlanUnitPlayException;
 import hmi.elckerlyc.TimePeg;
 import hmi.elckerlyc.feedback.FeedbackManager;
 
+/**
+ * A timed motionunit for pointing
+ * @author hvanwelbergen
+ */
 public class PointingTMU extends TimedMotionUnit
 {
     private PointingMU pmu;
@@ -108,4 +112,11 @@ public class PointingTMU extends TimedMotionUnit
             throw new TMUPlayException(ex.getLocalizedMessage(),this,ex);            
         }
     }    
+    
+    @Override
+    protected void relaxUnit(double time) throws TimedPlanUnitPlayException
+    {
+        super.relaxUnit(time);
+        pmu.setupRelaxUnit();
+    }
 }

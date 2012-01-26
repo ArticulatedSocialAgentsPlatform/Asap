@@ -28,7 +28,6 @@ import asap.animationengine.motionunit.MUPlayException;
 import asap.animationengine.motionunit.MotionUnit;
 import asap.animationengine.motionunit.TimedMotionUnit;
 
-
 import hmi.animation.*;
 import hmi.elckerlyc.BMLBlockPeg;
 import hmi.elckerlyc.feedback.FeedbackManager;
@@ -44,9 +43,8 @@ import hmi.math.*;
  * Timing: ready: gaze target reached relax: start to move back to rest pose
  * (for now 0 rotation of neck joints)
  * 
- * @author welberge TODO: return to resting pose (requires resting pose :) TODO:
- *         Fitts' law based default timing TODO: Predictor TODO: Double-hand
- *         point
+ * @author welberge TODO: Fitts' law based default timing 
+ * TODO: Double-hand point(?)
  */
 public class PointingMU implements MotionUnit
 {
@@ -77,9 +75,10 @@ public class PointingMU implements MotionUnit
     protected String hand = "RIGHT";
     protected WorldObject woTarget;
     protected double preparationDuration;
+    protected MotionUnit relaxUnit;
 
     private final KeyPositionManager keyPositionManager = new KeyPositionManagerImpl();
-    
+
     public void addKeyPosition(KeyPosition kp)
     {
         keyPositionManager.addKeyPosition(kp);
@@ -131,22 +130,17 @@ public class PointingMU implements MotionUnit
         tmp = new SigmoidManipulator(5, 1);
     }
 
-    public PointingMU(VJoint shoulder, VJoint elbow, VJoint wrist,
-            VJoint fingerTip)
+    public PointingMU(VJoint shoulder, VJoint elbow, VJoint wrist, VJoint fingerTip)
     {
         this();
         vjShoulder = shoulder;
         vjElbow = elbow;
         vjWrist = wrist;
         vjFingerTip = fingerTip;
-        if (shoulder != null)
-            shoulderId = shoulder.getSid();
-        if (elbow != null)
-            elbowId = elbow.getSid();
-        if (wrist != null)
-            wristId = wrist.getSid();
-        if (fingerTip != null)
-            fingerTipId = fingerTip.getSid();
+        if (shoulder != null) shoulderId = shoulder.getSid();
+        if (elbow != null) elbowId = elbow.getSid();
+        if (wrist != null) wristId = wrist.getSid();
+        if (fingerTip != null) fingerTipId = fingerTip.getSid();
         setupSolver();
     }
 
@@ -156,9 +150,7 @@ public class PointingMU implements MotionUnit
         float sv[] = new float[3];
         vjElbow.getPathTranslation(vjShoulder, tv);
         vjWrist.getPathTranslation(vjElbow, sv);
-        solver = new AnalyticalIKSolver(sv, tv,
-                AnalyticalIKSolver.LimbPosition.ARM, (Vec3f.length(sv) + Vec3f
-                        .length(tv)) * 0.999f);
+        solver = new AnalyticalIKSolver(sv, tv, AnalyticalIKSolver.LimbPosition.ARM, (Vec3f.length(sv) + Vec3f.length(tv)) * 0.999f);
     }
 
     @Override
@@ -176,7 +168,7 @@ public class PointingMU implements MotionUnit
         return pmu;
     }
 
-    public void setTarget(String target)throws MUPlayException
+    public void setTarget(String target) throws MUPlayException
     {
         if (woManager == null)
         {
@@ -192,12 +184,11 @@ public class PointingMU implements MotionUnit
         Vec3f.sub(vecTemp2, vecTemp);
         woTarget.getTranslation(vecTemp, null);
         // Vec3f.sub(vecTemp,vecTemp2);
-        AnalyticalIKSolver.translateToLocalSystem(null, vjShoulder, vecTemp,
-                vecTemp2);
+        AnalyticalIKSolver.translateToLocalSystem(null, vjShoulder, vecTemp, vecTemp2);
         setEndRotation(vecTemp2);
     }
 
-    public void setStartPose(double prep)throws MUPlayException
+    public void setStartPose(double prep) throws MUPlayException
     {
         preparationDuration = prep;
         player.getVCurr().getPart(shoulderId).getRotation(qShoulderStart);
@@ -226,15 +217,17 @@ public class PointingMU implements MotionUnit
         {
             shoulderId = Hanim.l_shoulder;
             elbowId = Hanim.l_elbow;
-            wristId = Hanim.l_wrist;//Hanim.l_index2;//Hanim.l_index3;// 
+            wristId = Hanim.l_wrist;// Hanim.l_index2;//Hanim.l_index3;//
             fingerTipId = Hanim.l_index3;
-        } else if (hand.equals("RIGHT"))
+        }
+        else if (hand.equals("RIGHT"))
         {
             shoulderId = Hanim.r_shoulder;
             elbowId = Hanim.r_elbow;
-            wristId = Hanim.r_wrist;//Hanim.r_index2; // //Hanim.r_index3;
+            wristId = Hanim.r_wrist;// Hanim.r_index2; // //Hanim.r_index3;
             fingerTipId = Hanim.r_index3;
-        } else if (hand.equals("UNSPECIFIED"))
+        }
+        else if (hand.equals("UNSPECIFIED"))
         {
             // TODO: better selection strategy: for example from presenter: use
             // left hand to point to the left, right to point to the right
@@ -243,7 +236,8 @@ public class PointingMU implements MotionUnit
             elbowId = Hanim.r_elbow;
             wristId = Hanim.r_index3;// Hanim.r_wrist;
             fingerTipId = Hanim.r_index3;
-        } else
+        }
+        else
         {
             throw new RuntimeException("Invalid hand spec " + hand);
         }
@@ -255,7 +249,7 @@ public class PointingMU implements MotionUnit
     }
 
     @Override
-    public void play(double t)
+    public void play(double t) throws MUPlayException
     {
         if (t < 0.25)
         {
@@ -264,21 +258,12 @@ public class PointingMU implements MotionUnit
             vjShoulder.setRotation(qTemp);
             Quat4f.interpolate(qTemp, qElbowStart, qElbow, tManip);
             vjElbow.setRotation(qTemp);
-        } else if (t > 0.75)
+        }
+        else if (t > 0.75)
         {
-            /*
-            float tManip = (float) tmp.manip((t - 0.75) / 0.25);
-            Quat4f.interpolate(qTemp, qShoulder, Quat4f.getIdentity(), tManip);
-            vjShoulder.setRotation(qTemp);
-            Quat4f.interpolate(qTemp, qElbow, Quat4f.getIdentity(), tManip);
-            vjElbow.setRotation(qTemp);
-            */
-            float tManip = (float) tmp.manip((t - 0.75) / 0.25);
-            Quat4f.interpolate(qTemp, qShoulder, qShoulderStart, tManip);
-            vjShoulder.setRotation(qTemp);
-            Quat4f.interpolate(qTemp, qElbow,qElbowStart, tManip);
-            vjElbow.setRotation(qTemp);
-        } else
+            relaxUnit.play( (t-0.75)/0.25 );            
+        }
+        else
         {
             vjShoulder.setRotation(qShoulder);
             vjElbow.setRotation(qElbow);
@@ -286,28 +271,24 @@ public class PointingMU implements MotionUnit
     }
 
     @Override
-    public TimedMotionUnit createTMU(FeedbackManager bfm,BMLBlockPeg bbPeg, String bmlId, String id)
+    public TimedMotionUnit createTMU(FeedbackManager bfm, BMLBlockPeg bbPeg, String bmlId, String id)
     {
-        return new PointingTMU(bfm,bbPeg, bmlId, id, this);
+        return new PointingTMU(bfm, bbPeg, bmlId, id, this);
     }
 
     @Override
     public void setParameterValue(String name, String value) throws ParameterNotFoundException
     {
-        if (name.equals("target"))
-            target = value;
-        else if (name.equals("hand"))
-            setHand(value);
+        if (name.equals("target")) target = value;
+        else if (name.equals("hand")) setHand(value);
         else throw new ParameterNotFoundException(name);
     }
 
     @Override
     public String getParameterValue(String name) throws ParameterNotFoundException
     {
-        if (name.equals("target"))
-            return target;
-        else if (name.equals("hand"))
-            return hand;
+        if (name.equals("target")) return target;
+        else if (name.equals("hand")) return hand;
         throw new ParameterNotFoundException(name);
     }
 
@@ -315,8 +296,8 @@ public class PointingMU implements MotionUnit
     public float getFloatParameterValue(String name) throws ParameterNotFoundException
     {
         throw new ParameterNotFoundException(name);
-    }  
-    
+    }
+
     @Override
     public void setFloatParameterValue(String name, float value) throws ParameterNotFoundException
     {
@@ -338,10 +319,9 @@ public class PointingMU implements MotionUnit
         // allow 2 pointing mu's to be active
         return null;
     }
-    
-    
-    private static final Set<String>PHJOINTS = ImmutableSet.of(); 
-    
+
+    private static final Set<String> PHJOINTS = ImmutableSet.of();
+
     @Override
     public Set<String> getPhysicalJoints()
     {
@@ -352,5 +332,10 @@ public class PointingMU implements MotionUnit
     public Set<String> getKinematicJoints()
     {
         return ImmutableSet.of(vjShoulder.getSid(), vjElbow.getSid());
-    }  
+    }
+
+    public void setupRelaxUnit()
+    {
+        relaxUnit = player.getRestPose().createTransitionToRest(getKinematicJoints());
+    }
 }
