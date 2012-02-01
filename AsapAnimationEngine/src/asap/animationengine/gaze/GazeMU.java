@@ -109,6 +109,8 @@ public class GazeMU implements MotionUnit
     protected static final double RELATIVE_READY_TIME = 0.25;
     protected static final double RELATIVE_RELAX_TIME = 0.75;
 
+    protected MotionUnit relaxUnit;
+    
     public GazeMU()
     {
         qGaze = new float[4];
@@ -267,14 +269,7 @@ public class GazeMU implements MotionUnit
 
         float gazeDir[] = Vec3f.getVec3f();
         Vec3f.set(gazeDir, localGaze);
-        Vec3f.normalize(gazeDir);
-        /*
-         * woTarget = woManager.getWorldObject(target); if (woTarget == null) {
-         * throw new MUPlayException("Gaze target not found", this); }
-         * woTarget.getTranslation2(gazeDir, neck); float q[] =
-         * Quat4f.getQuat4f(); Quat4f.inverse(q,qNeck); Quat4f.transformVec3f(q,
-         * gazeDir); Quat4f.transformVec3f(qNeck, gazeDir);
-        */
+        Vec3f.normalize(gazeDir);       
                 
         float eyeRotationDes[] = Quat4f.getQuat4f(); // desired final eye
                                                      // rotation
@@ -329,31 +324,33 @@ public class GazeMU implements MotionUnit
         }
     }
 
-    @Override
-    public void play(double t) throws MUPlayException
+    private void playEyes(double t) throws MUPlayException
     {
         if (rEye != null && lEye != null)
         {
             playEye(t, qGaze, qStartLeftEye, lEye);
             playEye(t, qGaze, qStartRightEye, rEye);
         }
-
+    }
+    
+    @Override
+    public void play(double t) throws MUPlayException
+    {
         if (t < 0.25)
         {
             float tManip = (float) tmp.manip(t / 0.25);
             Quat4f.interpolate(qTemp, qStart, qGaze, tManip);
             neck.setRotation(qTemp);
+            playEyes(t);
         }
         else if (t > 0.75)
         {
-            float tManip = (float) tmp.manip((t - 0.75) / 0.25);
-            // Quat4f.interpolate(qTemp, qGaze,Quat4f.getIdentity(), tManip);
-            Quat4f.interpolate(qTemp, qGaze, qStart, tManip);
-            neck.setRotation(qTemp);
+            relaxUnit.play( (t-0.75)/0.25);
         }
         else
         {
             neck.setRotation(qGaze);
+            playEyes(t);
         }
     }
 
@@ -465,16 +462,21 @@ public class GazeMU implements MotionUnit
         return PHJOINTS;
     }
 
+    public void setupRelaxUnit()
+    {
+        relaxUnit = player.getRestPose().createTransitionToRest(getKinematicJoints());
+    }
+    
     @Override
     public Set<String> getKinematicJoints()
     {
         if(lEye == null || rEye == null)
         {
-            return KINJOINTSALL;
+            return KINJOINTSNECK;
         }
         else
         {
-            return KINJOINTSNECK;
+            return KINJOINTSALL;            
         }
     }    
 }

@@ -100,5 +100,12 @@ public class GazeTMU extends TimedMotionUnit
         {
             throw new TMUPlayException(ex.getLocalizedMessage(),this,ex);            
         }        
-    }    
+    }   
+    
+    @Override
+    protected void relaxUnit(double time) throws TimedPlanUnitPlayException
+    {
+        super.relaxUnit(time);
+        gmu.setupRelaxUnit();
+    }
 }
