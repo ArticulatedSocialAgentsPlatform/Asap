@@ -17,13 +17,16 @@
  * You should have received a copy of the GNU General Public License
  * along with Elckerlyc.  If not, see http://www.gnu.org/licenses/.
  ******************************************************************************/
-package asap.animationengine.vhloader;
+package asap.animationengine.loader;
 
 import java.io.IOException;
 import java.util.*;
 
-import hmi.environment.vhloader.*;
-import hmi.environment.vhloader.impl.AnimationEnvironment;
+import asap.utils.*;
+import asap.environment.*;
+import asap.environment.impl.*;
+import hmi.mixedanimationenvironment.*;
+
 import hmi.xml.*;
 import hmi.util.*;
 import hmi.elckerlyc.*;
@@ -31,64 +34,67 @@ import hmi.animation.*;
 import asap.animationengine.AnimationPlanPlayer;
 import asap.animationengine.AnimationPlanner;
 import asap.animationengine.AnimationPlayer;
-import hmi.animationengine.AnimationPlayerManager;
 import asap.animationengine.gesturebinding.GestureBinding;
 import asap.animationengine.motionunit.TimedMotionUnit;
 import asap.animationengine.restpose.RestPose;
 import asap.animationengine.restpose.SkeletonPoseRestPose;
 import hmi.math.*;
 import hmi.elckerlyc.planunit.*;
+import hmi.physics.*;
 
 /**
 
 */
-public class AnimationEngineLoader implements EngineLoader
+public class MixedAnimationEngineLoader implements EngineLoader
 {
-    public AnimationEngineLoader()
-    {
-    }
-
+    
     private XMLStructureAdapter adapter = new XMLStructureAdapter();
-    private SkeletonEmbodiment se = null;
+    private MixedSkeletonEmbodiment mse = null;
     private PhysicalEmbodiment pe = null;
-    private AnimationEnvironment ae = null;
+    private MixedAnimationEnvironment mae = null;
+    private AsapEnvironment ae = null;
 
     private Engine engine = null;
     private PlanManager<TimedMotionUnit> animationPlanManager = null;
-    private AnimationPlayer animationPlayer = null;
+    private MixedAnimationPlayer animationPlayer = null;
     private AnimationPlanner animationPlanner = null;
     private SkeletonPose restpose;
     
     String id = "";
     // some variables cached during loading
     GestureBinding gesturebinding = null;
-    ElckerlycRealizerLoader theRealizerLoader = null;
+    AsapVirtualHuman theVirtualHuman = null;
 
     @Override
-    public void readXML(XMLTokenizer tokenizer, String newId, ElckerlycVirtualHuman evh, ElckerlycRealizerLoader realizerLoader,
+    public void readXML(XMLTokenizer tokenizer, String newId, AsapVirtualHuman avh, 
             Environment[] environments, Loader... requiredLoaders) throws IOException
     {
         id = newId;
-        theRealizerLoader = realizerLoader;
+        theVirtualHuman = avh;
         for (Environment e : environments)
         {
-            if (e instanceof AnimationEnvironment) ae = (AnimationEnvironment) e;
+            if (e instanceof MixedAnimationEnvironment) mae = (MixedAnimationEnvironment) e;
+            if (e instanceof AsapEnvironment) ae = (AsapEnvironment)e;
         }
         for (Loader e : requiredLoaders)
         {
-            if (e instanceof EmbodimentLoader && ((EmbodimentLoader) e).getEmbodiment() instanceof SkeletonEmbodiment) se = (SkeletonEmbodiment) ((EmbodimentLoader) e)
+            if (e instanceof EmbodimentLoader && ((EmbodimentLoader) e).getEmbodiment() instanceof MixedSkeletonEmbodiment) mse = (MixedSkeletonEmbodiment) ((EmbodimentLoader) e)
                     .getEmbodiment();
             if (e instanceof EmbodimentLoader && ((EmbodimentLoader) e).getEmbodiment() instanceof PhysicalEmbodiment) pe = (PhysicalEmbodiment) ((EmbodimentLoader) e)
                     .getEmbodiment();
         }
+        if (mae == null)
+        {
+            throw new RuntimeException("AnimationEngineLoader requires an Environment of type MixedAnimationEnvironment");
+        }
         if (ae == null)
         {
-            throw new RuntimeException("AnimationEngineLoader requires an Environment of type AnimationEnvironment");
+            throw new RuntimeException("AnimationEngineLoader requires an Environment of type AsapEnvironment");
         }
-        if (se == null)
+        if (mse == null)
         {
             throw new RuntimeException(
-                    "AnimationEngineLoader requires an EmbodimentLoader containing a SkeletonEmbodiment (e.g., HmiRenderBodyEmbodiment)");
+                    "AnimationEngineLoader requires an EmbodimentLoader containing a MixedSkeletonEmbodiment (e.g., HmiRenderBodyEmbodiment)");
         }
         if (pe == null)
         {
@@ -105,8 +111,8 @@ public class AnimationEngineLoader implements EngineLoader
     @Override
     public void unload()
     {
-        // TODO?
-        //ae.removeAnimationPlayer(animationPlayer);
+        //engine.shutdown();already done in scheduler...
+        mae.removeAnimationPlayer(animationPlayer, mse.getCurrentVJoint(), mse.getAnimationVJoint());
     }
 
     protected void readSection(XMLTokenizer tokenizer) throws IOException
@@ -115,7 +121,7 @@ public class AnimationEngineLoader implements EngineLoader
         if (tokenizer.atSTag("GestureBinding"))
         {
             attrMap = tokenizer.getAttributes();
-            gesturebinding = new GestureBinding(new Resources(adapter.getOptionalAttribute("basedir", attrMap, "")), theRealizerLoader
+            gesturebinding = new GestureBinding(new Resources(adapter.getOptionalAttribute("basedir", attrMap, "")), theVirtualHuman
                     .getElckerlycRealizer().getFeedbackManager());
             try
             {
@@ -138,9 +144,9 @@ public class AnimationEngineLoader implements EngineLoader
                 restpose = new SkeletonPose(new XMLTokenizer(res.getReader(adapter.getRequiredAttribute("filename", attrMap,
                         tokenizer))));
                 VJoint vjNull[] = new VJoint[0];
-                restpose.setTargets(se.getNextVJoint().getParts().toArray(vjNull));
+                restpose.setTargets(mse.getNextVJoint().getParts().toArray(vjNull));
                 restpose.setToTarget();
-                se.getNextVJoint().calculateMatrices();
+                mse.getNextVJoint().calculateMatrices();
             }
             catch (Exception e)
             {
@@ -156,8 +162,8 @@ public class AnimationEngineLoader implements EngineLoader
             String offsetString = adapter.getRequiredAttribute("offset", attrMap, tokenizer);
             float[] startposition = XMLStructureAdapter.decodeFloatArray(offsetString);
             if (startposition.length != 3) throw tokenizer.getXMLScanException("startposition.offset must containg a 3-float array");
-            se.getNextVJoint().translate(startposition);
-            se.getNextVJoint().calculateMatrices();
+            mse.getNextVJoint().translate(startposition);
+            mse.getNextVJoint().calculateMatrices();
             tokenizer.takeETag("StartPosition");
         }
         else if (tokenizer.atSTag("StartRotation"))
@@ -169,8 +175,8 @@ public class AnimationEngineLoader implements EngineLoader
             if (startrotation.length != 4) throw tokenizer.getXMLScanException("startrotation.rotation must containg a 4-float array");
             float[] qRot = new float[4];
             Quat4f.setFromAxisAngle4f(qRot, startrotation);
-            se.getNextVJoint().rotate(qRot);
-            se.getNextVJoint().calculateMatrices();
+            mse.getNextVJoint().rotate(qRot);
+            mse.getNextVJoint().calculateMatrices();
             tokenizer.takeETag("StartRotation");
         }
         else
@@ -191,36 +197,36 @@ public class AnimationEngineLoader implements EngineLoader
         RestPose pose;
         if(restpose!=null)
         {
-            pose = new SkeletonPoseRestPose(restpose, theRealizerLoader.getElckerlycRealizer()
+            pose = new SkeletonPoseRestPose(restpose, theVirtualHuman.getElckerlycRealizer()
                     .getFeedbackManager());
         }
         else
         {
-            pose = new SkeletonPoseRestPose(theRealizerLoader.getElckerlycRealizer()
+            pose = new SkeletonPoseRestPose(theVirtualHuman.getElckerlycRealizer()
                     .getFeedbackManager());
         }
-        AnimationPlanPlayer animationPlanPlayer = new AnimationPlanPlayer(pose,theRealizerLoader.getElckerlycRealizer()
+        AnimationPlanPlayer animationPlanPlayer = new AnimationPlanPlayer(pose,theVirtualHuman.getElckerlycRealizer()
                 .getFeedbackManager(), animationPlanManager, new DefaultTimedPlanUnitPlayer());
         
         //public AnimationPlayer(VJoint vP, VJoint vC, VJoint vN, ArrayList<MixedSystem> m, float h, WorldObjectManager wom,
         //PlanPlayer planPlayer)
         
-        animationPlayer = new AnimationPlayer(se.getPreviousVJoint(), se.getCurrentVJoint(), se.getNextVJoint(), 
-                pe.getMixedSystems(), AnimationPlayerManager.getH(), ae.getWorldObjectManager(), animationPlanPlayer);
+        animationPlayer = new AnimationPlayer(mse.getPreviousVJoint(), mse.getCurrentVJoint(), mse.getNextVJoint(), 
+                pe.getMixedSystems(), MixedAnimationPlayerManager.getH(), ae.getWorldObjectManager(), animationPlanPlayer);
 
-        pose.setAnimationPlayer(animationPlayer);
+        pose.setAnimationPlayer((AnimationPlayer)animationPlayer);
         // IKBody nextBody = new IKBody(se.getNextVJoint()); not used?
 
         // make planner
-        animationPlanner = new AnimationPlanner(theRealizerLoader.getElckerlycRealizer().getFeedbackManager(), animationPlayer,
+        animationPlanner = new AnimationPlanner(theVirtualHuman.getElckerlycRealizer().getFeedbackManager(), (AnimationPlayer)animationPlayer,
                 gesturebinding, animationPlanManager);
 
-        engine = new DefaultEngine<TimedMotionUnit>(animationPlanner, animationPlayer, animationPlanManager);
+        engine = new DefaultEngine<TimedMotionUnit>(animationPlanner, (AnimationPlayer)animationPlayer, animationPlanManager);
         engine.setId(id);
 
         // propagate avatar resetpose into the animation player, vnext etc, ikbodies,
         // phumans... and also as reset poses for same.
-        animationPlayer.setResetPose();
+        ((AnimationPlayer)animationPlayer).setResetPose();
 
         /**
          * then, after the avatar has been set in the right position, glue the feet to the floor to
@@ -229,10 +235,10 @@ public class AnimationEngineLoader implements EngineLoader
         pe.glueFeetToFloor();
 
         // add engine to realizer;
-        theRealizerLoader.getElckerlycRealizer().addEngine(engine);
+        theVirtualHuman.getElckerlycRealizer().addEngine(engine);
 
         // add player to playermanager
-        ae.addAnimationPlayer(animationPlayer);
+        mae.addAnimationPlayer(animationPlayer, mse.getNextVJoint(), mse.getAnimationVJoint());
 
     }
 
@@ -244,7 +250,7 @@ public class AnimationEngineLoader implements EngineLoader
 
     public AnimationPlayer getAnimationPlayer()
     {
-        return animationPlayer;
+        return (AnimationPlayer)animationPlayer;
     }
 
     public AnimationPlanner getAnimationPlanner()

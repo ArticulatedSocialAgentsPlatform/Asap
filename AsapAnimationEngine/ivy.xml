@@ -15,7 +15,9 @@
       -->
       <dependency org="HMI"     name="HmiBML"           rev="latest.release"    />
       <dependency org="HMI"     name="HmiElckerlyc"           rev="latest.release"    />
-      <dependency org="HMI"     name="HmiEnvironment"           rev="latest.release"    />
+      <dependency org="HMI"   transitive="false" name="AsapUtils"     rev="latest.${resolve.status}"   />    
+      <dependency org="HMI"   transitive="false" name="AsapEnvironment"     rev="latest.${resolve.status}"   />    
+      <dependency org="HMI"   transitive="false" name="HmiMixedAnimationEnvironment"     rev="latest.${resolve.status}"   />    
       <dependency org="HMI"     name="HmiUtil"           rev="latest.release"    />
       <dependency org="HMI"     name="HmiXml"            rev="latest.release"    />
       <dependency org="HMI"     name="HmiPhysics"            rev="latest.release"    />

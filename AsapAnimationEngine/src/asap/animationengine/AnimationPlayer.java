@@ -27,9 +27,11 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import asap.animationengine.mixed.MixedPlayer;
+import hmi.mixedanimationenvironment.*;
 import asap.animationengine.restpose.RestPose;
 import hmi.animation.Hanim;
 import hmi.animation.SkeletonPose;
+import hmi.animation.Skeleton;
 import hmi.animation.VJoint;
 import hmi.animation.VObjectTransformCopier;
 import hmi.elckerlyc.Player;
@@ -38,9 +40,8 @@ import hmi.elckerlyc.world.WorldObjectManager;
 import hmi.physics.PhysicalHumanoid;
 import hmi.physics.PhysicalJoint;
 import hmi.physics.PhysicalSegment;
-import hmi.physics.PhysicsSync;
+import asap.utils.PhysicsSync;
 import hmi.physics.controller.PhysicalController;
-import hmi.physics.mixed.MixedAnimationPlayer;
 import hmi.physics.mixed.MixedSystem;
 
 /**
@@ -70,6 +71,7 @@ public class AnimationPlayer implements Player, MixedAnimationPlayer
     private MixedPlayer mPlayer;
     private float stepTime;
 
+    private Skeleton prevSkel, curSkel, nextSkel;
     private SkeletonPose vPrevStartPose;
     private SkeletonPose vCurrStartPose;
     private SkeletonPose vNextStartPose;
@@ -93,11 +95,15 @@ public class AnimationPlayer implements Player, MixedAnimationPlayer
         vPrev = vP;
         vCurr = vC;
         vNext = vN;
+        prevSkel = new Skeleton("prevSkel", vPrev);
+        curSkel = new Skeleton("curSkel", vCurr);
+        nextSkel = new Skeleton("nextSkel", vNext);
+
         woManager = wom;
         VJoint[] emptyArray = new VJoint[0];
-        vPrevStartPose = new SkeletonPose(vPrev.getParts().toArray(emptyArray), "TR");
-        vCurrStartPose = new SkeletonPose(vCurr.getParts().toArray(emptyArray), "TR");
-        vNextStartPose = new SkeletonPose(vNext.getParts().toArray(emptyArray), "TR");
+        vPrevStartPose = new SkeletonPose("prev", prevSkel, "TR");
+        vCurrStartPose = new SkeletonPose("cur",  curSkel, "TR");
+        vNextStartPose = new SkeletonPose("next", nextSkel, "TR");
         vPrevStartPose.setFromTarget();
         vCurrStartPose.setFromTarget();
         vNextStartPose.setFromTarget();
@@ -431,5 +437,9 @@ public class AnimationPlayer implements Player, MixedAnimationPlayer
     public void shutdown()
     {
 
+    }
+    
+    public void verifyTime(double time)
+    {
     }
 }
