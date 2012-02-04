@@ -1,0 +1,10 @@
+Manifest-Version: 1.0
+Main-Class: undefined
+
+Name: asap/envtest
+Specification-Title:    AsapEnvTest
+Specification-Version:  0.1
+Specification-Vendor:   HMI
+Implementation-Title:   AsapEnvTest
+Implementation-Version: January 20 2012  04:38 PM
+Implementation-Vendor:  HMI
