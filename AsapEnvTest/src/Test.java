@@ -54,7 +54,8 @@ public class Test
     /**
      * Start the ElckerlycEnvironment prog
      */
-    public static void main(String[] arg)
+    @SuppressWarnings("unused")
+	public static void main(String[] arg)
     {
         System.setProperty("sun.java2d.noddraw", "true"); // avoid potential
                                                           // interference with
