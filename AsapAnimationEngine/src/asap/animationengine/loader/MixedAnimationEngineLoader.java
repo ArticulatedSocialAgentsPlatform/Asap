@@ -19,18 +19,25 @@
  ******************************************************************************/
 package asap.animationengine.loader;
 
+import hmi.animation.SkeletonPose;
+import hmi.animation.VJoint;
+import hmi.elckerlyc.DefaultEngine;
+import hmi.elckerlyc.Engine;
+import hmi.elckerlyc.planunit.DefaultTimedPlanUnitPlayer;
+import hmi.elckerlyc.planunit.PlanManager;
+import hmi.math.Quat4f;
+import hmi.mixedanimationenvironment.MixedAnimationEnvironment;
+import hmi.mixedanimationenvironment.MixedAnimationPlayer;
+import hmi.mixedanimationenvironment.MixedAnimationPlayerManager;
+import hmi.physics.MixedSkeletonEmbodiment;
+import hmi.physics.PhysicalEmbodiment;
+import hmi.util.Resources;
+import hmi.xml.XMLStructureAdapter;
+import hmi.xml.XMLTokenizer;
+
 import java.io.IOException;
-import java.util.*;
+import java.util.HashMap;
 
-import asap.utils.*;
-import asap.environment.*;
-import asap.environment.impl.*;
-import hmi.mixedanimationenvironment.*;
-
-import hmi.xml.*;
-import hmi.util.*;
-import hmi.elckerlyc.*;
-import hmi.animation.*;
 import asap.animationengine.AnimationPlanPlayer;
 import asap.animationengine.AnimationPlanner;
 import asap.animationengine.AnimationPlayer;
@@ -38,9 +45,12 @@ import asap.animationengine.gesturebinding.GestureBinding;
 import asap.animationengine.motionunit.TimedMotionUnit;
 import asap.animationengine.restpose.RestPose;
 import asap.animationengine.restpose.SkeletonPoseRestPose;
-import hmi.math.*;
-import hmi.elckerlyc.planunit.*;
-import hmi.physics.*;
+import asap.environment.AsapEnvironment;
+import asap.environment.AsapVirtualHuman;
+import asap.environment.EmbodimentLoader;
+import asap.environment.EngineLoader;
+import asap.environment.Loader;
+import asap.utils.Environment;
 
 /**
 

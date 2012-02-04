@@ -21,7 +21,7 @@
       <dependency org="HMI"     name="HmiUtil"           rev="latest.release"    />
       <dependency org="HMI"     name="HmiXml"            rev="latest.release"    />
       <dependency org="HMI"     name="HmiPhysics"            rev="latest.release"    />
-      <dependency org="HMI"     name="HmiAnimationEngine"            rev="latest.release"    />
+      <dependency org="HMI"     name="HmiAnimationEngine"    transitive="false"        rev="latest.release"    />
 
 
       <dependency org="google"  name="guava"             rev="latest.release"    />
