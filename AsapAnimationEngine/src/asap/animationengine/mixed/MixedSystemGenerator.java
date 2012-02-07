@@ -96,11 +96,13 @@ public class MixedSystemGenerator
     
     public MixedSystem generateMixedSystem(String phId, Collection<String> requiredJoints, Collection<String>desiredJoints,VJoint human)
     {
-        PhysicalHumanoid pHuman = fullBodyPh.createNew(phId);
+        PhysicalHumanoid pHuman = fullBodyPh.createNew(phId);        
         MixedSystem ms = new MixedSystem(gravity,pHuman);
-        MixedSystemAssembler msa = new MixedSystemAssembler(human,pHuman,ms);        
-        PhysicalHumanoidAssembler pha = msa.pha;
+        if(requiredJoints.isEmpty() && desiredJoints.isEmpty())return ms;
         
+        MixedSystemAssembler msa = new MixedSystemAssembler(human,pHuman,ms);        
+        
+        PhysicalHumanoidAssembler pha = msa.pha;        
         PhysicalSegment rootSegment = fullBodyPh.createSegment(phId+"-HumanoidRoot", Hanim.HumanoidRoot);
         PhysicalSegmentAssembler psaRoot = new PhysicalSegmentAssembler(human, pHuman, rootSegment);
         psaRoot.setRoot(true);        
@@ -121,6 +123,7 @@ public class MixedSystemGenerator
         
         
         List<List<String>> branches = new ArrayList<List<String>>();        
+        
         //find Branches
         for(PhysicalSegment ps:fullBodyPh.getSegments())
         {
@@ -153,18 +156,20 @@ public class MixedSystemGenerator
             
             IDSegment psRoot = new IDSegment();
             IDSegmentAssembler psaIDRoot = new IDSegmentAssembler(human,psRoot);
-            psaIDRoot.setRoot(true);
-            psaIDRoot.createFromPhysicalSegment(fullBodyPh.getSegment(branch.get(0)));            
-            ba.setRootSegmentAssembler(psaIDRoot);
+            psaIDRoot.setRoot(true);            
+            psaIDRoot.createFromPhysicalSegment(fullBodyPh.getSegment(branch.get(0)),findEndJoints(human.getPartBySid(branch.get(0))));
+            
+            ba.setRootSegmentAssembler(psaIDRoot);            
             branch.remove(0);
             
             for(String idseg:branch)
             {
                 IDSegment ps = new IDSegment();
                 IDSegmentAssembler psa = new IDSegmentAssembler(human,ps);
-                psaIDRoot.createFromPhysicalSegment(fullBodyPh.getSegment(idseg));
-                ba.addPhysicalSegmentAssembler(psa);    
+                psa.createFromPhysicalSegment(fullBodyPh.getSegment(idseg),findEndJoints(human.getPartBySid(idseg)));
+                ba.addPhysicalSegmentAssembler(psa);
             }
+            msa.addBranchAssembler(ba);
         }
         msa.setup();
         return ms;
