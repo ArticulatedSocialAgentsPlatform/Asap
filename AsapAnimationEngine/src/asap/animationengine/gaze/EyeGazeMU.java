@@ -23,6 +23,7 @@ import com.google.common.collect.ImmutableSet;
 
 import asap.animationengine.AnimationPlayer;
 import asap.animationengine.motionunit.MUPlayException;
+import asap.animationengine.motionunit.MUSetupException;
 import asap.animationengine.motionunit.TimedMotionUnit;
 import hmi.animation.Hanim;
 import hmi.elckerlyc.BMLBlockPeg;
@@ -44,11 +45,15 @@ public class EyeGazeMU extends GazeMU
     private float qEyeRight[] = Quat4f.getQuat4f();
     
     @Override    
-    public EyeGazeMU copy(AnimationPlayer p)
+    public EyeGazeMU copy(AnimationPlayer p) throws MUSetupException
     {
         EyeGazeMU gmu = new EyeGazeMU();
         gmu.lEye = p.getVNext().getPart(Hanim.l_eyeball_joint);
         gmu.rEye = p.getVNext().getPart(Hanim.r_eyeball_joint);
+        if(gmu.lEye == null || gmu.rEye==null)
+        {
+            throw new MUSetupException("Eyegaze MU requested, but no eyeball joint in skeleton.",this);
+        }
         gmu.player = p;
         gmu.woManager = p.getWoManager();
         gmu.target = target;

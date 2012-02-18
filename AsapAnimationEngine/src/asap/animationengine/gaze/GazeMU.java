@@ -178,7 +178,7 @@ public class GazeMU implements MotionUnit
     }
 
     @Override
-    public GazeMU copy(AnimationPlayer p)
+    public GazeMU copy(AnimationPlayer p) throws MUSetupException
     {
         GazeMU gmu = new GazeMU();
         gmu.neck = p.getVNext().getPart(Hanim.skullbase);

@@ -64,7 +64,7 @@ public interface MotionUnit extends KeyPositionManager
     /**
      * Create a copy of this motion unit and link it to the animationplayer
      */
-    MotionUnit copy(AnimationPlayer p);
+    MotionUnit copy(AnimationPlayer p) throws MUSetupException;
     
     /**
      * Get the motionunit replacement group (=typically the BML behavior)
