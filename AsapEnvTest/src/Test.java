@@ -23,6 +23,7 @@ import hmi.elckerlyc.world.WorldObject;
 import hmi.mixedanimationenvironment.MixedAnimationEnvironment;
 import hmi.physicsenvironment.OdePhysicsEnvironment;
 import hmi.renderenvironment.HmiRenderEnvironment;
+import hmi.renderenvironment.HmiRenderEnvironment.RenderStyle;
 import hmi.util.DefaultDeadlockListener;
 import hmi.util.EventDispatchThreadHangMonitor;
 import hmi.util.ThreadDeadlockDetector;
@@ -138,12 +139,12 @@ public class Test extends WindowAdapter
         armandiaRoot.setTranslation(1,1,1);
         */
 
-        hre.loadSphere("greensphere", 0.05f, 25, 25, new float[]{ 0.2f, 1, 0.2f, 1 },  new float[]{ 0.2f, 1, 0.2f, 1 }, new float[]{ 0.2f, 1, 0.2f, 0 }, new float[]{ 0.2f, 1, 0.2f, 1 });
+        hre.loadSphere("greensphere", 0.05f, 25, 25, RenderStyle.FILL, new float[]{ 0.2f, 1, 0.2f, 1 },  new float[]{ 0.2f, 1, 0.2f, 1 }, new float[]{ 0.2f, 1, 0.2f, 0 }, new float[]{ 0.2f, 1, 0.2f, 1 });
         VJoint sphereJoint = hre.getObjectRootJoint("greensphere");
         sphereJoint.setTranslation(-0.8f, 2.1f, 0.2f);
         ae.getWorldObjectManager().addWorldObject("greensphere", new WorldObject(sphereJoint));
 
-        hre.loadBox("bluebox", new float[]{0.05f,0.05f,0.05f}, new float[]{ 0.2f, 0.2f, 1, 1 },  new float[]{ 0.2f, 0.2f, 1, 1 }, new float[]{ 0.2f, 0.2f, 1, 0 }, new float[]{ 0.2f, 0.2f, 1, 1 });
+        hre.loadBox("bluebox", new float[]{0.05f,0.05f,0.05f}, RenderStyle.FILL, new float[]{ 0.2f, 0.2f, 1, 1 },  new float[]{ 0.2f, 0.2f, 1, 1 }, new float[]{ 0.2f, 0.2f, 1, 0 }, new float[]{ 0.2f, 0.2f, 1, 1 });
         VJoint boxJoint = hre.getObjectRootJoint("bluebox");
         boxJoint.setTranslation(-0.4f, 1.5f, 0.5f);
         ae.getWorldObjectManager().addWorldObject("bluebox", new WorldObject(boxJoint));
