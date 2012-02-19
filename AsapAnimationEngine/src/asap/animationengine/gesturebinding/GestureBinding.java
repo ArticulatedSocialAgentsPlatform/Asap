@@ -72,7 +72,16 @@ public class GestureBinding extends XMLStructureAdapter
                 }
                 else
                 {
-                    MotionUnit muCopy = s.motionUnit.copy(player);
+                    MotionUnit muCopy;
+                    try
+                    {
+                        muCopy = s.motionUnit.copy(player);
+                    }
+                    catch (MUSetupException e1)
+                    {
+                        logger.warn("Error in setting up motion unit", e1);
+                        continue;
+                    }
                     TimedMotionUnit tmu = muCopy.createTMU(fbManager,bbPeg,b.getBmlId(),b.id);                    
                     
                     

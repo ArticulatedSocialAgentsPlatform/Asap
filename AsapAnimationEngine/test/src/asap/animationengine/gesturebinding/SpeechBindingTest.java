@@ -14,6 +14,7 @@ import org.junit.Test;
 
 import asap.animationengine.AnimationPlayer;
 import asap.animationengine.gesturebinding.SpeechBinding;
+import asap.animationengine.motionunit.MUSetupException;
 import asap.animationengine.motionunit.TimedMotionUnit;
 
 /**
@@ -36,7 +37,7 @@ public class SpeechBindingTest
     }
     
     @Test
-    public void testReadXML() throws ParameterException
+    public void testReadXML() throws ParameterException, MUSetupException
     {
         String str = "<speechbinding>"+
                      "<VisimeSpec visime=\"0\">"+

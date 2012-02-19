@@ -27,11 +27,15 @@ import hmi.util.DefaultDeadlockListener;
 import hmi.util.EventDispatchThreadHangMonitor;
 import hmi.util.ThreadDeadlockDetector;
 
+import java.awt.Toolkit;
+import java.awt.event.WindowAdapter;
+import java.awt.event.WindowEvent;
 import java.io.IOException;
 import java.util.ArrayList;
 
 import javax.swing.JFrame;
 
+import lombok.extern.slf4j.Slf4j;
 import asap.environment.AsapEnvironment;
 import asap.environment.AsapVirtualHuman;
 import asap.utils.Environment;
@@ -42,9 +46,12 @@ import asap.utils.Environment;
  * @author Dennis Reidsma
  * @author Herwin van Welbergen
  */
-public class Test
+@Slf4j
+public class Test extends WindowAdapter 
 {
-
+	protected AsapEnvironment ae = null;
+	protected JFrame mainUI = null;
+	
     static { 
       EventDispatchThreadHangMonitor.initMonitoring(); 
       new ThreadDeadlockDetector().addListener(new DefaultDeadlockListener());
@@ -54,8 +61,13 @@ public class Test
     /**
      * Start the ElckerlycEnvironment prog
      */
-    @SuppressWarnings("unused")
 	public static void main(String[] arg)
+    {
+    	new Test().go();
+    }
+    
+    @SuppressWarnings("unused")
+    public void go()
     {
         System.setProperty("sun.java2d.noddraw", "true"); // avoid potential
                                                           // interference with
@@ -64,11 +76,12 @@ public class Test
         HmiRenderEnvironment hre = new HmiRenderEnvironment();
         OdePhysicsEnvironment ope = new OdePhysicsEnvironment();
         MixedAnimationEnvironment mae = new MixedAnimationEnvironment();
-        AsapEnvironment ae = new AsapEnvironment();
+        ae = new AsapEnvironment();
         AudioEnvironment aue = new AudioEnvironment("WAV_CLIP");
         
-        JFrame jf = new JFrame("Test new HmiEnvironment");
-        jf.setSize(1000,600);
+        mainUI = new JFrame("Test new HmiEnvironment");
+        mainUI.setSize(1000,600);
+        mainUI.addWindowListener(this);
         
         hre.init(); //canvas does not exist until init was called
         ope.init();
@@ -85,8 +98,8 @@ public class Test
         ope.addPrePhysicsCopyListener(ae); // this clock method drives the engines in ee. if no physics, then register ee as a listener at the render clock!
         
         java.awt.Component canvas = hre.getAWTComponent(); //after init, get canvas and add to window
-        jf.add(canvas);
-        jf.setVisible(true);
+        mainUI.add(canvas);
+        mainUI.setVisible(true);
         
         
         hre.startRenderClock();
@@ -97,7 +110,9 @@ public class Test
         ae.getWorldObjectManager().addWorldObject("camera", new WorldObject(camera));
         try
         {
-            AsapVirtualHuman avh = ae.loadVirtualHuman("armandia1", "Humanoids/armandia", "asapvhloader_test.xml", "armandia - testing new environment setup");
+        	AsapVirtualHuman avh = ae.loadVirtualHuman("blueguy", "Humanoids/blueguy", "blueguy_asaploader_mary_hudson.xml", "blueguy - test avatar");
+        	//AsapVirtualHuman avh = ae.loadVirtualHuman("billie", "Humanoids/billie", "asaploader_billie.xml", "billie");
+        	//AsapVirtualHuman avh = ae.loadVirtualHuman("armandia1", "Humanoids/armandia", "asapvhloader_test.xml", "armandia - testing new environment setup");
             //AsapVirtualHuman avh2 = ae.loadVirtualHuman("armandia2", "Humanoids/armandia", "loader2.xml", "another armandia - testing new environment setup"); 
         }
         catch (IOException ex)
@@ -107,6 +122,9 @@ public class Test
         
         //loading and using objects...
         
+
+        //hre.loadObject("psychoroom", "Shared3DModels/psychoroom", "Shared3DModels/psychoroom", "psychological_room.dae");
+
         /*
         hre.loadObject("cokecan", "Shared3DModels/cokecan", "Shared3DModels/cokecan", "cokecan_scale0.01.dae");
         VJoint cokecanjoint = hre.getObjectRootJoint("cokecan");
@@ -120,11 +138,19 @@ public class Test
         armandiaRoot.setTranslation(1,1,1);
         */
 
+        hre.loadSphere("greensphere", 0.05f, 25, 25, new float[]{ 0.2f, 1, 0.2f, 1 },  new float[]{ 0.2f, 1, 0.2f, 1 }, new float[]{ 0.2f, 1, 0.2f, 0 }, new float[]{ 0.2f, 1, 0.2f, 1 });
+        VJoint sphereJoint = hre.getObjectRootJoint("greensphere");
+        sphereJoint.setTranslation(-0.8f, 2.1f, 0.2f);
+        ae.getWorldObjectManager().addWorldObject("greensphere", new WorldObject(sphereJoint));
+
+        hre.loadBox("bluebox", new float[]{0.05f,0.05f,0.05f}, new float[]{ 0.2f, 0.2f, 1, 1 },  new float[]{ 0.2f, 0.2f, 1, 1 }, new float[]{ 0.2f, 0.2f, 1, 0 }, new float[]{ 0.2f, 0.2f, 1, 1 });
+        VJoint boxJoint = hre.getObjectRootJoint("bluebox");
+        boxJoint.setTranslation(-0.4f, 1.5f, 0.5f);
+        ae.getWorldObjectManager().addWorldObject("bluebox", new WorldObject(boxJoint));
+
         //OK, generally, this demo class should not know about physics, but the code below shows how to make a sphere, take the vjoint of the sphere, attach it to a physical sphere that resides in the OPE as a rigidbody.
         /*
-        hre.loadSphere("sphere", 0.2f, 25, 25, new float[]{ 1, 0, 0, 1 },  new float[]{ 1, 1, 1, 1 }, new float[]{ 0, 0, 0, 0 }, new float[]{ 0, 0, 0, 1 });
-        VJoint sphereJoint = hre.getObjectRootJoint("sphere");
-
+        
         OdeRigidBody phsphere = ope.createRigidBody("phsphere");
         OdeMass m = new OdeMass();
         m.setFromSphere(0.05f, 1);
@@ -136,18 +162,49 @@ public class Test
         phsphere.addTranslationBuffer(sphereJoint.getTranslationBuffer());
         */
 
-        
-        
-//close down:
-//shut down physics env
-//shut down render env
-//do we need to unload anything further?
-//shut down all engines
-//exit all frames
-        
+        //requestShutdown(true,true);
+
     }
-
-
+    public void requestShutdown(boolean closeWindow, boolean exitOnClose)
+    {
+        ae.requestShutdown();
+        //no need to pull the plug on the JFrame as the application will end now?
+        while (!ae.isShutdown()){
+        	log.debug("wait for shutdown");
+        	try
+        	{
+        		Thread.sleep(1000);
+        	}
+        	catch (Exception ex)
+        	{
+        	
+        	}
+        }
+        
+        System.out.println("AsapEnvironment completely shut down.");
+        if (closeWindow)
+        {
+	        System.out.println("Closing main GUI now.");
+	        // method to programatically close the frame, from
+	        // http://stackoverflow.com/questions
+	        // /1234912/how-to-programmatically-close-a-jframe
+	        //
+	        mainUI.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
+	        WindowEvent wev = new WindowEvent(mainUI, WindowEvent.WINDOW_CLOSING);
+	        Toolkit.getDefaultToolkit().getSystemEventQueue().postEvent(wev);
+        }
+        if (exitOnClose) System.exit(0);
+    	
+    }
+    public void windowClosing(WindowEvent e)
+    {
+    	new Thread(){
+    		public void run()
+    		{
+    			requestShutdown(false,true);
+    		}
+    	}.start();
+    }
 
 
 }

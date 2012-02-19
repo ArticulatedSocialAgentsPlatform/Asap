@@ -8,6 +8,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import asap.animationengine.AnimationPlayer;
+import asap.animationengine.motionunit.MUSetupException;
 import asap.animationengine.motionunit.MotionUnit;
 import asap.animationengine.motionunit.TimedMotionUnit;
 
@@ -52,12 +53,12 @@ public class SpeechBinding extends XMLStructureAdapter
     } 
     
     
-    public TimedMotionUnit getMotionUnit(int visime, BMLBlockPeg bbPeg, String bmlId, String id, AnimationPlayer player)
+    public TimedMotionUnit getMotionUnit(int visime, BMLBlockPeg bbPeg, String bmlId, String id, AnimationPlayer player) throws MUSetupException
     {
         return getMotionUnit(NullFeedbackManager.getInstance(),visime, bbPeg,bmlId,id,player);
     }
     
-    public TimedMotionUnit getMotionUnit(FeedbackManager fbm, int visime, BMLBlockPeg bbPeg, String bmlId, String id, AnimationPlayer player)
+    public TimedMotionUnit getMotionUnit(FeedbackManager fbm, int visime, BMLBlockPeg bbPeg, String bmlId, String id, AnimationPlayer player) throws MUSetupException
     {
         VisimeSpec viSpec = specs.get(visime);
         if(viSpec!=null)
