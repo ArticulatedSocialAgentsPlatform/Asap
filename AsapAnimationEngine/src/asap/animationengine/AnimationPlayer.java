@@ -21,10 +21,9 @@ package asap.animationengine;
 import java.util.ArrayList;
 import java.util.List;
 
-import net.jcip.annotations.GuardedBy;
+import lombok.extern.slf4j.Slf4j;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import net.jcip.annotations.GuardedBy;
 
 import asap.animationengine.mixed.MixedPlayer;
 import hmi.mixedanimationenvironment.*;
@@ -51,6 +50,7 @@ import hmi.physics.mixed.MixedSystem;
  * 
  * @author Herwin
  */
+@Slf4j
 public class AnimationPlayer implements Player, MixedAnimationPlayer
 {
     private VJoint vPrev;
@@ -77,7 +77,7 @@ public class AnimationPlayer implements Player, MixedAnimationPlayer
     private SkeletonPose vNextStartPose;
     private boolean prevValidOld = false;
     protected WorldObjectManager woManager;
-    private Logger logger = LoggerFactory.getLogger(AnimationPlayer.class.getName());
+    
 
     public RestPose getRestPose()
     {
@@ -181,9 +181,15 @@ public class AnimationPlayer implements Player, MixedAnimationPlayer
             }
         }
     }
-
-    public synchronized void play(double prevTime)
+    
+    @Override
+    public void play(double time){}
+    
+    @Override
+    public synchronized void playStep(double prevTime)
     {
+        log.debug("time {}",prevTime);
+        
         controllers.clear();
         prevValidOld = prevValid;
 
@@ -304,12 +310,12 @@ public class AnimationPlayer implements Player, MixedAnimationPlayer
         {
             if (!foundMatch)
             {
-                logger.warn("Could not find a mixed system that contains joints: {} ", controlledJoints);
+                log.warn("Could not find a mixed system that contains joints: {} ", controlledJoints);
             }
 
             if (bestMatch != mPlayer.getSystem())
             {
-                logger.debug("Switching system {}", prevTime);
+                log.debug("Switching system {}", prevTime);
                 mPlayer.switchSystem(bestMatch, stepTime, vPrev, vCurr, vNext, prevValidOld);
                 pHuman.setEnabled(false);
                 pHuman = mPlayer.getSystem().getPHuman();
