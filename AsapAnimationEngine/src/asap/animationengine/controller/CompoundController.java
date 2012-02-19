@@ -351,8 +351,7 @@ public class CompoundController extends XMLStructureAdapter implements PhysicalC
     @Override
     public Set<String> getJoints()
     {
-        // TODO Auto-generated method stub
-        return null;
+        return getRequiredJointIDs();
     }
 
 }
