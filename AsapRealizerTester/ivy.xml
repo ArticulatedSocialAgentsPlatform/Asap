@@ -25,21 +25,21 @@
       <dependency org="HMI"      name="HmiTTSnative"       rev="latest.${resolve.status}"  />
       <dependency org="HMI"      transitive="false" name="HmiTestUtil"        rev="latest.${resolve.status}"/>
       -->
-      <dependency org="HMI"      name="HmiAnimation"       rev="latest.release"  />
-      <dependency org="HMI"      name="HmiTTS"             rev="latest.release"  />
-      <dependency org="HMI"      name="HmiTTSMary"         rev="latest.release"  />
-      <dependency org="HMI"      name="HmiTTSSapi5"        rev="latest.release"  />
-      <dependency org="HMI"      name="HmiNeurophysics"    rev="latest.release"  />
-      <dependency org="HMI"      name="HmiDebug"           transitive="false" rev="latest.release"  />
-      <dependency org="HMI"      name="HmiGraphics"        transitive="false" rev="latest.release"  />
-      <dependency org="HMI"      name="HmiFaceGraphics"    transitive="false" rev="latest.release"  />
-      <dependency org="HMI"      name="HmiElckerlyc"       transitive="false" rev="latest.release"  />
-      <dependency org="HMI"      name="HmiRealizerTester"    transitive="false" rev="latest.release"  />
-      <dependency org="HMI"      name="HmiBML"             rev="latest.release"  />
-      <dependency org="HMI"      name="HmiXml"             rev="latest.release"  />
-      <dependency org="HMI"      name="HmiUtil"            rev="latest.release"  />
-      <dependency org="HMI"      name="HmiTTSnative"       rev="latest.release"  />
-      <dependency org="HMI"      transitive="false" name="HmiTestUtil"        rev="latest.release"/>
+      <dependency org="HMI"      name="HmiAnimation"       rev="latest.${resolve.status}"  />
+      <dependency org="HMI"      name="HmiTTS"             rev="latest.${resolve.status}"  />
+      <dependency org="HMI"      name="HmiTTSMary"         rev="latest.${resolve.status}"  />
+      <dependency org="HMI"      name="HmiTTSSapi5"        rev="latest.${resolve.status}"  />
+      <dependency org="HMI"      name="HmiNeurophysics"    rev="latest.${resolve.status}"  />
+      <dependency org="HMI"      name="HmiDebug"           transitive="false" rev="latest.${resolve.status}"  />
+      <dependency org="HMI"      name="HmiGraphics"        transitive="false" rev="latest.${resolve.status}"  />
+      <dependency org="HMI"      name="HmiFaceGraphics"    transitive="false" rev="latest.${resolve.status}"  />
+      <dependency org="HMI"      name="HmiElckerlyc"       transitive="false" rev="latest.${resolve.status}"  />
+      <dependency org="HMI"      name="HmiRealizerTester"    transitive="false" rev="latest.${resolve.status}"  />
+      <dependency org="HMI"      name="HmiBML"             rev="latest.${resolve.status}"  />
+      <dependency org="HMI"      name="HmiXml"             rev="latest.${resolve.status}"  />
+      <dependency org="HMI"      name="HmiUtil"            rev="latest.${resolve.status}"  />
+      <dependency org="HMI"      name="HmiTTSnative"       rev="latest.${resolve.status}"  />
+      <dependency org="HMI"      transitive="false" name="HmiTestUtil"        rev="latest.${resolve.status}"/>
 
       <dependency org="odejava"  name="odejava"            rev="latest.release"  />   
       <dependency org="Sun" name="jogl" rev="latest.release"  />                                 

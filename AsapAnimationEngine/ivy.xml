@@ -4,30 +4,21 @@
       <dependency org="Asap"     name="AsapBML"           rev="latest.${resolve.status}"    />
       <dependency org="Asap"     name="AsapRealizer"           rev="latest.${resolve.status}"    />
 
-      <!--
       <dependency org="HMI"     name="HmiBML"           rev="latest.${resolve.status}"    />
       <dependency org="HMI"     name="HmiElckerlyc"           rev="latest.${resolve.status}"    />
-      <dependency org="HMI"     name="HmiEnvironment"           rev="latest.${resolve.status}"    />
-      <dependency org="HMI"     name="HmiUtil"           rev="latest.${resolve.status}"    />
-      <dependency org="HMI"     name="HmiXml"            rev="latest.${resolve.status}"    />
-      <dependency org="HMI"     name="HmiPhysics"            rev="latest.${resolve.status}"    />
-      <dependency org="HMI"     name="HmiAnimationEngine"            rev="latest.${resolve.status}"    />
-      -->
-      <dependency org="HMI"     name="HmiBML"           rev="latest.release"    />
-      <dependency org="HMI"     name="HmiElckerlyc"           rev="latest.release"    />
       <dependency org="HMI"   transitive="false" name="AsapUtils"     rev="latest.${resolve.status}"   />    
       <dependency org="HMI"   transitive="false" name="AsapEnvironment"     rev="latest.${resolve.status}"   />    
       <dependency org="HMI"   transitive="false" name="HmiMixedAnimationEnvironment"     rev="latest.${resolve.status}"   />    
-      <dependency org="HMI"     name="HmiUtil"           rev="latest.release"    />
-      <dependency org="HMI"     name="HmiXml"            rev="latest.release"    />
-      <dependency org="HMI"     name="HmiPhysics"            rev="latest.release"    />
-      <dependency org="HMI"     name="HmiAnimationEngine"    transitive="false"        rev="latest.release"    />
+      <dependency org="HMI"     name="HmiUtil"           rev="latest.${resolve.status}"    />
+      <dependency org="HMI"     name="HmiXml"            rev="latest.${resolve.status}"    />
+      <dependency org="HMI"     name="HmiPhysics"            rev="latest.${resolve.status}"    />
+      <dependency org="HMI"     name="HmiAnimationEngine"    transitive="false"        rev="latest.${resolve.status}"    />
 
 
       <dependency org="google"  name="guava"             rev="latest.release"    />
       <dependency org="lombok"  name="lombok"            rev="latest.release"    />
       <dependency org="jcip"    name="jcip-annotations"  rev="latest.release"  />
       <dependency org="slf4j"   name="slf4j-api"         rev="latest.release"  />
-      <dependency org="singularsystems"   name="jep"     rev="latest.${resolve.status}"   />
+      <dependency org="singularsystems"   name="jep"     rev="latest.release"   />
    </dependencies>
 </ivy-module>
