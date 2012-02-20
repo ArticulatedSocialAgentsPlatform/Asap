@@ -2,6 +2,7 @@ package asap.animationengine.restpose;
 
 import hmi.animation.SkeletonPose;
 import hmi.animation.VJoint;
+import hmi.animation.VObjectTransformCopier;
 import hmi.elckerlyc.BMLBlockPeg;
 import hmi.elckerlyc.OffsetPeg;
 import hmi.elckerlyc.TimePeg;
@@ -112,6 +113,14 @@ public class SkeletonPoseRestPose implements RestPose
         TransitionMU mu = new SlerpTransitionToPoseMU(targetJoints, startJoints, rotations);
         mu.setStartPose();
         return mu;
+    }
+
+    @Override
+    public void setRestPose()
+    {
+        VObjectTransformCopier.newInstanceFromVJointTree(poseTree, player.getVCurr(), "T1R").copyConfig();       
+        VObjectTransformCopier.newInstanceFromVJointTree(poseTree, player.getVNext(), "T1R").copyConfig();
+        VObjectTransformCopier.newInstanceFromVJointTree(poseTree, player.getVPrev(), "T1R").copyConfig();
     }
 
 }

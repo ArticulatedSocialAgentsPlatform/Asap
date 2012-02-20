@@ -42,4 +42,9 @@ public interface RestPose
      * to a position dictated by this resting pose.  
      */
     MotionUnit createTransitionToRest(Set<String>joints);
+    
+    /**
+     * Sets the restpose to prev, next, curr on the animationplayer 
+     */
+    void setRestPose();
 }
