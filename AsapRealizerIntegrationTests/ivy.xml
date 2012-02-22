@@ -1,0 +1,64 @@
+<ivy-module version="2.0">
+   <info organisation="Asap" module="AsapRealizerIntegrationsTests"/>
+   <dependencies>
+      <dependency org="junit"    name="cpsuite"              rev="latest.release"  />
+      <dependency org="google"    name="junit-ext"              rev="latest.release"  />
+      <dependency org="mockito"   name="mockito-all"            rev="latest.release"  />
+      <dependency org="jboss"			name="javassist" rev="latest.release"  />
+      <dependency org="powermock"			name="powermock-mockito" rev="latest.release"  />
+      <dependency org="hamcrest" name="hamcrest-all"       rev="latest.release"  />
+      <dependency org="odejava" name="odejava"       rev="latest.release"  />
+      <dependency org="HMI"      transitive="false" name="HmiTestUtil"        rev="latest.{$resolve.status}"  />
+      <dependency org="HMI"      transitive="false" name="HmiElckerlycTestUtil"        rev="latest.{$resolve.status}"  />
+      <dependency org="HMI"      name="HmiGraphics" transitive="false" rev="latest.{$resolve.status}"  />
+      <dependency org="HMI"      name="HmiMath" rev="latest.{$resolve.status}"  />
+	  <dependency org="HMI"      name="HmiElckerlyc" rev="latest.{$resolve.status}"  />
+      <dependency org="HMI"      name="HmiAnimation" rev="latest.{$resolve.status}"  />
+      <dependency org="HMI"      name="HmiSpeechEngine"  transitive="false" rev="latest.{$resolve.status}"  />
+      <dependency org="HMI"      name="HmiFaceAnimation"  transitive="false" rev="latest.{$resolve.status}"  />
+      <dependency org="HMI"      name="HmiFaceGraphics"  transitive="false" rev="latest.{$resolve.status}"  />
+      <dependency org="HMI"      name="HmiFaceEngine"  transitive="false" rev="latest.{$resolve.status}"  />
+      <dependency org="HMI"      name="HmiAnimationEngine"  transitive="false" rev="latest.{$resolve.status}"  />
+      <dependency org="HMI"   name="HmiAudioEngine" transitive="false" rev="latest.${resolve.status}"   />
+      <dependency org="HMI"   name="HmiPhysics" transitive="false" rev="latest.${resolve.status}"   />
+      <dependency org="HMI"   name="HmiPhysicsEnvironment" transitive="false" rev="latest.${resolve.status}"   />
+      <dependency org="HMI"   name="HmiRenderEnvironment" transitive="false" rev="latest.${resolve.status}"   />
+      <dependency org="HMI"   name="HmiAudioEnvironment" transitive="false" rev="latest.${resolve.status}"   />
+      <dependency org="HMI"   name="HmiMixedAnimationEnvironment" transitive="false" rev="latest.${resolve.status}"   />
+      <dependency org="HMI"   name="HmiTTS" transitive="false" rev="latest.${resolve.status}"   />
+      <dependency org="HMI"   name="HmiTTSSapi5" transitive="false" rev="latest.${resolve.status}"   />
+      <dependency org="HMI"   name="HmiTTSMary" transitive="false" rev="latest.${resolve.status}"   />
+      <dependency org="Asap"   name="AsapBML" transitive="false" rev="latest.${resolve.status}"   />
+      <dependency org="Asap"   name="AsapAnimationEngine" transitive="false" rev="latest.${resolve.status}"   />
+      <dependency org="Asap"   name="AsapRealizer" transitive="false" rev="latest.${resolve.status}"   />
+
+      <dependency org="logback" name="logback-classic"     rev="latest.release"  />   
+      <dependency org="logback" name="logback-core"        rev="latest.release"  />   
+      
+      <!--dependency org="slf4j"   name="log4j-over-slf4j"      rev="latest.release"  />   
+      <dependency org="slf4j"   name="jul-to-slf4j"          rev="latest.release"  />   
+      <dependency org="slf4j"   name="jcl-over-slf4j"        rev="latest.release"  /-->   
+
+      <!-- for tests with SAPI -->
+      <dependency org="HMI"      name="HmiTTSnative"        rev="latest.{$resolve.status}"  />
+
+      <dependency org="lwjgl"    name="lwjgl"            rev="latest.release"  />   
+      <dependency org="Sun"      name="jlfgr"              rev="latest.release"  />   
+      <dependency org="singularsystems"   name="jep"       rev="latest.release"  />   
+      <dependency org="slf4j"    name="slf4j-api"          rev="latest.release"  />   
+      <dependency org="slf4j"    name="log4j-over-slf4j"   rev="latest.release"  />   
+      <dependency org="slf4j"    name="jul-to-slf4j"       rev="latest.release"  />   
+      <dependency org="slf4j"    name="jcl-over-slf4j"     rev="latest.release"  />   
+      
+      <!-- for tests with MaryTTS -->
+      <dependency org="slf4j"   name="log4j-over-slf4j"      rev="latest.release"  />   
+      <dependency org="dfki"   name="mary-common"    rev="latest.release"  />   
+      <dependency org="apache" name="commons-collections" rev="latest.release"  />   
+      <dependency org="opennlp" name="opennlp-tools" rev="latest.release"  />   
+      <dependency org="opennlp" name="maxent" rev="latest.release"  />   
+      <dependency org="freetts" name="freetts" rev="latest.release"  />   
+      <dependency org="gnu" name="trove" rev="latest.release"  />   
+      <dependency org="hsqldb" name="hsqldb" rev="latest.release"  />     
+      <dependency org="Jama" name="Jama" rev="latest.release"  />             
+   </dependencies>
+</ivy-module>

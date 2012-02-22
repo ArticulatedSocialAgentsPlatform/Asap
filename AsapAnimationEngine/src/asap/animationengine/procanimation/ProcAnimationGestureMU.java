@@ -49,10 +49,38 @@ public class ProcAnimationGestureMU implements GestureUnit
     private VJoint vNext;
     private Resources resource;
     private double preStrokeHoldDuration = 0;
+    
+    public double getStrokeDuration()
+    {
+        return gestureUnit.getPrefDuration();
+    }
+    
+    public double getPreStrokeHoldDuration()
+    {
+        return preStrokeHoldDuration;
+    }
+
+    public double getPostStrokeHoldDuration()
+    {
+        return postStrokeHoldDuration;
+    }
+
     private double postStrokeHoldDuration = 0;
     private int priority = Priority.GESTURE;
     private AnimationPlayer aniPlayer;
     private final double defaultRelaxDuration = 0.5;
+    
+    //TODO: determine using Fitts' law
+    public double getRetractionDuration()
+    {
+        return defaultRelaxDuration;
+    }
+    
+    //TODO: determine using Fitts' law
+    public double getPreparationDuration()
+    {
+        return defaultRelaxDuration;
+    }
     
     public int getPriority()
     {
@@ -315,6 +343,14 @@ public class ProcAnimationGestureMU implements GestureUnit
         return gestureUnit.getReplacementGroup();
     }
 
+    public double getRelativeStrokePos()
+    {
+        return (gestureUnit.getKeyPosition(BMLGestureSync.STROKE.getId()).time-
+                gestureUnit.getKeyPosition(BMLGestureSync.STROKE_START.getId()).time)
+                /(gestureUnit.getKeyPosition(BMLGestureSync.STROKE_END.getId()).time-
+                  gestureUnit.getKeyPosition(BMLGestureSync.STROKE_START.getId()).time);
+    }
+    
     public void setupTransitionUnits()
     {
         //setup keypos
@@ -323,10 +359,7 @@ public class ProcAnimationGestureMU implements GestureUnit
         double postHoldDur = gestureUnit.getPrefDuration()*postStrokeHoldDuration;
         double preHoldDur = gestureUnit.getPrefDuration()*preStrokeHoldDuration;
         
-        double relStrokePos = (gestureUnit.getKeyPosition(BMLGestureSync.STROKE.getId()).time-
-                              gestureUnit.getKeyPosition(BMLGestureSync.STROKE_START.getId()).time)
-                              /(gestureUnit.getKeyPosition(BMLGestureSync.STROKE_END.getId()).time-
-                                gestureUnit.getKeyPosition(BMLGestureSync.STROKE_START.getId()).time);
+        double relStrokePos = getRelativeStrokePos();
                               
         keyPositionManager.getKeyPosition(BMLGestureSync.READY.getId()).time = defaultRelaxDuration/duration;
         keyPositionManager.getKeyPosition(BMLGestureSync.STROKE_START.getId()).time = (defaultRelaxDuration+preHoldDur)/duration;

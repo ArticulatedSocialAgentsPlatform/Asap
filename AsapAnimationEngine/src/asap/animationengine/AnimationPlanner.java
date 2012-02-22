@@ -22,9 +22,8 @@ import hmi.elckerlyc.*;
 import hmi.elckerlyc.feedback.FeedbackManager;
 import hmi.elckerlyc.planunit.KeyPosition;
 import hmi.elckerlyc.planunit.PlanManager;
-import hmi.elckerlyc.scheduler.LinearStretchResolver;
 import hmi.elckerlyc.scheduler.TimePegAndConstraint;
-import hmi.elckerlyc.scheduler.UniModalResolver;
+
 
 import java.util.*;
 
@@ -51,15 +50,13 @@ import hmi.bml.ext.bmlt.BMLTNoiseBehaviour;
 public class AnimationPlanner extends AbstractPlanner<TimedMotionUnit>
 {
     private final AnimationPlayer player;
-    private GestureBinding gestureBinding;
-    private final UniModalResolver resolver;
+    private GestureBinding gestureBinding;    
 
     public AnimationPlanner(FeedbackManager bfm, AnimationPlayer p, GestureBinding g, PlanManager<TimedMotionUnit> planManager)
     {
         super(bfm,planManager);
         gestureBinding = g;        
-        player = p;
-        resolver = new LinearStretchResolver();
+        player = p;        
     }
 
     public void setGestureBinding(GestureBinding g)
@@ -114,7 +111,7 @@ public class AnimationPlanner extends AbstractPlanner<TimedMotionUnit>
         }
         TimedMotionUnit tmu = tmus.get(0);
         tmu.resolveDefaultBMLKeyPositions();
-        resolver.resolveSynchs(bbPeg, b, sac, tmu);
+        tmu.resolveSynchs(bbPeg, b, sac);
         return tmu;
     }
 

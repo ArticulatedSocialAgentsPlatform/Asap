@@ -19,6 +19,8 @@
 package asap.animationengine.motionunit;
 
 import hmi.elckerlyc.BMLBlockPeg;
+import hmi.elckerlyc.BehaviourPlanningException;
+
 import hmi.elckerlyc.feedback.FeedbackManager;
 import hmi.elckerlyc.feedback.NullFeedbackManager;
 import hmi.elckerlyc.planunit.KeyPosition;
@@ -30,11 +32,15 @@ import hmi.elckerlyc.planunit.TimedAbstractPlanUnit;
 import hmi.elckerlyc.planunit.PlanUnitTimeManager;
 
 import java.util.ArrayList;
+import java.util.List;
 import java.util.Set;
 import lombok.Delegate;
 
 import hmi.bml.feedback.BMLSyncPointProgressFeedback;
-
+import hmi.elckerlyc.scheduler.TimePegAndConstraint;
+import hmi.elckerlyc.scheduler.UniModalResolver;
+import hmi.elckerlyc.scheduler.LinearStretchResolver;
+import hmi.bml.core.Behaviour;
 /**
  * When you do not set an end time peg, 'UNKNNOWN' is assumed. This leads to the TimedMotionUnit being timed as
  * starttime..starttime+mu.getpreferredduration() When you do not set a start time peg, the animation cannot be played
@@ -46,12 +52,17 @@ public class TimedMotionUnit extends TimedAbstractPlanUnit
     // private Logger logger = LoggerFactory.getLogger(TimedMotionUnit.class.getName());
     private final MotionUnit mu;
     protected ArrayList<KeyPosition> progressHandled = new ArrayList<KeyPosition>();
+    private final UniModalResolver resolver = new LinearStretchResolver();
     
     @Delegate
     protected final PlanUnitTimeManager puTimeManager;
     public Set<String> getKinematicJoints(){return mu.getKinematicJoints();}
     public Set<String> getPhysicalJoints(){return mu.getPhysicalJoints();};
     
+    public void resolveSynchs(BMLBlockPeg bbPeg, Behaviour b, List<TimePegAndConstraint> sac)throws BehaviourPlanningException
+    {
+        resolver.resolveSynchs(bbPeg, b, sac, this);
+    }
     /**
      * Constructor
      * @param bmlBlockPeg
