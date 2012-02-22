@@ -240,6 +240,15 @@ public class ProcAnimationGestureTMU extends TimedMotionUnit
             }
         }
         
+        // XXX: really needed? Added this for now for compatibility with the LinearStretchResolver
+        // resolve end if unknown and not a persistent behavior
+        if (endSac==null)
+        {
+            TimePeg tpEnd = new TimePeg(bbPeg);
+            tpEnd.setGlobalValue(tpRef.getGlobalValue()+offset);
+            setTimePeg("end", tpEnd);           
+        }
+        
         //backward setting
         offset = 0;
         for(int i=tpFirst-1;i>=0;i--)
@@ -250,6 +259,10 @@ public class ProcAnimationGestureTMU extends TimedMotionUnit
                 pegAndConstrs[i].peg.setGlobalValue(tpRef.getGlobalValue()-offset+pegAndConstrs[i].offset);
             }
         }
+        
+        
+        
+        
     }
     
     @Override
