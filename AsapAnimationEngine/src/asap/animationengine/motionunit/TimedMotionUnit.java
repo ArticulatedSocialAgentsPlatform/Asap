@@ -42,7 +42,7 @@ import hmi.elckerlyc.scheduler.UniModalResolver;
 import hmi.elckerlyc.scheduler.LinearStretchResolver;
 import hmi.bml.core.Behaviour;
 /**
- * When you do not set an end time peg, 'UNKNNOWN' is assumed. This leads to the TimedMotionUnit being timed as
+ * When you do not set an end time peg, 'UNKNOWN' is assumed. This leads to the TimedMotionUnit being timed as
  * starttime..starttime+mu.getpreferredduration() When you do not set a start time peg, the animation cannot be played
  * 
  * @author welberge
@@ -213,5 +213,11 @@ public class TimedMotionUnit extends TimedAbstractPlanUnit
         {
             throw new PlanUnitParameterNotFoundException(getBMLId(), getId(), e.getParamId(), e);
         }
+    }
+    
+    @Override
+    public String toString()
+    {
+        return getBMLId()+":"+getId();
     }
 }

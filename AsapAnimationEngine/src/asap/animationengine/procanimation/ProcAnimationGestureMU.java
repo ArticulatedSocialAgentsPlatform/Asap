@@ -28,7 +28,6 @@ import com.google.common.collect.ImmutableSet;
 import asap.animationengine.AnimationPlayer;
 import asap.animationengine.motionunit.MUPlayException;
 import asap.animationengine.motionunit.MotionUnit;
-import asap.animationengine.motionunit.TimedMotionUnit;
 import asap.animationengine.transitions.SlerpTransitionToPoseMU;
 import asap.planunit.Priority;
 
@@ -305,7 +304,7 @@ public class ProcAnimationGestureMU implements GestureUnit
     }
 
     @Override
-    public TimedMotionUnit createTMU(FeedbackManager bbm, BMLBlockPeg bmlBlockPeg, String bmlId, String id)
+    public ProcAnimationGestureTMU createTMU(FeedbackManager bbm, BMLBlockPeg bmlBlockPeg, String bmlId, String id)
     {
         return new ProcAnimationGestureTMU(bbm, bmlBlockPeg, bmlId, id, this);
     }

@@ -149,4 +149,23 @@ public class ProcAnimationGestureTMUTest extends AbstractTimedPlanUnitTest
         assertThat(tpStroke.getGlobalValue(),greaterThan(0d));
         assertThat(tpStroke.getGlobalValue(),lessThan(1d));
     }
+    
+    @Test
+    public void resolveEndFromStartAndRelaxTest()throws BehaviourPlanningException
+    {
+        ProcAnimationGestureTMU tpu = setupPlanUnit(fbManager,BMLBlockPeg.GLOBALPEG, "id1", "bml1", 0);
+        List<TimePegAndConstraint> sac = new ArrayList<TimePegAndConstraint>();
+        TimePeg tpStart = new TimePeg(BMLBlockPeg.GLOBALPEG);
+        TimePeg tpEnd = new TimePeg(BMLBlockPeg.GLOBALPEG);
+        TimePeg tpRelax = new TimePeg(BMLBlockPeg.GLOBALPEG);
+        tpStart.setGlobalValue(0);
+        tpRelax.setGlobalValue(2);
+        sac.add(new TimePegAndConstraint("start", tpStart, new Constraint(), 0));
+        sac.add(new TimePegAndConstraint("end", tpEnd, new Constraint(), 0));
+        sac.add(new TimePegAndConstraint("relax", tpRelax, new Constraint(), 0));
+        tpu.resolveSynchs(BMLBlockPeg.GLOBALPEG, null, sac);
+        assertEquals(0,tpStart.getGlobalValue(),0.0001);
+        assertEquals(2,tpRelax.getGlobalValue(),0.0001);
+        assertThat(tpEnd.getGlobalValue(),greaterThan(2d));        
+    }
 }

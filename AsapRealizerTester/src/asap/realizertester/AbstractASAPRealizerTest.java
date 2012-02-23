@@ -20,7 +20,8 @@ public abstract class AbstractASAPRealizerTest extends AbstractElckerlycRealizer
         
         waitForBMLEndFeedback("bml1");
         waitForBMLEndFeedback("bml2");
-        
+        assertNoExceptions();
+        assertNoWarnings();
         assertBlockStartAndStopFeedbacks("bml1","bml2");
         assertNoDuplicateFeedbacks();
         assertAllBMLSyncsInBMLOrder("bml1", "g1", GestureBehaviour.getDefaultSyncPoints());
@@ -41,6 +42,8 @@ public abstract class AbstractASAPRealizerTest extends AbstractElckerlycRealizer
         waitForBMLEndFeedback("bml1");
         waitForBMLEndFeedback("bml2");
         
+        assertNoExceptions();
+        assertNoWarnings();
         assertBlockStartAndStopFeedbacks("bml1","bml2");
         assertNoDuplicateFeedbacks();
         assertLinkedSyncs("bml1", "g1", "relax", "bml2", "g1", "start");

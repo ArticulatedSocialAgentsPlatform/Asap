@@ -942,8 +942,10 @@ public class SchedulerParameterizedIntegrationTest
         assertNoWarnings();
         assertEquals(scheduler.getPegBoard().getRelativePegTime("bml1", "bml1", "beat1", "start"), 1, 0.0001);
         assertEquals(scheduler.getPegBoard().getRelativePegTime("bml1", "bml1", "beat1", "ready"), 2, 0.0001);
+        /*
         assertThat(scheduler.getPegBoard().getPegTime("bml1", "beat1", "end"), 
                 greaterThan(scheduler.getPegBoard().getPegTime("bml1", "beat1", "ready")));
+                */
     }
 
     @Ignore
@@ -1081,6 +1083,17 @@ public class SchedulerParameterizedIntegrationTest
         assertEquals(scheduler.getPegBoard().getRelativePegTime("bml1", "bml1", "relaxleft", "start"), 2.5, 0.0001);
         assertEquals(scheduler.getPegBoard().getRelativePegTime("bml1", "bml1", "relaxleft", "end"), 2.8, 0.0001);
 
+    }
+    
+    @Test//(timeout = SCHEDULE_TIMEOUT)
+    public void testGestureAtStart()
+    {
+        readXML("testspeech_gesturestart.xml");
+        assertNoWarnings();
+        assertNoExceptions();
+        assertEquals(0, scheduler.getPegBoard().getRelativePegTime("bml2", "bml2", "g1", "start"), 0.0001);
+        assertEquals(scheduler.getPegBoard().getPegTime("bml2", "speech1", "this") ,
+                scheduler.getPegBoard().getPegTime("bml2", "g1", "stroke"), 0.0001);
     }
 
     @Test(timeout = SCHEDULE_TIMEOUT)

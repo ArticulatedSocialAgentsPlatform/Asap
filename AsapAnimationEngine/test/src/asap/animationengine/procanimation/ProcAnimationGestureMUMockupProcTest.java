@@ -51,6 +51,8 @@ public class ProcAnimationGestureMUMockupProcTest
         VJoint vNext = HanimBody.getLOA1HanimBody();
         when(mockAnimationPlayer.getVCurr()).thenReturn(vCurr);
         when(mockAnimationPlayer.getVNext()).thenReturn(vNext);
+        when(mockProcAnimation.getPrefDuration()).thenReturn(1d);
+        when(mockProcAnimation.getPreferedDuration()).thenReturn(1d);
         when(mockProcAnimation.copy(mockAnimationPlayer)).thenReturn(mockProcAnimation);
         when(mockProcAnimation.copy((VJoint)any())).thenReturn(mockProcAnimationCopy);
         KeyPositionMocker.stubKeyPositions(mockProcAnimation,new KeyPosition("start",0),new KeyPosition("ready",0.4),
@@ -110,11 +112,11 @@ public class ProcAnimationGestureMUMockupProcTest
         TimedMotionUnit tmu = pag.createTMU(mockFeedbackManager, BMLBlockPeg.GLOBALPEG, "bml1", "g1");
         tmu.resolveDefaultBMLKeyPositions();
         tmu.setTimePeg(BMLGestureSync.START.getId(), createTimePeg(0));
-        tmu.setTimePeg(BMLGestureSync.END.getId(), createTimePeg(1));
+        tmu.setTimePeg(BMLGestureSync.END.getId(), createTimePeg(2));
         tmu.setState(TimedPlanUnitState.LURKING);
         tmu.start(0);
-        tmu.play(0.79);
-        verify(mockProcAnimation,times(1)).play(eq(0.8,0.05));
+        tmu.play(1);
+        verify(mockProcAnimation,times(1)).play(anyDouble());
     }
     
     @Test

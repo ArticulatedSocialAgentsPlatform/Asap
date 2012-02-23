@@ -83,7 +83,7 @@ public class PersistentFixtureAsapRealizerTest extends AbstractASAPRealizerTest
         OdePhysicsEnvironment ope = new OdePhysicsEnvironment();
         MixedAnimationEnvironment mae = new MixedAnimationEnvironment();
         staticEnvironment = new AsapEnvironment();
-        AudioEnvironment aue = new AudioEnvironment("WAV_CLIP");
+        AudioEnvironment aue = new AudioEnvironment("LJWGL_JOAL");
         
         mainUI = new JFrame("HMI BML Realizer Tester");
         mainUI.setSize(1000,600);
