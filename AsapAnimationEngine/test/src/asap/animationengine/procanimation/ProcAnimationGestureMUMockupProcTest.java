@@ -9,6 +9,7 @@ import hmi.elckerlyc.BMLBlockPeg;
 import hmi.elckerlyc.TimedPlanUnitPlayException;
 import hmi.elckerlyc.feedback.FeedbackManager;
 import hmi.elckerlyc.planunit.TimedPlanUnitState;
+import hmi.elckerlyc.util.KeyPositionMocker;
 import hmi.testutil.animation.HanimBody;
 
 import org.junit.Before;
@@ -52,13 +53,19 @@ public class ProcAnimationGestureMUMockupProcTest
         when(mockAnimationPlayer.getVNext()).thenReturn(vNext);
         when(mockProcAnimation.copy(mockAnimationPlayer)).thenReturn(mockProcAnimation);
         when(mockProcAnimation.copy((VJoint)any())).thenReturn(mockProcAnimationCopy);
+        KeyPositionMocker.stubKeyPositions(mockProcAnimation,new KeyPosition("start",0),new KeyPosition("ready",0.4),
+                new KeyPosition("strokeStart",0.4),new KeyPosition("stroke",0.5),new KeyPosition("strokeEnd",0.8),
+                new KeyPosition("relax",0.8), new KeyPosition("end",1));
         
         pag = new ProcAnimationGestureMU();
         pag.setGestureUnit(mockProcAnimation);
+        pag.addKeyPosition(new KeyPosition(BMLGestureSync.START.getId(), 0, 1.0));        
         pag.addKeyPosition(new KeyPosition(BMLGestureSync.STROKE_START.getId(), 0.2, 1.0));
+        pag.addKeyPosition(new KeyPosition(BMLGestureSync.STROKE.getId(), 0.8, 1.0));
         pag.addKeyPosition(new KeyPosition(BMLGestureSync.STROKE_END.getId(), 0.8, 1.0));
         pag.addKeyPosition(new KeyPosition(BMLGestureSync.READY.getId(), 0.2, 1.0));
-        pag.addKeyPosition(new KeyPosition(BMLGestureSync.RELAX.getId(), 0.8, 1.0));
+        pag.addKeyPosition(new KeyPosition(BMLGestureSync.RELAX.getId(), 0.8, 1.0));        
+        pag.addKeyPosition(new KeyPosition(BMLGestureSync.END.getId(), 1, 1.0));
         pag.setAnimationPlayer(mockAnimationPlayer);
         pag.setupTransitionUnits();
         
@@ -80,7 +87,7 @@ public class ProcAnimationGestureMUMockupProcTest
     public void testPlayStrokeStart() throws MUPlayException
     {
         pag.play(0.2001);
-        verify(mockProcAnimation,times(1)).play(eq(0.2,0.05));
+        verify(mockProcAnimation,times(1)).play(eq(0.4,0.05));
     }
     
     @Test

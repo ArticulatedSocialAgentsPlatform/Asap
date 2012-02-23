@@ -82,7 +82,7 @@ public class AnimationPlayerTest
         doThrow(new TimedPlanUnitPlayException("", mockTimedMotionUnit)).when(mockTimedMotionUnit).play(anyDouble());       
         
         planManager.addPlanUnit(mockTimedMotionUnit);                    
-        animationPlayer.play(0);
+        animationPlayer.playStep(0);
         verify(mockTimedMotionUnit,times(1)).play(anyDouble());
         assertEquals(1, beList.size());        
     }

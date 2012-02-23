@@ -354,19 +354,19 @@ public class ProcAnimationGestureMU implements GestureUnit
     public void setupTransitionUnits()
     {
         //setup keypos
-        double strokeDuration = gestureUnit.getPrefDuration();
-        double duration = this.getPreferedDuration();
-        double postHoldDur = gestureUnit.getPrefDuration()*postStrokeHoldDuration;
-        double preHoldDur = gestureUnit.getPrefDuration()*preStrokeHoldDuration;
-        
-        double relStrokePos = getRelativeStrokePos();
-                              
-        keyPositionManager.getKeyPosition(BMLGestureSync.READY.getId()).time = defaultRelaxDuration/duration;
-        keyPositionManager.getKeyPosition(BMLGestureSync.STROKE_START.getId()).time = (defaultRelaxDuration+preHoldDur)/duration;
-        keyPositionManager.getKeyPosition(BMLGestureSync.STROKE.getId()).time = (defaultRelaxDuration+preHoldDur+strokeDuration*relStrokePos)/duration;
-        keyPositionManager.getKeyPosition(BMLGestureSync.STROKE_END.getId()).time = (defaultRelaxDuration+preHoldDur+strokeDuration)/duration;
-        keyPositionManager.getKeyPosition(BMLGestureSync.RELAX.getId()).time = (defaultRelaxDuration+postHoldDur+
-                preHoldDur+strokeDuration)/duration;
+//        double strokeDuration = gestureUnit.getPrefDuration();
+//        double duration = this.getPreferedDuration();
+//        double postHoldDur = gestureUnit.getPrefDuration()*postStrokeHoldDuration;
+//        double preHoldDur = gestureUnit.getPrefDuration()*preStrokeHoldDuration;
+//        
+//        double relStrokePos = getRelativeStrokePos();
+//                              
+//        keyPositionManager.getKeyPosition(BMLGestureSync.READY.getId()).time = defaultRelaxDuration/duration;
+//        keyPositionManager.getKeyPosition(BMLGestureSync.STROKE_START.getId()).time = (defaultRelaxDuration+preHoldDur)/duration;
+//        keyPositionManager.getKeyPosition(BMLGestureSync.STROKE.getId()).time = (defaultRelaxDuration+preHoldDur+strokeDuration*relStrokePos)/duration;
+//        keyPositionManager.getKeyPosition(BMLGestureSync.STROKE_END.getId()).time = (defaultRelaxDuration+preHoldDur+strokeDuration)/duration;
+//        keyPositionManager.getKeyPosition(BMLGestureSync.RELAX.getId()).time = (defaultRelaxDuration+postHoldDur+
+//                preHoldDur+strokeDuration)/duration;
         
         //setup transunits
         int i = 0;
