@@ -1,35 +1,33 @@
 package asap.animationengine.procanimation;
 
 import hmi.animation.VJoint;
+import hmi.animation.VJointUtils;
 import hmi.bml.BMLGestureSync;
 import hmi.elckerlyc.BMLBlockPeg;
 import hmi.elckerlyc.feedback.FeedbackManager;
+import hmi.elckerlyc.planunit.InvalidParameterException;
 import hmi.elckerlyc.planunit.KeyPosition;
 import hmi.elckerlyc.planunit.KeyPositionManager;
 import hmi.elckerlyc.planunit.KeyPositionManagerImpl;
 import hmi.elckerlyc.planunit.ParameterException;
-import hmi.elckerlyc.planunit.InvalidParameterException;
 import hmi.util.Resources;
 import hmi.util.StringUtil;
 
 import java.io.IOException;
 import java.util.ArrayList;
-import java.util.Collection;
 import java.util.List;
 import java.util.Set;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import com.google.common.base.Function;
-import com.google.common.collect.Collections2;
-import com.google.common.collect.ImmutableSet;
-
 import asap.animationengine.AnimationPlayer;
 import asap.animationengine.motionunit.MUPlayException;
 import asap.animationengine.motionunit.MotionUnit;
 import asap.animationengine.transitions.SlerpTransitionToPoseMU;
 import asap.planunit.Priority;
+
+import com.google.common.collect.ImmutableSet;
 
 /**
  * Wraps a ProcAnimationMU inbetween a slerp transitions, and an automatically generated (by the restpose)
@@ -48,12 +46,12 @@ public class ProcAnimationGestureMU implements GestureUnit
     private VJoint vNext;
     private Resources resource;
     private double preStrokeHoldDuration = 0;
-    
+
     public double getStrokeDuration()
     {
         return gestureUnit.getPrefDuration();
     }
-    
+
     public double getPreStrokeHoldDuration()
     {
         return preStrokeHoldDuration;
@@ -67,20 +65,43 @@ public class ProcAnimationGestureMU implements GestureUnit
     private double postStrokeHoldDuration = 0;
     private int priority = Priority.GESTURE;
     private AnimationPlayer aniPlayer;
-    private final double defaultRelaxDuration = 0.5;
-    
-    //TODO: determine using Fitts' law
+
+    private float[] getPoseInStroke(String sync)
+    {
+        int i = 0;
+        float[] pose = new float[gestureUnit.getControlledJoints().size() * 4];
+        VJoint vCopy = vStart.copyTree("copy-");
+        ProcAnimationMU copyProc = gestureUnit.copy(vCopy);
+
+        i = 0;
+        copyProc.play(getKeyPosition(sync).time);
+        for (VJoint v : gestureUnit.getControlledJoints())
+        {
+            VJoint v2 = vCopy.getPartBySid(v.getSid());
+            v2.getRotation(pose, i);
+            i += 4;
+        }
+        return pose;
+    }
+
     public double getRetractionDuration()
     {
-        return defaultRelaxDuration;
+        VJoint vCopy = vStart.copyTree("copy-");
+        ProcAnimationMU copyProc = gestureUnit.copy(vCopy);
+        copyProc.play(getKeyPosition(BMLGestureSync.STROKE_END.getId()).time-0.01);
+        return aniPlayer.getRestPose().getTransitionToRestDuration(vCopy, VJointUtils.transformToSidSet(gestureUnit.getControlledJoints()));
     }
-    
-    //TODO: determine using Fitts' law
+
+    //TODO: dynamic determination from current hand position
     public double getPreparationDuration()
     {
-        return defaultRelaxDuration;
+        VJoint vCopy = vStart.copyTree("copy-");
+        ProcAnimationMU copyProc = gestureUnit.copy(vCopy);
+        copyProc.play(getKeyPosition(BMLGestureSync.STROKE_START.getId()).time+0.01);
+
+        return aniPlayer.getRestPose().getTransitionToRestDuration(vCopy, VJointUtils.transformToSidSet(gestureUnit.getControlledJoints()));
     }
-    
+
     public int getPriority()
     {
         return priority;
@@ -279,11 +300,10 @@ public class ProcAnimationGestureMU implements GestureUnit
         double relaxDuration = 1 - relaxTime;
         logger.debug("time: {}", t);
 
-        
         double gestureStart = gestureUnit.getKeyPosition(BMLGestureSync.STROKE_START.getId()).time;
         double gestureEnd = gestureUnit.getKeyPosition(BMLGestureSync.STROKE_END.getId()).time;
-        double gestureDur = gestureEnd-gestureStart;
-        
+        double gestureDur = gestureEnd - gestureStart;
+
         if (t < readyTime)
         {
             prepUnit.play(t / readyTime);
@@ -297,8 +317,8 @@ public class ProcAnimationGestureMU implements GestureUnit
         }
         else if (t > strokeStartTime && t < strokeEndTime)
         {
-            double fraction = (t-strokeStartTime)/(strokeEndTime-strokeStartTime);
-            gestureUnit.play(gestureStart+gestureDur * fraction);
+            double fraction = (t - strokeStartTime) / (strokeEndTime - strokeStartTime);
+            gestureUnit.play(gestureStart + gestureDur * fraction);
             logger.debug("gestureUnit.play: {}", t);
         }
     }
@@ -312,9 +332,8 @@ public class ProcAnimationGestureMU implements GestureUnit
     @Override
     public double getPreferedDuration()
     {
-        return gestureUnit.getPrefDuration()+defaultRelaxDuration*2+
-            gestureUnit.getPrefDuration()*preStrokeHoldDuration+
-            gestureUnit.getPrefDuration()*postStrokeHoldDuration;
+        return gestureUnit.getPrefDuration() + getPreparationDuration() + getRetractionDuration() + preStrokeHoldDuration
+                + postStrokeHoldDuration;
     }
 
     @Override
@@ -344,60 +363,32 @@ public class ProcAnimationGestureMU implements GestureUnit
 
     public double getRelativeStrokePos()
     {
-        return (gestureUnit.getKeyPosition(BMLGestureSync.STROKE.getId()).time-
-                gestureUnit.getKeyPosition(BMLGestureSync.STROKE_START.getId()).time)
-                /(gestureUnit.getKeyPosition(BMLGestureSync.STROKE_END.getId()).time-
-                  gestureUnit.getKeyPosition(BMLGestureSync.STROKE_START.getId()).time);
+        return (gestureUnit.getKeyPosition(BMLGestureSync.STROKE.getId()).time - gestureUnit.getKeyPosition(BMLGestureSync.STROKE_START
+                .getId()).time)
+                / (gestureUnit.getKeyPosition(BMLGestureSync.STROKE_END.getId()).time - gestureUnit
+                        .getKeyPosition(BMLGestureSync.STROKE_START.getId()).time);
     }
-    
+
     public void setupTransitionUnits()
     {
-        //setup keypos
-//        double strokeDuration = gestureUnit.getPrefDuration();
-//        double duration = this.getPreferedDuration();
-//        double postHoldDur = gestureUnit.getPrefDuration()*postStrokeHoldDuration;
-//        double preHoldDur = gestureUnit.getPrefDuration()*preStrokeHoldDuration;
-//        
-//        double relStrokePos = getRelativeStrokePos();
-//                              
-//        keyPositionManager.getKeyPosition(BMLGestureSync.READY.getId()).time = defaultRelaxDuration/duration;
-//        keyPositionManager.getKeyPosition(BMLGestureSync.STROKE_START.getId()).time = (defaultRelaxDuration+preHoldDur)/duration;
-//        keyPositionManager.getKeyPosition(BMLGestureSync.STROKE.getId()).time = (defaultRelaxDuration+preHoldDur+strokeDuration*relStrokePos)/duration;
-//        keyPositionManager.getKeyPosition(BMLGestureSync.STROKE_END.getId()).time = (defaultRelaxDuration+preHoldDur+strokeDuration)/duration;
-//        keyPositionManager.getKeyPosition(BMLGestureSync.RELAX.getId()).time = (defaultRelaxDuration+postHoldDur+
-//                preHoldDur+strokeDuration)/duration;
-        
-        //setup transunits
-        int i = 0;
-        float[] startPose = new float[gestureUnit.getControlledJoints().size() * 4];
-        float[] strokeStartPose = new float[gestureUnit.getControlledJoints().size() * 4];
-        float[] relaxStartPose = new float[gestureUnit.getControlledJoints().size() * 4];
-        VJoint vCopy = vStart.copyTree("copy-");
-        ProcAnimationMU copyProc = gestureUnit.copy(vCopy);
+        // setup keypos
+        // double strokeDuration = gestureUnit.getPrefDuration();
+        // double duration = this.getPreferedDuration();
+        // double postHoldDur = gestureUnit.getPrefDuration()*postStrokeHoldDuration;
+        // double preHoldDur = gestureUnit.getPrefDuration()*preStrokeHoldDuration;
+        //
+        // double relStrokePos = getRelativeStrokePos();
+        //
+        // keyPositionManager.getKeyPosition(BMLGestureSync.READY.getId()).time = defaultRelaxDuration/duration;
+        // keyPositionManager.getKeyPosition(BMLGestureSync.STROKE_START.getId()).time = (defaultRelaxDuration+preHoldDur)/duration;
+        // keyPositionManager.getKeyPosition(BMLGestureSync.STROKE.getId()).time = (defaultRelaxDuration+preHoldDur+strokeDuration*relStrokePos)/duration;
+        // keyPositionManager.getKeyPosition(BMLGestureSync.STROKE_END.getId()).time = (defaultRelaxDuration+preHoldDur+strokeDuration)/duration;
+        // keyPositionManager.getKeyPosition(BMLGestureSync.RELAX.getId()).time = (defaultRelaxDuration+postHoldDur+
+        // preHoldDur+strokeDuration)/duration;
 
-        for (VJoint v : gestureUnit.getControlledJoints())
-        {
-            v.getRotation(startPose, i);
-            i += 4;
-        }
+        // setup transunits
+        float[] strokeStartPose = getPoseInStroke(BMLGestureSync.STROKE_START.getId());
 
-        i = 0;
-        copyProc.play(getKeyPosition(BMLGestureSync.STROKE_START.getId()).time + 0.01);
-        for (VJoint v : gestureUnit.getControlledJoints())
-        {
-            VJoint v2 = vCopy.getPartBySid(v.getSid());
-            v2.getRotation(strokeStartPose, i);
-            i += 4;
-        }
-
-        i = 0;
-        copyProc.play(getKeyPosition(BMLGestureSync.STROKE_END.getId()).time - 0.01);
-        for (VJoint v : gestureUnit.getControlledJoints())
-        {
-            VJoint v2 = vCopy.getPartBySid(v.getSid());
-            v2.getRotation(relaxStartPose, i);
-            i += 4;
-        }
         ArrayList<VJoint> startPoseJoint = new ArrayList<VJoint>();
         for (VJoint vj : gestureUnit.getControlledJoints())
         {
@@ -410,15 +401,7 @@ public class ProcAnimationGestureMU implements GestureUnit
 
     public void setupRelaxUnit()
     {
-        Collection<String> j = Collections2.transform(gestureUnit.getControlledJoints(), new Function<VJoint, String>()
-        {
-            @Override
-            public String apply(VJoint joint)
-            {
-                return joint.getSid();
-            }
-        });
-        relaxUnit = aniPlayer.getRestPose().createTransitionToRest(ImmutableSet.copyOf(j));
+        relaxUnit = aniPlayer.getRestPose().createTransitionToRest(VJointUtils.transformToSidSet(gestureUnit.getControlledJoints()));
     }
 
     @Override

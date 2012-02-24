@@ -1,5 +1,6 @@
 package asap.animationengine.restpose;
 
+import hmi.animation.VJoint;
 import hmi.elckerlyc.BMLBlockPeg;
 
 import java.util.Set;
@@ -36,6 +37,12 @@ public interface RestPose
      */
     TimedMotionUnit createTransitionToRest(Set<String>joints, double startTime, double duration, 
             String bmlId, String id, BMLBlockPeg bmlBlockPeg);
+    
+    /**
+     * Determine the duration of a transition from vCurrent to the rest pose, taking
+     * into account only information from joints
+     */
+    double getTransitionToRestDuration(VJoint vCurrent, Set<String>joints);
     
     /**
      * Create a MotionUnit that moves the joints from their current position 

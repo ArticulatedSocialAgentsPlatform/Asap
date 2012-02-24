@@ -1,5 +1,27 @@
 package asap.animationengine.procanimation;
 
+import static org.hamcrest.MatcherAssert.assertThat;
+import static org.hamcrest.number.OrderingComparison.greaterThan;
+import static org.hamcrest.number.OrderingComparison.lessThan;
+import static org.junit.Assert.assertEquals;
+import static org.mockito.Matchers.any;
+import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.when;
+import hmi.animation.VJoint;
+import hmi.bml.BMLGestureSync;
+import hmi.bml.parser.Constraint;
+import hmi.elckerlyc.BMLBlockPeg;
+import hmi.elckerlyc.BehaviourPlanningException;
+import hmi.elckerlyc.TimePeg;
+import hmi.elckerlyc.feedback.FeedbackManager;
+import hmi.elckerlyc.planunit.AbstractTimedPlanUnitTest;
+import hmi.elckerlyc.planunit.KeyPosition;
+import hmi.elckerlyc.scheduler.BMLBlockManager;
+import hmi.elckerlyc.scheduler.TimePegAndConstraint;
+import hmi.elckerlyc.util.KeyPositionMocker;
+import hmi.elckerlyc.util.TimePegUtil;
+import hmi.testutil.animation.HanimBody;
+
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Set;
@@ -11,30 +33,7 @@ import org.powermock.modules.junit4.PowerMockRunner;
 
 import asap.animationengine.AnimationPlayer;
 import asap.animationengine.motionunit.MotionUnit;
-import asap.animationengine.procanimation.ProcAnimationGestureMU;
-import asap.animationengine.procanimation.ProcAnimationGestureTMU;
-import asap.animationengine.procanimation.ProcAnimationMU;
 import asap.animationengine.restpose.RestPose;
-
-import hmi.animation.VJoint;
-import hmi.elckerlyc.planunit.KeyPosition;
-import hmi.bml.BMLGestureSync;
-import hmi.bml.parser.Constraint;
-import hmi.elckerlyc.BMLBlockPeg;
-import hmi.elckerlyc.BehaviourPlanningException;
-import hmi.elckerlyc.TimePeg;
-import hmi.elckerlyc.feedback.FeedbackManager;
-import hmi.elckerlyc.planunit.AbstractTimedPlanUnitTest;
-import hmi.elckerlyc.scheduler.BMLBlockManager;
-import hmi.elckerlyc.scheduler.TimePegAndConstraint;
-import hmi.elckerlyc.util.KeyPositionMocker;
-import hmi.elckerlyc.util.TimePegUtil;
-import hmi.testutil.animation.HanimBody;
-import static org.junit.Assert.*;
-import static org.mockito.Matchers.any;
-import static org.mockito.Mockito.*;
-import static org.hamcrest.MatcherAssert.assertThat;
-import static org.hamcrest.number.OrderingComparison.*;
 
 /**
  * Unit test cases for ProcAnimationGestureTMUs
@@ -66,6 +65,8 @@ public class ProcAnimationGestureTMUTest extends AbstractTimedPlanUnitTest
                 new KeyPosition("relax",0.8), new KeyPosition("end",1));
         
         RestPose mockRestPose = mock(RestPose.class);
+        when(mockRestPose.getTransitionToRestDuration((VJoint)any(), (Set<String>)any())).thenReturn(1d);
+        
         MotionUnit mockRelaxMU = mock(MotionUnit.class);
         when(mockAnimationPlayer.getRestPose()).thenReturn(mockRestPose);        
         when(mockRestPose.createTransitionToRest((Set<String>)any())).thenReturn(mockRelaxMU);
@@ -139,15 +140,15 @@ public class ProcAnimationGestureTMUTest extends AbstractTimedPlanUnitTest
         TimePeg tpEnd = new TimePeg(BMLBlockPeg.GLOBALPEG);
         TimePeg tpStroke = new TimePeg(BMLBlockPeg.GLOBALPEG);
         tpStart.setGlobalValue(0);
-        tpEnd.setGlobalValue(1);
+        tpEnd.setGlobalValue(3);
         sac.add(new TimePegAndConstraint("start", tpStart, new Constraint(), 0));
         sac.add(new TimePegAndConstraint("end", tpEnd, new Constraint(), 0));
         sac.add(new TimePegAndConstraint("stroke", tpStroke, new Constraint(), 0));
         tpu.resolveSynchs(BMLBlockPeg.GLOBALPEG, null, sac);
         assertEquals(0,tpStart.getGlobalValue(),0.0001);
-        assertEquals(1,tpEnd.getGlobalValue(),0.0001);
+        assertEquals(3,tpEnd.getGlobalValue(),0.0001);
         assertThat(tpStroke.getGlobalValue(),greaterThan(0d));
-        assertThat(tpStroke.getGlobalValue(),lessThan(1d));
+        assertThat(tpStroke.getGlobalValue(),lessThan(3d));
     }
     
     @Test

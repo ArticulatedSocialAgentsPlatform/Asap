@@ -18,18 +18,25 @@
  ******************************************************************************/
 package asap.realizerintegrationtest;
 
-import java.io.IOException;
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.HashSet;
-import java.util.Set;
-
+import static hmi.testutil.bml.feedback.FeedbackAsserts.assertEqualException;
+import static org.hamcrest.MatcherAssert.assertThat;
+import static org.hamcrest.number.OrderingComparison.greaterThan;
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertTrue;
 import hmi.animation.VJoint;
-import hmi.physics.mixed.MixedSystem;
 import hmi.audioengine.AudioPlanner;
+import hmi.audioengine.TimedAbstractAudioUnit;
 import hmi.audioenvironment.LWJGLJoalSoundManager;
 import hmi.audioenvironment.SoundManager;
-import hmi.audioengine.TimedAbstractAudioUnit;
+import hmi.bml.core.BMLBehaviorAttributeExtension;
+import hmi.bml.core.HeadBehaviour;
+import hmi.bml.core.SpeechBehaviour;
+import hmi.bml.ext.bmlt.BMLTBMLBehaviorAttributes;
+import hmi.bml.feedback.BMLExceptionFeedback;
+import hmi.bml.feedback.BMLExceptionListener;
+import hmi.bml.feedback.BMLWarningFeedback;
+import hmi.bml.feedback.BMLWarningListener;
+import hmi.bml.parser.BMLParser;
 import hmi.elckerlyc.BMLBlockPeg;
 import hmi.elckerlyc.DefaultEngine;
 import hmi.elckerlyc.DefaultPlayer;
@@ -49,17 +56,9 @@ import hmi.elckerlyc.planunit.PlanManager;
 import hmi.elckerlyc.planunit.SingleThreadedPlanPlayer;
 import hmi.elckerlyc.scheduler.BMLBlockManager;
 import hmi.elckerlyc.scheduler.BMLScheduler;
-import asap.animationengine.AnimationPlanPlayer;
-import asap.animationengine.AnimationPlanner;
-import asap.animationengine.AnimationPlayer;
-import asap.animationengine.gesturebinding.GestureBinding;
-import asap.animationengine.gesturebinding.SpeechBinding;
-import asap.animationengine.motionunit.TimedMotionUnit;
-import asap.animationengine.restpose.RestPose;
-import asap.animationengine.restpose.SkeletonPoseRestPose;
-import asap.utils.SystemSchedulingClock;
 import hmi.elckerlyc.wait.TimedWaitUnit;
 import hmi.elckerlyc.wait.WaitPlanner;
+import hmi.physics.mixed.MixedSystem;
 import hmi.physics.ode.OdeHumanoid;
 import hmi.speechengine.DirectTTSUnitFactory;
 import hmi.speechengine.StdoutTextOutput;
@@ -75,32 +74,39 @@ import hmi.speechengine.ttsbinding.TTSBindingFactory;
 import hmi.testutil.LabelledParameterized;
 import hmi.testutil.animation.HanimBody;
 import hmi.tts.util.NullPhonemeToVisemeMapping;
-import hmi.util.*;
-import static org.hamcrest.MatcherAssert.assertThat;
-import org.hamcrest.collection.*;
+import hmi.util.OS;
+import hmi.util.Resources;
+import hmi.util.SystemClock;
+
+import java.io.IOException;
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.HashSet;
+import java.util.Set;
 
 import org.hamcrest.Matchers;
-import org.junit.*;
-import static org.junit.Assert.*; //import org.junit.runners.Parameterized;
-
-import org.junit.runners.Parameterized.Parameters;
-import static hmi.testutil.bml.feedback.FeedbackAsserts.assertEqualException;
-
+import org.hamcrest.collection.IsIterableContainingInOrder;
+import org.junit.After;
+import org.junit.AfterClass;
+import org.junit.Before;
+import org.junit.BeforeClass;
+import org.junit.Ignore;
+import org.junit.Test;
 import org.junit.runner.RunWith;
+import org.junit.runners.Parameterized.Parameters;
 import org.odejava.Odejava;
 
-import com.google.common.collect.ImmutableSet;
+import asap.animationengine.AnimationPlanPlayer;
+import asap.animationengine.AnimationPlanner;
+import asap.animationengine.AnimationPlayer;
+import asap.animationengine.gesturebinding.GestureBinding;
+import asap.animationengine.gesturebinding.SpeechBinding;
+import asap.animationengine.motionunit.TimedMotionUnit;
+import asap.animationengine.restpose.RestPose;
+import asap.animationengine.restpose.SkeletonPoseRestPose;
+import asap.utils.SystemSchedulingClock;
 
-import hmi.bml.core.BMLBehaviorAttributeExtension;
-import hmi.bml.core.HeadBehaviour;
-import hmi.bml.core.SpeechBehaviour;
-import hmi.bml.ext.bmlt.BMLTBMLBehaviorAttributes;
-import hmi.bml.feedback.BMLExceptionFeedback;
-import hmi.bml.feedback.BMLExceptionListener;
-import hmi.bml.feedback.BMLWarningFeedback;
-import hmi.bml.feedback.BMLWarningListener;
-import hmi.bml.parser.BMLParser;
-import static org.hamcrest.number.OrderingComparison.greaterThan;
+import com.google.common.collect.ImmutableSet;
 
 interface SpeechEngineFactory
 {
@@ -287,9 +293,10 @@ public class SchedulerParameterizedIntegrationTest
         
         PlanManager<TimedMotionUnit> animationPlanManager = new PlanManager<TimedMotionUnit>();
         
-        RestPose pose = new SkeletonPoseRestPose(bfm);
+        RestPose pose = new SkeletonPoseRestPose(bfm);        
         AnimationPlanPlayer animationPlanPlayer = new AnimationPlanPlayer(pose,bfm, animationPlanManager,new DefaultTimedPlanUnitPlayer());
         AnimationPlayer aPlayer = new AnimationPlayer(human, human, human, m, 0.001f, animationPlanPlayer);
+        pose.setAnimationPlayer(aPlayer);
         AnimationPlanner ap = new AnimationPlanner(bfm,aPlayer, gestureBinding, animationPlanManager);
         Engine animationEngine = new DefaultEngine<TimedMotionUnit>(ap,aPlayer,animationPlanManager);
         
@@ -1050,7 +1057,7 @@ public class SchedulerParameterizedIntegrationTest
         assertNoWarnings();
         assertNoExceptions();
         assertEquals(3, scheduler.getPegBoard().getRelativePegTime("bml1", "bml1", "beat1", "start"), 0.001f);
-        assertEquals(5, scheduler.getPegBoard().getRelativePegTime("bml1", "bml1", "beat1", "end"), 0.001f);
+        assertEquals(7, scheduler.getPegBoard().getRelativePegTime("bml1", "bml1", "beat1", "end"), 0.001f);
         assertEquals(scheduler.getPegBoard().getRelativePegTime("bml1", "bml1", "beat1", "strokeEnd"), scheduler.getPegBoard()
                 .getRelativePegTime("bml1", "bml1", "nod1", "start"), 0.001f);
     }
@@ -1085,7 +1092,7 @@ public class SchedulerParameterizedIntegrationTest
 
     }
     
-    @Test//(timeout = SCHEDULE_TIMEOUT)
+    @Test(timeout = SCHEDULE_TIMEOUT)
     public void testGestureAtStart()
     {
         readXML("testspeech_gesturestart.xml");

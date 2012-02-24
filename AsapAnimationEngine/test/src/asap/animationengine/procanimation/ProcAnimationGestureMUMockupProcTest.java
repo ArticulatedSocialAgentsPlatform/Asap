@@ -73,7 +73,8 @@ public class ProcAnimationGestureMUMockupProcTest
         
         RestPose mockRestPose = mock(RestPose.class);
         MotionUnit mockRelaxMU = mock(MotionUnit.class);
-        when(mockAnimationPlayer.getRestPose()).thenReturn(mockRestPose);        
+        when(mockAnimationPlayer.getRestPose()).thenReturn(mockRestPose);
+        when(mockRestPose.getTransitionToRestDuration((VJoint)any(), (Set<String>)any())).thenReturn(0.5d);
         when(mockRestPose.createTransitionToRest((Set<String>)any())).thenReturn(mockRelaxMU);
         pag.setupRelaxUnit();
     }

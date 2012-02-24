@@ -18,10 +18,11 @@
  ******************************************************************************/
 package asap.animationengine.procanimation;
 
-import hmi.math.*;
-import hmi.util.*;
-import hmi.xml.*;
-import hmi.animation.*;
+import hmi.animation.Hanim;
+import hmi.animation.SkeletonInterpolator;
+import hmi.animation.VJoint;
+import hmi.animation.VJointUtils;
+import hmi.elckerlyc.BMLBlockPeg;
 import hmi.elckerlyc.feedback.FeedbackManager;
 import hmi.elckerlyc.planunit.InvalidParameterException;
 import hmi.elckerlyc.planunit.KeyPosition;
@@ -29,22 +30,35 @@ import hmi.elckerlyc.planunit.KeyPositionManager;
 import hmi.elckerlyc.planunit.KeyPositionManagerImpl;
 import hmi.elckerlyc.planunit.ParameterException;
 import hmi.elckerlyc.planunit.ParameterNotFoundException;
-import hmi.elckerlyc.BMLBlockPeg;
+import hmi.math.Quat4f;
+import hmi.math.Vec3f;
+import hmi.util.Id;
+import hmi.util.StringUtil;
+import hmi.xml.XMLFormatting;
+import hmi.xml.XMLStructureAdapter;
+import hmi.xml.XMLTokenizer;
 
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.Collections;
+import java.util.Comparator;
+import java.util.HashMap;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Set;
+import java.util.Vector;
 import java.util.concurrent.atomic.AtomicReference;
 
-import org.nfunk.jep.*;
-import org.lsmp.djep.xjep.*;
-
-import com.google.common.base.Function;
-import com.google.common.collect.Collections2;
-import com.google.common.collect.ImmutableSet;
+import org.lsmp.djep.xjep.XJep;
+import org.nfunk.jep.ParseException;
+import org.nfunk.jep.Variable;
 
 import asap.animationengine.AnimationPlayer;
 import asap.animationengine.keyframe.KeyframeMU;
 import asap.animationengine.motionunit.MotionUnit;
 import asap.animationengine.motionunit.TimedMotionUnit;
+
+import com.google.common.collect.ImmutableSet;
 
 /**
  * Generic procedural animation package Animation is described as end effector path, joint rotation path and/or joint positions at key times
@@ -1444,14 +1458,6 @@ public class ProcAnimationMU extends XMLStructureAdapter implements MotionUnit
     @Override
     public Set<String> getKinematicJoints()
     {
-        Collection<String> joints = Collections2.transform(bodyParts, new Function<VJoint, String>()
-        {
-            @Override
-            public String apply(VJoint joint)
-            {
-                return joint.getSid();
-            }
-        });
-        return ImmutableSet.copyOf(joints);
+        return VJointUtils.transformToSidSet(bodyParts);
     }    
 }
