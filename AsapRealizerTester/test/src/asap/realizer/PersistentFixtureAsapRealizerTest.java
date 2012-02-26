@@ -85,7 +85,7 @@ public class PersistentFixtureAsapRealizerTest extends AbstractASAPRealizerTest
         staticEnvironment = new AsapEnvironment();
         AudioEnvironment aue = new AudioEnvironment("LJWGL_JOAL");
         
-        mainUI = new JFrame("HMI BML Realizer Tester");
+        mainUI = new JFrame("Asap BML Realizer Tester");
         mainUI.setSize(1000,600);
         
         hre.init(); //canvas does not exist until init was called
