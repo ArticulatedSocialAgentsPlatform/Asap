@@ -6,9 +6,9 @@ import org.slf4j.LoggerFactory;
 import asap.animationengine.controller.ControllerMU;
 
 import hmi.elckerlyc.BMLBlockPeg;
-import hmi.elckerlyc.PegBoard;
 import hmi.elckerlyc.TimedPlanUnitPlayException;
 import hmi.elckerlyc.feedback.FeedbackManager;
+import hmi.elckerlyc.pegboard.PegBoard;
 
 /**
  * Timed motion unit steering a Physical motion unit.

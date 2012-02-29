@@ -21,12 +21,12 @@ package asap.animationengine.noise;
 import hmi.animation.*;
 import hmi.math.*;
 import hmi.elckerlyc.feedback.FeedbackManager;
+import hmi.elckerlyc.pegboard.PegBoard;
 import hmi.elckerlyc.planunit.KeyPosition;
 import hmi.elckerlyc.planunit.KeyPositionManager;
 import hmi.elckerlyc.planunit.KeyPositionManagerImpl;
 import hmi.elckerlyc.planunit.ParameterNotFoundException;
 import hmi.elckerlyc.BMLBlockPeg;
-import hmi.elckerlyc.PegBoard;
 
 import java.util.*;
 

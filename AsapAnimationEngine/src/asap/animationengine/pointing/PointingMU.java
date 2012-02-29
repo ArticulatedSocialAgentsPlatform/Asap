@@ -30,8 +30,8 @@ import asap.animationengine.motionunit.TimedMotionUnit;
 
 import hmi.animation.*;
 import hmi.elckerlyc.BMLBlockPeg;
-import hmi.elckerlyc.PegBoard;
 import hmi.elckerlyc.feedback.FeedbackManager;
+import hmi.elckerlyc.pegboard.PegBoard;
 import hmi.elckerlyc.planunit.KeyPosition;
 import hmi.elckerlyc.planunit.KeyPositionManager;
 import hmi.elckerlyc.planunit.KeyPositionManagerImpl;

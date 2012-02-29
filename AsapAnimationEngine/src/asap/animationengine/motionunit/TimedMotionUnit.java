@@ -19,11 +19,11 @@
 package asap.animationengine.motionunit;
 
 import hmi.elckerlyc.BMLBlockPeg;
-import hmi.elckerlyc.PegBoard;
 import hmi.elckerlyc.BehaviourPlanningException;
 
 import hmi.elckerlyc.feedback.FeedbackManager;
 import hmi.elckerlyc.feedback.NullFeedbackManager;
+import hmi.elckerlyc.pegboard.PegBoard;
 import hmi.elckerlyc.planunit.KeyPosition;
 import hmi.elckerlyc.planunit.ParameterException;
 import hmi.elckerlyc.planunit.ParameterNotFoundException;

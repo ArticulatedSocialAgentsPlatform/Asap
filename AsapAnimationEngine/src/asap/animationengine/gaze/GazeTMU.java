@@ -22,10 +22,10 @@ import asap.animationengine.motionunit.*;
 import hmi.bml.BMLGestureSync;
 import hmi.elckerlyc.BMLBlockPeg;
 import hmi.elckerlyc.OffsetPeg;
-import hmi.elckerlyc.PegBoard;
 import hmi.elckerlyc.TimedPlanUnitPlayException;
 import hmi.elckerlyc.TimePeg;
 import hmi.elckerlyc.feedback.FeedbackManager;
+import hmi.elckerlyc.pegboard.PegBoard;
 
 /**
  * Timed motion unit for gaze, makes sure the gaze start pose is set at start.

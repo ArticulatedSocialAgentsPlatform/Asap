@@ -5,7 +5,7 @@ import java.util.Set;
 import hmi.bml.core.BehaviourBlock;
 import hmi.bml.ext.bmlt.BMLTBMLBehaviorAttributes;
 import hmi.elckerlyc.BMLBlockPeg;
-import hmi.elckerlyc.PegBoard;
+import hmi.elckerlyc.pegboard.PegBoard;
 import hmi.elckerlyc.planunit.TimedPlanUnitState;
 import hmi.elckerlyc.scheduler.BMLBlock;
 import hmi.elckerlyc.scheduler.BMLScheduler;

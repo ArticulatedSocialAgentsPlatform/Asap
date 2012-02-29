@@ -21,9 +21,9 @@ package asap.animationengine.noise;
 import asap.animationengine.motionunit.*;
 import hmi.bml.feedback.*;
 import hmi.elckerlyc.BMLBlockPeg;
-import hmi.elckerlyc.PegBoard;
 import hmi.elckerlyc.TimedPlanUnitPlayException;
 import hmi.elckerlyc.feedback.FeedbackManager;
+import hmi.elckerlyc.pegboard.PegBoard;
 import hmi.elckerlyc.planunit.KeyPosition;
 
 /**
