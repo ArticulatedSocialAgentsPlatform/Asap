@@ -3,6 +3,7 @@ package asap.animationengine.gesturebinding;
 import static org.junit.Assert.*;
 import hmi.animation.VJoint;
 import hmi.elckerlyc.BMLBlockPeg;
+import hmi.elckerlyc.PegBoard;
 import hmi.elckerlyc.feedback.FeedbackManager;
 import hmi.elckerlyc.planunit.ParameterException;
 import hmi.testutil.animation.HanimBody;
@@ -26,7 +27,7 @@ public class SpeechBindingTest
     private SpeechBinding speechBinding;
     AnimationPlayer mockAniPlayer = mock(AnimationPlayer.class);
     FeedbackManager mockBmlFeedbackManager = mock(FeedbackManager.class);
-    
+    private PegBoard pegBoard = new PegBoard();
     private VJoint human;
     
     @Before
@@ -57,12 +58,12 @@ public class SpeechBindingTest
         
         when(mockAniPlayer.getVNext()).thenReturn(human);
         
-        TimedMotionUnit tmu = speechBinding.getMotionUnit(0, BMLBlockPeg.GLOBALPEG, "bml1", "speech1", mockAniPlayer);
+        TimedMotionUnit tmu = speechBinding.getMotionUnit(0, BMLBlockPeg.GLOBALPEG, "bml1", "speech1", mockAniPlayer, pegBoard);
         assertEquals("bml1",tmu.getBMLId());
         assertEquals("speech1",tmu.getId());
         assertEquals(0f,Float.parseFloat(tmu.getMotionUnit().getParameterValue("a")),0.001f);
         
-        tmu = speechBinding.getMotionUnit(mockBmlFeedbackManager,1, BMLBlockPeg.GLOBALPEG, "bml1", "speech1", mockAniPlayer);
+        tmu = speechBinding.getMotionUnit(mockBmlFeedbackManager,1, BMLBlockPeg.GLOBALPEG, "bml1", "speech1", mockAniPlayer, pegBoard);
         assertEquals("bml1",tmu.getBMLId());
         assertEquals("speech1",tmu.getId());
         assertEquals(1f,Float.parseFloat(tmu.getMotionUnit().getParameterValue("a")),0.001f);

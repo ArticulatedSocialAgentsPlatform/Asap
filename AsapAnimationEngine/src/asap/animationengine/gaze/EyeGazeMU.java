@@ -27,6 +27,7 @@ import asap.animationengine.motionunit.MUSetupException;
 import asap.animationengine.motionunit.TimedMotionUnit;
 import hmi.animation.Hanim;
 import hmi.elckerlyc.BMLBlockPeg;
+import hmi.elckerlyc.PegBoard;
 import hmi.elckerlyc.feedback.FeedbackManager;
 import hmi.math.Quat4f;
 import hmi.math.Vec3f;
@@ -63,9 +64,9 @@ public class EyeGazeMU extends GazeMU
     }
 
     @Override
-    public TimedMotionUnit createTMU(FeedbackManager bfm, BMLBlockPeg bmlBlockPeg,String bmlId, String id)
+    public TimedMotionUnit createTMU(FeedbackManager bfm, BMLBlockPeg bmlBlockPeg,String bmlId, String id, PegBoard pb)
     {
-        return new GazeTMU(bfm,bmlBlockPeg,bmlId, id, this);
+        return new GazeTMU(bfm,bmlBlockPeg,bmlId, id, this,pb);
     }
     
     @Override

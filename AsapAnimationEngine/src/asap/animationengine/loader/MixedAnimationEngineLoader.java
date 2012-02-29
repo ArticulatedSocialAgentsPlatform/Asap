@@ -208,12 +208,12 @@ public class MixedAnimationEngineLoader implements EngineLoader
         if(restpose!=null)
         {
             pose = new SkeletonPoseRestPose(restpose, theVirtualHuman.getElckerlycRealizer()
-                    .getFeedbackManager());
+                    .getFeedbackManager(),theVirtualHuman.getPegBoard());
         }
         else
         {
             pose = new SkeletonPoseRestPose(theVirtualHuman.getElckerlycRealizer()
-                    .getFeedbackManager());
+                    .getFeedbackManager(),theVirtualHuman.getPegBoard());
         }
         AnimationPlanPlayer animationPlanPlayer = new AnimationPlanPlayer(pose,theVirtualHuman.getElckerlycRealizer()
                 .getFeedbackManager(), animationPlanManager, new DefaultTimedPlanUnitPlayer());
@@ -229,7 +229,7 @@ public class MixedAnimationEngineLoader implements EngineLoader
 
         // make planner
         animationPlanner = new AnimationPlanner(theVirtualHuman.getElckerlycRealizer().getFeedbackManager(), (AnimationPlayer)animationPlayer,
-                gesturebinding, animationPlanManager);
+                gesturebinding, animationPlanManager,theVirtualHuman.getPegBoard());
 
         engine = new DefaultEngine<TimedMotionUnit>(animationPlanner, (AnimationPlayer)animationPlayer, animationPlanManager);
         engine.setId(id);

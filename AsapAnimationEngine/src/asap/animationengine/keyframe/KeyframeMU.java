@@ -25,6 +25,8 @@ import hmi.elckerlyc.planunit.KeyPositionManager;
 import hmi.elckerlyc.planunit.KeyPositionManagerImpl;
 import hmi.elckerlyc.planunit.ParameterNotFoundException;
 import hmi.elckerlyc.BMLBlockPeg;
+import hmi.elckerlyc.PegBoard;
+
 import java.util.*;
 import java.util.Map.Entry;
 
@@ -232,9 +234,9 @@ public class KeyframeMU implements MotionUnit
     }
 
     @Override
-    public TimedMotionUnit createTMU(FeedbackManager bbm, BMLBlockPeg bbPeg, String bmlId, String id)
+    public TimedMotionUnit createTMU(FeedbackManager bbm, BMLBlockPeg bbPeg, String bmlId, String id, PegBoard pb)
     {
-        return new TimedMotionUnit(bbm, bbPeg, bmlId, id, this);
+        return new TimedMotionUnit(bbm, bbPeg, bmlId, id, this, pb);
     }
 
     @Override

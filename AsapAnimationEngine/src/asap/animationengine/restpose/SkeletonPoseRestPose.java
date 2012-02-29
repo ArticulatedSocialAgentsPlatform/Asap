@@ -6,6 +6,7 @@ import hmi.animation.VJoint;
 import hmi.animation.VObjectTransformCopier;
 import hmi.elckerlyc.BMLBlockPeg;
 import hmi.elckerlyc.OffsetPeg;
+import hmi.elckerlyc.PegBoard;
 import hmi.elckerlyc.TimePeg;
 import hmi.elckerlyc.feedback.FeedbackManager;
 import hmi.elckerlyc.planunit.KeyPosition;
@@ -34,21 +35,24 @@ public class SkeletonPoseRestPose implements RestPose
     private VJoint poseTree;
     private final FeedbackManager feedbackManager;
     private SkeletonPose pose;
-
-    public SkeletonPoseRestPose(FeedbackManager bbf)
+    private final PegBoard pegBoard;
+    
+    public SkeletonPoseRestPose(FeedbackManager bbf, PegBoard pb)
     {
         feedbackManager = bbf;
+        pegBoard = pb;
     }
 
-    public SkeletonPoseRestPose(SkeletonPose pose, FeedbackManager bbf)
+    public SkeletonPoseRestPose(SkeletonPose pose, FeedbackManager bbf,PegBoard pb)
     {
         this.pose = pose;
         feedbackManager = bbf;
+        pegBoard = pb;
     }
 
-    public SkeletonPoseRestPose(SkeletonPose pose, AnimationPlayer player, FeedbackManager bbf)
+    public SkeletonPoseRestPose(SkeletonPose pose, AnimationPlayer player, FeedbackManager bbf, PegBoard pb)
     {
-        this(pose, bbf);
+        this(pose, bbf,pb);
         setAnimationPlayer(player);
     }
 
@@ -89,7 +93,7 @@ public class SkeletonPoseRestPose implements RestPose
         TransitionMU mu = createTransitionToRest(joints);
         mu.addKeyPosition(new KeyPosition("start", 0));
         mu.addKeyPosition(new KeyPosition("end", 1));
-        TimedMotionUnit tmu = new TransitionTMU(feedbackManager, bmlBlockPeg, bmlId, id, mu);
+        TimedMotionUnit tmu = new TransitionTMU(feedbackManager, bmlBlockPeg, bmlId, id, mu, pegBoard);
         TimePeg startPeg = new TimePeg(bmlBlockPeg);
         startPeg.setGlobalValue(startTime);
         tmu.setTimePeg("start", startPeg);

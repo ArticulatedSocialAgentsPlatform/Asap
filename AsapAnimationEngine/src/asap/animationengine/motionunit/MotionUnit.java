@@ -22,6 +22,7 @@ import java.util.Set;
 
 import asap.animationengine.AnimationPlayer;
 import hmi.elckerlyc.BMLBlockPeg;
+import hmi.elckerlyc.PegBoard;
 import hmi.elckerlyc.feedback.FeedbackManager;
 import hmi.elckerlyc.planunit.KeyPositionManager;
 import hmi.elckerlyc.planunit.ParameterException;
@@ -54,7 +55,7 @@ public interface MotionUnit extends KeyPositionManager
      * @param id         behaviour id
      * @return          the TMU
      */
-    TimedMotionUnit createTMU(FeedbackManager bbm, BMLBlockPeg bmlBlockPeg, String bmlId,String id);
+    TimedMotionUnit createTMU(FeedbackManager bbm, BMLBlockPeg bmlBlockPeg, String bmlId,String id, PegBoard pb);
     
     /**
      * @return Prefered duration (in seconds) of this motion unit, 0 means not determined/infinite 

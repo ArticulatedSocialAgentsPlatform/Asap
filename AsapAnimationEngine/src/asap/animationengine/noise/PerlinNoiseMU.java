@@ -26,6 +26,8 @@ import hmi.elckerlyc.planunit.KeyPositionManager;
 import hmi.elckerlyc.planunit.KeyPositionManagerImpl;
 import hmi.elckerlyc.planunit.ParameterNotFoundException;
 import hmi.elckerlyc.BMLBlockPeg;
+import hmi.elckerlyc.PegBoard;
+
 import java.util.*;
 
 import lombok.extern.slf4j.Slf4j;
@@ -35,23 +37,21 @@ import com.google.common.collect.ImmutableSet;
 import asap.animationengine.AnimationPlayer;
 import asap.animationengine.motionunit.*;
 
-
-
 /**
  * Motion unit for applying perlin noise to a set of joints.
- * parameters: 
-    joint, 
-    offsetx, offsety, offsetz, (default -0.5, -0.5, -0.5)
-    basefreqx, basefreqz, basefreqz, (default 1,1,1)
-    baseamplitudex, baseamplitudey, baseamplitudez, (default 1,1,1)
-    persistencex, persistencey, persistencez, (default 0.5,0.5,0.5)
-    
-      //basefreq geeft iets aan over de snelheid waarmee de noise loopt.
-      //baseamplitude geeft de amplitude in radialen
-      //offset geeft de offsetangle in radialen
-      //persistence geeft iets aan over de verhouding hoge en lage frequenties. we gebruiken overigens maar 4 octaven 
-      //(zie ook uitleg hugo elias http://freespace.virgin.net/hugo.elias/models/m_perlin.htm )
- *     
+ * parameters:
+ * joint,
+ * offsetx, offsety, offsetz, (default -0.5, -0.5, -0.5)
+ * basefreqx, basefreqz, basefreqz, (default 1,1,1)
+ * baseamplitudex, baseamplitudey, baseamplitudez, (default 1,1,1)
+ * persistencex, persistencey, persistencez, (default 0.5,0.5,0.5)
+ * 
+ * //basefreq geeft iets aan over de snelheid waarmee de noise loopt.
+ * //baseamplitude geeft de amplitude in radialen
+ * //offset geeft de offsetangle in radialen
+ * //persistence geeft iets aan over de verhouding hoge en lage frequenties. we gebruiken overigens maar 4 octaven
+ * //(zie ook uitleg hugo elias http://freespace.virgin.net/hugo.elias/models/m_perlin.htm )
+ * 
  * @author Dennis Reidsma
  * 
  */
@@ -60,25 +60,25 @@ public class PerlinNoiseMU implements NoiseMU
 {
     private HashMap<String, String> parameters = new HashMap<String, String>(); // name => value set
     private KeyPositionManager keyPositionManager = new KeyPositionManagerImpl();
-    private PerlinNoise pnx1 = new PerlinNoise(1024,0,1);    
+    private PerlinNoise pnx1 = new PerlinNoise(1024, 0, 1);
     /*
-    private PerlinNoise pnx2 = new PerlinNoise(1024,0,1);    
-    private PerlinNoise pnx3 = new PerlinNoise(1024,0,1);    
-    private PerlinNoise pnx4 = new PerlinNoise(1024,0,1);
-    */    
-    private PerlinNoise pny1 = new PerlinNoise(1024,0,1);    
+     * private PerlinNoise pnx2 = new PerlinNoise(1024,0,1);
+     * private PerlinNoise pnx3 = new PerlinNoise(1024,0,1);
+     * private PerlinNoise pnx4 = new PerlinNoise(1024,0,1);
+     */
+    private PerlinNoise pny1 = new PerlinNoise(1024, 0, 1);
     /*
-    private PerlinNoise pny2 = new PerlinNoise(1024,0,1);    
-    private PerlinNoise pny3 = new PerlinNoise(1024,0,1);    
-    private PerlinNoise pny4 = new PerlinNoise(1024,0,1);    
-    */
-    private PerlinNoise pnz1 = new PerlinNoise(1024,0,1);    
+     * private PerlinNoise pny2 = new PerlinNoise(1024,0,1);
+     * private PerlinNoise pny3 = new PerlinNoise(1024,0,1);
+     * private PerlinNoise pny4 = new PerlinNoise(1024,0,1);
+     */
+    private PerlinNoise pnz1 = new PerlinNoise(1024, 0, 1);
     /*
-    private PerlinNoise pnz2 = new PerlinNoise(1024,0,1);    
-    private PerlinNoise pnz3 = new PerlinNoise(1024,0,1);    
-    private PerlinNoise pnz4 = new PerlinNoise(1024,0,1);    
-    */
-    
+     * private PerlinNoise pnz2 = new PerlinNoise(1024,0,1);
+     * private PerlinNoise pnz3 = new PerlinNoise(1024,0,1);
+     * private PerlinNoise pnz4 = new PerlinNoise(1024,0,1);
+     */
+
     protected AnimationPlayer player;
     float[] q = new float[4];
 
@@ -114,21 +114,20 @@ public class PerlinNoiseMU implements NoiseMU
 
     public PerlinNoiseMU()
     {
-      setParameterValue("joint",Hanim.skullbase);
-      setFloatParameterValue("offsetx",-0.1f);
-      setFloatParameterValue("offsety",0f);
-      setFloatParameterValue("offsetz",0f);
-      setFloatParameterValue("basefreqx",1f);
-      setFloatParameterValue("basefreqy",1f);
-      setFloatParameterValue("basefreqz",1f);
-      setFloatParameterValue("baseamplitudex",0.5f);
-      setFloatParameterValue("baseamplitudey",0f);
-      setFloatParameterValue("baseamplitudez",0f);
-      setFloatParameterValue("persistencex",0.5f);
-      setFloatParameterValue("persistencey",0.5f);
-      setFloatParameterValue("persistencez",0.5f);
+        setParameterValue("joint", Hanim.skullbase);
+        setFloatParameterValue("offsetx", -0.1f);
+        setFloatParameterValue("offsety", 0f);
+        setFloatParameterValue("offsetz", 0f);
+        setFloatParameterValue("basefreqx", 1f);
+        setFloatParameterValue("basefreqy", 1f);
+        setFloatParameterValue("basefreqz", 1f);
+        setFloatParameterValue("baseamplitudex", 0.5f);
+        setFloatParameterValue("baseamplitudey", 0f);
+        setFloatParameterValue("baseamplitudez", 0f);
+        setFloatParameterValue("persistencex", 0.5f);
+        setFloatParameterValue("persistencey", 0.5f);
+        setFloatParameterValue("persistencez", 0.5f);
     }
-
 
     @Override
     public double getPreferedDuration()
@@ -139,39 +138,39 @@ public class PerlinNoiseMU implements NoiseMU
     @Override
     public void play(double t) throws MUPlayException
     {
-      try
-      {
-          
-        float rotxRad =   getFloatParameterValue("offsetx")
-                         + getFloatParameterValue("baseamplitudex")*pnx1.noise((float)t*getFloatParameterValue("basefreqx"));
-                         // + baseamplitudex*persistence*pnx2.noise((float)currentTime*basefreqx*2)     
-                         // + baseamplitudex*persistence*persistence*pnx3.noise((float)currentTime*basefreqx*4)     
-                         // + baseamplitudex*persistence*persistence*persistence*pnx4.noise((float)currentTime*basefreqx*8)     
-        float rotyRad =   getFloatParameterValue("offsety")
-                         + getFloatParameterValue("baseamplitudey")*pny1.noise((float)t*getFloatParameterValue("basefreqy"));
-        float rotzRad =   getFloatParameterValue("offsetz")
-                         + getFloatParameterValue("baseamplitudez")*pnz1.noise((float)t*getFloatParameterValue("basefreqz"));
-        Quat4f.setFromRollPitchYaw(q, rotzRad, rotxRad, rotyRad);
-        player.getVNext().getPart(getParameterValue("joint")).setRotation(q);
-      }
-      catch (Exception ex)
-      {
-        throw new MUPlayException(ex.getMessage(), this);
-      }
+        try
+        {
+
+            float rotxRad = getFloatParameterValue("offsetx") + getFloatParameterValue("baseamplitudex")
+                    * pnx1.noise((float) t * getFloatParameterValue("basefreqx"));
+            // + baseamplitudex*persistence*pnx2.noise((float)currentTime*basefreqx*2)
+            // + baseamplitudex*persistence*persistence*pnx3.noise((float)currentTime*basefreqx*4)
+            // + baseamplitudex*persistence*persistence*persistence*pnx4.noise((float)currentTime*basefreqx*8)
+            float rotyRad = getFloatParameterValue("offsety") + getFloatParameterValue("baseamplitudey")
+                    * pny1.noise((float) t * getFloatParameterValue("basefreqy"));
+            float rotzRad = getFloatParameterValue("offsetz") + getFloatParameterValue("baseamplitudez")
+                    * pnz1.noise((float) t * getFloatParameterValue("basefreqz"));
+            Quat4f.setFromRollPitchYaw(q, rotzRad, rotxRad, rotyRad);
+            player.getVNext().getPart(getParameterValue("joint")).setRotation(q);
+        }
+        catch (Exception ex)
+        {
+            throw new MUPlayException(ex.getMessage(), this);
+        }
     }
 
     @Override
     public void setFloatParameterValue(String name, float value)
     {
         parameters.put(name, "" + value);
-//        System.out.println("param" +name+","+value);
+        // System.out.println("param" +name+","+value);
     }
 
     @Override
     public void setParameterValue(String name, String value)
     {
         parameters.put(name, value);
-        //System.out.println("param" +name+","+value);
+        // System.out.println("param" +name+","+value);
     }
 
     @Override
@@ -181,8 +180,7 @@ public class PerlinNoiseMU implements NoiseMU
         {
             throw new ParameterNotFoundException(name);
         }
-        else
-            return parameters.get(name);
+        else return parameters.get(name);
 
     }
 
@@ -206,15 +204,15 @@ public class PerlinNoiseMU implements NoiseMU
     }
 
     @Override
-    public TimedMotionUnit createTMU(FeedbackManager bbm, BMLBlockPeg bbPeg, String bmlId, String id)
+    public TimedMotionUnit createTMU(FeedbackManager bbm, BMLBlockPeg bbPeg, String bmlId, String id, PegBoard pb)
     {
-        return new NoiseTMU(bbm, bbPeg, bmlId, id, this);
+        return new NoiseTMU(bbm, bbPeg, bmlId, id, this, pb);
     }
 
     @Override
     public MotionUnit copy(AnimationPlayer p)
     {
-        HashMap<String, String> newparam = new HashMap<String, String> ();
+        HashMap<String, String> newparam = new HashMap<String, String>();
         newparam.putAll(parameters);
         PerlinNoiseMU pmu = new PerlinNoiseMU();
         pmu.parameters = newparam;
@@ -234,8 +232,9 @@ public class PerlinNoiseMU implements NoiseMU
             return null;
         }
     }
-    
-    private static final Set<String>PHJOINTS = ImmutableSet.of(); 
+
+    private static final Set<String> PHJOINTS = ImmutableSet.of();
+
     @Override
     public Set<String> getPhysicalJoints()
     {
@@ -252,9 +251,9 @@ public class PerlinNoiseMU implements NoiseMU
         }
         catch (ParameterNotFoundException e)
         {
-            log.warn("No joint set for PerlinNoiseMU, ParameterNotFoundException",e);            
+            log.warn("No joint set for PerlinNoiseMU, ParameterNotFoundException", e);
         }
         return ImmutableSet.of();
-        
-    } 
+
+    }
 }

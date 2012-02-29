@@ -20,6 +20,7 @@ package asap.animationengine.transitions;
 
 import hmi.elckerlyc.BMLBlockPeg;
 
+import hmi.elckerlyc.PegBoard;
 import hmi.elckerlyc.TimedPlanUnitPlayException;
 import hmi.elckerlyc.TimePeg;
 import hmi.elckerlyc.feedback.FeedbackManager;
@@ -42,15 +43,15 @@ public class TransitionTMU extends TimedMotionUnit
     protected TransitionMU transitionUnit;
     private static Logger logger = LoggerFactory.getLogger(GazeMU.class.getName()); 
     
-    public TransitionTMU(FeedbackManager bfm, BMLBlockPeg bbPeg, String bmlId,String behId,TransitionMU m)
+    public TransitionTMU(FeedbackManager bfm, BMLBlockPeg bbPeg, String bmlId,String behId,TransitionMU m, PegBoard pb)
     {
-        super(bfm, bbPeg, bmlId,behId,m);        
+        super(bfm, bbPeg, bmlId,behId,m, pb);        
         transitionUnit = m;        
     }
 
-    public TransitionTMU(BMLBlockPeg bbPeg, String bmlId,String behId,TransitionMU m)
+    public TransitionTMU(BMLBlockPeg bbPeg, String bmlId,String behId,TransitionMU m, PegBoard pb)
     {
-        this(NullFeedbackManager.getInstance(),bbPeg,bmlId,behId,m);        
+        this(NullFeedbackManager.getInstance(),bbPeg,bmlId,behId,m, pb);        
     }
     
     @Override

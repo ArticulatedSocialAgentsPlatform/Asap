@@ -21,6 +21,7 @@ package asap.animationengine.noise;
 import asap.animationengine.motionunit.*;
 import hmi.bml.feedback.*;
 import hmi.elckerlyc.BMLBlockPeg;
+import hmi.elckerlyc.PegBoard;
 import hmi.elckerlyc.TimedPlanUnitPlayException;
 import hmi.elckerlyc.feedback.FeedbackManager;
 import hmi.elckerlyc.planunit.KeyPosition;
@@ -29,34 +30,35 @@ import hmi.elckerlyc.planunit.KeyPosition;
  * Timed motion unit for noise motion units.
  * Specific to noise motion units is that they run in line with "real time". They call the play function of noise motion units
  * with a value t = globaltime - starttime(MU)
- 
+ * 
  * @author Dennis Reidsma
- *
+ * 
  */
 public class NoiseTMU extends TimedMotionUnit
 {
     private NoiseMU nmu;
-    //double startTime = 0;
-    
-    public NoiseTMU(FeedbackManager bfm,BMLBlockPeg bmlBlockPeg,String bmlId,String id,NoiseMU nmu)
+
+    // double startTime = 0;
+
+    public NoiseTMU(FeedbackManager bfm, BMLBlockPeg bmlBlockPeg, String bmlId, String id, NoiseMU nmu, PegBoard pb)
     {
-        super(bfm,bmlBlockPeg,bmlId, id,nmu);    
+        super(bfm, bmlBlockPeg, bmlId, id, nmu, pb);
         this.nmu = nmu;
     }
-    
+
     @Override
     protected void startUnit(double time) throws TimedPlanUnitPlayException
     {
-      //startTime = time;
-      sendProgress(0d, time);
-    }    
-    
+        // startTime = time;
+        sendProgress(0d, time);
+    }
+
     @Override
     protected void playUnit(double time) throws TMUPlayException
     {
         try
         {
-            //logger.debug("Timed Motion Unit play {}",time);
+            // logger.debug("Timed Motion Unit play {}",time);
             nmu.play(time);
         }
         catch (MUPlayException ex)
@@ -70,7 +72,7 @@ public class NoiseTMU extends TimedMotionUnit
     {
         sendProgress(1d, time);
     }
-    
+
     /**
      * Send progress feedback for all key positions passed at canonical time t.
      * 
@@ -95,6 +97,5 @@ public class NoiseTMU extends TimedMotionUnit
             }
         }
     }
-    
-    
+
 }

@@ -19,6 +19,7 @@
 package asap.animationengine.motionunit;
 
 import hmi.elckerlyc.BMLBlockPeg;
+import hmi.elckerlyc.PegBoard;
 import hmi.elckerlyc.BehaviourPlanningException;
 
 import hmi.elckerlyc.feedback.FeedbackManager;
@@ -53,6 +54,7 @@ public class TimedMotionUnit extends TimedAbstractPlanUnit
     private final MotionUnit mu;
     protected ArrayList<KeyPosition> progressHandled = new ArrayList<KeyPosition>();
     private final UniModalResolver resolver = new LinearStretchResolver();
+    protected PegBoard pegBoard;
     
     @Delegate
     protected final PlanUnitTimeManager puTimeManager;
@@ -70,16 +72,17 @@ public class TimedMotionUnit extends TimedAbstractPlanUnit
      * @param id behaviour id
      * @param m motion unit
      */
-    public TimedMotionUnit(FeedbackManager bbf, BMLBlockPeg bmlBlockPeg, String bmlId, String id, MotionUnit m)
+    public TimedMotionUnit(FeedbackManager bbf, BMLBlockPeg bmlBlockPeg, String bmlId, String id, MotionUnit m, PegBoard pb)
     {
         super(bbf, bmlBlockPeg, bmlId, id);
         mu = m;
         puTimeManager = new PlanUnitTimeManager(mu);
+        pegBoard = pb;
     }
 
-    public TimedMotionUnit(BMLBlockPeg bmlBlockPeg, String bmlId, String id, MotionUnit m)
+    public TimedMotionUnit(BMLBlockPeg bmlBlockPeg, String bmlId, String id, MotionUnit m, PegBoard pb)
     {
-        this(NullFeedbackManager.getInstance(), bmlBlockPeg, bmlId, id, m);
+        this(NullFeedbackManager.getInstance(), bmlBlockPeg, bmlId, id, m, pb);
     }
 
     
@@ -114,6 +117,11 @@ public class TimedMotionUnit extends TimedAbstractPlanUnit
         }
     }
 
+    public void updateTiming(double time)
+    {
+        
+    }
+    
     @Override
     protected void playUnit(double time) throws TMUPlayException
     {

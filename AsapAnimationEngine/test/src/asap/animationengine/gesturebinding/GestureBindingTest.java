@@ -25,6 +25,7 @@ import java.util.*;
 
 import hmi.animation.*;
 import hmi.elckerlyc.BMLBlockPeg;
+import hmi.elckerlyc.PegBoard;
 import hmi.elckerlyc.feedback.FeedbackManager;
 import hmi.elckerlyc.planunit.ParameterException;
 import hmi.testutil.animation.HanimBody;
@@ -52,80 +53,63 @@ public class GestureBindingTest
 {
     AnimationPlayer mockAniPlayer = mock(AnimationPlayer.class);
     FeedbackManager mockFeedbackManager = mock(FeedbackManager.class);
+    private PegBoard pegBoard = new PegBoard();
 
     private VJoint human;
     private GestureBinding gestureBinding;
-    
+
     @Before
     public void setup()
     {
         human = HanimBody.getLOA1HanimBody();
         Resources r = new Resources("");
-        gestureBinding = new GestureBinding(r,mockFeedbackManager);
-        String s = "<gesturebinding>" + 
-                   "<MotionUnitSpec type=\"head\">" + 
-                       "<constraints>" + 
-                           "<constraint name=\"action\" value=\"ROTATION\"/>" + 
-                           "<constraint name=\"rotation\" value=\"NOD\"/>" + 
-                       "</constraints>" + 
-                       "<parametermap>" + 
-                           "<parameter src=\"amount\" dst=\"a\"/>"+ 
-                           "<parameter src=\"repeats\" dst=\"r\"/>" + 
-                       "</parametermap>" + 
-                       "<MotionUnit type=\"ProcAnimation\" file=\"Humanoids/shared/procanimation/smartbody/nod.xml\"/>" + 
-                   "</MotionUnitSpec>"+ 
-                   "<MotionUnitSpec type=\"head\">" + 
-                       "<constraints>" + 
-                           "<constraint name=\"action\" value=\"ROTATION\"/>"+ 
-                           "<constraint name=\"rotation\" value=\"SHAKE\"/>" + 
-                       "</constraints>" + 
-                       "<parametermap>" + 
-                           "<parameter src=\"amount\" dst=\"a\"/>" + 
-                           "<parameter src=\"repeats\" dst=\"r\"/>" + 
-                       "</parametermap>"+ 
-                       "<MotionUnit type=\"ProcAnimation\" file=\"Humanoids/shared/procanimation/smartbody/shake.xml\"/>" + 
-                   "</MotionUnitSpec>" + 
-                   "<MotionUnitSpec type=\"keyframe\" namespace=\"http://hmi.ewi.utwente.nl/bmlt\">" + 
-                       "<constraints>"+ 
-                           "<constraint name=\"name\" value=\"vlakte\"/>" + 
-                       "</constraints>" + 
-                       "<MotionUnit type=\"Keyframe\" file=\"Humanoids/shared/keyframe/clench_fists.xml\"/>"+ 
-                   "</MotionUnitSpec>"+
-                   "</gesturebinding>";
+        gestureBinding = new GestureBinding(r, mockFeedbackManager);
+        String s = "<gesturebinding>" + "<MotionUnitSpec type=\"head\">" + "<constraints>"
+                + "<constraint name=\"action\" value=\"ROTATION\"/>" + "<constraint name=\"rotation\" value=\"NOD\"/>" + "</constraints>"
+                + "<parametermap>" + "<parameter src=\"amount\" dst=\"a\"/>" + "<parameter src=\"repeats\" dst=\"r\"/>" + "</parametermap>"
+                + "<MotionUnit type=\"ProcAnimation\" file=\"Humanoids/shared/procanimation/smartbody/nod.xml\"/>" + "</MotionUnitSpec>"
+                + "<MotionUnitSpec type=\"head\">" + "<constraints>" + "<constraint name=\"action\" value=\"ROTATION\"/>"
+                + "<constraint name=\"rotation\" value=\"SHAKE\"/>" + "</constraints>" + "<parametermap>"
+                + "<parameter src=\"amount\" dst=\"a\"/>" + "<parameter src=\"repeats\" dst=\"r\"/>" + "</parametermap>"
+                + "<MotionUnit type=\"ProcAnimation\" file=\"Humanoids/shared/procanimation/smartbody/shake.xml\"/>" + "</MotionUnitSpec>"
+                + "<MotionUnitSpec type=\"keyframe\" namespace=\"http://hmi.ewi.utwente.nl/bmlt\">" + "<constraints>"
+                + "<constraint name=\"name\" value=\"vlakte\"/>" + "</constraints>"
+                + "<MotionUnit type=\"Keyframe\" file=\"Humanoids/shared/keyframe/clench_fists.xml\"/>" + "</MotionUnitSpec>"
+                + "</gesturebinding>";
         gestureBinding.readXML(s);
         when(mockAniPlayer.getVNext()).thenReturn(human);
     }
 
     public HeadBehaviour createHeadBehaviour(String bmlId, String bml) throws IOException
     {
-        return new HeadBehaviour(bmlId,new XMLTokenizer(bml));
+        return new HeadBehaviour(bmlId, new XMLTokenizer(bml));
     }
-    
-    public BMLTKeyframeBehaviour createKeyFrameBehaviour(String bmlId, String bml)throws IOException
+
+    public BMLTKeyframeBehaviour createKeyFrameBehaviour(String bmlId, String bml) throws IOException
     {
-        return new BMLTKeyframeBehaviour(bmlId,new XMLTokenizer(bml));
+        return new BMLTKeyframeBehaviour(bmlId, new XMLTokenizer(bml));
     }
-    
+
     @Test
     public void testGetHeadNodWithRepeats2() throws IOException, ParameterException
     {
-        HeadBehaviour b = createHeadBehaviour("bml1","<head id=\"head1\" action=\"ROTATION\" rotation=\"NOD\" repeats=\"2\"/>");
-        
-        List<TimedMotionUnit> m = gestureBinding.getMotionUnit(BMLBlockPeg.GLOBALPEG, b, mockAniPlayer);
-        assertEquals(1,m.size());
+        HeadBehaviour b = createHeadBehaviour("bml1", "<head id=\"head1\" action=\"ROTATION\" rotation=\"NOD\" repeats=\"2\"/>");
+
+        List<TimedMotionUnit> m = gestureBinding.getMotionUnit(BMLBlockPeg.GLOBALPEG, b, mockAniPlayer, pegBoard);
+        assertEquals(1, m.size());
         assertTrue(Float.parseFloat(m.get(0).getMotionUnit().getParameterValue("r")) == 2.0);
         assertTrue(Float.parseFloat(m.get(0).getMotionUnit().getParameterValue("a")) == 0.5);// BML default
         assertEquals(m.get(0).getBMLId(), "bml1");
         assertEquals(m.get(0).getId(), "head1");
     }
-    
+
     @Test
     public void testGetHeadNodWithAmount2() throws IOException, ParameterException
     {
-        HeadBehaviour b = createHeadBehaviour("bml1","<head id=\"head1\" action=\"ROTATION\" rotation=\"SHAKE\" repeats=\"2\"/>");
-        
-        List<TimedMotionUnit> m  = gestureBinding.getMotionUnit(BMLBlockPeg.GLOBALPEG, b, mockAniPlayer);
-        assertEquals(1,m.size());
+        HeadBehaviour b = createHeadBehaviour("bml1", "<head id=\"head1\" action=\"ROTATION\" rotation=\"SHAKE\" repeats=\"2\"/>");
+
+        List<TimedMotionUnit> m = gestureBinding.getMotionUnit(BMLBlockPeg.GLOBALPEG, b, mockAniPlayer, pegBoard);
+        assertEquals(1, m.size());
         assertEquals(2, Float.parseFloat(m.get(0).getMotionUnit().getParameterValue("r")), 0.001);
         assertEquals(0.5, Float.parseFloat(m.get(0).getMotionUnit().getParameterValue("a")), 0.001);
         assertEquals(m.get(0).getBMLId(), "bml1");
@@ -136,10 +120,10 @@ public class GestureBindingTest
     public void testReadKeyframe() throws IOException
     {
         String kfString = "<keyframe xmlns=\"http://hmi.ewi.utwente.nl/bmlt\" id=\"v1\" name=\"vlakte\">"
-        + "     <parameter name=\"joints\" value=\"r_shoulder r_elbow r_wrist\"/>" + "</keyframe>";
-        Behaviour b = createKeyFrameBehaviour("bml1",kfString);
+                + "     <parameter name=\"joints\" value=\"r_shoulder r_elbow r_wrist\"/>" + "</keyframe>";
+        Behaviour b = createKeyFrameBehaviour("bml1", kfString);
 
-        List<TimedMotionUnit> m = gestureBinding.getMotionUnit(BMLBlockPeg.GLOBALPEG, b, mockAniPlayer);
+        List<TimedMotionUnit> m = gestureBinding.getMotionUnit(BMLBlockPeg.GLOBALPEG, b, mockAniPlayer, pegBoard);
         assertEquals(1, m.size());
         assertEquals("bml1", m.get(0).getBMLId());
         assertEquals("v1", m.get(0).getId());

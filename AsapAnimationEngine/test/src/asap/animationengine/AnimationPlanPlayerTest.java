@@ -10,6 +10,7 @@ import hmi.elckerlyc.planunit.KeyPosition;
 import hmi.bml.feedback.BMLExceptionFeedback;
 import hmi.bml.feedback.BMLSyncPointProgressFeedback;
 import hmi.elckerlyc.BMLBlockPeg;
+import hmi.elckerlyc.PegBoard;
 import hmi.elckerlyc.TimePeg;
 import hmi.elckerlyc.feedback.FeedbackManager;
 import hmi.elckerlyc.feedback.FeedbackManagerImpl;
@@ -41,7 +42,6 @@ import static hmi.elckerlyc.util.KeyPositionMocker.*;
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.collection.IsIterableContainingInAnyOrder.*;
 
-
 /**
  * Unit test cases for a PlanPlayer using TimedMotionUnits
  * 
@@ -61,30 +61,29 @@ public class AnimationPlanPlayerTest
     private BMLBlockManager mockBmlBlockManager = mock(BMLBlockManager.class);
     private RestPose mockRestPose = mock(RestPose.class);
     private FeedbackManager fbManager = new FeedbackManagerImpl(mockBmlBlockManager, "character1");
-
+    private PegBoard pegBoard = new PegBoard();
     PlanManager<TimedMotionUnit> planManager = new PlanManager<TimedMotionUnit>();
 
     private ListFeedbackListener fbl;
-    private AnimationPlanPlayer app;   
-    
+    private AnimationPlanPlayer app;
 
     @Before
     public void setup()
     {
         fbl = new ListFeedbackListener(fbList);
-        app = new AnimationPlanPlayer(mockRestPose,fbManager, planManager, new DefaultTimedPlanUnitPlayer());
+        app = new AnimationPlanPlayer(mockRestPose, fbManager, planManager, new DefaultTimedPlanUnitPlayer());
         app.addExceptionListener(new ListBMLExceptionListener(exList));
         fbManager.addFeedbackListener(fbl);
     }
 
     private TimedMotionUnit createMotionUnit(String behId, String bmlId, MotionUnit mu)
     {
-        return new TimedMotionUnit(fbManager, BMLBlockPeg.GLOBALPEG, bmlId, behId, mu);
+        return new TimedMotionUnit(fbManager, BMLBlockPeg.GLOBALPEG, bmlId, behId, mu, pegBoard);
     }
 
     private TransitionTMU createTransitionTMU(String behId, String bmlId, TransitionMU mu)
     {
-        return new TransitionTMU(fbManager, BMLBlockPeg.GLOBALPEG, bmlId, behId, mu);
+        return new TransitionTMU(fbManager, BMLBlockPeg.GLOBALPEG, bmlId, behId, mu, pegBoard);
     }
 
     @Test
@@ -183,9 +182,9 @@ public class AnimationPlanPlayerTest
         tmu2.setState(TimedPlanUnitState.LURKING);
         tmu1.setPriority(2);
         tmu2.setPriority(1);
-        
+
         app.play(0);
-        assertEquals(0,exList.size());
+        assertEquals(0, exList.size());
         assertTrue(tmu1.getState() == TimedPlanUnitState.IN_EXEC);
         assertTrue(tmu2.getState() == TimedPlanUnitState.LURKING);
         assertTrue(fbList.size() == 1);
@@ -309,12 +308,12 @@ public class AnimationPlanPlayerTest
         verify(muMock1, atLeastOnce()).getKeyPosition("end");
         verify(muMock1, times(1)).play(eq(0.5, 0.01));
     }
-    
+
     @Test
     public void testPriority() throws MUPlayException
     {
         TimedMotionUnit tmu1 = createMotionUnit("behaviour1", "bml1", muMock1);
-        when(muMock1.getKinematicJoints()).thenReturn(ImmutableSet.of("r_shoulder","r_wrist"));
+        when(muMock1.getKinematicJoints()).thenReturn(ImmutableSet.of("r_shoulder", "r_wrist"));
         when(muMock1.getPhysicalJoints()).thenReturn(new HashSet<String>());
         TimePeg tpStart = new TimePeg(BMLBlockPeg.GLOBALPEG);
         tpStart.setGlobalValue(0);
@@ -326,7 +325,7 @@ public class AnimationPlanPlayerTest
         tmu1.setState(TimedPlanUnitState.LURKING);
         tmu1.setPriority(50);
         planManager.addPlanUnit(tmu1);
-        
+
         TimedMotionUnit tmu2 = createMotionUnit("behaviour2", "bml1", muMock2);
         when(muMock2.getKinematicJoints()).thenReturn(ImmutableSet.of("r_shoulder"));
         when(muMock2.getPhysicalJoints()).thenReturn(new HashSet<String>());
@@ -340,14 +339,15 @@ public class AnimationPlanPlayerTest
         tmu2.setPriority(100);
         tmu2.setState(TimedPlanUnitState.LURKING);
         planManager.addPlanUnit(tmu2);
-        
+
         TimedMotionUnit mockTmu = mock(TimedMotionUnit.class);
         when(mockTmu.getKinematicJoints()).thenReturn(ImmutableSet.of("r_wrist"));
         when(mockTmu.getPhysicalJoints()).thenReturn(new HashSet<String>());
         when(mockTmu.getState()).thenReturn(TimedPlanUnitState.LURKING);
-        when(mockRestPose.createTransitionToRest(eq(ImmutableSet.of("r_wrist")), anyDouble(), 
-                eq("bml1"), eq("behaviour1-cleanup"), eq(BMLBlockPeg.GLOBALPEG))).thenReturn(mockTmu);
+        when(
+                mockRestPose.createTransitionToRest(eq(ImmutableSet.of("r_wrist")), anyDouble(), eq("bml1"), eq("behaviour1-cleanup"),
+                        eq(BMLBlockPeg.GLOBALPEG))).thenReturn(mockTmu);
         app.play(0);
-        assertThat(planManager.getPlanUnits(),containsInAnyOrder(tmu2,mockTmu));
+        assertThat(planManager.getPlanUnits(), containsInAnyOrder(tmu2, mockTmu));
     }
 }

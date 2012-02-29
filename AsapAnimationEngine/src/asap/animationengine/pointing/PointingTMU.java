@@ -27,6 +27,7 @@ import asap.animationengine.motionunit.TimedMotionUnit;
 
 import hmi.elckerlyc.BMLBlockPeg;
 import hmi.elckerlyc.OffsetPeg;
+import hmi.elckerlyc.PegBoard;
 import hmi.elckerlyc.TimedPlanUnitPlayException;
 import hmi.elckerlyc.TimePeg;
 import hmi.elckerlyc.feedback.FeedbackManager;
@@ -40,9 +41,9 @@ public class PointingTMU extends TimedMotionUnit
     private PointingMU pmu;
     private static Logger logger = LoggerFactory.getLogger(PointingTMU.class.getName());
     
-    public PointingTMU(FeedbackManager bfm, BMLBlockPeg bbPeg, String bmlId,String id,PointingMU mu)
+    public PointingTMU(FeedbackManager bfm, BMLBlockPeg bbPeg, String bmlId,String id,PointingMU mu, PegBoard pb)
     {
-        super(bfm, bbPeg, bmlId,id,mu);    
+        super(bfm, bbPeg, bmlId,id,mu, pb);    
         pmu = mu;
     }
     

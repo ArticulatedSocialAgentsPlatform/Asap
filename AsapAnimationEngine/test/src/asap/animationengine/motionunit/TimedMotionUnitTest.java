@@ -21,6 +21,7 @@ import hmi.elckerlyc.planunit.KeyPosition;
 import hmi.bml.BMLGestureSync;
 import hmi.bml.feedback.BMLSyncPointProgressFeedback;
 import hmi.elckerlyc.BMLBlockPeg;
+import hmi.elckerlyc.PegBoard;
 import hmi.elckerlyc.SyncPointNotFoundException;
 import hmi.elckerlyc.TimedPlanUnitPlayException;
 import hmi.elckerlyc.TimePeg;
@@ -50,6 +51,7 @@ public class TimedMotionUnitTest extends AbstractTimedPlanUnitTest
     private List<BMLSyncPointProgressFeedback> fbList;
     private ListFeedbackListener fbl;
     private TimedMotionUnit tmu;
+    private PegBoard pegBoard = new PegBoard();
 
     @Before
     public void setup()
@@ -57,7 +59,7 @@ public class TimedMotionUnitTest extends AbstractTimedPlanUnitTest
         fbList = new ArrayList<BMLSyncPointProgressFeedback>();
         fbl = new ListFeedbackListener(fbList);
         muMock = spy(new StubMotionUnit());
-        tmu = new TimedMotionUnit(fbManager, BMLBlockPeg.GLOBALPEG, "bml1", "behaviour1", muMock);
+        tmu = new TimedMotionUnit(fbManager, BMLBlockPeg.GLOBALPEG, "bml1", "behaviour1", muMock, pegBoard);
         fbManager.addFeedbackListener(fbl);
     }
 
@@ -321,7 +323,7 @@ public class TimedMotionUnitTest extends AbstractTimedPlanUnitTest
     @Override
     protected TimedPlanUnit setupPlanUnit(FeedbackManager bfm, BMLBlockPeg bbPeg, String id, String bmlId, double startTime)
     {
-        tmu = new TimedMotionUnit(bfm, bbPeg, bmlId, id, new StubMotionUnit());
+        tmu = new TimedMotionUnit(bfm, bbPeg, bmlId, id, new StubMotionUnit(),pegBoard);
         tmu.resolveDefaultBMLKeyPositions();
         tmu.setTimePeg("start", TimePegUtil.createTimePeg(bbPeg, startTime));
         return tmu;

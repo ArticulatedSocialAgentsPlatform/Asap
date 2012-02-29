@@ -11,6 +11,7 @@ import hmi.bml.core.HeadBehaviour;
 import hmi.bml.parser.Constraint;
 import hmi.elckerlyc.BMLBlockPeg;
 import hmi.elckerlyc.BehaviourPlanningException;
+import hmi.elckerlyc.PegBoard;
 import hmi.elckerlyc.PlannerTests;
 import hmi.elckerlyc.TimePeg;
 import hmi.elckerlyc.feedback.FeedbackManager;
@@ -53,6 +54,7 @@ public class AnimationPlannerTest
     private GestureBinding mockBinding = mock(GestureBinding.class);    
 
     private MotionUnit mockUnit = mock(MotionUnit.class);
+    private PegBoard pegBoard = new PegBoard();
 
     private BMLBlockManager mockBmlBlockManager = mock(BMLBlockManager.class);
     protected FeedbackManager fbManager = new FeedbackManagerImpl(mockBmlBlockManager,"character1");
@@ -65,14 +67,14 @@ public class AnimationPlannerTest
     @Before
     public void setup()
     {
-        animationPlanner = new AnimationPlanner(fbManager, mockPlayer, mockBinding, planManager);
+        animationPlanner = new AnimationPlanner(fbManager, mockPlayer, mockBinding, planManager,pegBoard);
         plannerTests = new PlannerTests<TimedMotionUnit>(animationPlanner, bbPeg);
 
-        TimedMotionUnit tmu = new TimedMotionUnit(fbManager, bbPeg, BMLID, "nod1", mockUnit);
+        TimedMotionUnit tmu = new TimedMotionUnit(fbManager, bbPeg, BMLID, "nod1", mockUnit,pegBoard);
         KeyPositionMocker.stubKeyPositions(mockUnit, new KeyPosition("start", 0, 1), new KeyPosition("end", 1, 1));
         final List<TimedMotionUnit> tmus = new ArrayList<TimedMotionUnit>();
         tmus.add(tmu);
-        when(mockBinding.getMotionUnit((BMLBlockPeg) any(), (Behaviour) any(), eq(mockPlayer))).thenReturn(tmus);
+        when(mockBinding.getMotionUnit((BMLBlockPeg) any(), (Behaviour) any(), eq(mockPlayer), eq(pegBoard))).thenReturn(tmus);
         when(mockUnit.getPreferedDuration()).thenReturn(3.0);        
     }
 

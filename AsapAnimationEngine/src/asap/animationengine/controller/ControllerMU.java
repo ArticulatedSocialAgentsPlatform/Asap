@@ -19,6 +19,7 @@
 package asap.animationengine.controller;
 
 import hmi.elckerlyc.BMLBlockPeg;
+import hmi.elckerlyc.PegBoard;
 import hmi.elckerlyc.feedback.FeedbackManager;
 import hmi.elckerlyc.planunit.InvalidParameterException;
 import hmi.elckerlyc.planunit.KeyPosition;
@@ -161,9 +162,9 @@ public class ControllerMU implements MotionUnit
     }
     
     @Override
-    public TimedMotionUnit createTMU(FeedbackManager bfm,BMLBlockPeg bbPeg,String bmlId, String id)
+    public TimedMotionUnit createTMU(FeedbackManager bfm,BMLBlockPeg bbPeg,String bmlId, String id, PegBoard pb)
     {
-        return new PhysicalTMU(bfm,bbPeg, bmlId, id, this);
+        return new PhysicalTMU(bfm,bbPeg, bmlId, id, this, pb);
     }
 
     @Override

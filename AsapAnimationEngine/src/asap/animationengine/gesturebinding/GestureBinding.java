@@ -19,6 +19,7 @@
 package asap.animationengine.gesturebinding;
 
 import hmi.elckerlyc.BMLBlockPeg;
+import hmi.elckerlyc.PegBoard;
 import hmi.elckerlyc.feedback.FeedbackManager;
 import hmi.elckerlyc.planunit.ParameterException;
 import hmi.util.*;
@@ -56,7 +57,7 @@ public class GestureBinding extends XMLStructureAdapter
     /**
      * Gets a list of timed motion units that satisfy the constraints of behaviour b     
      */
-    public List<TimedMotionUnit> getMotionUnit(BMLBlockPeg bbPeg,Behaviour b, AnimationPlayer player)
+    public List<TimedMotionUnit> getMotionUnit(BMLBlockPeg bbPeg,Behaviour b, AnimationPlayer player, PegBoard pegBoard)
     {
         ArrayList<TimedMotionUnit> mus = new ArrayList<TimedMotionUnit>();
         for (MotionUnitSpec s:specs)
@@ -82,7 +83,7 @@ public class GestureBinding extends XMLStructureAdapter
                         logger.warn("Error in setting up motion unit", e1);
                         continue;
                     }
-                    TimedMotionUnit tmu = muCopy.createTMU(fbManager,bbPeg,b.getBmlId(),b.id);                    
+                    TimedMotionUnit tmu = muCopy.createTMU(fbManager,bbPeg,b.getBmlId(),b.id, pegBoard);                    
                     
                     
                     //set default parameter values

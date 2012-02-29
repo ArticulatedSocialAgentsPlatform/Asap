@@ -23,6 +23,7 @@ import hmi.animation.SkeletonInterpolator;
 import hmi.animation.VJoint;
 import hmi.animation.VJointUtils;
 import hmi.elckerlyc.BMLBlockPeg;
+import hmi.elckerlyc.PegBoard;
 import hmi.elckerlyc.feedback.FeedbackManager;
 import hmi.elckerlyc.planunit.InvalidParameterException;
 import hmi.elckerlyc.planunit.KeyPosition;
@@ -1436,9 +1437,9 @@ public class ProcAnimationMU extends XMLStructureAdapter implements MotionUnit
     }
 
     @Override
-    public TimedMotionUnit createTMU(FeedbackManager bfm, BMLBlockPeg bbPeg, String bmlId, String id)
+    public TimedMotionUnit createTMU(FeedbackManager bfm, BMLBlockPeg bbPeg, String bmlId, String id, PegBoard pb)
     {
-        return new TimedMotionUnit(bfm, bbPeg, bmlId, id, this);
+        return new TimedMotionUnit(bfm, bbPeg, bmlId, id, this, pb);
     }
 
     @Override

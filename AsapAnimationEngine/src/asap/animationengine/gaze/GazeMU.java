@@ -29,6 +29,7 @@ import asap.animationengine.motionunit.*;
 import hmi.animation.*;
 import hmi.bml.core.OffsetDirection;
 import hmi.elckerlyc.BMLBlockPeg;
+import hmi.elckerlyc.PegBoard;
 import hmi.elckerlyc.TimePeg;
 import hmi.elckerlyc.feedback.FeedbackManager;
 import hmi.elckerlyc.planunit.InvalidParameterException;
@@ -356,9 +357,9 @@ public class GazeMU implements MotionUnit
 
     @Override
     public TimedMotionUnit createTMU(FeedbackManager bfm,
-            BMLBlockPeg bmlBlockPeg, String bmlId, String id)
+            BMLBlockPeg bmlBlockPeg, String bmlId, String id, PegBoard pb)
     {
-        return new GazeTMU(bfm,bmlBlockPeg,bmlId, id, this);
+        return new GazeTMU(bfm,bmlBlockPeg,bmlId, id, this, pb);
     }
 
     @Override

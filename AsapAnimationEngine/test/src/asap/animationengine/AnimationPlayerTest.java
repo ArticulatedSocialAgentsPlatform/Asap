@@ -2,6 +2,7 @@ package asap.animationengine;
 
 import static org.junit.Assert.assertEquals;
 import hmi.bml.feedback.BMLExceptionFeedback;
+import hmi.elckerlyc.PegBoard;
 import hmi.elckerlyc.TimedPlanUnitPlayException;
 import hmi.elckerlyc.feedback.FeedbackManager;
 import hmi.elckerlyc.feedback.FeedbackManagerImpl;
@@ -47,6 +48,7 @@ public class AnimationPlayerTest
     private TimedMotionUnit mockTimedMotionUnit = mock(TimedMotionUnit.class);
     private BMLBlockManager mockBMLBlockManager = mock(BMLBlockManager.class);
     private FeedbackManager fbManager = new FeedbackManagerImpl(mockBMLBlockManager,"character1");
+    private PegBoard pegBoard = new PegBoard();
     
     private PlanManager<TimedMotionUnit> planManager = new PlanManager<TimedMotionUnit>();
     
@@ -62,7 +64,7 @@ public class AnimationPlayerTest
         animationPlayer = new AnimationPlayer(HanimBody.getLOA1HanimBody(),
                 HanimBody.getLOA1HanimBody(), HanimBody.getLOA1HanimBody(),
                 m, 0.01f,
-                new AnimationPlanPlayer(new SkeletonPoseRestPose(fbManager), fbManager, planManager,
+                new AnimationPlanPlayer(new SkeletonPoseRestPose(fbManager,pegBoard), fbManager, planManager,
                         new DefaultTimedPlanUnitPlayer())                
                 );
         beList = new ArrayList<BMLExceptionFeedback>();

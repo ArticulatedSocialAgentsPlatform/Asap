@@ -42,6 +42,7 @@ import hmi.elckerlyc.DefaultEngine;
 import hmi.elckerlyc.DefaultPlayer;
 import hmi.elckerlyc.ElckerlycRealizer;
 import hmi.elckerlyc.Engine;
+import hmi.elckerlyc.PegBoard;
 import hmi.elckerlyc.Player;
 import hmi.elckerlyc.TimePeg;
 import hmi.elckerlyc.anticipator.Anticipator;
@@ -123,7 +124,7 @@ class TextEngineFactory implements SpeechEngineFactory
         PlanManager<TimedTextSpeechUnit> planManager = new PlanManager<TimedTextSpeechUnit>();
         Player player = new DefaultPlayer(new SingleThreadedPlanPlayer<TimedTextSpeechUnit>(bfm, planManager));
         TextPlanner planner = new TextPlanner(bfm, new StdoutTextOutput(), planManager);
-        return new DefaultEngine<TimedTextSpeechUnit>(planner,player,planManager);
+        return new DefaultEngine<TimedTextSpeechUnit>(planner, player, planManager);
     }
 
     @Override
@@ -138,11 +139,11 @@ class TTSEngineFactory implements SpeechEngineFactory
     private final TimedTTSUnitFactory ttsUnitFactory;
 
     private final TTSBindingFactory ttsBindFac;
-    
+
     public TTSEngineFactory(TimedTTSUnitFactory ttsUFac, TTSBindingFactory bindingFac, SoundManager soundManager)
     {
         ttsUnitFactory = ttsUFac;
-        ttsBindFac = bindingFac;        
+        ttsBindFac = bindingFac;
     }
 
     @Override
@@ -150,8 +151,8 @@ class TTSEngineFactory implements SpeechEngineFactory
     {
         PlanManager<TimedTTSUnit> planManager = new PlanManager<TimedTTSUnit>();
         Player player = new DefaultPlayer(new MultiThreadedPlanPlayer<TimedTTSUnit>(bfm, planManager));
-        TTSPlanner planner = new TTSPlanner(bfm, ttsUnitFactory,ttsBindFac.createBinding(), planManager);
-        return new DefaultEngine<TimedTTSUnit>(planner,player,planManager);
+        TTSPlanner planner = new TTSPlanner(bfm, ttsUnitFactory, ttsBindFac.createBinding(), planManager);
+        return new DefaultEngine<TimedTTSUnit>(planner, player, planManager);
     }
 
     @Override
@@ -183,19 +184,20 @@ public class SchedulerParameterizedIntegrationTest
     private static final int SCHEDULE_TIMEOUT = 10000;
 
     static BMLBlockManager bbm = new BMLBlockManager();
-    static FeedbackManager bfm = new FeedbackManagerImpl(bbm,"character1");
+    static FeedbackManager bfm = new FeedbackManagerImpl(bbm, "character1");
     protected static SoundManager soundManager = new LWJGLJoalSoundManager();
+    PegBoard pegBoard;
     
     @Before
     public void setup()
     {
-                
+
     }
-    
+
     @After
     public void cleanup()
     {
-        realizer.shutdown();                
+        realizer.shutdown();
     }
 
     @BeforeClass
@@ -233,9 +235,10 @@ public class SchedulerParameterizedIntegrationTest
     private void assertOneWarning(String expectedBmlId, String expectedBehId)
     {
         assertTrue("Unexpected number of warning(s), there should be only 1: " + warnings, 1 == warnings.size());
-        assertEquals(expectedBmlId,warnings.get(0).bmlId);
-        assertThat(warnings.get(0).modifiedBehaviours,IsIterableContainingInOrder.contains(expectedBehId));        
+        assertEquals(expectedBmlId, warnings.get(0).bmlId);
+        assertThat(warnings.get(0).modifiedBehaviours, IsIterableContainingInOrder.contains(expectedBehId));
     }
+
     private void assertNoExceptions()
     {
         assertTrue("Unexpected exceptions(s): " + exceptions, 0 == exceptions.size());
@@ -245,20 +248,19 @@ public class SchedulerParameterizedIntegrationTest
     public static Collection<Object[]> configs() throws Exception
     {
         bbm = new BMLBlockManager();
-        bfm = new FeedbackManagerImpl(bbm,"character1");
-        
-        
+        bfm = new FeedbackManagerImpl(bbm, "character1");
+
         ArrayList<SpeechEngineFactory> speechEngineFactories = new ArrayList<SpeechEngineFactory>();
-        
-        if(OS.equalsOS(OS.WINDOWS))
+
+        if (OS.equalsOS(OS.WINDOWS))
         {
-            speechEngineFactories.add(new TTSEngineFactory(new DirectTTSUnitFactory(bfm), new SAPITTSBindingFactory(),soundManager));
-            speechEngineFactories.add(new TTSEngineFactory(new WavTTSUnitFactory(bfm,soundManager), new SAPITTSBindingFactory(),soundManager));
+            speechEngineFactories.add(new TTSEngineFactory(new DirectTTSUnitFactory(bfm), new SAPITTSBindingFactory(), soundManager));
+            speechEngineFactories.add(new TTSEngineFactory(new WavTTSUnitFactory(bfm, soundManager), new SAPITTSBindingFactory(),
+                    soundManager));
         }
-        
-        
-        speechEngineFactories.add(new TTSEngineFactory(new WavTTSUnitFactory(bfm,soundManager), new MaryTTSBindingFactory(System
-                .getProperty("shared.project.root") + "/HmiResource/MARYTTS", new NullPhonemeToVisemeMapping()),soundManager));
+
+        speechEngineFactories.add(new TTSEngineFactory(new WavTTSUnitFactory(bfm, soundManager), new MaryTTSBindingFactory(System
+                .getProperty("shared.project.root") + "/HmiResource/MARYTTS", new NullPhonemeToVisemeMapping()), soundManager));
         speechEngineFactories.add(new TextEngineFactory());
 
         Collection<Object[]> objs = new ArrayList<Object[]>();
@@ -276,52 +278,54 @@ public class SchedulerParameterizedIntegrationTest
 
     public SchedulerParameterizedIntegrationTest(String label, SpeechEngineFactory sv) throws IOException
     {
-        Engine speechEngine = sv.createEngine(bfm,bbm);
+        Engine speechEngine = sv.createEngine(bfm, bbm);
         VJoint human = HanimBody.getLOA1HanimBody();
 
         ArrayList<MixedSystem> m = new ArrayList<MixedSystem>();
         float g[] = { 0, 0, 0 };
         OdeHumanoid p = new OdeHumanoid("phuman", null, null);
         m.add(new MixedSystem(g, p));
-
+        pegBoard = new PegBoard();
+        
         Resources gres = new Resources("");
-        GestureBinding gestureBinding = new GestureBinding(gres,bfm);
+        GestureBinding gestureBinding = new GestureBinding(gres, bfm);
         gestureBinding.readXML(gres.getReader("Humanoids/shared/gesturebinding/gesturebinding.xml"));
 
         SpeechBinding speechBinding = new SpeechBinding(gres);
-        speechBinding.readXML(gres.getReader("Humanoids/shared/speechbinding/disneyspeechbinding.xml"));        
-        
+        speechBinding.readXML(gres.getReader("Humanoids/shared/speechbinding/disneyspeechbinding.xml"));
+
         PlanManager<TimedMotionUnit> animationPlanManager = new PlanManager<TimedMotionUnit>();
-        
-        RestPose pose = new SkeletonPoseRestPose(bfm);        
-        AnimationPlanPlayer animationPlanPlayer = new AnimationPlanPlayer(pose,bfm, animationPlanManager,new DefaultTimedPlanUnitPlayer());
+
+        RestPose pose = new SkeletonPoseRestPose(bfm, pegBoard);
+        AnimationPlanPlayer animationPlanPlayer = new AnimationPlanPlayer(pose, bfm, animationPlanManager, new DefaultTimedPlanUnitPlayer());
         AnimationPlayer aPlayer = new AnimationPlayer(human, human, human, m, 0.001f, animationPlanPlayer);
         pose.setAnimationPlayer(aPlayer);
-        AnimationPlanner ap = new AnimationPlanner(bfm,aPlayer, gestureBinding, animationPlanManager);
-        Engine animationEngine = new DefaultEngine<TimedMotionUnit>(ap,aPlayer,animationPlanManager);
-        
+        AnimationPlanner ap = new AnimationPlanner(bfm, aPlayer, gestureBinding, animationPlanManager, pegBoard);
+        Engine animationEngine = new DefaultEngine<TimedMotionUnit>(ap, aPlayer, animationPlanManager);
+
         SystemClock clock = new SystemClock();
         clock.setMediaSeconds(0.3);
 
         PlanManager<TimedAbstractAudioUnit> audioPlanManager = new PlanManager<TimedAbstractAudioUnit>();
         Player audioPlayer = new DefaultPlayer(new MultiThreadedPlanPlayer<TimedAbstractAudioUnit>(bfm, audioPlanManager));
-        AudioPlanner aup = new AudioPlanner(bfm,new Resources(""),audioPlanManager,soundManager);
-        Engine auEngine = new DefaultEngine<TimedAbstractAudioUnit>(aup,audioPlayer,audioPlanManager);
+        AudioPlanner aup = new AudioPlanner(bfm, new Resources(""), audioPlanManager, soundManager);
+        Engine auEngine = new DefaultEngine<TimedAbstractAudioUnit>(aup, audioPlayer, audioPlanManager);
 
         PlanManager<TimedWaitUnit> waitPlanManager = new PlanManager<TimedWaitUnit>();
         Player waitPlayer = new DefaultPlayer(new SingleThreadedPlanPlayer<TimedWaitUnit>(bfm, waitPlanManager));
         WaitPlanner wp = new WaitPlanner(bfm, waitPlanManager);
-        Engine waitEngine = new DefaultEngine<TimedWaitUnit>(wp,waitPlayer,waitPlanManager);
+        Engine waitEngine = new DefaultEngine<TimedWaitUnit>(wp, waitPlayer, waitPlanManager);
 
         PlanManager<TimedParameterValueChangeUnit> pvcpPlanManager = new PlanManager<TimedParameterValueChangeUnit>();
         Player pvcpPlayer = new DefaultPlayer(new SingleThreadedPlanPlayer<TimedParameterValueChangeUnit>(bfm, pvcpPlanManager));
-        ParameterValueChangePlanner pvcp = new ParameterValueChangePlanner(bfm,new TrajectoryBinding(), pvcpPlanManager);
-        Engine pvpcEngine = new DefaultEngine<TimedParameterValueChangeUnit>(pvcp,pvcpPlayer,pvcpPlanManager);
-        
-        BMLParser parser = new BMLParser(new ImmutableSet.Builder<Class<? extends BMLBehaviorAttributeExtension>>().add(BMLTBMLBehaviorAttributes.class).build());
-        
-        realizer = new ElckerlycRealizer("avatar1", parser,bfm,new SystemSchedulingClock(clock), 
-                bbm, animationEngine, speechEngine, auEngine, waitEngine, pvpcEngine);
+        ParameterValueChangePlanner pvcp = new ParameterValueChangePlanner(bfm, new TrajectoryBinding(), pvcpPlanManager);
+        Engine pvpcEngine = new DefaultEngine<TimedParameterValueChangeUnit>(pvcp, pvcpPlayer, pvcpPlanManager);
+
+        BMLParser parser = new BMLParser(new ImmutableSet.Builder<Class<? extends BMLBehaviorAttributeExtension>>().add(
+                BMLTBMLBehaviorAttributes.class).build());
+
+        realizer = new ElckerlycRealizer("avatar1", parser, bfm, new SystemSchedulingClock(clock), bbm, pegBoard, animationEngine, speechEngine,
+                auEngine, waitEngine, pvpcEngine);
 
         res = new Resources("bmltest");
         warnings = new ArrayList<BMLWarningFeedback>();
@@ -351,7 +355,7 @@ public class SchedulerParameterizedIntegrationTest
         // move the start with
         // it
         readXML("testspeech_endtimed.xml");
-        scheduler.getPegBoard().getTimePeg("bml1", "speech1", "end").setGlobalValue(6);
+        pegBoard.getTimePeg("bml1", "speech1", "end").setGlobalValue(6);
         Engine speechEngine = realizer.getEngine(SpeechBehaviour.class);
         invBeh = speechEngine.getInvalidBehaviours();
         assertEquals(0, invBeh.size());
@@ -361,7 +365,7 @@ public class SchedulerParameterizedIntegrationTest
     public void timepegTestNod()
     {
         readXML("testnod.xml");
-        TimePeg nod1Start = scheduler.getPegBoard().getTimePeg("bml1", "nod1", "start");
+        TimePeg nod1Start = pegBoard.getTimePeg("bml1", "nod1", "start");
         nod1Start.setGlobalValue(1);
         Engine aEngine = realizer.getEngine(HeadBehaviour.class);
         invBeh = aEngine.getInvalidBehaviours();
@@ -375,15 +379,15 @@ public class SchedulerParameterizedIntegrationTest
         readXML("testspeech_synctimed.xml");
         assertNoExceptions();
         assertNoWarnings();
-        scheduler.getPegBoard().getTimePeg("bml1", "speech1", "s1").setGlobalValue(15);
+        pegBoard.getTimePeg("bml1", "speech1", "s1").setGlobalValue(15);
         Engine speechEngine = realizer.getEngine(SpeechBehaviour.class);
         invBeh = speechEngine.getInvalidBehaviours();
         assertEquals(0, invBeh.size());
 
-        scheduler.getPegBoard().getTimePeg("bml1", "speech1", "start").setGlobalValue(15);
+        pegBoard.getTimePeg("bml1", "speech1", "start").setGlobalValue(15);
         invBeh = speechEngine.getInvalidBehaviours();
         assertTrue(invBeh.size() == 0);
-        assertTrue(scheduler.getPegBoard().getPegTime("bml1", "speech1", "start") == 15);
+        assertTrue(pegBoard.getPegTime("bml1", "speech1", "start") == 15);
     }
 
     @Ignore
@@ -393,14 +397,14 @@ public class SchedulerParameterizedIntegrationTest
         readXML("testspeechandnod_synctimed.xml");
         assertNoExceptions();
         assertNoWarnings();
-        double speechStartOrig = scheduler.getPegBoard().getTimePeg("bml1", "speech1", "start").getLocalValue();
+        double speechStartOrig = pegBoard.getTimePeg("bml1", "speech1", "start").getLocalValue();
 
         assertTrue(speechStartOrig < 10);
 
         // TODO: fails because start is linked to nod, so start is not resolved
         // as a OffsetPeg and
         // will not move with speech1:s1
-        scheduler.getPegBoard().getTimePeg("bml1", "speech1", "s1").setGlobalValue(15);
+        pegBoard.getTimePeg("bml1", "speech1", "s1").setGlobalValue(15);
         Engine speechEngine = realizer.getEngine(SpeechBehaviour.class);
         invBeh = speechEngine.getInvalidBehaviours();
         assertTrue(invBeh.size() == 0);
@@ -409,7 +413,7 @@ public class SchedulerParameterizedIntegrationTest
         invBeh = animationEngine.getInvalidBehaviours();
         assertTrue(invBeh.size() == 0);
 
-        double speechStartNew = scheduler.getPegBoard().getTimePeg("bml1", "speech1", "start").getGlobalValue();
+        double speechStartNew = pegBoard.getTimePeg("bml1", "speech1", "start").getGlobalValue();
         assertTrue(speechStartNew - speechStartOrig == 5);
         // assertTrue(invBeh.get(0).equals("bml1:speech1"));
     }
@@ -420,7 +424,7 @@ public class SchedulerParameterizedIntegrationTest
         readXML("bmlt/testanticipatedspeech.xml");
         assertNoExceptions();
         assertNoWarnings();
-        assertTrue(scheduler.getPegBoard().getPegTime("bml1", "speech1", "start") == 21);
+        assertTrue(pegBoard.getPegTime("bml1", "speech1", "start") == 21);
     }
 
     @Test(timeout = SCHEDULE_TIMEOUT)
@@ -429,33 +433,33 @@ public class SchedulerParameterizedIntegrationTest
         readXML("bmlt/testanticipatedspeech_offset.xml");
         assertNoExceptions();
         assertNoWarnings();
-        assertTrue(scheduler.getPegBoard().getPegTime("bml1", "speech1", "start") == 22);
+        assertTrue(pegBoard.getPegTime("bml1", "speech1", "start") == 22);
     }
 
     @Test(timeout = SCHEDULE_TIMEOUT)
     public void testInvalidBmlreference()
     {
-        readXML("bmlt/testinvalidbmlref.xml");        
+        readXML("bmlt/testinvalidbmlref.xml");
         assertNoExceptions();
-        assertOneWarning("bml1","speech1");        
+        assertOneWarning("bml1", "speech1");
     }
-    
+
     @Test(timeout = SCHEDULE_TIMEOUT)
     public void testInvalidAnticipator()
     {
-        readXML("bmlt/testinvalidanticipator.xml");        
+        readXML("bmlt/testinvalidanticipator.xml");
         assertNoExceptions();
-        assertOneWarning("bml1","speech1");        
+        assertOneWarning("bml1", "speech1");
     }
-    
+
     @Test(timeout = SCHEDULE_TIMEOUT)
     public void testInvalidAnticipatorSync()
     {
-        readXML("bmlt/testinvalidanticipatorsync.xml");        
+        readXML("bmlt/testinvalidanticipatorsync.xml");
         assertNoExceptions();
-        assertOneWarning("bml1","speech1");        
+        assertOneWarning("bml1", "speech1");
     }
-    
+
     @Test(timeout = SCHEDULE_TIMEOUT)
     public void bmltConstraintAnticipatorTest()
     {
@@ -477,23 +481,23 @@ public class SchedulerParameterizedIntegrationTest
         assertNoWarnings();
         assertNoExceptions();
 
-        assertTrue(scheduler.getPegBoard().getPegTime("bml1", "nod1", "start") == 1);
-        assertTrue(scheduler.getPegBoard().getPegTime("bml1", "nod1", "end") == 2);
-        assertTrue(scheduler.getPegBoard().getPegTime("bml1", "nod1", "end") == 2);
-        assertTrue(scheduler.getPegBoard().getPegTime("bml1", "nod2", "start") == 2);
-        assertTrue(scheduler.getPegBoard().getPegTime("bml1", "nod2", "end") == 3);
-        assertTrue(scheduler.getPegBoard().getPegTime("bml1", "nod3", "start") == 3);
-        assertTrue(scheduler.getPegBoard().getPegTime("bml1", "nod3", "end") == 4);
-        assertTrue(scheduler.getPegBoard().getTimePeg("bml1", "nod1", "end") == scheduler.getPegBoard().getTimePeg("bml1", "nod2", "start"));
-        assertTrue(scheduler.getPegBoard().getTimePeg("bml1", "nod2", "end") == scheduler.getPegBoard().getTimePeg("bml1", "nod3", "start"));
+        assertTrue(pegBoard.getPegTime("bml1", "nod1", "start") == 1);
+        assertTrue(pegBoard.getPegTime("bml1", "nod1", "end") == 2);
+        assertTrue(pegBoard.getPegTime("bml1", "nod1", "end") == 2);
+        assertTrue(pegBoard.getPegTime("bml1", "nod2", "start") == 2);
+        assertTrue(pegBoard.getPegTime("bml1", "nod2", "end") == 3);
+        assertTrue(pegBoard.getPegTime("bml1", "nod3", "start") == 3);
+        assertTrue(pegBoard.getPegTime("bml1", "nod3", "end") == 4);
+        assertTrue(pegBoard.getTimePeg("bml1", "nod1", "end") == pegBoard.getTimePeg("bml1", "nod2", "start"));
+        assertTrue(pegBoard.getTimePeg("bml1", "nod2", "end") == pegBoard.getTimePeg("bml1", "nod3", "start"));
 
         antip.getSynchronisationPoint("sync2").setGlobalValue(2.2);
         antip.getSynchronisationPoint("sync3").setGlobalValue(3.2);
 
-        assertTrue(scheduler.getPegBoard().getPegTime("bml1", "nod1", "end") == 2.2);
-        assertTrue(scheduler.getPegBoard().getPegTime("bml1", "nod2", "start") == 2.2);
-        assertTrue(scheduler.getPegBoard().getPegTime("bml1", "nod2", "end") == 3.2);
-        assertTrue(scheduler.getPegBoard().getPegTime("bml1", "nod3", "start") == 3.2);
+        assertTrue(pegBoard.getPegTime("bml1", "nod1", "end") == 2.2);
+        assertTrue(pegBoard.getPegTime("bml1", "nod2", "start") == 2.2);
+        assertTrue(pegBoard.getPegTime("bml1", "nod2", "end") == 3.2);
+        assertTrue(pegBoard.getPegTime("bml1", "nod3", "start") == 3.2);
 
         realizer.removeAnticipator("anticipator1");
         assertTrue(realizer.getScheduler().getNumberOfAnticipators() == 1);
@@ -505,9 +509,9 @@ public class SchedulerParameterizedIntegrationTest
         readXML("bmlt/test_speech_syncs.xml");
         assertNoWarnings();
         assertNoExceptions();
-        assertEquals(scheduler.getPegBoard().getRelativePegTime("bml1", "bml1", "speech1", "start"), 2, 0.0001);
-        assertTrue(scheduler.getPegBoard().getPegTime("bml1", "speech1", "tm1")
-                - scheduler.getPegBoard().getPegTime("bml1", "ref1", "strokeEnd") < 0.001);
+        assertEquals(pegBoard.getRelativePegTime("bml1", "bml1", "speech1", "start"), 2, 0.0001);
+        assertTrue(pegBoard.getPegTime("bml1", "speech1", "tm1")
+                - pegBoard.getPegTime("bml1", "ref1", "strokeEnd") < 0.001);
 
     }
 
@@ -517,16 +521,16 @@ public class SchedulerParameterizedIntegrationTest
         readXML("bmlt/parametervaluechange.xml");
         assertNoWarnings();
         assertNoExceptions();
-        assertEquals(scheduler.getPegBoard().getRelativePegTime("bml1", "bml1", "speech1", "start"), 0, 0.0001);
-        assertEquals(scheduler.getPegBoard().getRelativePegTime("bml1", "bml1", "pvc1", "start"), 0, 0.0001);
-        assertEquals(scheduler.getPegBoard().getRelativePegTime("bml1", "bml1", "speech1", "end"), scheduler.getPegBoard()
+        assertEquals(pegBoard.getRelativePegTime("bml1", "bml1", "speech1", "start"), 0, 0.0001);
+        assertEquals(pegBoard.getRelativePegTime("bml1", "bml1", "pvc1", "start"), 0, 0.0001);
+        assertEquals(pegBoard.getRelativePegTime("bml1", "bml1", "speech1", "end"), pegBoard
                 .getRelativePegTime("bml1", "bml1", "pvc1", "end"), 0.0001);
-        assertEquals(scheduler.getPegBoard().getRelativePegTime("bml1", "bml1", "speech1", "end"), scheduler.getPegBoard()
+        assertEquals(pegBoard.getRelativePegTime("bml1", "bml1", "speech1", "end"), pegBoard
                 .getRelativePegTime("bml1", "bml1", "speech2", "start"), 0.0001);
-        assertEquals(scheduler.getPegBoard().getTimePeg("bml1", "speech1", "end"),
-                scheduler.getPegBoard().getTimePeg("bml1", "speech2", "start"));
-        assertEquals(scheduler.getPegBoard().getTimePeg("bml1", "speech1", "end"),
-                scheduler.getPegBoard().getTimePeg("bml1", "pvc1", "end"));
+        assertEquals(pegBoard.getTimePeg("bml1", "speech1", "end"),
+                pegBoard.getTimePeg("bml1", "speech2", "start"));
+        assertEquals(pegBoard.getTimePeg("bml1", "speech1", "end"), pegBoard
+                .getTimePeg("bml1", "pvc1", "end"));
     }
 
     @Test(timeout = SCHEDULE_TIMEOUT)
@@ -535,7 +539,7 @@ public class SchedulerParameterizedIntegrationTest
         readXML("bmlt/bmltaudio.xml");
         assertNoWarnings();
         assertNoExceptions();
-        assertEquals(0, scheduler.getPegBoard().getRelativePegTime("bml1", "bml1", "audio1", "start"), 0.01f);
+        assertEquals(0, pegBoard.getRelativePegTime("bml1", "bml1", "audio1", "start"), 0.01f);
     }
 
     @Test(timeout = SCHEDULE_TIMEOUT)
@@ -544,10 +548,10 @@ public class SchedulerParameterizedIntegrationTest
         readXML("bmlt/testnoise.xml");
         assertNoWarnings();
         assertNoExceptions();
-        assertEquals(scheduler.getPegBoard().getRelativePegTime("b", "b", "n", "start"), 0, 0.0001);
-        assertEquals(scheduler.getPegBoard().getRelativePegTime("b", "b", "n", "end"), 5000, 0.0001);
+        assertEquals(pegBoard.getRelativePegTime("b", "b", "n", "start"), 0, 0.0001);
+        assertEquals(pegBoard.getRelativePegTime("b", "b", "n", "end"), 5000, 0.0001);
     }
-    
+
     @Test(timeout = SCHEDULE_TIMEOUT)
     public void testBMLTTightMergedParamChange()
     {
@@ -555,27 +559,27 @@ public class SchedulerParameterizedIntegrationTest
         readXML("bmlt/testnoisechange.xml");
         assertNoWarnings();
         assertNoExceptions();
-        assertEquals(0, scheduler.getPegBoard().getRelativePegTime("b", "b", "n", "start"),0.0001);
-        assertEquals(5000, scheduler.getPegBoard().getRelativePegTime("b", "b", "n", "end"),0.0001);
-        assertEquals(16, scheduler.getPegBoard().getRelativePegTime("b", "bml2", "pvc", "start"), 0.0001);
-        assertEquals(20, scheduler.getPegBoard().getRelativePegTime("b", "bml2", "pvc", "end"), 0.0001);        
+        assertEquals(0, pegBoard.getRelativePegTime("b", "b", "n", "start"), 0.0001);
+        assertEquals(5000, pegBoard.getRelativePegTime("b", "b", "n", "end"), 0.0001);
+        assertEquals(16, pegBoard.getRelativePegTime("b", "bml2", "pvc", "start"), 0.0001);
+        assertEquals(20, pegBoard.getRelativePegTime("b", "bml2", "pvc", "end"), 0.0001);
     }
-    
+
     @Test(timeout = SCHEDULE_TIMEOUT)
     public void testWaitDoubleSync()
     {
         readXML("waitdoublesync.xml");
         assertNoWarnings();
         assertNoExceptions();
-        assertEquals(scheduler.getPegBoard().getRelativePegTime("bml1", "bml1", "speech1", "start"), 0, 0.0001);
-        assertEquals(scheduler.getPegBoard().getRelativePegTime("bml1", "bml1", "w1", "start"), 0, 0.0001);
-        assertEquals(scheduler.getPegBoard().getRelativePegTime("bml1", "bml1", "speech1", "end"), scheduler.getPegBoard()
+        assertEquals(pegBoard.getRelativePegTime("bml1", "bml1", "speech1", "start"), 0, 0.0001);
+        assertEquals(pegBoard.getRelativePegTime("bml1", "bml1", "w1", "start"), 0, 0.0001);
+        assertEquals(pegBoard.getRelativePegTime("bml1", "bml1", "speech1", "end"), pegBoard
                 .getRelativePegTime("bml1", "bml1", "w1", "end"), 0.0001);
-        assertEquals(scheduler.getPegBoard().getRelativePegTime("bml1", "bml1", "speech1", "end"), scheduler.getPegBoard()
+        assertEquals(pegBoard.getRelativePegTime("bml1", "bml1", "speech1", "end"), pegBoard
                 .getRelativePegTime("bml1", "bml1", "speech2", "start"), 0.0001);
-        assertEquals(scheduler.getPegBoard().getTimePeg("bml1", "speech1", "end"),
-                scheduler.getPegBoard().getTimePeg("bml1", "speech2", "start"));
-        assertEquals(scheduler.getPegBoard().getTimePeg("bml1", "speech1", "end"), scheduler.getPegBoard().getTimePeg("bml1", "w1", "end"));
+        assertEquals(pegBoard.getTimePeg("bml1", "speech1", "end"),
+                pegBoard.getTimePeg("bml1", "speech2", "start"));
+        assertEquals(pegBoard.getTimePeg("bml1", "speech1", "end"), pegBoard.getTimePeg("bml1", "w1", "end"));
     }
 
     @Test(timeout = SCHEDULE_TIMEOUT)
@@ -584,25 +588,26 @@ public class SchedulerParameterizedIntegrationTest
         readXML("testspeech3x.xml");
         assertNoWarnings();
         assertNoExceptions();
-        assertTrue(scheduler.getPegBoard().getRelativePegTime("bml1", "bml1", "speech10", "start") == 4);
-        assertEquals(scheduler.getPegBoard().getPegTime("bml1", "speech11", "start"),
-                scheduler.getPegBoard().getPegTime("bml1", "speech10", "end") + 4, 0.0001);
-        assertEquals(scheduler.getPegBoard().getPegTime("bml1", "speech12", "start"),
-                scheduler.getPegBoard().getPegTime("bml1", "speech11", "end") + 4, 0.0001);
+        assertTrue(pegBoard.getRelativePegTime("bml1", "bml1", "speech10", "start") == 4);
+        assertEquals(pegBoard.getPegTime("bml1", "speech11", "start"),
+                pegBoard.getPegTime("bml1", "speech10", "end") + 4, 0.0001);
+        assertEquals(pegBoard.getPegTime("bml1", "speech12", "start"),
+                pegBoard.getPegTime("bml1", "speech11", "end") + 4, 0.0001);
     }
 
-    @Test//(timeout = SCHEDULE_TIMEOUT)
+    @Test
+    // (timeout = SCHEDULE_TIMEOUT)
     public void testSpeechRelOffsets()
     {
         readXML("testspeechrel_offsets.xml");
         assertNoWarnings();
         assertNoExceptions();
-        double speech1Start = scheduler.getPegBoard().getRelativePegTime("bml1", "bml1", "speech1", "start");
+        double speech1Start = pegBoard.getRelativePegTime("bml1", "bml1", "speech1", "start");
         assertTrue(speech1Start == 4);
-        assertEquals(scheduler.getPegBoard().getPegTime("bml1", "speech2", "start"),
-                scheduler.getPegBoard().getPegTime("bml1", "speech1", "end") + 5, 0.0001);
-        assertEquals(scheduler.getPegBoard().getRelativePegTime("bml1", "bml1", "nod2", "start"), speech1Start - 2, 0.0001);
-        assertEquals(scheduler.getPegBoard().getPegTime("bml1", "nod2", "end"), scheduler.getPegBoard()
+        assertEquals(pegBoard.getPegTime("bml1", "speech2", "start"),
+                pegBoard.getPegTime("bml1", "speech1", "end") + 5, 0.0001);
+        assertEquals(pegBoard.getRelativePegTime("bml1", "bml1", "nod2", "start"), speech1Start - 2, 0.0001);
+        assertEquals(pegBoard.getPegTime("bml1", "nod2", "end"), pegBoard
                 .getPegTime("bml1", "speech2", "end") + 3, 0.0001);
     }
 
@@ -613,8 +618,8 @@ public class SchedulerParameterizedIntegrationTest
         assertNoWarnings();
         assertNoExceptions();
 
-        assertEquals(scheduler.getPegBoard().getRelativePegTime("bml1", "bml1", "nod1", "start"), 0, 0.0001);
-        assertEquals(scheduler.getPegBoard().getRelativePegTime("bml1", "bml1", "nod2", "start"), 2, 0.0001);
+        assertEquals(pegBoard.getRelativePegTime("bml1", "bml1", "nod1", "start"), 0, 0.0001);
+        assertEquals(pegBoard.getRelativePegTime("bml1", "bml1", "nod2", "start"), 2, 0.0001);
     }
 
     @Test(timeout = SCHEDULE_TIMEOUT)
@@ -624,9 +629,9 @@ public class SchedulerParameterizedIntegrationTest
 
         assertNoWarnings();
         assertNoExceptions();
-        assertEquals(scheduler.getPegBoard().getRelativePegTime("bml1", "bml1", "nod1", "start"), 0, 0.0001);
-        assertEquals(scheduler.getPegBoard().getPegTime("bml1", "speech1", "start"),
-                scheduler.getPegBoard().getPegTime("bml1", "nod1", "end"), 0.0001);
+        assertEquals(pegBoard.getRelativePegTime("bml1", "bml1", "nod1", "start"), 0, 0.0001);
+        assertEquals(pegBoard.getPegTime("bml1", "speech1", "start"),
+                pegBoard.getPegTime("bml1", "nod1", "end"), 0.0001);
     }
 
     @Test(timeout = SCHEDULE_TIMEOUT)
@@ -661,8 +666,8 @@ public class SchedulerParameterizedIntegrationTest
 
         assertNoWarnings();
         assertNoExceptions();
-        assertEquals(scheduler.getPegBoard().getRelativePegTime("bml1", "bml1", "nod1", "start"), 0, 0.0001);
-        assertEquals(scheduler.getPegBoard().getRelativePegTime("bml1", "bml1", "nod1", "end"), 2, 0.0001);
+        assertEquals(pegBoard.getRelativePegTime("bml1", "bml1", "nod1", "start"), 0, 0.0001);
+        assertEquals(pegBoard.getRelativePegTime("bml1", "bml1", "nod1", "end"), 2, 0.0001);
     }
 
     @Test(timeout = SCHEDULE_TIMEOUT)
@@ -671,8 +676,8 @@ public class SchedulerParameterizedIntegrationTest
         readXML("testnod2x_absolute.xml");
         assertNoWarnings();
         assertNoExceptions();
-        assertTrue(scheduler.getPegBoard().getRelativePegTime("bml1", "bml1", "nod1", "start") == 1);
-        assertTrue(scheduler.getPegBoard().getRelativePegTime("bml1", "bml1", "nod2", "start") == 3);
+        assertTrue(pegBoard.getRelativePegTime("bml1", "bml1", "nod1", "start") == 1);
+        assertTrue(pegBoard.getRelativePegTime("bml1", "bml1", "nod2", "start") == 3);
     }
 
     @Test(timeout = SCHEDULE_TIMEOUT)
@@ -681,7 +686,7 @@ public class SchedulerParameterizedIntegrationTest
         readXML("testspeech_endtimed.xml");
         assertNoWarnings();
         assertNoExceptions();
-        assertTrue(scheduler.getPegBoard().getRelativePegTime("bml1", "bml1", "speech1", "end") == 5);
+        assertTrue(pegBoard.getRelativePegTime("bml1", "bml1", "speech1", "end") == 5);
     }
 
     @Test(timeout = SCHEDULE_TIMEOUT)
@@ -690,7 +695,7 @@ public class SchedulerParameterizedIntegrationTest
         readXML("testnod.xml");
         assertNoWarnings();
         assertNoExceptions();
-        assertTrue(scheduler.getPegBoard().getRelativePegTime("bml1", "bml1", "nod1", "start") == 0);
+        assertTrue(pegBoard.getRelativePegTime("bml1", "bml1", "nod1", "start") == 0);
     }
 
     @Test(timeout = SCHEDULE_TIMEOUT)
@@ -699,7 +704,7 @@ public class SchedulerParameterizedIntegrationTest
         readXML("testnod_unknownattributes.xml");
         assertNoWarnings();
         assertNoExceptions();
-        assertTrue(scheduler.getPegBoard().getRelativePegTime("bml1", "bml1", "nod1", "start") == 0);
+        assertTrue(pegBoard.getRelativePegTime("bml1", "bml1", "nod1", "start") == 0);
     }
 
     @Test(timeout = SCHEDULE_TIMEOUT)
@@ -717,23 +722,23 @@ public class SchedulerParameterizedIntegrationTest
         readXML("testspeech_2linked.xml");
         assertNoWarnings();
         assertNoExceptions();
-        assertEquals(scheduler.getPegBoard().getRelativePegTime("bml1", "bml1", "speech1", "start"), 0, 0.0001);
-        assertEquals(scheduler.getPegBoard().getPegTime("bml1", "speech2", "start"),
-                scheduler.getPegBoard().getPegTime("bml1", "speech1", "end"), 0.0001);
+        assertEquals(pegBoard.getRelativePegTime("bml1", "bml1", "speech1", "start"), 0, 0.0001);
+        assertEquals(pegBoard.getPegTime("bml1", "speech2", "start"),
+                pegBoard.getPegTime("bml1", "speech1", "end"), 0.0001);
     }
 
-    @Test//(timeout = SCHEDULE_TIMEOUT)
+    @Test(timeout = SCHEDULE_TIMEOUT)
     public void testOffset2()
     {
         readXML("testoffset2.xml");
         assertNoWarnings();
         assertNoExceptions();
 
-        assertTrue(scheduler.getPegBoard().getRelativePegTime("bml1", "bml1", "g1", "start") == 4);
-        assertTrue(scheduler.getPegBoard().getRelativePegTime("bml1", "bml1", "g2", "start") == 3);
-        assertTrue(scheduler.getPegBoard().getRelativePegTime("bml1", "bml1", "g2", "end") == 4);
-        assertTrue(scheduler.getPegBoard().getPegTime("bml1", "h1", "start") == scheduler.getPegBoard().getPegTime("bml1", "g1", "end"));
-        assertTrue(scheduler.getPegBoard().getRelativePegTime("bml1", "bml1", "h1", "start") > 4);
+        assertTrue(pegBoard.getRelativePegTime("bml1", "bml1", "g1", "start") == 4);
+        assertTrue(pegBoard.getRelativePegTime("bml1", "bml1", "g2", "start") == 3);
+        assertTrue(pegBoard.getRelativePegTime("bml1", "bml1", "g2", "end") == 5);
+        assertTrue(pegBoard.getPegTime("bml1", "h1", "start") == pegBoard.getPegTime("bml1", "g1", "end"));
+        assertTrue(pegBoard.getRelativePegTime("bml1", "bml1", "h1", "start") > 4);
     }
 
     @Test(timeout = SCHEDULE_TIMEOUT)
@@ -743,15 +748,15 @@ public class SchedulerParameterizedIntegrationTest
         assertNoWarnings();
         assertNoExceptions();
 
-        assertTrue(scheduler.getPegBoard().getRelativePegTime("bml1", "bml1", "g1", "start") == 4);
-        assertTrue(scheduler.getPegBoard().getRelativePegTime("bml1", "bml1", "g2", "start") == 3);
-        assertTrue(scheduler.getPegBoard().getRelativePegTime("bml1", "bml1", "g2", "end") == 4);
-        assertTrue(scheduler.getPegBoard().getPegTime("bml1", "h1", "start") == scheduler.getPegBoard().getPegTime("bml1", "g1", "end"));
-        assertTrue(scheduler.getPegBoard().getRelativePegTime("bml1", "bml1", "h1", "start") > 4);
-        assertEquals(scheduler.getPegBoard().getRelativePegTime("bml1", "bml1", "gaze1", "start"), 1, 0.0001);
-        assertEquals(scheduler.getPegBoard().getPegTime("bml1", "gaze1", "end"),
-                scheduler.getPegBoard().getPegTime("bml1", "g1", "end") + 3, 0.0001);
-        assertTrue(scheduler.getPegBoard().getRelativePegTime("bml1", "bml1", "gaze1", "end") > 7);
+        assertTrue(pegBoard.getRelativePegTime("bml1", "bml1", "g1", "start") == 4);
+        assertTrue(pegBoard.getRelativePegTime("bml1", "bml1", "g2", "start") == 3);
+        assertTrue(pegBoard.getRelativePegTime("bml1", "bml1", "g2", "end") == 5);
+        assertTrue(pegBoard.getPegTime("bml1", "h1", "start") == pegBoard.getPegTime("bml1", "g1", "end"));
+        assertTrue(pegBoard.getRelativePegTime("bml1", "bml1", "h1", "start") > 4);
+        assertEquals(pegBoard.getRelativePegTime("bml1", "bml1", "gaze1", "start"), 1, 0.0001);
+        assertEquals(pegBoard.getPegTime("bml1", "gaze1", "end"),
+                pegBoard.getPegTime("bml1", "g1", "end") + 3, 0.0001);
+        assertTrue(pegBoard.getRelativePegTime("bml1", "bml1", "gaze1", "end") > 7);
     }
 
     @Test(timeout = SCHEDULE_TIMEOUT)
@@ -761,10 +766,10 @@ public class SchedulerParameterizedIntegrationTest
         assertNoWarnings();
         assertNoExceptions();
 
-        assertTrue(scheduler.getPegBoard().getRelativePegTime("bml1", "bml1", "h1", "start") == 4);
-        assertTrue(scheduler.getPegBoard().getRelativePegTime("bml1", "bml1", "h2", "start") == 6);
-        assertTrue(scheduler.getPegBoard().getRelativePegTime("bml1", "bml1", "h3", "start") == 8);
-        assertTrue(scheduler.getPegBoard().getRelativePegTime("bml1", "bml1", "h4", "start") == 10);
+        assertTrue(pegBoard.getRelativePegTime("bml1", "bml1", "h1", "start") == 4);
+        assertTrue(pegBoard.getRelativePegTime("bml1", "bml1", "h2", "start") == 6);
+        assertTrue(pegBoard.getRelativePegTime("bml1", "bml1", "h3", "start") == 8);
+        assertTrue(pegBoard.getRelativePegTime("bml1", "bml1", "h4", "start") == 10);
     }
 
     @Test(timeout = SCHEDULE_TIMEOUT)
@@ -774,13 +779,14 @@ public class SchedulerParameterizedIntegrationTest
         assertNoWarnings();
         assertNoExceptions();
 
-        assertEquals(scheduler.getPegBoard().getRelativePegTime("bml1", "bml1", "h1", "start"), 4, 0.0001);
-        assertEquals(scheduler.getPegBoard().getRelativePegTime("bml1", "bml1", "h2", "start"), 6, 0.0001);
-        assertEquals(scheduler.getPegBoard().getRelativePegTime("bml1", "bml1", "h3", "start"), 8, 0.0001);
-        assertEquals(scheduler.getPegBoard().getRelativePegTime("bml1", "bml1", "h4", "start"), 10, 0.0001);
+        assertEquals(pegBoard.getRelativePegTime("bml1", "bml1", "h1", "start"), 4, 0.0001);
+        assertEquals(pegBoard.getRelativePegTime("bml1", "bml1", "h2", "start"), 6, 0.0001);
+        assertEquals(pegBoard.getRelativePegTime("bml1", "bml1", "h3", "start"), 8, 0.0001);
+        assertEquals(pegBoard.getRelativePegTime("bml1", "bml1", "h4", "start"), 10, 0.0001);
     }
 
-    @Test//(timeout = SCHEDULE_TIMEOUT)
+    @Test
+    // (timeout = SCHEDULE_TIMEOUT)
     public void testEmpty()
     {
         readXML("empty.xml");
@@ -827,8 +833,8 @@ public class SchedulerParameterizedIntegrationTest
         readXML("testspeech_synctimed.xml");
         assertNoWarnings();
         assertNoExceptions();
-        assertTrue(scheduler.getPegBoard().getRelativePegTime("bml1", "bml1", "speech1", "s1") == 10);
-        assertTrue(scheduler.getPegBoard().getRelativePegTime("bml1", "bml1", "speech1", "start") < 10);
+        assertTrue(pegBoard.getRelativePegTime("bml1", "bml1", "speech1", "s1") == 10);
+        assertTrue(pegBoard.getRelativePegTime("bml1", "bml1", "speech1", "start") < 10);
     }
 
     @Test(timeout = SCHEDULE_TIMEOUT)
@@ -837,10 +843,10 @@ public class SchedulerParameterizedIntegrationTest
         readXML("testspeech_synctimed2x.xml");
         assertNoWarnings();
         assertNoExceptions();
-        assertTrue(scheduler.getPegBoard().getRelativePegTime("bml1", "bml1", "speech1", "s1") == 10);
-        assertTrue(scheduler.getPegBoard().getRelativePegTime("bml1", "bml1", "speech1", "start") < 10);
-        assertTrue(scheduler.getPegBoard().getRelativePegTime("bml1", "bml1", "speech2", "s1") == 20);
-        assertTrue(scheduler.getPegBoard().getRelativePegTime("bml1", "bml1", "speech2", "start") < 20);
+        assertTrue(pegBoard.getRelativePegTime("bml1", "bml1", "speech1", "s1") == 10);
+        assertTrue(pegBoard.getRelativePegTime("bml1", "bml1", "speech1", "start") < 10);
+        assertTrue(pegBoard.getRelativePegTime("bml1", "bml1", "speech2", "s1") == 20);
+        assertTrue(pegBoard.getRelativePegTime("bml1", "bml1", "speech2", "start") < 20);
     }
 
     @Test(timeout = SCHEDULE_TIMEOUT)
@@ -849,11 +855,11 @@ public class SchedulerParameterizedIntegrationTest
         readXML("testspeechandnod_synctimed.xml");
         assertNoWarnings();
         assertNoExceptions();
-        assertTrue(scheduler.getPegBoard().getPegTime("bml1", "speech1", "start") == scheduler.getPegBoard().getPegTime("bml1", "nod1",
+        assertTrue(pegBoard.getPegTime("bml1", "speech1", "start") == pegBoard.getPegTime("bml1", "nod1",
                 "start"));
 
-        assertTrue(scheduler.getPegBoard().getRelativePegTime("bml1", "bml1", "speech1", "s1") == 10);
-        assertTrue(scheduler.getPegBoard().getRelativePegTime("bml1", "bml1", "speech1", "start") < 10);
+        assertTrue(pegBoard.getRelativePegTime("bml1", "bml1", "speech1", "s1") == 10);
+        assertTrue(pegBoard.getRelativePegTime("bml1", "bml1", "speech1", "start") < 10);
     }
 
     @Test(timeout = SCHEDULE_TIMEOUT)
@@ -862,7 +868,7 @@ public class SchedulerParameterizedIntegrationTest
         readXML("testspeech_syncatstart.xml");
         assertNoWarnings();
         assertNoExceptions();
-        assertEquals(scheduler.getPegBoard().getRelativePegTime("bml1", "bml1", "welkom", "start"), 0, 0.0001);
+        assertEquals(pegBoard.getRelativePegTime("bml1", "bml1", "welkom", "start"), 0, 0.0001);
     }
 
     @Test(timeout = SCHEDULE_TIMEOUT)
@@ -871,11 +877,11 @@ public class SchedulerParameterizedIntegrationTest
         readXML("testspeech_syncatstartandtobeat.xml");
         assertNoWarnings();
         assertNoExceptions();
-        assertEquals(0, scheduler.getPegBoard().getRelativePegTime("bml1", "bml1", "welkom", "start"), 0.001);
-        assertEquals(scheduler.getPegBoard().getPegTime("bml1", "g1", "start"),
-                scheduler.getPegBoard().getPegTime("bml1", "welkom", "deicticheart1"), 0.001);
-        assertEquals(scheduler.getPegBoard().getPegTime("bml1", "g1", "end"),
-                scheduler.getPegBoard().getPegTime("bml1", "welkom", "deicticheart1") + 1, 0.001);
+        assertEquals(0, pegBoard.getRelativePegTime("bml1", "bml1", "welkom", "start"), 0.001);
+        assertEquals(pegBoard.getPegTime("bml1", "g1", "start"),
+                pegBoard.getPegTime("bml1", "welkom", "deicticheart1"), 0.001);
+        assertEquals(pegBoard.getPegTime("bml1", "g1", "end"),
+                pegBoard.getPegTime("bml1", "welkom", "deicticheart1") + 2, 0.001);
     }
 
     @Test(timeout = SCHEDULE_TIMEOUT)
@@ -903,14 +909,14 @@ public class SchedulerParameterizedIntegrationTest
         assertNoWarnings();
         assertNoExceptions();
 
-        assertTrue(scheduler.getPegBoard().getRelativePegTime("bml1", "bml1", "nod1", "start") == 1);
-        assertTrue(scheduler.getPegBoard().getRelativePegTime("bml1", "bml1", "g1", "start") == 1);
-        assertTrue(scheduler.getPegBoard().getRelativePegTime("bml1", "bml1", "speech1", "start") == 1);
-        assertTrue(scheduler.getPegBoard().getTimePeg("bml1", "speech1", "start") != scheduler.getPegBoard().getTimePeg("bml1", "g1",
+        assertTrue(pegBoard.getRelativePegTime("bml1", "bml1", "nod1", "start") == 1);
+        assertTrue(pegBoard.getRelativePegTime("bml1", "bml1", "g1", "start") == 1);
+        assertTrue(pegBoard.getRelativePegTime("bml1", "bml1", "speech1", "start") == 1);
+        assertTrue(pegBoard.getTimePeg("bml1", "speech1", "start") != pegBoard.getTimePeg("bml1", "g1",
                 "start"));
-        assertTrue(scheduler.getPegBoard().getTimePeg("bml1", "speech1", "start") != scheduler.getPegBoard().getTimePeg("bml1", "nod1",
+        assertTrue(pegBoard.getTimePeg("bml1", "speech1", "start") != pegBoard.getTimePeg("bml1", "nod1",
                 "start"));
-        assertTrue(scheduler.getPegBoard().getTimePeg("bml1", "g1", "start") != scheduler.getPegBoard().getTimePeg("bml1", "nod1", "start"));
+        assertTrue(pegBoard.getTimePeg("bml1", "g1", "start") != pegBoard.getTimePeg("bml1", "nod1", "start"));
     }
 
     @Test(timeout = SCHEDULE_TIMEOUT)
@@ -920,15 +926,15 @@ public class SchedulerParameterizedIntegrationTest
         assertNoWarnings();
         assertNoExceptions();
 
-        assertEquals(scheduler.getPegBoard().getRelativePegTime("bml1", "bml1", "speech1", "start"), 0, 0.0001);
-        assertTrue(scheduler.getPegBoard().getPegTime("bml1", "h1", "start") == scheduler.getPegBoard().getPegTime("bml1", "speech1", "s1"));
-        assertTrue(scheduler.getPegBoard().getRelativePegTime("bml1", "bml1", "h1", "start") > 0);
-        assertTrue(scheduler.getPegBoard().getPegTime("bml1", "h1", "end") == scheduler.getPegBoard().getPegTime("bml1", "h2", "start"));
-        assertTrue(scheduler.getPegBoard().getPegTime("bml1", "h2", "start") > scheduler.getPegBoard().getPegTime("bml1", "h1", "start"));
-        assertTrue(scheduler.getPegBoard().getPegTime("bml1", "h3", "start") == scheduler.getPegBoard().getPegTime("bml1", "h2", "end"));
-        assertTrue(scheduler.getPegBoard().getPegTime("bml1", "h3", "start") > scheduler.getPegBoard().getPegTime("bml1", "h2", "start"));
-        assertTrue(scheduler.getPegBoard().getPegTime("bml1", "h4", "start") == scheduler.getPegBoard().getPegTime("bml1", "h3", "end"));
-        assertTrue(scheduler.getPegBoard().getPegTime("bml1", "h4", "start") > scheduler.getPegBoard().getPegTime("bml1", "h3", "start"));
+        assertEquals(pegBoard.getRelativePegTime("bml1", "bml1", "speech1", "start"), 0, 0.0001);
+        assertTrue(pegBoard.getPegTime("bml1", "h1", "start") == pegBoard.getPegTime("bml1", "speech1", "s1"));
+        assertTrue(pegBoard.getRelativePegTime("bml1", "bml1", "h1", "start") > 0);
+        assertTrue(pegBoard.getPegTime("bml1", "h1", "end") == pegBoard.getPegTime("bml1", "h2", "start"));
+        assertTrue(pegBoard.getPegTime("bml1", "h2", "start") > pegBoard.getPegTime("bml1", "h1", "start"));
+        assertTrue(pegBoard.getPegTime("bml1", "h3", "start") == pegBoard.getPegTime("bml1", "h2", "end"));
+        assertTrue(pegBoard.getPegTime("bml1", "h3", "start") > pegBoard.getPegTime("bml1", "h2", "start"));
+        assertTrue(pegBoard.getPegTime("bml1", "h4", "start") == pegBoard.getPegTime("bml1", "h3", "end"));
+        assertTrue(pegBoard.getPegTime("bml1", "h4", "start") > pegBoard.getPegTime("bml1", "h3", "start"));
     }
 
     @Test(timeout = SCHEDULE_TIMEOUT)
@@ -947,12 +953,12 @@ public class SchedulerParameterizedIntegrationTest
         readXML("testbeatreadytimed.xml");
         assertNoExceptions();
         assertNoWarnings();
-        assertEquals(scheduler.getPegBoard().getRelativePegTime("bml1", "bml1", "beat1", "start"), 1, 0.0001);
-        assertEquals(scheduler.getPegBoard().getRelativePegTime("bml1", "bml1", "beat1", "ready"), 2, 0.0001);
+        assertEquals(pegBoard.getRelativePegTime("bml1", "bml1", "beat1", "start"), 1, 0.0001);
+        assertEquals(pegBoard.getRelativePegTime("bml1", "bml1", "beat1", "ready"), 2, 0.0001);
         /*
-        assertThat(scheduler.getPegBoard().getPegTime("bml1", "beat1", "end"), 
-                greaterThan(scheduler.getPegBoard().getPegTime("bml1", "beat1", "ready")));
-                */
+         * assertThat(pegBoard.getPegTime("bml1", "beat1", "end"),
+         * greaterThan(pegBoard.getPegTime("bml1", "beat1", "ready")));
+         */
     }
 
     @Ignore
@@ -965,10 +971,10 @@ public class SchedulerParameterizedIntegrationTest
         assertNoWarnings();
         assertNoExceptions();
 
-        assertTrue(scheduler.getPegBoard().getPegTime("bml1", "gaze1", "start") == 2);
-        assertTrue(scheduler.getPegBoard().getPegTime("bml1", "speech1", "start") == scheduler.getPegBoard().getPegTime("bml1", "gaze1",
+        assertTrue(pegBoard.getPegTime("bml1", "gaze1", "start") == 2);
+        assertTrue(pegBoard.getPegTime("bml1", "speech1", "start") == pegBoard.getPegTime("bml1", "gaze1",
                 "ready"));
-        assertTrue(scheduler.getPegBoard().getPegTime("bml1", "speech1", "start") > 2);
+        assertTrue(pegBoard.getPegTime("bml1", "speech1", "start") > 2);
     }
 
     @Test(timeout = SCHEDULE_TIMEOUT)
@@ -977,10 +983,10 @@ public class SchedulerParameterizedIntegrationTest
         readXML("testnods.xml");
         assertNoWarnings();
         assertNoExceptions();
-        assertEquals(scheduler.getPegBoard().getRelativePegTime("bml1", "bml1", "nod1", "start"), 1, 0.0001);
-        assertEquals(scheduler.getPegBoard().getPegTime("bml1", "tilt1", "start"), scheduler.getPegBoard()
+        assertEquals(pegBoard.getRelativePegTime("bml1", "bml1", "nod1", "start"), 1, 0.0001);
+        assertEquals(pegBoard.getPegTime("bml1", "tilt1", "start"), pegBoard
                 .getPegTime("bml1", "nod1", "end") + 1, 0.0001);
-        assertTrue(scheduler.getPegBoard().getPegTime("bml1", "nod1", "start") < scheduler.getPegBoard().getPegTime("bml1", "nod1", "end"));
+        assertTrue(pegBoard.getPegTime("bml1", "nod1", "start") < pegBoard.getPegTime("bml1", "nod1", "end"));
     }
 
     @Test(timeout = SCHEDULE_TIMEOUT)
@@ -990,10 +996,10 @@ public class SchedulerParameterizedIntegrationTest
         assertNoWarnings();
         assertNoExceptions();
 
-        assertTrue(scheduler.getPegBoard().getRelativePegTime("bml1", "bml1", "speech1", "start") == 6);
-        assertTrue(scheduler.getPegBoard().getPegTime("bml1", "speech1", "syncstart1") == scheduler.getPegBoard().getPegTime("bml1",
+        assertTrue(pegBoard.getRelativePegTime("bml1", "bml1", "speech1", "start") == 6);
+        assertTrue(pegBoard.getPegTime("bml1", "speech1", "syncstart1") == pegBoard.getPegTime("bml1",
                 "nod1", "start"));
-        assertTrue(scheduler.getPegBoard().getRelativePegTime("bml1", "bml1", "nod1", "end") == 9);
+        assertTrue(pegBoard.getRelativePegTime("bml1", "bml1", "nod1", "end") == 9);
     }
 
     @Test(timeout = SCHEDULE_TIMEOUT)
@@ -1003,13 +1009,12 @@ public class SchedulerParameterizedIntegrationTest
         assertNoWarnings();
         assertNoExceptions();
 
-        assertTrue(scheduler.getPegBoard().getRelativePegTime("bml1", "bml1", "speech1", "start") == 6);
-        assertTrue(scheduler.getPegBoard().getPegTime("bml1", "speech1", "syncstart1") == scheduler.getPegBoard().getPegTime("bml1",
+        assertTrue(pegBoard.getRelativePegTime("bml1", "bml1", "speech1", "start") == 6);
+        assertTrue(pegBoard.getPegTime("bml1", "speech1", "syncstart1") == pegBoard.getPegTime("bml1",
                 "nod1", "start"));
-        assertTrue(scheduler.getPegBoard().getRelativePegTime("bml1", "bml1", "nod1", "end") == 9);
+        assertTrue(pegBoard.getRelativePegTime("bml1", "bml1", "nod1", "end") == 9);
     }
 
-    
     @Test(timeout = SCHEDULE_TIMEOUT)
     public void testSpeechNodTimedToSyncCapitalization()
     {
@@ -1017,11 +1022,11 @@ public class SchedulerParameterizedIntegrationTest
         assertNoWarnings();
         assertNoExceptions();
 
-        assertTrue(scheduler.getPegBoard().getRelativePegTime("BMLWithCapitalizedStuff", "BMLWithCapitalizedStuff",
+        assertTrue(pegBoard.getRelativePegTime("BMLWithCapitalizedStuff", "BMLWithCapitalizedStuff",
                 "speech1WithCapitalizedStuff", "start") == 6);
-        assertTrue(scheduler.getPegBoard().getPegTime("BMLWithCapitalizedStuff", "speech1WithCapitalizedStuff", "syncStart_1") == scheduler
-                .getPegBoard().getPegTime("BMLWithCapitalizedStuff", "nod1WithCapitalizedStuff", "start"));
-        assertTrue(scheduler.getPegBoard().getRelativePegTime("BMLWithCapitalizedStuff", "BMLWithCapitalizedStuff",
+        assertTrue(pegBoard.getPegTime("BMLWithCapitalizedStuff", "speech1WithCapitalizedStuff", "syncStart_1") == 
+                pegBoard.getPegTime("BMLWithCapitalizedStuff", "nod1WithCapitalizedStuff", "start"));
+        assertTrue(pegBoard.getRelativePegTime("BMLWithCapitalizedStuff", "BMLWithCapitalizedStuff",
                 "nod1WithCapitalizedStuff", "end") == 9);
     }
 
@@ -1031,34 +1036,35 @@ public class SchedulerParameterizedIntegrationTest
         readXML("testnodandbeat.xml");
         assertNoWarnings();
         assertNoExceptions();
-        assertTrue(scheduler.getPegBoard().getRelativePegTime("bml1", "bml1", "nod1", "start") == 3);
-        assertTrue(scheduler.getPegBoard().getRelativePegTime("bml1", "bml1", "nod1", "end") == 5);
-        assertTrue(scheduler.getPegBoard().getRelativePegTime("bml1", "bml1", "nod1", "stroke") == scheduler.getPegBoard()
+        assertTrue(pegBoard.getRelativePegTime("bml1", "bml1", "nod1", "start") == 3);
+        assertTrue(pegBoard.getRelativePegTime("bml1", "bml1", "nod1", "end") == 5);
+        assertTrue(pegBoard.getRelativePegTime("bml1", "bml1", "nod1", "stroke") == pegBoard
                 .getRelativePegTime("bml1", "bml1", "beat1", "start"));
     }
 
-    @Ignore //smartbody scheduler failure
+    @Ignore
+    // smartbody scheduler failure
     @Test(timeout = SCHEDULE_TIMEOUT)
     public void testNodAndBeatSwitchedOrder()
     {
         readXML("testnodandbeat_switchedorder.xml");
         assertNoWarnings();
         assertNoExceptions();
-        assertTrue(scheduler.getPegBoard().getRelativePegTime("bml1", "bml1", "nod1", "start") == 3);
-        assertTrue(scheduler.getPegBoard().getRelativePegTime("bml1", "bml1", "nod1", "end") == 5);
-        assertTrue(scheduler.getPegBoard().getRelativePegTime("bml1", "bml1", "nod1", "stroke") == scheduler.getPegBoard()
+        assertTrue(pegBoard.getRelativePegTime("bml1", "bml1", "nod1", "start") == 3);
+        assertTrue(pegBoard.getRelativePegTime("bml1", "bml1", "nod1", "end") == 5);
+        assertTrue(pegBoard.getRelativePegTime("bml1", "bml1", "nod1", "stroke") == pegBoard
                 .getRelativePegTime("bml1", "bml1", "beat1", "start"));
     }
-    
+
     @Test(timeout = SCHEDULE_TIMEOUT)
     public void testBeatAndNod()
     {
         readXML("testbeatandnod.xml");
         assertNoWarnings();
         assertNoExceptions();
-        assertEquals(3, scheduler.getPegBoard().getRelativePegTime("bml1", "bml1", "beat1", "start"), 0.001f);
-        assertEquals(7, scheduler.getPegBoard().getRelativePegTime("bml1", "bml1", "beat1", "end"), 0.001f);
-        assertEquals(scheduler.getPegBoard().getRelativePegTime("bml1", "bml1", "beat1", "strokeEnd"), scheduler.getPegBoard()
+        assertEquals(3, pegBoard.getRelativePegTime("bml1", "bml1", "beat1", "start"), 0.001f);
+        assertEquals(7, pegBoard.getRelativePegTime("bml1", "bml1", "beat1", "end"), 0.001f);
+        assertEquals(pegBoard.getRelativePegTime("bml1", "bml1", "beat1", "strokeEnd"), pegBoard
                 .getRelativePegTime("bml1", "bml1", "nod1", "start"), 0.001f);
     }
 
@@ -1068,10 +1074,10 @@ public class SchedulerParameterizedIntegrationTest
         readXML("testspeech_nodtimedtosyncoffset.xml");
         assertNoWarnings();
         assertNoExceptions();
-        assertEquals(scheduler.getPegBoard().getRelativePegTime("bml1", "bml1", "speech1", "start"), 6, 0.0001);
-        assertEquals(scheduler.getPegBoard().getPegTime("bml1", "speech1", "syncstart1") + 1,
-                scheduler.getPegBoard().getPegTime("bml1", "nod1", "start"), 0.0001);
-        assertEquals(scheduler.getPegBoard().getRelativePegTime("bml1", "bml1", "nod1", "end"), 9, 0.0001);
+        assertEquals(pegBoard.getRelativePegTime("bml1", "bml1", "speech1", "start"), 6, 0.0001);
+        assertEquals(pegBoard.getPegTime("bml1", "speech1", "syncstart1") + 1,
+                pegBoard.getPegTime("bml1", "nod1", "start"), 0.0001);
+        assertEquals(pegBoard.getRelativePegTime("bml1", "bml1", "nod1", "end"), 9, 0.0001);
     }
 
     @Test(timeout = SCHEDULE_TIMEOUT)
@@ -1081,26 +1087,26 @@ public class SchedulerParameterizedIntegrationTest
 
         assertNoWarnings();
         assertNoExceptions();
-        assertEquals(scheduler.getPegBoard().getRelativePegTime("bml1", "bml1", "welkom", "deicticheart1"), 1, 0.0001);
-        assertEquals(scheduler.getPegBoard().getRelativePegTime("bml1", "bml1", "transleft", "end"), 1, 0.0001);
-        assertEquals(scheduler.getPegBoard().getRelativePegTime("bml1", "bml1", "g1", "start"), 1, 0.0001);
+        assertEquals(1, pegBoard.getRelativePegTime("bml1", "bml1", "welkom", "deicticheart1"), 0.0001);
+        assertEquals(2, pegBoard.getRelativePegTime("bml1", "bml1", "transleft", "end"), 0.0001);
+        assertEquals(1, pegBoard.getRelativePegTime("bml1", "bml1", "g1", "start"), 0.0001);
 
-        assertEquals(scheduler.getPegBoard().getRelativePegTime("bml1", "bml1", "transleft", "start"), 0, 0.0001);
-        assertEquals(scheduler.getPegBoard().getRelativePegTime("bml1", "bml1", "g1", "end"), 2, 0.0001);
-        assertEquals(scheduler.getPegBoard().getRelativePegTime("bml1", "bml1", "relaxleft", "start"), 2.5, 0.0001);
-        assertEquals(scheduler.getPegBoard().getRelativePegTime("bml1", "bml1", "relaxleft", "end"), 2.8, 0.0001);
+        assertEquals(0, pegBoard.getRelativePegTime("bml1", "bml1", "transleft", "start"), 0.0001);
+        assertEquals(3, pegBoard.getRelativePegTime("bml1", "bml1", "g1", "end"), 0.0001);
+        assertEquals(3.5, pegBoard.getRelativePegTime("bml1", "bml1", "relaxleft", "start"), 0.0001);
+        assertEquals(5.8, pegBoard.getRelativePegTime("bml1", "bml1", "relaxleft", "end"), 0.0001);
 
     }
-    
+
     @Test(timeout = SCHEDULE_TIMEOUT)
     public void testGestureAtStart()
     {
         readXML("testspeech_gesturestart.xml");
         assertNoWarnings();
         assertNoExceptions();
-        assertEquals(0, scheduler.getPegBoard().getRelativePegTime("bml2", "bml2", "g1", "start"), 0.0001);
-        assertEquals(scheduler.getPegBoard().getPegTime("bml2", "speech1", "this") ,
-                scheduler.getPegBoard().getPegTime("bml2", "g1", "stroke"), 0.0001);
+        assertEquals(0, pegBoard.getRelativePegTime("bml2", "bml2", "g1", "start"), 0.0001);
+        assertEquals(pegBoard.getPegTime("bml2", "speech1", "this"),
+                pegBoard.getPegTime("bml2", "g1", "stroke"), 0.0001);
     }
 
     @Test(timeout = SCHEDULE_TIMEOUT)
@@ -1135,18 +1141,21 @@ public class SchedulerParameterizedIntegrationTest
          */
     }
 
-    @Ignore //smartbody scheduler failure
+    @Ignore
+    // smartbody scheduler failure
     @Test(timeout = SCHEDULE_TIMEOUT)
     public void testOffset()
     {
-         readXML("testoffset.xml"); System.out.println(warnings); assertTrue(warnings.size()==0);
-         assertTrue(exceptions.size()==0); 
-         assertEquals(scheduler.getPegBoard().getRelativePegTime("bml1", "bml1", "g1", "start"), 4, 0.0001);
-         assertEquals(scheduler.getPegBoard().getRelativePegTime("bml1", "bml1", "g2", "start"), 3, 0.0001);
-         assertEquals(scheduler.getPegBoard().getRelativePegTime("bml1", "bml1", "g2", "end"), 4, 0.0001);
-         assertEquals(scheduler.getPegBoard().getRelativePegTime("bml1", "bml1", "h1", "start"), 
-                      scheduler.getPegBoard().getRelativePegTime("bml1", "bml1", "g1", "end"), 0.0001);
-         assertThat(scheduler.getPegBoard().getRelativePegTime("bml1", "bml1", "h1", "start"),greaterThan(4d));       
+        readXML("testoffset.xml");
+        System.out.println(warnings);
+        assertTrue(warnings.size() == 0);
+        assertTrue(exceptions.size() == 0);
+        assertEquals(pegBoard.getRelativePegTime("bml1", "bml1", "g1", "start"), 4, 0.0001);
+        assertEquals(pegBoard.getRelativePegTime("bml1", "bml1", "g2", "start"), 3, 0.0001);
+        assertEquals(pegBoard.getRelativePegTime("bml1", "bml1", "g2", "end"), 4, 0.0001);
+        assertEquals(pegBoard.getRelativePegTime("bml1", "bml1", "h1", "start"),
+                pegBoard.getRelativePegTime("bml1", "bml1", "g1", "end"), 0.0001);
+        assertThat(pegBoard.getRelativePegTime("bml1", "bml1", "h1", "start"), greaterThan(4d));
     }
 
     class MyExceptionListener implements BMLExceptionListener

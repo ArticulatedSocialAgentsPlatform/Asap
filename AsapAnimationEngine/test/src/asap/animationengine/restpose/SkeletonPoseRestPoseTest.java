@@ -4,6 +4,7 @@ import static org.junit.Assert.*;
 import hmi.animation.Hanim;
 import hmi.animation.SkeletonPose;
 import hmi.elckerlyc.BMLBlockPeg;
+import hmi.elckerlyc.PegBoard;
 import hmi.elckerlyc.TimedPlanUnitPlayException;
 import hmi.elckerlyc.feedback.NullFeedbackManager;
 import hmi.math.Quat4f;
@@ -21,14 +22,15 @@ import static hmi.testutil.math.Quat4fTestUtil.*;
  */
 public class SkeletonPoseRestPoseTest extends AbstractRestPoseTest
 {
+    private PegBoard pegBoard = new PegBoard();
     @Test
     public void testcreateTransitionToRest() throws TimedPlanUnitPlayException
     {
         String[] poseJoints = { Hanim.l_elbow, Hanim.l_wrist };
         float[] rotations = { 0, 0, 0, 1, 0, 1, 0, 0 };
         SkeletonPose pose = new SkeletonPose(poseJoints, rotations, "R");
-
-        SkeletonPoseRestPose restPose = new SkeletonPoseRestPose(pose, mockAnimationPlayer, NullFeedbackManager.getInstance());
+        
+        SkeletonPoseRestPose restPose = new SkeletonPoseRestPose(pose, mockAnimationPlayer, NullFeedbackManager.getInstance(),pegBoard);
         TimedMotionUnit tmu = restPose.createTransitionToRest(Sets.newHashSet("l_shoulder", "l_wrist"), 1, 2, "bml1", "transition1",
                 BMLBlockPeg.GLOBALPEG);
         assertEquals(BMLBlockPeg.GLOBALPEG, tmu.getBMLBlockPeg());

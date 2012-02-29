@@ -30,6 +30,7 @@ import asap.animationengine.motionunit.TimedMotionUnit;
 
 import hmi.animation.*;
 import hmi.elckerlyc.BMLBlockPeg;
+import hmi.elckerlyc.PegBoard;
 import hmi.elckerlyc.feedback.FeedbackManager;
 import hmi.elckerlyc.planunit.KeyPosition;
 import hmi.elckerlyc.planunit.KeyPositionManager;
@@ -271,9 +272,9 @@ public class PointingMU implements MotionUnit
     }
 
     @Override
-    public TimedMotionUnit createTMU(FeedbackManager bfm, BMLBlockPeg bbPeg, String bmlId, String id)
+    public TimedMotionUnit createTMU(FeedbackManager bfm, BMLBlockPeg bbPeg, String bmlId, String id, PegBoard pb)
     {
-        return new PointingTMU(bfm, bbPeg, bmlId, id, this);
+        return new PointingTMU(bfm, bbPeg, bmlId, id, this, pb);
     }
 
     @Override

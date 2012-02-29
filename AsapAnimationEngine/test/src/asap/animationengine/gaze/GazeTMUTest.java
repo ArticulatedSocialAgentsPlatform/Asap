@@ -10,6 +10,7 @@ import hmi.animation.Hanim;
 import hmi.animation.VJoint;
 import hmi.bml.BMLGestureSync;
 import hmi.elckerlyc.BMLBlockPeg;
+import hmi.elckerlyc.PegBoard;
 import hmi.elckerlyc.feedback.FeedbackManager;
 import hmi.elckerlyc.planunit.AbstractTimedPlanUnitTest;
 import hmi.elckerlyc.planunit.KeyPosition;
@@ -37,6 +38,7 @@ import asap.animationengine.restpose.RestPose;
 public class GazeTMUTest extends AbstractTimedPlanUnitTest
 {
     private AnimationPlayer mockAnimationPlayer = mock(AnimationPlayer.class);
+    private PegBoard pegBoard = new PegBoard();
     
     @SuppressWarnings("unchecked")
     @Override
@@ -66,7 +68,7 @@ public class GazeTMUTest extends AbstractTimedPlanUnitTest
         mu.addKeyPosition(new KeyPosition(BMLGestureSync.STROKE_END.getId(), 0.8, 1.0));
         mu.setupRelaxUnit();
         
-        GazeTMU tmu = new GazeTMU(bfm,bbPeg,bmlId,id,mu);
+        GazeTMU tmu = new GazeTMU(bfm,bbPeg,bmlId,id,mu, pegBoard);
         tmu.resolveDefaultBMLKeyPositions();
         tmu.setTimePeg("start", TimePegUtil.createTimePeg(bbPeg, startTime));
         return tmu;

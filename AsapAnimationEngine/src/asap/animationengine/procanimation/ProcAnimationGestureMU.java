@@ -4,6 +4,7 @@ import hmi.animation.VJoint;
 import hmi.animation.VJointUtils;
 import hmi.bml.BMLGestureSync;
 import hmi.elckerlyc.BMLBlockPeg;
+import hmi.elckerlyc.PegBoard;
 import hmi.elckerlyc.feedback.FeedbackManager;
 import hmi.elckerlyc.planunit.InvalidParameterException;
 import hmi.elckerlyc.planunit.KeyPosition;
@@ -88,16 +89,16 @@ public class ProcAnimationGestureMU implements GestureUnit
     {
         VJoint vCopy = vStart.copyTree("copy-");
         ProcAnimationMU copyProc = gestureUnit.copy(vCopy);
-        copyProc.play(getKeyPosition(BMLGestureSync.STROKE_END.getId()).time-0.01);
+        copyProc.play(getKeyPosition(BMLGestureSync.STROKE_END.getId()).time - 0.01);
         return aniPlayer.getRestPose().getTransitionToRestDuration(vCopy, VJointUtils.transformToSidSet(gestureUnit.getControlledJoints()));
     }
 
-    //TODO: dynamic determination from current hand position
+    // TODO: dynamic determination from current hand position
     public double getPreparationDuration()
     {
         VJoint vCopy = vStart.copyTree("copy-");
         ProcAnimationMU copyProc = gestureUnit.copy(vCopy);
-        copyProc.play(getKeyPosition(BMLGestureSync.STROKE_START.getId()).time+0.01);
+        copyProc.play(getKeyPosition(BMLGestureSync.STROKE_START.getId()).time + 0.01);
 
         return aniPlayer.getRestPose().getTransitionToRestDuration(vCopy, VJointUtils.transformToSidSet(gestureUnit.getControlledJoints()));
     }
@@ -324,9 +325,9 @@ public class ProcAnimationGestureMU implements GestureUnit
     }
 
     @Override
-    public ProcAnimationGestureTMU createTMU(FeedbackManager bbm, BMLBlockPeg bmlBlockPeg, String bmlId, String id)
+    public ProcAnimationGestureTMU createTMU(FeedbackManager bbm, BMLBlockPeg bmlBlockPeg, String bmlId, String id, PegBoard pb)
     {
-        return new ProcAnimationGestureTMU(bbm, bmlBlockPeg, bmlId, id, this);
+        return new ProcAnimationGestureTMU(bbm, bmlBlockPeg, bmlId, id, this, pb);
     }
 
     @Override

@@ -4,6 +4,7 @@ import hmi.elckerlyc.planunit.KeyPositionManager;
 import hmi.elckerlyc.planunit.KeyPositionManagerImpl;
 import hmi.elckerlyc.planunit.KeyPosition;
 import hmi.elckerlyc.BMLBlockPeg;
+import hmi.elckerlyc.PegBoard;
 import hmi.elckerlyc.feedback.FeedbackManager;
 
 import java.util.List;
@@ -21,8 +22,8 @@ import asap.animationengine.motionunit.TimedMotionUnit;
  */
 public class StubMotionUnit implements MotionUnit
 {
-    private KeyPositionManager keyPositionManager = new KeyPositionManagerImpl();
-
+    private KeyPositionManager keyPositionManager = new KeyPositionManagerImpl();    
+    
     public void addKeyPosition(KeyPosition kp)
     {
         keyPositionManager.addKeyPosition(kp);
@@ -71,9 +72,9 @@ public class StubMotionUnit implements MotionUnit
     }
 
     @Override
-    public TimedMotionUnit createTMU(FeedbackManager bfm, BMLBlockPeg bmlBlockPeg, String bmlId, String id)
+    public TimedMotionUnit createTMU(FeedbackManager bfm, BMLBlockPeg bmlBlockPeg, String bmlId, String id, PegBoard pb)
     {
-        return new TimedMotionUnit(bfm,bmlBlockPeg,bmlId,id,this);
+        return new TimedMotionUnit(bfm,bmlBlockPeg,bmlId,id,this, pb);
     }
 
     @Override

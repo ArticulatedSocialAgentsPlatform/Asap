@@ -10,6 +10,7 @@ import asap.animationengine.transitions.TransitionTMU;
 
 import hmi.elckerlyc.planunit.KeyPosition;
 import hmi.elckerlyc.BMLBlockPeg;
+import hmi.elckerlyc.PegBoard;
 import hmi.elckerlyc.TimePeg;
 import hmi.elckerlyc.TimedPlanUnitPlayException;
 import hmi.elckerlyc.feedback.FeedbackManager;
@@ -34,12 +35,12 @@ public class TransitionTMUTest extends AbstractTimedPlanUnitTest
 {
     TransitionMU mockTransitionMU = mock(TransitionMU.class);
     FeedbackManager mockBmlFeedbackManager = mock(FeedbackManager.class);
-    
+    private PegBoard pegBoard = new PegBoard();
     
     @Override
     protected TimedPlanUnit setupPlanUnit(FeedbackManager bfm, BMLBlockPeg bbPeg, String id, String bmlId, double startTime)
     {
-        TransitionTMU tmu = new TransitionTMU(bfm, bbPeg, bmlId, id, mockTransitionMU);
+        TransitionTMU tmu = new TransitionTMU(bfm, bbPeg, bmlId, id, mockTransitionMU, pegBoard);
         KeyPositionMocker.stubKeyPositions(mockTransitionMU,new KeyPosition("start",0,1),
                 new KeyPosition("ready",0,1),
                 new KeyPosition("strokeStart",0,1),
@@ -55,7 +56,7 @@ public class TransitionTMUTest extends AbstractTimedPlanUnitTest
     @Test
     public void testExecStates() throws TimedPlanUnitPlayException
     {
-        TransitionTMU tmu = new TransitionTMU(mockBmlFeedbackManager,BMLBlockPeg.GLOBALPEG, "bml1", "behaviour1", mockTransitionMU);
+        TransitionTMU tmu = new TransitionTMU(mockBmlFeedbackManager,BMLBlockPeg.GLOBALPEG, "bml1", "behaviour1", mockTransitionMU, pegBoard);
         TimePeg tpStart = new TimePeg(BMLBlockPeg.GLOBALPEG);
         tpStart.setGlobalValue(0);
         TimePeg tpEnd = new TimePeg(BMLBlockPeg.GLOBALPEG);

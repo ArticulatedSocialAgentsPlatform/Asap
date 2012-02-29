@@ -5,6 +5,7 @@ import java.util.Set;
 import hmi.bml.core.BehaviourBlock;
 import hmi.bml.ext.bmlt.BMLTBMLBehaviorAttributes;
 import hmi.elckerlyc.BMLBlockPeg;
+import hmi.elckerlyc.PegBoard;
 import hmi.elckerlyc.planunit.TimedPlanUnitState;
 import hmi.elckerlyc.scheduler.BMLBlock;
 import hmi.elckerlyc.scheduler.BMLScheduler;
@@ -35,7 +36,7 @@ import asap.bmlb.BMLBBMLBehaviorAttributes;
 public class BMLBandTSchedulingHandlerTest
 {
     private BMLScheduler mockScheduler = mock(BMLScheduler.class);
-    private BMLBandTSchedulingHandler handler = new BMLBandTSchedulingHandler(new SmartBodySchedulingStrategy());
+    private BMLBandTSchedulingHandler handler = new BMLBandTSchedulingHandler(new SmartBodySchedulingStrategy(new PegBoard()));
     
     @Before
     public void setup()

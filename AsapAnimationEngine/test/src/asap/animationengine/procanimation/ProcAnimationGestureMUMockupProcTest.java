@@ -6,6 +6,7 @@ import hmi.animation.VJoint;
 import hmi.elckerlyc.planunit.KeyPosition;
 import hmi.bml.BMLGestureSync;
 import hmi.elckerlyc.BMLBlockPeg;
+import hmi.elckerlyc.PegBoard;
 import hmi.elckerlyc.TimedPlanUnitPlayException;
 import hmi.elckerlyc.feedback.FeedbackManager;
 import hmi.elckerlyc.planunit.TimedPlanUnitState;
@@ -42,6 +43,7 @@ public class ProcAnimationGestureMUMockupProcTest
     private FeedbackManager mockFeedbackManager = mock(FeedbackManager.class);
     private VJoint vCurr;
     private ProcAnimationGestureMU pag;
+    private PegBoard pegBoard = new PegBoard();
     
     @SuppressWarnings("unchecked")
     @Before
@@ -110,7 +112,7 @@ public class ProcAnimationGestureMUMockupProcTest
     @Test
     public void testCreateTMU() throws TimedPlanUnitPlayException
     {
-        TimedMotionUnit tmu = pag.createTMU(mockFeedbackManager, BMLBlockPeg.GLOBALPEG, "bml1", "g1");
+        TimedMotionUnit tmu = pag.createTMU(mockFeedbackManager, BMLBlockPeg.GLOBALPEG, "bml1", "g1",pegBoard);
         tmu.resolveDefaultBMLKeyPositions();
         tmu.setTimePeg(BMLGestureSync.START.getId(), createTimePeg(0));
         tmu.setTimePeg(BMLGestureSync.END.getId(), createTimePeg(2));

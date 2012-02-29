@@ -25,6 +25,7 @@ import hmi.elckerlyc.planunit.KeyPositionManager;
 import hmi.elckerlyc.planunit.KeyPositionManagerImpl;
 import hmi.elckerlyc.planunit.ParameterNotFoundException;
 import hmi.elckerlyc.BMLBlockPeg;
+import hmi.elckerlyc.PegBoard;
 
 import java.util.*;
 
@@ -88,9 +89,9 @@ public abstract class TransitionMU implements MotionUnit
     }
     
     @Override
-    public TimedMotionUnit createTMU(FeedbackManager bfm, BMLBlockPeg bbPeg, String bmlId, String id)
+    public TimedMotionUnit createTMU(FeedbackManager bfm, BMLBlockPeg bbPeg, String bmlId, String id, PegBoard pb)
     {
-        return new TransitionTMU(bfm, bbPeg, bmlId, id, this);
+        return new TransitionTMU(bfm, bbPeg, bmlId, id, this, pb);
     }
 
     @Override
