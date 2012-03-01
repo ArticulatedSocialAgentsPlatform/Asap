@@ -4,11 +4,11 @@ import hmi.bml.BMLGestureSync;
 import hmi.bml.core.Behaviour;
 import hmi.elckerlyc.BMLBlockPeg;
 import hmi.elckerlyc.BehaviourPlanningException;
-import hmi.elckerlyc.OffsetPeg;
-import hmi.elckerlyc.TimePeg;
-import hmi.elckerlyc.TimedPlanUnitPlayException;
 import hmi.elckerlyc.feedback.FeedbackManager;
+import hmi.elckerlyc.pegboard.OffsetPeg;
 import hmi.elckerlyc.pegboard.PegBoard;
+import hmi.elckerlyc.pegboard.TimePeg;
+import hmi.elckerlyc.planunit.TimedPlanUnitPlayException;
 import hmi.elckerlyc.scheduler.TimePegAndConstraint;
 
 import java.util.ArrayList;
@@ -147,9 +147,12 @@ public class ProcAnimationGestureTMU extends TimedMotionUnit
         Set<TimePeg> fixedPegs = new HashSet<TimePeg>();
         for (TimePeg tp : pegs)
         {
-            if (tp != null && tp.getGlobalValue() != TimePeg.VALUE_UNKNOWN && tp.getGlobalValue() <= time)
+            if (tp != null && tp.getGlobalValue() != TimePeg.VALUE_UNKNOWN) 
             {
-                fixedPegs.add(tp);
+                if(tp.isAbsoluteTime() || tp.getGlobalValue() <= time || pegBoard.getPegKeys(tp).size()>1)
+                {
+                    fixedPegs.add(tp);
+                }
             }
         }
         findTiming(fixedPegs);
@@ -407,7 +410,7 @@ public class ProcAnimationGestureTMU extends TimedMotionUnit
         {
             if (!fixedPegs.contains(tp) && tp != null && !fixedPegs.contains(tp.getLink()))
             {
-                //tp.setGlobalValue(TimePeg.VALUE_UNKNOWN);
+                tp.setGlobalValue(TimePeg.VALUE_UNKNOWN);
             }
         }
 

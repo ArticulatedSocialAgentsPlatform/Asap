@@ -20,7 +20,9 @@ package asap.animationengine;
 
 import hmi.elckerlyc.*;
 import hmi.elckerlyc.feedback.FeedbackManager;
+import hmi.elckerlyc.pegboard.OffsetPeg;
 import hmi.elckerlyc.pegboard.PegBoard;
+import hmi.elckerlyc.pegboard.TimePeg;
 import hmi.elckerlyc.planunit.KeyPosition;
 import hmi.elckerlyc.planunit.PlanManager;
 import hmi.elckerlyc.scheduler.TimePegAndConstraint;

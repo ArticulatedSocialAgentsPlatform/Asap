@@ -7,7 +7,7 @@ import hmi.elckerlyc.pegboard.PegBoard;
 import hmi.elckerlyc.planunit.KeyPosition;
 import hmi.bml.BMLGestureSync;
 import hmi.elckerlyc.BMLBlockPeg;
-import hmi.elckerlyc.TimedPlanUnitPlayException;
+import hmi.elckerlyc.planunit.TimedPlanUnitPlayException;
 import hmi.elckerlyc.feedback.FeedbackManager;
 import hmi.elckerlyc.planunit.TimedPlanUnitState;
 import hmi.elckerlyc.util.KeyPositionMocker;

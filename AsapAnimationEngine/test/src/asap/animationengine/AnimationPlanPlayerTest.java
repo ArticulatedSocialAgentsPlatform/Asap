@@ -7,11 +7,11 @@ import java.util.HashSet;
 import java.util.List;
 
 import hmi.elckerlyc.pegboard.PegBoard;
+import hmi.elckerlyc.pegboard.TimePeg;
 import hmi.elckerlyc.planunit.KeyPosition;
 import hmi.bml.feedback.BMLExceptionFeedback;
 import hmi.bml.feedback.BMLSyncPointProgressFeedback;
 import hmi.elckerlyc.BMLBlockPeg;
-import hmi.elckerlyc.TimePeg;
 import hmi.elckerlyc.feedback.FeedbackManager;
 import hmi.elckerlyc.feedback.FeedbackManagerImpl;
 import hmi.elckerlyc.planunit.DefaultTimedPlanUnitPlayer;

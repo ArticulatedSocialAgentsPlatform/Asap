@@ -18,7 +18,7 @@
  ******************************************************************************/
 package asap.animationengine.motionunit;
 
-import hmi.elckerlyc.TimedPlanUnitPlayException;
+import hmi.elckerlyc.planunit.TimedPlanUnitPlayException;
 
 /**
  * Thrown when playback of a TMU fails

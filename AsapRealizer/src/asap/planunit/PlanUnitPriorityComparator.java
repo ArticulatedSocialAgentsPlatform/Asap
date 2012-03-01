@@ -1,6 +1,6 @@
 package asap.planunit;
 
-import hmi.elckerlyc.TimePeg;
+import hmi.elckerlyc.pegboard.TimePeg;
 import hmi.elckerlyc.planunit.TimedPlanUnit;
 
 import java.util.Comparator;

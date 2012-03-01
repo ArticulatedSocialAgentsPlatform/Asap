@@ -26,11 +26,11 @@ import asap.animationengine.motionunit.TMUPlayException;
 import asap.animationengine.motionunit.TimedMotionUnit;
 
 import hmi.elckerlyc.BMLBlockPeg;
-import hmi.elckerlyc.OffsetPeg;
-import hmi.elckerlyc.TimedPlanUnitPlayException;
-import hmi.elckerlyc.TimePeg;
 import hmi.elckerlyc.feedback.FeedbackManager;
+import hmi.elckerlyc.pegboard.OffsetPeg;
 import hmi.elckerlyc.pegboard.PegBoard;
+import hmi.elckerlyc.pegboard.TimePeg;
+import hmi.elckerlyc.planunit.TimedPlanUnitPlayException;
 
 /**
  * A timed motionunit for pointing

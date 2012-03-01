@@ -4,9 +4,9 @@ import static org.junit.Assert.*;
 import hmi.animation.Hanim;
 import hmi.animation.SkeletonPose;
 import hmi.elckerlyc.BMLBlockPeg;
-import hmi.elckerlyc.TimedPlanUnitPlayException;
 import hmi.elckerlyc.feedback.NullFeedbackManager;
 import hmi.elckerlyc.pegboard.PegBoard;
+import hmi.elckerlyc.planunit.TimedPlanUnitPlayException;
 import hmi.math.Quat4f;
 
 import org.junit.Test;

@@ -20,11 +20,11 @@ package asap.animationengine.transitions;
 
 import hmi.elckerlyc.BMLBlockPeg;
 
-import hmi.elckerlyc.TimedPlanUnitPlayException;
-import hmi.elckerlyc.TimePeg;
 import hmi.elckerlyc.feedback.FeedbackManager;
 import hmi.elckerlyc.feedback.NullFeedbackManager;
 import hmi.elckerlyc.pegboard.PegBoard;
+import hmi.elckerlyc.pegboard.TimePeg;
+import hmi.elckerlyc.planunit.TimedPlanUnitPlayException;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;

@@ -9,13 +9,13 @@ import asap.animationengine.transitions.TransitionMU;
 import asap.animationengine.transitions.TransitionTMU;
 
 import hmi.elckerlyc.pegboard.PegBoard;
+import hmi.elckerlyc.pegboard.TimePeg;
 import hmi.elckerlyc.planunit.KeyPosition;
 import hmi.elckerlyc.BMLBlockPeg;
-import hmi.elckerlyc.TimePeg;
-import hmi.elckerlyc.TimedPlanUnitPlayException;
 import hmi.elckerlyc.feedback.FeedbackManager;
 import hmi.elckerlyc.planunit.AbstractTimedPlanUnitTest;
 import hmi.elckerlyc.planunit.TimedPlanUnit;
+import hmi.elckerlyc.planunit.TimedPlanUnitPlayException;
 import hmi.elckerlyc.planunit.TimedPlanUnitState;
 import hmi.elckerlyc.scheduler.BMLBlockManager;
 import hmi.elckerlyc.scheduler.BMLScheduler;
