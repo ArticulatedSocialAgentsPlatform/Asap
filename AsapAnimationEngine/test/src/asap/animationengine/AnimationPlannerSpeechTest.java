@@ -2,9 +2,9 @@ package asap.animationengine;
 
 import static org.junit.Assert.assertEquals;
 import static org.mockito.Mockito.*;
-import hmi.elckerlyc.BMLBlockPeg;
 import hmi.elckerlyc.DefaultEngine;
 import hmi.elckerlyc.feedback.FeedbackManager;
+import hmi.elckerlyc.pegboard.BMLBlockPeg;
 import hmi.elckerlyc.pegboard.PegBoard;
 import hmi.elckerlyc.planunit.DefaultTimedPlanUnitPlayer;
 import hmi.elckerlyc.planunit.PlanManager;

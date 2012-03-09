@@ -20,8 +20,8 @@ package asap.animationengine.gaze;
 
 import asap.animationengine.motionunit.*;
 import hmi.bml.BMLGestureSync;
-import hmi.elckerlyc.BMLBlockPeg;
 import hmi.elckerlyc.feedback.FeedbackManager;
+import hmi.elckerlyc.pegboard.BMLBlockPeg;
 import hmi.elckerlyc.pegboard.OffsetPeg;
 import hmi.elckerlyc.pegboard.PegBoard;
 import hmi.elckerlyc.pegboard.TimePeg;

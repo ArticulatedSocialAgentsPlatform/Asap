@@ -2,9 +2,9 @@ package asap.animationengine.procanimation;
 
 import hmi.bml.BMLGestureSync;
 import hmi.bml.core.Behaviour;
-import hmi.elckerlyc.BMLBlockPeg;
 import hmi.elckerlyc.BehaviourPlanningException;
 import hmi.elckerlyc.feedback.FeedbackManager;
+import hmi.elckerlyc.pegboard.BMLBlockPeg;
 import hmi.elckerlyc.pegboard.OffsetPeg;
 import hmi.elckerlyc.pegboard.PegBoard;
 import hmi.elckerlyc.pegboard.TimePeg;

@@ -11,7 +11,7 @@ import asap.bmlb.*;
 
 import hmi.bml.core.BehaviourBlock;
 import hmi.bml.ext.bmlt.BMLTBMLBehaviorAttributes;
-import hmi.elckerlyc.BMLBlockPeg;
+import hmi.elckerlyc.pegboard.BMLBlockPeg;
 import hmi.elckerlyc.planunit.TimedPlanUnitState;
 import hmi.elckerlyc.scheduler.BMLScheduler;
 import hmi.elckerlyc.scheduler.SchedulingHandler;

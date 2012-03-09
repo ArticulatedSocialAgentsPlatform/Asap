@@ -1,7 +1,7 @@
 package asap.animationengine.restpose;
 
 import hmi.animation.VJoint;
-import hmi.elckerlyc.BMLBlockPeg;
+import hmi.elckerlyc.pegboard.BMLBlockPeg;
 
 import java.util.Set;
 

@@ -20,12 +20,12 @@ package asap.animationengine.keyframe;
 
 import hmi.animation.*;
 import hmi.elckerlyc.feedback.FeedbackManager;
+import hmi.elckerlyc.pegboard.BMLBlockPeg;
 import hmi.elckerlyc.pegboard.PegBoard;
 import hmi.elckerlyc.planunit.KeyPosition;
 import hmi.elckerlyc.planunit.KeyPositionManager;
 import hmi.elckerlyc.planunit.KeyPositionManagerImpl;
 import hmi.elckerlyc.planunit.ParameterNotFoundException;
-import hmi.elckerlyc.BMLBlockPeg;
 
 import java.util.*;
 import java.util.Map.Entry;

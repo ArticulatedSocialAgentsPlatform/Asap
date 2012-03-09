@@ -17,12 +17,12 @@ import asap.animationengine.motionunit.MUPlayException;
 import asap.animationengine.motionunit.MotionUnit;
 import asap.animationengine.motionunit.TimedMotionUnit;
 
+import hmi.elckerlyc.pegboard.BMLBlockPeg;
 import hmi.elckerlyc.pegboard.PegBoard;
 import hmi.elckerlyc.pegboard.TimePeg;
 import hmi.elckerlyc.planunit.KeyPosition;
 import hmi.bml.BMLGestureSync;
 import hmi.bml.feedback.BMLSyncPointProgressFeedback;
-import hmi.elckerlyc.BMLBlockPeg;
 import hmi.elckerlyc.SyncPointNotFoundException;
 import hmi.elckerlyc.feedback.FeedbackManager;
 import hmi.elckerlyc.feedback.FeedbackManagerImpl;

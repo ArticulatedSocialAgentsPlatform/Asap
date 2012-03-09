@@ -5,8 +5,8 @@ import org.slf4j.LoggerFactory;
 
 import asap.animationengine.controller.ControllerMU;
 
-import hmi.elckerlyc.BMLBlockPeg;
 import hmi.elckerlyc.feedback.FeedbackManager;
+import hmi.elckerlyc.pegboard.BMLBlockPeg;
 import hmi.elckerlyc.pegboard.PegBoard;
 import hmi.elckerlyc.planunit.TimedPlanUnitPlayException;
 

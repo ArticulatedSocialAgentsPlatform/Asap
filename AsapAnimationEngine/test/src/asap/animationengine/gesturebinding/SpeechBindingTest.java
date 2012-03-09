@@ -2,8 +2,8 @@ package asap.animationengine.gesturebinding;
 
 import static org.junit.Assert.*;
 import hmi.animation.VJoint;
-import hmi.elckerlyc.BMLBlockPeg;
 import hmi.elckerlyc.feedback.FeedbackManager;
+import hmi.elckerlyc.pegboard.BMLBlockPeg;
 import hmi.elckerlyc.pegboard.PegBoard;
 import hmi.elckerlyc.planunit.ParameterException;
 import hmi.testutil.animation.HanimBody;

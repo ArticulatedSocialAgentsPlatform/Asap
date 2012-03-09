@@ -9,8 +9,8 @@ import javax.swing.JFrame;
 
 import hmi.animation.VJoint;
 import hmi.audioenvironment.AudioEnvironment;
-import hmi.elckerlyc.BMLBlockPeg;
 import hmi.elckerlyc.anticipator.Anticipator;
+import hmi.elckerlyc.pegboard.BMLBlockPeg;
 import hmi.elckerlyc.pegboard.TimePeg;
 import hmi.elckerlyc.world.WorldObject;
 import hmi.mixedanimationenvironment.MixedAnimationEnvironment;

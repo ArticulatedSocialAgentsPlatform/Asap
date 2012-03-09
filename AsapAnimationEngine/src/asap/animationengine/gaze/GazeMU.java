@@ -28,8 +28,8 @@ import asap.animationengine.motionunit.*;
 
 import hmi.animation.*;
 import hmi.bml.core.OffsetDirection;
-import hmi.elckerlyc.BMLBlockPeg;
 import hmi.elckerlyc.feedback.FeedbackManager;
+import hmi.elckerlyc.pegboard.BMLBlockPeg;
 import hmi.elckerlyc.pegboard.PegBoard;
 import hmi.elckerlyc.pegboard.TimePeg;
 import hmi.elckerlyc.planunit.InvalidParameterException;
