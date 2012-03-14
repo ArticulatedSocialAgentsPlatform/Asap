@@ -23,6 +23,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import asap.animationengine.AnimationPlayer;
+import asap.animationengine.MovementTimingUtils;
 import asap.animationengine.motionunit.MUPlayException;
 import asap.animationengine.motionunit.MotionUnit;
 import asap.animationengine.transitions.SlerpTransitionToPoseMU;
@@ -93,16 +94,27 @@ public class ProcAnimationGestureMU implements GestureUnit
         return aniPlayer.getRestPose().getTransitionToRestDuration(vCopy, VJointUtils.transformToSidSet(gestureUnit.getControlledJoints()));
     }
 
-    // TODO: dynamic determination from current hand position
     public double getPreparationDuration()
     {
         VJoint vCopy = vStart.copyTree("copy-");
         ProcAnimationMU copyProc = gestureUnit.copy(vCopy);
         copyProc.play(getKeyPosition(BMLGestureSync.STROKE_START.getId()).time + 0.01);
+        double duration = MovementTimingUtils.getFittsMaximumLimbMovementDuration(aniPlayer.getVCurr(), vCopy, VJointUtils.transformToSidSet(gestureUnit.getControlledJoints()));
+        if (duration>0)return duration;
+        return 1;
+        
+        //return aniPlayer.getRestPose().getTransitionToRestDuration(vCopy, VJointUtils.transformToSidSet(gestureUnit.getControlledJoints()));
+    }
 
+    public double getPreparationFromRestDuration()
+    {
+        VJoint vCopy = vStart.copyTree("copy-");
+        ProcAnimationMU copyProc = gestureUnit.copy(vCopy);
+        copyProc.play(getKeyPosition(BMLGestureSync.STROKE_START.getId()).time + 0.01);
         return aniPlayer.getRestPose().getTransitionToRestDuration(vCopy, VJointUtils.transformToSidSet(gestureUnit.getControlledJoints()));
     }
 
+    
     public int getPriority()
     {
         return priority;

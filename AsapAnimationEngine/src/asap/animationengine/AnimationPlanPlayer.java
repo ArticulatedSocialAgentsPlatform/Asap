@@ -10,6 +10,7 @@ import lombok.extern.slf4j.Slf4j;
 
 import com.google.common.collect.Sets;
 
+import asap.animationengine.motionunit.TMUPlayException;
 import asap.animationengine.motionunit.TimedMotionUnit;
 import asap.animationengine.restpose.RestPose;
 import asap.planunit.PlanUnitPriorityComparator;
@@ -53,6 +54,30 @@ public class AnimationPlanPlayer implements PlanPlayer
         currentRestPose = defaultRestPose;
     }
 
+    private void updateTiming(double t)
+    {
+        List<TimedMotionUnit> tuUpdateFailed = new ArrayList<TimedMotionUnit>();        
+        // check which units should be playing
+        for (TimedMotionUnit tmu : planManager.getPlanUnits())
+        {
+            //if(tmu.isPlaying()||tmu.isLurking())
+            if(tmu.isLurking())
+            {
+                try
+                {
+                    tmu.updateTiming(t);
+                }
+                catch (TMUPlayException e)
+                {
+                    tuUpdateFailed.add(tmu);
+                    log.warn("updateTiming failure, TimedMotionUnit dropped",e);
+                    continue;
+                }
+            }            
+        }
+        planManager.removePlanUnits(tuUpdateFailed, t);
+    }
+    
     @Override
     public synchronized void play(double t)
     {
@@ -65,6 +90,9 @@ public class AnimationPlanPlayer implements PlanPlayer
         tmuRemove.clear();
         log.debug("plan Units: {}",planManager.getPlanUnits());
         
+        //updateTiming(t);
+        
+        
         // check which units should be playing
         for (TimedMotionUnit tmu : planManager.getPlanUnits())
         {
@@ -73,6 +101,8 @@ public class AnimationPlanPlayer implements PlanPlayer
                 playingPlanUnits.add(tmu);
             }
         }
+        
+        
         log.debug("playing plan Units: {}",playingPlanUnits);
         
         // sort by priority

@@ -53,6 +53,10 @@ public class ProcAnimationGestureTMUTest extends AbstractTimedPlanUnitTest
     @Override
     protected ProcAnimationGestureTMU setupPlanUnit(FeedbackManager bfm, BMLBlockPeg bbPeg, String id, String bmlId, double startTime)
     {
+        if(pegBoard.getBMLBlockPeg(bmlId)==null)
+        {
+            pegBoard.addBMLBlockPeg(new BMLBlockPeg(bmlId,0));
+        }
         VJoint vCurr = HanimBody.getLOA1HanimBody();
         VJoint vNext = HanimBody.getLOA1HanimBody();
         ProcAnimationGestureMU mu = new ProcAnimationGestureMU();
@@ -80,6 +84,7 @@ public class ProcAnimationGestureTMUTest extends AbstractTimedPlanUnitTest
         ProcAnimationGestureTMU tmu = new ProcAnimationGestureTMU(bfm, bbPeg, bmlId, id, mu, pegBoard);
         tmu.resolveDefaultBMLKeyPositions();
         tmu.setTimePeg("start", TimePegUtil.createTimePeg(bbPeg, startTime));
+        
         return tmu;
     }
 

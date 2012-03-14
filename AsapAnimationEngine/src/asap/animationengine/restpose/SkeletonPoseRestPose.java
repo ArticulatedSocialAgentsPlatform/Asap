@@ -1,6 +1,5 @@
 package asap.animationengine.restpose;
 
-import hmi.animation.Hanim;
 import hmi.animation.SkeletonPose;
 import hmi.animation.VJoint;
 import hmi.animation.VObjectTransformCopier;
@@ -12,14 +11,13 @@ import hmi.elckerlyc.pegboard.TimePeg;
 import hmi.elckerlyc.planunit.KeyPosition;
 import hmi.elckerlyc.planunit.TimedPlanUnitState;
 import hmi.math.Quat4f;
-import hmi.math.Vec3f;
-import hmi.neurophysics.FittsLaw;
 
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Set;
 
 import asap.animationengine.AnimationPlayer;
+import asap.animationengine.MovementTimingUtils;
 import asap.animationengine.motionunit.TimedMotionUnit;
 import asap.animationengine.transitions.SlerpTransitionToPoseMU;
 import asap.animationengine.transitions.TransitionMU;
@@ -131,41 +129,12 @@ public class SkeletonPoseRestPose implements RestPose
         VObjectTransformCopier.newInstanceFromVJointTree(poseTree, player.getVPrev(), "T1R").copyConfig();
     }
 
-    private double getFittsDuration(String id, String rootId, VJoint vCurrent)
-    {
-        VJoint currentJoint = vCurrent.getPartBySid(id);
-        VJoint currentRootJoint = vCurrent.getPartBySid(rootId);
-        VJoint poseJoint = poseTree.getPartBySid(id);
-        VJoint poseRootJoint = poseTree.getPartBySid(rootId);
-        if (currentJoint != null && poseJoint != null && currentRootJoint != null && poseRootJoint != null)
-        {
-            float[] relPos = Vec3f.getVec3f();
-            float[] restPos = Vec3f.getVec3f();
-            currentJoint.getPathTranslation(currentRootJoint, relPos);
-            poseJoint.getPathTranslation(poseRootJoint, restPos);
-            Vec3f.sub(relPos, restPos);
-            return FittsLaw.getHandTrajectoryDuration(Vec3f.length(relPos));
-        }
-        return -1;
-    }
-
     @Override
     public double getTransitionToRestDuration(VJoint vCurrent, Set<String> joints)
     {
-        double duration = 1;
-        double lastSetDur = -1;
-        if (joints.contains(Hanim.r_wrist))
-        {
-            double d = getFittsDuration(Hanim.r_wrist, Hanim.r_shoulder, vCurrent);
-            if (d > 0) lastSetDur = d;
-        }
-        if (joints.contains(Hanim.l_wrist))
-        {
-            double d = getFittsDuration(Hanim.l_wrist, Hanim.l_shoulder, vCurrent);
-            if (d > 0 && d > lastSetDur) lastSetDur = d;
-        }        
-        if(lastSetDur>0)return lastSetDur;
-        return duration;
+        double duration = MovementTimingUtils.getFittsMaximumLimbMovementDuration(vCurrent,poseTree,joints);
+        if(duration>0)return duration;
+        return 1;        
     }
 
 }

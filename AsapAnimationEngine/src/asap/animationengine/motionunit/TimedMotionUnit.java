@@ -117,7 +117,7 @@ public class TimedMotionUnit extends TimedAbstractPlanUnit
         }
     }
 
-    public void updateTiming(double time)
+    public void updateTiming(double time) throws TMUPlayException
     {
         
     }

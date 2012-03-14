@@ -112,7 +112,8 @@ public class ProcAnimationGestureMUMockupProcTest
     @Test
     public void testCreateTMU() throws TimedPlanUnitPlayException
     {
-        TimedMotionUnit tmu = pag.createTMU(mockFeedbackManager, BMLBlockPeg.GLOBALPEG, "bml1", "g1",pegBoard);
+        pegBoard.addBMLBlockPeg(new BMLBlockPeg("bml1",0));
+        TimedMotionUnit tmu = pag.createTMU(mockFeedbackManager, BMLBlockPeg.GLOBALPEG, "bml1", "g1",pegBoard);        
         tmu.resolveDefaultBMLKeyPositions();
         tmu.setTimePeg(BMLGestureSync.START.getId(), createTimePeg(0));
         tmu.setTimePeg(BMLGestureSync.END.getId(), createTimePeg(2));
