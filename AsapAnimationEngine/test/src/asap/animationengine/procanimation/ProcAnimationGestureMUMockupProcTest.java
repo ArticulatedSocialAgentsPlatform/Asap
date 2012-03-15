@@ -119,7 +119,7 @@ public class ProcAnimationGestureMUMockupProcTest
         tmu.setTimePeg(BMLGestureSync.END.getId(), createTimePeg(2));
         tmu.setState(TimedPlanUnitState.LURKING);
         tmu.start(0);
-        tmu.play(1);
+        tmu.play(1.1);
         verify(mockProcAnimation,times(1)).play(anyDouble());
     }
     

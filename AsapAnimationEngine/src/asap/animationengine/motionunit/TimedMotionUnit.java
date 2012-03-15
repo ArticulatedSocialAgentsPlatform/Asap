@@ -18,8 +18,9 @@
  ******************************************************************************/
 package asap.animationengine.motionunit;
 
+import hmi.bml.core.Behaviour;
+import hmi.bml.feedback.BMLSyncPointProgressFeedback;
 import hmi.elckerlyc.BehaviourPlanningException;
-
 import hmi.elckerlyc.feedback.FeedbackManager;
 import hmi.elckerlyc.feedback.NullFeedbackManager;
 import hmi.elckerlyc.pegboard.BMLBlockPeg;
@@ -29,30 +30,30 @@ import hmi.elckerlyc.planunit.ParameterException;
 import hmi.elckerlyc.planunit.ParameterNotFoundException;
 import hmi.elckerlyc.planunit.PlanUnitFloatParameterNotFoundException;
 import hmi.elckerlyc.planunit.PlanUnitParameterNotFoundException;
-import hmi.elckerlyc.planunit.TimedAbstractPlanUnit;
 import hmi.elckerlyc.planunit.PlanUnitTimeManager;
+import hmi.elckerlyc.planunit.TimedAbstractPlanUnit;
+import hmi.elckerlyc.scheduler.LinearStretchResolver;
+import hmi.elckerlyc.scheduler.TimePegAndConstraint;
+import hmi.elckerlyc.scheduler.UniModalResolver;
 
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Set;
-import lombok.Delegate;
+import java.util.concurrent.CopyOnWriteArrayList;
 
-import hmi.bml.feedback.BMLSyncPointProgressFeedback;
-import hmi.elckerlyc.scheduler.TimePegAndConstraint;
-import hmi.elckerlyc.scheduler.UniModalResolver;
-import hmi.elckerlyc.scheduler.LinearStretchResolver;
-import hmi.bml.core.Behaviour;
+import lombok.Delegate;
+import lombok.extern.slf4j.Slf4j;
 /**
  * When you do not set an end time peg, 'UNKNOWN' is assumed. This leads to the TimedMotionUnit being timed as
  * starttime..starttime+mu.getpreferredduration() When you do not set a start time peg, the animation cannot be played
  * 
  * @author welberge
  */
+@Slf4j
 public class TimedMotionUnit extends TimedAbstractPlanUnit
 {
-    // private Logger logger = LoggerFactory.getLogger(TimedMotionUnit.class.getName());
     private final MotionUnit mu;
-    protected ArrayList<KeyPosition> progressHandled = new ArrayList<KeyPosition>();
+    protected List<KeyPosition> progressHandled = new CopyOnWriteArrayList<KeyPosition>();
     private final UniModalResolver resolver = new LinearStretchResolver();
     protected PegBoard pegBoard;
     
@@ -100,20 +101,28 @@ public class TimedMotionUnit extends TimedAbstractPlanUnit
      */
     private void sendProgress(double t, double time)
     {
-        for (KeyPosition k : mu.getKeyPositions())
+    	List<BMLSyncPointProgressFeedback> fbToSend = new ArrayList<BMLSyncPointProgressFeedback>();    	
+    	synchronized(progressHandled)
         {
-            if (k.time <= t)
-            {
-                if (!progressHandled.contains(k))
-                {
-                    String bmlId = getBMLId();
-                    String behaviorId = getId();
-                    String syncId = k.id;
-                    double bmlBlockTime = time - bmlBlockPeg.getValue();             
-                    feedback(new BMLSyncPointProgressFeedback(bmlId, behaviorId, syncId, bmlBlockTime, time));
-                    progressHandled.add(k);
-                }
-            }
+	    	for (KeyPosition k : mu.getKeyPositions())
+	        {
+	            if (k.time <= t)
+	            {
+	                if (!progressHandled.contains(k))
+	                {
+	                    String bmlId = getBMLId();
+	                    String behaviorId = getId();
+	                    String syncId = k.id;
+	                    double bmlBlockTime = time - bmlBlockPeg.getValue();             
+	                    progressHandled.add(k);
+	                    fbToSend.add(new BMLSyncPointProgressFeedback(bmlId, behaviorId, syncId, bmlBlockTime, time));
+	                }
+	            }
+	        }
+        }
+    	for(BMLSyncPointProgressFeedback fb:fbToSend)
+        {
+    		feedback(fb);        
         }
     }
 
@@ -128,7 +137,7 @@ public class TimedMotionUnit extends TimedAbstractPlanUnit
         double t = puTimeManager.getRelativeTime(time);        
         try
         {
-            // logger.debug("Timed Motion Unit play {}",time);
+            log.warn("Timed Motion Unit play {}",time);
             mu.play(t);
         }
         catch (MUPlayException ex)

@@ -50,6 +50,13 @@
    <target name="checkstyleAll"  description="Runs checkstyle on all HMI projects">     
         <delegate target="checkstylexml" list="rebuildList"/>
    </target>
+   
+   <target name="eclipseAll"  description="Create eclipse projects for all Asap projects">   
+		<delegate target="eclipseproject" list="rebuildList"/>
+	</target>
+	<target name="eclipsesourceAll"  description="Create eclipse projects for all HMI projects">   
+		<delegate target="eclipsesourceproject" list="rebuildList" verbose="true"/>
+	</target>
 
    <target name="docall" description="Generate integrated Javadoc for all HMI/* projects">     
         <javadoc source="1.6" 
