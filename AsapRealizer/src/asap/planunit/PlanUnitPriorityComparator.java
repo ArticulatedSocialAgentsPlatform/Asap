@@ -3,15 +3,21 @@ package asap.planunit;
 import hmi.elckerlyc.pegboard.TimePeg;
 import hmi.elckerlyc.planunit.TimedPlanUnit;
 
+import java.io.Serializable;
 import java.util.Comparator;
 
 /**
  * Compares two TimedPlanUnits by priority, then by start time 
  * @author hvanwelbergen
  */
-public class PlanUnitPriorityComparator implements Comparator<TimedPlanUnit>
+public class PlanUnitPriorityComparator implements Comparator<TimedPlanUnit>, Serializable
 {
-    @Override
+    /**
+	 * 
+	 */
+	private static final long serialVersionUID = 1L;
+
+	@Override
     public int compare(TimedPlanUnit pu1, TimedPlanUnit pu2)
     {
         if (pu1.getPriority()<pu2.getPriority()) return 1;

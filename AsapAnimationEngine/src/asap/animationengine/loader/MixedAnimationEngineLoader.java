@@ -158,7 +158,7 @@ public class MixedAnimationEngineLoader implements EngineLoader
                 restpose.setToTarget();
                 mse.getNextVJoint().calculateMatrices();
             }
-            catch (Exception e)
+            catch (RuntimeException e)
             {
                 throw tokenizer.getXMLScanException("Cannot load start pose ");
             }

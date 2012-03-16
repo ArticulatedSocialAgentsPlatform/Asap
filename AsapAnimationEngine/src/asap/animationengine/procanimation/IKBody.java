@@ -193,7 +193,7 @@ public class IKBody
     {
         if (l != null)
         {
-            leftFoot = l;
+            Vec3f.set(leftFoot,l);
         }
         setFoot(l,keepFlat, lhip, lknee,lankle,solverLFeet);
     }
@@ -212,7 +212,7 @@ public class IKBody
     {
         if (r != null)
         {
-            rightFoot = r;
+            Vec3f.set(rightFoot,r);
         }
         setFoot(r,keepFlat, rhip, rknee,rankle,solverRFeet);
     }

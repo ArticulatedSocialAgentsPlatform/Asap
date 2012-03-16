@@ -150,7 +150,7 @@ class MotionUnitSpec extends XMLStructureAdapter implements ParameterDefaultsHan
             }
         }
       }
-      catch (Exception ex)
+      catch (RuntimeException ex)
       {
         logger.warn("Cannot read motion unit spec, dropping element from gesture binding. Tag: {} ", tag);
         motionUnit = null;

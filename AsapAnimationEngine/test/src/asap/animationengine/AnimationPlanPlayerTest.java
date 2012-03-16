@@ -139,7 +139,7 @@ public class AnimationPlanPlayerTest
         assertTrue(fbList.get(0).behaviorId.equals("behaviour1"));
         assertTrue(fbList.get(0).bmlId.equals("bml1"));
         assertTrue(fbList.get(0).syncId.equals("start"));
-        assertTrue(fbList.get(0).timeStamp == 0.99);
+        assertEquals(0.99, fbList.get(0).timeStamp,0.001);
         app.play(2);
         assertTrue(tmu1.getState() == TimedPlanUnitState.DONE);
         assertTrue(fbList.size() == 2);
@@ -147,7 +147,7 @@ public class AnimationPlanPlayerTest
         assertTrue(fbList.get(0).behaviorId.equals("behaviour1"));
         assertTrue(fbList.get(0).bmlId.equals("bml1"));
         assertTrue(fbList.get(0).syncId.equals("start"));
-        assertTrue(fbList.get(0).timeStamp == 0.99);
+        assertEquals(0.99, fbList.get(0).timeStamp, 0.001);
         assertTrue(fbList.get(1).behaviorId.equals("behaviour1"));
         assertTrue(fbList.get(1).bmlId.equals("bml1"));
         assertTrue(fbList.get(1).syncId.equals("end"));
@@ -201,11 +201,11 @@ public class AnimationPlanPlayerTest
         assertTrue(fbList.get(1).behaviorId.equals("behaviour1"));
         assertTrue(fbList.get(1).bmlId.equals("bml1"));
         assertTrue(fbList.get(1).syncId.equals("end"));
-        assertTrue(fbList.get(1).timeStamp == 2.1);
+        assertEquals(2.1, fbList.get(1).timeStamp,0.001);        
         assertTrue(fbList.get(2).behaviorId.equals("behaviour2"));
         assertTrue(fbList.get(2).bmlId.equals("bml1"));
         assertTrue(fbList.get(2).syncId.equals("start"));
-        assertTrue(fbList.get(2).timeStamp == 2.1);
+        assertEquals(2.1,fbList.get(2).timeStamp, 0.001);
 
         verify(muMock1, atLeastOnce()).getKeyPosition("start");
         verify(muMock1, times(1)).play(0);
@@ -238,7 +238,7 @@ public class AnimationPlanPlayerTest
         assertTrue(fbList.get(0).behaviorId.equals("behaviour1"));
         assertTrue(fbList.get(0).bmlId.equals("bml1"));
         assertTrue(fbList.get(0).syncId.equals("start"));
-        assertTrue(fbList.get(0).timeStamp == 0.5);
+        assertEquals(0.5, fbList.get(0).timeStamp,0.001);
 
         app.play(0.6);
         assertTrue(exList.size() == 0);
@@ -275,7 +275,7 @@ public class AnimationPlanPlayerTest
         assertTrue(fbList.get(0).behaviorId.equals("behaviour1"));
         assertTrue(fbList.get(0).bmlId.equals("bml1"));
         assertTrue(fbList.get(0).syncId.equals("start"));
-        assertTrue(fbList.get(0).timeStamp == 0.5);
+        assertEquals(0.5, fbList.get(0).timeStamp,0.001);
         verify(muMock1, atLeastOnce()).getKeyPosition("start");
         verify(muMock1, atLeastOnce()).getKeyPosition("end");
         verify(muMock1, times(1)).play(eq(0.5, 0.01));

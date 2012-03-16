@@ -6,6 +6,7 @@ import java.util.List;
 
 import hmi.animation.Hanim;
 import hmi.animation.VJoint;
+import hmi.math.Vec3f;
 import hmi.physics.PhysicalHumanoid;
 import hmi.physics.PhysicalSegment;
 import hmi.physics.assembler.IDBranchAssembler;
@@ -20,12 +21,12 @@ import hmi.physics.mixed.MixedSystem;
 public class MixedSystemGenerator
 {
     private final PhysicalHumanoid fullBodyPh;
-    private final float gravity[];    
+    private final float gravity[]=new float[3];    
     
     public MixedSystemGenerator(PhysicalHumanoid fbPh, float g[])
     {
         fullBodyPh = fbPh;
-        gravity = g;        
+        Vec3f.set(gravity,g);        
     }
     
     private void addPhysicalSegments(String jointName, PhysicalHumanoid pHuman, VJoint human,PhysicalHumanoidAssembler pha)

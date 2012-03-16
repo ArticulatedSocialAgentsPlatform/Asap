@@ -81,6 +81,6 @@ public class HermiteSplineJEP extends PostfixMathCommand
         spline.setM0(m0.floatValue());
         spline.setMn(mn.floatValue());
 
-        inStack.push(new Double(spline.eval(t.floatValue())));
+        inStack.push(Double.valueOf(spline.eval(t.floatValue())));
     }
 }

@@ -51,6 +51,9 @@ private final SchedulingStrategy strategy;
         case REPLACE:
             scheduler.reset();
             break;
+        case UNKNOWN:
+        	logger.info("Unknown scheduling composition, defaulting to merge");
+        	break;        
         case MERGE:
             break;
         case APPEND:
@@ -62,7 +65,7 @@ private final SchedulingStrategy strategy;
         case APPEND_AFTER:
             appendAfter.addAll(bmltAttr.getAppendList());
             appendAfter.retainAll(scheduler.getBMLBlocks());
-            break;
+            break;        	
         }
         
         double predictedStart = Math.max(scheduler.predictEndTime(appendAfter),scheduler.predictSubsidingTime(chunkAfter));        
@@ -92,6 +95,7 @@ private final SchedulingStrategy strategy;
             switch (BMLBComposition.parse(bb.getSchedulingMechanism().getNameStart()))
             {
             case REPLACE:
+            case UNKNOWN:            
             case MERGE:
                 scheduler.startBlock(bb.id);
                 break;

@@ -78,7 +78,7 @@ public class VisimeSpec extends XMLStructureAdapter implements ParameterDefaults
             }
         }
       }
-      catch (Exception ex)
+      catch (RuntimeException ex)
       {
         logger.warn("Cannot read motion unit spec, dropping element from gesture binding. Tag: {} ", tag);
         motionUnit = null;

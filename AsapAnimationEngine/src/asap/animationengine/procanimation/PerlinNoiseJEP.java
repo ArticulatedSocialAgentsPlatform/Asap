@@ -67,7 +67,7 @@ public class PerlinNoiseJEP extends PostfixMathCommand
             float r = pnoise.noise(((Double) param1).floatValue(), p2
                     .intValue());
             // push the result on the inStack
-            inStack.push(new Double(r));
+            inStack.push(Double.valueOf(r));
         } else
         {
             throw new ParseException("Invalid parameter type");

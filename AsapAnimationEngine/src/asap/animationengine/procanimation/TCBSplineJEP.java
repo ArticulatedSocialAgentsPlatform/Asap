@@ -114,7 +114,7 @@ public class TCBSplineJEP extends PostfixMathCommand
         spline.setM0(m0);
         spline.setMn(mn);
 
-        inStack.push(new Double(spline.eval(t.floatValue())));
+        inStack.push(Double.valueOf(spline.eval(t.floatValue())));
 
     }
 }

@@ -19,6 +19,7 @@
 package asap.animationengine.transitions;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Collection;
 import java.util.Set;
 
@@ -66,7 +67,14 @@ public class SlerpTransitionToPoseMU extends TransitionMU
         super();
         joints = j;
         startJoints = startPoseJoints;
-        endPose = ep;
+        if(ep!=null)
+        {
+        	endPose = Arrays.copyOf(ep, ep.length);
+        }
+        else
+        {
+        	endPose = null;
+        }
         qResult = new float[joints.size() * 4];
     }
 
@@ -77,11 +85,7 @@ public class SlerpTransitionToPoseMU extends TransitionMU
         float[] ep = null;
         if (endPose != null)
         {
-            ep = new float[endPose.length];
-            for (int i = 0; i < endPose.length; i++)
-            {
-                ep[i] = endPose[i];
-            }
+            ep = Arrays.copyOf(endPose, endPose.length);        	
         }
 
         if (startJoints == null)
@@ -125,7 +129,7 @@ public class SlerpTransitionToPoseMU extends TransitionMU
      */
     public void setStartPose(float sp[])
     {
-        startPose = sp;
+        startPose = Arrays.copyOf(sp, sp.length);    	
     }
 
     /**
@@ -182,7 +186,8 @@ public class SlerpTransitionToPoseMU extends TransitionMU
             @Override
             public String apply(VJoint joint)
             {
-                return joint.getSid();
+                if(joint==null)return "";
+            	return joint.getSid();
             }
         });
         return ImmutableSet.copyOf(j);

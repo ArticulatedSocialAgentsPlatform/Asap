@@ -98,7 +98,7 @@ public class GestureBindingTest
         List<TimedMotionUnit> m = gestureBinding.getMotionUnit(BMLBlockPeg.GLOBALPEG, b, mockAniPlayer, pegBoard);
         assertEquals(1, m.size());
         assertTrue(Float.parseFloat(m.get(0).getMotionUnit().getParameterValue("r")) == 2.0);
-        assertTrue(Float.parseFloat(m.get(0).getMotionUnit().getParameterValue("a")) == 0.5);// BML default
+        assertEquals(0.5,Float.parseFloat(m.get(0).getMotionUnit().getParameterValue("a")),0.001);// BML default
         assertEquals(m.get(0).getBMLId(), "bml1");
         assertEquals(m.get(0).getId(), "head1");
     }

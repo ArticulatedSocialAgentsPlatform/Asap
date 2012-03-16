@@ -149,7 +149,7 @@ public class CompoundController extends XMLStructureAdapter implements PhysicalC
                 idSet.add(newId);
             }
         }
-        jointIDs = idSet.toArray(new String[0]);
+        jointIDs = idSet.toArray(new String[idSet.size()]);
 
         List<String> desIdList = Arrays.asList(desJointIDs);
         HashSet<String> desIdSet = new HashSet<String>();
@@ -161,7 +161,7 @@ public class CompoundController extends XMLStructureAdapter implements PhysicalC
                 desIdSet.add(newId);
             }
         }
-        desJointIDs = desIdSet.toArray(new String[0]);
+        desJointIDs = desIdSet.toArray(new String[desIdSet.size()]);
     }
 
     public void addDesiredController(PhysicalController newController, String id)
@@ -178,7 +178,7 @@ public class CompoundController extends XMLStructureAdapter implements PhysicalC
                 idSet.add(newId);
             }
         }
-        desJointIDs = idSet.toArray(new String[0]);
+        desJointIDs = idSet.toArray(new String[idSet.size()]);
 
         List<String> desIdList = Arrays.asList(desJointIDs);
         idSet.addAll(desIdList);
@@ -189,7 +189,7 @@ public class CompoundController extends XMLStructureAdapter implements PhysicalC
                 idSet.add(newId);
             }
         }
-        desJointIDs = idSet.toArray(new String[0]);
+        desJointIDs = idSet.toArray(new String[idSet.size()]);
     }
 
     @Override

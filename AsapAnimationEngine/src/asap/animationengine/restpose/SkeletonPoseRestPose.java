@@ -60,7 +60,7 @@ public class SkeletonPoseRestPose implements RestPose
         poseTree = player.getVCurr().copyTree("rest-");
         if (pose != null)
         {
-            pose.setTargets(poseTree.getParts().toArray(new VJoint[0]));
+            pose.setTargets(poseTree.getParts().toArray(new VJoint[poseTree.getParts().size()]));
             pose.setToTarget();
         }
         else
