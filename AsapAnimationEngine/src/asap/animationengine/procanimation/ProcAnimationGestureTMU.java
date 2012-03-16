@@ -185,16 +185,22 @@ public class ProcAnimationGestureTMU extends TimedMotionUnit
         double offset = 0;
         if (tpFirst == -1)
         {
-            // all syncs unknown, start at local time 0
+            double localTime = 0;
+            BMLBlockPeg currentBlockPeg = pegBoard.getBMLBlockPeg(getBMLId());
+            if(time>currentBlockPeg.getValue())
+            {
+            	localTime = time-currentBlockPeg.getValue();
+            }
+        	// all syncs unknown, start at local time 0
             if (startPeg != null)
             {
                 tpRef = startPeg;
-                tpRef.setValue(0, pegBoard.getBMLBlockPeg(getBMLId()));
+                tpRef.setValue(localTime, currentBlockPeg);
             }
             else
             {
-                tpRef = new TimePeg(pegBoard.getBMLBlockPeg(getBMLId()));
-                tpRef.setLocalValue(0);
+                tpRef = new TimePeg(currentBlockPeg);
+                tpRef.setLocalValue(localTime);
                 startPeg = tpRef;
                 setTimePeg("start", startPeg);
             }
