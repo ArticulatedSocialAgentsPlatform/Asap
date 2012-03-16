@@ -2,7 +2,29 @@ package asap.animationengine.motionunit;
 
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.contains;
-import static org.junit.Assert.*;
+import static org.hamcrest.number.IsCloseTo.closeTo;
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertTrue;
+import static org.mockito.Matchers.anyDouble;
+import static org.mockito.Matchers.doubleThat;
+import static org.mockito.Mockito.spy;
+import static org.mockito.Mockito.times;
+import static org.mockito.Mockito.verify;
+import hmi.bml.BMLGestureSync;
+import hmi.bml.feedback.BMLSyncPointProgressFeedback;
+import hmi.bml.feedback.ListFeedbackListener;
+import hmi.elckerlyc.SyncPointNotFoundException;
+import hmi.elckerlyc.feedback.FeedbackManager;
+import hmi.elckerlyc.pegboard.BMLBlockPeg;
+import hmi.elckerlyc.pegboard.PegBoard;
+import hmi.elckerlyc.pegboard.TimePeg;
+import hmi.elckerlyc.planunit.AbstractTimedPlanUnitTest;
+import hmi.elckerlyc.planunit.KeyPosition;
+import hmi.elckerlyc.planunit.TimedPlanUnit;
+import hmi.elckerlyc.planunit.TimedPlanUnitPlayException;
+import hmi.elckerlyc.planunit.TimedPlanUnitState;
+import hmi.elckerlyc.scheduler.BMLBlockManager;
+import hmi.elckerlyc.util.TimePegUtil;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -13,29 +35,6 @@ import org.junit.runner.RunWith;
 import org.powermock.core.classloader.annotations.PrepareForTest;
 import org.powermock.modules.junit4.PowerMockRunner;
 
-import asap.animationengine.motionunit.MUPlayException;
-import asap.animationengine.motionunit.MotionUnit;
-import asap.animationengine.motionunit.TimedMotionUnit;
-
-import hmi.elckerlyc.pegboard.BMLBlockPeg;
-import hmi.elckerlyc.pegboard.PegBoard;
-import hmi.elckerlyc.pegboard.TimePeg;
-import hmi.elckerlyc.planunit.KeyPosition;
-import hmi.bml.BMLGestureSync;
-import hmi.bml.feedback.BMLSyncPointProgressFeedback;
-import hmi.elckerlyc.SyncPointNotFoundException;
-import hmi.elckerlyc.feedback.FeedbackManager;
-import hmi.elckerlyc.feedback.FeedbackManagerImpl;
-import hmi.elckerlyc.planunit.AbstractTimedPlanUnitTest;
-import hmi.elckerlyc.planunit.TimedPlanUnit;
-import hmi.elckerlyc.planunit.TimedPlanUnitPlayException;
-import hmi.elckerlyc.planunit.TimedPlanUnitState;
-import hmi.elckerlyc.scheduler.BMLBlockManager;
-import hmi.elckerlyc.util.TimePegUtil;
-import hmi.bml.feedback.ListFeedbackListener;
-import static org.mockito.Mockito.*;
-import static org.hamcrest.number.IsCloseTo.closeTo;
-
 /**
  * Testcases for the TimedMotionUnit
  * @author welberge
@@ -45,9 +44,7 @@ import static org.hamcrest.number.IsCloseTo.closeTo;
 public class TimedMotionUnitTest extends AbstractTimedPlanUnitTest
 {
     private MotionUnit muMock;
-    private BMLBlockManager mockBmlBlockManager = mock(BMLBlockManager.class);
-    private FeedbackManager fbManager = new FeedbackManagerImpl(mockBmlBlockManager,"character1");
-
+    
     private List<BMLSyncPointProgressFeedback> fbList;
     private ListFeedbackListener fbl;
     private TimedMotionUnit tmu;
@@ -76,9 +73,7 @@ public class TimedMotionUnitTest extends AbstractTimedPlanUnitTest
     public void testGetAvailableSyncs()
     {
         tmu.resolveDefaultBMLKeyPositions();
-        assertThat(tmu.getAvailableSyncs(), contains("start", "ready", "strokeStart", "stroke", "strokeEnd", "relax", "end"));
-        //FIXME
-        //assertThat(tmu.getAvailableSyncs(), contains("start", "end"));
+        assertThat(tmu.getAvailableSyncs(), contains("start", "ready", "strokeStart", "stroke", "strokeEnd", "relax", "end"));        
     }
 
     @Test

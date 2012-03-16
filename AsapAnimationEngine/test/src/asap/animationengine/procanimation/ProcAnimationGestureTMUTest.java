@@ -15,7 +15,6 @@ import hmi.elckerlyc.feedback.FeedbackManager;
 import hmi.elckerlyc.pegboard.BMLBlockPeg;
 import hmi.elckerlyc.pegboard.PegBoard;
 import hmi.elckerlyc.pegboard.TimePeg;
-import hmi.elckerlyc.planunit.AbstractTimedPlanUnitTest;
 import hmi.elckerlyc.planunit.KeyPosition;
 import hmi.elckerlyc.scheduler.BMLBlockManager;
 import hmi.elckerlyc.scheduler.TimePegAndConstraint;
@@ -34,6 +33,7 @@ import org.powermock.modules.junit4.PowerMockRunner;
 
 import asap.animationengine.AnimationPlayer;
 import asap.animationengine.motionunit.MotionUnit;
+import asap.animationengine.motionunit.TimedMotionUnitTest;
 import asap.animationengine.restpose.RestPose;
 
 /**
@@ -43,7 +43,7 @@ import asap.animationengine.restpose.RestPose;
  */
 @RunWith(PowerMockRunner.class)
 @PrepareForTest(BMLBlockManager.class)
-public class ProcAnimationGestureTMUTest extends AbstractTimedPlanUnitTest
+public class ProcAnimationGestureTMUTest extends TimedMotionUnitTest
 {
     private ProcAnimationMU mockProcAnimation = mock(ProcAnimationMU.class);
     private AnimationPlayer mockAnimationPlayer = mock(AnimationPlayer.class);
