@@ -78,7 +78,7 @@ public class AnimationPlayer2 implements Player, MixedAnimationPlayer
     protected WorldObjectManager woManager;
     private MixedSystemGenerator mixedSystemGenerator;
     private MixedSystem currentMixedSystem;
-
+    private final float gravity[]={0,-9.8f,0}; 
     public RestPose getRestPose()
     {
         return app.getRestPose();
@@ -114,6 +114,7 @@ public class AnimationPlayer2 implements Player, MixedAnimationPlayer
         votcNextToCurr = VObjectTransformCopier.newInstanceFromVJointTree(vNext, vCurr, "T1R");
         votcCurrToPrev = VObjectTransformCopier.newInstanceFromVJointTree(vCurr, vPrev, "T1R");
 
+        mixedSystemGenerator = new MixedSystemGenerator(ph,gravity); 
         MixedSystem m = mixedSystemGenerator.generateMixedSystem("phDefault", new HashSet<String>(), new HashSet<String>(), vCurr);
         mPlayer = new MixedPlayer(m, vPrev, vCurr, vNext);
         
