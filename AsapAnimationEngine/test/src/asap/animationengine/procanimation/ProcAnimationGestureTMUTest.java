@@ -1,6 +1,7 @@
 package asap.animationengine.procanimation;
 
 import static org.hamcrest.MatcherAssert.assertThat;
+import static org.hamcrest.number.OrderingComparison.greaterThanOrEqualTo;
 import static org.hamcrest.number.OrderingComparison.greaterThan;
 import static org.hamcrest.number.OrderingComparison.lessThan;
 import static org.junit.Assert.assertEquals;
@@ -231,5 +232,22 @@ public class ProcAnimationGestureTMUTest extends TimedMotionUnitTest
     	tpu.updateTiming(1);
     	assertEquals(0, tpu.getTimePeg("start").getGlobalValue(),0.0001);
     	assertEquals(STROKE_DURATION, tpu.getTime("strokeEnd")-tpu.getTime("strokeStart"),0.0001);
+    }
+    
+    @Test
+    public void testUpdateTimingStrokeSet() throws TMUPlayException
+    {
+        ProcAnimationGestureTMU tpu = setupPlanUnit(fbManager, BMLBlockPeg.GLOBALPEG, "id1", "bml1");
+        
+        TimePeg tp = TimePegUtil.createTimePeg( BMLBlockPeg.GLOBALPEG, 1);
+        tpu.setTimePeg("stroke", tp);        
+        pegBoard.addTimePeg("bml1", "id1", "stroke", tp);
+        pegBoard.addTimePeg("bml1", "id2", "start", tp);        
+        
+        tpu.updateTiming(0);
+        assertEquals(1, tpu.getTimePeg("stroke").getGlobalValue(),0.0001);
+        assertEquals(STROKE_DURATION, tpu.getTime("strokeEnd")-tpu.getTime("strokeStart"),0.0001);
+        assertThat(tpu.getTimePeg("start").getLocalValue(),greaterThanOrEqualTo(0d));
+        assertThat(tpu.getTimePeg("start").getGlobalValue(),greaterThanOrEqualTo(0d));
     }
 }

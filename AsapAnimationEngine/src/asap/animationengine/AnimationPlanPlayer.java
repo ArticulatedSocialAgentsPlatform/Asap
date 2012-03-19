@@ -60,8 +60,8 @@ public class AnimationPlanPlayer implements PlanPlayer
         // check which units should be playing
         for (TimedMotionUnit tmu : planManager.getPlanUnits())
         {
-            //if(tmu.isPlaying()||tmu.isLurking())
-            if(tmu.isLurking())
+            if(tmu.isPlaying()||tmu.isLurking())
+            //if(tmu.isLurking())
             {
                 try
                 {
@@ -90,7 +90,7 @@ public class AnimationPlanPlayer implements PlanPlayer
         tmuRemove.clear();
         log.debug("plan Units: {}",planManager.getPlanUnits());
         
-        //updateTiming(t);
+        updateTiming(t);
         
         
         // check which units should be playing

@@ -223,12 +223,18 @@ public class ProcAnimationGestureTMU extends TimedMotionUnit
 
         // backward setting
         offset = 0;
+        BMLBlockPeg bbPeg = pegBoard.getBMLBlockPeg(getBMLId());
         for (int i = tpFirst - 1; i >= 0; i--)
         {
             offset += phases[i];
+            double globalValue = tpRef.getGlobalValue() - offset;
+            if(tpRef.getGlobalValue()-offset<bbPeg.getValue())
+            {
+                globalValue = bbPeg.getValue();
+            }
             if (pegs[i] != null && changeAblePegs.contains(pegs[i]))
             {
-                pegs[i].setGlobalValue(tpRef.getGlobalValue() - offset);
+                pegs[i].setGlobalValue(globalValue);
             }
         }
     }
