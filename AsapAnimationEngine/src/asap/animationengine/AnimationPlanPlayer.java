@@ -90,8 +90,9 @@ public class AnimationPlanPlayer implements PlanPlayer
         tmuRemove.clear();
         log.debug("plan Units: {}",planManager.getPlanUnits());
         
+        long time = System.nanoTime();
         updateTiming(t);
-        
+        log.debug("update time: {} ms", (System.nanoTime()-time)/1000000d );
         
         // check which units should be playing
         for (TimedMotionUnit tmu : planManager.getPlanUnits())
