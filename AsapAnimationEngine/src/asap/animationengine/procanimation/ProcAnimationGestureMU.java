@@ -46,6 +46,10 @@ public class ProcAnimationGestureMU implements GestureUnit
     private MotionUnit relaxUnit;
     private VJoint vStart;
     private VJoint vNext;
+    
+    private VJoint vStrokeStart;
+    private VJoint vStrokeEnd;
+    
     private Resources resource;
     private double preStrokeHoldDuration = 0;
 
@@ -88,18 +92,14 @@ public class ProcAnimationGestureMU implements GestureUnit
 
     public double getRetractionDuration()
     {
-        VJoint vCopy = vStart.copyTree("copy-");
-        ProcAnimationMU copyProc = gestureUnit.copy(vCopy);
-        copyProc.play(getKeyPosition(BMLGestureSync.STROKE_END.getId()).time - 0.01);
-        return aniPlayer.getRestPose().getTransitionToRestDuration(vCopy, VJointUtils.transformToSidSet(gestureUnit.getControlledJoints()));
+        
+        return aniPlayer.getRestPose().getTransitionToRestDuration(vStrokeEnd, VJointUtils.transformToSidSet(gestureUnit.getControlledJoints()));
     }
 
     public double getPreparationDuration()
     {
-        VJoint vCopy = vStart.copyTree("copy-");
-        ProcAnimationMU copyProc = gestureUnit.copy(vCopy);
-        copyProc.play(getKeyPosition(BMLGestureSync.STROKE_START.getId()).time + 0.01);
-        double duration = MovementTimingUtils.getFittsMaximumLimbMovementDuration(aniPlayer.getVCurr(), vCopy, VJointUtils.transformToSidSet(gestureUnit.getControlledJoints()));
+        
+        double duration = MovementTimingUtils.getFittsMaximumLimbMovementDuration(aniPlayer.getVCurr(), vStrokeStart, VJointUtils.transformToSidSet(gestureUnit.getControlledJoints()));
         if (duration>0)return duration;
         return 1;
         
@@ -146,9 +146,19 @@ public class ProcAnimationGestureMU implements GestureUnit
                 keyPositionManager.addKeyPosition(kp);
             }
         }
+        gestureUnit.setup(vNext);
+        
+        VJoint vStrokeEnd = vStart.copyTree("strokeEnd-");
+        ProcAnimationMU copyProc = gestureUnit.copy(vStrokeEnd);
+        copyProc.play(getKeyPosition(BMLGestureSync.STROKE_END.getId()).time - 0.01);
+        
+        VJoint vStrokeStart = vStart.copyTree("strokeStart-");
+        copyProc = gestureUnit.copy(vStrokeStart);
+        copyProc.play(getKeyPosition(BMLGestureSync.STROKE_START.getId()).time + 0.01);
+        
         setPreStrokeHoldDuration();
         setPostStrokeHoldDuration();
-        gestureUnit.setup(vNext);
+        
     }
 
     public void setAnimationPlayer(AnimationPlayer ap)
