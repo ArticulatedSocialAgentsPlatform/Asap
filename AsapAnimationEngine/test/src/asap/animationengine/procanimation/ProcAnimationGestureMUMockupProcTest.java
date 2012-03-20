@@ -57,7 +57,15 @@ public class ProcAnimationGestureMUMockupProcTest
         when(mockProcAnimation.getPreferedDuration()).thenReturn(1d);
         when(mockProcAnimation.copy(mockAnimationPlayer)).thenReturn(mockProcAnimation);
         when(mockProcAnimation.copy((VJoint)any())).thenReturn(mockProcAnimationCopy);
+        when(mockProcAnimationCopy.getPrefDuration()).thenReturn(1d);
+        when(mockProcAnimationCopy.getPreferedDuration()).thenReturn(1d);
+        
+        
         KeyPositionMocker.stubKeyPositions(mockProcAnimation,new KeyPosition("start",0),new KeyPosition("ready",0.4),
+                new KeyPosition("strokeStart",0.4),new KeyPosition("stroke",0.5),new KeyPosition("strokeEnd",0.8),
+                new KeyPosition("relax",0.8), new KeyPosition("end",1));
+        
+        KeyPositionMocker.stubKeyPositions(mockProcAnimationCopy,new KeyPosition("start",0),new KeyPosition("ready",0.4),
                 new KeyPosition("strokeStart",0.4),new KeyPosition("stroke",0.5),new KeyPosition("strokeEnd",0.8),
                 new KeyPosition("relax",0.8), new KeyPosition("end",1));
         
