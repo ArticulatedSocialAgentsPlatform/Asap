@@ -4,6 +4,7 @@
       <dependency org="Asap"     name="AsapBML"      rev="latest.${resolve.status}"    />
       <dependency org="HMI"     name="HmiBML"      rev="latest.${resolve.status}"    />
       <dependency org="HMI"     name="HmiUtil"      rev="latest.${resolve.status}"    />
+      <dependency org="HMI"     name="AsapUtils"      rev="latest.${resolve.status}"    />
       <dependency org="HMI"     name="HmiXml"      rev="latest.${resolve.status}"    />
       <dependency org="HMI"     name="HmiMath"      rev="latest.${resolve.status}"    />
       <dependency org="HMI"     name="HmiElckerlyc" transitive="false"     rev="latest.${resolve.status}"    />
