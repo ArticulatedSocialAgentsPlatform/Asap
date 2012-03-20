@@ -47,8 +47,8 @@ public class ProcAnimationGestureMU implements GestureUnit
     private VJoint vStart;
     private VJoint vNext;
     
-    private VJoint vStrokeStart;
-    private VJoint vStrokeEnd;
+    private ProcAnimationMU copyProc;
+    private VJoint copyJoint;
     
     private Resources resource;
     private double preStrokeHoldDuration = 0;
@@ -92,14 +92,14 @@ public class ProcAnimationGestureMU implements GestureUnit
 
     public double getRetractionDuration()
     {
-        
-        return aniPlayer.getRestPose().getTransitionToRestDuration(vStrokeEnd, VJointUtils.transformToSidSet(gestureUnit.getControlledJoints()));
+        copyProc.play(getKeyPosition(BMLGestureSync.STROKE_END.getId()).time - 0.01);        
+        return aniPlayer.getRestPose().getTransitionToRestDuration(copyJoint, VJointUtils.transformToSidSet(gestureUnit.getControlledJoints()));
     }
 
     public double getPreparationDuration()
     {
-        
-        double duration = MovementTimingUtils.getFittsMaximumLimbMovementDuration(aniPlayer.getVCurr(), vStrokeStart, VJointUtils.transformToSidSet(gestureUnit.getControlledJoints()));
+        copyProc.play(getKeyPosition(BMLGestureSync.STROKE_START.getId()).time + 0.01);
+        double duration = MovementTimingUtils.getFittsMaximumLimbMovementDuration(aniPlayer.getVCurr(), copyJoint, VJointUtils.transformToSidSet(gestureUnit.getControlledJoints()));
         if (duration>0)return duration;
         return 1;
         
@@ -108,10 +108,8 @@ public class ProcAnimationGestureMU implements GestureUnit
 
     public double getPreparationFromRestDuration()
     {
-        VJoint vCopy = vStart.copyTree("copy-");
-        ProcAnimationMU copyProc = gestureUnit.copy(vCopy);
         copyProc.play(getKeyPosition(BMLGestureSync.STROKE_START.getId()).time + 0.01);
-        return aniPlayer.getRestPose().getTransitionToRestDuration(vCopy, VJointUtils.transformToSidSet(gestureUnit.getControlledJoints()));
+        return aniPlayer.getRestPose().getTransitionToRestDuration(copyJoint, VJointUtils.transformToSidSet(gestureUnit.getControlledJoints()));
     }
 
     
@@ -145,26 +143,18 @@ public class ProcAnimationGestureMU implements GestureUnit
             {
                 keyPositionManager.addKeyPosition(kp);
             }
-        }
-        gestureUnit.setup(vNext);
-        
-        VJoint vStrokeEnd = vStart.copyTree("strokeEnd-");
-        ProcAnimationMU copyProc = gestureUnit.copy(vStrokeEnd);
-        copyProc.play(getKeyPosition(BMLGestureSync.STROKE_END.getId()).time - 0.01);
-        
-        VJoint vStrokeStart = vStart.copyTree("strokeStart-");
-        copyProc = gestureUnit.copy(vStrokeStart);
-        copyProc.play(getKeyPosition(BMLGestureSync.STROKE_START.getId()).time + 0.01);
-        
+        }              
         setPreStrokeHoldDuration();
         setPostStrokeHoldDuration();
-        
+        gestureUnit.setup(vNext);  
+        copyProc = gestureUnit.copy(copyJoint);
     }
 
     public void setAnimationPlayer(AnimationPlayer ap)
     {
         vStart = ap.getVCurr();
         vNext = ap.getVNext();
+        copyJoint = vNext.copyTree("copy-");
         gestureUnit.setup(vNext);
         aniPlayer = ap;
     }
@@ -268,6 +258,7 @@ public class ProcAnimationGestureMU implements GestureUnit
         else
         {
             gestureUnit.setFloatParameterValue(name, value);
+            copyProc.setFloatParameterValue(name, value);
         }
     }
 
@@ -296,6 +287,7 @@ public class ProcAnimationGestureMU implements GestureUnit
         else
         {
             gestureUnit.setParameterValue(name, value);
+            copyProc.setParameterValue(name, value);
         }
     }
 
