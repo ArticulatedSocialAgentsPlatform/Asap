@@ -1,0 +1,7 @@
+<ivy-module version="2.0">
+   <info organisation="Asap" module="AsapMURMLTest"/>
+   <dependencies>
+      <dependency org="junit" name="junit"   rev="latest.release" />      
+      <dependency org="hamcrest" name="hamcrest-all"       rev="latest.release"  />
+   </dependencies>
+</ivy-module>
