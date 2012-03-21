@@ -14,8 +14,8 @@ import hmi.xml.XMLTokenizer;
  */
 public class Definition extends XMLStructureAdapter
 {
-    @Getter
-    private Posture posture;
+    @Getter private Posture posture;
+    @Getter private Keyframing keyframing; 
     
     @Override
     public void decodeContent(XMLTokenizer tokenizer) throws IOException
@@ -26,6 +26,11 @@ public class Definition extends XMLStructureAdapter
             posture = new Posture();
             posture.readXML(tokenizer);
         }
+        if (tag.equals(Keyframing.xmlTag()))
+        {
+            keyframing = new Keyframing();
+            keyframing.readXML(tokenizer);
+        }        
     }
     
     /*

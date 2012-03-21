@@ -41,10 +41,10 @@ public class Keyframing extends XMLStructureAdapter
     @Override
     public void decodeAttributes(HashMap<String, String> attrMap, XMLTokenizer tokenizer)
     {
-        mode = Mode.valueOf(getOptionalAttribute("mode", attrMap,"spline"));
+        mode = Mode.valueOf(getOptionalAttribute("mode", attrMap,"spline").toUpperCase());
         priority = getOptionalIntAttribute("priority", attrMap, 0);
         easescale = getOptionalIntAttribute("easescale", attrMap, 1);
-        applyMode = ApplyMode.valueOf(getOptionalAttribute("applymode", attrMap,"exclusive"));
+        applyMode = ApplyMode.valueOf(getOptionalAttribute("applymode", attrMap,"exclusive").toUpperCase());
         name = getOptionalAttribute("name", attrMap,"KF_Anim_");
         easeturningpoint = getOptionalDoubleAttribute("easeturningpoint", attrMap, 0.5);
         startTime = getOptionalDoubleAttribute("startTime", attrMap, 0);
