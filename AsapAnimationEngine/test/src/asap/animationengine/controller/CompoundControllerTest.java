@@ -8,7 +8,6 @@ import hmi.physics.controller.PhysicalController;
 import org.junit.Before;
 import org.junit.Test;
 
-import asap.animationengine.controller.CompoundController;
 import static org.mockito.Mockito.*;
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.collection.IsIterableContainingInAnyOrder.*;
