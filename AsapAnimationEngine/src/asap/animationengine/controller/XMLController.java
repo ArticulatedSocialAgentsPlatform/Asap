@@ -70,8 +70,9 @@ public class XMLController extends XMLStructureAdapter
         }
         catch (Exception e)
         {
-            // TODO: XMLScanException?
-            throw new RuntimeException(e);
+            XMLScanException ex = new XMLScanException();
+            ex.initCause(e);
+            throw ex;
         }
     }
 
