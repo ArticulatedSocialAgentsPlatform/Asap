@@ -53,8 +53,8 @@ import asap.environment.Loader;
 import asap.utils.Environment;
 
 /**
-
-*/
+ * Loads the Asap AnimationEngine
+ */
 public class MixedAnimationEngineLoader implements EngineLoader
 {
     
