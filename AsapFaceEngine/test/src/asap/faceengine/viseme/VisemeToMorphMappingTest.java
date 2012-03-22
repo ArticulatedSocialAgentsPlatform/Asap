@@ -1,10 +1,9 @@
 package asap.faceengine.viseme;
 
-import static org.junit.Assert.*;
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertNull;
 
 import org.junit.Test;
-
-import asap.faceengine.viseme.VisemeToMorphMapping;
 /**
  * Unit tests for VisemeToMorphMapping
  * @author welberge

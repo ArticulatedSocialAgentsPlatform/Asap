@@ -64,11 +64,7 @@ public class FaceBinding extends XMLStructureAdapter
                     && ((s.getSpecnamespace() == null && b.getNamespace() == null) || (s.getSpecnamespace() != null && s.getSpecnamespace()
                             .equals(b.getNamespace()))))
             {
-                if (!s.satisfiesConstraints(b))
-                {
-                    // System.out.println("Constraint mismatch");
-                }
-                else
+                if (s.satisfiesConstraints(b))
                 {
                     // System.out.println("Found type and constraint match");
                     FaceUnit fuCopy = s.faceUnit.copy(fc, fconv, econv);

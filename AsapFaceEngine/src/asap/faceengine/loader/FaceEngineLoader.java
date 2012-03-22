@@ -59,7 +59,7 @@ public class FaceEngineLoader implements EngineLoader
     private XMLStructureAdapter adapter = new XMLStructureAdapter();
     private FaceEmbodiment m4e = null;
     private JComponentEmbodiment jce = null;
-    
+
     private boolean initUI = false;
 
     private Engine engine = null;
@@ -73,21 +73,23 @@ public class FaceEngineLoader implements EngineLoader
     private AsapVirtualHuman theVirtualHuman = null;
 
     @Override
-    public void readXML(XMLTokenizer tokenizer, String newId, AsapVirtualHuman avh,
-            Environment[] environments, Loader... requiredLoaders) throws IOException
+    public void readXML(XMLTokenizer tokenizer, String newId, AsapVirtualHuman avh, Environment[] environments, Loader... requiredLoaders)
+            throws IOException
     {
         id = newId;
         theVirtualHuman = avh;
         for (Loader e : requiredLoaders)
         {
-            if (e instanceof EmbodimentLoader && ((EmbodimentLoader) e).getEmbodiment() instanceof FaceEmbodiment) m4e = (FaceEmbodiment) ((EmbodimentLoader) e)
+            if (e instanceof EmbodimentLoader && ((EmbodimentLoader) e).getEmbodiment() 
+                    instanceof FaceEmbodiment) m4e = (FaceEmbodiment) ((EmbodimentLoader) e)
                     .getEmbodiment();
-            if (e instanceof EmbodimentLoader && ((EmbodimentLoader) e).getEmbodiment() instanceof JComponentEmbodiment) jce = (JComponentEmbodiment) ((EmbodimentLoader) e)
+            if (e instanceof EmbodimentLoader && ((EmbodimentLoader) e).getEmbodiment() 
+                    instanceof JComponentEmbodiment) jce = (JComponentEmbodiment) ((EmbodimentLoader) e)
                     .getEmbodiment();
         }
         if (m4e == null)
         {
-             throw new RuntimeException("FaceEngineLoader requires an EmbodimentLoader containing a FaceEmbodiment");
+            throw new RuntimeException("FaceEngineLoader requires an EmbodimentLoader containing a FaceEmbodiment");
         }
         while (!tokenizer.atETag("Loader"))
         {
@@ -139,8 +141,8 @@ public class FaceEngineLoader implements EngineLoader
     {
         if (facebinding == null) throw tokenizer.getXMLScanException("facebinding is null, cannot build faceplanner ");
         planManager = new PlanManager<TimedFaceUnit>();
-        facePlayer = new DefaultPlayer(new SingleThreadedPlanPlayer<TimedFaceUnit>(theVirtualHuman.getElckerlycRealizer().getFeedbackManager(),
-                planManager));
+        facePlayer = new DefaultPlayer(new SingleThreadedPlanPlayer<TimedFaceUnit>(theVirtualHuman.getElckerlycRealizer()
+                .getFeedbackManager(), planManager));
         econv = new EmotionConverter();
         fconv = new FACSConverter();
         FaceController fc = null;
@@ -195,11 +197,15 @@ public class FaceEngineLoader implements EngineLoader
                 }
             });
             faceUIPanel.add(showDirectMPEG4Control);
-            
-            SwingUtilities.invokeLater(new Runnable() {
-                public void run() { jce.addJComponent(faceUIPanel); }
+
+            SwingUtilities.invokeLater(new Runnable()
+            {
+                public void run()
+                {
+                    jce.addJComponent(faceUIPanel);
+                }
             });
-            
+
         }
     }
 

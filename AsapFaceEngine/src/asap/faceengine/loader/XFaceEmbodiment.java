@@ -36,68 +36,77 @@ import asap.utils.CopyEmbodiment;
 import asap.utils.Embodiment;
 import asap.utils.Environment;
 
+/**
+ * Loader for an XFaceEmbodiment
+ * @author hvanwelbergen
+ *
+ */
 public class XFaceEmbodiment implements FaceEmbodiment, CopyEmbodiment, EmbodimentLoader
 {
-  
-  private XMLStructureAdapter adapter = new XMLStructureAdapter();
 
-  private FaceController faceController = null;
-  private XfaceInterface xfi = null;
-  
-  String id = "";
+    private XMLStructureAdapter adapter = new XMLStructureAdapter();
 
-  @Override
-  public void unload()
-  {
-    xfi.disconnect();
-  }
-  public String getId()
-  {
-    return id;
-  }
-  @Override
-  public void readXML(XMLTokenizer tokenizer, String newId, AsapVirtualHuman avh, Environment[] environments, Loader ... requiredLoaders) throws IOException
-  {
-    id=newId;
+    private FaceController faceController = null;
+    private XfaceInterface xfi = null;
 
-    while (!tokenizer.atETag("Loader")) 
+    String id = "";
+
+    @Override
+    public void unload()
     {
-      readSection(tokenizer);
+        xfi.disconnect();
     }
-  }
-  protected void readSection(XMLTokenizer tokenizer) throws IOException
-  {
-    HashMap<String, String> attrMap = null;
-    if (tokenizer.atSTag("XFaceHost"))
-    {
-      attrMap = tokenizer.getAttributes();
-      tokenizer.takeSTag("XFaceHost");
-      int port = adapter.getOptionalIntAttribute("port", attrMap, 50011);
-      xfi = new XfaceInterface(port);
-      faceController = new XFaceController(xfi);
-      xfi.connect();
-      tokenizer.takeETag("XFaceHost");
-    }
-    else
-    {
-      throw tokenizer.getXMLScanException("Unknown tag in Embodiment content");
-    }
-  }
 
-  
-  @Override
-  public Embodiment getEmbodiment()
-  {
-    return this;
-  }
+    public String getId()
+    {
+        return id;
+    }
 
-  @Override
-  public FaceController getFaceController()
-  {
-    return faceController;
-  }
-  public void copy()
-  {
-    faceController.copy();
-  } 
+    @Override
+    public void readXML(XMLTokenizer tokenizer, String newId, AsapVirtualHuman avh, Environment[] environments, Loader... requiredLoaders)
+            throws IOException
+    {
+        id = newId;
+
+        while (!tokenizer.atETag("Loader"))
+        {
+            readSection(tokenizer);
+        }
+    }
+
+    protected void readSection(XMLTokenizer tokenizer) throws IOException
+    {
+        HashMap<String, String> attrMap = null;
+        if (tokenizer.atSTag("XFaceHost"))
+        {
+            attrMap = tokenizer.getAttributes();
+            tokenizer.takeSTag("XFaceHost");
+            int port = adapter.getOptionalIntAttribute("port", attrMap, 50011);
+            xfi = new XfaceInterface(port);
+            faceController = new XFaceController(xfi);
+            xfi.connect();
+            tokenizer.takeETag("XFaceHost");
+        }
+        else
+        {
+            throw tokenizer.getXMLScanException("Unknown tag in Embodiment content");
+        }
+    }
+
+    @Override
+    public Embodiment getEmbodiment()
+    {
+        return this;
+    }
+
+    @Override
+    public FaceController getFaceController()
+    {
+        return faceController;
+    }
+
+    public void copy()
+    {
+        faceController.copy();
+    }
 }

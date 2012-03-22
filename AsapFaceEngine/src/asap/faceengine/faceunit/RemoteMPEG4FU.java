@@ -54,56 +54,71 @@ public class RemoteMPEG4FU extends Thread implements FaceUnit
     private FaceController faceController;
 
     private final MPEG4Configuration mpeg4Config = new MPEG4Configuration();
-    
+
     private Integer[] faceValues;
     private BufferedReader in;
 
     public RemoteMPEG4FU()
-    {   
-        
+    {
+
     }
-    
+
     public void connectToServer()
     {
-    	try {
-			Socket socket = new Socket("localhost", 9123);
-            in = new BufferedReader(new InputStreamReader( socket.getInputStream() ));
-        } catch (UnknownHostException e) {
-        		System.out.println("Unknown host");
-        		in = null;
-        } catch (IOException e) {
-        		System.out.println("Could not connect to localhost");
-        		in = null;
+        try
+        {
+            Socket socket = new Socket("localhost", 9123);
+            in = new BufferedReader(new InputStreamReader(socket.getInputStream()));
         }
-    	if( in != null ) {
-    		start();
-    	}
+        catch (UnknownHostException e)
+        {
+            System.out.println("Unknown host");
+            in = null;
+        }
+        catch (IOException e)
+        {
+            System.out.println("Could not connect to localhost");
+            in = null;
+        }
+        if (in != null)
+        {
+            start();
+        }
     }
-    
+
     public void run()
     {
-    	while(true) {
-    		if( in != null ) {
-	    		String line = null;
-	    		try {
-	    			line = in.readLine();
-	    		}catch(IOException e) {
-	    			in = null;
-	    			e.printStackTrace();
-	    		}
-	    		if( line != null ) {
-	    			String[] recValues = line.split(" ");
-	    			if( recValues.length == 68 ) {
-	    				synchronized (this) {
-	    					faceValues = new Integer[68];
-	    					for( int i=0; i<faceValues.length; i++ ) {
-	    						faceValues[i] = Integer.valueOf(recValues[i]);
-	    					}
-	    				}
-	    			}
-	    		}
-    		}
-    	}
+        while (true)
+        {
+            if (in != null)
+            {
+                String line = null;
+                try
+                {
+                    line = in.readLine();
+                }
+                catch (IOException e)
+                {
+                    in = null;
+                    e.printStackTrace();
+                }
+                if (line != null)
+                {
+                    String[] recValues = line.split(" ");
+                    if (recValues.length == 68)
+                    {
+                        synchronized (this)
+                        {
+                            faceValues = new Integer[68];
+                            for (int i = 0; i < faceValues.length; i++)
+                            {
+                                faceValues[i] = Integer.valueOf(recValues[i]);
+                            }
+                        }
+                    }
+                }
+            }
+        }
     }
 
     public void setFaceController(FaceController fc)
@@ -114,7 +129,7 @@ public class RemoteMPEG4FU extends Thread implements FaceUnit
     @Override
     public void setFloatParameterValue(String name, float value) throws ParameterException
     {
-        
+
     }
 
     @Override
@@ -125,7 +140,7 @@ public class RemoteMPEG4FU extends Thread implements FaceUnit
     @Override
     public String getParameterValue(String name) throws ParameterException
     {
-        return ""+getFloatParameterValue(name);        
+        return "" + getFloatParameterValue(name);
     }
 
     @Override
@@ -152,29 +167,36 @@ public class RemoteMPEG4FU extends Thread implements FaceUnit
      */
     public void play(double t) throws FUPlayException
     {
-    	if( in == null ) {
-    		connectToServer();
-    	}
-    	if( faceValues == null ) {
-    		return;
-    	}
-    	
-    	Integer[] faceValuesCopy = null;
-    	synchronized (this) {
-    		faceValuesCopy = faceValues.clone();
-    	}
-    	
+        if (in == null)
+        {
+            connectToServer();
+        }
+        if (faceValues == null)
+        {
+            return;
+        }
+
+        Integer[] faceValuesCopy = null;
+        synchronized (this)
+        {
+            faceValuesCopy = faceValues.clone();
+        }
+
         synchronized (AnimationSync.getSync())
         {
-        	if( faceValuesCopy != null ) {
-        		faceController.removeMPEG4Configuration(mpeg4Config);
-        		try {
-        			mpeg4Config.setValues(faceValuesCopy);
-        		}catch( Exception e ) {
-        			e.printStackTrace();
-        		}
-        		faceController.addMPEG4Configuration(mpeg4Config);
-        	}
+            if (faceValuesCopy != null)
+            {
+                faceController.removeMPEG4Configuration(mpeg4Config);
+                try
+                {
+                    mpeg4Config.setValues(faceValuesCopy);
+                }
+                catch (Exception e)
+                {
+                    e.printStackTrace();
+                }
+                faceController.addMPEG4Configuration(mpeg4Config);
+            }
         }
     }
 
@@ -193,7 +215,7 @@ public class RemoteMPEG4FU extends Thread implements FaceUnit
      * @return the TFU
      */
     @Override
-    public TimedFaceUnit createTFU(FeedbackManager bfm,BMLBlockPeg bbPeg, String bmlId, String id)
+    public TimedFaceUnit createTFU(FeedbackManager bfm, BMLBlockPeg bbPeg, String bmlId, String id)
     {
         return new TimedFaceUnit(bfm, bbPeg, bmlId, id, this);
     }

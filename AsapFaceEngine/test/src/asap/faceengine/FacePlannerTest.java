@@ -1,14 +1,14 @@
 package asap.faceengine;
 
-import java.io.IOException;
-import java.util.ArrayList;
-import java.util.List;
-
-import hmi.elckerlyc.pegboard.BMLBlockPeg;
-import hmi.elckerlyc.pegboard.TimePeg;
-import hmi.elckerlyc.planunit.KeyPosition;
+import static org.junit.Assert.assertEquals;
+import static org.mockito.Matchers.any;
+import static org.mockito.Matchers.eq;
+import static org.mockito.Mockito.doThrow;
+import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.when;
 import hmi.bml.core.FaceBehaviour;
 import hmi.bml.feedback.BMLExceptionFeedback;
+import hmi.bml.feedback.ListBMLExceptionListener;
 import hmi.bml.parser.Constraint;
 import hmi.elckerlyc.BehaviourPlanningException;
 import hmi.elckerlyc.DefaultPlayer;
@@ -16,6 +16,9 @@ import hmi.elckerlyc.PlannerTests;
 import hmi.elckerlyc.Player;
 import hmi.elckerlyc.feedback.FeedbackManager;
 import hmi.elckerlyc.feedback.FeedbackManagerImpl;
+import hmi.elckerlyc.pegboard.BMLBlockPeg;
+import hmi.elckerlyc.pegboard.TimePeg;
+import hmi.elckerlyc.planunit.KeyPosition;
 import hmi.elckerlyc.planunit.PlanManager;
 import hmi.elckerlyc.planunit.SingleThreadedPlanPlayer;
 import hmi.elckerlyc.planunit.TimedPlanUnitPlayException;
@@ -24,12 +27,14 @@ import hmi.elckerlyc.scheduler.BMLBlockManager;
 import hmi.elckerlyc.scheduler.TimePegAndConstraint;
 import hmi.elckerlyc.util.KeyPositionMocker;
 import hmi.elckerlyc.util.TimePegUtil;
-import hmi.bml.feedback.ListBMLExceptionListener;
-import hmi.xml.XMLTokenizer;
 import hmi.faceanimation.FaceController;
-import hmi.faceanimation.converters.*;
-import static org.junit.Assert.*;
-import static org.mockito.Mockito.*;
+import hmi.faceanimation.converters.EmotionConverter;
+import hmi.faceanimation.converters.FACSConverter;
+import hmi.xml.XMLTokenizer;
+
+import java.io.IOException;
+import java.util.ArrayList;
+import java.util.List;
 
 import org.junit.Before;
 import org.junit.Test;
@@ -37,17 +42,16 @@ import org.junit.runner.RunWith;
 import org.powermock.core.classloader.annotations.PrepareForTest;
 import org.powermock.modules.junit4.PowerMockRunner;
 
-import asap.faceengine.FacePlanner;
 import asap.faceengine.facebinding.FaceBinding;
 import asap.faceengine.faceunit.FaceUnit;
 import asap.faceengine.faceunit.TimedFaceUnit;
 
-@RunWith(PowerMockRunner.class)
-@PrepareForTest(BMLBlockManager.class)
 /**
  * Unit test cases for the FacePlanner
  * @author hvanwelbergen
  */
+@RunWith(PowerMockRunner.class)
+@PrepareForTest(BMLBlockManager.class)
 public class FacePlannerTest
 {
     private FacePlanner facePlanner;

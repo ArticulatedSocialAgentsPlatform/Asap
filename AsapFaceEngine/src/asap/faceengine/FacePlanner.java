@@ -46,11 +46,11 @@ import asap.faceengine.faceunit.TimedFaceUnit;
 /**
  * This planner will in the future support planning of face behaviors -- i.e. face expressions and such. In addition, the faceplanner allows for the
  * possiblities to set visemes at certain TimePegs. This functionality is mostly accessed by the verbalplanner.
- * @author Reidsma 
+ * @author Reidsma
  */
 public class FacePlanner extends AbstractPlanner<TimedFaceUnit>
 {
-    //private static Logger logger = LoggerFactory.getLogger(FacePlanner.class.getName());
+    // private static Logger logger = LoggerFactory.getLogger(FacePlanner.class.getName());
 
     private FaceController faceController;
     private FACSConverter facsConverter;
@@ -59,14 +59,15 @@ public class FacePlanner extends AbstractPlanner<TimedFaceUnit>
     private final FaceBinding faceBinding;
     private UniModalResolver resolver;
 
-    public FacePlanner(FeedbackManager bfm, FaceController fc, FACSConverter fconv, EmotionConverter econv, FaceBinding fb, PlanManager<TimedFaceUnit> planManager)
+    public FacePlanner(FeedbackManager bfm, FaceController fc, FACSConverter fconv, EmotionConverter econv, FaceBinding fb,
+            PlanManager<TimedFaceUnit> planManager)
     {
         super(bfm, planManager);
         faceBinding = fb;
         faceController = fc;
         facsConverter = fconv;
         emotionConverter = econv;
-        
+
         resolver = new LinearStretchResolver();
     }
 
@@ -79,13 +80,13 @@ public class FacePlanner extends AbstractPlanner<TimedFaceUnit>
      * Creates a TimedFaceUnit that satisfies sacs and adds it to the face plan. All registered BMLFeedbackListener are linked to this TimedFaceUnit.
      */
     @Override
-    public List<SyncAndTimePeg> addBehaviour(BMLBlockPeg bbPeg, Behaviour b, List<TimePegAndConstraint> sacs,
-            TimedFaceUnit tfu) throws BehaviourPlanningException
+    public List<SyncAndTimePeg> addBehaviour(BMLBlockPeg bbPeg, Behaviour b, List<TimePegAndConstraint> sacs, TimedFaceUnit tfu)
+            throws BehaviourPlanningException
     {
         List<SyncAndTimePeg> satps = new ArrayList<SyncAndTimePeg>();
         if (tfu == null)
         {
-            List<TimedFaceUnit> tfus = faceBinding.getFaceUnit(fbManager,bbPeg, b, faceController, facsConverter, emotionConverter);
+            List<TimedFaceUnit> tfus = faceBinding.getFaceUnit(fbManager, bbPeg, b, faceController, facsConverter, emotionConverter);
             if (tfus.isEmpty())
             {
                 throw new BehaviourPlanningException(b, "Behavior " + b.id
@@ -100,7 +101,7 @@ public class FacePlanner extends AbstractPlanner<TimedFaceUnit>
                         + " could not be constructed from the face binding because the parameters are not valid, behavior omitted.");
             }
         }
-        
+
         // apply syncs to tfu
         tfu.resolveDefaultBMLKeyPositions();
         linkSynchs(tfu, sacs);
@@ -116,10 +117,9 @@ public class FacePlanner extends AbstractPlanner<TimedFaceUnit>
     }
 
     @Override
-    public TimedFaceUnit resolveSynchs(BMLBlockPeg bbPeg, Behaviour b, List<TimePegAndConstraint> sac)
-            throws BehaviourPlanningException
+    public TimedFaceUnit resolveSynchs(BMLBlockPeg bbPeg, Behaviour b, List<TimePegAndConstraint> sac) throws BehaviourPlanningException
     {
-        List<TimedFaceUnit> tfus = faceBinding.getFaceUnit(fbManager,bbPeg, b, faceController, facsConverter, emotionConverter);
+        List<TimedFaceUnit> tfus = faceBinding.getFaceUnit(fbManager, bbPeg, b, faceController, facsConverter, emotionConverter);
         if (tfus.isEmpty())
         {
             throw new BehaviourPlanningException(b, "Behavior " + b.id
@@ -180,5 +180,5 @@ public class FacePlanner extends AbstractPlanner<TimedFaceUnit>
     public double getRigidity(Behaviour beh)
     {
         return 0.5;
-    }    
+    }
 }

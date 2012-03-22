@@ -20,9 +20,13 @@ import hmi.faceanimation.converters.FACSConverter;
 
 import org.junit.Test;
 
-import asap.faceengine.facebinding.FaceBinding;
 import asap.faceengine.faceunit.TimedFaceUnit;
 
+/**
+ * Unit testcases for the facebinding
+ * @author hvanwelbergen
+ *
+ */
 public class FaceBindingTest
 {
     private FaceController mockFaceController = mock(FaceController.class);

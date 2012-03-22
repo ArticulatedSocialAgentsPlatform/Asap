@@ -50,8 +50,8 @@ import asap.utils.AnimationSync;
 public class RemoteFACSFU extends Thread implements FaceUnit
 {
 
-		private final static String HOST = "130.89.228.90";
-		private final static int PORT = 9123;
+    private final static String HOST = "130.89.228.90";
+    private final static int PORT = 9123;
 
     private final KeyPositionManager keyPositionManager = new KeyPositionManagerImpl();
 
@@ -63,62 +63,78 @@ public class RemoteFACSFU extends Thread implements FaceUnit
     private FACSConverter facsConverter;
 
     private final MPEG4Configuration mpeg4Config = new MPEG4Configuration();
-    
+
     private Float[] faceValues;
     private BufferedReader in;
 
     public RemoteFACSFU()
     {
-    	
+
     }
-    
+
     public void connectToServer()
     {
-    	try {
-			Socket socket = new Socket(HOST, PORT);
-            in = new BufferedReader(new InputStreamReader( socket.getInputStream() ));
-        } catch (UnknownHostException e) {
-        		System.out.println("Unknown host " + HOST);
-        		in = null;
-        } catch (IOException e) {
-        		System.out.println("Could not connect to " + HOST);
-        		in = null;
+        try
+        {
+            Socket socket = new Socket(HOST, PORT);
+            in = new BufferedReader(new InputStreamReader(socket.getInputStream()));
         }
-    	if( in != null ) {
-    		start();
-    	}
+        catch (UnknownHostException e)
+        {
+            System.out.println("Unknown host " + HOST);
+            in = null;
+        }
+        catch (IOException e)
+        {
+            System.out.println("Could not connect to " + HOST);
+            in = null;
+        }
+        if (in != null)
+        {
+            start();
+        }
     }
-    
+
     public void run()
     {
-    	while(true) {
-    		if( in != null ) {
-	    		String line = null;
-	    		try {
-	    			line = in.readLine();
-	    		}catch(IOException e) {
-	    			e.printStackTrace();
-	    			in = null;
-	    		}
-	    		if( line != null ) {
-	    			String[] recValues = line.split(" ");
-	    			if( recValues.length == 84 ) {
-	    				synchronized (this) {
-	    					faceValues = new Float[84];
-	    					for( int i=0; i<84; i++ ) {
-	    						faceValues[i] = Float.valueOf(recValues[i]);
-	    					}
-	    				}
-	    			}
-	    		}
-    		}
-    	}
+        while (true)
+        {
+            if (in != null)
+            {
+                String line = null;
+                try
+                {
+                    line = in.readLine();
+                }
+                catch (IOException e)
+                {
+                    e.printStackTrace();
+                    in = null;
+                }
+                if (line != null)
+                {
+                    String[] recValues = line.split(" ");
+                    if (recValues.length == 84)
+                    {
+                        synchronized (this)
+                        {
+                            faceValues = new Float[84];
+                            for (int i = 0; i < 84; i++)
+                            {
+                                faceValues[i] = Float.valueOf(recValues[i]);
+                            }
+                        }
+                    }
+                }
+            }
+        }
     }
 
     public void setFaceController(FaceController fc)
     {
         faceController = fc;
     }
+
     public void setFACSConverter(FACSConverter fc)
     {
         facsConverter = fc;
@@ -127,7 +143,7 @@ public class RemoteFACSFU extends Thread implements FaceUnit
     @Override
     public void setFloatParameterValue(String name, float value) throws ParameterException
     {
-        
+
     }
 
     @Override
@@ -138,7 +154,7 @@ public class RemoteFACSFU extends Thread implements FaceUnit
     @Override
     public String getParameterValue(String name) throws ParameterException
     {
-        return ""+getFloatParameterValue(name);        
+        return "" + getFloatParameterValue(name);
     }
 
     @Override
@@ -170,21 +186,27 @@ public class RemoteFACSFU extends Thread implements FaceUnit
      */
     public void play(double t) throws FUPlayException
     {
-    	if( in == null ) {
-    		connectToServer();
-    	}
-    	if( faceValues == null ) {
-    		return;
-    	}
-    	synchronized (this) {
-    		Float[] faceValuesCopy = faceValues.clone();
-    		try {
-    			facsConfig.setValues(faceValuesCopy);
-    		}catch( Exception e ) {
-    			e.printStackTrace();
-    		}
-    	}
-    	
+        if (in == null)
+        {
+            connectToServer();
+        }
+        if (faceValues == null)
+        {
+            return;
+        }
+        synchronized (this)
+        {
+            Float[] faceValuesCopy = faceValues.clone();
+            try
+            {
+                facsConfig.setValues(faceValuesCopy);
+            }
+            catch (Exception e)
+            {
+                e.printStackTrace();
+            }
+        }
+
         synchronized (AnimationSync.getSync())
         {
 
@@ -209,7 +231,7 @@ public class RemoteFACSFU extends Thread implements FaceUnit
      * @return the TFU
      */
     @Override
-    public TimedFaceUnit createTFU(FeedbackManager bfm,BMLBlockPeg bbPeg, String bmlId, String id)
+    public TimedFaceUnit createTFU(FeedbackManager bfm, BMLBlockPeg bbPeg, String bmlId, String id)
     {
         return new TimedFaceUnit(bfm, bbPeg, bmlId, id, this);
     }
@@ -237,7 +259,7 @@ public class RemoteFACSFU extends Thread implements FaceUnit
         RemoteFACSFU result = new RemoteFACSFU();
         result.setFaceController(fc);
         result.setFACSConverter(fconv);
-        result.intensity=intensity;
+        result.intensity = intensity;
         result.setConfig(facsConfig);
         for (KeyPosition keypos : getKeyPositions())
         {

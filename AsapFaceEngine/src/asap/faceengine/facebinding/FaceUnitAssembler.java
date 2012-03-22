@@ -38,8 +38,7 @@ import asap.faceengine.faceunit.RemoteMPEG4FU;
 
 class FaceUnitAssembler extends XMLStructureAdapter
 {
-    private static Logger logger = LoggerFactory
-            .getLogger(FaceUnitAssembler.class.getName());
+    private static Logger logger = LoggerFactory.getLogger(FaceUnitAssembler.class.getName());
 
     private FaceUnit faceUnit;
 
@@ -52,12 +51,11 @@ class FaceUnitAssembler extends XMLStructureAdapter
     {
         String type = getRequiredAttribute("type", attrMap, tokenizer);
 
-
         if (type.equals("Morph"))
         {
             MorphFU fu = new MorphFU();
             faceUnit = fu;
-        } 
+        }
         else if (type.equals("Plutchik"))
         {
             PlutchikFU fu = new PlutchikFU();
@@ -68,36 +66,36 @@ class FaceUnitAssembler extends XMLStructureAdapter
             AUFU fu = new AUFU();
             faceUnit = fu;
         }
-        else if(type.equals("RemoteFACS"))
+        else if (type.equals("RemoteFACS"))
         {
-        	RemoteFACSFU rfu = new RemoteFACSFU();
-        	faceUnit = rfu;
+            RemoteFACSFU rfu = new RemoteFACSFU();
+            faceUnit = rfu;
         }
-        else if(type.equals("RemoteMPEG4"))
+        else if (type.equals("RemoteMPEG4"))
         {
-        	RemoteMPEG4FU mfu = new RemoteMPEG4FU();
-        	faceUnit = mfu;
+            RemoteMPEG4FU mfu = new RemoteMPEG4FU();
+            faceUnit = mfu;
         }
         else if (type.equals("FACS"))
         {
             FACSFU fu = new FACSFU();
             faceUnit = fu;
             String filename = getRequiredAttribute("filename", attrMap, null);
-            FACSConfiguration fc=  new FACSConfiguration();
+            FACSConfiguration fc = new FACSConfiguration();
             try
             {
-              fc.readXML(new Resources("").getReader(filename));
-              fu.setConfig(fc);
+                fc.readXML(new Resources("").getReader(filename));
+                fu.setConfig(fc);
             }
             catch (Exception e)
             {
-              faceUnit = null;
-              logger.warn("Cannot read FACS configuration from file \"{}\"; error: {}", filename, e.getMessage());
+                faceUnit = null;
+                logger.warn("Cannot read FACS configuration from file \"{}\"; error: {}", filename, e.getMessage());
             }
         }
         else
         {
-          logger.warn("Cannot read FaceUnit type \"{}\" in FaceBinding; omitting this FaceUnit", type);
+            logger.warn("Cannot read FaceUnit type \"{}\" in FaceBinding; omitting this FaceUnit", type);
         }
     }
 
@@ -109,22 +107,26 @@ class FaceUnitAssembler extends XMLStructureAdapter
         return faceUnit;
     }
 
-   /*
-    * The XML Stag for XML encoding
-    */
-   private static final String XMLTAG = "FaceUnit";
- 
-   /**
-    * The XML Stag for XML encoding -- use this static method when you want to see if a given String equals
-    * the xml tag for this class
-    */
-   public static String xmlTag() { return XMLTAG; }
- 
-   /**
-    * The XML Stag for XML encoding -- use this method to find out the run-time xml tag of an object
-    */
-   @Override
-   public String getXMLTag() {
-      return XMLTAG;
-   }
+    /*
+     * The XML Stag for XML encoding
+     */
+    private static final String XMLTAG = "FaceUnit";
+
+    /**
+     * The XML Stag for XML encoding -- use this static method when you want to see if a given String equals
+     * the xml tag for this class
+     */
+    public static String xmlTag()
+    {
+        return XMLTAG;
+    }
+
+    /**
+     * The XML Stag for XML encoding -- use this method to find out the run-time xml tag of an object
+     */
+    @Override
+    public String getXMLTag()
+    {
+        return XMLTAG;
+    }
 }

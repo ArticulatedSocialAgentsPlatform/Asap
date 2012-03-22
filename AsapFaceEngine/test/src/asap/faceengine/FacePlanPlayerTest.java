@@ -31,6 +31,11 @@ import asap.faceengine.faceunit.FaceUnit;
 import asap.faceengine.faceunit.TimedFaceUnit;
 import asap.motionunit.MUPlayException;
 
+/**
+ * Unit test cases for the FacePlanPlayer
+ * @author hvanwelbergen
+ *
+ */
 @RunWith(PowerMockRunner.class)
 @PrepareForTest(BMLBlockManager.class)
 public class FacePlanPlayerTest
