@@ -4,6 +4,7 @@
       <dependency org="HMI"     name="HmiMath"           rev="latest.${resolve.status}"    />
       <dependency org="Asap"     name="AsapMath"           rev="latest.${resolve.status}"    />
       <dependency org="HMI"     name="HmiUtil"           rev="latest.${resolve.status}"    />
+      <dependency org="HMI"     name="HmiXml"           rev="latest.${resolve.status}"    />
       
       <!-- TODO: This dependency should be factored out -->
       <dependency org="HMI"     name="HmiElckerlyc"      transitive="false"    rev="latest.${resolve.status}"    />
