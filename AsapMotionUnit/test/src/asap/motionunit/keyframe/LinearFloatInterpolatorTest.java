@@ -1,6 +1,15 @@
 package asap.motionunit.keyframe;
 
+import static org.junit.Assert.*;
+
+import org.junit.Before;
 import org.junit.Test;
+
+import com.google.common.collect.ImmutableList;
+import com.google.common.primitives.Floats;
+
+import static org.hamcrest.collection.IsIterableContainingInOrder.*;
+import static org.hamcrest.MatcherAssert.assertThat;
 
 /**
  * Unit test cases for LinearFloatInterpolator
@@ -9,9 +18,47 @@ import org.junit.Test;
  */
 public class LinearFloatInterpolatorTest
 {
-    @Test
-    public void test()
+    private LinearFloatInterpolator interp = new LinearFloatInterpolator();
+    
+    @Before
+    public void setup()
     {
-        
+        KeyFrame kf0 = new KeyFrame(0,new float[]{1,2,3});
+        KeyFrame kf1 = new KeyFrame(0.2,new float[]{2,3,4});
+        KeyFrame kf2 = new KeyFrame(0.8,new float[]{3,4,5});
+        KeyFrame kf3 = new KeyFrame(1,new float[]{4,5,6});
+        interp.setKeyFrames(ImmutableList.of(kf0,kf1,kf2,kf3), 3);        
+    }
+    
+    @Test
+    public void testInterpolateToStart()
+    {
+        KeyFrame kf = interp.interpolate(0);
+        assertEquals(0, kf.getFrameTime(),0.0001);
+        assertThat(Floats.asList(kf.getDofs()), contains(1f,2f,3f));
+    }
+    
+    @Test
+    public void testInterpolateToEnd()
+    {
+        KeyFrame kf = interp.interpolate(1);
+        assertEquals(1, kf.getFrameTime(),0.0001);
+        assertThat(Floats.asList(kf.getDofs()), contains(4f,5f,6f));
+    }
+    
+    @Test
+    public void testInterpolate02()
+    {
+        KeyFrame kf = interp.interpolate(0.2);
+        assertEquals(0.2, kf.getFrameTime(),0.0001);
+        assertThat(Floats.asList(kf.getDofs()), contains(2f,3f,4f));
+    }
+    
+    @Test
+    public void testInterpolate01()
+    {
+        KeyFrame kf = interp.interpolate(0.1);
+        assertEquals(0.1, kf.getFrameTime(),0.0001);
+        assertThat(Floats.asList(kf.getDofs()), contains(1.5f,2.5f,3.5f));
     }
 }

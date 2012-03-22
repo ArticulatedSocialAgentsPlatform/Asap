@@ -16,10 +16,13 @@ public class LinearFloatInterpolator implements Interpolator
         for(int i=0;i<nrOfDof;i++)
         {
             double p[][]=new double[frames.size()][];
+            int j=0;
             for(KeyFrame kf:frames)
             {
-                p[i][0] = kf.getFrameTime();
-                p[i][1] = kf.getDofs()[i];
+                p[j]=new double[2];
+                p[j][0] = kf.getFrameTime();
+                p[j][1] = kf.getDofs()[i];
+                j++;
             }
             linInterPolators.add(new LinearInterpolator(p));            
         }
