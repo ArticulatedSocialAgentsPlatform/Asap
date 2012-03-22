@@ -103,7 +103,7 @@ public class CubicSplineInterpolator
 
         while (khi - klo > 1)
         {
-            k = (khi + klo) >> 1;
+            k = (khi + klo) >>> 1;
             if (xa[k] > x) khi = k;
             else klo = k;
         }
