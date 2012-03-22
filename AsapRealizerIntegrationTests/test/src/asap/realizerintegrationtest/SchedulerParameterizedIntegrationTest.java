@@ -481,23 +481,23 @@ public class SchedulerParameterizedIntegrationTest
         assertNoWarnings();
         assertNoExceptions();
 
-        assertTrue(pegBoard.getPegTime("bml1", "nod1", "start") == 1);
-        assertTrue(pegBoard.getPegTime("bml1", "nod1", "end") == 2);
-        assertTrue(pegBoard.getPegTime("bml1", "nod1", "end") == 2);
-        assertTrue(pegBoard.getPegTime("bml1", "nod2", "start") == 2);
-        assertTrue(pegBoard.getPegTime("bml1", "nod2", "end") == 3);
-        assertTrue(pegBoard.getPegTime("bml1", "nod3", "start") == 3);
-        assertTrue(pegBoard.getPegTime("bml1", "nod3", "end") == 4);
-        assertTrue(pegBoard.getTimePeg("bml1", "nod1", "end") == pegBoard.getTimePeg("bml1", "nod2", "start"));
-        assertTrue(pegBoard.getTimePeg("bml1", "nod2", "end") == pegBoard.getTimePeg("bml1", "nod3", "start"));
+        assertEquals(1, pegBoard.getPegTime("bml1", "nod1", "start"), 0.0001);
+        assertEquals(2, pegBoard.getPegTime("bml1", "nod1", "end"), 0.0001);
+        assertEquals(2, pegBoard.getPegTime("bml1", "nod1", "end"), 0.0001);
+        assertEquals(2, pegBoard.getPegTime("bml1", "nod2", "start"), 0.0001);
+        assertEquals(3, pegBoard.getPegTime("bml1", "nod2", "end"), 0.0001);
+        assertEquals(3, pegBoard.getPegTime("bml1", "nod3", "start"), 0.0001);
+        assertEquals(4, pegBoard.getPegTime("bml1", "nod3", "end"), 0.0001);
+        assertEquals(pegBoard.getTimePeg("bml1", "nod1", "end") , pegBoard.getTimePeg("bml1", "nod2", "start"));
+        assertEquals(pegBoard.getTimePeg("bml1", "nod2", "end"), pegBoard.getTimePeg("bml1", "nod3", "start"));
 
         antip.getSynchronisationPoint("sync2").setGlobalValue(2.2);
         antip.getSynchronisationPoint("sync3").setGlobalValue(3.2);
 
-        assertTrue(pegBoard.getPegTime("bml1", "nod1", "end") == 2.2);
-        assertTrue(pegBoard.getPegTime("bml1", "nod2", "start") == 2.2);
-        assertTrue(pegBoard.getPegTime("bml1", "nod2", "end") == 3.2);
-        assertTrue(pegBoard.getPegTime("bml1", "nod3", "start") == 3.2);
+        assertEquals(2.2, pegBoard.getPegTime("bml1", "nod1", "end"),0.0001);
+        assertEquals(2.2, pegBoard.getPegTime("bml1", "nod2", "start"),0.0001);
+        assertEquals(3.2, pegBoard.getPegTime("bml1", "nod2", "end"), 0.0001);
+        assertEquals(3.2, pegBoard.getPegTime("bml1", "nod3", "start"), 0.0001);
 
         realizer.removeAnticipator("anticipator1");
         assertTrue(realizer.getScheduler().getNumberOfAnticipators() == 1);
