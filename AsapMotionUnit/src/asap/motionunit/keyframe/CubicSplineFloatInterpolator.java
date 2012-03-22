@@ -3,21 +3,21 @@ package asap.motionunit.keyframe;
 import java.util.ArrayList;
 import java.util.List;
 
-import asap.math.LinearInterpolator;
+import asap.math.CubicSplineInterpolator;
 
 /**
- * Linear interpolator for of a list of keyframes. Interpolates each dof seperately. 
+ * Cubic spline interpolator for of a list of keyframes. Interpolates each dof seperately.
  * @author hvanwelbergen
  *
  */
-public class LinearFloatInterpolator implements Interpolator
+public class CubicSplineFloatInterpolator implements Interpolator
 {
-    List<LinearInterpolator> linInterPolators = new ArrayList<LinearInterpolator>();
+    List<CubicSplineInterpolator> cubicSplineInterPolators = new ArrayList<CubicSplineInterpolator>();
     
     @Override
     public void setKeyFrames(List<KeyFrame> frames, int nrOfDof)
     {
-        linInterPolators.clear();
+        cubicSplineInterPolators.clear();
         for(int i=0;i<nrOfDof;i++)
         {
             double p[][]=new double[frames.size()][];
@@ -29,20 +29,21 @@ public class LinearFloatInterpolator implements Interpolator
                 p[j][1] = kf.getDofs()[i];
                 j++;
             }
-            linInterPolators.add(new LinearInterpolator(p));            
+            cubicSplineInterPolators.add(new CubicSplineInterpolator(p,0,0));            
         }
     }
     
     @Override
     public KeyFrame interpolate(double time)
     {
-        float dofs[]=new float [linInterPolators.size()];
+        float dofs[]=new float [cubicSplineInterPolators.size()];
         int i=0;
-        for(LinearInterpolator inter:linInterPolators)
+        for(CubicSplineInterpolator inter:cubicSplineInterPolators)
         {
             dofs[i] = (float)inter.interpolate(time);
             i++;
         }
         return new KeyFrame(time,dofs);
     }
+
 }
