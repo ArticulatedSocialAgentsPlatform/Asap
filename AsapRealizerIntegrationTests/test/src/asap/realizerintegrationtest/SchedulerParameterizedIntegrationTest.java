@@ -185,7 +185,7 @@ public class SchedulerParameterizedIntegrationTest
 
     static BMLBlockManager bbm = new BMLBlockManager();
     static FeedbackManager bfm = new FeedbackManagerImpl(bbm, "character1");
-    protected static SoundManager soundManager = new LWJGLJoalSoundManager();
+    protected static final SoundManager soundManager = new LWJGLJoalSoundManager();
     PegBoard pegBoard;
     
     @Before
