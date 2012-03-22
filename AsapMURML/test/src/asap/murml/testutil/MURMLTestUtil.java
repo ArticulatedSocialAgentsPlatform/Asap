@@ -9,6 +9,7 @@ import asap.murml.JointValue;
  */
 public final class MURMLTestUtil
 {
+    private MURMLTestUtil(){}
     public static JointValue createJointValue(String id, float ... dofs)
     {
         return new JointValue(id,dofs);

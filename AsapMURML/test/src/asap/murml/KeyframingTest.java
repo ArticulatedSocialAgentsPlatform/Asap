@@ -12,7 +12,7 @@ import asap.murml.Keyframing.Mode;
 /**
  * Unit test cases for Keyframing
  * @author hvanwelbergen
- *
+ * 
  */
 public class KeyframingTest
 {
@@ -20,16 +20,15 @@ public class KeyframingTest
     public void testRead()
     {
         Keyframing kf = new Keyframing();
-        kf.readXML("<keyframing mode=\"spline\" priority=\"100\" easescale=\"10\">"
-                + "<phase>"
-                + "<frame ftime=\"0.1\"><posture>Humanoid (dB_Smile 3 70 0 0) (dB_OpenMouthWOOQ 3 0 0 0) (dB_OpenMouthL 3 0 0 0) (dB_OpenMouthE 3 0 0 0)</posture>"
-                + "</frame>"
-                + "<frame ftime=\"0.2\"><posture>Humanoid (dB_Smile 3 80 0 0) (dB_OpenMouthWOOQ 3 1 0 0) (dB_OpenMouthL 3 0 1 0) (dB_OpenMouthE 3 0 0 1)</posture>"
-                + "</frame>" + "</phase></keyframing>");
+        kf.readXML("<keyframing mode=\"spline\" priority=\"100\" easescale=\"10\">" + "<phase>"
+                + "<frame ftime=\"0.1\"><posture>Humanoid (dB_Smile 3 70 0 0) (dB_OpenMouthWOOQ 3 0 0 0) "
+                + "(dB_OpenMouthL 3 0 0 0) (dB_OpenMouthE 3 0 0 0)</posture>" + "</frame>"
+                + "<frame ftime=\"0.2\"><posture>Humanoid (dB_Smile 3 80 0 0) (dB_OpenMouthWOOQ 3 1 0 0) "
+                + "(dB_OpenMouthL 3 0 1 0) (dB_OpenMouthE 3 0 0 1)</posture>" + "</frame>" + "</phase></keyframing>");
         assertEquals(Mode.SPLINE, kf.getMode());
         assertEquals(100, kf.getPriority());
-        assertEquals(10, kf.getEasescale(),0.0001);
-        
+        assertEquals(10, kf.getEasescale(), 0.0001);
+
         Phase ph = kf.getPhases().get(0);
         Frame f0 = ph.getFrames().get(0);
         assertThat(

@@ -18,11 +18,10 @@ public class PhaseTest
     public void testRead()
     {
         Phase ph = new Phase();
-        ph.readXML("<phase>"
-                + "<frame ftime=\"0.1\"><posture>Humanoid (dB_Smile 3 70 0 0) (dB_OpenMouthWOOQ 3 0 0 0) (dB_OpenMouthL 3 0 0 0) (dB_OpenMouthE 3 0 0 0)</posture>"
-                + "</frame>"
-                + "<frame ftime=\"0.2\"><posture>Humanoid (dB_Smile 3 80 0 0) (dB_OpenMouthWOOQ 3 1 0 0) (dB_OpenMouthL 3 0 1 0) (dB_OpenMouthE 3 0 0 1)</posture>"
-                + "</frame>" + "</phase>");
+        ph.readXML("<phase>" + "<frame ftime=\"0.1\"><posture>Humanoid (dB_Smile 3 70 0 0) "
+                + "(dB_OpenMouthWOOQ 3 0 0 0) (dB_OpenMouthL 3 0 0 0) (dB_OpenMouthE 3 0 0 0)</posture>" + "</frame>"
+                + "<frame ftime=\"0.2\"><posture>Humanoid (dB_Smile 3 80 0 0) "
+                + "(dB_OpenMouthWOOQ 3 1 0 0) (dB_OpenMouthL 3 0 1 0) (dB_OpenMouthE 3 0 0 1)</posture>" + "</frame>" + "</phase>");
         Frame f0 = ph.getFrames().get(0);
 
         assertThat(
