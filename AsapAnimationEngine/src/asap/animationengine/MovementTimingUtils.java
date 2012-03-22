@@ -11,7 +11,7 @@ import hmi.neurophysics.FittsLaw;
  * utility class to determine movement timing 
  * @author hvanwelbergen
  */
-public class MovementTimingUtils
+public final class MovementTimingUtils
 {
     private MovementTimingUtils(){}
     
