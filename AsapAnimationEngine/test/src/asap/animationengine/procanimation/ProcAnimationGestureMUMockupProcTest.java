@@ -17,12 +17,12 @@ import org.junit.Before;
 import org.junit.Test;
 
 import asap.animationengine.AnimationPlayer;
-import asap.animationengine.motionunit.MUPlayException;
-import asap.animationengine.motionunit.MotionUnit;
+import asap.animationengine.motionunit.AnimationUnit;
 import asap.animationengine.motionunit.TimedMotionUnit;
 import asap.animationengine.procanimation.ProcAnimationGestureMU;
 import asap.animationengine.procanimation.ProcAnimationMU;
 import asap.animationengine.restpose.RestPose;
+import asap.motionunit.MUPlayException;
 
 import static org.junit.Assert.*;
 import static org.mockito.Matchers.any;
@@ -82,7 +82,7 @@ public class ProcAnimationGestureMUMockupProcTest
         pag.setupTransitionUnits();
         
         RestPose mockRestPose = mock(RestPose.class);
-        MotionUnit mockRelaxMU = mock(MotionUnit.class);
+        AnimationUnit mockRelaxMU = mock(AnimationUnit.class);
         when(mockAnimationPlayer.getRestPose()).thenReturn(mockRestPose);
         when(mockRestPose.getTransitionToRestDuration((VJoint)any(), (Set<String>)any())).thenReturn(0.5d);
         when(mockRestPose.createTransitionToRest((Set<String>)any())).thenReturn(mockRelaxMU);

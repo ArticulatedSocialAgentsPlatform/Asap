@@ -1,6 +1,6 @@
 package asap.animationengine.procanimation;
 
-import asap.animationengine.motionunit.MotionUnit;
+import asap.animationengine.motionunit.AnimationUnit;
 import hmi.util.Resources;
 
 /**
@@ -9,7 +9,7 @@ import hmi.util.Resources;
  * @author Herwin
  *
  */
-public interface GestureUnit extends MotionUnit
+public interface GestureUnit extends AnimationUnit
 {
     /**
      * Set the resource that's used to get the stroke motion unit

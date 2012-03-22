@@ -2,9 +2,9 @@ Manifest-Version: 1.0
 Main-Class: hmi.bml.reader.Info
 
 Name: asap/bmlb/
-Specification-Title:    AsapMath
+Specification-Title:    AsapMotionUnit
 Specification-Version:  0.2
 Specification-Vendor:   Asap
-Implementation-Title:   AsapMath
+Implementation-Title:   AsapMotionUnit
 Implementation-Version: March 22 2012  10:55 AM
 Implementation-Vendor:  Asap

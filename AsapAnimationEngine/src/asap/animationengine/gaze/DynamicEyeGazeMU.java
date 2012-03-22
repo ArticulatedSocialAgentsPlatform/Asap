@@ -23,7 +23,7 @@ import java.util.Set;
 import com.google.common.collect.ImmutableSet;
 
 import asap.animationengine.AnimationPlayer;
-import asap.animationengine.motionunit.MUPlayException;
+import asap.motionunit.MUPlayException;
 import hmi.animation.Hanim;
 import hmi.animation.VJoint;
 import hmi.math.Quat4f;

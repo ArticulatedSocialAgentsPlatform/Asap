@@ -6,8 +6,8 @@ import static org.mockito.Mockito.when;
 import org.junit.Test;
 import static org.junit.Assert.*;
 import asap.animationengine.AnimationPlayer;
-import asap.animationengine.motionunit.MUPlayException;
 import asap.animationengine.motionunit.MUSetupException;
+import asap.motionunit.MUPlayException;
 import hmi.animation.VJoint;
 import hmi.testutil.animation.HanimBody;
 

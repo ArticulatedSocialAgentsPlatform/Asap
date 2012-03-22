@@ -6,7 +6,7 @@ import hmi.elckerlyc.pegboard.BMLBlockPeg;
 import java.util.Set;
 
 import asap.animationengine.AnimationPlayer;
-import asap.animationengine.motionunit.MotionUnit;
+import asap.animationengine.motionunit.AnimationUnit;
 import asap.animationengine.motionunit.TimedMotionUnit;
 
 /**
@@ -48,7 +48,7 @@ public interface RestPose
      * Create a MotionUnit that moves the joints from their current position 
      * to a position dictated by this resting pose.  
      */
-    MotionUnit createTransitionToRest(Set<String>joints);
+    AnimationUnit createTransitionToRest(Set<String>joints);
     
     /**
      * Sets the restpose to prev, next, curr on the animationplayer 

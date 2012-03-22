@@ -13,14 +13,14 @@ import java.util.Set;
 import com.google.common.collect.ImmutableSet;
 
 import asap.animationengine.AnimationPlayer;
-import asap.animationengine.motionunit.MUPlayException;
-import asap.animationengine.motionunit.MotionUnit;
+import asap.animationengine.motionunit.AnimationUnit;
 import asap.animationengine.motionunit.TimedMotionUnit;
+import asap.motionunit.MUPlayException;
 /**
  * Motion unit stub, typically used to test a TimedMotionUnit implementation.
  * @author welberge
  */
-public class StubMotionUnit implements MotionUnit
+public class StubMotionUnit implements AnimationUnit
 {
     private KeyPositionManager keyPositionManager = new KeyPositionManagerImpl();    
     
@@ -84,7 +84,7 @@ public class StubMotionUnit implements MotionUnit
     }
 
     @Override
-    public MotionUnit copy(AnimationPlayer p)
+    public AnimationUnit copy(AnimationPlayer p)
     {
         return null;
     }

@@ -34,7 +34,7 @@ import org.powermock.modules.junit4.PowerMockRunner;
 import asap.animationengine.AnimationPlanner;
 import asap.animationengine.AnimationPlayer;
 import asap.animationengine.gesturebinding.GestureBinding;
-import asap.animationengine.motionunit.MotionUnit;
+import asap.animationengine.motionunit.AnimationUnit;
 import asap.animationengine.motionunit.TimedMotionUnit;
 
 import static org.mockito.Mockito.*;
@@ -53,7 +53,7 @@ public class AnimationPlannerTest
     private AnimationPlayer mockPlayer = mock(AnimationPlayer.class);
     private GestureBinding mockBinding = mock(GestureBinding.class);    
 
-    private MotionUnit mockUnit = mock(MotionUnit.class);
+    private AnimationUnit mockUnit = mock(AnimationUnit.class);
     private PegBoard pegBoard = new PegBoard();
 
     private BMLBlockManager mockBmlBlockManager = mock(BMLBlockManager.class);

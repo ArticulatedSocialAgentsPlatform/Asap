@@ -19,7 +19,7 @@
 package asap.animationengine.gaze;
 
 import asap.animationengine.AnimationPlayer;
-import asap.animationengine.motionunit.MUPlayException;
+import asap.motionunit.MUPlayException;
 import hmi.elckerlyc.planunit.KeyPosition;
 import hmi.elckerlyc.util.timemanipulator.*;
 import hmi.animation.*;

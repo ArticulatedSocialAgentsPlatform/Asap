@@ -28,12 +28,12 @@ import org.powermock.modules.junit4.PowerMockRunner;
 
 import com.google.common.collect.ImmutableSet;
 
-import asap.animationengine.motionunit.MUPlayException;
-import asap.animationengine.motionunit.MotionUnit;
+import asap.animationengine.motionunit.AnimationUnit;
 import asap.animationengine.motionunit.TimedMotionUnit;
 import asap.animationengine.restpose.RestPose;
 import asap.animationengine.transitions.TransitionMU;
 import asap.animationengine.transitions.TransitionTMU;
+import asap.motionunit.MUPlayException;
 
 import static org.mockito.Mockito.*;
 import static org.mockito.AdditionalMatchers.*;
@@ -52,8 +52,8 @@ import static org.hamcrest.collection.IsIterableContainingInAnyOrder.*;
 @PrepareForTest({ BMLBlockManager.class })
 public class AnimationPlanPlayerTest
 {
-    private MotionUnit muMock1 = mock(MotionUnit.class);
-    private MotionUnit muMock2 = mock(MotionUnit.class);
+    private AnimationUnit muMock1 = mock(AnimationUnit.class);
+    private AnimationUnit muMock2 = mock(AnimationUnit.class);
     private TransitionMU muMockTransition = mock(TransitionMU.class);
 
     private List<BMLSyncPointProgressFeedback> fbList = new ArrayList<BMLSyncPointProgressFeedback>();
@@ -76,7 +76,7 @@ public class AnimationPlanPlayerTest
         fbManager.addFeedbackListener(fbl);
     }
 
-    private TimedMotionUnit createMotionUnit(String behId, String bmlId, MotionUnit mu)
+    private TimedMotionUnit createMotionUnit(String behId, String bmlId, AnimationUnit mu)
     {
         return new TimedMotionUnit(fbManager, BMLBlockPeg.GLOBALPEG, bmlId, behId, mu, pegBoard);
     }

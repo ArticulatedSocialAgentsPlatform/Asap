@@ -56,7 +56,7 @@ import org.nfunk.jep.Variable;
 
 import asap.animationengine.AnimationPlayer;
 import asap.animationengine.keyframe.KeyframeMU;
-import asap.animationengine.motionunit.MotionUnit;
+import asap.animationengine.motionunit.AnimationUnit;
 import asap.animationengine.motionunit.TimedMotionUnit;
 
 import com.google.common.collect.ImmutableSet;
@@ -74,7 +74,7 @@ import com.google.common.collect.ImmutableSet;
  * @author welberge
  * @author Mark ter Maat
  */
-public class ProcAnimationMU extends XMLStructureAdapter implements MotionUnit {
+public class ProcAnimationMU extends XMLStructureAdapter implements AnimationUnit {
 	// private static Logger logger =
 	// LoggerFactory.getLogger(ProcAnimationMU.class.getName());
 

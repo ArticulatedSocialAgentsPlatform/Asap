@@ -7,7 +7,7 @@ import java.util.HashMap;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import asap.animationengine.motionunit.MotionUnit;
+import asap.animationengine.motionunit.AnimationUnit;
 
 import hmi.util.Resources;
 import hmi.xml.XMLStructureAdapter;
@@ -15,7 +15,7 @@ import hmi.xml.XMLTokenizer;
 
 public class VisimeSpec extends XMLStructureAdapter implements ParameterDefaultsHandler
 {
-    private MotionUnit motionUnit;
+    private AnimationUnit motionUnit;
     private final Resources resources;
     private int visime;
     private HashMap<String,MotionUnitParameterDefault>parameterdefault = new HashMap<String,MotionUnitParameterDefault>();
@@ -31,7 +31,7 @@ public class VisimeSpec extends XMLStructureAdapter implements ParameterDefaults
         resources = r;
     }
     
-    public MotionUnit getMotionUnit()
+    public AnimationUnit getMotionUnit()
     {
         return motionUnit;
     }    

@@ -9,7 +9,7 @@ import org.slf4j.LoggerFactory;
 
 import asap.animationengine.AnimationPlayer;
 import asap.animationengine.motionunit.MUSetupException;
-import asap.animationengine.motionunit.MotionUnit;
+import asap.animationengine.motionunit.AnimationUnit;
 import asap.animationengine.motionunit.TimedMotionUnit;
 
 import hmi.elckerlyc.feedback.FeedbackManager;
@@ -64,8 +64,8 @@ public class SpeechBinding extends XMLStructureAdapter
         VisimeSpec viSpec = specs.get(visime);
         if (viSpec != null)
         {
-            MotionUnit mu = viSpec.getMotionUnit();
-            MotionUnit muCopy = mu.copy(player);
+            AnimationUnit mu = viSpec.getMotionUnit();
+            AnimationUnit muCopy = mu.copy(player);
             TimedMotionUnit tmu = muCopy.createTMU(fbm, bbPeg, bmlId, id, pegBoard);
 
             // set default parameter values

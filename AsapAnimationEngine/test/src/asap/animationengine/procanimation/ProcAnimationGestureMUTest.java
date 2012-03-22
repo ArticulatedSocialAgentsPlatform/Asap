@@ -9,11 +9,11 @@ import org.junit.Before;
 import org.junit.Test;
 
 import asap.animationengine.AnimationPlayer;
-import asap.animationengine.motionunit.MUPlayException;
-import asap.animationengine.motionunit.MotionUnit;
+import asap.animationengine.motionunit.AnimationUnit;
 import asap.animationengine.procanimation.ProcAnimationGestureMU;
 import asap.animationengine.procanimation.ProcAnimationMU;
 import asap.animationengine.restpose.RestPose;
+import asap.motionunit.MUPlayException;
 
 import hmi.animation.VJoint;
 import hmi.elckerlyc.planunit.KeyPosition;
@@ -100,7 +100,7 @@ public class ProcAnimationGestureMUTest
     public void testPlayEnd() throws MUPlayException
     {
         RestPose mockRestPose = mock(RestPose.class);
-        MotionUnit mockRelaxMU = mock(MotionUnit.class);
+        AnimationUnit mockRelaxMU = mock(AnimationUnit.class);
         when(mockAnimationPlayer.getRestPose()).thenReturn(mockRestPose);        
         when(mockRestPose.createTransitionToRest((Set<String>)any())).thenReturn(mockRelaxMU);
         pag.setupRelaxUnit();

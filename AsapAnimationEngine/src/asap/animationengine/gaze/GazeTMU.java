@@ -19,6 +19,7 @@
 package asap.animationengine.gaze;
 
 import asap.animationengine.motionunit.*;
+import asap.motionunit.MUPlayException;
 import hmi.bml.BMLGestureSync;
 import hmi.elckerlyc.feedback.FeedbackManager;
 import hmi.elckerlyc.pegboard.BMLBlockPeg;

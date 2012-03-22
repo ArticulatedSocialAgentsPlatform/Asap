@@ -21,9 +21,9 @@ package asap.animationengine.pointing;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import asap.animationengine.motionunit.MUPlayException;
 import asap.animationengine.motionunit.TMUPlayException;
 import asap.animationengine.motionunit.TimedMotionUnit;
+import asap.motionunit.MUPlayException;
 
 import hmi.elckerlyc.feedback.FeedbackManager;
 import hmi.elckerlyc.pegboard.BMLBlockPeg;

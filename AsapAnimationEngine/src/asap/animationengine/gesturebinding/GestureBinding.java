@@ -73,7 +73,7 @@ public class GestureBinding extends XMLStructureAdapter
                 }
                 else
                 {
-                    MotionUnit muCopy;
+                    AnimationUnit muCopy;
                     try
                     {
                         muCopy = s.motionUnit.copy(player);

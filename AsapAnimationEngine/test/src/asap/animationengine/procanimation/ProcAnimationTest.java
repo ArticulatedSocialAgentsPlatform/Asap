@@ -13,11 +13,11 @@ import static hmi.testutil.math.Quat4fTestUtil.assertQuat4fRotationEquivalent;
 import org.junit.Before;
 import org.junit.Test;
 
-import asap.animationengine.motionunit.MUPlayException;
-import asap.animationengine.motionunit.MotionUnit;
+import asap.animationengine.motionunit.AnimationUnit;
 import asap.animationengine.procanimation.IKBody;
 import asap.animationengine.procanimation.Parameter;
 import asap.animationengine.procanimation.ProcAnimationMU;
+import asap.motionunit.MUPlayException;
 import static hmi.testutil.math.Vec3fTestUtil.*;
 import static org.junit.Assert.*;
 /**
@@ -81,7 +81,7 @@ public class ProcAnimationTest
         
         VJoint humanCopy = HanimBody.getLOA1HanimBody();
         humanCopy.getPart("HumanoidRoot").setTranslation(0,0,0);
-        MotionUnit mu = procAnimation.copy(humanCopy);
+        AnimationUnit mu = procAnimation.copy(humanCopy);
         mu.play(0);
         float t[]=Vec3f.getVec3f();
         humanCopy.getPart("HumanoidRoot").getTranslation(t);
@@ -174,7 +174,7 @@ public class ProcAnimationTest
     public void testCopy() throws MUPlayException
     {
         VJoint humanCopy = HanimBody.getLOA1HanimBody();
-        MotionUnit puCopy = procAnimation.copy(humanCopy);
+        AnimationUnit puCopy = procAnimation.copy(humanCopy);
         
         puCopy.play(0);
         float q[]=Quat4f.getQuat4f();

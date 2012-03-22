@@ -43,7 +43,7 @@ class MotionUnitAssembler extends XMLStructureAdapter
               
     private Resources resources;
 
-    private MotionUnit motionUnit = null;
+    private AnimationUnit motionUnit = null;
 
     public MotionUnitAssembler(Resources r)
     {
@@ -218,7 +218,7 @@ class MotionUnitAssembler extends XMLStructureAdapter
                     logger.warn("Exception: ", e);
                     return;
                 }
-                if (!MotionUnit.class.isAssignableFrom(muClass))
+                if (!AnimationUnit.class.isAssignableFrom(muClass))
                 {
                     motionUnit = null;
                     logger.warn("{} does not implement the MotionUnit interface", className);
@@ -227,7 +227,7 @@ class MotionUnitAssembler extends XMLStructureAdapter
                 
                 try
                 {
-                    motionUnit = (MotionUnit) (muClass.newInstance());
+                    motionUnit = (AnimationUnit) (muClass.newInstance());
                 }
                 catch (InstantiationException e)
                 {
@@ -249,7 +249,7 @@ class MotionUnitAssembler extends XMLStructureAdapter
     /**
      * @return the motionUnit, null if not set up/invalid
      */
-    public MotionUnit getMotionUnit()
+    public AnimationUnit getMotionUnit()
     {
         return motionUnit;
     }

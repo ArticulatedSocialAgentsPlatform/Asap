@@ -35,6 +35,8 @@ import org.junit.runner.RunWith;
 import org.powermock.core.classloader.annotations.PrepareForTest;
 import org.powermock.modules.junit4.PowerMockRunner;
 
+import asap.motionunit.MUPlayException;
+
 /**
  * Testcases for the TimedMotionUnit
  * @author welberge
@@ -43,7 +45,7 @@ import org.powermock.modules.junit4.PowerMockRunner;
 @PrepareForTest({BMLBlockManager.class})
 public class TimedMotionUnitTest extends AbstractTimedPlanUnitTest
 {
-    private MotionUnit muMock;
+    private AnimationUnit muMock;
     
     private List<BMLSyncPointProgressFeedback> fbList;
     private ListFeedbackListener fbl;

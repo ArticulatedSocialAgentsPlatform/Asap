@@ -24,6 +24,7 @@ import com.google.common.collect.ImmutableSet;
 
 import asap.animationengine.AnimationPlayer;
 import asap.animationengine.motionunit.*;
+import asap.motionunit.MUPlayException;
 
 
 import hmi.animation.*;
@@ -63,7 +64,7 @@ import hmi.util.StringUtil;
  *         Graf, & P. Vidal (Eds.), The Head-Neck Sensory-Motor System (pp.
  *         387-391). New York: Oxford University Press.
  */
-public class GazeMU implements MotionUnit
+public class GazeMU implements AnimationUnit
 {
     protected float qGaze[];
 
@@ -110,7 +111,7 @@ public class GazeMU implements MotionUnit
     protected static final double RELATIVE_READY_TIME = 0.25;
     protected static final double RELATIVE_RELAX_TIME = 0.75;
 
-    protected MotionUnit relaxUnit;
+    protected AnimationUnit relaxUnit;
     
     public GazeMU()
     {

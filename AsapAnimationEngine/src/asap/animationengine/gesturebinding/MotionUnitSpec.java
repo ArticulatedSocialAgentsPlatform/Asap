@@ -28,13 +28,13 @@ import hmi.xml.*;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import asap.animationengine.motionunit.MotionUnit;
+import asap.animationengine.motionunit.AnimationUnit;
 
 class MotionUnitSpec extends XMLStructureAdapter implements ParameterDefaultsHandler
 {
     private final static Logger logger = LoggerFactory.getLogger(MotionUnitSpec.class.getName());
 
-    public MotionUnit motionUnit;
+    public AnimationUnit motionUnit;
     private String type;
     private String specnamespace;
     

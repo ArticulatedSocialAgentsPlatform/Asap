@@ -3,6 +3,7 @@
    <dependencies>
       <dependency org="Asap"     name="AsapBML"           rev="latest.${resolve.status}"    />
       <dependency org="Asap"     name="AsapRealizer"           rev="latest.${resolve.status}"    />
+      <dependency org="Asap"     name="AsapMotionUnit"           rev="latest.${resolve.status}"    />
 
       <dependency org="HMI"     name="HmiBML"           rev="latest.${resolve.status}"    />
       <dependency org="HMI"     name="HmiElckerlyc"           rev="latest.${resolve.status}"    />

@@ -30,7 +30,7 @@ import hmi.elckerlyc.planunit.ParameterNotFoundException;
 import java.util.*;
 
 import asap.animationengine.AnimationPlayer;
-import asap.animationengine.motionunit.MotionUnit;
+import asap.animationengine.motionunit.AnimationUnit;
 import asap.animationengine.motionunit.TimedMotionUnit;
 
 
@@ -47,7 +47,7 @@ import asap.animationengine.motionunit.TimedMotionUnit;
  * the pose they set at any given time (for now, only procedural MotionUnits).
  * @author welberge
  */
-public abstract class TransitionMU implements MotionUnit
+public abstract class TransitionMU implements AnimationUnit
 {
     protected Collection<VJoint> joints;
     private double prefDuration = 2;

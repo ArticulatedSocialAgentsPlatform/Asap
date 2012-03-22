@@ -11,7 +11,7 @@ import org.powermock.core.classloader.annotations.PrepareForTest;
 import org.powermock.modules.junit4.PowerMockRunner;
 
 import asap.animationengine.AnimationPlayer;
-import asap.animationengine.motionunit.MotionUnit;
+import asap.animationengine.motionunit.AnimationUnit;
 import asap.animationengine.restpose.RestPose;
 import hmi.animation.Hanim;
 import hmi.animation.VJoint;
@@ -59,7 +59,7 @@ public class PointingTMUTest extends AbstractTimedPlanUnitTest
         mu.woManager = woManager;
         
         RestPose mockRestPose = mock(RestPose.class);
-        MotionUnit mockRelaxMU = mock(MotionUnit.class);
+        AnimationUnit mockRelaxMU = mock(AnimationUnit.class);
         when(mockAnimationPlayer.getRestPose()).thenReturn(mockRestPose);        
         when(mockRestPose.createTransitionToRest((Set<String>)any())).thenReturn(mockRelaxMU);
         

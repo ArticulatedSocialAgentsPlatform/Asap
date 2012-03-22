@@ -19,7 +19,7 @@ public class PhysicalTMU extends TimedMotionUnit
 {
     private static Logger logger = LoggerFactory.getLogger(PhysicalTMU.class.getName());
 
-    public PhysicalTMU(FeedbackManager bbm, BMLBlockPeg bbPeg, String bmlId, String id, MotionUnit m, PegBoard pb)
+    public PhysicalTMU(FeedbackManager bbm, BMLBlockPeg bbPeg, String bmlId, String id, AnimationUnit m, PegBoard pb)
     {
         super(bbm, bbPeg, bmlId, id, m, pb);
     }

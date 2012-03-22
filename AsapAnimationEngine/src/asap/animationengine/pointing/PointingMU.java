@@ -24,9 +24,9 @@ import java.util.Set;
 import com.google.common.collect.ImmutableSet;
 
 import asap.animationengine.AnimationPlayer;
-import asap.animationengine.motionunit.MUPlayException;
-import asap.animationengine.motionunit.MotionUnit;
+import asap.animationengine.motionunit.AnimationUnit;
 import asap.animationengine.motionunit.TimedMotionUnit;
+import asap.motionunit.MUPlayException;
 
 import hmi.animation.*;
 import hmi.elckerlyc.feedback.FeedbackManager;
@@ -47,7 +47,7 @@ import hmi.math.*;
  * @author welberge TODO: Fitts' law based default timing 
  * TODO: Double-hand point(?)
  */
-public class PointingMU implements MotionUnit
+public class PointingMU implements AnimationUnit
 {
     protected float qShoulder[];
     protected float qElbow[];
@@ -76,7 +76,7 @@ public class PointingMU implements MotionUnit
     protected String hand = "RIGHT";
     protected WorldObject woTarget;
     protected double preparationDuration;
-    protected MotionUnit relaxUnit;
+    protected AnimationUnit relaxUnit;
 
     private final KeyPositionManager keyPositionManager = new KeyPositionManagerImpl();
 

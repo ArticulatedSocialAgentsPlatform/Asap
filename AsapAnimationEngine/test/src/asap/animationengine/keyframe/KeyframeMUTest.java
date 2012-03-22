@@ -13,8 +13,8 @@ import org.junit.Before;
 import org.junit.Test;
 
 import asap.animationengine.keyframe.KeyframeMU;
-import asap.animationengine.motionunit.MUPlayException;
-import asap.animationengine.motionunit.MotionUnit;
+import asap.animationengine.motionunit.AnimationUnit;
+import asap.motionunit.MUPlayException;
 
 public class KeyframeMUTest
 {
@@ -107,7 +107,7 @@ public class KeyframeMUTest
     public void testCopy() throws MUPlayException
     {
         VJoint humanCopy = HanimBody.getLOA1HanimBody();
-        MotionUnit kfmuCopy = kfmu.copy(humanCopy);
+        AnimationUnit kfmuCopy = kfmu.copy(humanCopy);
         
         kfmuCopy.play(0);        
         float q[]=Quat4f.getQuat4f();

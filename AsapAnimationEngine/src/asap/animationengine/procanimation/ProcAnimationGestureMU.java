@@ -24,9 +24,9 @@ import org.slf4j.LoggerFactory;
 
 import asap.animationengine.AnimationPlayer;
 import asap.animationengine.MovementTimingUtils;
-import asap.animationengine.motionunit.MUPlayException;
-import asap.animationengine.motionunit.MotionUnit;
+import asap.animationengine.motionunit.AnimationUnit;
 import asap.animationengine.transitions.SlerpTransitionToPoseMU;
+import asap.motionunit.MUPlayException;
 import asap.planunit.Priority;
 
 import com.google.common.collect.ImmutableSet;
@@ -43,7 +43,7 @@ public class ProcAnimationGestureMU implements GestureUnit
     private ProcAnimationMU gestureUnit = new ProcAnimationMU();
     private KeyPositionManager keyPositionManager = new KeyPositionManagerImpl();
     private SlerpTransitionToPoseMU prepUnit;
-    private MotionUnit relaxUnit;
+    private AnimationUnit relaxUnit;
     private VJoint vStart;
     private VJoint vNext;
     

@@ -43,7 +43,7 @@ import asap.animationengine.motionunit.*;
  * @author Herwin van Welbergen
  *
  */
-public class ControllerMU implements MotionUnit
+public class ControllerMU implements AnimationUnit
 {
     private PhysicalController controller;
     private String replacementgroup = null;
@@ -84,7 +84,7 @@ public class ControllerMU implements MotionUnit
      *            animation player to use the MotionUnit in
      */
     @Override
-    public MotionUnit copy(AnimationPlayer p)
+    public AnimationUnit copy(AnimationPlayer p)
     {
         PhysicalController pc = controller.copy(p.getPHuman());
         ControllerMU c = new ControllerMU(pc, p);

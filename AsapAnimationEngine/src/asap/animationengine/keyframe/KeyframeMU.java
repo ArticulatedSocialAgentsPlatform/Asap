@@ -42,7 +42,7 @@ import asap.animationengine.motionunit.*;
  * @author Herwin van Welbergen
  * 
  */
-public class KeyframeMU implements MotionUnit
+public class KeyframeMU implements AnimationUnit
 {
     private SkeletonInterpolator baseIp;
     private SkeletonInterpolator currentIp;
@@ -145,7 +145,7 @@ public class KeyframeMU implements MotionUnit
         return baseIp;
     }
 
-    public MotionUnit copy(VJoint v)
+    public AnimationUnit copy(VJoint v)
     {
         VJoint[] empty = new VJoint[0];
         ArrayList<VJoint> vjParts = new ArrayList<VJoint>();
@@ -240,7 +240,7 @@ public class KeyframeMU implements MotionUnit
     }
 
     @Override
-    public MotionUnit copy(AnimationPlayer p)
+    public AnimationUnit copy(AnimationPlayer p)
     {
         return copy(p.getVNext());
     }

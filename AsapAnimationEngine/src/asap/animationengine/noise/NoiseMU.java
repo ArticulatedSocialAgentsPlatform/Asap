@@ -26,6 +26,6 @@ import asap.animationengine.motionunit.*;
  * @author Dennis Reidsma
  * 
  */
-public interface NoiseMU extends MotionUnit
+public interface NoiseMU extends AnimationUnit
 {
 }

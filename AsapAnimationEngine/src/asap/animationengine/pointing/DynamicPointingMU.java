@@ -19,7 +19,7 @@
 package asap.animationengine.pointing;
 
 import asap.animationengine.AnimationPlayer;
-import asap.animationengine.motionunit.MUPlayException;
+import asap.motionunit.MUPlayException;
 import hmi.animation.AnalyticalIKSolver;
 import hmi.math.Quat4f;
 

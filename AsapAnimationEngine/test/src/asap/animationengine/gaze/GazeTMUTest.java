@@ -26,7 +26,7 @@ import org.powermock.core.classloader.annotations.PrepareForTest;
 import org.powermock.modules.junit4.PowerMockRunner;
 
 import asap.animationengine.AnimationPlayer;
-import asap.animationengine.motionunit.MotionUnit;
+import asap.animationengine.motionunit.AnimationUnit;
 import asap.animationengine.restpose.RestPose;
 
 /**
@@ -60,7 +60,7 @@ public class GazeTMUTest extends AbstractTimedPlanUnitTest
         mu.neck = vNext.getPartBySid(Hanim.skullbase);
         
         RestPose mockRestPose = mock(RestPose.class);
-        MotionUnit mockRelaxMU = mock(MotionUnit.class);
+        AnimationUnit mockRelaxMU = mock(AnimationUnit.class);
         when(mockAnimationPlayer.getRestPose()).thenReturn(mockRestPose);        
         when(mockRestPose.createTransitionToRest((Set<String>)any())).thenReturn(mockRelaxMU);
         

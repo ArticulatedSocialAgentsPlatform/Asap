@@ -41,6 +41,8 @@ import java.util.List;
 import java.util.Set;
 import java.util.concurrent.CopyOnWriteArrayList;
 
+import asap.motionunit.MUPlayException;
+
 import lombok.Delegate;
 import lombok.extern.slf4j.Slf4j;
 /**
@@ -52,7 +54,7 @@ import lombok.extern.slf4j.Slf4j;
 @Slf4j
 public class TimedMotionUnit extends TimedAbstractPlanUnit
 {
-    private final MotionUnit mu;
+    private final AnimationUnit mu;
     protected List<KeyPosition> progressHandled = new CopyOnWriteArrayList<KeyPosition>();
     private final UniModalResolver resolver = new LinearStretchResolver();
     protected PegBoard pegBoard;
@@ -73,7 +75,7 @@ public class TimedMotionUnit extends TimedAbstractPlanUnit
      * @param id behaviour id
      * @param m motion unit
      */
-    public TimedMotionUnit(FeedbackManager bbf, BMLBlockPeg bmlBlockPeg, String bmlId, String id, MotionUnit m, PegBoard pb)
+    public TimedMotionUnit(FeedbackManager bbf, BMLBlockPeg bmlBlockPeg, String bmlId, String id, AnimationUnit m, PegBoard pb)
     {
         super(bbf, bmlBlockPeg, bmlId, id);
         mu = m;
@@ -81,7 +83,7 @@ public class TimedMotionUnit extends TimedAbstractPlanUnit
         pegBoard = pb;
     }
 
-    public TimedMotionUnit(BMLBlockPeg bmlBlockPeg, String bmlId, String id, MotionUnit m, PegBoard pb)
+    public TimedMotionUnit(BMLBlockPeg bmlBlockPeg, String bmlId, String id, AnimationUnit m, PegBoard pb)
     {
         this(NullFeedbackManager.getInstance(), bmlBlockPeg, bmlId, id, m, pb);
     }
@@ -163,7 +165,7 @@ public class TimedMotionUnit extends TimedAbstractPlanUnit
     /**
      * @return the encapsulated motion unit
      */
-    public MotionUnit getMotionUnit()
+    public AnimationUnit getMotionUnit()
     {
         return mu;
     }

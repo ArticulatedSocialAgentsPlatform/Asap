@@ -19,6 +19,7 @@
 package asap.animationengine.noise;
 
 import asap.animationengine.motionunit.*;
+import asap.motionunit.MUPlayException;
 import hmi.bml.feedback.*;
 import hmi.elckerlyc.feedback.FeedbackManager;
 import hmi.elckerlyc.pegboard.BMLBlockPeg;

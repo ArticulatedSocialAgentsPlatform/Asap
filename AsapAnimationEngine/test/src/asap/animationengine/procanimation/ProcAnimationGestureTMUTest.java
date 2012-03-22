@@ -33,7 +33,7 @@ import org.powermock.core.classloader.annotations.PrepareForTest;
 import org.powermock.modules.junit4.PowerMockRunner;
 
 import asap.animationengine.AnimationPlayer;
-import asap.animationengine.motionunit.MotionUnit;
+import asap.animationengine.motionunit.AnimationUnit;
 import asap.animationengine.motionunit.TMUPlayException;
 import asap.animationengine.motionunit.TimedMotionUnitTest;
 import asap.animationengine.restpose.RestPose;
@@ -75,7 +75,7 @@ public class ProcAnimationGestureTMUTest extends TimedMotionUnitTest
         RestPose mockRestPose = mock(RestPose.class);
         when(mockRestPose.getTransitionToRestDuration((VJoint) any(), (Set<String>) any())).thenReturn(1d);
 
-        MotionUnit mockRelaxMU = mock(MotionUnit.class);
+        AnimationUnit mockRelaxMU = mock(AnimationUnit.class);
         when(mockAnimationPlayer.getRestPose()).thenReturn(mockRestPose);
         when(mockRestPose.createTransitionToRest((Set<String>) any())).thenReturn(mockRelaxMU);
 

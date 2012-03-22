@@ -22,9 +22,9 @@ import java.util.Set;
 import com.google.common.collect.ImmutableSet;
 
 import asap.animationengine.AnimationPlayer;
-import asap.animationengine.motionunit.MUPlayException;
 import asap.animationengine.motionunit.MUSetupException;
 import asap.animationengine.motionunit.TimedMotionUnit;
+import asap.motionunit.MUPlayException;
 import hmi.animation.Hanim;
 import hmi.elckerlyc.feedback.FeedbackManager;
 import hmi.elckerlyc.pegboard.BMLBlockPeg;

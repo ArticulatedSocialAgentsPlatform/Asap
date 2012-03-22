@@ -21,7 +21,7 @@ import org.junit.Test;
 import asap.animationengine.AnimationPlanner;
 import asap.animationengine.AnimationPlayer;
 import asap.animationengine.gesturebinding.GestureBinding;
-import asap.animationengine.motionunit.MotionUnit;
+import asap.animationengine.motionunit.AnimationUnit;
 import asap.animationengine.motionunit.TimedMotionUnit;
 import asap.animationengine.restpose.SkeletonPoseRestPose;
 
@@ -31,10 +31,10 @@ import asap.animationengine.restpose.SkeletonPoseRestPose;
  */
 public class AnimationPlannerSpeechTest
 {
-    private MotionUnit mockUnit1 = mock(MotionUnit.class);
-    private MotionUnit mockUnit2 = mock(MotionUnit.class);
-    private MotionUnit mockUnit3 = mock(MotionUnit.class);
-    private MotionUnit mockUnit4 = mock(MotionUnit.class);
+    private AnimationUnit mockUnit1 = mock(AnimationUnit.class);
+    private AnimationUnit mockUnit2 = mock(AnimationUnit.class);
+    private AnimationUnit mockUnit3 = mock(AnimationUnit.class);
+    private AnimationUnit mockUnit4 = mock(AnimationUnit.class);
     private GestureBinding mockBinding = mock(GestureBinding.class);
     private PhysicalHumanoid mockPh = mock(PhysicalHumanoid.class);
     private FeedbackManager mockBmlFeedbackManager = mock(FeedbackManager.class);

@@ -36,6 +36,7 @@ import com.google.common.collect.ImmutableSet;
 
 import asap.animationengine.AnimationPlayer;
 import asap.animationengine.motionunit.*;
+import asap.motionunit.MUPlayException;
 
 /**
  * Motion unit for applying perlin noise to a set of joints.
@@ -210,7 +211,7 @@ public class PerlinNoiseMU implements NoiseMU
     }
 
     @Override
-    public MotionUnit copy(AnimationPlayer p)
+    public AnimationUnit copy(AnimationPlayer p)
     {
         HashMap<String, String> newparam = new HashMap<String, String>();
         newparam.putAll(parameters);
