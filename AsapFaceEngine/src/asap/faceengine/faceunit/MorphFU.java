@@ -54,12 +54,14 @@ import asap.utils.AnimationSync;
 public class MorphFU implements FaceUnit
 {
     private float intensity = 1f;
-    
+
     private String targetName = "";
+
     public void setTargetName(String targetName)
     {
         this.targetName = targetName;
     }
+
     private static Logger logger = LoggerFactory.getLogger(MorphFU.class.getName());
     private boolean multiple = false;
     private final KeyPositionManager keyPositionManager = new KeyPositionManagerImpl();
@@ -88,65 +90,60 @@ public class MorphFU implements FaceUnit
     {
         faceController = fc;
     }
-    
-    
-    
+
     public void setIntensity(float intensity)
     {
         this.intensity = intensity;
     }
 
-    
     @Override
     public void setFloatParameterValue(String name, float value) throws ParameterNotFoundException
     {
-        if (name.equals("intensity"))
-            intensity = value;
-      else throw new ParameterNotFoundException(name);
+        if (name.equals("intensity")) intensity = value;
+        else throw new ParameterNotFoundException(name);
     }
 
     @Override
     public void setParameterValue(String name, String value) throws ParameterException
     {
-      if (name.equals("targetname"))
-      {
-        targetName = value;
-        updateMorphTargets();
-      }
-      else if (name.equals("multiple"))
-      {
-        multiple = Boolean.parseBoolean(value);
-        updateMorphTargets();
-      }
-      else
-      {
-          if (StringUtil.isNumeric(value))
-          {
-              setFloatParameterValue(name, Float.parseFloat(value));
-          }
-          else
-          {
-              throw new InvalidParameterException(name,value);
-          }
-      }
+        if (name.equals("targetname"))
+        {
+            targetName = value;
+            updateMorphTargets();
+        }
+        else if (name.equals("multiple"))
+        {
+            multiple = Boolean.parseBoolean(value);
+            updateMorphTargets();
+        }
+        else
+        {
+            if (StringUtil.isNumeric(value))
+            {
+                setFloatParameterValue(name, Float.parseFloat(value));
+            }
+            else
+            {
+                throw new InvalidParameterException(name, value);
+            }
+        }
     }
-    
+
     @Override
     public String getParameterValue(String name) throws ParameterException
     {
-        if (name.equals("targetname")) return ""+targetName;
-        if (name.equals("multiple")) return ""+multiple;
-        return ""+getFloatParameterValue(name);
+        if (name.equals("targetname")) return "" + targetName;
+        if (name.equals("multiple")) return "" + multiple;
+        return "" + getFloatParameterValue(name);
     }
 
-    
     @Override
     public float getFloatParameterValue(String name) throws ParameterException
     {
         if (name.equals("intensity")) return intensity;
         throw new ParameterNotFoundException(name);
-    } 
-    
+    }
+
     @Override
     public boolean hasValidParameters()
     {
@@ -177,7 +174,7 @@ public class MorphFU implements FaceUnit
      */
     public void play(double t) throws FUPlayException
     {
-        logger.debug("Playing FU at time={}",t);
+        logger.debug("Playing FU at time={}", t);
         // between where and where? Linear interpolate from intensity 0..max
         // between start&Ready; then down from relax till end
 
@@ -197,8 +194,7 @@ public class MorphFU implements FaceUnit
         }
         else if (t > relax && t < 1)
         {
-            newMorphedWeight = intensity
-                    * (float) (1 - ((t - relax) / (1 - relax)));
+            newMorphedWeight = intensity * (float) (1 - ((t - relax) / (1 - relax)));
         }
         float[] prevWeights = new float[morphTargets.length];
         for (int i = 0; i < prevWeights.length; i++)
@@ -210,7 +206,7 @@ public class MorphFU implements FaceUnit
             // System.out.println("Playing FU at time=" + t);
             logger.debug("RemoveWeight=" + prevMorphedWeight);
             logger.debug("NewWeight=" + newMorphedWeight);
-            logger.debug("target: "+Arrays.toString(morphTargets));
+            logger.debug("target: " + Arrays.toString(morphTargets));
             float[] newWeights = new float[morphTargets.length];
             for (int i = 0; i < newWeights.length; i++)
                 newWeights[i] = newMorphedWeight;
@@ -263,18 +259,18 @@ public class MorphFU implements FaceUnit
      */
     public FaceUnit copy(FaceController fc, FACSConverter fconv, EmotionConverter econv)
     {
-      MorphFU result = new MorphFU();
-      result.setFaceController(fc);
-      result.intensity = intensity;
-      result.targetName = targetName;
-      result.multiple = multiple;
-      
-      for (KeyPosition keypos : getKeyPositions())
-      {
-        result.addKeyPosition(keypos.deepCopy());
-      }
-      result.updateMorphTargets();
-      return result;
+        MorphFU result = new MorphFU();
+        result.setFaceController(fc);
+        result.intensity = intensity;
+        result.targetName = targetName;
+        result.multiple = multiple;
+
+        for (KeyPosition keypos : getKeyPositions())
+        {
+            result.addKeyPosition(keypos.deepCopy());
+        }
+        result.updateMorphTargets();
+        return result;
     }
 
     @Override
