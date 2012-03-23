@@ -2,6 +2,7 @@
    <info organisation="Asap" module="AsapFaceEngine"/>
    <dependencies>
      <dependency org="Asap"   name="AsapMotionUnit"            rev="latest.${resolve.status}"   />
+     <dependency org="Asap"   name="AsapMURML"            rev="latest.${resolve.status}"   />
      <dependency org="HMI"   name="HmiUtil"            rev="latest.${resolve.status}"   />
       <dependency org="HMI"   name="HmiXml"             rev="latest.${resolve.status}"   />
       <dependency org="HMI"   name="HmiMath"            rev="latest.${resolve.status}"   />

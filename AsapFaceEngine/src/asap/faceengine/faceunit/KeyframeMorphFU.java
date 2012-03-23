@@ -1,5 +1,9 @@
 package asap.faceengine.faceunit;
 
+import java.util.List;
+
+import com.google.common.collect.ImmutableList;
+
 import hmi.elckerlyc.feedback.FeedbackManager;
 import hmi.elckerlyc.pegboard.BMLBlockPeg;
 import hmi.elckerlyc.planunit.KeyPosition;
@@ -9,14 +13,17 @@ import hmi.faceanimation.converters.FACSConverter;
 import asap.motionunit.keyframe.Interpolator;
 import asap.motionunit.keyframe.KeyFrame;
 import asap.motionunit.keyframe.KeyFrameMotionUnit;
+import asap.utils.AnimationSync;
 
 public class KeyframeMorphFU extends KeyFrameMotionUnit implements FaceUnit
 {
     private FaceController faceController;
+    private List<String> targets;
     
-    public KeyframeMorphFU(Interpolator interp)
+    public KeyframeMorphFU(List<String> targets, Interpolator interp)
     {
         super(interp);
+        this.targets = ImmutableList.copyOf(targets);
         KeyPosition ready = new KeyPosition("ready", 0.1d, 1d);
         KeyPosition relax = new KeyPosition("relax", 0.9d, 1d);
         KeyPosition start = new KeyPosition("start", 0d, 1d);
@@ -73,6 +80,10 @@ public class KeyframeMorphFU extends KeyFrameMotionUnit implements FaceUnit
     @Override
     public void applyKeyFrame(KeyFrame kf)
     {
-        // TODO Auto-generated method stub        
+        synchronized (AnimationSync.getSync())
+        {
+            //TODO: remove old values
+            faceController.addMorphTargets(targets.toArray(new String[targets.size()]), kf.getDofs());
+        }
     }
 }

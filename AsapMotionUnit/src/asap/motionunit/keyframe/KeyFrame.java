@@ -2,6 +2,11 @@ package asap.motionunit.keyframe;
 
 import java.util.Arrays;
 
+/**
+ * Stores a keyframe time and a set of dof values (as float array)
+ * @author hvanwelbergen
+ *
+ */
 public class KeyFrame
 {
     private double ftime;
