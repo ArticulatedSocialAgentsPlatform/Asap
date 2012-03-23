@@ -21,9 +21,9 @@ package asap.animationengine.pointing;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import asap.animationengine.motionunit.TMUPlayException;
-import asap.animationengine.motionunit.TimedMotionUnit;
+import asap.animationengine.motionunit.TimeAnimationUnit;
 import asap.motionunit.MUPlayException;
+import asap.motionunit.TMUPlayException;
 
 import hmi.elckerlyc.feedback.FeedbackManager;
 import hmi.elckerlyc.pegboard.BMLBlockPeg;
@@ -36,7 +36,7 @@ import hmi.elckerlyc.planunit.TimedPlanUnitPlayException;
  * A timed motionunit for pointing
  * @author hvanwelbergen
  */
-public class PointingTMU extends TimedMotionUnit
+public class PointingTMU extends TimeAnimationUnit
 {
     private PointingMU pmu;
     private static Logger logger = LoggerFactory.getLogger(PointingTMU.class.getName());

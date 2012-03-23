@@ -10,7 +10,7 @@ import org.slf4j.LoggerFactory;
 import asap.animationengine.AnimationPlayer;
 import asap.animationengine.motionunit.MUSetupException;
 import asap.animationengine.motionunit.AnimationUnit;
-import asap.animationengine.motionunit.TimedMotionUnit;
+import asap.animationengine.motionunit.TimeAnimationUnit;
 
 import hmi.elckerlyc.feedback.FeedbackManager;
 import hmi.elckerlyc.feedback.NullFeedbackManager;
@@ -52,13 +52,13 @@ public class SpeechBinding extends XMLStructureAdapter
         }
     }
 
-    public TimedMotionUnit getMotionUnit(int visime, BMLBlockPeg bbPeg, String bmlId, String id, AnimationPlayer player, PegBoard pegBoard)
+    public TimeAnimationUnit getMotionUnit(int visime, BMLBlockPeg bbPeg, String bmlId, String id, AnimationPlayer player, PegBoard pegBoard)
             throws MUSetupException
     {
         return getMotionUnit(NullFeedbackManager.getInstance(), visime, bbPeg, bmlId, id, player, pegBoard);
     }
 
-    public TimedMotionUnit getMotionUnit(FeedbackManager fbm, int visime, BMLBlockPeg bbPeg, String bmlId, String id,
+    public TimeAnimationUnit getMotionUnit(FeedbackManager fbm, int visime, BMLBlockPeg bbPeg, String bmlId, String id,
             AnimationPlayer player, PegBoard pegBoard) throws MUSetupException
     {
         VisimeSpec viSpec = specs.get(visime);
@@ -66,7 +66,7 @@ public class SpeechBinding extends XMLStructureAdapter
         {
             AnimationUnit mu = viSpec.getMotionUnit();
             AnimationUnit muCopy = mu.copy(player);
-            TimedMotionUnit tmu = muCopy.createTMU(fbm, bbPeg, bmlId, id, pegBoard);
+            TimeAnimationUnit tmu = muCopy.createTMU(fbm, bbPeg, bmlId, id, pegBoard);
 
             // set default parameter values
             for (MotionUnitParameterDefault mupc : viSpec.getParameterDefaults())

@@ -20,6 +20,7 @@ package asap.animationengine.noise;
 
 import asap.animationengine.motionunit.*;
 import asap.motionunit.MUPlayException;
+import asap.motionunit.TMUPlayException;
 import hmi.bml.feedback.*;
 import hmi.elckerlyc.feedback.FeedbackManager;
 import hmi.elckerlyc.pegboard.BMLBlockPeg;
@@ -35,7 +36,7 @@ import hmi.elckerlyc.planunit.TimedPlanUnitPlayException;
  * @author Dennis Reidsma
  * 
  */
-public class NoiseTMU extends TimedMotionUnit
+public class NoiseTMU extends TimeAnimationUnit
 {
     private NoiseMU nmu;
 

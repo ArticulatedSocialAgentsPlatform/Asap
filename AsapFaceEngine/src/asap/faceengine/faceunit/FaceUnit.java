@@ -42,23 +42,10 @@ public interface FaceUnit extends MotionUnit
      * @param id         behaviour id
      * @return          the TFU
      */
-    TimedFaceUnit createTFU(FeedbackManager bfm, BMLBlockPeg bbPeg,String bmlId,String id);
-    
-    
-    /**
-     * @return Prefered duration (in seconds) of this face unit, 0 means not determined/infinite 
-     */
-    double getPreferedDuration();
+    TimedFaceUnit createTFU(FeedbackManager bfm, BMLBlockPeg bbPeg,String bmlId,String id);    
     
     /**
      * Create a copy of this face unit and link it to the faceplayer
      */
-    FaceUnit copy(FaceController fc, FACSConverter fconv, EmotionConverter econv);
-    
-    /**
-     * Get the faceunit replacement group (=typically the BML behavior)
-     * Used to determine the currently active persistent TFU for this group in the player
-     * Only one group is active at a time
-     */
-    String getReplacementGroup();    
+    FaceUnit copy(FaceController fc, FACSConverter fconv, EmotionConverter econv); 
 }

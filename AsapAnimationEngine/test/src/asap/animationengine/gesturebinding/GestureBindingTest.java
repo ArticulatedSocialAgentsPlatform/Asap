@@ -37,7 +37,7 @@ import org.junit.Test;
 
 import asap.animationengine.AnimationPlayer;
 import asap.animationengine.gesturebinding.GestureBinding;
-import asap.animationengine.motionunit.TimedMotionUnit;
+import asap.animationengine.motionunit.TimeAnimationUnit;
 
 import hmi.bml.core.Behaviour;
 import hmi.bml.core.HeadBehaviour;
@@ -95,7 +95,7 @@ public class GestureBindingTest
     {
         HeadBehaviour b = createHeadBehaviour("bml1", "<head id=\"head1\" action=\"ROTATION\" rotation=\"NOD\" repeats=\"2\"/>");
 
-        List<TimedMotionUnit> m = gestureBinding.getMotionUnit(BMLBlockPeg.GLOBALPEG, b, mockAniPlayer, pegBoard);
+        List<TimeAnimationUnit> m = gestureBinding.getMotionUnit(BMLBlockPeg.GLOBALPEG, b, mockAniPlayer, pegBoard);
         assertEquals(1, m.size());
         assertTrue(Float.parseFloat(m.get(0).getMotionUnit().getParameterValue("r")) == 2.0);
         assertEquals(0.5,Float.parseFloat(m.get(0).getMotionUnit().getParameterValue("a")),0.001);// BML default
@@ -108,7 +108,7 @@ public class GestureBindingTest
     {
         HeadBehaviour b = createHeadBehaviour("bml1", "<head id=\"head1\" action=\"ROTATION\" rotation=\"SHAKE\" repeats=\"2\"/>");
 
-        List<TimedMotionUnit> m = gestureBinding.getMotionUnit(BMLBlockPeg.GLOBALPEG, b, mockAniPlayer, pegBoard);
+        List<TimeAnimationUnit> m = gestureBinding.getMotionUnit(BMLBlockPeg.GLOBALPEG, b, mockAniPlayer, pegBoard);
         assertEquals(1, m.size());
         assertEquals(2, Float.parseFloat(m.get(0).getMotionUnit().getParameterValue("r")), 0.001);
         assertEquals(0.5, Float.parseFloat(m.get(0).getMotionUnit().getParameterValue("a")), 0.001);
@@ -123,7 +123,7 @@ public class GestureBindingTest
                 + "     <parameter name=\"joints\" value=\"r_shoulder r_elbow r_wrist\"/>" + "</keyframe>";
         Behaviour b = createKeyFrameBehaviour("bml1", kfString);
 
-        List<TimedMotionUnit> m = gestureBinding.getMotionUnit(BMLBlockPeg.GLOBALPEG, b, mockAniPlayer, pegBoard);
+        List<TimeAnimationUnit> m = gestureBinding.getMotionUnit(BMLBlockPeg.GLOBALPEG, b, mockAniPlayer, pegBoard);
         assertEquals(1, m.size());
         assertEquals("bml1", m.get(0).getBMLId());
         assertEquals("v1", m.get(0).getId());

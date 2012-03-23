@@ -10,9 +10,9 @@ import lombok.extern.slf4j.Slf4j;
 
 import com.google.common.collect.Sets;
 
-import asap.animationengine.motionunit.TMUPlayException;
-import asap.animationengine.motionunit.TimedMotionUnit;
+import asap.animationengine.motionunit.TimeAnimationUnit;
 import asap.animationengine.restpose.RestPose;
+import asap.motionunit.TMUPlayException;
 import asap.planunit.PlanUnitPriorityComparator;
 
 import hmi.bml.feedback.BMLExceptionListener;
@@ -31,8 +31,8 @@ import hmi.elckerlyc.planunit.TimedPlanUnitState;
 @Slf4j
 public class AnimationPlanPlayer implements PlanPlayer
 {
-    private final SingleThreadedPlanPlayer<TimedMotionUnit> defPlayer;
-    private final PlanManager<TimedMotionUnit> planManager;
+    private final SingleThreadedPlanPlayer<TimeAnimationUnit> defPlayer;
+    private final PlanManager<TimeAnimationUnit> planManager;
     private final FeedbackManager fbManager;
     private final TimedPlanUnitPlayer tpuPlayer;
     private final RestPose defaultRestPose;
@@ -43,10 +43,10 @@ public class AnimationPlanPlayer implements PlanPlayer
         return currentRestPose;
     }
 
-    public AnimationPlanPlayer(RestPose defaultRestPose, FeedbackManager fbm, PlanManager<TimedMotionUnit> planManager,
+    public AnimationPlanPlayer(RestPose defaultRestPose, FeedbackManager fbm, PlanManager<TimeAnimationUnit> planManager,
             TimedPlanUnitPlayer tpuCallback)
     {
-        defPlayer = new SingleThreadedPlanPlayer<TimedMotionUnit>(fbm, planManager, tpuCallback);
+        defPlayer = new SingleThreadedPlanPlayer<TimeAnimationUnit>(fbm, planManager, tpuCallback);
         fbManager = fbm;
         tpuPlayer = tpuCallback;
         this.planManager = planManager;
@@ -56,9 +56,9 @@ public class AnimationPlanPlayer implements PlanPlayer
 
     private void updateTiming(double t)
     {
-        List<TimedMotionUnit> tuUpdateFailed = new ArrayList<TimedMotionUnit>();        
+        List<TimeAnimationUnit> tuUpdateFailed = new ArrayList<TimeAnimationUnit>();        
         // check which units should be playing
-        for (TimedMotionUnit tmu : planManager.getPlanUnits())
+        for (TimeAnimationUnit tmu : planManager.getPlanUnits())
         {
             if(tmu.isPlaying()||tmu.isLurking())
             //if(tmu.isLurking())
@@ -81,8 +81,8 @@ public class AnimationPlanPlayer implements PlanPlayer
     @Override
     public synchronized void play(double t)
     {
-        List<TimedMotionUnit> tmuRemove = new ArrayList<TimedMotionUnit>();
-        List<TimedMotionUnit> playingPlanUnits = new ArrayList<TimedMotionUnit>();
+        List<TimeAnimationUnit> tmuRemove = new ArrayList<TimeAnimationUnit>();
+        List<TimeAnimationUnit> playingPlanUnits = new ArrayList<TimeAnimationUnit>();
         Set<String> physicalJoints = new HashSet<String>();
         Set<String> kinematicJoints = new HashSet<String>();
 
@@ -95,7 +95,7 @@ public class AnimationPlanPlayer implements PlanPlayer
         //log.debug("update time: {} ms", (System.nanoTime()-time)/1000000d );
         
         // check which units should be playing
-        for (TimedMotionUnit tmu : planManager.getPlanUnits())
+        for (TimeAnimationUnit tmu : planManager.getPlanUnits())
         {
             if (t >= tmu.getStartTime() && (tmu.isPlaying() || tmu.isLurking()))
             {
@@ -110,7 +110,7 @@ public class AnimationPlanPlayer implements PlanPlayer
         Collections.sort(playingPlanUnits, new PlanUnitPriorityComparator());
 
         // playback
-        List<TimedMotionUnit> tmuAdd = playback(t, tmuRemove, playingPlanUnits, physicalJoints, kinematicJoints);
+        List<TimeAnimationUnit> tmuAdd = playback(t, tmuRemove, playingPlanUnits, physicalJoints, kinematicJoints);
         planManager.addPlanUnits(tmuAdd);
 
         tpuPlayer.handlePlayExceptions(t, fbManager);
@@ -123,11 +123,11 @@ public class AnimationPlanPlayer implements PlanPlayer
         currentRestPose.play(t, kinematicJoints, physicalJoints);
     }
 
-    private List<TimedMotionUnit> playback(double t, List<TimedMotionUnit> tmuRemove, List<TimedMotionUnit> playingPlanUnits,
+    private List<TimeAnimationUnit> playback(double t, List<TimeAnimationUnit> tmuRemove, List<TimeAnimationUnit> playingPlanUnits,
             Set<String> physicalJoints, Set<String> kinematicJoints)
     {
-        List<TimedMotionUnit> tmuAdd = new ArrayList<TimedMotionUnit>();
-        for (TimedMotionUnit tmu : playingPlanUnits)
+        List<TimeAnimationUnit> tmuAdd = new ArrayList<TimeAnimationUnit>();
+        for (TimeAnimationUnit tmu : playingPlanUnits)
         {
             if (Sets.intersection(tmu.getKinematicJoints(), kinematicJoints).isEmpty()
                     && Sets.intersection(tmu.getKinematicJoints(), physicalJoints).isEmpty()
@@ -149,7 +149,7 @@ public class AnimationPlanPlayer implements PlanPlayer
                 cleanup.removeAll(kinematicJoints);
                 cleanup.addAll(tmu.getPhysicalJoints());
                 cleanup.removeAll(physicalJoints);
-                TimedMotionUnit tmuCleanup = this.currentRestPose.createTransitionToRest(cleanup, t, tmu.getBMLId(), tmu.getId()
+                TimeAnimationUnit tmuCleanup = this.currentRestPose.createTransitionToRest(cleanup, t, tmu.getBMLId(), tmu.getId()
                         + "-cleanup", tmu.getBMLBlockPeg());
                 tmuRemove.add(tmu);
                 tmuAdd.add(tmuCleanup);

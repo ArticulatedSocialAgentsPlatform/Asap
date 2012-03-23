@@ -102,7 +102,7 @@ import asap.animationengine.AnimationPlanner;
 import asap.animationengine.AnimationPlayer;
 import asap.animationengine.gesturebinding.GestureBinding;
 import asap.animationengine.gesturebinding.SpeechBinding;
-import asap.animationengine.motionunit.TimedMotionUnit;
+import asap.animationengine.motionunit.TimeAnimationUnit;
 import asap.animationengine.restpose.RestPose;
 import asap.animationengine.restpose.SkeletonPoseRestPose;
 import asap.utils.SystemSchedulingClock;
@@ -294,14 +294,14 @@ public class SchedulerParameterizedIntegrationTest
         SpeechBinding speechBinding = new SpeechBinding(gres);
         speechBinding.readXML(gres.getReader("Humanoids/shared/speechbinding/disneyspeechbinding.xml"));
 
-        PlanManager<TimedMotionUnit> animationPlanManager = new PlanManager<TimedMotionUnit>();
+        PlanManager<TimeAnimationUnit> animationPlanManager = new PlanManager<TimeAnimationUnit>();
 
         RestPose pose = new SkeletonPoseRestPose(bfm, pegBoard);
         AnimationPlanPlayer animationPlanPlayer = new AnimationPlanPlayer(pose, bfm, animationPlanManager, new DefaultTimedPlanUnitPlayer());
         AnimationPlayer aPlayer = new AnimationPlayer(human, human, human, m, 0.001f, animationPlanPlayer);
         pose.setAnimationPlayer(aPlayer);
         AnimationPlanner ap = new AnimationPlanner(bfm, aPlayer, gestureBinding, animationPlanManager, pegBoard);
-        Engine animationEngine = new DefaultEngine<TimedMotionUnit>(ap, aPlayer, animationPlanManager);
+        Engine animationEngine = new DefaultEngine<TimeAnimationUnit>(ap, aPlayer, animationPlanManager);
 
         SystemClock clock = new SystemClock();
         clock.setMediaSeconds(0.3);

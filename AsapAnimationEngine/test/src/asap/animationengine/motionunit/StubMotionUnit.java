@@ -14,7 +14,7 @@ import com.google.common.collect.ImmutableSet;
 
 import asap.animationengine.AnimationPlayer;
 import asap.animationengine.motionunit.AnimationUnit;
-import asap.animationengine.motionunit.TimedMotionUnit;
+import asap.animationengine.motionunit.TimeAnimationUnit;
 import asap.motionunit.MUPlayException;
 /**
  * Motion unit stub, typically used to test a TimedMotionUnit implementation.
@@ -72,9 +72,9 @@ public class StubMotionUnit implements AnimationUnit
     }
 
     @Override
-    public TimedMotionUnit createTMU(FeedbackManager bfm, BMLBlockPeg bmlBlockPeg, String bmlId, String id, PegBoard pb)
+    public TimeAnimationUnit createTMU(FeedbackManager bfm, BMLBlockPeg bmlBlockPeg, String bmlId, String id, PegBoard pb)
     {
-        return new TimedMotionUnit(bfm,bmlBlockPeg,bmlId,id,this, pb);
+        return new TimeAnimationUnit(bfm,bmlBlockPeg,bmlId,id,this, pb);
     }
 
     @Override

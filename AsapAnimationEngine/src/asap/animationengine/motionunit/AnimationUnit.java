@@ -43,23 +43,10 @@ public interface AnimationUnit extends MotionUnit
      * @param id         behaviour id
      * @return          the TMU
      */
-    TimedMotionUnit createTMU(FeedbackManager bbm, BMLBlockPeg bmlBlockPeg, String bmlId,String id, PegBoard pb);
-    
-    /**
-     * @return Prefered duration (in seconds) of this motion unit, 0 means not determined/infinite 
-     */
-    double getPreferedDuration();
+    TimeAnimationUnit createTMU(FeedbackManager bbm, BMLBlockPeg bmlBlockPeg, String bmlId,String id, PegBoard pb);
     
     /**
      * Create a copy of this motion unit and link it to the animationplayer
      */
     AnimationUnit copy(AnimationPlayer p) throws MUSetupException;
-    
-    /**
-     * Get the motionunit replacement group (=typically the BML behavior)
-     * Used to determine the currently active persistent TMU for this group in the player
-     * Only one group is active at a time
-     * returns null if none
-     */
-    String getReplacementGroup();       
 }

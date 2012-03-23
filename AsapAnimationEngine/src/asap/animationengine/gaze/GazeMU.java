@@ -357,7 +357,7 @@ public class GazeMU implements AnimationUnit
     }
 
     @Override
-    public TimedMotionUnit createTMU(FeedbackManager bfm,
+    public TimeAnimationUnit createTMU(FeedbackManager bfm,
             BMLBlockPeg bmlBlockPeg, String bmlId, String id, PegBoard pb)
     {
         return new GazeTMU(bfm,bmlBlockPeg,bmlId, id, this, pb);

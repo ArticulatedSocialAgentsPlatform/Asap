@@ -25,7 +25,7 @@ import org.powermock.core.classloader.annotations.PrepareForTest;
 import org.powermock.modules.junit4.PowerMockRunner;
 
 import asap.animationengine.AnimationPlayer;
-import asap.animationengine.motionunit.TimedMotionUnit;
+import asap.animationengine.motionunit.TimeAnimationUnit;
 import asap.animationengine.restpose.SkeletonPoseRestPose;
 import static org.powermock.api.mockito.PowerMockito.*;
 import static org.mockito.Mockito.times;
@@ -38,19 +38,19 @@ import static org.mockito.Matchers.*;
  *
  */
 @RunWith(PowerMockRunner.class)
-@PrepareForTest({TimedMotionUnit.class,BMLBlockManager.class})
+@PrepareForTest({TimeAnimationUnit.class,BMLBlockManager.class})
 public class AnimationPlayerTest
 {
     private AnimationPlayer animationPlayer;
     private List<BMLExceptionFeedback> beList;
 
     private PhysicalHumanoid mockPhysicalHumanoid = mock(PhysicalHumanoid.class);
-    private TimedMotionUnit mockTimedMotionUnit = mock(TimedMotionUnit.class);
+    private TimeAnimationUnit mockTimedMotionUnit = mock(TimeAnimationUnit.class);
     private BMLBlockManager mockBMLBlockManager = mock(BMLBlockManager.class);
     private FeedbackManager fbManager = new FeedbackManagerImpl(mockBMLBlockManager,"character1");
     private PegBoard pegBoard = new PegBoard();
     
-    private PlanManager<TimedMotionUnit> planManager = new PlanManager<TimedMotionUnit>();
+    private PlanManager<TimeAnimationUnit> planManager = new PlanManager<TimeAnimationUnit>();
     
     @Before
     public void setup()

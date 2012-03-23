@@ -17,8 +17,8 @@ import java.util.List;
 import java.util.Set;
 
 import lombok.extern.slf4j.Slf4j;
-import asap.animationengine.motionunit.TMUPlayException;
-import asap.animationengine.motionunit.TimedMotionUnit;
+import asap.animationengine.motionunit.TimeAnimationUnit;
+import asap.motionunit.TMUPlayException;
 import asap.planunit.Priority;
 
 /**
@@ -27,7 +27,7 @@ import asap.planunit.Priority;
  * 
  */
 @Slf4j
-public class ProcAnimationGestureTMU extends TimedMotionUnit
+public class ProcAnimationGestureTMU extends TimeAnimationUnit
 {
     private final ProcAnimationGestureMU mu;
     private TimePeg startPeg, readyPeg, strokeStartPeg, strokeEndPeg, strokePeg, relaxPeg, endPeg;

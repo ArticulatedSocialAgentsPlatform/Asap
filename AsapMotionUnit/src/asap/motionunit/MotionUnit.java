@@ -17,6 +17,19 @@ public interface MotionUnit extends KeyPositionManager
      */
     void play(double t)throws MUPlayException;    
     
+    /**
+     * Get the faceunit replacement group (=typically the BML behavior)
+     * Used to determine the currently active persistent TFU for this group in the player
+     * Only one group is active at a time
+     */
+    @Deprecated
+    String getReplacementGroup();   
+    
+    /**
+     * @return Prefered duration (in seconds) of this face unit, 0 means not determined/infinite 
+     */
+    double getPreferedDuration();
+        
     void setFloatParameterValue(String name, float value)throws ParameterException;;
     void setParameterValue(String name, String value)throws ParameterException;;
     String getParameterValue(String name)throws ParameterException;

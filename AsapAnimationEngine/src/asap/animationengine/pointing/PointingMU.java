@@ -25,7 +25,7 @@ import com.google.common.collect.ImmutableSet;
 
 import asap.animationengine.AnimationPlayer;
 import asap.animationengine.motionunit.AnimationUnit;
-import asap.animationengine.motionunit.TimedMotionUnit;
+import asap.animationengine.motionunit.TimeAnimationUnit;
 import asap.motionunit.MUPlayException;
 
 import hmi.animation.*;
@@ -272,7 +272,7 @@ public class PointingMU implements AnimationUnit
     }
 
     @Override
-    public TimedMotionUnit createTMU(FeedbackManager bfm, BMLBlockPeg bbPeg, String bmlId, String id, PegBoard pb)
+    public TimeAnimationUnit createTMU(FeedbackManager bfm, BMLBlockPeg bbPeg, String bmlId, String id, PegBoard pb)
     {
         return new PointingTMU(bfm, bbPeg, bmlId, id, this, pb);
     }

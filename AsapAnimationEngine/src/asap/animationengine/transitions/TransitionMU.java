@@ -31,7 +31,7 @@ import java.util.*;
 
 import asap.animationengine.AnimationPlayer;
 import asap.animationengine.motionunit.AnimationUnit;
-import asap.animationengine.motionunit.TimedMotionUnit;
+import asap.animationengine.motionunit.TimeAnimationUnit;
 
 
 /**
@@ -89,7 +89,7 @@ public abstract class TransitionMU implements AnimationUnit
     }
     
     @Override
-    public TimedMotionUnit createTMU(FeedbackManager bfm, BMLBlockPeg bbPeg, String bmlId, String id, PegBoard pb)
+    public TimeAnimationUnit createTMU(FeedbackManager bfm, BMLBlockPeg bbPeg, String bmlId, String id, PegBoard pb)
     {
         return new TransitionTMU(bfm, bbPeg, bmlId, id, this, pb);
     }

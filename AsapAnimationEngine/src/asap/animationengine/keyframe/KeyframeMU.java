@@ -234,9 +234,9 @@ public class KeyframeMU implements AnimationUnit
     }
 
     @Override
-    public TimedMotionUnit createTMU(FeedbackManager bbm, BMLBlockPeg bbPeg, String bmlId, String id, PegBoard pb)
+    public TimeAnimationUnit createTMU(FeedbackManager bbm, BMLBlockPeg bbPeg, String bmlId, String id, PegBoard pb)
     {
-        return new TimedMotionUnit(bbm, bbPeg, bmlId, id, this, pb);
+        return new TimeAnimationUnit(bbm, bbPeg, bmlId, id, this, pb);
     }
 
     @Override

@@ -35,7 +35,7 @@ import asap.animationengine.AnimationPlanner;
 import asap.animationengine.AnimationPlayer;
 import asap.animationengine.gesturebinding.GestureBinding;
 import asap.animationengine.motionunit.AnimationUnit;
-import asap.animationengine.motionunit.TimedMotionUnit;
+import asap.animationengine.motionunit.TimeAnimationUnit;
 
 import static org.mockito.Mockito.*;
 
@@ -59,20 +59,20 @@ public class AnimationPlannerTest
     private BMLBlockManager mockBmlBlockManager = mock(BMLBlockManager.class);
     protected FeedbackManager fbManager = new FeedbackManagerImpl(mockBmlBlockManager,"character1");
     private AnimationPlanner animationPlanner;
-    private PlannerTests<TimedMotionUnit> plannerTests;
+    private PlannerTests<TimeAnimationUnit> plannerTests;
     private static final String BMLID = "bml1";
     private final BMLBlockPeg bbPeg = new BMLBlockPeg("Peg1", 0.3);
-    private final PlanManager<TimedMotionUnit> planManager = new PlanManager<TimedMotionUnit>();
+    private final PlanManager<TimeAnimationUnit> planManager = new PlanManager<TimeAnimationUnit>();
 
     @Before
     public void setup()
     {
         animationPlanner = new AnimationPlanner(fbManager, mockPlayer, mockBinding, planManager,pegBoard);
-        plannerTests = new PlannerTests<TimedMotionUnit>(animationPlanner, bbPeg);
+        plannerTests = new PlannerTests<TimeAnimationUnit>(animationPlanner, bbPeg);
 
-        TimedMotionUnit tmu = new TimedMotionUnit(fbManager, bbPeg, BMLID, "nod1", mockUnit,pegBoard);
+        TimeAnimationUnit tmu = new TimeAnimationUnit(fbManager, bbPeg, BMLID, "nod1", mockUnit,pegBoard);
         KeyPositionMocker.stubKeyPositions(mockUnit, new KeyPosition("start", 0, 1), new KeyPosition("end", 1, 1));
-        final List<TimedMotionUnit> tmus = new ArrayList<TimedMotionUnit>();
+        final List<TimeAnimationUnit> tmus = new ArrayList<TimeAnimationUnit>();
         tmus.add(tmu);
         when(mockBinding.getMotionUnit((BMLBlockPeg) any(), (Behaviour) any(), eq(mockPlayer), eq(pegBoard))).thenReturn(tmus);
         when(mockUnit.getPreferedDuration()).thenReturn(3.0);        
@@ -108,7 +108,7 @@ public class AnimationPlannerTest
         ArrayList<TimePegAndConstraint> sacs = new ArrayList<TimePegAndConstraint>();
         TimePeg sp = new TimePeg(bbPeg);
         sacs.add(new TimePegAndConstraint("start", sp, new Constraint(), 0, false));
-        TimedMotionUnit pu = animationPlanner.resolveSynchs(bbPeg, beh, sacs);
+        TimeAnimationUnit pu = animationPlanner.resolveSynchs(bbPeg, beh, sacs);
         animationPlanner.addBehaviour(bbPeg, beh, sacs, pu);
         assertThat(planManager.getBehaviours(BMLID), IsIterableContainingInOrder.contains("nod1"));        
     }
@@ -122,7 +122,7 @@ public class AnimationPlannerTest
         TimePeg sp = new TimePeg(bbPeg);
         sacs.add(new TimePegAndConstraint("start", sp, new Constraint(), 0, false));
 
-        TimedMotionUnit pu = animationPlanner.resolveSynchs(bbPeg, beh, sacs);
+        TimeAnimationUnit pu = animationPlanner.resolveSynchs(bbPeg, beh, sacs);
         assertEquals(0.3, sp.getGlobalValue(), 0.0001);
         animationPlanner.addBehaviour(bbPeg, beh, sacs, pu);
         assertEquals(0.3, pu.getStartTime(), 0.0001);

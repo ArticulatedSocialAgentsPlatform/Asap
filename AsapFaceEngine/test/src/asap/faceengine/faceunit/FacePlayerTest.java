@@ -1,4 +1,4 @@
-package asap.faceengine;
+package asap.faceengine.faceunit;
 
 import static org.junit.Assert.assertEquals;
 import static org.mockito.Matchers.*;
@@ -25,6 +25,7 @@ import java.util.List;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
+import org.powermock.api.mockito.PowerMockito;
 import org.powermock.core.classloader.annotations.PrepareForTest;
 import org.powermock.modules.junit4.PowerMockRunner;
 
@@ -36,7 +37,7 @@ import asap.faceengine.faceunit.TimedFaceUnit;
  * @author welberge
  */
 @RunWith(PowerMockRunner.class)
-@PrepareForTest(BMLBlockManager.class)
+@PrepareForTest({BMLBlockManager.class,TimedFaceUnit.class})
 public class FacePlayerTest
 {
     private List<BMLExceptionFeedback> beList;
@@ -67,8 +68,8 @@ public class FacePlayerTest
         tfu.setTimePeg("start", TimePegUtil.createTimePeg(0));
         tfu.setTimePeg("end", TimePegUtil.createTimePeg(1));
         tfu.setState(TimedPlanUnitState.LURKING);
-        TimedFaceUnit spyTfu = spy(tfu);
-        doThrow(new TimedPlanUnitPlayException("", spyTfu)).when(spyTfu).playUnit(anyDouble());        
+        TimedFaceUnit spyTfu = PowerMockito.spy(tfu);
+        doThrow(new TimedPlanUnitPlayException("", spyTfu)).when(spyTfu).play(anyDouble());        
         planManager.addPlanUnit(spyTfu);        
         
         assertEquals(1, planManager.getBehaviours("bml1").size());

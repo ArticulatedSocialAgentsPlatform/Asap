@@ -1,9 +1,8 @@
-package asap.faceengine;
+package asap.faceengine.faceunit;
 
 import static org.junit.Assert.assertEquals;
 import static org.mockito.Matchers.any;
 import static org.mockito.Matchers.eq;
-import static org.mockito.Mockito.doThrow;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
 import hmi.bml.core.FaceBehaviour;
@@ -39,19 +38,19 @@ import java.util.List;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
+import org.powermock.api.mockito.PowerMockito;
 import org.powermock.core.classloader.annotations.PrepareForTest;
 import org.powermock.modules.junit4.PowerMockRunner;
 
+import asap.faceengine.FacePlanner;
 import asap.faceengine.facebinding.FaceBinding;
-import asap.faceengine.faceunit.FaceUnit;
-import asap.faceengine.faceunit.TimedFaceUnit;
 
 /**
  * Unit test cases for the FacePlanner
  * @author hvanwelbergen
  */
 @RunWith(PowerMockRunner.class)
-@PrepareForTest(BMLBlockManager.class)
+@PrepareForTest({BMLBlockManager.class,TimedFaceUnit.class})
 public class FacePlannerTest
 {
     private FacePlanner facePlanner;
@@ -120,7 +119,7 @@ public class FacePlannerTest
         List<TimePegAndConstraint> sacs = new ArrayList<TimePegAndConstraint>();
         TimePegAndConstraint tp = new TimePegAndConstraint("start", TimePegUtil.createTimePeg(0), new Constraint(), 0, false);
         sacs.add(tp);
-        TimedFaceUnit mockTimedFaceUnit = mock(TimedFaceUnit.class);
+        TimedFaceUnit mockTimedFaceUnit = PowerMockito.mock(TimedFaceUnit.class);
         when(mockTimedFaceUnit.getStartTime()).thenReturn(0d);
         when(mockTimedFaceUnit.getEndTime()).thenReturn(TimePeg.VALUE_UNKNOWN);
         when(mockTimedFaceUnit.isLurking()).thenReturn(false);
@@ -129,7 +128,8 @@ public class FacePlannerTest
         when(mockTimedFaceUnit.getFaceUnit()).thenReturn(mockFaceUnit);
         when(mockTimedFaceUnit.getId()).thenReturn("fu1");
         when(mockTimedFaceUnit.getBMLId()).thenReturn("bml1");
-        doThrow(new TimedPlanUnitPlayException("failure!", mockTimedFaceUnit)).when(mockTimedFaceUnit).playUnit(0);
+        PowerMockito.doThrow(new TimedPlanUnitPlayException("failure!", mockTimedFaceUnit)).when(mockTimedFaceUnit).play(0);
+       
 
         facePlanner.addBehaviour(BMLBlockPeg.GLOBALPEG, mockFaceBehaviour, sacs, mockTimedFaceUnit);
         facePlayer.play(0);
