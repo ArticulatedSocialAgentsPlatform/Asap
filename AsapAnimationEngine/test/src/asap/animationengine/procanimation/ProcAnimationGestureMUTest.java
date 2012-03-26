@@ -1,7 +1,14 @@
 package asap.animationengine.procanimation;
 
+import static hmi.testutil.math.Quat4fTestUtil.assertQuat4fRotationEquivalent;
+import static org.mockito.Matchers.any;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
+import hmi.animation.VJoint;
+import hmi.bml.BMLGestureSync;
+import hmi.elckerlyc.planunit.KeyPosition;
+import hmi.math.Quat4f;
+import hmi.testutil.animation.HanimBody;
 
 import java.util.Set;
 
@@ -10,18 +17,8 @@ import org.junit.Test;
 
 import asap.animationengine.AnimationPlayer;
 import asap.animationengine.motionunit.AnimationUnit;
-import asap.animationengine.procanimation.ProcAnimationGestureMU;
-import asap.animationengine.procanimation.ProcAnimationMU;
 import asap.animationengine.restpose.RestPose;
 import asap.motionunit.MUPlayException;
-
-import hmi.animation.VJoint;
-import hmi.elckerlyc.planunit.KeyPosition;
-import hmi.bml.BMLGestureSync;
-import hmi.math.Quat4f;
-import hmi.testutil.animation.HanimBody;
-import static hmi.testutil.math.Quat4fTestUtil.*;
-import static org.mockito.Mockito.*;
 
 public class ProcAnimationGestureMUTest
 {

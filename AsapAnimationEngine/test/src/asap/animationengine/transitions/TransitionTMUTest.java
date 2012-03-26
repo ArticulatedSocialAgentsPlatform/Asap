@@ -1,19 +1,17 @@
 package asap.animationengine.transitions;
 
-import org.junit.Test;
-import org.junit.runner.RunWith;
-import org.powermock.core.classloader.annotations.PrepareForTest;
-import org.powermock.modules.junit4.PowerMockRunner;
-
-import asap.animationengine.transitions.TransitionMU;
-import asap.animationengine.transitions.TransitionTMU;
-
+import static org.mockito.AdditionalMatchers.eq;
+import static org.mockito.Mockito.atLeastOnce;
+import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.times;
+import static org.mockito.Mockito.verify;
+import static org.mockito.Mockito.when;
+import hmi.elckerlyc.feedback.FeedbackManager;
 import hmi.elckerlyc.pegboard.BMLBlockPeg;
 import hmi.elckerlyc.pegboard.PegBoard;
 import hmi.elckerlyc.pegboard.TimePeg;
-import hmi.elckerlyc.planunit.KeyPosition;
-import hmi.elckerlyc.feedback.FeedbackManager;
 import hmi.elckerlyc.planunit.AbstractTimedPlanUnitTest;
+import hmi.elckerlyc.planunit.KeyPosition;
 import hmi.elckerlyc.planunit.TimedPlanUnit;
 import hmi.elckerlyc.planunit.TimedPlanUnitPlayException;
 import hmi.elckerlyc.planunit.TimedPlanUnitState;
@@ -21,8 +19,11 @@ import hmi.elckerlyc.scheduler.BMLBlockManager;
 import hmi.elckerlyc.scheduler.BMLScheduler;
 import hmi.elckerlyc.util.KeyPositionMocker;
 import hmi.elckerlyc.util.TimePegUtil;
-import static org.mockito.AdditionalMatchers.eq;
-import static org.mockito.Mockito.*;
+
+import org.junit.Test;
+import org.junit.runner.RunWith;
+import org.powermock.core.classloader.annotations.PrepareForTest;
+import org.powermock.modules.junit4.PowerMockRunner;
 /**
  * Unit test cases for transition timed motion units
  * @author Herwin

@@ -37,16 +37,18 @@ public final class MURMLFUBuilder
                 List<String> targets = new ArrayList<String>();
                 List<KeyFrame> keyFrames = new ArrayList<KeyFrame>();
                 
+                int nrOfDofs = 0;
                 //XXX assumes that all frames have the same interpolation targets
                 for(JointValue jv:p0.getJointValues())
                 {                    
-                    targets.add(jv.jointSid);                    
+                    targets.add(jv.jointSid);
+                    nrOfDofs++;     //only one dof per 'joint' in face units
                 }          
                 
                 
                 for(Frame f:ph.getFrames())
                 {
-                    int size = 0;
+                    int size = 0;                    
                     for(JointValue jv : f.getPosture().getJointValues())
                     {
                         size+=jv.getDofs().length;
@@ -58,8 +60,9 @@ public final class MURMLFUBuilder
                     {
                         for(float fl: jv.getDofs())
                         {
-                            dofs[i] = fl;
+                            dofs[i] = fl/100f;
                             i++;
+                            break;  //ignore all 'joint' values beyond the first      
                         }                        
                     }
                     keyFrames.add(new KeyFrame(f.getFtime(), dofs));
@@ -67,7 +70,7 @@ public final class MURMLFUBuilder
                 
                 //TODO: select interpolator
                 CubicSplineFloatInterpolator interp = new CubicSplineFloatInterpolator();
-                interp.setKeyFrames(keyFrames,targets.size());
+                interp.setKeyFrames(keyFrames,nrOfDofs);
                 return new KeyframeMorphFU(targets, interp);
             }
         }

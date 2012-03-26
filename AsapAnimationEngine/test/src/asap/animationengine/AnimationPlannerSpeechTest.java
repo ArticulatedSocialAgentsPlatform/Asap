@@ -1,7 +1,7 @@
 package asap.animationengine;
 
 import static org.junit.Assert.assertEquals;
-import static org.mockito.Mockito.*;
+import static org.mockito.Mockito.mock;
 import hmi.elckerlyc.DefaultEngine;
 import hmi.elckerlyc.feedback.FeedbackManager;
 import hmi.elckerlyc.pegboard.BMLBlockPeg;
@@ -18,8 +18,6 @@ import java.util.List;
 import org.junit.Before;
 import org.junit.Test;
 
-import asap.animationengine.AnimationPlanner;
-import asap.animationengine.AnimationPlayer;
 import asap.animationengine.gesturebinding.GestureBinding;
 import asap.animationengine.motionunit.AnimationUnit;
 import asap.animationengine.motionunit.TimeAnimationUnit;

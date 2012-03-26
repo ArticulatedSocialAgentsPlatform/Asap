@@ -1,7 +1,7 @@
 package asap.animationengine.keyframe;
 
-import static org.junit.Assert.*;
 import static hmi.testutil.math.Quat4fTestUtil.assertQuat4fRotationEquivalent;
+import static org.junit.Assert.assertEquals;
 import hmi.animation.Hanim;
 import hmi.animation.SkeletonInterpolator;
 import hmi.animation.VJoint;
@@ -12,7 +12,6 @@ import hmi.testutil.animation.HanimBody;
 import org.junit.Before;
 import org.junit.Test;
 
-import asap.animationengine.keyframe.KeyframeMU;
 import asap.animationengine.motionunit.AnimationUnit;
 import asap.motionunit.MUPlayException;
 

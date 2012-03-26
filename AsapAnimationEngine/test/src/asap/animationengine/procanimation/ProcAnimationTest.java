@@ -1,25 +1,21 @@
 package asap.animationengine.procanimation;
 
-import java.util.ArrayList;
-
-
+import static hmi.testutil.math.Quat4fTestUtil.assertQuat4fRotationEquivalent;
+import static hmi.testutil.math.Vec3fTestUtil.assertVec3fEquals;
+import static org.junit.Assert.assertEquals;
 import hmi.animation.VJoint;
 import hmi.elckerlyc.planunit.ParameterException;
 import hmi.math.Quat4f;
 import hmi.math.Vec3f;
 import hmi.testutil.animation.HanimBody;
-import static hmi.testutil.math.Quat4fTestUtil.assertQuat4fRotationEquivalent;
+
+import java.util.ArrayList;
 
 import org.junit.Before;
 import org.junit.Test;
 
 import asap.animationengine.motionunit.AnimationUnit;
-import asap.animationengine.procanimation.IKBody;
-import asap.animationengine.procanimation.Parameter;
-import asap.animationengine.procanimation.ProcAnimationMU;
 import asap.motionunit.MUPlayException;
-import static hmi.testutil.math.Vec3fTestUtil.*;
-import static org.junit.Assert.*;
 /**
  * Unit test cases for the ProcAnimationMU
  * @author hvanwelbergen

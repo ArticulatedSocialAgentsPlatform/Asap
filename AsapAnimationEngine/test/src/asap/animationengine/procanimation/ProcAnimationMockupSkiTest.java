@@ -1,5 +1,10 @@
 package asap.animationengine.procanimation;
 
+import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.times;
+import static org.mockito.Mockito.verify;
+import static org.mockito.Mockito.when;
+import static org.powermock.api.mockito.PowerMockito.whenNew;
 import hmi.animation.SkeletonInterpolator;
 import hmi.animation.VJoint;
 import hmi.testutil.animation.HanimBody;
@@ -10,16 +15,10 @@ import java.util.ArrayList;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
+import org.powermock.core.classloader.annotations.PrepareForTest;
 import org.powermock.modules.junit4.PowerMockRunner;
 
-import org.powermock.core.classloader.annotations.PrepareForTest;
-
 import asap.animationengine.keyframe.KeyframeMU;
-import asap.animationengine.procanimation.IKBody;
-import asap.animationengine.procanimation.Parameter;
-import asap.animationengine.procanimation.ProcAnimationMU;
-import static org.powermock.api.mockito.PowerMockito.whenNew;
-import static org.mockito.Mockito.*;
 /**
  * Tests a ProcAnimation acting upon an embedded SkeletonInterpolator. 
  * @author Herwin

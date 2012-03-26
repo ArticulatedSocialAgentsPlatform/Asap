@@ -18,31 +18,30 @@
  ******************************************************************************/
 package asap.animationengine.gesturebinding;
 
-import static org.junit.Assert.*;
-
-import java.io.IOException;
-import java.util.*;
-
-import hmi.animation.*;
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertTrue;
+import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.when;
+import hmi.animation.VJoint;
+import hmi.bml.core.Behaviour;
+import hmi.bml.core.HeadBehaviour;
+import hmi.bml.ext.bmlt.BMLTKeyframeBehaviour;
 import hmi.elckerlyc.feedback.FeedbackManager;
 import hmi.elckerlyc.pegboard.BMLBlockPeg;
 import hmi.elckerlyc.pegboard.PegBoard;
 import hmi.elckerlyc.planunit.ParameterException;
 import hmi.testutil.animation.HanimBody;
-import hmi.util.*;
+import hmi.util.Resources;
 import hmi.xml.XMLTokenizer;
+
+import java.io.IOException;
+import java.util.List;
 
 import org.junit.Before;
 import org.junit.Test;
 
 import asap.animationengine.AnimationPlayer;
-import asap.animationengine.gesturebinding.GestureBinding;
 import asap.animationengine.motionunit.TimeAnimationUnit;
-
-import hmi.bml.core.Behaviour;
-import hmi.bml.core.HeadBehaviour;
-import hmi.bml.ext.bmlt.BMLTKeyframeBehaviour;
-import static org.mockito.Mockito.*;
 
 /**
  * Test cases for GestureBinding.

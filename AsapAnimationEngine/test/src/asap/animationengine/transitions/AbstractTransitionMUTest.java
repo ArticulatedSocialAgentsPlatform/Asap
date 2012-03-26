@@ -1,17 +1,17 @@
 package asap.animationengine.transitions;
 
-import org.junit.Before;
-import org.junit.Test;
-
-import asap.animationengine.AnimationPlayer;
-import asap.animationengine.transitions.TransitionMU;
-
+import static org.junit.Assert.assertEquals;
+import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.when;
 import hmi.animation.Hanim;
 import hmi.animation.VJoint;
 import hmi.elckerlyc.planunit.ParameterNotFoundException;
 import hmi.testutil.animation.HanimBody;
-import static org.junit.Assert.*;
-import static org.mockito.Mockito.*;
+
+import org.junit.Before;
+import org.junit.Test;
+
+import asap.animationengine.AnimationPlayer;
 /**
  * generic TransitionMU testcases
  * @author welberge

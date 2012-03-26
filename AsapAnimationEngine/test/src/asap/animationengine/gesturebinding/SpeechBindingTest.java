@@ -1,6 +1,8 @@
 package asap.animationengine.gesturebinding;
 
-import static org.junit.Assert.*;
+import static org.junit.Assert.assertEquals;
+import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.when;
 import hmi.animation.VJoint;
 import hmi.elckerlyc.feedback.FeedbackManager;
 import hmi.elckerlyc.pegboard.BMLBlockPeg;
@@ -8,13 +10,11 @@ import hmi.elckerlyc.pegboard.PegBoard;
 import hmi.elckerlyc.planunit.ParameterException;
 import hmi.testutil.animation.HanimBody;
 import hmi.util.Resources;
-import static org.mockito.Mockito.*;
 
 import org.junit.Before;
 import org.junit.Test;
 
 import asap.animationengine.AnimationPlayer;
-import asap.animationengine.gesturebinding.SpeechBinding;
 import asap.animationengine.motionunit.MUSetupException;
 import asap.animationengine.motionunit.TimeAnimationUnit;
 

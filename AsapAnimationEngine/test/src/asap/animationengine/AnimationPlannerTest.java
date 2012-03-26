@@ -1,11 +1,11 @@
 package asap.animationengine;
 
-import static org.junit.Assert.*;
-
-import java.io.IOException;
-import java.util.ArrayList;
-import java.util.List;
-
+import static org.hamcrest.MatcherAssert.assertThat;
+import static org.junit.Assert.assertEquals;
+import static org.mockito.Matchers.any;
+import static org.mockito.Matchers.eq;
+import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.when;
 import hmi.bml.core.Behaviour;
 import hmi.bml.core.HeadBehaviour;
 import hmi.bml.parser.Constraint;
@@ -16,28 +16,27 @@ import hmi.elckerlyc.feedback.FeedbackManagerImpl;
 import hmi.elckerlyc.pegboard.BMLBlockPeg;
 import hmi.elckerlyc.pegboard.PegBoard;
 import hmi.elckerlyc.pegboard.TimePeg;
+import hmi.elckerlyc.planunit.KeyPosition;
 import hmi.elckerlyc.planunit.PlanManager;
 import hmi.elckerlyc.scheduler.BMLBlockManager;
 import hmi.elckerlyc.scheduler.TimePegAndConstraint;
 import hmi.elckerlyc.util.KeyPositionMocker;
 import hmi.xml.XMLTokenizer;
-import hmi.elckerlyc.planunit.KeyPosition;
-import static org.hamcrest.MatcherAssert.assertThat;
-import org.hamcrest.collection.*;
 
+import java.io.IOException;
+import java.util.ArrayList;
+import java.util.List;
+
+import org.hamcrest.collection.IsIterableContainingInOrder;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.powermock.core.classloader.annotations.PrepareForTest;
 import org.powermock.modules.junit4.PowerMockRunner;
 
-import asap.animationengine.AnimationPlanner;
-import asap.animationengine.AnimationPlayer;
 import asap.animationengine.gesturebinding.GestureBinding;
 import asap.animationengine.motionunit.AnimationUnit;
 import asap.animationengine.motionunit.TimeAnimationUnit;
-
-import static org.mockito.Mockito.*;
 
 
 /**

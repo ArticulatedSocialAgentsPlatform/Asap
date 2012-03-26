@@ -18,19 +18,17 @@
  ******************************************************************************/
 package asap.animationengine.procanimation;
 
+import static hmi.testutil.math.Quat4fTestUtil.assertQuat4fRotationEquivalent;
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertTrue;
 import hmi.animation.Hanim;
 import hmi.animation.VJoint;
 import hmi.math.Quat4f;
 import hmi.testutil.animation.HanimBody;
-import static hmi.testutil.math.Quat4fTestUtil.assertQuat4fRotationEquivalent;
 
 import org.junit.Before;
 import org.junit.Test;
 import org.lsmp.djep.xjep.XJep;
-
-import asap.animationengine.procanimation.Keyframes;
-
-import static org.junit.Assert.*;
 
 /**
  * Unit tests for Keyframes in ProcAnimation

@@ -50,7 +50,7 @@ public class ProcAnimationGestureTMUTest extends TimedMotionUnitTest
     private ProcAnimationMU mockProcAnimation = mock(ProcAnimationMU.class);
     private AnimationPlayer mockAnimationPlayer = mock(AnimationPlayer.class);
     private PegBoard pegBoard = new PegBoard();
-    private final double STROKE_DURATION = 1;
+    private static final double STROKE_DURATION = 1;
     
     @SuppressWarnings("unchecked")
 	protected ProcAnimationGestureTMU setupPlanUnit(FeedbackManager bfm, BMLBlockPeg bbPeg, String id, String bmlId)

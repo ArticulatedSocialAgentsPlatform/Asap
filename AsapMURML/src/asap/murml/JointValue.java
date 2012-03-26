@@ -16,8 +16,12 @@ public final class JointValue
     @Getter
     public final String jointSid;
     
-    @Getter
     public final float[] dofs;
+    
+    public float[] getDofs()
+    {
+        return Arrays.copyOf(dofs, dofs.length);
+    }
     
     public JointValue(String id, float[] dofs)
     {

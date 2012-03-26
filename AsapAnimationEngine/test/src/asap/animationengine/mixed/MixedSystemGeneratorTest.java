@@ -1,11 +1,7 @@
 package asap.animationengine.mixed;
 
-import static org.junit.Assert.*;
-
-import java.io.IOException;
-import java.util.ArrayList;
-import java.util.List;
-
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertNotNull;
 import hmi.animation.Hanim;
 import hmi.animation.VJoint;
 import hmi.physics.PhysicalHumanoid;
@@ -16,14 +12,16 @@ import hmi.physics.ode.OdeHumanoid;
 import hmi.testutil.animation.HanimBody;
 import hmi.util.Resources;
 
+import java.io.IOException;
+import java.util.ArrayList;
+import java.util.List;
+
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
 import org.odejava.HashSpace;
 import org.odejava.Odejava;
 import org.odejava.World;
-
-import asap.animationengine.mixed.MixedSystemGenerator;
 
 /**
  * Unit test cases for the MixedSystemGenerator

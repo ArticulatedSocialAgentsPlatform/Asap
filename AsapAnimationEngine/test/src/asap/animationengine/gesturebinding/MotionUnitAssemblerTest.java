@@ -1,16 +1,14 @@
 package asap.animationengine.gesturebinding;
 
-import hmi.util.Resources;
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.instanceOf;
+import static org.junit.Assert.assertNull;
+import static org.mockito.Mockito.mock;
+import hmi.util.Resources;
 
 import org.junit.Test;
 
-import asap.animationengine.gesturebinding.MotionUnitAssembler;
 import asap.animationengine.motionunit.StubMotionUnit;
-
-import static org.junit.Assert.*;
-import static org.mockito.Mockito.*;
 
 class NotAMotionUnit {}
 

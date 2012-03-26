@@ -1,7 +1,14 @@
 package asap.animationengine;
 
 import static org.junit.Assert.assertEquals;
+import static org.mockito.Matchers.anyDouble;
+import static org.mockito.Mockito.times;
+import static org.mockito.Mockito.verify;
+import static org.powermock.api.mockito.PowerMockito.doThrow;
+import static org.powermock.api.mockito.PowerMockito.mock;
+import static org.powermock.api.mockito.PowerMockito.when;
 import hmi.bml.feedback.BMLExceptionFeedback;
+import hmi.bml.feedback.ListBMLExceptionListener;
 import hmi.elckerlyc.feedback.FeedbackManager;
 import hmi.elckerlyc.feedback.FeedbackManagerImpl;
 import hmi.elckerlyc.pegboard.PegBoard;
@@ -10,7 +17,6 @@ import hmi.elckerlyc.planunit.PlanManager;
 import hmi.elckerlyc.planunit.TimedPlanUnitPlayException;
 import hmi.elckerlyc.planunit.TimedPlanUnitState;
 import hmi.elckerlyc.scheduler.BMLBlockManager;
-import hmi.bml.feedback.ListBMLExceptionListener;
 import hmi.physics.PhysicalHumanoid;
 import hmi.physics.mixed.MixedSystem;
 import hmi.testutil.animation.HanimBody;
@@ -24,13 +30,8 @@ import org.junit.runner.RunWith;
 import org.powermock.core.classloader.annotations.PrepareForTest;
 import org.powermock.modules.junit4.PowerMockRunner;
 
-import asap.animationengine.AnimationPlayer;
 import asap.animationengine.motionunit.TimeAnimationUnit;
 import asap.animationengine.restpose.SkeletonPoseRestPose;
-import static org.powermock.api.mockito.PowerMockito.*;
-import static org.mockito.Mockito.times;
-import static org.mockito.Mockito.verify;
-import static org.mockito.Matchers.*;
 
 /**
  * Test cases for the AnimationPlayer 
