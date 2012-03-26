@@ -46,10 +46,10 @@ public class ProcAnimationGestureMU implements GestureUnit
     private AnimationUnit relaxUnit;
     private VJoint vStart;
     private VJoint vNext;
-    
+
     private ProcAnimationMU copyProc;
     private VJoint copyJoint;
-    
+
     private Resources resource;
     private double preStrokeHoldDuration = 0;
 
@@ -76,10 +76,10 @@ public class ProcAnimationGestureMU implements GestureUnit
     {
         int i = 0;
         float[] pose = new float[gestureUnit.getControlledJoints().size() * 4];
-        
+
         i = 0;
-        
-        copyProc.play(copyProc.getKeyPosition(sync).time+0.01);
+
+        copyProc.play(copyProc.getKeyPosition(sync).time + 0.01);
         for (VJoint v : gestureUnit.getControlledJoints())
         {
             VJoint v2 = copyJoint.getPartBySid(v.getSid());
@@ -91,27 +91,29 @@ public class ProcAnimationGestureMU implements GestureUnit
 
     public double getRetractionDuration()
     {
-        copyProc.play(copyProc.getKeyPosition(BMLGestureSync.STROKE_END.getId()).time - 0.01);        
-        return aniPlayer.getRestPose().getTransitionToRestDuration(copyJoint, VJointUtils.transformToSidSet(gestureUnit.getControlledJoints()));
+        copyProc.play(copyProc.getKeyPosition(BMLGestureSync.STROKE_END.getId()).time - 0.01);
+        return aniPlayer.getRestPose().getTransitionToRestDuration(copyJoint,
+                VJointUtils.transformToSidSet(gestureUnit.getControlledJoints()));
     }
 
     public double getPreparationDuration()
     {
         copyProc.play(copyProc.getKeyPosition(BMLGestureSync.STROKE_START.getId()).time + 0.01);
-        double duration = MovementTimingUtils.getFittsMaximumLimbMovementDuration(aniPlayer.getVCurr(), copyJoint, VJointUtils.transformToSidSet(gestureUnit.getControlledJoints()));
-        if (duration>0)return duration;
+        double duration = MovementTimingUtils.getFittsMaximumLimbMovementDuration(aniPlayer.getVCurr(), copyJoint,
+                VJointUtils.transformToSidSet(gestureUnit.getControlledJoints()));
+        if (duration > 0) return duration;
         return 1;
-        
-        //return aniPlayer.getRestPose().getTransitionToRestDuration(vCopy, VJointUtils.transformToSidSet(gestureUnit.getControlledJoints()));
+
+        // return aniPlayer.getRestPose().getTransitionToRestDuration(vCopy, VJointUtils.transformToSidSet(gestureUnit.getControlledJoints()));
     }
 
     public double getPreparationFromRestDuration()
     {
         copyProc.play(getKeyPosition(BMLGestureSync.STROKE_START.getId()).time + 0.01);
-        return aniPlayer.getRestPose().getTransitionToRestDuration(copyJoint, VJointUtils.transformToSidSet(gestureUnit.getControlledJoints()));
+        return aniPlayer.getRestPose().getTransitionToRestDuration(copyJoint,
+                VJointUtils.transformToSidSet(gestureUnit.getControlledJoints()));
     }
 
-    
     public int getPriority()
     {
         return priority;
@@ -142,11 +144,11 @@ public class ProcAnimationGestureMU implements GestureUnit
             {
                 keyPositionManager.addKeyPosition(kp);
             }
-        }              
+        }
         setPreStrokeHoldDuration();
         setPostStrokeHoldDuration();
         gestureUnit.setup(vNext);
-        if(vNext!=null)
+        if (vNext != null)
         {
             copyJoint = vNext.copyTree("copy-");
         }
@@ -390,21 +392,6 @@ public class ProcAnimationGestureMU implements GestureUnit
 
     public void setupTransitionUnits()
     {
-        // setup keypos
-        // double strokeDuration = gestureUnit.getPrefDuration();
-        // double duration = this.getPreferedDuration();
-        // double postHoldDur = gestureUnit.getPrefDuration()*postStrokeHoldDuration;
-        // double preHoldDur = gestureUnit.getPrefDuration()*preStrokeHoldDuration;
-        //
-        // double relStrokePos = getRelativeStrokePos();
-        //
-        // keyPositionManager.getKeyPosition(BMLGestureSync.READY.getId()).time = defaultRelaxDuration/duration;
-        // keyPositionManager.getKeyPosition(BMLGestureSync.STROKE_START.getId()).time = (defaultRelaxDuration+preHoldDur)/duration;
-        // keyPositionManager.getKeyPosition(BMLGestureSync.STROKE.getId()).time = (defaultRelaxDuration+preHoldDur+strokeDuration*relStrokePos)/duration;
-        // keyPositionManager.getKeyPosition(BMLGestureSync.STROKE_END.getId()).time = (defaultRelaxDuration+preHoldDur+strokeDuration)/duration;
-        // keyPositionManager.getKeyPosition(BMLGestureSync.RELAX.getId()).time = (defaultRelaxDuration+postHoldDur+
-        // preHoldDur+strokeDuration)/duration;
-
         // setup transunits
         float[] strokeStartPose = getPoseInStroke(BMLGestureSync.STROKE_START.getId());
 

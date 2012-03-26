@@ -22,14 +22,12 @@ public final class MURMLFUBuilder
 {
     private MURMLFUBuilder(){}
     
-    public static FaceUnit setup(String murml)
+    public static FaceUnit setup(Definition murmlDefinition)
     {
-        Definition def = new Definition();
-        def.readXML(murml);
-        if(def.getKeyframing()!=null)
+        if(murmlDefinition.getKeyframing()!=null)
         {
             //XXX for now just generates a MU for the first phase
-            Phase ph = def.getKeyframing().getPhases().get(0);
+            Phase ph = murmlDefinition.getKeyframing().getPhases().get(0);
             if(ph.getFrames().size()>0)
             {
                 Posture p0 = ph.getFrames().get(0).getPosture();
@@ -75,5 +73,12 @@ public final class MURMLFUBuilder
             }
         }
         return null;
+    }
+    
+    public static FaceUnit setup(String murml)
+    {
+        Definition def = new Definition();
+        def.readXML(murml);
+        return setup(def);
     }
 }

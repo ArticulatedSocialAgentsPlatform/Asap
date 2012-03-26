@@ -21,7 +21,7 @@ public final class MovementTimingUtils
      * returns -1 if id or rootId are not available in vSource and/or vTarget
      * XXX: setup exceptions for this?
      */
-    public static final double getFittsDuration(String id, String rootId, VJoint vSource, VJoint vTarget)
+    public static double getFittsDuration(String id, String rootId, VJoint vSource, VJoint vTarget)
     {
         VJoint srcJoint = vSource.getPartBySid(id);
         VJoint srcRootJoint = vSource.getPartBySid(rootId);
@@ -43,7 +43,7 @@ public final class MovementTimingUtils
      * Get the maximum limb movement duration duration (as determined by Fitts' law) to move the set of joints
      * determined by joints from vSource to vTarget. returns -1 if no wrists are present in vSource and/or vTarget. 
      */
-    public static final double getFittsMaximumLimbMovementDuration(VJoint vSource, VJoint vTarget, Set<String> joints)
+    public static double getFittsMaximumLimbMovementDuration(VJoint vSource, VJoint vTarget, Set<String> joints)
     {
         double lastSetDur = -1;
         if (joints.contains(Hanim.r_wrist))

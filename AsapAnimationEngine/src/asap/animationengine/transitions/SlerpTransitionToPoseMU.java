@@ -61,19 +61,18 @@ public class SlerpTransitionToPoseMU extends TransitionMU
      * @param ep
      *            end pose, contains quaternion joint rotations for each joint
      */
-    public SlerpTransitionToPoseMU(Collection<VJoint> j,
-            Collection<VJoint> startPoseJoints, float ep[])
+    public SlerpTransitionToPoseMU(Collection<VJoint> j, Collection<VJoint> startPoseJoints, float ep[])
     {
         super();
         joints = j;
         startJoints = startPoseJoints;
-        if(ep!=null)
+        if (ep != null)
         {
-        	endPose = Arrays.copyOf(ep, ep.length);
+            endPose = Arrays.copyOf(ep, ep.length);
         }
         else
         {
-        	endPose = null;
+            endPose = null;
         }
         qResult = new float[joints.size() * 4];
     }
@@ -85,7 +84,7 @@ public class SlerpTransitionToPoseMU extends TransitionMU
         float[] ep = null;
         if (endPose != null)
         {
-            ep = Arrays.copyOf(endPose, endPose.length);        	
+            ep = Arrays.copyOf(endPose, endPose.length);
         }
 
         if (startJoints == null)
@@ -116,8 +115,7 @@ public class SlerpTransitionToPoseMU extends TransitionMU
         }
         else
         {
-            return new SlerpTransitionToPoseMU(player.getVNext().getParts(),
-                    startPoseJoints, ep);
+            return new SlerpTransitionToPoseMU(player.getVNext().getParts(), startPoseJoints, ep);
         }
     }
 
@@ -129,7 +127,7 @@ public class SlerpTransitionToPoseMU extends TransitionMU
      */
     public void setStartPose(float sp[])
     {
-        startPose = Arrays.copyOf(sp, sp.length);    	
+        startPose = Arrays.copyOf(sp, sp.length);
     }
 
     /**
@@ -169,7 +167,7 @@ public class SlerpTransitionToPoseMU extends TransitionMU
     {
 
     }
-    
+
     private static final Set<String> PHJOINTS = ImmutableSet.of();
 
     @Override
@@ -186,10 +184,10 @@ public class SlerpTransitionToPoseMU extends TransitionMU
             @Override
             public String apply(VJoint joint)
             {
-                if(joint==null)return "";
-            	return joint.getSid();
+                if (joint == null) return "";
+                return joint.getSid();
             }
         });
         return ImmutableSet.copyOf(j);
-    } 
+    }
 }

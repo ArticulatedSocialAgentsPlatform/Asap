@@ -46,6 +46,7 @@ private final SchedulingStrategy strategy;
             logger.debug("interrupting {}", bmlId);
             scheduler.interruptBlock(bmlId);
         }
+        
         switch (BMLBComposition.parse(bb.getSchedulingMechanism().getNameStart()))
         {
         case REPLACE:

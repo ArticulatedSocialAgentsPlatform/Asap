@@ -9,6 +9,11 @@ import java.util.Collection;
 import org.junit.Before;
 import org.junit.runners.Parameterized.Parameters;
 
+/**
+ * Testcase to validates the procanimation resource data against the procanimation xsd
+ * @author hvanwelbergen
+ *
+ */
 public class ProcAnimationXSDValidationIntegrationTest extends
         XSDValidationTest
 {

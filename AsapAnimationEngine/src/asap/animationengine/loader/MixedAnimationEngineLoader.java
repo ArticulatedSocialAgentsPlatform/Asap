@@ -57,7 +57,7 @@ import asap.utils.Environment;
  */
 public class MixedAnimationEngineLoader implements EngineLoader
 {
-    
+
     private XMLStructureAdapter adapter = new XMLStructureAdapter();
     private MixedSkeletonEmbodiment mse = null;
     private PhysicalEmbodiment pe = null;
@@ -69,29 +69,33 @@ public class MixedAnimationEngineLoader implements EngineLoader
     private MixedAnimationPlayer animationPlayer = null;
     private AnimationPlanner animationPlanner = null;
     private SkeletonPose restpose;
-    
+
     String id = "";
     // some variables cached during loading
     GestureBinding gesturebinding = null;
     AsapVirtualHuman theVirtualHuman = null;
 
     @Override
-    public void readXML(XMLTokenizer tokenizer, String newId, AsapVirtualHuman avh, 
-            Environment[] environments, Loader... requiredLoaders) throws IOException
+    public void readXML(XMLTokenizer tokenizer, String newId, AsapVirtualHuman avh, Environment[] environments, Loader... requiredLoaders)
+            throws IOException
     {
         id = newId;
         theVirtualHuman = avh;
         for (Environment e : environments)
         {
             if (e instanceof MixedAnimationEnvironment) mae = (MixedAnimationEnvironment) e;
-            if (e instanceof AsapEnvironment) ae = (AsapEnvironment)e;
+            if (e instanceof AsapEnvironment) ae = (AsapEnvironment) e;
         }
         for (Loader e : requiredLoaders)
         {
-            if (e instanceof EmbodimentLoader && ((EmbodimentLoader) e).getEmbodiment() instanceof MixedSkeletonEmbodiment) mse = (MixedSkeletonEmbodiment) ((EmbodimentLoader) e)
-                    .getEmbodiment();
-            if (e instanceof EmbodimentLoader && ((EmbodimentLoader) e).getEmbodiment() instanceof PhysicalEmbodiment) pe = (PhysicalEmbodiment) ((EmbodimentLoader) e)
-                    .getEmbodiment();
+            if (e instanceof EmbodimentLoader && ((EmbodimentLoader) e).getEmbodiment() instanceof MixedSkeletonEmbodiment)
+            {
+                mse = (MixedSkeletonEmbodiment) ((EmbodimentLoader) e).getEmbodiment();
+            }
+            if (e instanceof EmbodimentLoader && ((EmbodimentLoader) e).getEmbodiment() instanceof PhysicalEmbodiment)
+            {
+                pe = (PhysicalEmbodiment) ((EmbodimentLoader) e).getEmbodiment();
+            }
         }
         if (mae == null)
         {
@@ -121,7 +125,7 @@ public class MixedAnimationEngineLoader implements EngineLoader
     @Override
     public void unload()
     {
-        //engine.shutdown();already done in scheduler...
+        // engine.shutdown();already done in scheduler...
         mae.removeAnimationPlayer(animationPlayer, mse.getCurrentVJoint(), mse.getAnimationVJoint());
     }
 
@@ -151,8 +155,7 @@ public class MixedAnimationEngineLoader implements EngineLoader
             try
             {
                 Resources res = new Resources(adapter.getOptionalAttribute("resources", attrMap, ""));
-                restpose = new SkeletonPose(new XMLTokenizer(res.getReader(adapter.getRequiredAttribute("filename", attrMap,
-                        tokenizer))));
+                restpose = new SkeletonPose(new XMLTokenizer(res.getReader(adapter.getRequiredAttribute("filename", attrMap, tokenizer))));
                 VJoint vjNull[] = new VJoint[0];
                 restpose.setTargets(mse.getNextVJoint().getParts().toArray(vjNull));
                 restpose.setToTarget();
@@ -203,40 +206,39 @@ public class MixedAnimationEngineLoader implements EngineLoader
         // now: make animation player and planner and everything; using se and gesturebinding and speechbinding.
         if (gesturebinding == null) throw tokenizer.getXMLScanException("gesturebinding is null, cannot build animation planner ");
         animationPlanManager = new PlanManager<TimeAnimationUnit>();
-        
+
         RestPose pose;
-        if(restpose!=null)
+        if (restpose != null)
         {
-            pose = new SkeletonPoseRestPose(restpose, theVirtualHuman.getElckerlycRealizer()
-                    .getFeedbackManager(),theVirtualHuman.getPegBoard());
+            pose = new SkeletonPoseRestPose(restpose, theVirtualHuman.getElckerlycRealizer().getFeedbackManager(),
+                    theVirtualHuman.getPegBoard());
         }
         else
         {
-            pose = new SkeletonPoseRestPose(theVirtualHuman.getElckerlycRealizer()
-                    .getFeedbackManager(),theVirtualHuman.getPegBoard());
+            pose = new SkeletonPoseRestPose(theVirtualHuman.getElckerlycRealizer().getFeedbackManager(), theVirtualHuman.getPegBoard());
         }
-        AnimationPlanPlayer animationPlanPlayer = new AnimationPlanPlayer(pose,theVirtualHuman.getElckerlycRealizer()
-                .getFeedbackManager(), animationPlanManager, new DefaultTimedPlanUnitPlayer());
-        
-        //public AnimationPlayer(VJoint vP, VJoint vC, VJoint vN, ArrayList<MixedSystem> m, float h, WorldObjectManager wom,
-        //PlanPlayer planPlayer)
-        
-        animationPlayer = new AnimationPlayer(mse.getPreviousVJoint(), mse.getCurrentVJoint(), mse.getNextVJoint(), 
-                pe.getMixedSystems(), MixedAnimationPlayerManager.getH(), ae.getWorldObjectManager(), animationPlanPlayer);
+        AnimationPlanPlayer animationPlanPlayer = new AnimationPlanPlayer(pose,
+                theVirtualHuman.getElckerlycRealizer().getFeedbackManager(), animationPlanManager, new DefaultTimedPlanUnitPlayer());
 
-        pose.setAnimationPlayer((AnimationPlayer)animationPlayer);
+        // public AnimationPlayer(VJoint vP, VJoint vC, VJoint vN, ArrayList<MixedSystem> m, float h, WorldObjectManager wom,
+        // PlanPlayer planPlayer)
+
+        animationPlayer = new AnimationPlayer(mse.getPreviousVJoint(), mse.getCurrentVJoint(), mse.getNextVJoint(), pe.getMixedSystems(),
+                MixedAnimationPlayerManager.getH(), ae.getWorldObjectManager(), animationPlanPlayer);
+
+        pose.setAnimationPlayer((AnimationPlayer) animationPlayer);
         // IKBody nextBody = new IKBody(se.getNextVJoint()); not used?
 
         // make planner
-        animationPlanner = new AnimationPlanner(theVirtualHuman.getElckerlycRealizer().getFeedbackManager(), (AnimationPlayer)animationPlayer,
-                gesturebinding, animationPlanManager,theVirtualHuman.getPegBoard());
+        animationPlanner = new AnimationPlanner(theVirtualHuman.getElckerlycRealizer().getFeedbackManager(),
+                (AnimationPlayer) animationPlayer, gesturebinding, animationPlanManager, theVirtualHuman.getPegBoard());
 
-        engine = new DefaultEngine<TimeAnimationUnit>(animationPlanner, (AnimationPlayer)animationPlayer, animationPlanManager);
+        engine = new DefaultEngine<TimeAnimationUnit>(animationPlanner, (AnimationPlayer) animationPlayer, animationPlanManager);
         engine.setId(id);
 
         // propagate avatar resetpose into the animation player, vnext etc, ikbodies,
         // phumans... and also as reset poses for same.
-        ((AnimationPlayer)animationPlayer).setResetPose();
+        ((AnimationPlayer) animationPlayer).setResetPose();
 
         /**
          * then, after the avatar has been set in the right position, glue the feet to the floor to
@@ -260,7 +262,7 @@ public class MixedAnimationEngineLoader implements EngineLoader
 
     public AnimationPlayer getAnimationPlayer()
     {
-        return (AnimationPlayer)animationPlayer;
+        return (AnimationPlayer) animationPlayer;
     }
 
     public AnimationPlanner getAnimationPlanner()
