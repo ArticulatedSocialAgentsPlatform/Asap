@@ -4,6 +4,7 @@
       <dependency org="HMI"     name="HmiBML"           rev="latest.${resolve.status}"    />
       <dependency org="HMI"     name="HmiUtil"           rev="latest.${resolve.status}"    />
       <dependency org="HMI"     name="HmiXml"            rev="latest.${resolve.status}"    />
+      <dependency org="Asap"    name="AsapMURML"            rev="latest.${resolve.status}"    />
 
       <dependency org="google"  name="guava"             rev="latest.release"    />
       <dependency org="lombok"  name="lombok"            rev="latest.release"    />
