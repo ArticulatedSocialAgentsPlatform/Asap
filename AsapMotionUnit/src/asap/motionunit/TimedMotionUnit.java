@@ -1,6 +1,7 @@
 package asap.motionunit;
 
 import java.util.List;
+
 import java.util.ArrayList;
 import java.util.concurrent.CopyOnWriteArrayList;
 
@@ -16,6 +17,12 @@ import hmi.elckerlyc.planunit.ParameterException;
 import hmi.elckerlyc.planunit.ParameterNotFoundException;
 
 import hmi.bml.feedback.BMLSyncPointProgressFeedback;
+
+/**
+ * A timedmotionunit is an abstract plan unit that delegates playback of motion to a motion unit.
+ * It takes care of translating the 'real' time into time values between 0 and 1 used in this motion unit.
+ * @author hvanwelbergen
+ */
 @Slf4j
 public class TimedMotionUnit extends TimedAbstractPlanUnit
 {

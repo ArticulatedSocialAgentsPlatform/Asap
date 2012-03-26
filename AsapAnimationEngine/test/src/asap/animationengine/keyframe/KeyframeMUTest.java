@@ -16,6 +16,11 @@ import asap.animationengine.keyframe.KeyframeMU;
 import asap.animationengine.motionunit.AnimationUnit;
 import asap.motionunit.MUPlayException;
 
+/**
+ * Unit testcases for KeyframeMU
+ * @author hvanwelbergen
+ *
+ */
 public class KeyframeMUTest
 {
     private static final double SKI_STARTTIME = 1;

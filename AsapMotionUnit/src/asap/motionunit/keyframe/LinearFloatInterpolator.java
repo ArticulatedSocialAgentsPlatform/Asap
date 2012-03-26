@@ -3,6 +3,8 @@ package asap.motionunit.keyframe;
 import java.util.ArrayList;
 import java.util.List;
 
+import com.google.common.collect.ImmutableList;
+
 import asap.math.LinearInterpolator;
 
 /**
@@ -12,11 +14,15 @@ import asap.math.LinearInterpolator;
  */
 public class LinearFloatInterpolator implements Interpolator
 {
-    List<LinearInterpolator> linInterPolators = new ArrayList<LinearInterpolator>();
+    private List<LinearInterpolator> linInterPolators = new ArrayList<LinearInterpolator>();
+    private List<KeyFrame> keyFrames;
+    private int nrOfDof;
     
     @Override
     public void setKeyFrames(List<KeyFrame> frames, int nrOfDof)
     {
+        keyFrames = frames;
+        this.nrOfDof = nrOfDof;
         linInterPolators.clear();
         for(int i=0;i<nrOfDof;i++)
         {
@@ -44,5 +50,13 @@ public class LinearFloatInterpolator implements Interpolator
             i++;
         }
         return new KeyFrame(time,dofs);
+    }
+    
+    @Override
+    public LinearFloatInterpolator copy()
+    {
+        LinearFloatInterpolator interp = new LinearFloatInterpolator();
+        interp.setKeyFrames(ImmutableList.copyOf(keyFrames), nrOfDof);
+        return interp;
     }
 }

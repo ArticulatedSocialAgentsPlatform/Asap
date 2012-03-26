@@ -34,7 +34,7 @@ import org.nfunk.jep.ParseException;
  * 
  * @author welberge
  */
-public class Keyframe extends XMLStructureAdapter implements Comparable<Keyframe>
+public class Keyframe extends XMLStructureAdapter
 {
     private XJep parser;
 
@@ -262,25 +262,6 @@ public class Keyframe extends XMLStructureAdapter implements Comparable<Keyframe
         }
         Quat4f.set(goal, q);
         return true;
-    }
-
-    /**
-     * Comparable interface Compares this object with the specified object for order. Returns a
-     * negative integer, zero, or a positive integer as this object is less than, equal to, or
-     * greater than the specified object. keyframes are sorted by time
-     */
-    @Override   //XXX move to Keyframe comperator?
-    public int compareTo(Keyframe o)
-    {
-        if (time < o.time)
-        {
-            return -1;
-        }
-        if (time > o.time)
-        {
-            return 1;
-        }
-        return 0;
     }
 
     /*

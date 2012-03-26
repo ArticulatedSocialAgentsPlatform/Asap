@@ -10,4 +10,5 @@ public interface Interpolator
 {
     KeyFrame interpolate(double time);
     void setKeyFrames(List<KeyFrame> frames, int nrOfDof);
+    Interpolator copy();
 }

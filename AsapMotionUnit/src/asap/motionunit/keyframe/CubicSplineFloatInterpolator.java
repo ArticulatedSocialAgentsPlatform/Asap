@@ -3,6 +3,8 @@ package asap.motionunit.keyframe;
 import java.util.ArrayList;
 import java.util.List;
 
+import com.google.common.collect.ImmutableList;
+
 import asap.math.CubicSplineInterpolator;
 
 /**
@@ -12,11 +14,15 @@ import asap.math.CubicSplineInterpolator;
  */
 public class CubicSplineFloatInterpolator implements Interpolator
 {
-    List<CubicSplineInterpolator> cubicSplineInterPolators = new ArrayList<CubicSplineInterpolator>();
+    private List<CubicSplineInterpolator> cubicSplineInterPolators = new ArrayList<CubicSplineInterpolator>();
+    private List<KeyFrame> keyFrames;
+    private int nrOfDof;
     
     @Override
     public void setKeyFrames(List<KeyFrame> frames, int nrOfDof)
     {
+        keyFrames = frames;
+        this.nrOfDof = nrOfDof;
         cubicSplineInterPolators.clear();
         for(int i=0;i<nrOfDof;i++)
         {
@@ -44,6 +50,14 @@ public class CubicSplineFloatInterpolator implements Interpolator
             i++;
         }
         return new KeyFrame(time,dofs);
+    }
+    
+    @Override
+    public CubicSplineFloatInterpolator copy()
+    {
+        CubicSplineFloatInterpolator interp = new CubicSplineFloatInterpolator();
+        interp.setKeyFrames(ImmutableList.copyOf(keyFrames), nrOfDof);
+        return interp;
     }
 
 }

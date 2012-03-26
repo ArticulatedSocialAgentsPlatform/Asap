@@ -11,6 +11,11 @@ import hmi.elckerlyc.planunit.ParameterNotFoundException;
 
 import lombok.Delegate;
 
+/**
+ * Generic implementation a motion motion unit that interpolates a set of keyframes
+ * @author hvanwelbergen
+ *
+ */
 public abstract class KeyFrameMotionUnit implements MotionUnit
 {
     @Delegate private KeyPositionManager keyPositionManager = new KeyPositionManagerImpl();

@@ -15,15 +15,24 @@ import asap.motionunit.keyframe.KeyFrame;
 import asap.motionunit.keyframe.KeyFrameMotionUnit;
 import asap.utils.AnimationSync;
 
+/**
+ * A group of morph targets, controlled by key frames
+ * @author hvanwelbergen
+ *
+ */
 public class KeyframeMorphFU extends KeyFrameMotionUnit implements FaceUnit
 {
     private FaceController faceController;
-    private List<String> targets;
-    
+    private String[] targets;
+    private float[] prevWeights;
+    private Interpolator interp;
+
     public KeyframeMorphFU(List<String> targets, Interpolator interp)
     {
         super(interp);
-        this.targets = ImmutableList.copyOf(targets);
+        this.interp = interp;
+        prevWeights = new float[targets.size()];
+        this.targets = targets.toArray(new String[targets.size()]);
         KeyPosition ready = new KeyPosition("ready", 0.1d, 1d);
         KeyPosition relax = new KeyPosition("relax", 0.9d, 1d);
         KeyPosition start = new KeyPosition("start", 0d, 1d);
@@ -33,7 +42,7 @@ public class KeyframeMorphFU extends KeyFrameMotionUnit implements FaceUnit
         addKeyPosition(relax);
         addKeyPosition(end);
     }
-    
+
     @Override
     public String getReplacementGroup()
     {
@@ -55,15 +64,18 @@ public class KeyframeMorphFU extends KeyFrameMotionUnit implements FaceUnit
     @Override
     public void cleanup()
     {
-        // TODO Auto-generated method stub
-        
+        faceController.removeMorphTargets(targets, prevWeights);
+        for (int i = 0; i < prevWeights.length; i++)
+        {
+            prevWeights[i] = 0;
+        }
     }
 
     public void setFaceController(FaceController fc)
     {
         faceController = fc;
     }
-    
+
     @Override
     public TimedFaceUnit createTFU(FeedbackManager bfm, BMLBlockPeg bbPeg, String bmlId, String id)
     {
@@ -73,8 +85,13 @@ public class KeyframeMorphFU extends KeyFrameMotionUnit implements FaceUnit
     @Override
     public FaceUnit copy(FaceController fc, FACSConverter fconv, EmotionConverter econv)
     {
-        // TODO Auto-generated method stub
-        return null;
+        KeyframeMorphFU copy = new KeyframeMorphFU(ImmutableList.copyOf(targets), interp.copy());
+        copy.setFaceController(faceController);
+        for (KeyPosition keypos : getKeyPositions())
+        {
+            copy.addKeyPosition(keypos.deepCopy());
+        }
+        return copy;
     }
 
     @Override
@@ -82,8 +99,9 @@ public class KeyframeMorphFU extends KeyFrameMotionUnit implements FaceUnit
     {
         synchronized (AnimationSync.getSync())
         {
-            //TODO: remove old values
-            faceController.addMorphTargets(targets.toArray(new String[targets.size()]), kf.getDofs());
+            faceController.removeMorphTargets(targets, prevWeights);
+            faceController.addMorphTargets(targets, kf.getDofs());
+            System.arraycopy(kf.getDofs(), 0, prevWeights, 0, prevWeights.length);
         }
     }
 }

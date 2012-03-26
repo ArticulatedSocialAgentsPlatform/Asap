@@ -18,15 +18,19 @@
  ******************************************************************************/
 package asap.animationengine.procanimation;
 
+import hmi.animation.VJoint;
+import hmi.math.Quat4f;
+import hmi.xml.XMLFormatting;
+import hmi.xml.XMLStructureAdapter;
+import hmi.xml.XMLTokenizer;
+
 import java.util.ArrayList;
 import java.util.Collections;
+import java.util.Comparator;
+import java.util.List;
 import java.util.Vector;
 
 import org.lsmp.djep.xjep.XJep;
-
-import hmi.animation.VJoint;
-import hmi.math.Quat4f;
-import hmi.xml.*;
 
 /**
  * Procedurally describes joint rotation as key rotations at key times, inbetween rotations are
@@ -40,13 +44,13 @@ public class Keyframes extends XMLStructureAdapter
 
     private String encoding = "";
 
-    private ArrayList<Keyframe> frames = new ArrayList<Keyframe>();
+    private List<Keyframe> frames = new ArrayList<Keyframe>();
 
     private VJoint joint;
 
-    //private double startT = 0;
+    // private double startT = 0;
 
-    //private double endT = 0;
+    // private double endT = 0;
 
     private XJep parser;
 
@@ -179,7 +183,7 @@ public class Keyframes extends XMLStructureAdapter
     /**
      * returns list with all parameters used in all formulas
      */
-    @SuppressWarnings({"rawtypes" })
+    @SuppressWarnings({ "rawtypes" })
     public Vector findParameters(Vector v)
     {
         for (Keyframe f : frames)
@@ -196,7 +200,7 @@ public class Keyframes extends XMLStructureAdapter
      *            : time, 0 &lt t &lt 1
      * @param goal
      *            : output rotation
-     * @return false on error   TODO: throw exception instead?
+     * @return false on error TODO: throw exception instead?
      */
     public boolean evaluate(double t, float[] goal, VJoint human)
     {
@@ -236,9 +240,9 @@ public class Keyframes extends XMLStructureAdapter
         else
         {
             endT = end.getTime();
-            end.evaluate(qNext, human);   
+            end.evaluate(qNext, human);
             start.evaluate(qPrev, human);
-            startT = start.getTime();                    
+            startT = start.getTime();
         }
         Quat4f.interpolate(goal, qPrev, qNext, (float) ((t - startT) / (endT - startT)));
         return true;
@@ -288,6 +292,24 @@ public class Keyframes extends XMLStructureAdapter
         return false;
     }
 
+    class KeyframeTimeComparator implements Comparator<Keyframe>
+    {
+        @Override
+        public int compare(Keyframe kf1, Keyframe kf2)
+        {
+            if (kf1.getTime() < kf2.getTime())
+            {
+                return -1;
+            }
+            if (kf1.getTime() > kf2.getTime())
+            {
+                return 1;
+            }
+            return 0;
+        }
+
+    }
+
     @Override
     public void decodeContent(XMLTokenizer tokenizer) throws java.io.IOException
     {
@@ -300,7 +322,7 @@ public class Keyframes extends XMLStructureAdapter
                 frames.add(kf);
             }
         }
-        Collections.sort(frames);
+        Collections.sort(frames, new KeyframeTimeComparator());
     }
 
     @Override
