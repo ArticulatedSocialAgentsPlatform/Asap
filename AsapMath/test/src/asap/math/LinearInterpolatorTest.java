@@ -1,6 +1,6 @@
 package asap.math;
 
-import static org.junit.Assert.*;
+import static org.junit.Assert.assertEquals;
 
 import org.junit.Test;
 
@@ -41,5 +41,13 @@ public class LinearInterpolatorTest
         double pval[][]={{0,1},{1,2},{2,3}};
         LinearInterpolator in = new LinearInterpolator(pval);
         assertEquals(1.5,in.interpolate(0.5),0.001);
+    }
+    
+    @Test
+    public void testInterpolateOneValue()
+    {
+        double pval[][]={{0,1}};
+        LinearInterpolator in = new LinearInterpolator(pval);
+        assertEquals(1,in.interpolate(0),0.001);
     }
 }

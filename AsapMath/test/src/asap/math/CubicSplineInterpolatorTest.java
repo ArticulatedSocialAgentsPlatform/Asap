@@ -46,4 +46,37 @@ public class CubicSplineInterpolatorTest
         assertThat(in.interpolate(0.5),greaterThan(1d));
         assertThat(in.interpolate(0.5),lessThan(2d));
     }
+    
+    @Test
+    public void testInterpolateOneValue()
+    {
+        double pval[][]={{0,1}};
+        CubicSplineInterpolator in = new CubicSplineInterpolator(pval,0,0);
+        assertEquals(1,in.interpolate(0),0.001);
+    }
+    
+    @Test
+    public void testInterpolateTwoValues()
+    {
+        double pval[][]={{0,1},{1,2}};
+        CubicSplineInterpolator in = new CubicSplineInterpolator(pval,0,0);
+        assertEquals(1,in.interpolate(0),0.001);
+    }
+    
+    @Test
+    public void testInterpolateTwoValuesEnd()
+    {
+        double pval[][]={{0,1},{1,2}};
+        CubicSplineInterpolator in = new CubicSplineInterpolator(pval,0,0);
+        assertEquals(2,in.interpolate(1),0.001);
+    }
+    
+    @Test
+    public void testInterpolateInbetweenTwoValues()
+    {
+        double pval[][]={{0,1},{1,2}};
+        CubicSplineInterpolator in = new CubicSplineInterpolator(pval,0,0);
+        assertThat(in.interpolate(0.5),greaterThan(1d));
+        assertThat(in.interpolate(0.5),lessThan(2d));
+    }
 }

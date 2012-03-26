@@ -7,7 +7,7 @@ package asap.math;
  * Assumes that values in pval are ordered in time
  * @author hvanwelbergen
  * @author hvanwelbergen
- *
+ * 
  */
 public class CubicSplineInterpolator
 {
@@ -43,9 +43,9 @@ public class CubicSplineInterpolator
 
     private void init(double yfd1, double yfdn)
     {
-        nr_xv = new double[pval.length+2];
-        nr_yv = new double[pval.length+2];
-        nr_y2drv = new double[pval.length+2];
+        nr_xv = new double[pval.length + 1];
+        nr_yv = new double[pval.length + 1];
+        nr_y2drv = new double[pval.length + 1];
 
         // transfer control point values to numrep array
         for (int i = 0; i < pval.length; i++)
@@ -53,18 +53,21 @@ public class CubicSplineInterpolator
             nr_xv[i + 1] = pval[i][0];
             nr_yv[i + 1] = pval[i][1];
         }
-        spline(nr_xv, nr_yv, pval.length+1, yfd1, yfdn, nr_y2drv);
+        spline(nr_xv, nr_yv, pval.length, yfd1, yfdn, nr_y2drv);
     }
 
     private void spline(double x[], double y[], int n, double yp1, double ypn, double y2[])
     {
         int i, k;
         double p, qn, sig, un;
-        //double u[] = new double[n - 1];
+        // double u[] = new double[n - 1];
         double u[] = new double[n];
 
-        if (yp1 > 0.99e30) y2[1] = u[1] = 0.0;
-        else
+        if (yp1 > 0.99e30)
+        {
+            y2[1] = u[1] = 0.0;
+        }
+        else if(n>1)
         {
             y2[1] = -0.5;
             u[1] = (3.0 / (x[2] - x[1])) * ((y[2] - y[1]) / (x[2] - x[1]) - yp1);
@@ -77,7 +80,10 @@ public class CubicSplineInterpolator
             u[i] = (y[i + 1] - y[i]) / (x[i + 1] - x[i]) - (y[i] - y[i - 1]) / (x[i] - x[i - 1]);
             u[i] = (6.0 * u[i] / (x[i + 1] - x[i - 1]) - sig * u[i - 1]) / p;
         }
-        if (ypn > 0.99e30) qn = un = 0.0;
+        if (ypn > 0.99e30 || n <= 2)
+        {
+            qn = un = 0.0;
+        }        
         else
         {
             qn = 0.5;
@@ -87,14 +93,15 @@ public class CubicSplineInterpolator
         for (k = n - 1; k >= 1; k--)
             y2[k] = y2[k] * y2[k + 1] + u[k];
     }
-    
+
     public double interpolate(double time)
     {
         return splint(nr_xv, nr_yv, nr_y2drv, pval.length, time);
     }
-    
+
     private double splint(double xa[], double ya[], double y2a[], int n, double x)
     {
+        if(n==1) return ya[1];
         int klo, khi, k;
         double h, b, a;
 

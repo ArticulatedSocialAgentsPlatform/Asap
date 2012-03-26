@@ -21,6 +21,7 @@ import asap.murml.Posture;
 public final class MURMLFUBuilder
 {
     private MURMLFUBuilder(){}
+    
     public static FaceUnit setup(String murml)
     {
         Definition def = new Definition();

@@ -292,7 +292,7 @@ public class Keyframes extends XMLStructureAdapter
         return false;
     }
 
-    class KeyframeTimeComparator implements Comparator<Keyframe>
+    private static final class KeyframeTimeComparator implements Comparator<Keyframe>
     {
         @Override
         public int compare(Keyframe kf1, Keyframe kf2)
