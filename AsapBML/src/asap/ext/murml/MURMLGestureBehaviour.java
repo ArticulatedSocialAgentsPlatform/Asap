@@ -1,32 +1,36 @@
 package asap.ext.murml;
 
+import hmi.bml.core.GestureBehaviour;
 import hmi.bml.parser.SyncPoint;
 import hmi.xml.XMLTokenizer;
 
 import java.io.IOException;
 import java.util.List;
 
-import com.google.common.collect.ImmutableList;
-
 /**
- * Extension for MURML face behaviors
+ * Extension for MURML gesture behaviours
  * @author hvanwelbergen
- * 
  */
-public class MURMLFaceBehaviour extends MURMLBehaviour
+public class MURMLGestureBehaviour extends MURMLBehaviour
 {
-    public MURMLFaceBehaviour(String bmlId, XMLTokenizer tokenizer) throws IOException
+    public MURMLGestureBehaviour(String bmlId)
+    {
+        super(bmlId);        
+    }
+    
+    public MURMLGestureBehaviour(String bmlId, XMLTokenizer tokenizer) throws IOException
     {
         super(bmlId);
         readXML(tokenizer);
     }
 
     
-
+    
+    
     /*
      * The XML Stag for XML encoding
      */
-    private static final String XMLTAG = "murmlface";
+    private static final String XMLTAG = "murmlgesture";
 
     /**
      * The XML Stag for XML encoding -- use this static method when you want to see if a given
@@ -65,6 +69,13 @@ public class MURMLFaceBehaviour extends MURMLBehaviour
     {
         return false;
     }
+
+    private static final List<String> DEFAULT_SYNCS = GestureBehaviour.getDefaultSyncPoints();
+
+    public static List<String> getDefaultSyncPoints()
+    {
+        return DEFAULT_SYNCS;
+    }
     
     @Override
     public void addDefaultSyncPoints()
@@ -73,12 +84,5 @@ public class MURMLFaceBehaviour extends MURMLBehaviour
         {
             addSyncPoint(new SyncPoint(bmlId, id, s));
         }
-    }
-
-    private static final List<String> DEFAULT_SYNCS = ImmutableList.of("start", "end");
-
-    public static List<String> getDefaultSyncPoints()
-    {
-        return DEFAULT_SYNCS;
     }
 }
