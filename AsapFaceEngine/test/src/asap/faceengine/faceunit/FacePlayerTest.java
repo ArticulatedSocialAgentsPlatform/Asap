@@ -1,16 +1,17 @@
 package asap.faceengine.faceunit;
 
 import static org.junit.Assert.assertEquals;
-import static org.mockito.Matchers.*;
-import static org.mockito.Mockito.*;
-
-import hmi.elckerlyc.pegboard.BMLBlockPeg;
-import hmi.elckerlyc.planunit.KeyPosition;
+import static org.mockito.Matchers.anyDouble;
+import static org.mockito.Mockito.doThrow;
+import static org.mockito.Mockito.mock;
 import hmi.bml.feedback.BMLExceptionFeedback;
-import hmi.elckerlyc.Player;
+import hmi.bml.feedback.ListBMLExceptionListener;
 import hmi.elckerlyc.DefaultPlayer;
+import hmi.elckerlyc.Player;
 import hmi.elckerlyc.feedback.FeedbackManager;
 import hmi.elckerlyc.feedback.FeedbackManagerImpl;
+import hmi.elckerlyc.pegboard.BMLBlockPeg;
+import hmi.elckerlyc.planunit.KeyPosition;
 import hmi.elckerlyc.planunit.PlanManager;
 import hmi.elckerlyc.planunit.SingleThreadedPlanPlayer;
 import hmi.elckerlyc.planunit.TimedPlanUnitPlayException;
@@ -18,19 +19,16 @@ import hmi.elckerlyc.planunit.TimedPlanUnitState;
 import hmi.elckerlyc.scheduler.BMLBlockManager;
 import hmi.elckerlyc.util.KeyPositionMocker;
 import hmi.elckerlyc.util.TimePegUtil;
-import hmi.bml.feedback.ListBMLExceptionListener;
 
 import java.util.ArrayList;
 import java.util.List;
+
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.powermock.api.mockito.PowerMockito;
 import org.powermock.core.classloader.annotations.PrepareForTest;
 import org.powermock.modules.junit4.PowerMockRunner;
-
-import asap.faceengine.faceunit.FaceUnit;
-import asap.faceengine.faceunit.TimedFaceUnit;
 
 /**
  * Unit Test cases for the FacePlayer

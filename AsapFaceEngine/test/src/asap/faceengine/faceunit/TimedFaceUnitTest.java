@@ -29,8 +29,6 @@ import org.junit.runner.RunWith;
 import org.powermock.core.classloader.annotations.PrepareForTest;
 import org.powermock.modules.junit4.PowerMockRunner;
 
-import asap.faceengine.faceunit.FaceUnit;
-import asap.faceengine.faceunit.TimedFaceUnit;
 import asap.motionunit.MUPlayException;
 
 /**
