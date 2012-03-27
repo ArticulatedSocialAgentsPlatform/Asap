@@ -3,8 +3,8 @@ Main-Class: hmi.bml.reader.Info
 
 Name: asap/bmlb/
 Specification-Title:    AsapFaceEngine
-Specification-Version:  0.22
+Specification-Version:  0.23
 Specification-Vendor:   Asap
 Implementation-Title:   AsapFaceEngine
-Implementation-Version: December 20 2011  05:11 PM
+Implementation-Version: March 27 2012  10:36 AM
 Implementation-Vendor:  Asap

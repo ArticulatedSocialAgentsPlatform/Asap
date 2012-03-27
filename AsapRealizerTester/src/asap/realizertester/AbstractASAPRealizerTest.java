@@ -1,6 +1,7 @@
 package asap.realizertester;
 
 
+import hmi.bml.core.FaceBehaviour;
 import hmi.bml.core.GestureBehaviour;
 import hmi.realizertester.AbstractElckerlycRealizerTest;
 
@@ -48,5 +49,18 @@ public abstract class AbstractASAPRealizerTest extends AbstractElckerlycRealizer
         assertNoDuplicateFeedbacks();
         assertLinkedSyncs("bml1", "g1", "relax", "bml2", "g1", "start");
         assertLinkedSyncs("bml1", "g1", "relax", "bml1", "g1", "end");
+    }
+    
+    @Test
+    public void testMURMLFace() throws IOException, InterruptedException
+    {
+        String bmlString = readTestFile("murml/murmlfacekeyframe.xml");
+        realizerPort.performBML(bmlString);
+        
+        waitForBMLEndFeedback("bml1");
+        assertNoExceptions();
+        assertNoWarnings();
+        assertBlockStartAndStopFeedbacks("bml1");
+        assertAllBMLSyncsInBMLOrder("bml1", "face1", FaceBehaviour.getDefaultSyncPoints());
     }
 }

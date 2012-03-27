@@ -86,7 +86,7 @@ public class KeyframeMorphFU extends KeyFrameMotionUnit implements FaceUnit
     public FaceUnit copy(FaceController fc, FACSConverter fconv, EmotionConverter econv)
     {
         KeyframeMorphFU copy = new KeyframeMorphFU(ImmutableList.copyOf(targets), interp.copy());
-        copy.setFaceController(faceController);
+        copy.setFaceController(fc);
         for (KeyPosition keypos : getKeyPositions())
         {
             copy.addKeyPosition(keypos.deepCopy());

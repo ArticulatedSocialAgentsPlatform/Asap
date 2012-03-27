@@ -90,7 +90,7 @@ public class TimedMotionUnit extends TimedAbstractPlanUnit
         double t = puTimeManager.getRelativeTime(time);        
         try
         {
-            log.warn("Timed Motion Unit play {}",time);
+            log.debug("Timed Motion Unit play {}",time);
             mu.play(t);
         }
         catch (MUPlayException ex)

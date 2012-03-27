@@ -85,7 +85,7 @@
   </Loader>
   
   <Loader id="faceengine" 
-          loader="hmi.faceengine.loader.FaceEngineLoader"
+          loader="asap.faceengine.loader.FaceEngineLoader"
           requiredloaders="graphicalembodiment">
     <FaceBinding basedir="" resources="Humanoids/armandia/facebinding/" filename="facebinding.xml"/>
   </Loader>
