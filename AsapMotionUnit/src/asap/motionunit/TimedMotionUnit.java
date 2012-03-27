@@ -121,6 +121,9 @@ public class TimedMotionUnit extends TimedAbstractPlanUnit
         return mu;
     }
     
+    /**
+     * @deprecated
+     */
     @Override
     @Deprecated
     public String getReplacementGroup()

@@ -61,7 +61,8 @@ public class FacePlannerTest
     private final PlanManager<TimedFaceUnit> planManager = new PlanManager<TimedFaceUnit>();
     private FaceBinding mockFaceBinding = mock(FaceBinding.class);
     private FaceUnit mockUnit = mock(FaceUnit.class);
-    
+    private static final float PLAN_PRECISION = 0.00001f;
+            
     @Before
     public void setup()
     {
@@ -107,8 +108,14 @@ public class FacePlannerTest
     {
         String bmlString = "<murml:murmlface xmlns:murml=\"http://www.techfak.uni-bielefeld.de/ags/soa/murml\" " +
                 "id=\"a1\" start=\"nod1:end\">" +
-                "<definition><keyframing><phase><frame ftime=\"0\"><posture>Humanoid "+
-                "(dB_Smile 3 70 0 0)</posture></frame></phase></keyframing></definition>"+
+                "<definition><keyframing><phase>" +
+                "<frame ftime=\"0\">" +
+                "<posture>Humanoid (dB_Smile 3 70 0 0)</posture>" +
+                "</frame>" +
+                "<frame ftime=\"2\">" +
+                "<posture>Humanoid (dB_Smile 3 80 0 0)</posture>" +
+                "</frame>" +
+                "</phase></keyframing></definition>"+
                 "</murml:murmlface>";
         MURMLFaceBehaviour b = new MURMLFaceBehaviour(BMLID, new XMLTokenizer(bmlString));
         ArrayList<TimePegAndConstraint> sacs = new ArrayList<TimePegAndConstraint>();
@@ -117,6 +124,8 @@ public class FacePlannerTest
         
         TimedFaceUnit tfu = facePlanner.resolveSynchs(bbPeg, b, sacs);
         assertNotNull(tfu);
-        assertThat(tfu.getFaceUnit(), instanceOf(KeyframeMorphFU.class));        
+        assertThat(tfu.getFaceUnit(), instanceOf(KeyframeMorphFU.class));      
+        assertEquals(0, tfu.getStartTime(), PLAN_PRECISION);
+        assertEquals(2, tfu.getEndTime(), PLAN_PRECISION);
     }
 }

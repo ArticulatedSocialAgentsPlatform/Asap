@@ -21,6 +21,7 @@ public interface MotionUnit extends KeyPositionManager
      * Get the faceunit replacement group (=typically the BML behavior)
      * Used to determine the currently active persistent TFU for this group in the player
      * Only one group is active at a time
+     * @deprecated
      */
     @Deprecated
     String getReplacementGroup();   

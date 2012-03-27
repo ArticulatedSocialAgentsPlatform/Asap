@@ -18,7 +18,7 @@ import asap.utils.AnimationSync;
 /**
  * A group of morph targets, controlled by key frames
  * @author hvanwelbergen
- *
+ * 
  */
 public class KeyframeMorphFU extends KeyFrameMotionUnit implements FaceUnit
 {
@@ -26,11 +26,20 @@ public class KeyframeMorphFU extends KeyFrameMotionUnit implements FaceUnit
     private String[] targets;
     private float[] prevWeights;
     private Interpolator interp;
-
-    public KeyframeMorphFU(List<String> targets, Interpolator interp)
+    private int nrOfDofs;
+    private List<KeyFrame> keyFrames;
+    private double preferedDuration = 1;
+    
+    public KeyframeMorphFU(List<String> targets, Interpolator interp, List<KeyFrame> keyFrames, int nrOfDofs)
     {
         super(interp);
         this.interp = interp;
+        this.nrOfDofs = nrOfDofs;
+        this.keyFrames = ImmutableList.copyOf(keyFrames);
+        unifyKeyFrames();
+
+        interp.setKeyFrames(keyFrames, nrOfDofs);
+
         prevWeights = new float[targets.size()];
         this.targets = targets.toArray(new String[targets.size()]);
         KeyPosition ready = new KeyPosition("ready", 0.1d, 1d);
@@ -43,6 +52,22 @@ public class KeyframeMorphFU extends KeyFrameMotionUnit implements FaceUnit
         addKeyPosition(end);
     }
 
+    private void unifyKeyFrames()
+    {
+        if(keyFrames.size()<2)
+        {
+            return;
+        }
+        double start = keyFrames.get(0).getFrameTime();
+        double end = keyFrames.get(keyFrames.size()-1).getFrameTime();
+        preferedDuration = end - start;
+        
+        for(KeyFrame kf:keyFrames)
+        {
+            kf.setFrameTime( (kf.getFrameTime()-start) / preferedDuration);
+        }
+    }
+
     @Override
     public String getReplacementGroup()
     {
@@ -52,7 +77,7 @@ public class KeyframeMorphFU extends KeyFrameMotionUnit implements FaceUnit
     @Override
     public double getPreferedDuration()
     {
-        return 0;
+        return preferedDuration;
     }
 
     @Override
@@ -85,7 +110,7 @@ public class KeyframeMorphFU extends KeyFrameMotionUnit implements FaceUnit
     @Override
     public FaceUnit copy(FaceController fc, FACSConverter fconv, EmotionConverter econv)
     {
-        KeyframeMorphFU copy = new KeyframeMorphFU(ImmutableList.copyOf(targets), interp.copy());
+        KeyframeMorphFU copy = new KeyframeMorphFU(ImmutableList.copyOf(targets), interp.copy(), ImmutableList.copyOf(keyFrames), nrOfDofs);
         copy.setFaceController(fc);
         for (KeyPosition keypos : getKeyPositions())
         {

@@ -41,7 +41,7 @@ public class MURMLFUBuilderTest
     public void testTwoFrames()throws MUPlayException
     {
         String murmlString = "<definition><keyframing><phase>" +
-        		"<frame ftime=\"0\"><posture>Humanoid "
+                "<frame ftime=\"0\"><posture>Humanoid "
                 + "(dB_Smile 3 70 0 0)</posture></frame>" +
                 "<frame ftime=\"1\"><posture>Humanoid "
                 + "(dB_Smile 3 80 0 0)</posture></frame>" +
@@ -64,6 +64,26 @@ public class MURMLFUBuilderTest
                 "<frame ftime=\"0\"><posture>Humanoid "
                 + "(dB_Smile 3 70 0 0)(dB_Dummy 1 30)</posture></frame>" +
                 "<frame ftime=\"1\"><posture>Humanoid "
+                + "(dB_Smile 3 80 0 0)(dB_Dummy 1 20)</posture></frame>" +
+                "</phase></keyframing></definition>";
+        FaceUnit fu = MURMLFUBuilder.setup(murmlString);
+        assertThat(fu, instanceOf(KeyframeMorphFU.class));
+        KeyframeMorphFU kfu = (KeyframeMorphFU) fu;
+        kfu.setFaceController(mockFc);
+        kfu.play(1);
+
+        final String[] expectedTargets = new String[] { "dB_Smile", "dB_Dummy" };
+        final float[] expectedValues = new float[] {0.8f, 0.2f};
+        verify(mockFc, times(1)).addMorphTargets(AdditionalMatchers.aryEq(expectedTargets), AdditionalMatchers.aryEq(expectedValues));
+    }
+    
+    @Test
+    public void testUnification()throws MUPlayException
+    {
+        String murmlString = "<definition><keyframing><phase>" +
+                "<frame ftime=\"1\"><posture>Humanoid "
+                + "(dB_Smile 3 70 0 0)(dB_Dummy 1 30)</posture></frame>" +
+                "<frame ftime=\"4\"><posture>Humanoid "
                 + "(dB_Smile 3 80 0 0)(dB_Dummy 1 20)</posture></frame>" +
                 "</phase></keyframing></definition>";
         FaceUnit fu = MURMLFUBuilder.setup(murmlString);

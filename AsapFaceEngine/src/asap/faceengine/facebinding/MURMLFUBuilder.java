@@ -68,8 +68,7 @@ public final class MURMLFUBuilder
                 
                 //TODO: select interpolator
                 CubicSplineFloatInterpolator interp = new CubicSplineFloatInterpolator();
-                interp.setKeyFrames(keyFrames,nrOfDofs);
-                return new KeyframeMorphFU(targets, interp);
+                return new KeyframeMorphFU(targets, interp, keyFrames, nrOfDofs);
             }
         }
         return null;

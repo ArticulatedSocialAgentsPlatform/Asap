@@ -2,6 +2,9 @@ package asap.motionunit.keyframe;
 
 import java.util.Arrays;
 
+import lombok.Getter;
+import lombok.Setter;
+
 /**
  * Stores a keyframe time and a set of dof values (as float array)
  * @author hvanwelbergen
@@ -9,12 +12,12 @@ import java.util.Arrays;
  */
 public class KeyFrame
 {
-    private double ftime;
+    @Getter @Setter private double frameTime;
     private float dofs[];
     
     public KeyFrame(double ftime, float dofs[])
     {
-        this.ftime = ftime;
+        frameTime = ftime;
         this.dofs = Arrays.copyOf(dofs, dofs.length);
     }
     
@@ -22,10 +25,4 @@ public class KeyFrame
     {
         return Arrays.copyOf(dofs, dofs.length);
     }
-    
-    public double getFrameTime()
-    {
-        return ftime;
-    }
-    
 }
