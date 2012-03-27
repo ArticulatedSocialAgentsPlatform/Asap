@@ -122,7 +122,7 @@ public class TimedMotionUnit extends TimedAbstractPlanUnit
     }
     
     /**
-     * @deprecated
+     * @deprecated No longer relevant in BML 1.0
      */
     @Override
     @Deprecated
