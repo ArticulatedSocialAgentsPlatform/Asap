@@ -119,8 +119,10 @@ public class FacePlannerTest
                 "</murml:murmlface>";
         MURMLFaceBehaviour b = new MURMLFaceBehaviour(BMLID, new XMLTokenizer(bmlString));
         ArrayList<TimePegAndConstraint> sacs = new ArrayList<TimePegAndConstraint>();
-        TimePeg startPeg = TimePegUtil.createTimePeg(0);        
+        TimePeg startPeg = TimePegUtil.createTimePeg(0);
+        TimePeg endPeg = new TimePeg(bbPeg);
         sacs.add(new TimePegAndConstraint("start",startPeg , new Constraint(), 0, false));
+        sacs.add(new TimePegAndConstraint("end",endPeg , new Constraint(), 0, false));
         
         TimedFaceUnit tfu = facePlanner.resolveSynchs(bbPeg, b, sacs);
         assertNotNull(tfu);
