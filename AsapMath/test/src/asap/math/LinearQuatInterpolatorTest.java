@@ -46,4 +46,13 @@ public class LinearQuatInterpolatorTest
         Quat4f.interpolate(qExpected, Quat4f.getQuat4f(1,0,0,0), Quat4f.getQuat4f(0,0,0,1),0.5f);
         Quat4fTestUtil.assertQuat4fRotationEquivalent(qExpected, q, INTERPOLATION_PRECISION);
     }
+    
+    @Test
+    public void testInterpolateOneValue()
+    {
+        double pval[][]={{0,1,0,0,0}};
+        LinearQuatInterpolator in = new LinearQuatInterpolator(pval);
+        in.interpolate(0.5,q);
+        Quat4fTestUtil.assertQuat4fRotationEquivalent(Quat4f.getQuat4f(1,0,0,0), q, INTERPOLATION_PRECISION);
+    }
 }
