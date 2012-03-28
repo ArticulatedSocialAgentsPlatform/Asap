@@ -64,6 +64,6 @@ public class LinearQuatInterpolator
             t = (float) ((time - keyTimes[q0index])/dur);
         }
         
-        Quat4f.interpolate(q, keyValues[q0index], keyValues[q1index], t);
+        Quat4f.interpolate(q, index, keyValues[q0index],0, keyValues[q1index],0, t);
     }
 }

@@ -15,7 +15,7 @@ import hmi.elckerlyc.planunit.TimedPlanUnitPlayException;
  * @author Herwin
  * 
  */
-public class PhysicalTMU extends TimeAnimationUnit
+public class PhysicalTMU extends TimedAnimationUnit
 {
     private static Logger logger = LoggerFactory.getLogger(PhysicalTMU.class.getName());
 

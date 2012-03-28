@@ -4,12 +4,15 @@ import hmi.elckerlyc.feedback.FeedbackManager;
 import hmi.elckerlyc.pegboard.BMLBlockPeg;
 import hmi.elckerlyc.pegboard.PegBoard;
 
+import java.util.List;
 import java.util.Set;
+
+import com.google.common.collect.ImmutableList;
 
 import asap.animationengine.AnimationPlayer;
 import asap.animationengine.motionunit.AnimationUnit;
 import asap.animationengine.motionunit.MUSetupException;
-import asap.animationengine.motionunit.TimeAnimationUnit;
+import asap.animationengine.motionunit.TimedAnimationUnit;
 import asap.motionunit.keyframe.Interpolator;
 import asap.motionunit.keyframe.KeyFrame;
 import asap.motionunit.keyframe.KeyFrameMotionUnit;
@@ -21,9 +24,11 @@ import asap.motionunit.keyframe.KeyFrameMotionUnit;
  */
 public class MURMLKeyframeMU extends KeyFrameMotionUnit implements AnimationUnit
 {
-    public MURMLKeyframeMU(Interpolator interp)
+    private List<String> targets;
+    public MURMLKeyframeMU(List<String> targets, Interpolator interp, List<KeyFrame> keyFrames, int nrOfDofs)
     {
-        super(interp);        
+        super(interp);
+        targets = ImmutableList.copyOf(targets);        
     }
 
     /**
@@ -65,7 +70,7 @@ public class MURMLKeyframeMU extends KeyFrameMotionUnit implements AnimationUnit
     }
 
     @Override
-    public TimeAnimationUnit createTMU(FeedbackManager bbm, BMLBlockPeg bmlBlockPeg, String bmlId, String id, PegBoard pb)
+    public TimedAnimationUnit createTMU(FeedbackManager bbm, BMLBlockPeg bmlBlockPeg, String bmlId, String id, PegBoard pb)
     {
         // TODO Auto-generated method stub
         return null;

@@ -57,9 +57,9 @@ public class GestureBinding extends XMLStructureAdapter
     /**
      * Gets a list of timed motion units that satisfy the constraints of behaviour b     
      */
-    public List<TimeAnimationUnit> getMotionUnit(BMLBlockPeg bbPeg,Behaviour b, AnimationPlayer player, PegBoard pegBoard)
+    public List<TimedAnimationUnit> getMotionUnit(BMLBlockPeg bbPeg,Behaviour b, AnimationPlayer player, PegBoard pegBoard)
     {
-        ArrayList<TimeAnimationUnit> mus = new ArrayList<TimeAnimationUnit>();
+        ArrayList<TimedAnimationUnit> mus = new ArrayList<TimedAnimationUnit>();
         for (MotionUnitSpec s:specs)
         {
             if(s.getType().equals(b.getXMLTag()) && 
@@ -83,7 +83,7 @@ public class GestureBinding extends XMLStructureAdapter
                         logger.warn("Error in setting up motion unit", e1);
                         continue;
                     }
-                    TimeAnimationUnit tmu = muCopy.createTMU(fbManager,bbPeg,b.getBmlId(),b.id, pegBoard);                    
+                    TimedAnimationUnit tmu = muCopy.createTMU(fbManager,bbPeg,b.getBmlId(),b.id, pegBoard);                    
                     
                     
                     //set default parameter values

@@ -162,7 +162,7 @@ public class ControllerMU implements AnimationUnit
     }
     
     @Override
-    public TimeAnimationUnit createTMU(FeedbackManager bfm,BMLBlockPeg bbPeg,String bmlId, String id, PegBoard pb)
+    public TimedAnimationUnit createTMU(FeedbackManager bfm,BMLBlockPeg bbPeg,String bmlId, String id, PegBoard pb)
     {
         return new PhysicalTMU(bfm,bbPeg, bmlId, id, this, pb);
     }

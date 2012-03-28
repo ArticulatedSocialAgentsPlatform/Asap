@@ -39,7 +39,7 @@ import asap.motionunit.TimedMotionUnit;
  * 
  * @author welberge
  */
-public class TimeAnimationUnit extends TimedMotionUnit
+public class TimedAnimationUnit extends TimedMotionUnit
 {
     private final AnimationUnit mu;
     private final UniModalResolver resolver = new LinearStretchResolver();
@@ -59,14 +59,14 @@ public class TimeAnimationUnit extends TimedMotionUnit
      * @param id behaviour id
      * @param m motion unit
      */
-    public TimeAnimationUnit(FeedbackManager bbf, BMLBlockPeg bmlBlockPeg, String bmlId, String id, AnimationUnit m, PegBoard pb)
+    public TimedAnimationUnit(FeedbackManager bbf, BMLBlockPeg bmlBlockPeg, String bmlId, String id, AnimationUnit m, PegBoard pb)
     {
         super(bbf, bmlBlockPeg, bmlId, id, m );
         mu = m;
         pegBoard = pb;
     }
 
-    public TimeAnimationUnit(BMLBlockPeg bmlBlockPeg, String bmlId, String id, AnimationUnit m, PegBoard pb)
+    public TimedAnimationUnit(BMLBlockPeg bmlBlockPeg, String bmlId, String id, AnimationUnit m, PegBoard pb)
     {
         this(NullFeedbackManager.getInstance(), bmlBlockPeg, bmlId, id, m, pb);
     }

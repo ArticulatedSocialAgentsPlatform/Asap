@@ -31,7 +31,7 @@ import hmi.elckerlyc.scheduler.TimePegAndConstraint;
 import java.util.*;
 
 import asap.animationengine.gesturebinding.*;
-import asap.animationengine.motionunit.TimeAnimationUnit;
+import asap.animationengine.motionunit.TimedAnimationUnit;
 
 import hmi.bml.core.Behaviour;
 import hmi.bml.core.GazeBehaviour;
@@ -49,13 +49,13 @@ import hmi.bml.ext.bmlt.BMLTNoiseBehaviour;
  * 
  * @author welberge
  */
-public class AnimationPlanner extends AbstractPlanner<TimeAnimationUnit>
+public class AnimationPlanner extends AbstractPlanner<TimedAnimationUnit>
 {
     private final AnimationPlayer player;
     private final PegBoard pegBoard;
     private GestureBinding gestureBinding;
 
-    public AnimationPlanner(FeedbackManager bfm, AnimationPlayer p, GestureBinding g, PlanManager<TimeAnimationUnit> planManager, PegBoard pb)
+    public AnimationPlanner(FeedbackManager bfm, AnimationPlayer p, GestureBinding g, PlanManager<TimedAnimationUnit> planManager, PegBoard pb)
     {
         super(bfm, planManager);
         pegBoard = pb;
@@ -73,14 +73,14 @@ public class AnimationPlanner extends AbstractPlanner<TimeAnimationUnit>
      * TimedMotionUnit.
      */
     @Override
-    public List<SyncAndTimePeg> addBehaviour(BMLBlockPeg bbPeg, Behaviour b, List<TimePegAndConstraint> sacs, TimeAnimationUnit tmu)
+    public List<SyncAndTimePeg> addBehaviour(BMLBlockPeg bbPeg, Behaviour b, List<TimePegAndConstraint> sacs, TimedAnimationUnit tmu)
             throws BehaviourPlanningException
     {
         List<SyncAndTimePeg> satps = new ArrayList<SyncAndTimePeg>();
 
         if (tmu == null)
         {
-            List<TimeAnimationUnit> tmus = gestureBinding.getMotionUnit(bbPeg, b, player, pegBoard);
+            List<TimedAnimationUnit> tmus = gestureBinding.getMotionUnit(bbPeg, b, player, pegBoard);
             if (tmus.isEmpty())
             {
                 throw new BehaviourPlanningException(b, "Behavior " + b.id
@@ -106,22 +106,22 @@ public class AnimationPlanner extends AbstractPlanner<TimeAnimationUnit>
     }
 
     @Override
-    public TimeAnimationUnit resolveSynchs(BMLBlockPeg bbPeg, Behaviour b, List<TimePegAndConstraint> sac) throws BehaviourPlanningException
+    public TimedAnimationUnit resolveSynchs(BMLBlockPeg bbPeg, Behaviour b, List<TimePegAndConstraint> sac) throws BehaviourPlanningException
     {
-        List<TimeAnimationUnit> tmus = gestureBinding.getMotionUnit(bbPeg, b, player, pegBoard);
+        List<TimedAnimationUnit> tmus = gestureBinding.getMotionUnit(bbPeg, b, player, pegBoard);
         if (tmus.isEmpty())
         {
             throw new BehaviourPlanningException(b, "Behavior " + b.id
                     + " could not be constructed from the gesture binding, behavior omitted.");
         }
-        TimeAnimationUnit tmu = tmus.get(0);
+        TimedAnimationUnit tmu = tmus.get(0);
         tmu.resolveDefaultBMLKeyPositions();
         tmu.resolveSynchs(bbPeg, b, sac);
         return tmu;
     }
 
     // link synchpoints in sac to tmu
-    private void linkSynchs(TimeAnimationUnit tmu, List<TimePegAndConstraint> sacs)
+    private void linkSynchs(TimedAnimationUnit tmu, List<TimePegAndConstraint> sacs)
     {
         for (TimePegAndConstraint s : sacs)
         {

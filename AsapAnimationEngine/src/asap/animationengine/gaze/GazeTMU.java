@@ -34,7 +34,7 @@ import hmi.elckerlyc.planunit.TimedPlanUnitPlayException;
  * @author Herwin
  *
  */
-public class GazeTMU extends TimeAnimationUnit
+public class GazeTMU extends TimedAnimationUnit
 {
     private GazeMU gmu;
     

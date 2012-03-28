@@ -13,7 +13,7 @@ import org.junit.Test;
 
 import com.google.common.collect.Sets;
 
-import asap.animationengine.motionunit.TimeAnimationUnit;
+import asap.animationengine.motionunit.TimedAnimationUnit;
 import static hmi.testutil.math.Quat4fTestUtil.*;
 /**
  * Unit tests for the SkeletonPoseRestPose
@@ -31,7 +31,7 @@ public class SkeletonPoseRestPoseTest extends AbstractRestPoseTest
         SkeletonPose pose = new SkeletonPose(poseJoints, rotations, "R");
         
         SkeletonPoseRestPose restPose = new SkeletonPoseRestPose(pose, mockAnimationPlayer, NullFeedbackManager.getInstance(),pegBoard);
-        TimeAnimationUnit tmu = restPose.createTransitionToRest(Sets.newHashSet("l_shoulder", "l_wrist"), 1, 2, "bml1", "transition1",
+        TimedAnimationUnit tmu = restPose.createTransitionToRest(Sets.newHashSet("l_shoulder", "l_wrist"), 1, 2, "bml1", "transition1",
                 BMLBlockPeg.GLOBALPEG);
         assertEquals(BMLBlockPeg.GLOBALPEG, tmu.getBMLBlockPeg());
         assertEquals("transition1", tmu.getId());

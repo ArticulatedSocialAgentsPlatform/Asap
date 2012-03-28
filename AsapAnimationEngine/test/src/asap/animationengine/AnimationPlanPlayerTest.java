@@ -29,7 +29,7 @@ import org.powermock.modules.junit4.PowerMockRunner;
 import com.google.common.collect.ImmutableSet;
 
 import asap.animationengine.motionunit.AnimationUnit;
-import asap.animationengine.motionunit.TimeAnimationUnit;
+import asap.animationengine.motionunit.TimedAnimationUnit;
 import asap.animationengine.restpose.RestPose;
 import asap.animationengine.transitions.TransitionMU;
 import asap.animationengine.transitions.TransitionTMU;
@@ -62,7 +62,7 @@ public class AnimationPlanPlayerTest
     private RestPose mockRestPose = mock(RestPose.class);
     private FeedbackManager fbManager = new FeedbackManagerImpl(mockBmlBlockManager, "character1");
     private PegBoard pegBoard = new PegBoard();
-    PlanManager<TimeAnimationUnit> planManager = new PlanManager<TimeAnimationUnit>();
+    PlanManager<TimedAnimationUnit> planManager = new PlanManager<TimedAnimationUnit>();
 
     private ListFeedbackListener fbl;
     private AnimationPlanPlayer app;
@@ -76,9 +76,9 @@ public class AnimationPlanPlayerTest
         fbManager.addFeedbackListener(fbl);
     }
 
-    private TimeAnimationUnit createMotionUnit(String behId, String bmlId, AnimationUnit mu)
+    private TimedAnimationUnit createMotionUnit(String behId, String bmlId, AnimationUnit mu)
     {
-        return new TimeAnimationUnit(fbManager, BMLBlockPeg.GLOBALPEG, bmlId, behId, mu, pegBoard);
+        return new TimedAnimationUnit(fbManager, BMLBlockPeg.GLOBALPEG, bmlId, behId, mu, pegBoard);
     }
 
     private TransitionTMU createTransitionTMU(String behId, String bmlId, TransitionMU mu)
@@ -91,7 +91,7 @@ public class AnimationPlanPlayerTest
     {
         // Playing one motion unit at t=0, checking for state transition,
         // feedback calls, no warnings
-        TimeAnimationUnit tmu1 = createMotionUnit("behaviour1", "bml1", muMock1);
+        TimedAnimationUnit tmu1 = createMotionUnit("behaviour1", "bml1", muMock1);
         planManager.addPlanUnit(tmu1);
 
         stubKeyPositions(muMock1, new KeyPosition("start", 0, 1), new KeyPosition("end", 1, 1));
@@ -119,7 +119,7 @@ public class AnimationPlanPlayerTest
         // Playing one motion unit, 2 calls to play: during valid play time and
         // after end time. Checking for state transitions, feedback calls, no
         // warnings
-        TimeAnimationUnit tmu1 = createMotionUnit("behaviour1", "bml1", muMock1);
+        TimedAnimationUnit tmu1 = createMotionUnit("behaviour1", "bml1", muMock1);
         planManager.addPlanUnit(tmu1);
 
         stubKeyPositions(muMock1, new KeyPosition("start", 0, 1), new KeyPosition("end", 1, 1));
@@ -162,10 +162,10 @@ public class AnimationPlanPlayerTest
     {
         // Plays a succesion of two motion units. Checking for state
         // transitions, feedback calls, no warnings.
-        TimeAnimationUnit tmu1 = createMotionUnit("behaviour1", "bml1", muMock1);
+        TimedAnimationUnit tmu1 = createMotionUnit("behaviour1", "bml1", muMock1);
         planManager.addPlanUnit(tmu1);
 
-        TimeAnimationUnit tmu2 = createMotionUnit("behaviour2", "bml1", muMock2);
+        TimedAnimationUnit tmu2 = createMotionUnit("behaviour2", "bml1", muMock2);
         planManager.addPlanUnit(tmu2);
 
         stubKeyPositions(muMock1, new KeyPosition("start", 0, 1), new KeyPosition("end", 1, 1));
@@ -255,7 +255,7 @@ public class AnimationPlanPlayerTest
     {
         // play a single transition motion unit, somewhere halfway execution,
         // check feedback, state transition
-        TimeAnimationUnit tmu = createMotionUnit("behaviour1", "bml1", muMock1);
+        TimedAnimationUnit tmu = createMotionUnit("behaviour1", "bml1", muMock1);
         TimePeg tpStart = new TimePeg(BMLBlockPeg.GLOBALPEG);
         tpStart.setGlobalValue(0);
         TimePeg tpEnd = new TimePeg(BMLBlockPeg.GLOBALPEG);
@@ -286,7 +286,7 @@ public class AnimationPlanPlayerTest
     {
         // play a single (failing) transition motion unit, somewhere halfway
         // execution, check feedback, state transition
-        TimeAnimationUnit tmu = createMotionUnit("behaviour1", "bml1", muMock1);
+        TimedAnimationUnit tmu = createMotionUnit("behaviour1", "bml1", muMock1);
         TimePeg tpStart = new TimePeg(BMLBlockPeg.GLOBALPEG);
         tpStart.setGlobalValue(0);
         TimePeg tpEnd = new TimePeg(BMLBlockPeg.GLOBALPEG);
@@ -312,7 +312,7 @@ public class AnimationPlanPlayerTest
     @Test
     public void testPriority() throws MUPlayException
     {
-        TimeAnimationUnit tmu1 = createMotionUnit("behaviour1", "bml1", muMock1);
+        TimedAnimationUnit tmu1 = createMotionUnit("behaviour1", "bml1", muMock1);
         when(muMock1.getKinematicJoints()).thenReturn(ImmutableSet.of("r_shoulder", "r_wrist"));
         when(muMock1.getPhysicalJoints()).thenReturn(new HashSet<String>());
         TimePeg tpStart = new TimePeg(BMLBlockPeg.GLOBALPEG);
@@ -326,7 +326,7 @@ public class AnimationPlanPlayerTest
         tmu1.setPriority(50);
         planManager.addPlanUnit(tmu1);
 
-        TimeAnimationUnit tmu2 = createMotionUnit("behaviour2", "bml1", muMock2);
+        TimedAnimationUnit tmu2 = createMotionUnit("behaviour2", "bml1", muMock2);
         when(muMock2.getKinematicJoints()).thenReturn(ImmutableSet.of("r_shoulder"));
         when(muMock2.getPhysicalJoints()).thenReturn(new HashSet<String>());
         TimePeg tpStart2 = new TimePeg(BMLBlockPeg.GLOBALPEG);
@@ -340,7 +340,7 @@ public class AnimationPlanPlayerTest
         tmu2.setState(TimedPlanUnitState.LURKING);
         planManager.addPlanUnit(tmu2);
 
-        TimeAnimationUnit mockTmu = mock(TimeAnimationUnit.class);
+        TimedAnimationUnit mockTmu = mock(TimedAnimationUnit.class);
         when(mockTmu.getKinematicJoints()).thenReturn(ImmutableSet.of("r_wrist"));
         when(mockTmu.getPhysicalJoints()).thenReturn(new HashSet<String>());
         when(mockTmu.getState()).thenReturn(TimedPlanUnitState.LURKING);

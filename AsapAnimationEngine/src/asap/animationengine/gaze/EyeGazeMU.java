@@ -23,7 +23,7 @@ import com.google.common.collect.ImmutableSet;
 
 import asap.animationengine.AnimationPlayer;
 import asap.animationengine.motionunit.MUSetupException;
-import asap.animationengine.motionunit.TimeAnimationUnit;
+import asap.animationengine.motionunit.TimedAnimationUnit;
 import asap.motionunit.MUPlayException;
 import hmi.animation.Hanim;
 import hmi.elckerlyc.feedback.FeedbackManager;
@@ -64,7 +64,7 @@ public class EyeGazeMU extends GazeMU
     }
 
     @Override
-    public TimeAnimationUnit createTMU(FeedbackManager bfm, BMLBlockPeg bmlBlockPeg,String bmlId, String id, PegBoard pb)
+    public TimedAnimationUnit createTMU(FeedbackManager bfm, BMLBlockPeg bmlBlockPeg,String bmlId, String id, PegBoard pb)
     {
         return new GazeTMU(bfm,bmlBlockPeg,bmlId, id, this,pb);
     }

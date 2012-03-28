@@ -36,7 +36,7 @@ import hmi.elckerlyc.planunit.TimedPlanUnitPlayException;
  * @author Dennis Reidsma
  * 
  */
-public class NoiseTMU extends TimeAnimationUnit
+public class NoiseTMU extends TimedAnimationUnit
 {
     private NoiseMU nmu;
 

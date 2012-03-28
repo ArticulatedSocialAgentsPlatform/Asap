@@ -57,7 +57,7 @@ import org.nfunk.jep.Variable;
 import asap.animationengine.AnimationPlayer;
 import asap.animationengine.keyframe.KeyframeMU;
 import asap.animationengine.motionunit.AnimationUnit;
-import asap.animationengine.motionunit.TimeAnimationUnit;
+import asap.animationengine.motionunit.TimedAnimationUnit;
 
 import com.google.common.collect.ImmutableSet;
 
@@ -1453,9 +1453,9 @@ public class ProcAnimationMU extends XMLStructureAdapter implements AnimationUni
     }
 
     @Override
-    public TimeAnimationUnit createTMU(FeedbackManager bfm, BMLBlockPeg bbPeg, String bmlId, String id, PegBoard pb)
+    public TimedAnimationUnit createTMU(FeedbackManager bfm, BMLBlockPeg bbPeg, String bmlId, String id, PegBoard pb)
     {
-        return new TimeAnimationUnit(bfm, bbPeg, bmlId, id, this, pb);
+        return new TimedAnimationUnit(bfm, bbPeg, bmlId, id, this, pb);
     }
 
     @Override

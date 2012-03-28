@@ -30,7 +30,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import asap.animationengine.gaze.GazeMU;
-import asap.animationengine.motionunit.TimeAnimationUnit;
+import asap.animationengine.motionunit.TimedAnimationUnit;
 
 
 /**
@@ -38,7 +38,7 @@ import asap.animationengine.motionunit.TimeAnimationUnit;
  * at the start of the TimedMotionUnit. 
  * @author Herwin
  */
-public class TransitionTMU extends TimeAnimationUnit
+public class TransitionTMU extends TimedAnimationUnit
 {
     protected TransitionMU transitionUnit;
     private static Logger logger = LoggerFactory.getLogger(GazeMU.class.getName()); 

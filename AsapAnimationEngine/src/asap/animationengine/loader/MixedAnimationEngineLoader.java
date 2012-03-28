@@ -42,7 +42,7 @@ import asap.animationengine.AnimationPlanPlayer;
 import asap.animationengine.AnimationPlanner;
 import asap.animationengine.AnimationPlayer;
 import asap.animationengine.gesturebinding.GestureBinding;
-import asap.animationengine.motionunit.TimeAnimationUnit;
+import asap.animationengine.motionunit.TimedAnimationUnit;
 import asap.animationengine.restpose.RestPose;
 import asap.animationengine.restpose.SkeletonPoseRestPose;
 import asap.environment.AsapEnvironment;
@@ -65,7 +65,7 @@ public class MixedAnimationEngineLoader implements EngineLoader
     private AsapEnvironment ae = null;
 
     private Engine engine = null;
-    private PlanManager<TimeAnimationUnit> animationPlanManager = null;
+    private PlanManager<TimedAnimationUnit> animationPlanManager = null;
     private MixedAnimationPlayer animationPlayer = null;
     private AnimationPlanner animationPlanner = null;
     private SkeletonPose restpose;
@@ -205,7 +205,7 @@ public class MixedAnimationEngineLoader implements EngineLoader
         // gesturebinding exists...
         // now: make animation player and planner and everything; using se and gesturebinding and speechbinding.
         if (gesturebinding == null) throw tokenizer.getXMLScanException("gesturebinding is null, cannot build animation planner ");
-        animationPlanManager = new PlanManager<TimeAnimationUnit>();
+        animationPlanManager = new PlanManager<TimedAnimationUnit>();
 
         RestPose pose;
         if (restpose != null)
@@ -233,7 +233,7 @@ public class MixedAnimationEngineLoader implements EngineLoader
         animationPlanner = new AnimationPlanner(theVirtualHuman.getElckerlycRealizer().getFeedbackManager(),
                 (AnimationPlayer) animationPlayer, gesturebinding, animationPlanManager, theVirtualHuman.getPegBoard());
 
-        engine = new DefaultEngine<TimeAnimationUnit>(animationPlanner, (AnimationPlayer) animationPlayer, animationPlanManager);
+        engine = new DefaultEngine<TimedAnimationUnit>(animationPlanner, (AnimationPlayer) animationPlayer, animationPlanManager);
         engine.setId(id);
 
         // propagate avatar resetpose into the animation player, vnext etc, ikbodies,
@@ -270,7 +270,7 @@ public class MixedAnimationEngineLoader implements EngineLoader
         return animationPlanner;
     }
 
-    public PlanManager<TimeAnimationUnit> getPlanManager()
+    public PlanManager<TimedAnimationUnit> getPlanManager()
     {
         return animationPlanManager;
     }

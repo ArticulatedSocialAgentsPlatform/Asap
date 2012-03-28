@@ -205,7 +205,7 @@ public class PerlinNoiseMU implements NoiseMU
     }
 
     @Override
-    public TimeAnimationUnit createTMU(FeedbackManager bbm, BMLBlockPeg bbPeg, String bmlId, String id, PegBoard pb)
+    public TimedAnimationUnit createTMU(FeedbackManager bbm, BMLBlockPeg bbPeg, String bmlId, String id, PegBoard pb)
     {
         return new NoiseTMU(bbm, bbPeg, bmlId, id, this, pb);
     }
