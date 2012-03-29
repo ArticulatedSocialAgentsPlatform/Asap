@@ -1,7 +1,6 @@
 package asap.motionunit.keyframe;
 
 import java.util.List;
-import java.util.ArrayList;
 import asap.motionunit.MUPlayException;
 import asap.motionunit.MotionUnit;
 import hmi.elckerlyc.planunit.KeyPositionManager;
@@ -20,7 +19,6 @@ public abstract class KeyFrameMotionUnit implements MotionUnit
 {
     @Delegate private KeyPositionManager keyPositionManager = new KeyPositionManagerImpl();
     
-    private List<KeyFrame> keyFrames = new ArrayList<KeyFrame>();
     
     private final Interpolator interpolator;
     
@@ -29,9 +27,21 @@ public abstract class KeyFrameMotionUnit implements MotionUnit
         interpolator = interp;
     }
     
-    public void addKeyFrame(KeyFrame kf)
+    protected double unifyKeyFrames(List<KeyFrame> keyFrames)
     {
-        keyFrames.add(kf);
+        if(keyFrames.size()<2)
+        {
+            return 1;
+        }
+        double start = keyFrames.get(0).getFrameTime();
+        double end = keyFrames.get(keyFrames.size()-1).getFrameTime();
+        double preferedDuration = end - start;
+        
+        for(KeyFrame kf:keyFrames)
+        {
+            kf.setFrameTime( (kf.getFrameTime()-start) / preferedDuration);
+        }
+        return preferedDuration;
     }
     
     @Override

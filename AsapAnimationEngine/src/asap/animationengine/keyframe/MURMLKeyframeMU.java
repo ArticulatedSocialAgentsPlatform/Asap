@@ -1,13 +1,16 @@
 package asap.animationengine.keyframe;
 
+import hmi.animation.VJoint;
 import hmi.elckerlyc.feedback.FeedbackManager;
 import hmi.elckerlyc.pegboard.BMLBlockPeg;
 import hmi.elckerlyc.pegboard.PegBoard;
+import hmi.elckerlyc.planunit.KeyPosition;
 
 import java.util.List;
 import java.util.Set;
 
 import com.google.common.collect.ImmutableList;
+import com.google.common.collect.ImmutableSet;
 
 import asap.animationengine.AnimationPlayer;
 import asap.animationengine.motionunit.AnimationUnit;
@@ -24,13 +27,39 @@ import asap.motionunit.keyframe.KeyFrameMotionUnit;
  */
 public class MURMLKeyframeMU extends KeyFrameMotionUnit implements AnimationUnit
 {
-    private List<String> targets;
+    private ImmutableList<String> targets;
+    private ImmutableList<KeyFrame> keyFrames;
+    private VJoint vNext;
+    private int nrOfDofs;
+    private Interpolator interp;
+    private double preferedDuration = 1;
+    
     public MURMLKeyframeMU(List<String> targets, Interpolator interp, List<KeyFrame> keyFrames, int nrOfDofs)
     {
         super(interp);
-        targets = ImmutableList.copyOf(targets);        
+        this.targets = ImmutableList.copyOf(targets);
+        this.nrOfDofs = nrOfDofs;
+        this.keyFrames = ImmutableList.copyOf(keyFrames);
+        this.interp = interp;
+        preferedDuration = unifyKeyFrames(keyFrames);
+        interp.setKeyFrames(keyFrames, nrOfDofs);
+        
+        KeyPosition start = new KeyPosition("start", 0d, 1d);
+        KeyPosition ready = new KeyPosition("ready", 0.1d, 1d);
+        KeyPosition strokeStart = new KeyPosition("strokeStart", 0.1d, 1d);
+        KeyPosition stroke = new KeyPosition("stroke", 0.5d, 1d);
+        KeyPosition strokeEnd = new KeyPosition("strokeEnd", 0.9d, 1d);
+        KeyPosition relax = new KeyPosition("relax", 0.9d, 1d);        
+        KeyPosition end = new KeyPosition("end", 1d, 1d);
+        addKeyPosition(start);        
+        addKeyPosition(ready);
+        addKeyPosition(strokeStart);
+        addKeyPosition(stroke);
+        addKeyPosition(strokeEnd);
+        addKeyPosition(relax);
+        addKeyPosition(end);
     }
-
+    
     /**
      * @deprecated no longer relevant in BML 1.0
      */
@@ -44,42 +73,55 @@ public class MURMLKeyframeMU extends KeyFrameMotionUnit implements AnimationUnit
     @Override
     public double getPreferedDuration()
     {
-        // TODO Auto-generated method stub
-        return 0;
+        return preferedDuration;
     }
 
     @Override
     public void applyKeyFrame(KeyFrame kf)
     {
-        // TODO Auto-generated method stub
-        
-    }
-
-    @Override
-    public Set<String> getPhysicalJoints()
-    {
-        // TODO Auto-generated method stub
-        return null;
+        int i = 0;
+        for(String target:targets)
+        {
+            vNext.getPartBySid(target).setRotation(kf.getDofs(),i*4);
+            i++;
+        }
     }
 
     @Override
     public Set<String> getKinematicJoints()
     {
-        // TODO Auto-generated method stub
-        return null;
+        return ImmutableSet.copyOf(targets);
+    }
+
+    private static final Set<String>PHJOINTS = ImmutableSet.of(); 
+    
+    @Override
+    public Set<String> getPhysicalJoints()
+    {
+        return PHJOINTS;
+    }
+
+    public AnimationUnit copy(VJoint v)
+    {
+        MURMLKeyframeMU copy = new MURMLKeyframeMU(targets,  interp, keyFrames,  nrOfDofs);
+        copy.vNext = v;
+        copy.preferedDuration = preferedDuration;
+        for (KeyPosition keypos : getKeyPositions())
+        {
+            copy.addKeyPosition(keypos.deepCopy());
+        }
+        return copy;
+    }
+    
+    @Override
+    public AnimationUnit copy(AnimationPlayer p) throws MUSetupException
+    {
+        return copy(p.getVNext());        
     }
 
     @Override
     public TimedAnimationUnit createTMU(FeedbackManager bbm, BMLBlockPeg bmlBlockPeg, String bmlId, String id, PegBoard pb)
     {
-        // TODO Auto-generated method stub
-        return null;
-    }
-
-    @Override
-    public AnimationUnit copy(AnimationPlayer p) throws MUSetupException
-    {
-        // TODO Auto-generated method stub
-        return null;
+        return new TimedAnimationUnit(bbm, bmlBlockPeg, bmlId, id, this, pb);
     }    
 }

@@ -36,7 +36,7 @@ public class KeyframeMorphFU extends KeyFrameMotionUnit implements FaceUnit
         this.interp = interp;
         this.nrOfDofs = nrOfDofs;
         this.keyFrames = ImmutableList.copyOf(keyFrames);
-        unifyKeyFrames();
+        preferedDuration = unifyKeyFrames(keyFrames);
 
         interp.setKeyFrames(keyFrames, nrOfDofs);
 
@@ -50,22 +50,6 @@ public class KeyframeMorphFU extends KeyFrameMotionUnit implements FaceUnit
         addKeyPosition(ready);
         addKeyPosition(relax);
         addKeyPosition(end);
-    }
-
-    private void unifyKeyFrames()
-    {
-        if(keyFrames.size()<2)
-        {
-            return;
-        }
-        double start = keyFrames.get(0).getFrameTime();
-        double end = keyFrames.get(keyFrames.size()-1).getFrameTime();
-        preferedDuration = end - start;
-        
-        for(KeyFrame kf:keyFrames)
-        {
-            kf.setFrameTime( (kf.getFrameTime()-start) / preferedDuration);
-        }
     }
 
     @Override

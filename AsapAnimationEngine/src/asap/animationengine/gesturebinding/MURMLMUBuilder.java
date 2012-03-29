@@ -1,10 +1,15 @@
 package asap.animationengine.gesturebinding;
 
+import hmi.math.Quat4f;
+
 import java.util.ArrayList;
 import java.util.List;
 
+import asap.animationengine.keyframe.MURMLKeyframeMU;
 import asap.animationengine.motionunit.AnimationUnit;
+import asap.motionunit.keyframe.Interpolator;
 import asap.motionunit.keyframe.KeyFrame;
+import asap.motionunit.keyframe.LinearQuatFloatInterpolator;
 import asap.murml.Definition;
 import asap.murml.Frame;
 import asap.murml.JointValue;
@@ -43,33 +48,31 @@ public final class MURMLMUBuilder
                     nrOfDofs+=jv.getDofs().length;     
                 }          
                 
-                
+                nrOfDofs = (nrOfDofs*4)/3;
                 for(Frame f:ph.getFrames())
                 {
                     int size = 0;                    
                     for(JointValue jv : f.getPosture().getJointValues())
                     {
                         size+=jv.getDofs().length;
-                    }                    
-                    float dofs[] = new float [size];
+                    }
+                    float dofs[] = new float [(size*4)/3];
                     
-                    int i=0;
                     for(JointValue jv : f.getPosture().getJointValues())
                     {
-                        for(float fl: jv.getDofs())
+                        for(int i=0;i<size/3;i++)
                         {
-                            dofs[i] = fl/100f;
-                            i++;                                  
-                        }                        
+                            float q[]=new float[4];
+                            Quat4f.setFromRollPitchYawDegrees(q, jv.getDofs()[i*3], jv.getDofs()[i*3+1], jv.getDofs()[i*3+2]);
+                            Quat4f.set(dofs, i*4, q,0);
+                        }
                     }
                     keyFrames.add(new KeyFrame(f.getFtime(), dofs));
                 }
                 
-                //TODO: select interpolator
-                //CubicSplineFloatInterpolator interp = new CubicSplineFloatInterpolator();
-                //return new Keyframe(targets, interp, keyFrames, nrOfDofs);
-                
-                //TODO: generate motionunit
+                LinearQuatFloatInterpolator interp = new LinearQuatFloatInterpolator(); 
+                interp.setKeyFrames(keyFrames, nrOfDofs);
+                return new MURMLKeyframeMU(targets, interp, keyFrames, nrOfDofs);
             }
         }
         return null;
