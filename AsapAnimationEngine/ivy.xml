@@ -16,6 +16,7 @@
       <dependency org="HMI"     name="HmiPhysics"            rev="latest.${resolve.status}"    />
       <dependency org="HMI"     name="HmiNeurophysics"            rev="latest.${resolve.status}"    />
       <dependency org="HMI"     name="HmiAnimationEngine"    transitive="false"        rev="latest.${resolve.status}"    />
+	  <dependency org="HMI"     name="HmiTTS"    transitive="false"        rev="latest.${resolve.status}"    />
 
 
       <dependency org="google"  name="guava"             rev="latest.release"    />
