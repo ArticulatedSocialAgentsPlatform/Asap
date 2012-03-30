@@ -7,7 +7,6 @@ import java.util.List;
 
 import asap.animationengine.keyframe.MURMLKeyframeMU;
 import asap.animationengine.motionunit.AnimationUnit;
-import asap.motionunit.keyframe.Interpolator;
 import asap.motionunit.keyframe.KeyFrame;
 import asap.motionunit.keyframe.LinearQuatFloatInterpolator;
 import asap.murml.Definition;

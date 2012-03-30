@@ -31,7 +31,10 @@ import hmi.elckerlyc.scheduler.TimePegAndConstraint;
 import java.util.*;
 
 import asap.animationengine.gesturebinding.*;
+import asap.animationengine.motionunit.AnimationUnit;
+import asap.animationengine.motionunit.MUSetupException;
 import asap.animationengine.motionunit.TimedAnimationUnit;
+import asap.ext.murml.MURMLGestureBehaviour;
 
 import hmi.bml.core.Behaviour;
 import hmi.bml.core.GazeBehaviour;
@@ -68,6 +71,7 @@ public class AnimationPlanner extends AbstractPlanner<TimedAnimationUnit>
         gestureBinding = g;
     }
 
+    
     /**
      * Creates a TimedMotionUnit that satisfies sacs and adds it to the motion plan. All registered BMLFeedbackListener are linked to this
      * TimedMotionUnit.
@@ -80,15 +84,7 @@ public class AnimationPlanner extends AbstractPlanner<TimedAnimationUnit>
 
         if (tmu == null)
         {
-            List<TimedAnimationUnit> tmus = gestureBinding.getMotionUnit(bbPeg, b, player, pegBoard);
-            if (tmus.isEmpty())
-            {
-                throw new BehaviourPlanningException(b, "Behavior " + b.id
-                        + " could not be constructed from the gesture binding, behavior omitted.");
-            }
-
-            // for now, just add the first
-            tmu = tmus.get(0);
+            tmu = createTAU(bbPeg, b);
         }
 
         // apply syncs to tmu
@@ -108,15 +104,40 @@ public class AnimationPlanner extends AbstractPlanner<TimedAnimationUnit>
     @Override
     public TimedAnimationUnit resolveSynchs(BMLBlockPeg bbPeg, Behaviour b, List<TimePegAndConstraint> sac) throws BehaviourPlanningException
     {
-        List<TimedAnimationUnit> tmus = gestureBinding.getMotionUnit(bbPeg, b, player, pegBoard);
-        if (tmus.isEmpty())
-        {
-            throw new BehaviourPlanningException(b, "Behavior " + b.id
-                    + " could not be constructed from the gesture binding, behavior omitted.");
-        }
-        TimedAnimationUnit tmu = tmus.get(0);
+        TimedAnimationUnit tmu = createTAU(bbPeg, b);
         tmu.resolveDefaultBMLKeyPositions();
         tmu.resolveSynchs(bbPeg, b, sac);
+        return tmu;
+    }
+
+    private TimedAnimationUnit createTAU(BMLBlockPeg bbPeg, Behaviour b) throws BehaviourPlanningException
+    {
+        TimedAnimationUnit tmu;
+        if(b instanceof MURMLGestureBehaviour)
+        {
+            AnimationUnit mu = MURMLMUBuilder.setup( ((MURMLGestureBehaviour)b).getMurmlDefinition());
+            AnimationUnit muCopy;
+            try
+            {
+                muCopy = mu.copy(player);
+            }
+            catch (MUSetupException e)
+            {
+                throw new BehaviourPlanningException(b, "MURMLGestureBehaviour " + b.id
+                        + " could not be constructed.",e);
+            }
+            tmu = muCopy.createTMU(fbManager, bbPeg, b.getBmlId(), b.id, pegBoard);
+        }
+        else
+        {
+            List<TimedAnimationUnit> tmus = gestureBinding.getMotionUnit(bbPeg, b, player, pegBoard);
+            if (tmus.isEmpty())
+            {
+                throw new BehaviourPlanningException(b, "Behavior " + b.id
+                        + " could not be constructed from the gesture binding, behavior omitted.");
+            }
+            tmu = tmus.get(0);
+        }
         return tmu;
     }
 
@@ -155,6 +176,7 @@ public class AnimationPlanner extends AbstractPlanner<TimedAnimationUnit>
         list.add(BMLTTransitionBehaviour.class);
         list.add(BMLTKeyframeBehaviour.class);
         list.add(BMLTNoiseBehaviour.class);
+        list.add(MURMLGestureBehaviour.class);
         return list;
     }
 
@@ -166,6 +188,7 @@ public class AnimationPlanner extends AbstractPlanner<TimedAnimationUnit>
         list.add(BMLTControllerBehaviour.class);
         list.add(BMLTTransitionBehaviour.class);
         list.add(BMLTKeyframeBehaviour.class);
+        list.add(MURMLGestureBehaviour.class);
         return list;
     }
 
