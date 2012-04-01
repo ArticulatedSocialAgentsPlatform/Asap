@@ -64,14 +64,13 @@ public final class MURMLMUBuilder
                     }
                     float dofs[] = new float [(size*4)/3];
                     
+                    int i=0;
                     for(JointValue jv : f.getPosture().getJointValues())
                     {
-                        for(int i=0;i<size/3;i++)
-                        {
-                            float q[]=new float[4];
-                            Quat4f.setFromRollPitchYawDegrees(q, jv.getDofs()[i*3], jv.getDofs()[i*3+1], jv.getDofs()[i*3+2]);
-                            Quat4f.set(dofs, i*4, q,0);
-                        }
+                        float q[]=new float[4];
+                        Quat4f.setFromRollPitchYawDegrees(q, jv.getDofs()[0], jv.getDofs()[1], jv.getDofs()[2]);
+                        Quat4f.set(dofs, i*4, q,0);
+                        i++;
                     }
                     keyFrames.add(new KeyFrame(f.getFtime(), dofs));
                 }

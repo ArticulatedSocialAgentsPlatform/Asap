@@ -49,4 +49,65 @@ public class MURMLMUBuilderTest
         vNext.getPart("l_shoulder").getRotation(q);
         Quat4fTestUtil.assertQuat4fRotationEquivalent(qExp, q, ROT_PRECISION);
     }
+    
+    @Test
+    public void testTwoFrames() throws MUPlayException, MUSetupException
+    {
+        String murmlString = "<definition><keyframing><phase><frame ftime=\"0\"><posture>Humanoid "
+                + "(l_shoulder 3 100 0 0)</posture></frame><frame ftime=\"1\"><posture>Humanoid "
+                + "(l_shoulder 3 0 80 0)</posture></frame></phase></keyframing></definition>";
+        AnimationUnit au = MURMLMUBuilder.setup(murmlString);
+        assertThat(au, instanceOf(MURMLKeyframeMU.class));
+        MURMLKeyframeMU mu = (MURMLKeyframeMU)au;
+        au = mu.copy(mockAnimationPlayer);
+        au.play(1);
+        
+        float[]qExp = Quat4f.getQuat4f();
+        Quat4f.setFromRollPitchYawDegrees(qExp, 0, 80, 0);
+        float q[] = Quat4f.getQuat4f();
+        vNext.getPart("l_shoulder").getRotation(q);
+        Quat4fTestUtil.assertQuat4fRotationEquivalent(qExp, q, ROT_PRECISION);
+    }
+    
+    @Test
+    public void testTwoFramesTwoTargets()throws MUPlayException, MUSetupException
+    {
+        String murmlString = "<definition><keyframing><phase><frame ftime=\"0\"><posture>Humanoid "
+                + "(l_shoulder 3 100 0 0)(r_shoulder 3 0 0 100)</posture></frame><frame ftime=\"1\"><posture>Humanoid "
+                + "(l_shoulder 3 0 80 0)(r_shoulder 3 80 0 0)</posture></frame></phase></keyframing></definition>";
+        AnimationUnit au = MURMLMUBuilder.setup(murmlString);
+        assertThat(au, instanceOf(MURMLKeyframeMU.class));
+        MURMLKeyframeMU mu = (MURMLKeyframeMU)au;
+        au = mu.copy(mockAnimationPlayer);
+        au.play(1);
+        
+        float[]qExp = Quat4f.getQuat4f();
+        Quat4f.setFromRollPitchYawDegrees(qExp, 0, 80, 0);
+        float q[] = Quat4f.getQuat4f();
+        vNext.getPart("l_shoulder").getRotation(q);
+        Quat4fTestUtil.assertQuat4fRotationEquivalent(qExp, q, ROT_PRECISION);
+        
+        Quat4f.setFromRollPitchYawDegrees(qExp, 80, 0, 0);        
+        vNext.getPart("r_shoulder").getRotation(q);
+        Quat4fTestUtil.assertQuat4fRotationEquivalent(qExp, q, ROT_PRECISION);
+    }
+    
+    @Test
+    public void testUnification()throws MUPlayException, MUSetupException
+    {
+        String murmlString = "<definition><keyframing><phase><frame ftime=\"0\"><posture>Humanoid "
+                + "(l_shoulder 3 100 0 0)</posture></frame><frame ftime=\"4\"><posture>Humanoid "
+                + "(l_shoulder 3 0 80 0)</posture></frame></phase></keyframing></definition>";
+        AnimationUnit au = MURMLMUBuilder.setup(murmlString);
+        assertThat(au, instanceOf(MURMLKeyframeMU.class));
+        MURMLKeyframeMU mu = (MURMLKeyframeMU)au;
+        au = mu.copy(mockAnimationPlayer);
+        au.play(1);
+        
+        float[]qExp = Quat4f.getQuat4f();
+        Quat4f.setFromRollPitchYawDegrees(qExp, 0, 80, 0);
+        float q[] = Quat4f.getQuat4f();
+        vNext.getPart("l_shoulder").getRotation(q);
+        Quat4fTestUtil.assertQuat4fRotationEquivalent(qExp, q, ROT_PRECISION);
+    }
 }
