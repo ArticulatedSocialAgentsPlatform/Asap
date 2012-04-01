@@ -63,4 +63,17 @@ public abstract class AbstractASAPRealizerTest extends AbstractElckerlycRealizer
         assertBlockStartAndStopFeedbacks("bml1");
         assertAllBMLSyncsInBMLOrder("bml1", "face1", FaceBehaviour.getDefaultSyncPoints());
     }
+    
+    @Test
+    public void testMURMLBody() throws IOException, InterruptedException
+    {
+        String bmlString = readTestFile("murml/murmlbodykeyframe.xml");
+        realizerPort.performBML(bmlString);
+        
+        waitForBMLEndFeedback("bml1");
+        assertNoExceptions();
+        assertNoWarnings();
+        assertBlockStartAndStopFeedbacks("bml1");
+        assertAllBMLSyncsInBMLOrder("bml1", "gesture1", GestureBehaviour.getDefaultSyncPoints());
+    }
 }

@@ -18,7 +18,20 @@
  ******************************************************************************/
 package asap.animationengine;
 
-import hmi.elckerlyc.*;
+import hmi.bml.BMLInfo;
+import hmi.bml.core.Behaviour;
+import hmi.bml.core.GazeBehaviour;
+import hmi.bml.core.GestureBehaviour;
+import hmi.bml.core.HeadBehaviour;
+import hmi.bml.core.PostureBehaviour;
+import hmi.bml.ext.bmlt.BMLTControllerBehaviour;
+import hmi.bml.ext.bmlt.BMLTKeyframeBehaviour;
+import hmi.bml.ext.bmlt.BMLTNoiseBehaviour;
+import hmi.bml.ext.bmlt.BMLTProcAnimationBehaviour;
+import hmi.bml.ext.bmlt.BMLTTransitionBehaviour;
+import hmi.elckerlyc.AbstractPlanner;
+import hmi.elckerlyc.BehaviourPlanningException;
+import hmi.elckerlyc.SyncAndTimePeg;
 import hmi.elckerlyc.feedback.FeedbackManager;
 import hmi.elckerlyc.pegboard.BMLBlockPeg;
 import hmi.elckerlyc.pegboard.OffsetPeg;
@@ -28,24 +41,15 @@ import hmi.elckerlyc.planunit.KeyPosition;
 import hmi.elckerlyc.planunit.PlanManager;
 import hmi.elckerlyc.scheduler.TimePegAndConstraint;
 
-import java.util.*;
+import java.util.ArrayList;
+import java.util.List;
 
-import asap.animationengine.gesturebinding.*;
+import asap.animationengine.gesturebinding.GestureBinding;
+import asap.animationengine.gesturebinding.MURMLMUBuilder;
 import asap.animationengine.motionunit.AnimationUnit;
 import asap.animationengine.motionunit.MUSetupException;
 import asap.animationengine.motionunit.TimedAnimationUnit;
 import asap.ext.murml.MURMLGestureBehaviour;
-
-import hmi.bml.core.Behaviour;
-import hmi.bml.core.GazeBehaviour;
-import hmi.bml.core.GestureBehaviour;
-import hmi.bml.core.HeadBehaviour;
-import hmi.bml.core.PostureBehaviour;
-import hmi.bml.ext.bmlt.BMLTControllerBehaviour;
-import hmi.bml.ext.bmlt.BMLTKeyframeBehaviour;
-import hmi.bml.ext.bmlt.BMLTProcAnimationBehaviour;
-import hmi.bml.ext.bmlt.BMLTTransitionBehaviour;
-import hmi.bml.ext.bmlt.BMLTNoiseBehaviour;
 
 /**
  * Main use: take BML based behaviors, resolve timepegs, add to player. Uses GestureBinding to map BML behavior classes to, e.g., ProcAnimations
@@ -57,7 +61,12 @@ public class AnimationPlanner extends AbstractPlanner<TimedAnimationUnit>
     private final AnimationPlayer player;
     private final PegBoard pegBoard;
     private GestureBinding gestureBinding;
-
+    static
+    {
+        BMLInfo.addBehaviourType(MURMLGestureBehaviour.xmlTag(), MURMLGestureBehaviour.class);        
+    }
+    
+    
     public AnimationPlanner(FeedbackManager bfm, AnimationPlayer p, GestureBinding g, PlanManager<TimedAnimationUnit> planManager, PegBoard pb)
     {
         super(bfm, planManager);

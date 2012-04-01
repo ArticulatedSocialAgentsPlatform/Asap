@@ -133,78 +133,7 @@ public class PersistentFixtureAsapRealizerTest extends AbstractASAPRealizerTest
         VJoint boxJoint = hre.getObjectRootJoint("bluebox");
         boxJoint.setTranslation(-0.25f, 1.45f, 0.3f);
         staticEnvironment.getWorldObjectManager().addWorldObject("bluebox", new WorldObject(boxJoint));
-        logger.debug("Finished setup");
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-//        logger.debug("Started setup");
-//        staticEnvironment = new ElckerlycEnvironment()
-//        {
-//            @Override
-//            protected void initQuickSettings()
-//            {
-//                frameTitle = "Elckerlyc - HMI BML Realizer Tester";
-//                useVsync = true;
-//                runphysics = true;
-//                // laptop=false;
-//                laptop = true;
-//                collisionEnabled = false;
-//                // debugJOGL = true;
-//            }
-//
-//            public void init()
-//            {
-//                super.init();
-//                initDemoScene();
-//            }
-//
-//            private void initDemoScene()
-//            {
-//
-//                // setup box
-//                VGLNode boxNode = new VGLNode("box");
-//                GLShape boxShape = new GLShape();
-//                BoxGeometry boxGeometry = new BoxGeometry(0.05f, 0.05f, 0.05f);
-//                boxShape.addGLGeometry(boxGeometry);
-//                GLMaterial boxState = new GLMaterial();
-//                /*
-//                 * boxState.setDiffuseColor(boxDiffuse);
-//                 * boxState.setSpecularColor(boxSpecular);
-//                 * boxState.setAmbientColor(boxAmbient);
-//                 * boxState.setEmissionColor(boxEmission);
-//                 */
-//                boxState.setShininess(15);
-//                boxShape.addGLState(new GLFill());
-//                boxShape.addGLState(new NoTexture2DState());
-//                boxShape.addGLState(boxState);
-//                boxNode.addGLShape(boxShape);
-//                boxNode.getRoot().setTranslation(-0.25f, 1.45f, 0.3f);
-//
-//                VJoint boxAni = boxNode.getRoot().masterCopyTree("master-");
-//                vjWorldRenderRoot.addChild(boxNode.getRoot());
-//                vjWorldAnimationRoot.addChild(boxAni);
-//                addVisualisation(boxNode);
-//                ae.getWorldObjectManager().addWorldObject("bluebox", new WorldObject(boxAni));
-//            }
-//        };
-//        staticEnvironment.init();
-//        staticEnvironment.startAll();
-//        vHuman = staticEnvironment.loadVirtualHuman("Humanoids/armandia", "vhloadermaryttsasaprealizertester.xml", "TestAvatar");
-//
-//        logger.debug("Finished setup");
+        logger.debug("Finished setup");        
     }
 
     @Before
