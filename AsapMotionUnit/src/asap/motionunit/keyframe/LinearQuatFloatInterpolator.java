@@ -6,7 +6,10 @@ import java.util.List;
 import com.google.common.collect.ImmutableList;
 
 import asap.math.LinearQuatInterpolator;
-
+/**
+ * Cubic spline interpolator for of a list of keyframes. Interpolates groups of 4 dofs as quat using slerp.
+ * @author hvanwelbergen
+ */
 public class LinearQuatFloatInterpolator implements Interpolator
 {
     private List<LinearQuatInterpolator> linearQuatInterPolators = new ArrayList<LinearQuatInterpolator>();
@@ -20,7 +23,7 @@ public class LinearQuatFloatInterpolator implements Interpolator
         this.nrOfDof = nrOfDof;
         linearQuatInterPolators.clear();
         
-        for(int i=0;i<nrOfDof;i++)
+        for(int i=0;i<nrOfDof/4;i++)
         {
             double p[][]=new double[frames.size()][];
             int j=0;

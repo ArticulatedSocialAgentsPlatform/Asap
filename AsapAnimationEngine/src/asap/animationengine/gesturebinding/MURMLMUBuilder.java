@@ -24,7 +24,14 @@ public final class MURMLMUBuilder
     private MURMLMUBuilder()
     {
     }
-
+    
+    public static AnimationUnit setup(String murml)
+    {
+        Definition def = new Definition();
+        def.readXML(murml);
+        return setup(def);
+    }
+    
     public static AnimationUnit setup(Definition murmlDefinition)
     {
         if (murmlDefinition.getKeyframing() != null)
