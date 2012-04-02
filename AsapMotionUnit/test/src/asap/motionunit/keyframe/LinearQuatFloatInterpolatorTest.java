@@ -21,7 +21,7 @@ public class LinearQuatFloatInterpolatorTest
         KeyFrame kf1 = new KeyFrame(0.2, new float[] { 1, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1, 0 });
         KeyFrame kf2 = new KeyFrame(0.8, new float[] { 0, 0, 1, 0, 0, 0, 0, 1, 0, 1, 0, 0 });
         KeyFrame kf3 = new KeyFrame(1, new float[] { 0, 0, 0, 1, 0, 0, 1, 0, 1, 0, 0, 0 });
-        interp.setKeyFrames(ImmutableList.of(kf0, kf1, kf2, kf3), 3);
+        interp.setKeyFrames(ImmutableList.of(kf0, kf1, kf2, kf3), 3*4);
     }
 
     @Test
