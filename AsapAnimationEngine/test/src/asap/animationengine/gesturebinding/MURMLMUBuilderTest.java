@@ -25,7 +25,7 @@ public class MURMLMUBuilderTest
 {
     private AnimationPlayer mockAnimationPlayer = mock(AnimationPlayer.class);
     private VJoint vNext = HanimBody.getLOA1HanimBody();
-    private final float ROT_PRECISION = 0.001f;
+    private static final float ROT_PRECISION = 0.001f;
     @Before
     public void setup()
     {
