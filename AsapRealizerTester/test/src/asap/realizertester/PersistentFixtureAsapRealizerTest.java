@@ -1,4 +1,4 @@
-package asap.realizer;
+package asap.realizertester;
 
 import java.awt.Toolkit;
 import java.awt.event.WindowEvent;

@@ -75,27 +75,38 @@
   <Loader id="animationengine" 
           loader="asap.animationengine.loader.MixedAnimationEngineLoader"
           requiredloaders="mixedskeletonembodiment,physicalembodiment">
-    <!--
+<!--
     <GestureBinding basedir="" resources="Humanoids/armandia/gesturebinding/" filename="gesturebinding.xml"/>
-    -->
+   -->
     <GestureBinding basedir="" resources="Humanoids/shared/gesturebinding/" filename="asapgesturebinding.xml"/>
+
+
     <StartPose resources="Humanoids/armandia/restposes/" filename="looselyhangingarms.xml"/>
     <StartPosition offset="0.2 0 0"/>
     <StartRotation rotation="0 1 0 -0.2"/>
   </Loader>
-  
+
   <Loader id="faceengine" 
           loader="asap.faceengine.loader.FaceEngineLoader"
           requiredloaders="graphicalembodiment">
     <FaceBinding basedir="" resources="Humanoids/armandia/facebinding/" filename="facebinding.xml"/>
   </Loader>
-    
 
- <Loader id="speechengine" loader="hmi.speechengine.loader.SpeechEngineLoader" requiredloaders="faceengine,animationengine">
-    <SpeechBinding basedir="" resources="Humanoids/shared/speechbinding/" filename="ikpspeechbinding.xml"/>
+<Loader id="facelipsync" requiredloaders="faceengine" loader="asap.faceengine.loader.TimedFaceUnitLipSynchProviderLoader">
+	<MorphVisemeBinding resources="Humanoids/armandia/facebinding/" filename="ikpvisemebinding.xml"/>
+  </Loader>
+  <Loader id="jawlipsync" requiredloaders="animationengine" loader="asap.animationengine.loader.TimedAnimationUnitLipSynchProviderLoader">
+	<SpeechBinding basedir="" resources="Humanoids/shared/speechbinding/" filename="ikpspeechbinding.xml"/>
+  </Loader>
+
+ <Loader id="speechengine" loader="hmi.speechengine.loader.SpeechEngineLoader" requiredloaders="facelipsync,jawlipsync">
+	<!--    
+<SpeechBinding basedir="" resources="Humanoids/shared/speechbinding/" filename="ikpspeechbinding.xml"/>
     <MorphVisemeBinding resources="Humanoids/armandia/facebinding/" filename="ikpvisemebinding.xml"/>
+-->
     <Voice voicetype="MARY" localmarydir="HmiResource/MARYTTS" factory="WAV_TTS"/>
   </Loader>
+
 
   
   <!-- Engine for playing audio files, nice for sound effects (e.g., clapping) or for prerecorded speech fragments -->
