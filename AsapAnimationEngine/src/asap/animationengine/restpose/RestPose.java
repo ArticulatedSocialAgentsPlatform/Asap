@@ -1,6 +1,7 @@
 package asap.animationengine.restpose;
 
 import hmi.animation.VJoint;
+import hmi.elckerlyc.feedback.FeedbackManager;
 import hmi.elckerlyc.pegboard.BMLBlockPeg;
 
 import java.util.Set;
@@ -28,14 +29,14 @@ public interface RestPose
      * Create a transition TMU that moves the joints from their current position 
      * to a position dictated by this resting pose.  
      */
-    TimedAnimationUnit createTransitionToRest(Set<String>joints, double startTime, 
+    TimedAnimationUnit createTransitionToRest(FeedbackManager fbm, Set<String>joints, double startTime, 
             String bmlId, String id, BMLBlockPeg bmlBlockPeg);
     
     /**
      * Create a transition TMU that moves the joints from their current position 
      * to a position dictated by this resting pose.  
      */
-    TimedAnimationUnit createTransitionToRest(Set<String>joints, double startTime, double duration, 
+    TimedAnimationUnit createTransitionToRest(FeedbackManager fbm, Set<String>joints, double startTime, double duration, 
             String bmlId, String id, BMLBlockPeg bmlBlockPeg);
     
     /**

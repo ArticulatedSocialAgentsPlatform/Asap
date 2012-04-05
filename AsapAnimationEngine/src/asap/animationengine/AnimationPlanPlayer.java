@@ -17,6 +17,7 @@ import asap.planunit.PlanUnitPriorityComparator;
 
 import hmi.bml.feedback.BMLExceptionListener;
 import hmi.elckerlyc.feedback.FeedbackManager;
+import hmi.elckerlyc.feedback.NullFeedbackManager;
 import hmi.elckerlyc.planunit.PlanManager;
 import hmi.elckerlyc.planunit.PlanPlayer;
 import hmi.elckerlyc.planunit.SingleThreadedPlanPlayer;
@@ -139,7 +140,7 @@ public class AnimationPlanPlayer implements PlanPlayer
             }
             else
             {
-                if (tmu.isLurking())
+                if (tmu.isLurking() && !tmu.isSubUnit())
                 {
                     fbManager.puException(tmu, "Dropping " + tmu.getBMLId() + ":" + tmu.getId()
                             + "for higher priority behaviors before it was even started", t);
@@ -148,9 +149,11 @@ public class AnimationPlanPlayer implements PlanPlayer
                 Set<String> cleanup = new HashSet<String>(tmu.getKinematicJoints());
                 cleanup.removeAll(kinematicJoints);
                 cleanup.addAll(tmu.getPhysicalJoints());
-                cleanup.removeAll(physicalJoints);
-                TimedAnimationUnit tmuCleanup = this.currentRestPose.createTransitionToRest(cleanup, t, tmu.getBMLId(), tmu.getId()
-                        + "-cleanup", tmu.getBMLBlockPeg());
+                cleanup.removeAll(physicalJoints);                
+                TimedAnimationUnit tmuCleanup = this.currentRestPose.createTransitionToRest(NullFeedbackManager.getInstance(),
+                        cleanup, t, tmu.getBMLId(), tmu.getId(), tmu.getBMLBlockPeg());
+                tmuCleanup.setSubUnit(true);
+                
                 tmuRemove.add(tmu);
                 tmuAdd.add(tmuCleanup);
             }

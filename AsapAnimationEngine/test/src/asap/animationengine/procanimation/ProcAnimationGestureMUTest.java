@@ -20,6 +20,11 @@ import asap.animationengine.motionunit.AnimationUnit;
 import asap.animationengine.restpose.RestPose;
 import asap.motionunit.MUPlayException;
 
+/**
+ * Unit test case for ProcAnimationGestureMU
+ * @author hvanwelbergen
+ *
+ */
 public class ProcAnimationGestureMUTest
 {
     private AnimationPlayer mockAnimationPlayer = mock(AnimationPlayer.class);    

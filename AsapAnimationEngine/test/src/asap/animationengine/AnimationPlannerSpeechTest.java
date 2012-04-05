@@ -51,7 +51,7 @@ public class AnimationPlannerSpeechTest
         m.add(ms);
         AnimationPlayer ap = new AnimationPlayer(HanimBody.getLOA1HanimBody(), HanimBody.getLOA1HanimBody(), HanimBody.getLOA1HanimBody(),
                 m, 0.001f,
-                new AnimationPlanPlayer(new SkeletonPoseRestPose(mockBmlFeedbackManager,pegBoard), mockBmlFeedbackManager, planManager,
+                new AnimationPlanPlayer(new SkeletonPoseRestPose(pegBoard), mockBmlFeedbackManager, planManager,
                         new DefaultTimedPlanUnitPlayer()));
 
         animationPlanner = new AnimationPlanner(mockBmlFeedbackManager, ap, mockBinding, planManager,pegBoard);

@@ -95,6 +95,7 @@
 <Loader id="facelipsync" requiredloaders="faceengine" loader="asap.faceengine.loader.TimedFaceUnitLipSynchProviderLoader">
 	<MorphVisemeBinding resources="Humanoids/armandia/facebinding/" filename="ikpvisemebinding.xml"/>
   </Loader>
+
   <Loader id="jawlipsync" requiredloaders="animationengine" loader="asap.animationengine.loader.TimedAnimationUnitLipSynchProviderLoader">
 	<SpeechBinding basedir="" resources="Humanoids/shared/speechbinding/" filename="ikpspeechbinding.xml"/>
   </Loader>

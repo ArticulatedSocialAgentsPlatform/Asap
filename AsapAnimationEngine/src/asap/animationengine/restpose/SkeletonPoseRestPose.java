@@ -30,27 +30,24 @@ import asap.animationengine.transitions.TransitionTMU;
 public class SkeletonPoseRestPose implements RestPose
 {
     private AnimationPlayer player;
-    private VJoint poseTree;
-    private final FeedbackManager feedbackManager;
+    private VJoint poseTree;    
     private SkeletonPose pose;
     private final PegBoard pegBoard;
     
-    public SkeletonPoseRestPose(FeedbackManager bbf, PegBoard pb)
+    public SkeletonPoseRestPose(PegBoard pb)
     {
-        feedbackManager = bbf;
         pegBoard = pb;
     }
 
-    public SkeletonPoseRestPose(SkeletonPose pose, FeedbackManager bbf,PegBoard pb)
+    public SkeletonPoseRestPose(SkeletonPose pose, PegBoard pb)
     {
-        this.pose = pose;
-        feedbackManager = bbf;
+        this.pose = pose;        
         pegBoard = pb;
     }
 
-    public SkeletonPoseRestPose(SkeletonPose pose, AnimationPlayer player, FeedbackManager bbf, PegBoard pb)
+    public SkeletonPoseRestPose(SkeletonPose pose, AnimationPlayer player,PegBoard pb)
     {
-        this(pose, bbf,pb);
+        this(pose,pb);
         setAnimationPlayer(player);
     }
 
@@ -79,19 +76,19 @@ public class SkeletonPoseRestPose implements RestPose
     }
 
     @Override
-    public TimedAnimationUnit createTransitionToRest(Set<String> joints, double startTime, String bmlId, String id, BMLBlockPeg bmlBlockPeg)
+    public TimedAnimationUnit createTransitionToRest(FeedbackManager fbm, Set<String> joints, double startTime, String bmlId, String id, BMLBlockPeg bmlBlockPeg)
     {
-        return createTransitionToRest(joints, startTime, 1, bmlId, id, bmlBlockPeg);
+        return createTransitionToRest(fbm, joints, startTime, 1, bmlId, id, bmlBlockPeg);
     }
 
     @Override
-    public TimedAnimationUnit createTransitionToRest(Set<String> joints, double startTime, double duration, String bmlId, String id,
+    public TimedAnimationUnit createTransitionToRest(FeedbackManager fbm, Set<String> joints, double startTime, double duration, String bmlId, String id,
             BMLBlockPeg bmlBlockPeg)
     {
         TransitionMU mu = createTransitionToRest(joints);
         mu.addKeyPosition(new KeyPosition("start", 0));
         mu.addKeyPosition(new KeyPosition("end", 1));
-        TimedAnimationUnit tmu = new TransitionTMU(feedbackManager, bmlBlockPeg, bmlId, id, mu, pegBoard);
+        TimedAnimationUnit tmu = new TransitionTMU(fbm, bmlBlockPeg, bmlId, id, mu, pegBoard);
         TimePeg startPeg = new TimePeg(bmlBlockPeg);
         startPeg.setGlobalValue(startTime);
         tmu.setTimePeg("start", startPeg);

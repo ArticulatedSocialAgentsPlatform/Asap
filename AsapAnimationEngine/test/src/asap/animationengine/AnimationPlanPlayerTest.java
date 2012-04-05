@@ -14,6 +14,7 @@ import hmi.bml.feedback.BMLExceptionFeedback;
 import hmi.bml.feedback.BMLSyncPointProgressFeedback;
 import hmi.elckerlyc.feedback.FeedbackManager;
 import hmi.elckerlyc.feedback.FeedbackManagerImpl;
+import hmi.elckerlyc.feedback.NullFeedbackManager;
 import hmi.elckerlyc.planunit.DefaultTimedPlanUnitPlayer;
 import hmi.elckerlyc.planunit.PlanManager;
 import hmi.elckerlyc.planunit.TimedPlanUnitState;
@@ -345,7 +346,8 @@ public class AnimationPlanPlayerTest
         when(mockTmu.getPhysicalJoints()).thenReturn(new HashSet<String>());
         when(mockTmu.getState()).thenReturn(TimedPlanUnitState.LURKING);
         when(
-                mockRestPose.createTransitionToRest(eq(ImmutableSet.of("r_wrist")), anyDouble(), eq("bml1"), eq("behaviour1-cleanup"),
+                mockRestPose.createTransitionToRest(eq(NullFeedbackManager.getInstance()),
+                        eq(ImmutableSet.of("r_wrist")), anyDouble(), eq("bml1"), eq("behaviour1"),
                         eq(BMLBlockPeg.GLOBALPEG))).thenReturn(mockTmu);
         app.play(0);
         assertThat(planManager.getPlanUnits(), containsInAnyOrder(tmu2, mockTmu));
