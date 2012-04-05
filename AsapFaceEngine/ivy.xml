@@ -13,6 +13,7 @@
       <dependency org="HMI"   name="HmiBML"             rev="latest.${resolve.status}"   />
 	  <dependency org="HMI"   name="HmiTTS"             transitive="false" rev="latest.${resolve.status}"   />
 	  <dependency org="HMI"   name="HmiElckerlyc"             transitive="false" rev="latest.${resolve.status}"   />
+	  <dependency org="HMI"   name="AsapEnvironment"             transitive="false" rev="latest.${resolve.status}"   />
       <dependency org="HMI"   transitive="false" name="HmiElckerlyc"       rev="latest.${resolve.status}"   />
       <dependency org="HMI"   transitive="false" name="AsapUtils"     rev="latest.${resolve.status}"   />    
       <dependency org="HMI"   transitive="false" name="AsapEnvironment"     rev="latest.${resolve.status}"   />    

@@ -297,7 +297,7 @@ public class SchedulerParameterizedIntegrationTest
 
         PlanManager<TimedAnimationUnit> animationPlanManager = new PlanManager<TimedAnimationUnit>();
 
-        RestPose pose = new SkeletonPoseRestPose(bfm, pegBoard);
+        RestPose pose = new SkeletonPoseRestPose(pegBoard);
         AnimationPlanPlayer animationPlanPlayer = new AnimationPlanPlayer(pose, bfm, animationPlanManager, new DefaultTimedPlanUnitPlayer());
         AnimationPlayer aPlayer = new AnimationPlayer(human, human, human, m, 0.001f, animationPlanPlayer);
         pose.setAnimationPlayer(aPlayer);
