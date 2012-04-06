@@ -13,6 +13,7 @@ import hmi.faceanimation.converters.FACSConverter;
 import asap.motionunit.keyframe.Interpolator;
 import asap.motionunit.keyframe.KeyFrame;
 import asap.motionunit.keyframe.KeyFrameMotionUnit;
+import asap.timemanipulator.TimeManipulator;
 import asap.utils.AnimationSync;
 
 /**
@@ -29,10 +30,12 @@ public class KeyframeMorphFU extends KeyFrameMotionUnit implements FaceUnit
     private int nrOfDofs;
     private List<KeyFrame> keyFrames;
     private double preferedDuration = 1;
+    private TimeManipulator manip;
     
-    public KeyframeMorphFU(List<String> targets, Interpolator interp, List<KeyFrame> keyFrames, int nrOfDofs)
+    public KeyframeMorphFU(List<String> targets, Interpolator interp, TimeManipulator manip, List<KeyFrame> keyFrames, int nrOfDofs)
     {
-        super(interp);
+        super(interp, manip);
+        this.manip = manip;
         this.interp = interp;
         this.nrOfDofs = nrOfDofs;
         this.keyFrames = ImmutableList.copyOf(keyFrames);
@@ -94,7 +97,7 @@ public class KeyframeMorphFU extends KeyFrameMotionUnit implements FaceUnit
     @Override
     public FaceUnit copy(FaceController fc, FACSConverter fconv, EmotionConverter econv)
     {
-        KeyframeMorphFU copy = new KeyframeMorphFU(ImmutableList.copyOf(targets), interp.copy(), ImmutableList.copyOf(keyFrames), nrOfDofs);
+        KeyframeMorphFU copy = new KeyframeMorphFU(ImmutableList.copyOf(targets), interp.copy(), manip, ImmutableList.copyOf(keyFrames), nrOfDofs);
         copy.preferedDuration = preferedDuration;
         copy.setFaceController(fc);
         for (KeyPosition keypos : getKeyPositions())

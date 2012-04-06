@@ -12,6 +12,7 @@ import asap.murml.Frame;
 import asap.murml.JointValue;
 import asap.murml.Phase;
 import asap.murml.Posture;
+import asap.timemanipulator.EaseInEaseOutManipulator;
 
 /**
  * Creates a facial unit from a MURML description
@@ -68,7 +69,9 @@ public final class MURMLFUBuilder
                 
                 //TODO: select interpolator
                 CubicSplineFloatInterpolator interp = new CubicSplineFloatInterpolator();
-                return new KeyframeMorphFU(targets, interp, keyFrames, nrOfDofs);
+                double scale = murmlDefinition.getKeyframing().getEasescale();
+                double p = murmlDefinition.getKeyframing().getEaseturningpoint();
+                return new KeyframeMorphFU(targets, interp, new EaseInEaseOutManipulator(scale,p), keyFrames, nrOfDofs);
             }
         }
         return null;
