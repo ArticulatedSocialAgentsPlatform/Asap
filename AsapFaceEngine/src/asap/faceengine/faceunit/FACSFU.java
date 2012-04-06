@@ -32,8 +32,7 @@ import hmi.faceanimation.converters.FACSConverter;
 import hmi.faceanimation.model.FACSConfiguration;
 import hmi.faceanimation.model.MPEG4Configuration;
 import hmi.util.StringUtil;
-
-import java.util.List;
+import lombok.Delegate;
 
 import asap.utils.AnimationSync;
 
@@ -49,7 +48,7 @@ import asap.utils.AnimationSync;
  */
 public class FACSFU implements FaceUnit
 {
-
+    @Delegate
     private final KeyPositionManager keyPositionManager = new KeyPositionManagerImpl();
 
     protected float intensity = 1f;
@@ -234,35 +233,5 @@ public class FACSFU implements FaceUnit
             result.addKeyPosition(keypos.deepCopy());
         }
         return result;
-    }
-
-    @Override
-    public void addKeyPosition(KeyPosition kp)
-    {
-        keyPositionManager.addKeyPosition(kp);
-    }
-
-    @Override
-    public KeyPosition getKeyPosition(String name)
-    {
-        return keyPositionManager.getKeyPosition(name);
-    }
-
-    @Override
-    public List<KeyPosition> getKeyPositions()
-    {
-        return keyPositionManager.getKeyPositions();
-    }
-
-    @Override
-    public void setKeyPositions(List<KeyPosition> p)
-    {
-        keyPositionManager.setKeyPositions(p);
-    }
-
-    @Override
-    public void removeKeyPosition(String id)
-    {
-        keyPositionManager.removeKeyPosition(id);
     }
 }

@@ -32,7 +32,7 @@ import hmi.faceanimation.converters.FACSConverter;
 import hmi.util.StringUtil;
 
 import java.util.Arrays;
-import java.util.List;
+import lombok.Delegate;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -64,7 +64,7 @@ public class MorphFU implements FaceUnit
 
     private static Logger logger = LoggerFactory.getLogger(MorphFU.class.getName());
     private boolean multiple = false;
-    private final KeyPositionManager keyPositionManager = new KeyPositionManagerImpl();
+    @Delegate private final KeyPositionManager keyPositionManager = new KeyPositionManagerImpl();
 
     private String[] morphTargets = new String[] { "" };
 
@@ -272,35 +272,4 @@ public class MorphFU implements FaceUnit
         result.updateMorphTargets();
         return result;
     }
-
-    @Override
-    public KeyPosition getKeyPosition(String name)
-    {
-        return keyPositionManager.getKeyPosition(name);
-    }
-
-    @Override
-    public void addKeyPosition(KeyPosition kp)
-    {
-        keyPositionManager.addKeyPosition(kp);
-    }
-
-    @Override
-    public List<KeyPosition> getKeyPositions()
-    {
-        return keyPositionManager.getKeyPositions();
-    }
-
-    @Override
-    public void setKeyPositions(List<KeyPosition> p)
-    {
-        keyPositionManager.setKeyPositions(p);
-    }
-
-    @Override
-    public void removeKeyPosition(String id)
-    {
-        keyPositionManager.removeKeyPosition(id);
-    }
-
 }

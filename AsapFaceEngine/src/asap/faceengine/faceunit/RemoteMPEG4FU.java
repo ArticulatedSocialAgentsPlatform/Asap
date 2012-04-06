@@ -35,7 +35,7 @@ import java.io.IOException;
 import java.io.InputStreamReader;
 import java.net.Socket;
 import java.net.UnknownHostException;
-import java.util.List;
+import lombok.Delegate;
 
 import asap.utils.AnimationSync;
 
@@ -49,7 +49,7 @@ import asap.utils.AnimationSync;
 public class RemoteMPEG4FU extends Thread implements FaceUnit
 {
 
-    private final KeyPositionManager keyPositionManager = new KeyPositionManagerImpl();
+    @Delegate private final KeyPositionManager keyPositionManager = new KeyPositionManagerImpl();
 
     private FaceController faceController;
 
@@ -247,35 +247,5 @@ public class RemoteMPEG4FU extends Thread implements FaceUnit
             result.addKeyPosition(keypos.deepCopy());
         }
         return result;
-    }
-
-    @Override
-    public void addKeyPosition(KeyPosition kp)
-    {
-        keyPositionManager.addKeyPosition(kp);
-    }
-
-    @Override
-    public KeyPosition getKeyPosition(String name)
-    {
-        return keyPositionManager.getKeyPosition(name);
-    }
-
-    @Override
-    public List<KeyPosition> getKeyPositions()
-    {
-        return keyPositionManager.getKeyPositions();
-    }
-
-    @Override
-    public void setKeyPositions(List<KeyPosition> p)
-    {
-        keyPositionManager.setKeyPositions(p);
-    }
-
-    @Override
-    public void removeKeyPosition(String id)
-    {
-        keyPositionManager.removeKeyPosition(id);
     }
 }
