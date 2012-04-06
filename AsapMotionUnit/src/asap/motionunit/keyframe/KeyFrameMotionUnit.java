@@ -9,6 +9,8 @@ import hmi.elckerlyc.planunit.ParameterException;
 import hmi.elckerlyc.planunit.ParameterNotFoundException;
 
 import lombok.Delegate;
+import asap.timemanipulator.TimeManipulator;
+import asap.timemanipulator.LinearManipulator;
 
 /**
  * Generic implementation a motion motion unit that interpolates a set of keyframes
@@ -18,13 +20,19 @@ import lombok.Delegate;
 public abstract class KeyFrameMotionUnit implements MotionUnit
 {
     @Delegate private KeyPositionManager keyPositionManager = new KeyPositionManagerImpl();
-    
+    private TimeManipulator manip = new LinearManipulator();
     
     private final Interpolator interpolator;
     
+    public KeyFrameMotionUnit(Interpolator interp, TimeManipulator m)
+    {
+        this.manip = m;
+        interpolator = interp;
+    }
+    
     public KeyFrameMotionUnit(Interpolator interp)
     {
-        interpolator = interp;
+        this(interp, new LinearManipulator());
     }
     
     protected double unifyKeyFrames(List<KeyFrame> keyFrames)
@@ -47,7 +55,7 @@ public abstract class KeyFrameMotionUnit implements MotionUnit
     @Override
     public void play(double t) throws MUPlayException
     {
-        KeyFrame kf = interpolator.interpolate(t);
+        KeyFrame kf = interpolator.interpolate(manip.manip(t));
         applyKeyFrame(kf);
     }
 

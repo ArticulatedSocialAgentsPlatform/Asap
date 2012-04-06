@@ -19,6 +19,7 @@ import asap.animationengine.motionunit.TimedAnimationUnit;
 import asap.motionunit.keyframe.Interpolator;
 import asap.motionunit.keyframe.KeyFrame;
 import asap.motionunit.keyframe.KeyFrameMotionUnit;
+import asap.timemanipulator.TimeManipulator;
 
 /**
  * MURML-style keyframe animation
@@ -33,10 +34,12 @@ public class MURMLKeyframeMU extends KeyFrameMotionUnit implements AnimationUnit
     private int nrOfDofs;
     private Interpolator interp;
     private double preferedDuration = 1;
+    private TimeManipulator manip;
     
-    public MURMLKeyframeMU(List<String> targets, Interpolator interp, List<KeyFrame> keyFrames, int nrOfDofs)
+    public MURMLKeyframeMU(List<String> targets, Interpolator interp, TimeManipulator manip, List<KeyFrame> keyFrames, int nrOfDofs)
     {
-        super(interp);
+        super(interp,manip);
+        this.manip = manip;
         this.targets = ImmutableList.copyOf(targets);
         this.nrOfDofs = nrOfDofs;
         this.keyFrames = ImmutableList.copyOf(keyFrames);
@@ -103,7 +106,7 @@ public class MURMLKeyframeMU extends KeyFrameMotionUnit implements AnimationUnit
 
     public AnimationUnit copy(VJoint v)
     {
-        MURMLKeyframeMU copy = new MURMLKeyframeMU(targets,  interp, keyFrames,  nrOfDofs);
+        MURMLKeyframeMU copy = new MURMLKeyframeMU(targets,  interp, manip, keyFrames,  nrOfDofs);
         copy.vNext = v;
         copy.preferedDuration = preferedDuration;
         for (KeyPosition keypos : getKeyPositions())

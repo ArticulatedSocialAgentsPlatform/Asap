@@ -14,6 +14,7 @@ import asap.murml.Frame;
 import asap.murml.JointValue;
 import asap.murml.Phase;
 import asap.murml.Posture;
+import asap.timemanipulator.EaseInEaseOutManipulator;
 
 /**
  * Creates an animation unit from a MURML description
@@ -77,7 +78,9 @@ public final class MURMLMUBuilder
                 
                 LinearQuatFloatInterpolator interp = new LinearQuatFloatInterpolator(); 
                 interp.setKeyFrames(keyFrames, nrOfDofs);
-                return new MURMLKeyframeMU(targets, interp, keyFrames, nrOfDofs);
+                double scale = murmlDefinition.getKeyframing().getEasescale();
+                double p = murmlDefinition.getKeyframing().getEaseturningpoint();
+                return new MURMLKeyframeMU(targets, interp, new EaseInEaseOutManipulator(scale,p), keyFrames, nrOfDofs);
             }
         }
         return null;
