@@ -39,7 +39,7 @@ import asap.utils.AnimationSync;
 
 /**
  * A basic facial animation unit consisting of one FACS configuration The key
- * positions are: start, ready, relax, end. This descripes an apex-like
+ * positions are: start, ready, relax, end. This describes an apex-like
  * intensity development: Between start and ready, the face configuration is
  * blended in; between relax and end the face configuration is blended out.
  * 
@@ -52,9 +52,9 @@ public class FACSFU implements FaceUnit
 
     private final KeyPositionManager keyPositionManager = new KeyPositionManagerImpl();
 
-    private float intensity = 1f;
+    protected float intensity = 1f;
 
-    private FACSConfiguration facsConfig = new FACSConfiguration();
+    protected FACSConfiguration facsConfig = new FACSConfiguration();
 
     private FaceController faceController;
     private FACSConverter facsConverter;
