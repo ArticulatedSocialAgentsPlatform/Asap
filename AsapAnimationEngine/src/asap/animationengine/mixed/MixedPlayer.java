@@ -29,6 +29,11 @@ import hmi.physics.inversedynamics.*;
 import hmi.physics.mixed.Branch;
 import hmi.physics.mixed.MixedSystem;
 
+/**
+ * Manages the playback of motion on a mixedsystem
+ * @author Herwin
+ *
+ */
 public class MixedPlayer
 {
     private Logger logger = LoggerFactory.getLogger(MixedPlayer.class.getName());

@@ -30,10 +30,10 @@ import asap.animationengine.transitions.TransitionTMU;
 public class SkeletonPoseRestPose implements RestPose
 {
     private AnimationPlayer player;
-    private VJoint poseTree;    
+    private VJoint poseTree;
     private SkeletonPose pose;
     private final PegBoard pegBoard;
-    
+
     public SkeletonPoseRestPose(PegBoard pb)
     {
         pegBoard = pb;
@@ -41,13 +41,13 @@ public class SkeletonPoseRestPose implements RestPose
 
     public SkeletonPoseRestPose(SkeletonPose pose, PegBoard pb)
     {
-        this.pose = pose;        
+        this.pose = pose;
         pegBoard = pb;
     }
 
-    public SkeletonPoseRestPose(SkeletonPose pose, AnimationPlayer player,PegBoard pb)
+    public SkeletonPoseRestPose(SkeletonPose pose, AnimationPlayer player, PegBoard pb)
     {
-        this(pose,pb);
+        this(pose, pb);
         setAnimationPlayer(player);
     }
 
@@ -76,14 +76,15 @@ public class SkeletonPoseRestPose implements RestPose
     }
 
     @Override
-    public TimedAnimationUnit createTransitionToRest(FeedbackManager fbm, Set<String> joints, double startTime, String bmlId, String id, BMLBlockPeg bmlBlockPeg)
+    public TimedAnimationUnit createTransitionToRest(FeedbackManager fbm, Set<String> joints, double startTime, String bmlId, String id,
+            BMLBlockPeg bmlBlockPeg)
     {
         return createTransitionToRest(fbm, joints, startTime, 1, bmlId, id, bmlBlockPeg);
     }
 
     @Override
-    public TimedAnimationUnit createTransitionToRest(FeedbackManager fbm, Set<String> joints, double startTime, double duration, String bmlId, String id,
-            BMLBlockPeg bmlBlockPeg)
+    public TimedAnimationUnit createTransitionToRest(FeedbackManager fbm, Set<String> joints, double startTime, double duration,
+            String bmlId, String id, BMLBlockPeg bmlBlockPeg)
     {
         TransitionMU mu = createTransitionToRest(joints);
         mu.addKeyPosition(new KeyPosition("start", 0));
@@ -129,9 +130,9 @@ public class SkeletonPoseRestPose implements RestPose
     @Override
     public double getTransitionToRestDuration(VJoint vCurrent, Set<String> joints)
     {
-        double duration = MovementTimingUtils.getFittsMaximumLimbMovementDuration(vCurrent,poseTree,joints);
-        if(duration>0)return duration;
-        return 1;        
+        double duration = MovementTimingUtils.getFittsMaximumLimbMovementDuration(vCurrent, poseTree, joints);
+        if (duration > 0) return duration;
+        return 1;
     }
 
 }

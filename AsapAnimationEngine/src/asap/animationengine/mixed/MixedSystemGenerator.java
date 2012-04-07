@@ -18,6 +18,11 @@ import hmi.physics.inversedynamics.IDBranch;
 import hmi.physics.inversedynamics.IDSegment;
 import hmi.physics.mixed.MixedSystem;
 
+/**
+ * Can generate a mixed system given a list of required and desired physical joints
+ * @author Herwin
+ *
+ */
 public class MixedSystemGenerator
 {
     private final PhysicalHumanoid fullBodyPh;
