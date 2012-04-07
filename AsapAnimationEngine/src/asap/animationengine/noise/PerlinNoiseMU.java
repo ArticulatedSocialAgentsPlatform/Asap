@@ -257,4 +257,10 @@ public class PerlinNoiseMU implements NoiseMU
         return ImmutableSet.of();
 
     }
+
+    @Override
+    public void startUnit(double t) throws MUPlayException
+    {
+                
+    }
 }

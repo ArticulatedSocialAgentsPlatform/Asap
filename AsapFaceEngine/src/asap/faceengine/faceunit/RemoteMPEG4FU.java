@@ -62,7 +62,11 @@ public class RemoteMPEG4FU extends Thread implements FaceUnit
     {
 
     }
-
+    @Override
+    public void startUnit(double t)
+    {
+        
+    }
     public void connectToServer()
     {
         try

@@ -71,7 +71,8 @@ public final class MURMLFUBuilder
                 CubicSplineFloatInterpolator interp = new CubicSplineFloatInterpolator();
                 double scale = murmlDefinition.getKeyframing().getEasescale();
                 double p = murmlDefinition.getKeyframing().getEaseturningpoint();
-                return new KeyframeMorphFU(targets, interp, new EaseInEaseOutManipulator(scale,p), keyFrames, nrOfDofs);
+                return new KeyframeMorphFU(targets, interp, new EaseInEaseOutManipulator(scale,p), keyFrames, nrOfDofs,
+                        murmlDefinition.getKeyframing().isInsertStartframe());
             }
         }
         return null;

@@ -80,7 +80,8 @@ public final class MURMLMUBuilder
                 interp.setKeyFrames(keyFrames, nrOfDofs);
                 double scale = murmlDefinition.getKeyframing().getEasescale();
                 double p = murmlDefinition.getKeyframing().getEaseturningpoint();
-                return new MURMLKeyframeMU(targets, interp, new EaseInEaseOutManipulator(scale,p), keyFrames, nrOfDofs);
+                return new MURMLKeyframeMU(targets, interp, new EaseInEaseOutManipulator(scale,p), keyFrames, nrOfDofs,
+                        murmlDefinition.getKeyframing().isInsertStartframe());
             }
         }
         return null;

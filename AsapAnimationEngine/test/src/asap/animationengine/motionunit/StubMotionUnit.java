@@ -110,4 +110,10 @@ public class StubMotionUnit implements AnimationUnit
     {
         return ImmutableSet.of();
     }
+
+    @Override
+    public void startUnit(double t) throws MUPlayException
+    {
+                
+    }
 }

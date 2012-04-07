@@ -18,6 +18,11 @@ public interface MotionUnit extends KeyPositionManager
     void play(double t)throws MUPlayException;    
     
     /**
+     * Prepares the motion unit for start     
+     */
+    void startUnit(double t)throws MUPlayException;
+    
+    /**
      * Get the faceunit replacement group (=typically the BML behavior)
      * Used to determine the currently active persistent TFU for this group in the player
      * Only one group is active at a time

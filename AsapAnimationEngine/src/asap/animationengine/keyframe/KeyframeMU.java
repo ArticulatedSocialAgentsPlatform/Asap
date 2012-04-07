@@ -34,6 +34,7 @@ import com.google.common.collect.ImmutableSet;
 
 import asap.animationengine.AnimationPlayer;
 import asap.animationengine.motionunit.*;
+import asap.motionunit.MUPlayException;
 
 
 /**
@@ -270,5 +271,11 @@ public class KeyframeMU implements AnimationUnit
     public Set<String> getKinematicJoints()
     {
         return ImmutableSet.copyOf(currentIp.getPartIds());
+    }
+
+    @Override
+    public void startUnit(double t) throws MUPlayException
+    {
+                
     } 
 }

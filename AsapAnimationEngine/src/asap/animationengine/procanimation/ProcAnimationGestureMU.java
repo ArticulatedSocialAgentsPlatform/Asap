@@ -429,4 +429,10 @@ public class ProcAnimationGestureMU implements GestureUnit
     {
         return gestureUnit.getKinematicJoints();
     }
+
+    @Override
+    public void startUnit(double t) throws MUPlayException
+    {
+                
+    }
 }

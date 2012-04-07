@@ -36,6 +36,7 @@ import java.util.Set;
 import com.google.common.collect.ImmutableSet;
 import asap.animationengine.AnimationPlayer;
 import asap.animationengine.motionunit.*;
+import asap.motionunit.MUPlayException;
 
 
 /**
@@ -219,5 +220,11 @@ public class ControllerMU implements AnimationUnit
     public Set<String> getPhysicalJoints()
     {
         return controller.getJoints();        
+    }
+
+    @Override
+    public void startUnit(double t) throws MUPlayException
+    {
+                
     } 
 }

@@ -58,6 +58,7 @@ import asap.animationengine.AnimationPlayer;
 import asap.animationengine.keyframe.KeyframeMU;
 import asap.animationengine.motionunit.AnimationUnit;
 import asap.animationengine.motionunit.TimedAnimationUnit;
+import asap.motionunit.MUPlayException;
 
 import com.google.common.collect.ImmutableSet;
 
@@ -1476,5 +1477,10 @@ public class ProcAnimationMU extends XMLStructureAdapter implements AnimationUni
     public Set<String> getKinematicJoints()
     {
         return VJointUtils.transformToSidSet(bodyParts);
+    }
+
+    @Override
+    public void startUnit(double t) throws MUPlayException
+    {
     }
 }

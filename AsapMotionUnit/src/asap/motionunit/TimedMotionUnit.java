@@ -11,6 +11,7 @@ import lombok.extern.slf4j.Slf4j;
 import hmi.elckerlyc.planunit.KeyPosition;
 import hmi.elckerlyc.planunit.PlanUnitTimeManager;
 import hmi.elckerlyc.planunit.TimedAbstractPlanUnit;
+import hmi.elckerlyc.planunit.TimedPlanUnitPlayException;
 import hmi.elckerlyc.pegboard.BMLBlockPeg;
 import hmi.elckerlyc.feedback.FeedbackManager;
 import hmi.elckerlyc.planunit.ParameterException;
@@ -111,6 +112,20 @@ public class TimedMotionUnit extends TimedAbstractPlanUnit
         {
             sendProgress(1, time);
         }
+    }
+    
+    @Override
+    protected void startUnit(double time) throws TimedPlanUnitPlayException
+    {
+        try
+        {
+            mu.startUnit(time);
+        }
+        catch (MUPlayException ex)
+        {
+            throw new TimedPlanUnitPlayException("MUPlayException on mu startUnit", this, ex);
+        }
+        super.startUnit(time);        
     }
 
     /**

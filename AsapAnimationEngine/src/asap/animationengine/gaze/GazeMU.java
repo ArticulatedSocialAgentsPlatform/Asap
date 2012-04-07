@@ -480,5 +480,11 @@ public class GazeMU implements AnimationUnit
         {
             return KINJOINTSALL;            
         }
+    }
+
+    @Override
+    public void startUnit(double t) throws MUPlayException
+    {
+                
     }    
 }

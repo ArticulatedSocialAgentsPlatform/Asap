@@ -23,33 +23,52 @@ public abstract class KeyFrameMotionUnit implements MotionUnit
     private TimeManipulator manip = new LinearManipulator();
     
     private final Interpolator interpolator;
+    private final boolean allowDynamicStart;
     
-    public KeyFrameMotionUnit(Interpolator interp, TimeManipulator m)
+    public KeyFrameMotionUnit(Interpolator interp, TimeManipulator m, boolean allowDynamicStart)
     {
+        this.allowDynamicStart = allowDynamicStart;
         this.manip = m;
         interpolator = interp;
     }
     
     public KeyFrameMotionUnit(Interpolator interp)
     {
-        this(interp, new LinearManipulator());
+        this(interp, new LinearManipulator(), true);
     }
     
     protected double unifyKeyFrames(List<KeyFrame> keyFrames)
     {
         if(keyFrames.size()<2)
         {
-            return 1;
+            return keyFrames.get(0).getFrameTime();
         }
-        double start = keyFrames.get(0).getFrameTime();
         double end = keyFrames.get(keyFrames.size()-1).getFrameTime();
-        double preferedDuration = end - start;
+        double preferedDuration = end;
         
         for(KeyFrame kf:keyFrames)
         {
-            kf.setFrameTime( (kf.getFrameTime()-start) / preferedDuration);
+            kf.setFrameTime(kf.getFrameTime() / preferedDuration);
         }
         return preferedDuration;
+    }
+    
+    protected void setupDynamicStart(double t, List<KeyFrame> keyFrames)
+    {
+        if(allowDynamicStart)
+        {
+            if(keyFrames.size()>0) 
+            {
+                if(keyFrames.get(0).getFrameTime()>0)
+                {
+                    keyFrames.add(0,getStartKeyFrame());
+                }
+            }
+            else
+            {
+                keyFrames.add(getStartKeyFrame());
+            }            
+        }
     }
     
     @Override
@@ -60,6 +79,8 @@ public abstract class KeyFrameMotionUnit implements MotionUnit
     }
 
     public abstract void applyKeyFrame(KeyFrame kf);
+    
+    public abstract KeyFrame getStartKeyFrame();
     
     @Override
     public void setFloatParameterValue(String name, float value) throws ParameterException

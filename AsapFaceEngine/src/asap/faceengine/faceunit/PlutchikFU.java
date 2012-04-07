@@ -64,7 +64,11 @@ public class PlutchikFU implements FaceUnit
                                               // configuration sent to
                                               // FaceController, because we need
                                               // to subtract it again later on!
-
+    @Override
+    public void startUnit(double t)
+    {
+        
+    }
     public PlutchikFU()
     {
         KeyPosition ready = new KeyPosition("ready", 0.1d, 1d);

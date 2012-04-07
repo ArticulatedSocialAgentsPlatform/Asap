@@ -10,6 +10,7 @@ import hmi.elckerlyc.planunit.KeyPosition;
 import hmi.faceanimation.FaceController;
 import hmi.faceanimation.converters.EmotionConverter;
 import hmi.faceanimation.converters.FACSConverter;
+import asap.motionunit.MUPlayException;
 import asap.motionunit.keyframe.Interpolator;
 import asap.motionunit.keyframe.KeyFrame;
 import asap.motionunit.keyframe.KeyFrameMotionUnit;
@@ -27,17 +28,20 @@ public class KeyframeMorphFU extends KeyFrameMotionUnit implements FaceUnit
     private String[] targets;
     private float[] prevWeights;
     private Interpolator interp;
+    private boolean allowDynamicStart;
     private int nrOfDofs;
     private List<KeyFrame> keyFrames;
     private double preferedDuration = 1;
     private TimeManipulator manip;
-    
-    public KeyframeMorphFU(List<String> targets, Interpolator interp, TimeManipulator manip, List<KeyFrame> keyFrames, int nrOfDofs)
+
+    public KeyframeMorphFU(List<String> targets, Interpolator interp, TimeManipulator manip, List<KeyFrame> keyFrames, int nrOfDofs,
+            boolean allowDynamicStart)
     {
-        super(interp, manip);
+        super(interp, manip, allowDynamicStart);
         this.manip = manip;
         this.interp = interp;
         this.nrOfDofs = nrOfDofs;
+        this.allowDynamicStart = allowDynamicStart;
         this.keyFrames = ImmutableList.copyOf(keyFrames);
         preferedDuration = unifyKeyFrames(keyFrames);
 
@@ -97,7 +101,8 @@ public class KeyframeMorphFU extends KeyFrameMotionUnit implements FaceUnit
     @Override
     public FaceUnit copy(FaceController fc, FACSConverter fconv, EmotionConverter econv)
     {
-        KeyframeMorphFU copy = new KeyframeMorphFU(ImmutableList.copyOf(targets), interp.copy(), manip, ImmutableList.copyOf(keyFrames), nrOfDofs);
+        KeyframeMorphFU copy = new KeyframeMorphFU(ImmutableList.copyOf(targets), interp.copy(), manip, ImmutableList.copyOf(keyFrames),
+                nrOfDofs, allowDynamicStart);
         copy.preferedDuration = preferedDuration;
         copy.setFaceController(fc);
         for (KeyPosition keypos : getKeyPositions())
@@ -116,5 +121,19 @@ public class KeyframeMorphFU extends KeyFrameMotionUnit implements FaceUnit
             faceController.addMorphTargets(targets, kf.getDofs());
             System.arraycopy(kf.getDofs(), 0, prevWeights, 0, prevWeights.length);
         }
+    }
+
+    @Override
+    public KeyFrame getStartKeyFrame()
+    {
+        // frames are additive, this just sets a 0 start frame..
+        float dofs[] = new float[targets.length];
+        return new KeyFrame(0, dofs);
+    }
+
+    @Override
+    public void startUnit(double t) throws MUPlayException
+    {
+        super.setupDynamicStart(t, keyFrames);        
     }
 }

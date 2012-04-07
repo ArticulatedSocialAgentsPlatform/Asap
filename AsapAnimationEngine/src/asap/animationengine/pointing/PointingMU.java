@@ -339,4 +339,10 @@ public class PointingMU implements AnimationUnit
     {
         relaxUnit = player.getRestPose().createTransitionToRest(getKinematicJoints());
     }
+
+    @Override
+    public void startUnit(double t) throws MUPlayException
+    {
+                
+    }
 }

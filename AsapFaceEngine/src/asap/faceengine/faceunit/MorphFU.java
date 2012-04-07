@@ -61,7 +61,11 @@ public class MorphFU implements FaceUnit
     {
         this.targetName = targetName;
     }
-
+    @Override
+    public void startUnit(double t)
+    {
+        
+    }
     private static Logger logger = LoggerFactory.getLogger(MorphFU.class.getName());
     private boolean multiple = false;
     @Delegate private final KeyPositionManager keyPositionManager = new KeyPositionManagerImpl();

@@ -28,6 +28,7 @@ import com.google.common.collect.Collections2;
 import com.google.common.collect.ImmutableSet;
 
 import asap.animationengine.AnimationPlayer;
+import asap.motionunit.MUPlayException;
 
 import hmi.animation.VJoint;
 import hmi.math.Quat4f;
@@ -189,5 +190,11 @@ public class SlerpTransitionToPoseMU extends TransitionMU
             }
         });
         return ImmutableSet.copyOf(j);
+    }
+
+    @Override
+    public void startUnit(double t) throws MUPlayException
+    {
+                
     }
 }

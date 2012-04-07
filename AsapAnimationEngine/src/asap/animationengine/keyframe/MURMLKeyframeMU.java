@@ -16,6 +16,7 @@ import asap.animationengine.AnimationPlayer;
 import asap.animationengine.motionunit.AnimationUnit;
 import asap.animationengine.motionunit.MUSetupException;
 import asap.animationengine.motionunit.TimedAnimationUnit;
+import asap.motionunit.MUPlayException;
 import asap.motionunit.keyframe.Interpolator;
 import asap.motionunit.keyframe.KeyFrame;
 import asap.motionunit.keyframe.KeyFrameMotionUnit;
@@ -24,7 +25,7 @@ import asap.timemanipulator.TimeManipulator;
 /**
  * MURML-style keyframe animation
  * @author hvanwelbergen
- *
+ * 
  */
 public class MURMLKeyframeMU extends KeyFrameMotionUnit implements AnimationUnit
 {
@@ -33,12 +34,15 @@ public class MURMLKeyframeMU extends KeyFrameMotionUnit implements AnimationUnit
     private VJoint vNext;
     private int nrOfDofs;
     private Interpolator interp;
+    private boolean allowDynamicStart;
     private double preferedDuration = 1;
     private TimeManipulator manip;
-    
-    public MURMLKeyframeMU(List<String> targets, Interpolator interp, TimeManipulator manip, List<KeyFrame> keyFrames, int nrOfDofs)
+
+    public MURMLKeyframeMU(List<String> targets, Interpolator interp, TimeManipulator manip, List<KeyFrame> keyFrames, int nrOfDofs,
+            boolean allowDynamicStart)
     {
-        super(interp,manip);
+        super(interp, manip, allowDynamicStart);
+        this.allowDynamicStart = allowDynamicStart;
         this.manip = manip;
         this.targets = ImmutableList.copyOf(targets);
         this.nrOfDofs = nrOfDofs;
@@ -46,15 +50,15 @@ public class MURMLKeyframeMU extends KeyFrameMotionUnit implements AnimationUnit
         this.interp = interp;
         preferedDuration = unifyKeyFrames(keyFrames);
         interp.setKeyFrames(keyFrames, nrOfDofs);
-        
+
         KeyPosition start = new KeyPosition("start", 0d, 1d);
         KeyPosition ready = new KeyPosition("ready", 0.1d, 1d);
         KeyPosition strokeStart = new KeyPosition("strokeStart", 0.1d, 1d);
         KeyPosition stroke = new KeyPosition("stroke", 0.5d, 1d);
         KeyPosition strokeEnd = new KeyPosition("strokeEnd", 0.9d, 1d);
-        KeyPosition relax = new KeyPosition("relax", 0.9d, 1d);        
+        KeyPosition relax = new KeyPosition("relax", 0.9d, 1d);
         KeyPosition end = new KeyPosition("end", 1d, 1d);
-        addKeyPosition(start);        
+        addKeyPosition(start);
         addKeyPosition(ready);
         addKeyPosition(strokeStart);
         addKeyPosition(stroke);
@@ -62,7 +66,7 @@ public class MURMLKeyframeMU extends KeyFrameMotionUnit implements AnimationUnit
         addKeyPosition(relax);
         addKeyPosition(end);
     }
-    
+
     /**
      * @deprecated no longer relevant in BML 1.0
      */
@@ -83,9 +87,9 @@ public class MURMLKeyframeMU extends KeyFrameMotionUnit implements AnimationUnit
     public void applyKeyFrame(KeyFrame kf)
     {
         int i = 0;
-        for(String target:targets)
+        for (String target : targets)
         {
-            vNext.getPartBySid(target).setRotation(kf.getDofs(),i*4);
+            vNext.getPartBySid(target).setRotation(kf.getDofs(), i * 4);
             i++;
         }
     }
@@ -96,8 +100,8 @@ public class MURMLKeyframeMU extends KeyFrameMotionUnit implements AnimationUnit
         return ImmutableSet.copyOf(targets);
     }
 
-    private static final Set<String>PHJOINTS = ImmutableSet.of(); 
-    
+    private static final Set<String> PHJOINTS = ImmutableSet.of();
+
     @Override
     public Set<String> getPhysicalJoints()
     {
@@ -106,7 +110,7 @@ public class MURMLKeyframeMU extends KeyFrameMotionUnit implements AnimationUnit
 
     public AnimationUnit copy(VJoint v)
     {
-        MURMLKeyframeMU copy = new MURMLKeyframeMU(targets,  interp, manip, keyFrames,  nrOfDofs);
+        MURMLKeyframeMU copy = new MURMLKeyframeMU(targets, interp, manip, keyFrames, nrOfDofs, allowDynamicStart);
         copy.vNext = v;
         copy.preferedDuration = preferedDuration;
         for (KeyPosition keypos : getKeyPositions())
@@ -115,16 +119,36 @@ public class MURMLKeyframeMU extends KeyFrameMotionUnit implements AnimationUnit
         }
         return copy;
     }
-    
+
     @Override
     public AnimationUnit copy(AnimationPlayer p) throws MUSetupException
     {
-        return copy(p.getVNext());        
+        return copy(p.getVNext());
     }
 
     @Override
     public TimedAnimationUnit createTMU(FeedbackManager bbm, BMLBlockPeg bmlBlockPeg, String bmlId, String id, PegBoard pb)
     {
         return new TimedAnimationUnit(bbm, bmlBlockPeg, bmlId, id, this, pb);
-    }    
+    }
+
+    @Override
+    public KeyFrame getStartKeyFrame()
+    {
+        float q[] = new float[getKinematicJoints().size() * 4];
+        int i = 0;
+        for (String target : targets)
+        {
+            VJoint vj = vNext.getPartBySid(target);
+            vj.getRotation(q, i);
+            i += 4;
+        }
+        return new KeyFrame(0, q);
+    }
+
+    @Override
+    public void startUnit(double t) throws MUPlayException
+    {
+        super.setupDynamicStart(t, keyFrames);        
+    }
 }
