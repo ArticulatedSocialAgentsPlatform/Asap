@@ -1,11 +1,5 @@
 package asap.faceengine.lipsync;
 
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-
-import lombok.extern.slf4j.Slf4j;
-
 import hmi.bml.core.Behaviour;
 import hmi.elckerlyc.lipsync.LipSynchProvider;
 import hmi.elckerlyc.pegboard.BMLBlockPeg;
@@ -14,10 +8,15 @@ import hmi.elckerlyc.pegboard.TimePeg;
 import hmi.elckerlyc.planunit.PlanManager;
 import hmi.elckerlyc.planunit.TimedPlanUnit;
 import hmi.faceanimation.FaceController;
-import asap.faceengine.faceunit.TimedFaceUnit;
-import asap.faceengine.viseme.DisneyVisemes;
-import asap.faceengine.viseme.VisemeBinding;
 import hmi.tts.Visime;
+
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+
+import lombok.extern.slf4j.Slf4j;
+import asap.faceengine.faceunit.TimedFaceUnit;
+import asap.faceengine.viseme.VisemeBinding;
 
 /**
  * Creates TimedFaceUnits for lipsync 
@@ -46,13 +45,10 @@ public class TimedFaceUnitLipSynchProvider implements LipSynchProvider
         double prevDuration = 0d;
 
         // add null viseme before
-        TimedFaceUnit tfu = visimeBinding.getVisemeUnit(bbPeg, beh, DisneyVisemes.V_NULL, faceController);
-        tfu.setSubUnit(true);
+        TimedFaceUnit tfu = null;
         HashMap<TimedFaceUnit, Double> startTimes = new HashMap<TimedFaceUnit, Double>();
         HashMap<TimedFaceUnit, Double> endTimes = new HashMap<TimedFaceUnit, Double>();
-        startTimes.put(tfu, Double.valueOf(0d));
-        endTimes.put(tfu, Double.valueOf(0d));
-
+        
         for (Visime vis : visemes)
         {
             // OOK: de visemen zijn nu te kort (sluiten aan op interpolatie 0/0
@@ -61,7 +57,10 @@ public class TimedFaceUnitLipSynchProvider implements LipSynchProvider
             double start = totalDuration / 1000d - prevDuration / 2000;
             double peak = totalDuration / 1000d + vis.getDuration() / 2000d;
             double end = totalDuration / 1000d + vis.getDuration() / 1000d;
-            endTimes.put(tfu, peak); // extend previous tfu to the peak of this
+            if(tfu!=null)
+            {
+                endTimes.put(tfu, peak); // extend previous tfu to the peak of this
+            }
                                      // one!
             tfu = visimeBinding.getVisemeUnit(bbPeg, beh, vis.getNumber(), faceController);
 
@@ -71,11 +70,7 @@ public class TimedFaceUnitLipSynchProvider implements LipSynchProvider
             totalDuration += vis.getDuration();
             prevDuration = vis.getDuration();
         }
-        // add null viseme at end
-        tfu = visimeBinding.getVisemeUnit(bbPeg, beh, DisneyVisemes.V_NULL, faceController);
-        tfus.add(tfu);
-        startTimes.put(tfu, Double.valueOf(totalDuration / 1000d));
-        endTimes.put(tfu, Double.valueOf(totalDuration / 1000d));
+        
 
         for (TimedFaceUnit vfu : tfus)
         {
