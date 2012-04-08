@@ -51,7 +51,8 @@ public class ProcAnimationGestureTMUTest extends TimedMotionUnitTest
     private AnimationPlayer mockAnimationPlayer = mock(AnimationPlayer.class);
     private PegBoard pegBoard = new PegBoard();
     private static final double STROKE_DURATION = 1;
-
+    private static final double TIME_PRECISION = 0.0001;
+    
     @SuppressWarnings("unchecked")
     protected ProcAnimationGestureTMU setupPlanUnit(FeedbackManager bfm, BMLBlockPeg bbPeg, String id, String bmlId)
     {
@@ -117,8 +118,8 @@ public class ProcAnimationGestureTMUTest extends TimedMotionUnitTest
         sac.add(new TimePegAndConstraint("start", tpStart, new Constraint(), 0));
         sac.add(new TimePegAndConstraint("end", tpEnd, new Constraint(), 0));
         tpu.resolveSynchs(BMLBlockPeg.GLOBALPEG, null, sac);
-        assertEquals(0.1, tpStart.getGlobalValue(), 0.0001);
-        assertEquals(0.1 + tpu.getPreferedDuration(), tpEnd.getGlobalValue(), 0.0001);
+        assertEquals(0.1, tpStart.getGlobalValue(), TIME_PRECISION);
+        assertEquals(0.1 + tpu.getPreferedDuration(), tpEnd.getGlobalValue(), TIME_PRECISION);
     }
 
     @Test
@@ -132,8 +133,8 @@ public class ProcAnimationGestureTMUTest extends TimedMotionUnitTest
         sac.add(new TimePegAndConstraint("start", tpStart, new Constraint(), 0));
         sac.add(new TimePegAndConstraint("end", tpEnd, new Constraint(), 0));
         tpu.resolveSynchs(BMLBlockPeg.GLOBALPEG, null, sac);
-        assertEquals(10, tpEnd.getGlobalValue(), 0.0001);
-        assertEquals(10 - tpu.getPreferedDuration(), tpStart.getGlobalValue(), 0.0001);
+        assertEquals(10, tpEnd.getGlobalValue(), TIME_PRECISION);
+        assertEquals(10 - tpu.getPreferedDuration(), tpStart.getGlobalValue(), TIME_PRECISION);
     }
 
     @Test
@@ -144,7 +145,7 @@ public class ProcAnimationGestureTMUTest extends TimedMotionUnitTest
         TimePeg tp = new TimePeg(BMLBlockPeg.GLOBALPEG);
         sac.add(new TimePegAndConstraint("start", tp, new Constraint(), 0));
         tpu.resolveSynchs(BMLBlockPeg.GLOBALPEG, null, sac);
-        assertEquals(0, tp.getGlobalValue(), 0.0001);
+        assertEquals(0, tp.getGlobalValue(), TIME_PRECISION);
     }
 
     @Test
@@ -161,8 +162,8 @@ public class ProcAnimationGestureTMUTest extends TimedMotionUnitTest
         sac.add(new TimePegAndConstraint("end", tpEnd, new Constraint(), 0));
         sac.add(new TimePegAndConstraint("stroke", tpStroke, new Constraint(), 0));
         tpu.resolveSynchs(BMLBlockPeg.GLOBALPEG, null, sac);
-        assertEquals(0, tpStart.getGlobalValue(), 0.0001);
-        assertEquals(3, tpEnd.getGlobalValue(), 0.0001);
+        assertEquals(0, tpStart.getGlobalValue(), TIME_PRECISION);
+        assertEquals(3, tpEnd.getGlobalValue(), TIME_PRECISION);
         assertThat(tpStroke.getGlobalValue(), greaterThan(0d));
         assertThat(tpStroke.getGlobalValue(), lessThan(3d));
     }
@@ -181,8 +182,8 @@ public class ProcAnimationGestureTMUTest extends TimedMotionUnitTest
         sac.add(new TimePegAndConstraint("end", tpEnd, new Constraint(), 0));
         sac.add(new TimePegAndConstraint("relax", tpRelax, new Constraint(), 0));
         tpu.resolveSynchs(BMLBlockPeg.GLOBALPEG, null, sac);
-        assertEquals(0, tpStart.getGlobalValue(), 0.0001);
-        assertEquals(2, tpRelax.getGlobalValue(), 0.0001);
+        assertEquals(0, tpStart.getGlobalValue(), TIME_PRECISION);
+        assertEquals(2, tpRelax.getGlobalValue(), TIME_PRECISION);
         assertThat(tpEnd.getGlobalValue(), greaterThan(2d));
     }
 
@@ -191,8 +192,8 @@ public class ProcAnimationGestureTMUTest extends TimedMotionUnitTest
     {
         ProcAnimationGestureTMU tpu = setupPlanUnit(fbManager, BMLBlockPeg.GLOBALPEG, "id1", "bml1");
         tpu.updateTiming(0);
-        assertEquals(0, tpu.getTimePeg("start").getGlobalValue(), 0.0001);
-        assertEquals(STROKE_DURATION, tpu.getTime("strokeEnd") - tpu.getTime("strokeStart"), 0.0001);
+        assertEquals(0, tpu.getTimePeg("start").getGlobalValue(), TIME_PRECISION);
+        assertEquals(STROKE_DURATION, tpu.getTime("strokeEnd") - tpu.getTime("strokeStart"), TIME_PRECISION);
     }
 
     @Test
@@ -200,18 +201,18 @@ public class ProcAnimationGestureTMUTest extends TimedMotionUnitTest
     {
         ProcAnimationGestureTMU tpu = setupPlanUnit(fbManager, BMLBlockPeg.GLOBALPEG, "id1", "bml1");
         tpu.updateTiming(1);
-        assertEquals(1, tpu.getTimePeg("start").getGlobalValue(), 0.0001);
-        assertEquals(STROKE_DURATION, tpu.getTime("strokeEnd") - tpu.getTime("strokeStart"), 0.0001);
+        assertEquals(1, tpu.getTimePeg("start").getGlobalValue(), TIME_PRECISION);
+        assertEquals(STROKE_DURATION, tpu.getTime("strokeEnd") - tpu.getTime("strokeStart"), TIME_PRECISION);
     }
 
     @Test
     public void testUpdateTimingSetStart() throws TMUPlayException
     {
         ProcAnimationGestureTMU tpu = setupPlanUnit(fbManager, BMLBlockPeg.GLOBALPEG, "id1", "bml1", 1);
-        assertEquals(1, tpu.getTimePeg("start").getGlobalValue(), 0.0001);
+        assertEquals(1, tpu.getTimePeg("start").getGlobalValue(), TIME_PRECISION);
         tpu.updateTiming(0);
-        assertEquals(0, tpu.getTimePeg("start").getGlobalValue(), 0.0001);
-        assertEquals(STROKE_DURATION, tpu.getTime("strokeEnd") - tpu.getTime("strokeStart"), 0.0001);
+        assertEquals(0, tpu.getTimePeg("start").getGlobalValue(), TIME_PRECISION);
+        assertEquals(STROKE_DURATION, tpu.getTime("strokeEnd") - tpu.getTime("strokeStart"), TIME_PRECISION);
     }
 
     @Test
@@ -221,8 +222,8 @@ public class ProcAnimationGestureTMUTest extends TimedMotionUnitTest
         TimePeg tp = pegBoard.getTimePeg("bml1", "id1", "start");
         pegBoard.addTimePeg("bml1", "id2", "start", tp);
         tpu.updateTiming(0);
-        assertEquals(1, tpu.getTimePeg("start").getGlobalValue(), 0.0001);
-        assertEquals(STROKE_DURATION, tpu.getTime("strokeEnd") - tpu.getTime("strokeStart"), 0.0001);
+        assertEquals(1, tpu.getTimePeg("start").getGlobalValue(), TIME_PRECISION);
+        assertEquals(STROKE_DURATION, tpu.getTime("strokeEnd") - tpu.getTime("strokeStart"), TIME_PRECISION);
     }
 
     @Test
@@ -230,8 +231,8 @@ public class ProcAnimationGestureTMUTest extends TimedMotionUnitTest
     {
         ProcAnimationGestureTMU tpu = setupPlanUnit(fbManager, BMLBlockPeg.GLOBALPEG, "id1", "bml1", 0);
         tpu.updateTiming(1);
-        assertEquals(0, tpu.getTimePeg("start").getGlobalValue(), 0.0001);
-        assertEquals(STROKE_DURATION, tpu.getTime("strokeEnd") - tpu.getTime("strokeStart"), 0.0001);
+        assertEquals(0, tpu.getTimePeg("start").getGlobalValue(), TIME_PRECISION);
+        assertEquals(STROKE_DURATION, tpu.getTime("strokeEnd") - tpu.getTime("strokeStart"), TIME_PRECISION);
     }
 
     @Test
@@ -245,8 +246,8 @@ public class ProcAnimationGestureTMUTest extends TimedMotionUnitTest
         pegBoard.addTimePeg("bml1", "id2", "start", tp);
 
         tpu.updateTiming(0);
-        assertEquals(1, tpu.getTimePeg("stroke").getGlobalValue(), 0.0001);
-        assertEquals(STROKE_DURATION, tpu.getTime("strokeEnd") - tpu.getTime("strokeStart"), 0.0001);
+        assertEquals(1, tpu.getTimePeg("stroke").getGlobalValue(), TIME_PRECISION);
+        assertEquals(STROKE_DURATION, tpu.getTime("strokeEnd") - tpu.getTime("strokeStart"), TIME_PRECISION);
         assertThat(tpu.getTimePeg("start").getLocalValue(), greaterThanOrEqualTo(0d));
         assertThat(tpu.getTimePeg("start").getGlobalValue(), greaterThanOrEqualTo(0d));
     }

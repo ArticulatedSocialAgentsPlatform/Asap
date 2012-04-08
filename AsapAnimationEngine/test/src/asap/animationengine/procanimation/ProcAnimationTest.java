@@ -34,6 +34,7 @@ public class ProcAnimationTest
     private static final float[] L_SHOULDER_ROT = Quat4f.getQuat4f(0, 0, 1, 0);
     private static final float[] R_SHOULDER_ROT = Quat4f.getQuat4f(0, 0, 0, 1);
     
+    private static final float ANIMATION_PRECISION = 0.0001f;
     @Before
     public void loadDaeHuman()
     {
@@ -67,7 +68,7 @@ public class ProcAnimationTest
         procAnimation.play(0);
         float t[]=Vec3f.getVec3f();
         human.getPart("HumanoidRoot").getTranslation(t);
-        assertVec3fEquals(0,0,0,t,0.0001f);
+        assertVec3fEquals(0,0,0,t,ANIMATION_PRECISION);
     }
     
     @Test
@@ -81,7 +82,7 @@ public class ProcAnimationTest
         mu.play(0);
         float t[]=Vec3f.getVec3f();
         humanCopy.getPart("HumanoidRoot").getTranslation(t);
-        assertVec3fEquals(0,0,0,t,0.0001f);
+        assertVec3fEquals(0,0,0,t,ANIMATION_PRECISION);
     }
     
 
@@ -95,13 +96,13 @@ public class ProcAnimationTest
         float q[]=Quat4f.getQuat4f();
         
         human.getPart("HumanoidRoot").getRotation(q);
-        assertQuat4fRotationEquivalent(HUMANOIDROOT_ROT[0],HUMANOIDROOT_ROT[1],-HUMANOIDROOT_ROT[2],-HUMANOIDROOT_ROT[3],q,0.001f);
+        assertQuat4fRotationEquivalent(HUMANOIDROOT_ROT[0],HUMANOIDROOT_ROT[1],-HUMANOIDROOT_ROT[2],-HUMANOIDROOT_ROT[3],q,ANIMATION_PRECISION);
         
         human.getPart("l_shoulder").getRotation(q);
-        assertQuat4fRotationEquivalent(R_SHOULDER_ROT[0],R_SHOULDER_ROT[1],-R_SHOULDER_ROT[2],-R_SHOULDER_ROT[3],q,0.001f);
+        assertQuat4fRotationEquivalent(R_SHOULDER_ROT[0],R_SHOULDER_ROT[1],-R_SHOULDER_ROT[2],-R_SHOULDER_ROT[3],q,ANIMATION_PRECISION);
         
         human.getPart("r_shoulder").getRotation(q);
-        assertQuat4fRotationEquivalent(L_SHOULDER_ROT[0],L_SHOULDER_ROT[1],-L_SHOULDER_ROT[2],-L_SHOULDER_ROT[3],q,0.001f);
+        assertQuat4fRotationEquivalent(L_SHOULDER_ROT[0],L_SHOULDER_ROT[1],-L_SHOULDER_ROT[2],-L_SHOULDER_ROT[3],q,ANIMATION_PRECISION);
     }
     
     @Test
@@ -114,7 +115,7 @@ public class ProcAnimationTest
         procAnimation.play(0);
         float q[]=Quat4f.getQuat4f();
         human.getPart("l_shoulder").getRotation(q);       
-        assertQuat4fRotationEquivalent(R_SHOULDER_ROT[0],R_SHOULDER_ROT[1],-R_SHOULDER_ROT[2],-R_SHOULDER_ROT[3],q,0.001f);
+        assertQuat4fRotationEquivalent(R_SHOULDER_ROT[0],R_SHOULDER_ROT[1],-R_SHOULDER_ROT[2],-R_SHOULDER_ROT[3],q,ANIMATION_PRECISION);
     }
     
     @Test
@@ -126,7 +127,7 @@ public class ProcAnimationTest
         procAnimation.play(0);
         float q[]=Quat4f.getQuat4f();
         human.getPart("l_shoulder").getRotation(q);       
-        assertQuat4fRotationEquivalent(R_SHOULDER_ROT[0],R_SHOULDER_ROT[1],-R_SHOULDER_ROT[2],-R_SHOULDER_ROT[3],q,0.001f);
+        assertQuat4fRotationEquivalent(R_SHOULDER_ROT[0],R_SHOULDER_ROT[1],-R_SHOULDER_ROT[2],-R_SHOULDER_ROT[3],q,ANIMATION_PRECISION);
     }
     
     @Test
@@ -136,13 +137,13 @@ public class ProcAnimationTest
         
         float q[]=Quat4f.getQuat4f();
         human.getPart("HumanoidRoot").getRotation(q);        
-        assertQuat4fRotationEquivalent(HUMANOIDROOT_ROT,q,0.001f);        
+        assertQuat4fRotationEquivalent(HUMANOIDROOT_ROT,q,ANIMATION_PRECISION);        
     
         human.getPart("r_shoulder").getRotation(q);        
-        assertQuat4fRotationEquivalent(R_SHOULDER_ROT,q,0.001f);
+        assertQuat4fRotationEquivalent(R_SHOULDER_ROT,q,ANIMATION_PRECISION);
         
         human.getPart("l_shoulder").getRotation(q);        
-        assertQuat4fRotationEquivalent(L_SHOULDER_ROT,q,0.001f);
+        assertQuat4fRotationEquivalent(L_SHOULDER_ROT,q,ANIMATION_PRECISION);
     }
     
     @Test
@@ -157,13 +158,13 @@ public class ProcAnimationTest
         
         float q[]=Quat4f.getQuat4f();
         human.getPart("HumanoidRoot").getRotation(q);        
-        assertQuat4fRotationEquivalent(HUMANOIDROOT_ROT,q,0.001f);        
+        assertQuat4fRotationEquivalent(HUMANOIDROOT_ROT,q,ANIMATION_PRECISION);        
     
         human.getPart("r_shoulder").getRotation(q);        
-        assertQuat4fRotationEquivalent(R_SHOULDER_ROT,q,0.001f);
+        assertQuat4fRotationEquivalent(R_SHOULDER_ROT,q,ANIMATION_PRECISION);
         
         human.getPart("l_shoulder").getRotation(q);        
-        assertQuat4fRotationEquivalent(L_SHOULDER_ROT,q,0.001f);
+        assertQuat4fRotationEquivalent(L_SHOULDER_ROT,q,ANIMATION_PRECISION);
     }
     
     @Test
@@ -175,13 +176,13 @@ public class ProcAnimationTest
         puCopy.play(0);
         float q[]=Quat4f.getQuat4f();
         humanCopy.getPart("HumanoidRoot").getRotation(q);        
-        assertQuat4fRotationEquivalent(HUMANOIDROOT_ROT,q,0.001f);        
+        assertQuat4fRotationEquivalent(HUMANOIDROOT_ROT,q,ANIMATION_PRECISION);        
     
         humanCopy.getPart("r_shoulder").getRotation(q);        
-        assertQuat4fRotationEquivalent(R_SHOULDER_ROT,q,0.001f);
+        assertQuat4fRotationEquivalent(R_SHOULDER_ROT,q,ANIMATION_PRECISION);
         
         humanCopy.getPart("l_shoulder").getRotation(q);        
-        assertQuat4fRotationEquivalent(L_SHOULDER_ROT,q,0.001f);
+        assertQuat4fRotationEquivalent(L_SHOULDER_ROT,q,ANIMATION_PRECISION);
     }
     
     @Test

@@ -45,6 +45,8 @@ public class KeyframesTest
     private VJoint rWristJoint;
     private VJoint animationRoot;
     private Keyframes kfs; 
+    private static final float ANIMATION_PRECISION = 0.000001f;
+    
     @Before
     public void loadDaeHuman()
     {
@@ -70,13 +72,13 @@ public class KeyframesTest
         assertEquals(kfs.getEncoding(),"quaternion");
         Quat4f.set(q,0.7071068f,-0.7071068f,0.0f,0.0f);
         kfs.evaluate(0, goal, human);
-        assertTrue(Quat4f.epsilonEquals(goal, q, 0.000001f));
+        assertTrue(Quat4f.epsilonEquals(goal, q, ANIMATION_PRECISION));
         
         kfs.evaluate(0.8f, goal, human);
-        assertTrue(Quat4f.epsilonEquals(goal, q, 0.000001f));
+        assertTrue(Quat4f.epsilonEquals(goal, q, ANIMATION_PRECISION));
         
         kfs.evaluate(1, goal, human);
-        assertTrue(Quat4f.epsilonEquals(goal, q, 0.000001f));        
+        assertTrue(Quat4f.epsilonEquals(goal, q, ANIMATION_PRECISION));        
     }
     
     @Test
@@ -94,13 +96,13 @@ public class KeyframesTest
         assertTrue(kfs.getEncoding().equals("quaternion"));
         Quat4f.set(q,0.7071068f,-0.7071068f,0.0f,0.0f);
         kfs.evaluate(0, goal, human);
-        assertTrue(Quat4f.epsilonEquals(goal, q, 0.000001f));
+        assertTrue(Quat4f.epsilonEquals(goal, q, ANIMATION_PRECISION));
         
         kfs.evaluate(0.8f, goal, human);
-        assertTrue(Quat4f.epsilonEquals(goal, q, 0.000001f));
+        assertTrue(Quat4f.epsilonEquals(goal, q, ANIMATION_PRECISION));
         
         kfs.evaluate(1, goal, human);
-        assertTrue(Quat4f.epsilonEquals(goal, q, 0.000001f));
+        assertTrue(Quat4f.epsilonEquals(goal, q, ANIMATION_PRECISION));
     }
     
     @Test
@@ -118,24 +120,24 @@ public class KeyframesTest
         
         Quat4f.set(q,0.7071068f,-0.7071068f,0.0f,0.0f);
         kfs.evaluate(0, goal, human);
-        assertTrue(Quat4f.epsilonEquals(goal, q, 0.000001f));
+        assertTrue(Quat4f.epsilonEquals(goal, q, ANIMATION_PRECISION));
         
         kfs.evaluate(1f, goal, human);
         Quat4f.set(q,1.0f,0.0f,0.0f,0.0f);
-        assertTrue(Quat4f.epsilonEquals(goal, q, 0.000001f));
+        assertTrue(Quat4f.epsilonEquals(goal, q, ANIMATION_PRECISION));
         
         Quat4f.set(q1,0.7071068f,-0.7071068f,0.0f,0.0f);
         Quat4f.set(q2,1,0,0,0);
         Quat4f.interpolate(q, q1,q2, 0.7f);
         kfs.evaluate(0.7, goal, human);
-        assertTrue(Quat4f.epsilonEquals(goal, q, 0.000001f));
+        assertTrue(Quat4f.epsilonEquals(goal, q, ANIMATION_PRECISION));
         
         animationRoot.calculateMatrices();
         kfs.evaluate(0.7, goal, human);
         rWristJoint.setRotation(goal);
         animationRoot.calculateMatrices();
         rWristJoint.getPathRotation(human, q1);
-        assertTrue(Quat4f.epsilonEquals(q1, q, 0.000001f));
+        assertTrue(Quat4f.epsilonEquals(q1, q, ANIMATION_PRECISION));
     }
     
     @Test
@@ -158,7 +160,7 @@ public class KeyframesTest
         rWristJoint.setRotation(goal);
         animationRoot.calculateMatrices();
         rWristJoint.getPathRotation(human, q);
-        assertTrue(Quat4f.epsilonEquals(q1, q, 0.000001f));        
+        assertTrue(Quat4f.epsilonEquals(q1, q, ANIMATION_PRECISION));        
     }
     
     @Test
@@ -204,13 +206,13 @@ public class KeyframesTest
         Quat4f.set(q1, 0.7071068f,-0.7071068f,0.0f,0.0f);
         Quat4f.set(q2, -0.7071068f,0.0f,0.0f,0.7071068f);
         Quat4f.interpolate(q, q1,q2, 0.5f);
-        assertTrue(Quat4f.epsilonEquals(q, goal, 0.000001f));
+        assertTrue(Quat4f.epsilonEquals(q, goal, ANIMATION_PRECISION));
         
         kfs.evaluate(0.75, goal, human);        
         Quat4f.set(q1, -0.7071068f,0.0f,0.0f,0.7071068f);
         Quat4f.set(q2, 1,0,0,0);
         Quat4f.interpolate(q, q1,q2, 0.5f);
-        assertTrue(Quat4f.epsilonEquals(q, goal, 0.000001f));
+        assertTrue(Quat4f.epsilonEquals(q, goal, ANIMATION_PRECISION));
     }
     
     @Test
@@ -226,7 +228,7 @@ public class KeyframesTest
         
         kfs.evaluate(0, goal, human);
         Quat4f.set(q, 0.7071068f,-0.7071068f,0.0f,0.0f);
-        assertQuat4fRotationEquivalent(q, goal, 0.000001f);
+        assertQuat4fRotationEquivalent(q, goal, ANIMATION_PRECISION);
     }
     
     @Test
@@ -242,6 +244,6 @@ public class KeyframesTest
         
         kfs.evaluate(1, goal, human);
         Quat4f.set(q, 1,0,0,0);
-        assertQuat4fRotationEquivalent(q, goal, 0.000001f);
+        assertQuat4fRotationEquivalent(q, goal, ANIMATION_PRECISION);
     }
 }
