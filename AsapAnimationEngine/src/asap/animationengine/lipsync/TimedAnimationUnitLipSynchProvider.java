@@ -95,23 +95,6 @@ public class TimedAnimationUnitLipSynchProvider implements LipSynchProvider
             log.debug("Viseme number {}", vis.getNumber());
         }
 
-        // add null viseme at end
-        try
-        {
-            tmu = speechBinding.getMotionUnit(0, bbPeg, beh.getBmlId(), beh.id, animationPlayer, pegBoard);
-            tmu.resolveDefaultBMLKeyPositions();
-            tmus.add(tmu);
-
-            startTimes.put(tmu, Double.valueOf(totalDuration / 1000d));
-            endTimes.put(tmu, Double.valueOf(totalDuration / 1000d));
-
-        }
-        catch (MUSetupException e)
-        {
-            log.warn("Exception planning last timedmotionunit for speechbehavior {}", e, beh);
-        }
-
-        // animationPlayer.addVisemesForSpeechUnit(tmus);
         for (TimedAnimationUnit tm : tmus)
         {
             tm.setSubUnit(true);
