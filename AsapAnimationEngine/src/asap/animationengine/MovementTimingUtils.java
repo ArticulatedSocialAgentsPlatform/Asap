@@ -46,12 +46,12 @@ public final class MovementTimingUtils
     public static double getFittsMaximumLimbMovementDuration(VJoint vSource, VJoint vTarget, Set<String> joints)
     {
         double lastSetDur = -1;
-        if (joints.contains(Hanim.r_wrist))
+        if (joints.contains(Hanim.r_shoulder))
         {
             double d = getFittsDuration(Hanim.r_wrist, Hanim.r_shoulder, vSource, vTarget);
             if (d > 0) lastSetDur = d;
         }
-        if (joints.contains(Hanim.l_wrist))
+        if (joints.contains(Hanim.l_shoulder))
         {
             double d = getFittsDuration(Hanim.l_wrist, Hanim.l_shoulder, vSource, vTarget);
             if (d > 0 && d > lastSetDur) lastSetDur = d;

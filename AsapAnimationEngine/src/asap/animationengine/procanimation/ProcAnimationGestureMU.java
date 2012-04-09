@@ -94,6 +94,7 @@ public class ProcAnimationGestureMU implements GestureUnit
         copyProc.play(copyProc.getKeyPosition(BMLGestureSync.STROKE_END.getId()).time - 0.01);
         return aniPlayer.getRestPose().getTransitionToRestDuration(copyJoint,
                 VJointUtils.transformToSidSet(gestureUnit.getControlledJoints()));
+        
     }
 
     public double getPreparationDuration()
