@@ -1,6 +1,7 @@
 package asap.animationengine.restpose;
 
-import static org.junit.Assert.*;
+import static hmi.testutil.math.Quat4fTestUtil.assertQuat4fEquals;
+import static org.junit.Assert.assertEquals;
 import hmi.animation.Hanim;
 import hmi.animation.SkeletonPose;
 import hmi.elckerlyc.feedback.NullFeedbackManager;
@@ -11,10 +12,9 @@ import hmi.math.Quat4f;
 
 import org.junit.Test;
 
-import com.google.common.collect.Sets;
-
 import asap.animationengine.motionunit.TimedAnimationUnit;
-import static hmi.testutil.math.Quat4fTestUtil.*;
+
+import com.google.common.collect.Sets;
 
 /**
  * Unit tests for the SkeletonPoseRestPose
@@ -24,7 +24,7 @@ import static hmi.testutil.math.Quat4fTestUtil.*;
 public class SkeletonPoseRestPoseTest extends AbstractRestPoseTest
 {
     private PegBoard pegBoard = new PegBoard();
-
+    
     @Test
     public void testcreateTransitionToRest() throws TimedPlanUnitPlayException
     {

@@ -3,6 +3,7 @@ package asap.faceengine.faceunit;
 import java.util.List;
 
 import com.google.common.collect.ImmutableList;
+import com.google.common.collect.Lists;
 
 import hmi.elckerlyc.feedback.FeedbackManager;
 import hmi.elckerlyc.pegboard.BMLBlockPeg;
@@ -42,7 +43,7 @@ public class KeyframeMorphFU extends KeyFrameMotionUnit implements FaceUnit
         this.interp = interp;
         this.nrOfDofs = nrOfDofs;
         this.allowDynamicStart = allowDynamicStart;
-        this.keyFrames = ImmutableList.copyOf(keyFrames);
+        this.keyFrames = Lists.newArrayList(keyFrames);
         preferedDuration = unifyKeyFrames(keyFrames);
 
         interp.setKeyFrames(keyFrames, nrOfDofs);
@@ -134,6 +135,7 @@ public class KeyframeMorphFU extends KeyFrameMotionUnit implements FaceUnit
     @Override
     public void startUnit(double t) throws MUPlayException
     {
-        super.setupDynamicStart(t, keyFrames);        
+        super.setupDynamicStart(t, keyFrames);
+        interp.setKeyFrames(keyFrames, nrOfDofs);
     }
 }

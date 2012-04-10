@@ -9,6 +9,11 @@ import org.junit.Test;
 
 import com.google.common.collect.ImmutableList;
 
+/**
+ * Unit tests for the LinearQuatFloatInterpolator
+ * @author hvanwelbergen
+ *
+ */
 public class LinearQuatFloatInterpolatorTest
 {
     private static final float INTERPOLATION_PRECISION = 0.0001f;

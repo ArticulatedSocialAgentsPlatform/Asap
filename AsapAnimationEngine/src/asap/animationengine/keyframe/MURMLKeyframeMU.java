@@ -11,6 +11,7 @@ import java.util.Set;
 
 import com.google.common.collect.ImmutableList;
 import com.google.common.collect.ImmutableSet;
+import com.google.common.collect.Lists;
 
 import asap.animationengine.AnimationPlayer;
 import asap.animationengine.motionunit.AnimationUnit;
@@ -30,7 +31,7 @@ import asap.timemanipulator.TimeManipulator;
 public class MURMLKeyframeMU extends KeyFrameMotionUnit implements AnimationUnit
 {
     private ImmutableList<String> targets;
-    private ImmutableList<KeyFrame> keyFrames;
+    private List<KeyFrame> keyFrames;
     private VJoint vNext;
     private int nrOfDofs;
     private Interpolator interp;
@@ -46,7 +47,7 @@ public class MURMLKeyframeMU extends KeyFrameMotionUnit implements AnimationUnit
         this.manip = manip;
         this.targets = ImmutableList.copyOf(targets);
         this.nrOfDofs = nrOfDofs;
-        this.keyFrames = ImmutableList.copyOf(keyFrames);
+        this.keyFrames = Lists.newArrayList(keyFrames);
         this.interp = interp;
         preferedDuration = unifyKeyFrames(keyFrames);
         interp.setKeyFrames(keyFrames, nrOfDofs);
@@ -149,6 +150,7 @@ public class MURMLKeyframeMU extends KeyFrameMotionUnit implements AnimationUnit
     @Override
     public void startUnit(double t) throws MUPlayException
     {
-        super.setupDynamicStart(t, keyFrames);        
+        super.setupDynamicStart(t, keyFrames);
+        interp.setKeyFrames(keyFrames, nrOfDofs);
     }
 }

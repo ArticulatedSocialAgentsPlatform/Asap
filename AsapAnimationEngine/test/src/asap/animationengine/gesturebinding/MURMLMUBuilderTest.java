@@ -110,4 +110,67 @@ public class MURMLMUBuilderTest
         vNext.getPart("l_shoulder").getRotation(q);
         Quat4fTestUtil.assertQuat4fRotationEquivalent(qExp, q, ROT_PRECISION);
     }
+    
+    @Test
+    public void testFlexibleStartAtStart() throws MUPlayException, MUSetupException
+    {
+        String murmlString = "<definition><keyframing><phase>" +
+        		"<frame ftime=\"4\"><posture>Humanoid "
+                + "(l_shoulder 3 0 80 0)</posture></frame></phase></keyframing></definition>";
+        AnimationUnit au = MURMLMUBuilder.setup(murmlString);
+        au = au.copy(mockAnimationPlayer);
+        
+        float[] qRefStart = Quat4f.getQuat4f(); 
+        Quat4f.setFromAxisAngle4f(qRefStart, 0,0,1, (float) Math.PI);
+        vNext.getPart("l_shoulder").setRotation(qRefStart);
+        au.startUnit(0);
+        au.play(0);
+        float q[] = Quat4f.getQuat4f();
+        vNext.getPart("l_shoulder").getRotation(q);
+        Quat4fTestUtil.assertQuat4fRotationEquivalent(qRefStart, q, ROT_PRECISION);
+    }
+    
+    @Test
+    public void testFlexibleStartAtEnd() throws MUPlayException, MUSetupException
+    {
+        String murmlString = "<definition><keyframing><phase>" +
+                "<frame ftime=\"4\"><posture>Humanoid "
+                + "(l_shoulder 3 0 80 0)</posture></frame></phase></keyframing></definition>";
+        AnimationUnit au = MURMLMUBuilder.setup(murmlString);
+        au = au.copy(mockAnimationPlayer);
+        
+        float[] qRefStart = Quat4f.getQuat4f(); 
+        Quat4f.setFromAxisAngle4f(qRefStart, 0,0,1, (float) Math.PI);
+        vNext.getPart("l_shoulder").setRotation(qRefStart);        
+        au.startUnit(0);
+        au.play(1);
+        float[]qExp = Quat4f.getQuat4f();
+        Quat4f.setFromRollPitchYawDegrees(qExp, 0, 80, 0);
+        float q[] = Quat4f.getQuat4f();
+        vNext.getPart("l_shoulder").getRotation(q);
+        Quat4fTestUtil.assertQuat4fRotationEquivalent(qExp, q, ROT_PRECISION);
+    }
+    
+    @Test
+    public void testFlexibleStartHalfWay() throws MUPlayException, MUSetupException
+    {
+        String murmlString = "<definition><keyframing><phase>" +
+                "<frame ftime=\"4\"><posture>Humanoid "
+                + "(l_shoulder 3 0 80 0)</posture></frame></phase></keyframing></definition>";
+        AnimationUnit au = MURMLMUBuilder.setup(murmlString);
+        au = au.copy(mockAnimationPlayer);
+        
+        float[] qRefStart = Quat4f.getQuat4f(); 
+        Quat4f.setFromAxisAngle4f(qRefStart, 0,0,1, (float) Math.PI);
+        vNext.getPart("l_shoulder").setRotation(qRefStart);        
+        au.startUnit(0);
+        au.play(0.5);
+        float[]qRefEnd = Quat4f.getQuat4f();
+        Quat4f.setFromRollPitchYawDegrees(qRefEnd, 0, 80, 0);
+        float[]qExp = Quat4f.getQuat4f();
+        Quat4f.interpolate(qExp, qRefStart, qRefEnd,0.5f);
+        float q[] = Quat4f.getQuat4f();
+        vNext.getPart("l_shoulder").getRotation(q);
+        Quat4fTestUtil.assertQuat4fRotationEquivalent(qExp, q, ROT_PRECISION);
+    }
 }

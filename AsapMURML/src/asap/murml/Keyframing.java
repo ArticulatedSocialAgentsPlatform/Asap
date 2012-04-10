@@ -16,7 +16,7 @@ import hmi.xml.XMLTokenizer;
  */
 public class Keyframing extends XMLStructureAdapter
 {
-    enum Mode
+    public enum Mode
     {
         SPLINE, LINEAR, QUATERNION, RAW;
     }

@@ -39,12 +39,7 @@ public abstract class KeyFrameMotionUnit implements MotionUnit
     
     protected double unifyKeyFrames(List<KeyFrame> keyFrames)
     {
-        if(keyFrames.size()<2)
-        {
-            return keyFrames.get(0).getFrameTime();
-        }
-        double end = keyFrames.get(keyFrames.size()-1).getFrameTime();
-        double preferedDuration = end;
+        double preferedDuration = keyFrames.get(keyFrames.size()-1).getFrameTime();
         
         for(KeyFrame kf:keyFrames)
         {
