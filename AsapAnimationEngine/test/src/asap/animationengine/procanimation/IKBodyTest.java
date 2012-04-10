@@ -17,7 +17,7 @@ public class IKBodyTest
 {
     private static final float POSITION_PRECISION = 0.01f;
     private VJoint human;
-    IKBody body;
+    private IKBody body;
     
     @Before
     public void setup()

@@ -4,6 +4,7 @@ import java.util.Set;
 
 import hmi.animation.Hanim;
 import hmi.animation.VJoint;
+import hmi.math.Quat4f;
 import hmi.math.Vec3f;
 import hmi.neurophysics.FittsLaw;
 
@@ -29,10 +30,17 @@ public final class MovementTimingUtils
         VJoint targetRootJoint = vTarget.getPartBySid(rootId);
         if (srcJoint != null && targetJoint != null && srcRootJoint != null && targetRootJoint != null)
         {
+            //transform to coordinates in the 'before shoulder rotation' system
             float[] relPos = Vec3f.getVec3f();
             float[] restPos = Vec3f.getVec3f();
             srcJoint.getPathTranslation(srcRootJoint, relPos);
+            float[]q=new float[4];
+            srcRootJoint.getRotation(q);            
+            Quat4f.transformVec3f(q, relPos);
             targetJoint.getPathTranslation(targetRootJoint, restPos);
+            targetRootJoint.getRotation(q);            
+            Quat4f.transformVec3f(q, restPos);
+            
             Vec3f.sub(relPos, restPos);
             return FittsLaw.getHandTrajectoryDuration(Vec3f.length(relPos));
         }

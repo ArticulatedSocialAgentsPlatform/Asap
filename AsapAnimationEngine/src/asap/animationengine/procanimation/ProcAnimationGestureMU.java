@@ -1,5 +1,6 @@
 package asap.animationengine.procanimation;
 
+import hmi.animation.Hanim;
 import hmi.animation.VJoint;
 import hmi.animation.VJointUtils;
 import hmi.bml.BMLGestureSync;
@@ -11,6 +12,7 @@ import hmi.elckerlyc.planunit.KeyPosition;
 import hmi.elckerlyc.planunit.KeyPositionManager;
 import hmi.elckerlyc.planunit.KeyPositionManagerImpl;
 import hmi.elckerlyc.planunit.ParameterException;
+import hmi.math.Vec3f;
 import hmi.util.Resources;
 import hmi.util.StringUtil;
 
@@ -19,9 +21,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Set;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
+import lombok.extern.slf4j.Slf4j;
 import asap.animationengine.AnimationPlayer;
 import asap.animationengine.MovementTimingUtils;
 import asap.animationengine.motionunit.AnimationUnit;
@@ -37,9 +37,9 @@ import com.google.common.collect.ImmutableSet;
  * The ProcAnimation is played between its strokeStart and strokeEnd
  * @author Herwin
  */
+@Slf4j
 public class ProcAnimationGestureMU implements GestureUnit
 {
-    private static Logger logger = LoggerFactory.getLogger(ProcAnimationGestureMU.class.getName());
     private ProcAnimationMU gestureUnit = new ProcAnimationMU();
     private KeyPositionManager keyPositionManager = new KeyPositionManagerImpl();
     private SlerpTransitionToPoseMU prepUnit;
@@ -100,6 +100,16 @@ public class ProcAnimationGestureMU implements GestureUnit
     public double getPreparationDuration()
     {
         copyProc.play(copyProc.getKeyPosition(BMLGestureSync.STROKE_START.getId()).time + 0.01);
+        
+        if(log.isDebugEnabled())
+        {
+            float vecDst[]=new float[3];
+            float vecSrc[]=new float[3];
+            copyJoint.getPart(Hanim.l_wrist).getPathTranslation(copyJoint.getPart(Hanim.l_shoulder).getParent(), vecDst);
+            aniPlayer.getVCurr().getPart(Hanim.l_wrist).getPathTranslation(aniPlayer.getVCurr().getPart(Hanim.l_shoulder), vecSrc);
+            log.debug("copyJoint lwrist pos at strokeStart:{}\n current lwrist pos:{}",Vec3f.toString(vecDst),Vec3f.toString(vecSrc));
+        }
+        
         double duration = MovementTimingUtils.getFittsMaximumLimbMovementDuration(aniPlayer.getVCurr(), copyJoint,
                 VJointUtils.transformToSidSet(gestureUnit.getControlledJoints()));
         if (duration > 0) return duration;
@@ -320,7 +330,7 @@ public class ProcAnimationGestureMU implements GestureUnit
         double strokeEndTime = keyPositionManager.getKeyPosition(BMLGestureSync.STROKE_END.getId()).time;
 
         double relaxDuration = 1 - relaxTime;
-        logger.debug("time: {}", t);
+        log.debug("time: {}", t);
 
         double gestureStart = gestureUnit.getKeyPosition(BMLGestureSync.STROKE_START.getId()).time;
         double gestureEnd = gestureUnit.getKeyPosition(BMLGestureSync.STROKE_END.getId()).time;
@@ -329,19 +339,19 @@ public class ProcAnimationGestureMU implements GestureUnit
         if (t < readyTime)
         {
             prepUnit.play(t / readyTime);
-            logger.debug("prepUnit.play: {}", t / readyTime);
+            log.debug("prepUnit.play: {}", t / readyTime);
         }
         else if (t > relaxTime)
         {
             relaxUnit.play((t - relaxTime) / relaxDuration);
             priority = Priority.GESTURE_RETRACTION;
-            logger.debug("relaxUnit.play: {}", (t - relaxTime) / relaxDuration);
+            log.debug("relaxUnit.play: {}", (t - relaxTime) / relaxDuration);
         }
         else if (t > strokeStartTime && t < strokeEndTime)
         {
             double fraction = (t - strokeStartTime) / (strokeEndTime - strokeStartTime);
             gestureUnit.play(gestureStart + gestureDur * fraction);
-            logger.debug("gestureUnit.play: {}", t);
+            log.debug("gestureUnit.play: {}", t);
         }
     }
 

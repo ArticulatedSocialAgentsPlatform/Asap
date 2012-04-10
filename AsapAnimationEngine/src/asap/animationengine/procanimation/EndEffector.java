@@ -325,12 +325,6 @@ public class EndEffector extends XMLStructureAdapter
     // ---------------------------------------------------------------------------------------------------------
     // XML parsing part
     // ---------------------------------------------------------------------------------------------------------
-    /**
-     * decodes the value from an attribute value String returns true if
-     * succesful, returns false for attribute names that are not recognized.
-     * Might throw a RuntimeException when an attribute has been recognized, but
-     * is ill formatted.
-     */
     @Override
     public boolean decodeAttribute(String attrName, String attrValue)
     {
@@ -358,15 +352,6 @@ public class EndEffector extends XMLStructureAdapter
         return true;
     }
 
-    /**
-     * decodes the value from an attribute value String returns true if
-     * succesful, returns false for attribute names that are not recognized.
-     * Might throw a RuntimeException when an attribute has been recognized, but
-     * is ill formatted. Moreover, an XMLTokenizer reference is available which
-     * can be queried for attributes, like getTokenLine() or getTokenCharPos(),
-     * which might be helpful to produce error messages referring to
-     * lines/positions within the XML document
-     */
     @Override
     public boolean decodeAttribute(String attrName, String attrValue,
             XMLTokenizer tokenizer)
@@ -374,35 +359,18 @@ public class EndEffector extends XMLStructureAdapter
         return decodeAttribute(attrName, attrValue);
     }
 
-    /**
-     * decodes the XML contents, i.e. the XML between the STag and ETag of the
-     * encoding.
-     */
     @Override
     public void decodeContent(XMLTokenizer tokenizer)
             throws java.io.IOException
     {
     }
 
-    /**
-     * Appends a String to buf that encodes the contents for the XML encoding.
-     * The encoding should start on a new line, using indentation equal to tab.
-     * There should be no newline after the encoding.
-     */
     @Override
     public StringBuilder appendContent(StringBuilder buf, XMLFormatting fmt)
     {
         return buf;
     }
 
-    /**
-     * Appends a String to buf that encodes the attributes for the XML encoding.
-     * When non empty, the attribute string should start with a space character.
-     * Hint: call the appendAttribute(StringBuffer buf, String attrName, String
-     * attrValue) for every relevant attribute; this takes care of the leading
-     * space as well as spaces in between the attributes) The encoding should
-     * preferably not add newline characters.
-     */
     @Override
     public StringBuilder appendAttributeString(StringBuilder buf)
     {
