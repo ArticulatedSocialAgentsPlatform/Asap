@@ -4,7 +4,7 @@ package asap.planunit;
  * Constants for timedplanunit priority.  
  * @author hvanwelbergen
  */
-public class Priority
+public final class Priority
 {
     private Priority(){}
     public static final int GESTURE = 100;
