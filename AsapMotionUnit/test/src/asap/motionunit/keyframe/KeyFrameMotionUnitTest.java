@@ -18,7 +18,7 @@ public class KeyFrameMotionUnitTest
     private Interpolator mockInterpolator = mock(Interpolator.class);
     private static final double TIME_PRECISION = 0.0001d;
 
-    class KeyFrameMotionUnitStub extends KeyFrameMotionUnit
+    static class KeyFrameMotionUnitStub extends KeyFrameMotionUnit
     {
 
         public KeyFrameMotionUnitStub(Interpolator interp)

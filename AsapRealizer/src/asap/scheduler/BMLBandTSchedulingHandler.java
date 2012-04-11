@@ -51,6 +51,7 @@ public class BMLBandTSchedulingHandler implements SchedulingHandler
         case REPLACE:
             scheduler.reset();
             break;
+        default:
         case UNKNOWN:
             logger.info("Unknown scheduling composition, defaulting to merge");
             break;

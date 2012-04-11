@@ -24,6 +24,7 @@ import hmi.xml.XMLFormatting;
 import hmi.xml.XMLStructureAdapter;
 import hmi.xml.XMLTokenizer;
 
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
@@ -47,10 +48,6 @@ public class Keyframes extends XMLStructureAdapter
     private List<Keyframe> frames = new ArrayList<Keyframe>();
 
     private VJoint joint;
-
-    // private double startT = 0;
-
-    // private double endT = 0;
 
     private XJep parser;
 
@@ -222,7 +219,7 @@ public class Keyframes extends XMLStructureAdapter
                 break;
             }
         }
-        // System.out.println("Start: "+start.toString()+" end: "+end.toString());
+        
         if (end == null && start == null)
         {
             return false;
@@ -292,8 +289,10 @@ public class Keyframes extends XMLStructureAdapter
         return false;
     }
 
-    private static final class KeyframeTimeComparator implements Comparator<Keyframe>
+    private static final class KeyframeTimeComparator implements Comparator<Keyframe>, Serializable
     {
+        private static final long serialVersionUID = 1L;
+
         @Override
         public int compare(Keyframe kf1, Keyframe kf2)
         {
