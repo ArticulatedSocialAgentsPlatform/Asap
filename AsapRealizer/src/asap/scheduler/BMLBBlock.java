@@ -1,7 +1,14 @@
 package asap.scheduler;
 
+import hmi.elckerlyc.planunit.TimedPlanUnitState;
+import hmi.elckerlyc.scheduler.AbstractBMLBlock;
+import hmi.elckerlyc.scheduler.BMLScheduler;
+
+import java.util.ArrayList;
+import java.util.Collection;
 import java.util.Collections;
 import java.util.HashSet;
+import java.util.List;
 import java.util.Set;
 import java.util.concurrent.CopyOnWriteArraySet;
 
@@ -9,11 +16,6 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import com.google.common.collect.ImmutableMap;
-
-import hmi.elckerlyc.planunit.TimedPlanUnitState;
-import hmi.elckerlyc.scheduler.AbstractBMLBlock;
-import hmi.elckerlyc.scheduler.BMLScheduler;
-
 /**
  * Manages the state of a BML block used in ASAP.
  * @author hvanwelbergen
@@ -44,9 +46,17 @@ public class BMLBBlock extends AbstractBMLBlock
         this(id,s,new HashSet<String>(), new HashSet<String>(), new HashSet<String>());
     }
 
+    private void reAlignBlock()
+    {
+        
+        //TODO: move all behavior clusters as far to the 'left' as possible
+    }
+    
     @Override
     public void start()
     {
+        scheduler.updateTiming(getBMLId());
+        reAlignBlock();
         super.start();
         activateOnStartBlocks();        
     }

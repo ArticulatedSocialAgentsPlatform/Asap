@@ -76,8 +76,7 @@ public class AnimationPlayer2 implements Player, MixedAnimationPlayer
     private SkeletonPose vNextStartPose;
     private boolean prevValidOld = false;
     protected WorldObjectManager woManager;
-    private MixedSystemGenerator mixedSystemGenerator;
-    private MixedSystem currentMixedSystem;
+    private MixedSystemGenerator mixedSystemGenerator;    
     private final float gravity[]={0,-9.8f,0}; 
     public RestPose getRestPose()
     {
@@ -457,5 +456,11 @@ public class AnimationPlayer2 implements Player, MixedAnimationPlayer
     
     public void verifyTime(double time)
     {
+    }
+    
+    @Override
+    public void updateTiming(String bmlId)
+    {
+        
     }
 }

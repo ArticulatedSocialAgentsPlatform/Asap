@@ -18,30 +18,29 @@
  ******************************************************************************/
 package asap.animationengine;
 
-import java.util.ArrayList;
-import java.util.List;
-
-import lombok.extern.slf4j.Slf4j;
-
-import net.jcip.annotations.GuardedBy;
-
-import asap.animationengine.mixed.MixedPlayer;
-import hmi.mixedanimationenvironment.*;
-import asap.animationengine.restpose.RestPose;
 import hmi.animation.Hanim;
-import hmi.animation.SkeletonPose;
 import hmi.animation.Skeleton;
+import hmi.animation.SkeletonPose;
 import hmi.animation.VJoint;
 import hmi.animation.VObjectTransformCopier;
 import hmi.elckerlyc.Player;
 import hmi.elckerlyc.planunit.TimedPlanUnitState;
 import hmi.elckerlyc.world.WorldObjectManager;
+import hmi.mixedanimationenvironment.MixedAnimationPlayer;
 import hmi.physics.PhysicalHumanoid;
 import hmi.physics.PhysicalJoint;
 import hmi.physics.PhysicalSegment;
-import asap.utils.PhysicsSync;
 import hmi.physics.controller.PhysicalController;
 import hmi.physics.mixed.MixedSystem;
+
+import java.util.ArrayList;
+import java.util.List;
+
+import lombok.extern.slf4j.Slf4j;
+import net.jcip.annotations.GuardedBy;
+import asap.animationengine.mixed.MixedPlayer;
+import asap.animationengine.restpose.RestPose;
+import asap.utils.PhysicsSync;
 
 /**
  * Manages the execution of a plan containing TimedMotionUnits. The AnimationPlayer is different from the DefaultPlayer in that the TimedMotionUnits
@@ -447,5 +446,11 @@ public class AnimationPlayer implements Player, MixedAnimationPlayer
     
     public void verifyTime(double time)
     {
+    }
+    
+    @Override
+    public void updateTiming(String bmlId)
+    {
+        app.updateTiming(bmlId);
     }
 }

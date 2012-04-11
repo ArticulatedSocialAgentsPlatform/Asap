@@ -1,20 +1,5 @@
 package asap.animationengine;
 
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Set;
-
-import lombok.extern.slf4j.Slf4j;
-
-import com.google.common.collect.Sets;
-
-import asap.animationengine.motionunit.TimedAnimationUnit;
-import asap.animationengine.restpose.RestPose;
-import asap.motionunit.TMUPlayException;
-import asap.planunit.PlanUnitPriorityComparator;
-
 import hmi.bml.feedback.BMLExceptionListener;
 import hmi.elckerlyc.feedback.FeedbackManager;
 import hmi.elckerlyc.feedback.NullFeedbackManager;
@@ -24,6 +9,20 @@ import hmi.elckerlyc.planunit.SingleThreadedPlanPlayer;
 import hmi.elckerlyc.planunit.TimedPlanUnit;
 import hmi.elckerlyc.planunit.TimedPlanUnitPlayer;
 import hmi.elckerlyc.planunit.TimedPlanUnitState;
+
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Set;
+
+import lombok.extern.slf4j.Slf4j;
+import asap.animationengine.motionunit.TimedAnimationUnit;
+import asap.animationengine.restpose.RestPose;
+import asap.motionunit.TMUPlayException;
+import asap.planunit.PlanUnitPriorityComparator;
+
+import com.google.common.collect.Sets;
 
 /**
  * Specialized PlanPlayer that handles conflict resolution for TimedMotionUnits
@@ -200,5 +199,23 @@ public class AnimationPlanPlayer implements PlanPlayer
     public void addExceptionListener(BMLExceptionListener ws)
     {
         defPlayer.addExceptionListener(ws);
+    }
+    
+    public void updateTiming(String bmlId)
+    {
+        List<TimedAnimationUnit> failedBehaviors = new ArrayList<TimedAnimationUnit>();
+        for(TimedAnimationUnit tmu :planManager.getPlanUnits(bmlId))
+        {
+            try
+            {
+                tmu.updateTiming(0);
+            }
+            catch (TMUPlayException e)
+            {
+                log.warn("Failure in updating the timing of TimedAnimationUnit {}, TimedAnimationUnit removed", tmu);
+                failedBehaviors.add(tmu);
+            }            
+        }
+        planManager.removePlanUnits(failedBehaviors, 0);
     }
 }
