@@ -28,6 +28,7 @@ public class CompoundControllerTest
     private CompoundController compoundController;
     
     private PhysicalHumanoid mockPhysicalHumanoid = mock(PhysicalHumanoid.class);
+    private static final double PARAMETER_PRECISION = 0.0001;
     
     @Before
     public void setup()
@@ -64,14 +65,14 @@ public class CompoundControllerTest
     public void testGetParameterValue() throws ControllerParameterNotFoundException
     {
         assertEquals("l_elbow",compoundController.getParameterValue("elbow:joint"));
-        assertEquals(1,Float.parseFloat(compoundController.getParameterValue("elbow:ds")),0.001);
-        assertEquals(200,Float.parseFloat(compoundController.getParameterValue("elbow:ks")),0.001);
-        assertEquals(3,Float.parseFloat(compoundController.getParameterValue("elbow:angle")),0.001);
+        assertEquals(1,Float.parseFloat(compoundController.getParameterValue("elbow:ds")),PARAMETER_PRECISION);
+        assertEquals(200,Float.parseFloat(compoundController.getParameterValue("elbow:ks")),PARAMETER_PRECISION);
+        assertEquals(3,Float.parseFloat(compoundController.getParameterValue("elbow:angle")),PARAMETER_PRECISION);
         
         assertEquals("l_wrist",compoundController.getParameterValue("wrist:joint"));
-        assertEquals(2,Float.parseFloat(compoundController.getParameterValue("wrist:ds")),0.001);
-        assertEquals(100,Float.parseFloat(compoundController.getParameterValue("wrist:ks")),0.001);
-        assertEquals(1,Float.parseFloat(compoundController.getParameterValue("wrist:angle")),0.001);
+        assertEquals(2,Float.parseFloat(compoundController.getParameterValue("wrist:ds")),PARAMETER_PRECISION);
+        assertEquals(100,Float.parseFloat(compoundController.getParameterValue("wrist:ks")),PARAMETER_PRECISION);
+        assertEquals(1,Float.parseFloat(compoundController.getParameterValue("wrist:angle")),PARAMETER_PRECISION);
     }
     
     @Test
@@ -87,13 +88,13 @@ public class CompoundControllerTest
         PhysicalController cCopy = compoundController.copy(mockPhysicalHumanoid);
         
         assertEquals("l_elbow",cCopy.getParameterValue("elbow:joint"));
-        assertEquals(1,Float.parseFloat(cCopy.getParameterValue("elbow:ds")),0.001);
-        assertEquals(200,Float.parseFloat(cCopy.getParameterValue("elbow:ks")),0.001);
-        assertEquals(3,Float.parseFloat(cCopy.getParameterValue("elbow:angle")),0.001);
+        assertEquals(1,Float.parseFloat(cCopy.getParameterValue("elbow:ds")),PARAMETER_PRECISION);
+        assertEquals(200,Float.parseFloat(cCopy.getParameterValue("elbow:ks")),PARAMETER_PRECISION);
+        assertEquals(3,Float.parseFloat(cCopy.getParameterValue("elbow:angle")),PARAMETER_PRECISION);
         
         assertEquals("l_wrist",cCopy.getParameterValue("wrist:joint"));
-        assertEquals(2,Float.parseFloat(cCopy.getParameterValue("wrist:ds")),0.001);
-        assertEquals(100,Float.parseFloat(cCopy.getParameterValue("wrist:ks")),0.001);
-        assertEquals(1,Float.parseFloat(cCopy.getParameterValue("wrist:angle")),0.001);
+        assertEquals(2,Float.parseFloat(cCopy.getParameterValue("wrist:ds")),PARAMETER_PRECISION);
+        assertEquals(100,Float.parseFloat(cCopy.getParameterValue("wrist:ks")),PARAMETER_PRECISION);
+        assertEquals(1,Float.parseFloat(cCopy.getParameterValue("wrist:angle")),PARAMETER_PRECISION);
     }
 }

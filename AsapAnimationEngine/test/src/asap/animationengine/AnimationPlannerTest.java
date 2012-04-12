@@ -62,7 +62,7 @@ public class AnimationPlannerTest
     private static final String BMLID = "bml1";
     private final BMLBlockPeg bbPeg = new BMLBlockPeg("Peg1", 0.3);
     private final PlanManager<TimedAnimationUnit> planManager = new PlanManager<TimedAnimationUnit>();
-
+    private static final double TIMING_PRECISION = 0.0001;
     @Before
     public void setup()
     {
@@ -122,10 +122,10 @@ public class AnimationPlannerTest
         sacs.add(new TimePegAndConstraint("start", sp, new Constraint(), 0, false));
 
         TimedAnimationUnit pu = animationPlanner.resolveSynchs(bbPeg, beh, sacs);
-        assertEquals(0.3, sp.getGlobalValue(), 0.0001);
+        assertEquals(0.3, sp.getGlobalValue(), TIMING_PRECISION);
         animationPlanner.addBehaviour(bbPeg, beh, sacs, pu);
-        assertEquals(0.3, pu.getStartTime(), 0.0001);
-        assertEquals(3.3, pu.getEndTime(), 0.0001);
+        assertEquals(0.3, pu.getStartTime(), TIMING_PRECISION);
+        assertEquals(3.3, pu.getEndTime(), TIMING_PRECISION);
     }
 
     @Test

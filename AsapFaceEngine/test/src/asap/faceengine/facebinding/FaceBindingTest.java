@@ -25,7 +25,7 @@ import asap.faceengine.faceunit.TimedFaceUnit;
 /**
  * Unit testcases for the facebinding
  * @author hvanwelbergen
- *
+ * 
  */
 public class FaceBindingTest
 {
@@ -34,60 +34,43 @@ public class FaceBindingTest
     private FACSConverter mockFacsConverter = mock(FACSConverter.class);
     private EmotionConverter mockEmotionConverter = mock(EmotionConverter.class);
     private FaceBinding faceBinding;
-    
+    private static final double PARAMETER_PRECISION = 0.0001;
+
     @Before
     public void setup()
     {
-        String binding = "<facebinding>"+
-        "<FaceUnitSpec type=\"face\">"+
-            "<constraints>"+
-                "<constraint name=\"type\" value=\"LEXICALIZED\"/>"+
-                "<constraint name=\"lexeme\" value=\"smile\"/>"+
-            "</constraints>"+
-            "<parametermap>"+
-                "<parameter src=\"amount\" dst=\"intensity\"/>"+
-            "</parametermap>"+
-            "<parameterdefaults>"+
-                "<parameterdefault name=\"angle\" value=\"315\"/>"+
-                "<parameterdefault name=\"activation\" value=\"1\"/>"+
-            "</parameterdefaults>"+
-            "<FaceUnit type=\"Plutchik\"/>"+
-        "</FaceUnitSpec>"+
-        "<FaceUnitSpec type=\"face\">"+
-            "<constraints>"+
-            "<constraint name=\"type\" value=\"LEXICALIZED\"/>"+
-            "<constraint name=\"lexeme\" value=\"frown\"/>"+
-            "</constraints>"+
-            "<parametermap>"+
-                "<parameter src=\"amount\" dst=\"intensity\"/>"+
-            "</parametermap>"+
-            "<parameterdefaults>"+
-                "<parameterdefault name=\"intensity\" value=\"1\"/>"+
-                "<parameterdefault name=\"targetname\" value=\"bodymorpher1\"/>"+                         
-            "</parameterdefaults>"+
-            "<FaceUnit type=\"Morph\"/>"+
-        "</FaceUnitSpec>"+  
-        "</facebinding>";
+        String binding = "<facebinding>" + "<FaceUnitSpec type=\"face\">" + "<constraints>"
+                + "<constraint name=\"type\" value=\"LEXICALIZED\"/>" + "<constraint name=\"lexeme\" value=\"smile\"/>" + "</constraints>"
+                + "<parametermap>" + "<parameter src=\"amount\" dst=\"intensity\"/>" + "</parametermap>" + "<parameterdefaults>"
+                + "<parameterdefault name=\"angle\" value=\"315\"/>" + "<parameterdefault name=\"activation\" value=\"1\"/>"
+                + "</parameterdefaults>" + "<FaceUnit type=\"Plutchik\"/>" + "</FaceUnitSpec>" + "<FaceUnitSpec type=\"face\">"
+                + "<constraints>" + "<constraint name=\"type\" value=\"LEXICALIZED\"/>" + "<constraint name=\"lexeme\" value=\"frown\"/>"
+                + "</constraints>" + "<parametermap>" + "<parameter src=\"amount\" dst=\"intensity\"/>" + "</parametermap>"
+                + "<parameterdefaults>" + "<parameterdefault name=\"intensity\" value=\"1\"/>"
+                + "<parameterdefault name=\"targetname\" value=\"bodymorpher1\"/>" + "</parameterdefaults>" + "<FaceUnit type=\"Morph\"/>"
+                + "</FaceUnitSpec>" + "</facebinding>";
         faceBinding = new FaceBinding();
         faceBinding.readXML(binding);
     }
-    
+
     private FaceBehaviour createFaceBehaviour(String bmlId, String bml) throws IOException
     {
-        return new FaceBehaviour(bmlId,new XMLTokenizer(bml));
+        return new FaceBehaviour(bmlId, new XMLTokenizer(bml));
     }
+
     @Test
     public void testReadXML() throws IOException, ParameterException
     {
-        FaceBehaviour fbeh = createFaceBehaviour("bml1","<face amount=\"3\" id=\"face1\" type=\"LEXICALIZED\" lexeme=\"smile\"/>");
-        
-        BMLBlockPeg bbPeg = new BMLBlockPeg("bml1",0.3);
-        List<TimedFaceUnit> fus = faceBinding.getFaceUnit(mockFeedbackManager,bbPeg, fbeh, mockFaceController,mockFacsConverter,mockEmotionConverter);
-        assertEquals(1,fus.size());
-        assertEquals(fus.get(0).getBMLId(),"bml1");
-        assertEquals(fus.get(0).getId(),"face1");        
-        assertEquals(Double.parseDouble(fus.get(0).getFaceUnit().getParameterValue("angle")),315,0.0001);
-        assertEquals(Double.parseDouble(fus.get(0).getFaceUnit().getParameterValue("activation")),1,0.0001);
-        assertEquals(Double.parseDouble(fus.get(0).getFaceUnit().getParameterValue("intensity")),3,0.0001);
+        FaceBehaviour fbeh = createFaceBehaviour("bml1", "<face amount=\"3\" id=\"face1\" type=\"LEXICALIZED\" lexeme=\"smile\"/>");
+
+        BMLBlockPeg bbPeg = new BMLBlockPeg("bml1", 0.3);
+        List<TimedFaceUnit> fus = faceBinding.getFaceUnit(mockFeedbackManager, bbPeg, fbeh, mockFaceController, mockFacsConverter,
+                mockEmotionConverter);
+        assertEquals(1, fus.size());
+        assertEquals(fus.get(0).getBMLId(), "bml1");
+        assertEquals(fus.get(0).getId(), "face1");
+        assertEquals(Double.parseDouble(fus.get(0).getFaceUnit().getParameterValue("angle")), 315, PARAMETER_PRECISION);
+        assertEquals(Double.parseDouble(fus.get(0).getFaceUnit().getParameterValue("activation")), 1, PARAMETER_PRECISION);
+        assertEquals(Double.parseDouble(fus.get(0).getFaceUnit().getParameterValue("intensity")), 3, PARAMETER_PRECISION);
     }
 }

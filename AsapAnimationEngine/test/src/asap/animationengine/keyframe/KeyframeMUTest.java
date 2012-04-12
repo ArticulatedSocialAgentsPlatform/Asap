@@ -32,6 +32,9 @@ public class KeyframeMUTest
     private SkeletonInterpolator ski;
     private VJoint human;
     private KeyframeMU kfmu;
+    private static final float ROTATION_PRECISION = 0.0001f;
+    private static final double TIMING_PRECISION = 0.0001;
+    
     @Before
     public void setup()
     {
@@ -65,7 +68,7 @@ public class KeyframeMUTest
         
         float q[]=Quat4f.getQuat4f();
         human.getPart("l_shoulder").getRotation(q);
-        assertQuat4fRotationEquivalent(R_SHOULDER_ROT[0],R_SHOULDER_ROT[1],-R_SHOULDER_ROT[2],-R_SHOULDER_ROT[3],q,0.001f);
+        assertQuat4fRotationEquivalent(R_SHOULDER_ROT[0],R_SHOULDER_ROT[1],-R_SHOULDER_ROT[2],-R_SHOULDER_ROT[3],q,ROTATION_PRECISION);
     }
     
     @Test
@@ -79,10 +82,10 @@ public class KeyframeMUTest
         kfmu.play(0);
         float q[]=Quat4f.getQuat4f();
         human.getPart(Hanim.HumanoidRoot).getRotation(q);
-        assertQuat4fRotationEquivalent(0,0,0,1, q, 0.0001f);
+        assertQuat4fRotationEquivalent(0,0,0,1, q, ROTATION_PRECISION);
         
         human.getPart(Hanim.r_shoulder).getRotation(q);
-        assertQuat4fRotationEquivalent(1,0,0,0, q, 0.0001f);
+        assertQuat4fRotationEquivalent(1,0,0,0, q, ROTATION_PRECISION);
         
         human.getPart(Hanim.l_shoulder).getRotation(q);
         assertQuat4fRotationEquivalent(R_SHOULDER_ROT[0],R_SHOULDER_ROT[1],-R_SHOULDER_ROT[2],-R_SHOULDER_ROT[3],q,0.001f);
@@ -99,10 +102,10 @@ public class KeyframeMUTest
         kfmu.play(0);
         float q[]=Quat4f.getQuat4f();
         human.getPart(Hanim.HumanoidRoot).getRotation(q);
-        assertQuat4fRotationEquivalent(0,0,0,1, q, 0.0001f);
+        assertQuat4fRotationEquivalent(0,0,0,1, q, ROTATION_PRECISION);
         
         human.getPart(Hanim.r_shoulder).getRotation(q);
-        assertQuat4fRotationEquivalent(1,0,0,0, q, 0.0001f);
+        assertQuat4fRotationEquivalent(1,0,0,0, q, ROTATION_PRECISION);
         
         human.getPart(Hanim.l_shoulder).getRotation(q);
         assertQuat4fRotationEquivalent(R_SHOULDER_ROT[0],R_SHOULDER_ROT[1],-R_SHOULDER_ROT[2],-R_SHOULDER_ROT[3],q,0.001f);
@@ -116,20 +119,20 @@ public class KeyframeMUTest
         kfmuCopy.play(0);        
         float q[]=Quat4f.getQuat4f();
         humanCopy.getPart(Hanim.HumanoidRoot).getRotation(q);
-        assertQuat4fRotationEquivalent(HUMANOIDROOT_ROT, q, 0.0001f);
+        assertQuat4fRotationEquivalent(HUMANOIDROOT_ROT, q, ROTATION_PRECISION);
         
         humanCopy.getPart(Hanim.r_shoulder).getRotation(q);
-        assertQuat4fRotationEquivalent(R_SHOULDER_ROT, q, 0.0001f);
+        assertQuat4fRotationEquivalent(R_SHOULDER_ROT, q, ROTATION_PRECISION);
         
         humanCopy.getPart(Hanim.l_shoulder).getRotation(q);
-        assertQuat4fRotationEquivalent(L_SHOULDER_ROT, q, 0.0001f);
+        assertQuat4fRotationEquivalent(L_SHOULDER_ROT, q, ROTATION_PRECISION);
         
-        assertEquals(1,kfmuCopy.getPreferedDuration(),0.001f);
+        assertEquals(1,kfmuCopy.getPreferedDuration(),TIMING_PRECISION);
     }
     
     @Test
     public void testGetDuration()
     {
-        assertEquals(1,kfmu.getPreferedDuration(),0.001f);
+        assertEquals(1,kfmu.getPreferedDuration(),TIMING_PRECISION);
     }
 }

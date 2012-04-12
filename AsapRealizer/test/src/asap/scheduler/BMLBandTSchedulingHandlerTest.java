@@ -36,7 +36,9 @@ import asap.bmlb.BMLBBMLBehaviorAttributes;
 public class BMLBandTSchedulingHandlerTest
 {
     private BMLScheduler mockScheduler = mock(BMLScheduler.class);
-    private BMLBandTSchedulingHandler handler = new BMLBandTSchedulingHandler(new SmartBodySchedulingStrategy(new PegBoard()));
+    private PegBoard pegBoard = new PegBoard();
+    private BMLBandTSchedulingHandler handler = new BMLBandTSchedulingHandler(new SmartBodySchedulingStrategy(new PegBoard()),pegBoard);
+    private static final double TIMING_PRECISION = 0.0001;
     
     @Before
     public void setup()
@@ -61,7 +63,7 @@ public class BMLBandTSchedulingHandlerTest
         ArgumentCaptor<BMLBlockPeg> blockPegArgument = ArgumentCaptor.forClass(BMLBlockPeg.class);
         verify(mockScheduler,times(1)).addBMLBlockPeg(blockPegArgument.capture());
         assertEquals(id,blockPegArgument.getValue().getId());
-        assertEquals(time,blockPegArgument.getValue().getValue(),0.001);        
+        assertEquals(time,blockPegArgument.getValue().getValue(),TIMING_PRECISION);        
     }
     
     private BMLBlock captureBMLBlock()

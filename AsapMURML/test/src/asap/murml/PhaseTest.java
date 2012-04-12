@@ -14,6 +14,7 @@ import org.junit.Test;
  */
 public class PhaseTest
 {
+    private static final double PARAMETER_PRECISION = 0.00001;
     @Test
     public void testRead()
     {
@@ -29,7 +30,7 @@ public class PhaseTest
                 IsIterableContainingInAnyOrder.containsInAnyOrder(createJointValue("dB_Smile", 70, 0, 0),
                         createJointValue("dB_OpenMouthWOOQ", 0, 0, 0), createJointValue("dB_OpenMouthL", 0, 0, 0),
                         createJointValue("dB_OpenMouthE", 0, 0, 0)));
-        assertEquals(0.1, f0.getFtime(), 0.001);
+        assertEquals(0.1, f0.getFtime(), PARAMETER_PRECISION);
 
         Frame f1 = ph.getFrames().get(1);
         assertThat(
@@ -37,7 +38,7 @@ public class PhaseTest
                 IsIterableContainingInAnyOrder.containsInAnyOrder(createJointValue("dB_Smile", 80, 0, 0),
                         createJointValue("dB_OpenMouthWOOQ", 1, 0, 0), createJointValue("dB_OpenMouthL", 0, 1, 0),
                         createJointValue("dB_OpenMouthE", 0, 0, 1)));
-        assertEquals(0.2, f1.getFtime(), 0.001);
+        assertEquals(0.2, f1.getFtime(), PARAMETER_PRECISION);
 
     }
 }

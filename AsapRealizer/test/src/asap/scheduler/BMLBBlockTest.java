@@ -5,6 +5,7 @@ import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
+import hmi.elckerlyc.pegboard.PegBoard;
 import hmi.elckerlyc.planunit.TimedPlanUnitState;
 import hmi.elckerlyc.scheduler.BMLScheduler;
 import hmi.bml.BMLGestureSync;
@@ -29,12 +30,14 @@ public class BMLBBlockTest
 {
     private static final String BLOCKID = "block1";
     private BMLScheduler mockScheduler = mock(BMLScheduler.class);
-    private final static ImmutableMap<String,TimedPlanUnitState> EMPTY_UPDATE_MAP = new ImmutableMap.Builder<String,TimedPlanUnitState>().build();
-    
+    private PegBoard pegBoard = new PegBoard();
+    private final static ImmutableMap<String, TimedPlanUnitState> EMPTY_UPDATE_MAP = new ImmutableMap.Builder<String, TimedPlanUnitState>()
+            .build();
+
     @Test
     public void testUpdate()
     {
-        BMLBBlock block = new BMLBBlock(BLOCKID, mockScheduler);
+        BMLBBlock block = new BMLBBlock(BLOCKID, mockScheduler, pegBoard);
         block.setState(TimedPlanUnitState.LURKING);
         block.update(EMPTY_UPDATE_MAP);
         verify(mockScheduler, times(1)).startBlock(BLOCKID);
@@ -43,7 +46,7 @@ public class BMLBBlockTest
     @Test
     public void testNoUpdateInPending()
     {
-        BMLBBlock block = new BMLBBlock(BLOCKID, mockScheduler);
+        BMLBBlock block = new BMLBBlock(BLOCKID, mockScheduler, pegBoard);
         block.setState(TimedPlanUnitState.PENDING);
         block.update(EMPTY_UPDATE_MAP);
         verify(mockScheduler, times(0)).startBlock(BLOCKID);
@@ -52,8 +55,9 @@ public class BMLBBlockTest
     @Test
     public void testNoUpdateWhenAppending()
     {
-        BMLBBlock block = new BMLBBlock(BLOCKID, mockScheduler, Sets.newHashSet("bml2"), new HashSet<String>(), new HashSet<String>());
-        block.setState(TimedPlanUnitState.LURKING);        
+        BMLBBlock block = new BMLBBlock(BLOCKID, mockScheduler, pegBoard, Sets.newHashSet("bml2"), new HashSet<String>(),
+                new HashSet<String>());
+        block.setState(TimedPlanUnitState.LURKING);
         block.update(ImmutableMap.of("bml2", TimedPlanUnitState.IN_EXEC));
         verify(mockScheduler, times(0)).startBlock(BLOCKID);
     }
@@ -61,7 +65,7 @@ public class BMLBBlockTest
     @Test
     public void testFinishEmptyBlock()
     {
-        BMLBBlock block = new BMLBBlock(BLOCKID, mockScheduler);
+        BMLBBlock block = new BMLBBlock(BLOCKID, mockScheduler, pegBoard);
         block.setState(TimedPlanUnitState.IN_EXEC);
         block.update(EMPTY_UPDATE_MAP);
         assertEquals(TimedPlanUnitState.DONE, block.getState());
@@ -71,7 +75,7 @@ public class BMLBBlockTest
     @Test
     public void testNotFinishNonEmptyBlock()
     {
-        BMLBBlock block = new BMLBBlock(BLOCKID, mockScheduler);
+        BMLBBlock block = new BMLBBlock(BLOCKID, mockScheduler, pegBoard);
         block.setState(TimedPlanUnitState.IN_EXEC);
         when(mockScheduler.getBehaviours(BLOCKID)).thenReturn(Sets.newHashSet("beh1"));
         block.update(EMPTY_UPDATE_MAP);
@@ -82,7 +86,7 @@ public class BMLBBlockTest
     @Test
     public void testFinishNonEmptyBlock()
     {
-        BMLBBlock block = new BMLBBlock(BLOCKID, mockScheduler);
+        BMLBBlock block = new BMLBBlock(BLOCKID, mockScheduler, pegBoard);
         block.setState(TimedPlanUnitState.IN_EXEC);
         when(mockScheduler.getBehaviours(BLOCKID)).thenReturn(Sets.newHashSet("beh1"));
         block.behaviorProgress("beh1", BMLGestureSync.END.getId());
@@ -94,18 +98,18 @@ public class BMLBBlockTest
     @Test
     public void testSubsiding()
     {
-        BMLBBlock block = new BMLBBlock(BLOCKID, mockScheduler);
+        BMLBBlock block = new BMLBBlock(BLOCKID, mockScheduler, pegBoard);
         block.setState(TimedPlanUnitState.IN_EXEC);
         when(mockScheduler.getBehaviours(BLOCKID)).thenReturn(Sets.newHashSet("beh1"));
         block.behaviorProgress("beh1", BMLGestureSync.RELAX.getId());
-        block.update(EMPTY_UPDATE_MAP);        
+        block.update(EMPTY_UPDATE_MAP);
         assertEquals(TimedPlanUnitState.SUBSIDING, block.getState());
     }
 
     @Test
     public void testSubsidingToDone()
     {
-        BMLBBlock block = new BMLBBlock(BLOCKID, mockScheduler);
+        BMLBBlock block = new BMLBBlock(BLOCKID, mockScheduler, pegBoard);
         block.setState(TimedPlanUnitState.SUBSIDING);
         when(mockScheduler.getBehaviours(BLOCKID)).thenReturn(Sets.newHashSet("beh1"));
         block.behaviorProgress("beh1", BMLGestureSync.END.getId());
@@ -117,45 +121,50 @@ public class BMLBBlockTest
     @Test
     public void testChunk()
     {
-        BMLBBlock block = new BMLBBlock(BLOCKID, mockScheduler, new HashSet<String>(), new HashSet<String>(), Sets.newHashSet("bml2"));
+        BMLBBlock block = new BMLBBlock(BLOCKID, mockScheduler, pegBoard, new HashSet<String>(), new HashSet<String>(),
+                Sets.newHashSet("bml2"));
         block.setState(TimedPlanUnitState.LURKING);
         block.update(ImmutableMap.of("bml2", TimedPlanUnitState.SUBSIDING));
         verify(mockScheduler, times(1)).startBlock(BLOCKID);
     }
-    
+
     @Test
     public void testChunkGone()
     {
-        BMLBBlock block = new BMLBBlock(BLOCKID, mockScheduler, new HashSet<String>(), new HashSet<String>(), Sets.newHashSet("bml2"));
+        BMLBBlock block = new BMLBBlock(BLOCKID, mockScheduler, pegBoard, new HashSet<String>(), new HashSet<String>(),
+                Sets.newHashSet("bml2"));
         block.setState(TimedPlanUnitState.LURKING);
         block.update(EMPTY_UPDATE_MAP);
         verify(mockScheduler, times(1)).startBlock(BLOCKID);
     }
-    
+
     @Test
     public void testNotChunk()
     {
-        BMLBBlock block = new BMLBBlock(BLOCKID, mockScheduler, new HashSet<String>(), new HashSet<String>(), Sets.newHashSet("bml2"));
+        BMLBBlock block = new BMLBBlock(BLOCKID, mockScheduler, pegBoard, new HashSet<String>(), new HashSet<String>(),
+                Sets.newHashSet("bml2"));
         block.setState(TimedPlanUnitState.LURKING);
         block.update(ImmutableMap.of("bml2", TimedPlanUnitState.IN_EXEC));
         verify(mockScheduler, times(0)).startBlock(BLOCKID);
     }
-    
+
     @Test
     public void testChunkAndAppend()
     {
-        BMLBBlock block = new BMLBBlock(BLOCKID, mockScheduler, new HashSet<String>(), Sets.newHashSet("bml3"), Sets.newHashSet("bml2"));
+        BMLBBlock block = new BMLBBlock(BLOCKID, mockScheduler, pegBoard, new HashSet<String>(), Sets.newHashSet("bml3"),
+                Sets.newHashSet("bml2"));
         block.setState(TimedPlanUnitState.LURKING);
-        block.update(ImmutableMap.of("bml2", TimedPlanUnitState.SUBSIDING,"bml3",TimedPlanUnitState.DONE));
+        block.update(ImmutableMap.of("bml2", TimedPlanUnitState.SUBSIDING, "bml3", TimedPlanUnitState.DONE));
         verify(mockScheduler, times(1)).startBlock(BLOCKID);
     }
-    
+
     @Test
     public void testChunkAndNoAppend()
     {
-        BMLBBlock block = new BMLBBlock(BLOCKID, mockScheduler, new HashSet<String>(), Sets.newHashSet("bml3"), Sets.newHashSet("bml2"));
+        BMLBBlock block = new BMLBBlock(BLOCKID, mockScheduler, pegBoard, new HashSet<String>(), Sets.newHashSet("bml3"),
+                Sets.newHashSet("bml2"));
         block.setState(TimedPlanUnitState.LURKING);
-        block.update(ImmutableMap.of("bml2", TimedPlanUnitState.SUBSIDING,"bml3",TimedPlanUnitState.SUBSIDING));
+        block.update(ImmutableMap.of("bml2", TimedPlanUnitState.SUBSIDING, "bml3", TimedPlanUnitState.SUBSIDING));
         verify(mockScheduler, times(1)).startBlock(BLOCKID);
     }
 }

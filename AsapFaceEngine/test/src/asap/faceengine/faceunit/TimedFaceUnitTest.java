@@ -43,6 +43,7 @@ public class TimedFaceUnitTest extends AbstractTimedPlanUnitTest
     private FaceUnit fuMock = mock(FaceUnit.class);
     private BMLBlockManager mockBmlBlockManager = mock(BMLBlockManager.class);
     private FeedbackManager fbManager = new FeedbackManagerImpl(mockBmlBlockManager,"character1");
+    private static final double TIMING_PRECISION = 0.0001;
     
     public TimedFaceUnit createTimedFaceUnit(String behId, String bmlId, FaceUnit fu)
     {
@@ -91,8 +92,8 @@ public class TimedFaceUnitTest extends AbstractTimedPlanUnitTest
         assertEquals("behaviour1",fbList.get(0).behaviorId);
         assertEquals("bml1",fbList.get(0).bmlId);
         assertEquals("start",fbList.get(0).syncId);
-        assertEquals(0.5,fbList.get(0).timeStamp,0.0001);
-        assertEquals(0.5,fbList.get(0).bmlBlockTime,0.0001);       
+        assertEquals(0.5,fbList.get(0).timeStamp,TIMING_PRECISION);
+        assertEquals(0.5,fbList.get(0).bmlBlockTime,TIMING_PRECISION);       
         verify(fuMock,times(1)).play(0.5);
     }
 

@@ -67,6 +67,7 @@ public class AnimationPlanPlayerTest
 
     private ListFeedbackListener fbl;
     private AnimationPlanPlayer app;
+    private static final double TIMING_PRECISION = 0.0001;
 
     @Before
     public void setup()
@@ -108,7 +109,7 @@ public class AnimationPlanPlayerTest
         assertEquals("behaviour1", fbList.get(0).behaviorId);
         assertEquals("bml1", fbList.get(0).bmlId);
         assertEquals("start", fbList.get(0).syncId);
-        assertEquals(0, fbList.get(0).timeStamp, 0.00001f);
+        assertEquals(0, fbList.get(0).timeStamp, TIMING_PRECISION);
 
         verify(muMock1, atLeastOnce()).getKeyPosition("start");
         verify(muMock1, times(1)).play(0);
@@ -140,7 +141,7 @@ public class AnimationPlanPlayerTest
         assertTrue(fbList.get(0).behaviorId.equals("behaviour1"));
         assertTrue(fbList.get(0).bmlId.equals("bml1"));
         assertTrue(fbList.get(0).syncId.equals("start"));
-        assertEquals(0.99, fbList.get(0).timeStamp,0.001);
+        assertEquals(0.99, fbList.get(0).timeStamp, TIMING_PRECISION);
         app.play(2);
         assertTrue(tmu1.getState() == TimedPlanUnitState.DONE);
         assertTrue(fbList.size() == 2);
@@ -148,7 +149,7 @@ public class AnimationPlanPlayerTest
         assertTrue(fbList.get(0).behaviorId.equals("behaviour1"));
         assertTrue(fbList.get(0).bmlId.equals("bml1"));
         assertTrue(fbList.get(0).syncId.equals("start"));
-        assertEquals(0.99, fbList.get(0).timeStamp, 0.001);
+        assertEquals(0.99, fbList.get(0).timeStamp, TIMING_PRECISION);
         assertTrue(fbList.get(1).behaviorId.equals("behaviour1"));
         assertTrue(fbList.get(1).bmlId.equals("bml1"));
         assertTrue(fbList.get(1).syncId.equals("end"));
@@ -202,11 +203,11 @@ public class AnimationPlanPlayerTest
         assertTrue(fbList.get(1).behaviorId.equals("behaviour1"));
         assertTrue(fbList.get(1).bmlId.equals("bml1"));
         assertTrue(fbList.get(1).syncId.equals("end"));
-        assertEquals(2.1, fbList.get(1).timeStamp,0.001);        
+        assertEquals(2.1, fbList.get(1).timeStamp, TIMING_PRECISION);
         assertTrue(fbList.get(2).behaviorId.equals("behaviour2"));
         assertTrue(fbList.get(2).bmlId.equals("bml1"));
         assertTrue(fbList.get(2).syncId.equals("start"));
-        assertEquals(2.1,fbList.get(2).timeStamp, 0.001);
+        assertEquals(2.1, fbList.get(2).timeStamp, TIMING_PRECISION);
 
         verify(muMock1, atLeastOnce()).getKeyPosition("start");
         verify(muMock1, times(1)).play(0);
@@ -239,7 +240,7 @@ public class AnimationPlanPlayerTest
         assertTrue(fbList.get(0).behaviorId.equals("behaviour1"));
         assertTrue(fbList.get(0).bmlId.equals("bml1"));
         assertTrue(fbList.get(0).syncId.equals("start"));
-        assertEquals(0.5, fbList.get(0).timeStamp,0.001);
+        assertEquals(0.5, fbList.get(0).timeStamp, TIMING_PRECISION);
 
         app.play(0.6);
         assertTrue(exList.size() == 0);
@@ -247,7 +248,7 @@ public class AnimationPlanPlayerTest
         assertTrue(tmu.getState() == TimedPlanUnitState.IN_EXEC);
         verify(muMockTransition, atLeastOnce()).getKeyPosition("start");
         verify(muMockTransition, atLeastOnce()).getKeyPosition("end");
-        verify(muMockTransition, times(1)).play(eq(0.5, 0.01));
+        verify(muMockTransition, times(1)).play(eq(0.5, TIMING_PRECISION));
         verify(muMockTransition, times(1)).setStartPose();
     }
 
@@ -276,10 +277,10 @@ public class AnimationPlanPlayerTest
         assertTrue(fbList.get(0).behaviorId.equals("behaviour1"));
         assertTrue(fbList.get(0).bmlId.equals("bml1"));
         assertTrue(fbList.get(0).syncId.equals("start"));
-        assertEquals(0.5, fbList.get(0).timeStamp,0.001);
+        assertEquals(0.5, fbList.get(0).timeStamp, TIMING_PRECISION);
         verify(muMock1, atLeastOnce()).getKeyPosition("start");
         verify(muMock1, atLeastOnce()).getKeyPosition("end");
-        verify(muMock1, times(1)).play(eq(0.5, 0.01));
+        verify(muMock1, times(1)).play(eq(0.5, TIMING_PRECISION));
     }
 
     @Test
@@ -296,7 +297,7 @@ public class AnimationPlanPlayerTest
         planManager.addPlanUnit(tmu);
 
         stubKeyPositions(muMock1, new KeyPosition("start", 0, 1), new KeyPosition("end", 1, 1));
-        doThrow(new MUPlayException("failure!", muMock1)).when(muMock1).play(eq(0.5, 0.01));
+        doThrow(new MUPlayException("failure!", muMock1)).when(muMock1).play(eq(0.5, TIMING_PRECISION));
 
         tmu.setTimePeg("start", tpStart);
         tmu.setTimePeg("end", tpEnd);
@@ -307,7 +308,7 @@ public class AnimationPlanPlayerTest
         assertEquals(TimedPlanUnitState.DONE, tmu.getState());
         verify(muMock1, atLeastOnce()).getKeyPosition("start");
         verify(muMock1, atLeastOnce()).getKeyPosition("end");
-        verify(muMock1, times(1)).play(eq(0.5, 0.01));
+        verify(muMock1, times(1)).play(eq(0.5, TIMING_PRECISION));
     }
 
     @Test
@@ -346,9 +347,8 @@ public class AnimationPlanPlayerTest
         when(mockTmu.getPhysicalJoints()).thenReturn(new HashSet<String>());
         when(mockTmu.getState()).thenReturn(TimedPlanUnitState.LURKING);
         when(
-                mockRestPose.createTransitionToRest(eq(NullFeedbackManager.getInstance()),
-                        eq(ImmutableSet.of("r_wrist")), anyDouble(), eq("bml1"), eq("behaviour1"),
-                        eq(BMLBlockPeg.GLOBALPEG))).thenReturn(mockTmu);
+                mockRestPose.createTransitionToRest(eq(NullFeedbackManager.getInstance()), eq(ImmutableSet.of("r_wrist")), anyDouble(),
+                        eq("bml1"), eq("behaviour1"), eq(BMLBlockPeg.GLOBALPEG))).thenReturn(mockTmu);
         app.play(0);
         assertThat(planManager.getPlanUnits(), containsInAnyOrder(tmu2, mockTmu));
     }

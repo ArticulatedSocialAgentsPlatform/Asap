@@ -17,6 +17,7 @@ import com.google.common.collect.ImmutableList;
 public class LinearQuatFloatInterpolatorTest
 {
     private static final float INTERPOLATION_PRECISION = 0.0001f;
+    private static final float FRAMETIME_PRECISION = 0.0001f;
     private LinearQuatFloatInterpolator interp = new LinearQuatFloatInterpolator();
 
     @Before
@@ -33,7 +34,7 @@ public class LinearQuatFloatInterpolatorTest
     public void testInterpolateToStart()
     {
         KeyFrame kf = interp.interpolate(0);
-        assertEquals(0, kf.getFrameTime(), 0.0001);
+        assertEquals(0, kf.getFrameTime(), FRAMETIME_PRECISION);
         Quat4fTestUtil.assertQuat4fRotationEquivalent(Quat4f.getQuat4f(0, 1, 0, 0), 0, kf.getDofs(), 0, INTERPOLATION_PRECISION);
         Quat4fTestUtil.assertQuat4fRotationEquivalent(Quat4f.getQuat4f(1, 0, 0, 0), 0, kf.getDofs(), 4, INTERPOLATION_PRECISION);
         Quat4fTestUtil.assertQuat4fRotationEquivalent(Quat4f.getQuat4f(0, 0, 0, 1), 0, kf.getDofs(), 8, INTERPOLATION_PRECISION);
@@ -43,7 +44,7 @@ public class LinearQuatFloatInterpolatorTest
     public void testInterpolateToEnd()
     {
         KeyFrame kf = interp.interpolate(1);
-        assertEquals(1, kf.getFrameTime(), 0.0001);
+        assertEquals(1, kf.getFrameTime(), FRAMETIME_PRECISION);
         Quat4fTestUtil.assertQuat4fRotationEquivalent(Quat4f.getQuat4f(0, 0, 0, 1), 0, kf.getDofs(), 0, INTERPOLATION_PRECISION);
         Quat4fTestUtil.assertQuat4fRotationEquivalent(Quat4f.getQuat4f(0, 0, 1, 0), 0, kf.getDofs(), 4, INTERPOLATION_PRECISION);
         Quat4fTestUtil.assertQuat4fRotationEquivalent(Quat4f.getQuat4f(1, 0, 0, 0), 0, kf.getDofs(), 8, INTERPOLATION_PRECISION);
@@ -53,7 +54,7 @@ public class LinearQuatFloatInterpolatorTest
     public void testInterpolate02()
     {
         KeyFrame kf = interp.interpolate(0.2);
-        assertEquals(0.2, kf.getFrameTime(), 0.0001);
+        assertEquals(0.2, kf.getFrameTime(), FRAMETIME_PRECISION);
         Quat4fTestUtil.assertQuat4fRotationEquivalent(Quat4f.getQuat4f(1, 0, 0, 0), 0, kf.getDofs(), 0, INTERPOLATION_PRECISION);
         Quat4fTestUtil.assertQuat4fRotationEquivalent(Quat4f.getQuat4f(0, 1, 0, 0), 0, kf.getDofs(), 4, INTERPOLATION_PRECISION);
         Quat4fTestUtil.assertQuat4fRotationEquivalent(Quat4f.getQuat4f(0, 0, 1, 0), 0, kf.getDofs(), 8, INTERPOLATION_PRECISION);
@@ -63,7 +64,7 @@ public class LinearQuatFloatInterpolatorTest
     public void testInterpolate01()
     {
         KeyFrame kf = interp.interpolate(0.1);
-        assertEquals(0.1, kf.getFrameTime(), 0.0001);
+        assertEquals(0.1, kf.getFrameTime(), FRAMETIME_PRECISION);
         float q0[] = Quat4f.getQuat4f();
         float q1[] = Quat4f.getQuat4f();
         float q2[] = Quat4f.getQuat4f();

@@ -1,5 +1,8 @@
 package asap.scheduler;
 
+import hmi.elckerlyc.pegboard.BehaviorCluster;
+import hmi.elckerlyc.pegboard.BehaviorKey;
+import hmi.elckerlyc.pegboard.PegBoard;
 import hmi.elckerlyc.planunit.TimedPlanUnitState;
 import hmi.elckerlyc.scheduler.AbstractBMLBlock;
 import hmi.elckerlyc.scheduler.BMLScheduler;
@@ -9,8 +12,7 @@ import java.util.HashSet;
 import java.util.Set;
 import java.util.concurrent.CopyOnWriteArraySet;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import lombok.extern.slf4j.Slf4j;
 
 import com.google.common.collect.ImmutableMap;
 
@@ -19,16 +21,18 @@ import com.google.common.collect.ImmutableMap;
  * @author hvanwelbergen
  * 
  */
+@Slf4j
 public class BMLBBlock extends AbstractBMLBlock
 {
     private final Set<String> appendSet = new CopyOnWriteArraySet<String>();
     private final Set<String> onStartSet = new CopyOnWriteArraySet<String>();
     private final Set<String> chunkAfterSet = new CopyOnWriteArraySet<String>();
-    private static final Logger logger = LoggerFactory.getLogger(BMLBBlock.class.getName());
+    private final PegBoard pegBoard;
 
-    public BMLBBlock(String id, BMLScheduler s, Set<String> appendAfter, Set<String> onStart, Set<String> chunkAfter)
+    public BMLBBlock(String id, BMLScheduler s, PegBoard pb, Set<String> appendAfter, Set<String> onStart, Set<String> chunkAfter)
     {
         super(id, s);
+        pegBoard = pb;
         appendSet.addAll(appendAfter);
         onStartSet.addAll(onStart);
         chunkAfterSet.addAll(chunkAfter);
@@ -39,15 +43,48 @@ public class BMLBBlock extends AbstractBMLBlock
         return Collections.unmodifiableSet(onStartSet);
     }
 
-    public BMLBBlock(String id, BMLScheduler s)
+    public BMLBBlock(String id, BMLScheduler s, PegBoard pb)
     {
-        this(id, s, new HashSet<String>(), new HashSet<String>(), new HashSet<String>());
+        this(id, s, pb, new HashSet<String>(), new HashSet<String>(), new HashSet<String>());
+    }
+    
+    
+    //assumes that for all behaviors in the cluster, their start is resolved and listed on the PegBoard
+    private void reAlignUngroundedCluster(BehaviorCluster cluster)
+    {
+        double shift = Double.MAX_VALUE;
+        boolean shiftRequired = false;
+        
+        //one (or more) of the behaviors should start at local time 0. Find the timeshift that makes this happen 
+        for(BehaviorKey bk:cluster.getBehaviors())
+        {
+            double startTime = pegBoard.getPegTime(bk.getBmlId(), bk.getBehaviorId(), "start");
+            if(startTime<shift)
+            {
+                startTime = shift;
+                shiftRequired = true;
+            }
+        }
+        
+        if(shiftRequired)
+        {
+            pegBoard.shiftCluster(cluster, -shift);            
+        }        
     }
 
     private void reAlignBlock()
     {
+        Set<BehaviorCluster> clusters = new HashSet<BehaviorCluster>();
+        for (String behaviorId : scheduler.getBehaviours(getBMLId()))
+        {
+            clusters.add(pegBoard.getBehaviorCluster(bmlId, behaviorId));
+        }
 
-        // TODO: move all behavior clusters as far to the 'left' as possible
+        for (BehaviorCluster bc : clusters)
+        {
+            if (bc.isGrounded()) continue;
+            reAlignUngroundedCluster(bc);
+        }
     }
 
     @Override
@@ -101,11 +138,11 @@ public class BMLBBlock extends AbstractBMLBlock
         {
             if (!allBlocks.get(cuId).isSubsidingOrDone())
             {
-                logger.debug("{} waiting for subsiding at {}", bmlId, scheduler.getSchedulingTime());
+                log.debug("{} waiting for subsiding at {}", bmlId, scheduler.getSchedulingTime());
                 return;
             }
         }
-        logger.debug("{} started at {}", bmlId, scheduler.getSchedulingTime());
+        log.debug("{} started at {}", bmlId, scheduler.getSchedulingTime());
         scheduler.startBlock(bmlId);
     }
 
@@ -118,7 +155,7 @@ public class BMLBBlock extends AbstractBMLBlock
         }
         if (getState() != TimedPlanUnitState.DONE && isFinished())
         {
-            logger.debug("bml block {} finished", bmlId);
+            log.debug("bml block {} finished", bmlId);
             finish();
         }
     }

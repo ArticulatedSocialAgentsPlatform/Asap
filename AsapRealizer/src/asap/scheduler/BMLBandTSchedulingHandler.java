@@ -1,35 +1,36 @@
 package asap.scheduler;
 
-import java.util.HashSet;
-import java.util.Set;
-
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
-import asap.bmlb.*;
-
 import hmi.bml.core.BehaviourBlock;
 import hmi.bml.ext.bmlt.BMLTBMLBehaviorAttributes;
 import hmi.elckerlyc.pegboard.BMLBlockPeg;
+import hmi.elckerlyc.pegboard.PegBoard;
 import hmi.elckerlyc.planunit.TimedPlanUnitState;
 import hmi.elckerlyc.scheduler.BMLScheduler;
 import hmi.elckerlyc.scheduler.SchedulingHandler;
 import hmi.elckerlyc.scheduler.SchedulingStrategy;
+
+import java.util.HashSet;
+import java.util.Set;
+
+import lombok.extern.slf4j.Slf4j;
+import asap.bmlb.BMLBBMLBehaviorAttributes;
+import asap.bmlb.BMLBComposition;
 
 /**
  * Creates BMLT blocks and handles the first part of the BMLT state machine
  * @author hvanwelbergen
  * 
  */
+@Slf4j
 public class BMLBandTSchedulingHandler implements SchedulingHandler
 {
     private final SchedulingStrategy strategy;
-
-    private final Logger logger = LoggerFactory.getLogger(BMLBandTSchedulingHandler.class.getName());
-
-    public BMLBandTSchedulingHandler(SchedulingStrategy strategy)
+    private final PegBoard pegBoard;
+    
+    public BMLBandTSchedulingHandler(SchedulingStrategy strategy, PegBoard pb)
     {
         this.strategy = strategy;
+        this.pegBoard = pb;
     }
 
     @Override
@@ -42,7 +43,7 @@ public class BMLBandTSchedulingHandler implements SchedulingHandler
         Set<String> chunkAfter = new HashSet<String>();
         for (String bmlId : bmltAttr.getInterruptList())
         {
-            logger.debug("interrupting {}", bmlId);
+            log.debug("interrupting {}", bmlId);
             scheduler.interruptBlock(bmlId);
         }
 
@@ -53,7 +54,7 @@ public class BMLBandTSchedulingHandler implements SchedulingHandler
             break;
         default:
         case UNKNOWN:
-            logger.info("Unknown scheduling composition, defaulting to merge");
+            log.warn("Unknown scheduling composition, defaulting to merge");
             break;
         case MERGE:
             break;
@@ -73,12 +74,12 @@ public class BMLBandTSchedulingHandler implements SchedulingHandler
         scheduler.planningStart(bb.id, predictedStart);
 
         // logger.debug("Scheduling started at: {}",schedulingClock.getTime());
-        BMLBBlock bbm = new BMLBBlock(bb.id, scheduler, appendAfter, bmltAttr.getOnStartList(), chunkAfter);
+        BMLBBlock bbm = new BMLBBlock(bb.id, scheduler, pegBoard, appendAfter, bmltAttr.getOnStartList(), chunkAfter);
         BMLBlockPeg bmlBlockPeg = new BMLBlockPeg(bb.id, predictedStart);
         scheduler.addBMLBlockPeg(bmlBlockPeg);
 
         strategy.schedule(bb.getSchedulingMechanism(), bb, bmlBlockPeg, scheduler, scheduler.getSchedulingTime());
-        logger.debug("Scheduling finished at: {}", scheduler.getSchedulingTime());
+        log.debug("Scheduling finished at: {}", scheduler.getSchedulingTime());
         scheduler.removeInvalidBehaviors(bb.id);
 
         predictedStart = Math.max(scheduler.predictEndTime(appendAfter), scheduler.predictSubsidingTime(chunkAfter));
@@ -87,7 +88,7 @@ public class BMLBandTSchedulingHandler implements SchedulingHandler
         scheduler.planningFinished(bb.id, predictedStart, scheduler.predictEndTime(bb.id));
         if (bmltAttr.isPrePlanned())
         {
-            logger.debug("Preplanning {}.", bb.id);
+            log.debug("Preplanning {}.", bb.id);
             bbm.setState(TimedPlanUnitState.PENDING);
         }
         else
