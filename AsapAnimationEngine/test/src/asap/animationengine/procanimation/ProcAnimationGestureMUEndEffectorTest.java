@@ -14,7 +14,6 @@ import hmi.neurophysics.FittsLaw;
 import hmi.testutil.animation.HanimBody;
 
 import org.junit.Before;
-import org.junit.Ignore;
 import org.junit.Test;
 
 import asap.animationengine.AnimationPlayer;

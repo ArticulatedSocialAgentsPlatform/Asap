@@ -14,6 +14,7 @@ import static asap.murml.testutil.MURMLTestUtil.createJointValue;
  */
 public class FrameTest
 {
+    private static final double PARAMETER_PRECISION = 0.0001;
     @Test
     public void testRead()
     {
@@ -25,6 +26,6 @@ public class FrameTest
                 IsIterableContainingInAnyOrder.containsInAnyOrder(createJointValue("dB_Smile", 70, 0, 0),
                         createJointValue("dB_OpenMouthWOOQ", 0, 0, 0), createJointValue("dB_OpenMouthL", 0, 0, 0),
                         createJointValue("dB_OpenMouthE", 0, 0, 0)));
-        assertEquals(0.1, f.getFtime(), 0.001);
+        assertEquals(0.1, f.getFtime(), PARAMETER_PRECISION);
     }
 }

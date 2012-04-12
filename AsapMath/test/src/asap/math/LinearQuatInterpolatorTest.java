@@ -5,6 +5,11 @@ import hmi.testutil.math.Quat4fTestUtil;
 
 import org.junit.Test;
 
+/**
+ * Unit tests for the LinearQuatInterpolator
+ * @author hvanwelbergen
+ *
+ */
 public class LinearQuatInterpolatorTest
 {
     private static final float INTERPOLATION_PRECISION = 0.001f;

@@ -14,12 +14,13 @@ import static org.hamcrest.number.OrderingComparison.lessThan;
  */
 public class CubicSplineInterpolatorTest
 {
+    private static final double INTERPOLATION_PRECISION = 0.0001;
     @Test
     public void testInterpolateStart()
     {
         double pval[][]={{0,1},{1,2},{2,3}};
         CubicSplineInterpolator in = new CubicSplineInterpolator(pval,0,0);
-        assertEquals(1,in.interpolate(0),0.001);
+        assertEquals(1,in.interpolate(0),INTERPOLATION_PRECISION);
     }
     
     @Test
@@ -27,7 +28,7 @@ public class CubicSplineInterpolatorTest
     {
         double pval[][]={{0,1},{1,2},{2,3}};
         CubicSplineInterpolator in = new CubicSplineInterpolator(pval,0,0);
-        assertEquals(3,in.interpolate(2),0.001);
+        assertEquals(3,in.interpolate(2),INTERPOLATION_PRECISION);
     }
     
     @Test
@@ -35,7 +36,7 @@ public class CubicSplineInterpolatorTest
     {
         double pval[][]={{0,1},{1,2},{2,3}};
         CubicSplineInterpolator in = new CubicSplineInterpolator(pval,0,0);
-        assertEquals(2,in.interpolate(1),0.001);
+        assertEquals(2,in.interpolate(1),INTERPOLATION_PRECISION);
     }
     
     @Test
@@ -52,7 +53,7 @@ public class CubicSplineInterpolatorTest
     {
         double pval[][]={{0,1}};
         CubicSplineInterpolator in = new CubicSplineInterpolator(pval,0,0);
-        assertEquals(1,in.interpolate(0),0.001);
+        assertEquals(1,in.interpolate(0),INTERPOLATION_PRECISION);
     }
     
     @Test
@@ -60,7 +61,7 @@ public class CubicSplineInterpolatorTest
     {
         double pval[][]={{0,1},{1,2}};
         CubicSplineInterpolator in = new CubicSplineInterpolator(pval,0,0);
-        assertEquals(1,in.interpolate(0),0.001);
+        assertEquals(1,in.interpolate(0),INTERPOLATION_PRECISION);
     }
     
     @Test
@@ -68,7 +69,7 @@ public class CubicSplineInterpolatorTest
     {
         double pval[][]={{0,1},{1,2}};
         CubicSplineInterpolator in = new CubicSplineInterpolator(pval,0,0);
-        assertEquals(2,in.interpolate(1),0.001);
+        assertEquals(2,in.interpolate(1),INTERPOLATION_PRECISION);
     }
     
     @Test

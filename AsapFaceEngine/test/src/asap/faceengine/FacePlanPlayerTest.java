@@ -46,7 +46,7 @@ public class FacePlanPlayerTest
     private FeedbackManager fbManager = new FeedbackManagerImpl(mockBmlBlockManager,"character1");
     private FeedbackManager mockFeedbackManager = mock(FeedbackManager.class);
     private PlanManager<TimedFaceUnit> planManager = new PlanManager<TimedFaceUnit>();
-    
+    private static final double TIMING_PRECISION = 0.0001;
     @Test
     public void testPlayTfu() throws MUPlayException 
     {
@@ -68,7 +68,7 @@ public class FacePlanPlayerTest
         assertEquals("behaviour1",fbList.get(0).behaviorId);
         assertEquals("bml1",fbList.get(0).bmlId);
         assertEquals("start",fbList.get(0).syncId);
-        assertEquals(0, fbList.get(0).timeStamp,0.0001);
+        assertEquals(0, fbList.get(0).timeStamp,TIMING_PRECISION);
         
         verify(fuMock1,times(1)).play(0);        
     }

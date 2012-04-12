@@ -14,6 +14,7 @@ import org.junit.Test;
  */
 public class DefinitionTest
 {
+    private static final double PARAMETER_PRECISION = 0.0001;
     @Test
     public void testEmptyDefinition()
     {
@@ -44,6 +45,6 @@ public class DefinitionTest
         d.readXML("<definition><keyframing><phase><frame ftime=\"0\"><posture>Humanoid "
                 + "(dB_Smile 3 70 0 0)</posture></frame></phase></keyframing></definition>");
         assertNull(d.getPosture());
-        assertEquals(0, d.getKeyframing().getPhases().get(0).getFrames().get(0).getFtime(), 0.001);
+        assertEquals(0, d.getKeyframing().getPhases().get(0).getFrames().get(0).getFtime(), PARAMETER_PRECISION);
     }
 }

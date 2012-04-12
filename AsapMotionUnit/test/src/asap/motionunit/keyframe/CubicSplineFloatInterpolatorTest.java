@@ -19,7 +19,7 @@ import com.google.common.primitives.Floats;
 public class CubicSplineFloatInterpolatorTest
 {
     private CubicSplineFloatInterpolator interp = new CubicSplineFloatInterpolator();
-    
+    private static final double TIME_PRECISION = 0.0001;
     @Before
     public void setup()
     {
@@ -34,7 +34,7 @@ public class CubicSplineFloatInterpolatorTest
     public void testInterpolateToStart()
     {
         KeyFrame kf = interp.interpolate(0);
-        assertEquals(0, kf.getFrameTime(),0.0001);
+        assertEquals(0, kf.getFrameTime(),TIME_PRECISION);
         assertThat(Floats.asList(kf.getDofs()), contains(1f,2f,3f));
     }
     
@@ -42,7 +42,7 @@ public class CubicSplineFloatInterpolatorTest
     public void testInterpolateToEnd()
     {
         KeyFrame kf = interp.interpolate(1);
-        assertEquals(1, kf.getFrameTime(),0.0001);
+        assertEquals(1, kf.getFrameTime(),TIME_PRECISION);
         assertThat(Floats.asList(kf.getDofs()), contains(4f,5f,6f));
     }
     
@@ -50,7 +50,7 @@ public class CubicSplineFloatInterpolatorTest
     public void testInterpolate02()
     {
         KeyFrame kf = interp.interpolate(0.2);
-        assertEquals(0.2, kf.getFrameTime(),0.0001);
+        assertEquals(0.2, kf.getFrameTime(),TIME_PRECISION);
         assertThat(Floats.asList(kf.getDofs()), contains(2f,3f,4f));
     }
     
@@ -58,7 +58,7 @@ public class CubicSplineFloatInterpolatorTest
     public void testInterpolate01()
     {
         KeyFrame kf = interp.interpolate(0.1);
-        assertEquals(0.1, kf.getFrameTime(),0.0001);
+        assertEquals(0.1, kf.getFrameTime(),TIME_PRECISION);
         assertThat(kf.getDofs()[0],greaterThan(1f));
         assertThat(kf.getDofs()[0],lessThan(2f));
         assertThat(kf.getDofs()[1],greaterThan(2f));

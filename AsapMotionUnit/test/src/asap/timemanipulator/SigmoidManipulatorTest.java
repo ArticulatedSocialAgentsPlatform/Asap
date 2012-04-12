@@ -1,5 +1,10 @@
 package asap.timemanipulator;
 
+/**
+ * unit tests for the SigmoidManipulator
+ * @author hvanwelbergen
+ *
+ */
 public class SigmoidManipulatorTest extends AbstractTimeManipulatorTest
 {
 

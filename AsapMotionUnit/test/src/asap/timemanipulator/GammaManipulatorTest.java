@@ -1,5 +1,10 @@
 package asap.timemanipulator;
 
+/**
+ * Unit tests for the GammaManipulator
+ * @author hvanwelbergen
+ *
+ */
 public class GammaManipulatorTest extends AbstractTimeManipulatorTest
 {
 

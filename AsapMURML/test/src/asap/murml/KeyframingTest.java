@@ -16,6 +16,7 @@ import asap.murml.Keyframing.Mode;
  */
 public class KeyframingTest
 {
+    private static final double PARAMETER_PRECISION = 0.0001;
     @Test
     public void testRead()
     {
@@ -27,7 +28,7 @@ public class KeyframingTest
                 + "(dB_OpenMouthL 3 0 1 0) (dB_OpenMouthE 3 0 0 1)</posture>" + "</frame>" + "</phase></keyframing>");
         assertEquals(Mode.SPLINE, kf.getMode());
         assertEquals(100, kf.getPriority());
-        assertEquals(10, kf.getEasescale(), 0.0001);
+        assertEquals(10, kf.getEasescale(), PARAMETER_PRECISION);
 
         Phase ph = kf.getPhases().get(0);
         Frame f0 = ph.getFrames().get(0);
@@ -36,7 +37,7 @@ public class KeyframingTest
                 IsIterableContainingInAnyOrder.containsInAnyOrder(createJointValue("dB_Smile", 70, 0, 0),
                         createJointValue("dB_OpenMouthWOOQ", 0, 0, 0), createJointValue("dB_OpenMouthL", 0, 0, 0),
                         createJointValue("dB_OpenMouthE", 0, 0, 0)));
-        assertEquals(0.1, f0.getFtime(), 0.001);
+        assertEquals(0.1, f0.getFtime(), PARAMETER_PRECISION);
 
         Frame f1 = ph.getFrames().get(1);
         assertThat(
@@ -44,6 +45,6 @@ public class KeyframingTest
                 IsIterableContainingInAnyOrder.containsInAnyOrder(createJointValue("dB_Smile", 80, 0, 0),
                         createJointValue("dB_OpenMouthWOOQ", 1, 0, 0), createJointValue("dB_OpenMouthL", 0, 1, 0),
                         createJointValue("dB_OpenMouthE", 0, 0, 1)));
-        assertEquals(0.2, f1.getFtime(), 0.001);
+        assertEquals(0.2, f1.getFtime(), PARAMETER_PRECISION);
     }
 }

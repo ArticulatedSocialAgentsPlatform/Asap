@@ -8,6 +8,11 @@ import hmi.realizertester.AbstractElckerlycRealizerTest;
 import java.io.IOException;
 import org.junit.Test;
 
+/**
+ * Asap/MURML specific testcases for the AsapRealizer 
+ * @author hvanwelbergen
+ *
+ */
 public abstract class AbstractASAPRealizerTest extends AbstractElckerlycRealizerTest
 {
     @Test

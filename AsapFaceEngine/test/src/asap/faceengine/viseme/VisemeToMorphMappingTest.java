@@ -12,13 +12,13 @@ import org.junit.Test;
 public class VisemeToMorphMappingTest
 {
     private VisemeToMorphMapping map = new VisemeToMorphMapping();
-    
+    private static final double PARAMETER_PRECISION = 0.0001;
     @Test
     public void testReadXML()
     {
         map.readXML("<VisemeToMorphMapping><Mapping viseme=\"10\" target=\"visemetest\"/></VisemeToMorphMapping>");
         assertEquals("visemetest",map.getMorphTargetForViseme(10).morphName);
-        assertEquals(1,map.getMorphTargetForViseme(10).intensity,0.001);
+        assertEquals(1,map.getMorphTargetForViseme(10).intensity,PARAMETER_PRECISION);
     }
     
     @Test
@@ -26,7 +26,7 @@ public class VisemeToMorphMappingTest
     {
         map.readXML("<VisemeToMorphMapping><Mapping viseme=\"10\" intensity=\"0.5\" target=\"visemetest\"/></VisemeToMorphMapping>");
         assertEquals("visemetest",map.getMorphTargetForViseme(10).morphName);
-        assertEquals(0.5,map.getMorphTargetForViseme(10).intensity,0.001);
+        assertEquals(0.5,map.getMorphTargetForViseme(10).intensity,PARAMETER_PRECISION);
     }
     
     @Test

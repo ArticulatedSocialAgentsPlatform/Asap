@@ -11,6 +11,10 @@ import asap.environment.AsapVirtualHuman;
 import asap.utils.Environment;
 import static org.mockito.Mockito.*;
 
+/**
+ * LipSynchProviderLoader that creates a TimedFaceUnitLipSynchProviderLoader from the XML specification. 
+ * @author hvanwelbergen
+ */
 public class TimedFaceUnitLipSynchProviderLoaderTest
 {
     AsapVirtualHuman mockAsapVH = mock(AsapVirtualHuman.class);

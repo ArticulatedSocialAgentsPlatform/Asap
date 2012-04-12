@@ -1,12 +1,5 @@
 package asap.realizertester;
 
-import java.awt.Toolkit;
-import java.awt.event.WindowEvent;
-import java.io.IOException;
-import java.util.ArrayList;
-
-import javax.swing.JFrame;
-
 import hmi.animation.VJoint;
 import hmi.audioenvironment.AudioEnvironment;
 import hmi.elckerlyc.anticipator.Anticipator;
@@ -18,10 +11,17 @@ import hmi.physicsenvironment.OdePhysicsEnvironment;
 import hmi.renderenvironment.HmiRenderEnvironment;
 import hmi.renderenvironment.HmiRenderEnvironment.RenderStyle;
 
+import java.awt.Toolkit;
+import java.awt.event.WindowEvent;
+import java.io.IOException;
+import java.util.ArrayList;
+
+import javax.swing.JFrame;
+
 import org.junit.After;
+import org.junit.AfterClass;
 import org.junit.Before;
 import org.junit.BeforeClass;
-import org.junit.AfterClass;
 import org.junit.Ignore;
 import org.junit.Test;
 import org.slf4j.Logger;
@@ -29,13 +29,12 @@ import org.slf4j.LoggerFactory;
 
 import asap.environment.AsapEnvironment;
 import asap.environment.AsapVirtualHuman;
-import asap.realizertester.AbstractASAPRealizerTest;
 import asap.utils.Environment;
 
 /**
  * Integration test cases for the AsapRealizer
  * @author hvanwelbergen
- *
+ * 
  */
 public class PersistentFixtureAsapRealizerTest extends AbstractASAPRealizerTest
 {
@@ -48,7 +47,7 @@ public class PersistentFixtureAsapRealizerTest extends AbstractASAPRealizerTest
     private DummyAnticipator anticipator;
 
     private static JFrame mainUI = null;
-    
+
     static class DummyAnticipator extends Anticipator
     {
         private TimePeg sp1, sp2;
@@ -84,11 +83,11 @@ public class PersistentFixtureAsapRealizerTest extends AbstractASAPRealizerTest
         MixedAnimationEnvironment mae = new MixedAnimationEnvironment();
         staticEnvironment = new AsapEnvironment();
         AudioEnvironment aue = new AudioEnvironment("LJWGL_JOAL");
-        
+
         mainUI = new JFrame("Asap BML Realizer Tester");
-        mainUI.setSize(1000,600);
-        
-        hre.init(); //canvas does not exist until init was called
+        mainUI.setSize(1000, 600);
+
+        hre.init(); // canvas does not exist until init was called
         ope.init();
         aue.init();
         mae.init(ope);
@@ -98,42 +97,42 @@ public class PersistentFixtureAsapRealizerTest extends AbstractASAPRealizerTest
         environments.add(mae);
         environments.add(aue);
         environments.add(staticEnvironment);
+
+        staticEnvironment.init(environments, ope.getPhysicsSchedulingClock()); // if no physics, just use renderclock here!
         
-        staticEnvironment.init(environments, ope.getPhysicsSchedulingClock()); //if no physics, just use renderclock here!
-        ope.addPrePhysicsCopyListener(staticEnvironment); // this clock method drives the engines in ee. if no physics, then register ee as a listener at the render clock!
-        
-        java.awt.Component canvas = hre.getAWTComponent(); //after init, get canvas and add to window
+        // this clock method drives the engines in ee. if no physics, then register ee as a listener at the render clock!
+        ope.addPrePhysicsCopyListener(staticEnvironment); 
+
+        java.awt.Component canvas = hre.getAWTComponent(); // after init, get canvas and add to window
         mainUI.add(canvas);
         mainUI.setVisible(true);
-        
-        
+
         hre.startRenderClock();
         ope.startPhysicsClock();
-        
-        //add worldobject "camera" that we can use to look at user :)
-        VJoint camera = hre.getCameraTarget(); 
+
+        // add worldobject "camera" that we can use to look at user :)
+        VJoint camera = hre.getCameraTarget();
         staticEnvironment.getWorldObjectManager().addWorldObject("camera", new WorldObject(camera));
-        
+
         try
         {
-            //vHuman = staticEnvironment.loadVirtualHuman("blueguy", "Humanoids/blueguy", "blueguy_asaploader_mary_hudson.xml", "blueguy - test avatar");
-            //vHuman = staticEnvironment.loadVirtualHuman("Humanoids/armandia", "vhloadermaryttsasaprealizertester.xml", "TestAvatar");
-            vHuman = staticEnvironment.loadVirtualHuman("armandia", "Humanoids/armandia", "armandia_asaploader_mary_hudson.xml", "TestAvatar");
+            // vHuman = staticEnvironment.loadVirtualHuman("blueguy", "Humanoids/blueguy",
+            //"blueguy_asaploader_mary_hudson.xml", "blueguy - test avatar");
+            // vHuman = staticEnvironment.loadVirtualHuman("Humanoids/armandia", "vhloadermaryttsasaprealizertester.xml", "TestAvatar");
+            vHuman = staticEnvironment.loadVirtualHuman("armandia", "Humanoids/armandia", "armandia_asaploader_mary_hudson.xml",
+                    "TestAvatar");
         }
         catch (IOException ex)
         {
             System.out.println("Cannot load VH");
         }
 
-        hre.loadBox("bluebox", new float[]{0.05f,0.05f,0.05f}, RenderStyle.LINE, 
-               new float[]{ 0.2f, 0.2f, 1, 1 },  
-               new float[]{ 0.2f, 0.2f, 1, 1 }, 
-               new float[]{ 0.2f, 0.2f, 1, 0 }, 
-               new float[]{ 0.2f, 0.2f, 1, 1 });
+        hre.loadBox("bluebox", new float[] { 0.05f, 0.05f, 0.05f }, RenderStyle.LINE, new float[] { 0.2f, 0.2f, 1, 1 }, new float[] { 0.2f,
+                0.2f, 1, 1 }, new float[] { 0.2f, 0.2f, 1, 0 }, new float[] { 0.2f, 0.2f, 1, 1 });
         VJoint boxJoint = hre.getObjectRootJoint("bluebox");
         boxJoint.setTranslation(-0.25f, 1.45f, 0.3f);
         staticEnvironment.getWorldObjectManager().addWorldObject("bluebox", new WorldObject(boxJoint));
-        logger.debug("Finished setup");        
+        logger.debug("Finished setup");
     }
 
     @Before
@@ -152,24 +151,24 @@ public class PersistentFixtureAsapRealizerTest extends AbstractASAPRealizerTest
 
     @Override
     @Ignore
-    public void testTransition()    //transition behaviors are now deprecated
+    public void testTransition() // transition behaviors are now deprecated
     {
-        
+
     }
-    
+
     @Test
     public void testTemporaryInvalidTimingInAppend() throws InterruptedException, IOException
     {
-        String bmlString1 = "<bml id=\"bml1\" xmlns:bmlt=\"http://hmi.ewi.utwente.nl/bmlt\" " +
-        		"bmlt:preplan=\"true\"><speech id=\"sp1\"><text>Hello</text></speech></bml>";
-        String bmlString2 = "<bml id=\"bml2\" composition=\"append\">" +
-        		"<wait id=\"w1\" start=\"0\" end=\"anticipators:dummyanticipator:dummy1\"/></bml>";
-        String bmlString3 = "<bml id=\"bml3\" composition=\"append\">" +
-        		"<speech id=\"sp1\"><text>Hello hello hello hello hello hello </text></speech></bml>";
-        String bmlString4 = "<bml id=\"bml4\" composition=\"append\">" +
-        		"<wait id=\"w1\" start=\"0\" end=\"anticipators:dummyanticipator:dummy2\"/></bml>";
-        String bmlString5 = "<bml id=\"bml5\" composition=\"append\">" +
-        		"<speech id=\"sp1\"><text>Hello hello hello hello hello hello </text></speech></bml>";
+        String bmlString1 = "<bml id=\"bml1\" xmlns:bmlt=\"http://hmi.ewi.utwente.nl/bmlt\" "
+                + "bmlt:preplan=\"true\"><speech id=\"sp1\"><text>Hello</text></speech></bml>";
+        String bmlString2 = "<bml id=\"bml2\" composition=\"append\">"
+                + "<wait id=\"w1\" start=\"0\" end=\"anticipators:dummyanticipator:dummy1\"/></bml>";
+        String bmlString3 = "<bml id=\"bml3\" composition=\"append\">"
+                + "<speech id=\"sp1\"><text>Hello hello hello hello hello hello </text></speech></bml>";
+        String bmlString4 = "<bml id=\"bml4\" composition=\"append\">"
+                + "<wait id=\"w1\" start=\"0\" end=\"anticipators:dummyanticipator:dummy2\"/></bml>";
+        String bmlString5 = "<bml id=\"bml5\" composition=\"append\">"
+                + "<speech id=\"sp1\"><text>Hello hello hello hello hello hello </text></speech></bml>";
         String bmlString6 = "<bml id=\"bml6\" xmlns:bmlt=\"http://hmi.ewi.utwente.nl/bmlt\" bmlt:onStart=\"bml1\"></bml>";
         realizerPort.performBML(bmlString1);
         realizerPort.performBML(bmlString2);
@@ -204,8 +203,9 @@ public class PersistentFixtureAsapRealizerTest extends AbstractASAPRealizerTest
     public static void cleanup()
     {
         staticEnvironment.requestShutdown();
-        //no need to pull the plug on the JFrame as the application will end now?
-        while (!staticEnvironment.isShutdown()){
+        // no need to pull the plug on the JFrame as the application will end now?
+        while (!staticEnvironment.isShutdown())
+        {
             logger.debug("wait for shutdown");
             try
             {
@@ -213,10 +213,10 @@ public class PersistentFixtureAsapRealizerTest extends AbstractASAPRealizerTest
             }
             catch (Exception ex)
             {
-            
+
             }
         }
-        
+
         System.out.println("AsapEnvironment completely shut down.");
         System.out.println("Closing main GUI now.");
         // method to programatically close the frame, from
