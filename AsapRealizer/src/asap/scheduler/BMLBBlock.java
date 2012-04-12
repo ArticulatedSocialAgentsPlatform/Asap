@@ -3,6 +3,7 @@ package asap.scheduler;
 import hmi.elckerlyc.pegboard.BehaviorCluster;
 import hmi.elckerlyc.pegboard.BehaviorKey;
 import hmi.elckerlyc.pegboard.PegBoard;
+import hmi.elckerlyc.pegboard.TimePeg;
 import hmi.elckerlyc.planunit.TimedPlanUnitState;
 import hmi.elckerlyc.scheduler.AbstractBMLBlock;
 import hmi.elckerlyc.scheduler.BMLScheduler;
@@ -47,29 +48,34 @@ public class BMLBBlock extends AbstractBMLBlock
     {
         this(id, s, pb, new HashSet<String>(), new HashSet<String>(), new HashSet<String>());
     }
-    
-    
-    //assumes that for all behaviors in the cluster, their start is resolved and listed on the PegBoard
+
+    // assumes that for all behaviors in the cluster, their start is resolved and listed on the PegBoard
     private void reAlignUngroundedCluster(BehaviorCluster cluster)
     {
         double shift = Double.MAX_VALUE;
         boolean shiftRequired = false;
-        
-        //one (or more) of the behaviors should start at local time 0. Find the timeshift that makes this happen 
-        for(BehaviorKey bk:cluster.getBehaviors())
+
+        // one (or more) of the behaviors should start at local time 0. Find the timeshift that makes this happen
+        for (BehaviorKey bk : cluster.getBehaviors())
         {
-            double startTime = pegBoard.getPegTime(bk.getBmlId(), bk.getBehaviorId(), "start");
-            if(startTime<shift)
+            double startTime = pegBoard.getRelativePegTime(bmlId,bk.getBmlId(), bk.getBehaviorId(), "start");
+            if (startTime == TimePeg.VALUE_UNKNOWN)
             {
-                startTime = shift;
+                log.warn("Skipping realignment of behavior {}:{}, start peg not set.", bk.getBmlId(), bk.getBehaviorId());
+            }
+            else if (startTime < shift)
+            {
+                shift = startTime;
+                log.debug("TimeShift from {}:{} = {}",new Object[]{bk.getBmlId(),bk.getBehaviorId(),""+shift});                
                 shiftRequired = true;
             }
         }
         
-        if(shiftRequired)
+        if (shiftRequired)
         {
-            pegBoard.shiftCluster(cluster, -shift);            
-        }        
+            log.debug("TimeShift set: {}",shift);
+            pegBoard.shiftCluster(cluster, -shift);
+        }
     }
 
     private void reAlignBlock()
@@ -90,8 +96,8 @@ public class BMLBBlock extends AbstractBMLBlock
     @Override
     public void start()
     {
-        //scheduler.updateTiming(getBMLId());
-        //reAlignBlock();
+        scheduler.updateTiming(getBMLId());
+        reAlignBlock();
         super.start();
         activateOnStartBlocks();
     }

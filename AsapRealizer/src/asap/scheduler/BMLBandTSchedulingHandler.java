@@ -54,7 +54,7 @@ public class BMLBandTSchedulingHandler implements SchedulingHandler
             break;
         default:
         case UNKNOWN:
-            log.warn("Unknown scheduling composition, defaulting to merge");
+            log.warn("Unknown scheduling composition {} in BML block {}, defaulting to merge",bb.getSchedulingMechanism(),bb.getBmlId());
             break;
         case MERGE:
             break;

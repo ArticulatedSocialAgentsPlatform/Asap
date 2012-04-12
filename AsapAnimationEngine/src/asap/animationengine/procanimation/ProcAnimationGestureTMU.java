@@ -101,7 +101,7 @@ public class ProcAnimationGestureTMU extends TimedAnimationUnit
 
     public double getPreparationDuration()
     {
-        if (isLurking() || isPlaying())
+        if (isLurking() || isPlaying()||isPending())
         {
             return mu.getPreparationDuration();
         }
