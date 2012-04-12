@@ -56,7 +56,8 @@ public class GestureBindingTest
 
     private VJoint human;
     private GestureBinding gestureBinding;
-
+    private static final double PARAMETER_PRECISION = 0.0001;
+    
     @Before
     public void setup()
     {
@@ -97,7 +98,7 @@ public class GestureBindingTest
         List<TimedAnimationUnit> m = gestureBinding.getMotionUnit(BMLBlockPeg.GLOBALPEG, b, mockAniPlayer, pegBoard);
         assertEquals(1, m.size());
         assertTrue(Float.parseFloat(m.get(0).getMotionUnit().getParameterValue("r")) == 2.0);
-        assertEquals(0.5,Float.parseFloat(m.get(0).getMotionUnit().getParameterValue("a")),0.001);// BML default
+        assertEquals(0.5,Float.parseFloat(m.get(0).getMotionUnit().getParameterValue("a")),PARAMETER_PRECISION);// BML default
         assertEquals(m.get(0).getBMLId(), "bml1");
         assertEquals(m.get(0).getId(), "head1");
     }
@@ -109,8 +110,8 @@ public class GestureBindingTest
 
         List<TimedAnimationUnit> m = gestureBinding.getMotionUnit(BMLBlockPeg.GLOBALPEG, b, mockAniPlayer, pegBoard);
         assertEquals(1, m.size());
-        assertEquals(2, Float.parseFloat(m.get(0).getMotionUnit().getParameterValue("r")), 0.001);
-        assertEquals(0.5, Float.parseFloat(m.get(0).getMotionUnit().getParameterValue("a")), 0.001);
+        assertEquals(2, Float.parseFloat(m.get(0).getMotionUnit().getParameterValue("r")), PARAMETER_PRECISION);
+        assertEquals(0.5, Float.parseFloat(m.get(0).getMotionUnit().getParameterValue("a")), PARAMETER_PRECISION);
         assertEquals(m.get(0).getBMLId(), "bml1");
         assertEquals(m.get(0).getId(), "head1");
     }

@@ -45,6 +45,7 @@ public class ProcAnimationGestureMUMockupProcTest
     private VJoint vCurr;
     private ProcAnimationGestureMU pag;
     private PegBoard pegBoard = new PegBoard();
+    private static final double TIMING_PRECISION = 0.001;
     
     @SuppressWarnings("unchecked")
     @Before
@@ -136,8 +137,8 @@ public class ProcAnimationGestureMUMockupProcTest
     public void testCopy() throws MUPlayException
     {
         ProcAnimationGestureMU mu = pag.copy(mockAnimationPlayer);
-        assertEquals(0.2,mu.getKeyPosition(BMLGestureSync.STROKE_START.getId()).time,0.001);
-        assertEquals(0.8,mu.getKeyPosition(BMLGestureSync.STROKE_END.getId()).time,0.001);
+        assertEquals(0.2,mu.getKeyPosition(BMLGestureSync.STROKE_START.getId()).time,TIMING_PRECISION);
+        assertEquals(0.8,mu.getKeyPosition(BMLGestureSync.STROKE_END.getId()).time,TIMING_PRECISION);
         mu.setupTransitionUnits();
         mu.play(0.79);
         verify(mockProcAnimation,times(1)).play(eq(0.8,0.05));

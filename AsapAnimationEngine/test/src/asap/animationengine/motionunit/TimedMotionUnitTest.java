@@ -51,7 +51,8 @@ public class TimedMotionUnitTest extends AbstractTimedPlanUnitTest
     private ListFeedbackListener fbl;
     private TimedAnimationUnit tmu;
     private PegBoard pegBoard = new PegBoard();
-
+    private static final double TIMING_PRECISION = 0.01;
+    
     @Before
     public void setup()
     {
@@ -67,8 +68,8 @@ public class TimedMotionUnitTest extends AbstractTimedPlanUnitTest
         assertEquals(expected.behaviorId, actual.behaviorId);
         assertEquals(expected.bmlId, actual.bmlId);
         assertEquals(expected.syncId, actual.syncId);
-        assertEquals(expected.bmlBlockTime, actual.bmlBlockTime, 0.01);
-        assertEquals(expected.timeStamp, actual.timeStamp, 0.01);
+        assertEquals(expected.bmlBlockTime, actual.bmlBlockTime, TIMING_PRECISION);
+        assertEquals(expected.timeStamp, actual.timeStamp, TIMING_PRECISION);
     }
 
     @Test
@@ -82,7 +83,7 @@ public class TimedMotionUnitTest extends AbstractTimedPlanUnitTest
     public void getRelativeTime() throws SyncPointNotFoundException
     {
         muMock.addKeyPosition(new KeyPosition("stroke", 0.4, 1));
-        assertEquals(0.4, tmu.getRelativeTime("stroke"), 0.01);
+        assertEquals(0.4, tmu.getRelativeTime("stroke"), TIMING_PRECISION);
     }
 
     @Test
@@ -90,14 +91,14 @@ public class TimedMotionUnitTest extends AbstractTimedPlanUnitTest
     {
         muMock.addKeyPosition(new KeyPosition(BMLGestureSync.STROKE.getId(), 0.4, 1));
         tmu.resolveDefaultBMLKeyPositions();
-        assertEquals(0.0, tmu.getRelativeTime(BMLGestureSync.START.getId()), 0.01);
-        assertEquals(0.0, tmu.getRelativeTime(BMLGestureSync.READY.getId()), 0.01);
-        assertEquals(0.0, tmu.getRelativeTime(BMLGestureSync.STROKE_START.getId()), 0.01);
-        assertEquals(0.4, tmu.getRelativeTime(BMLGestureSync.STROKE.getId()), 0.01);
-        assertEquals(1, tmu.getRelativeTime(BMLGestureSync.STROKE_END.getId()), 0.01);
-        assertEquals(1, tmu.getRelativeTime(BMLGestureSync.RELAX.getId()), 0.01);
-        assertEquals(1, tmu.getRelativeTime(BMLGestureSync.END.getId()), 0.01);
-        assertEquals(1, tmu.getRelativeTime("end"), 0.01);
+        assertEquals(0.0, tmu.getRelativeTime(BMLGestureSync.START.getId()), TIMING_PRECISION);
+        assertEquals(0.0, tmu.getRelativeTime(BMLGestureSync.READY.getId()), TIMING_PRECISION);
+        assertEquals(0.0, tmu.getRelativeTime(BMLGestureSync.STROKE_START.getId()), TIMING_PRECISION);
+        assertEquals(0.4, tmu.getRelativeTime(BMLGestureSync.STROKE.getId()), TIMING_PRECISION);
+        assertEquals(1, tmu.getRelativeTime(BMLGestureSync.STROKE_END.getId()), TIMING_PRECISION);
+        assertEquals(1, tmu.getRelativeTime(BMLGestureSync.RELAX.getId()), TIMING_PRECISION);
+        assertEquals(1, tmu.getRelativeTime(BMLGestureSync.END.getId()), TIMING_PRECISION);
+        assertEquals(1, tmu.getRelativeTime("end"), TIMING_PRECISION);
     }
 
     @Test
@@ -201,7 +202,7 @@ public class TimedMotionUnitTest extends AbstractTimedPlanUnitTest
         tmu.setTimePeg("start", tp);
         tmu.setState(TimedPlanUnitState.SUBSIDING);
         tmu.play(1);
-        verify(muMock,times(1)).play(doubleThat(closeTo(0.5,0.001)));
+        verify(muMock,times(1)).play(doubleThat(closeTo(0.5,TIMING_PRECISION)));
     }
 
     @Test
