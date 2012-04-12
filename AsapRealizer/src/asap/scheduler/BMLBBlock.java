@@ -90,8 +90,8 @@ public class BMLBBlock extends AbstractBMLBlock
     @Override
     public void start()
     {
-        scheduler.updateTiming(getBMLId());
-        reAlignBlock();
+        //scheduler.updateTiming(getBMLId());
+        //reAlignBlock();
         super.start();
         activateOnStartBlocks();
     }
