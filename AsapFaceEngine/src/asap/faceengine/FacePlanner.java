@@ -185,6 +185,7 @@ public class FacePlanner extends AbstractPlanner<TimedFaceUnit>
     public List<Class<? extends Behaviour>> getSupportedDescriptionExtensions()
     {
         List<Class<? extends Behaviour>> list = new ArrayList<Class<? extends Behaviour>>();
+        list.add(MURMLFaceBehaviour.class);
         return list;
     }
 
