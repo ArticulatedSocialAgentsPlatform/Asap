@@ -64,7 +64,8 @@ public class FacePlanner extends AbstractPlanner<TimedFaceUnit>
     /* register the MURML BML face behaviors with the BML parser... */
     static
     {
-        BMLInfo.addBehaviourType(MURMLFaceBehaviour.xmlTag(), MURMLFaceBehaviour.class);        
+        BMLInfo.addBehaviourType(MURMLFaceBehaviour.xmlTag(), MURMLFaceBehaviour.class);    
+        BMLInfo.addDescriptionExtension(MURMLFaceBehaviour.xmlTag(), MURMLFaceBehaviour.class);        
     }
     
     public FacePlanner(FeedbackManager bfm, FaceController fc, FACSConverter fconv, EmotionConverter econv, FaceBinding fb,
