@@ -21,6 +21,8 @@ package asap.animationengine.gesturebinding;
 import java.io.*;
 import java.util.*;
 
+import lombok.Getter;
+
 import hmi.bml.core.Behaviour;
 
 import hmi.util.*;
@@ -30,6 +32,11 @@ import org.slf4j.LoggerFactory;
 
 import asap.animationengine.motionunit.AnimationUnit;
 
+/**
+ * XML parser for the MotionUnitSpec in a gesturebinding
+ * @author Herwin
+ *
+ */
 class MotionUnitSpec extends XMLStructureAdapter implements ParameterDefaultsHandler
 {
     private final static Logger logger = LoggerFactory.getLogger(MotionUnitSpec.class.getName());
@@ -39,7 +46,7 @@ class MotionUnitSpec extends XMLStructureAdapter implements ParameterDefaultsHan
     private String specnamespace;
     
 
-    private ArrayList<MotionUnitSpecConstraint>constraints = new ArrayList<MotionUnitSpecConstraint>();
+    @Getter private ArrayList<MotionUnitSpecConstraint>constraints = new ArrayList<MotionUnitSpecConstraint>();
     private HashMap<String,String>parametermap = new HashMap<String,String>();
     private HashMap<String,MotionUnitParameterDefault>parameterdefault = new HashMap<String,MotionUnitParameterDefault>();
     

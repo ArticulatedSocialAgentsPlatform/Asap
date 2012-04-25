@@ -137,7 +137,8 @@ public class GestureBinding extends XMLStructureAdapter
                 MotionUnitSpec muSpec = new MotionUnitSpec(resources);
                 muSpec.readXML(tokenizer);
                 if (muSpec.motionUnit != null) specs.add(muSpec);
-                else logger.warn("Dropped motion unit spec because we could not construct the motion unit");
+                else logger.warn("Dropped motion unit spec because we could not construct the motion unit of type {}, constraints {}"
+                        ,muSpec.getType(), muSpec.getConstraints());
             }            
         }
     }  
