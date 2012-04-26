@@ -142,7 +142,7 @@ public class AnimationPlanPlayer implements PlanPlayer
                 if (tmu.isLurking() && !tmu.isSubUnit())
                 {
                     fbManager.puException(tmu, "Dropping " + tmu.getBMLId() + ":" + tmu.getId()
-                            + "for higher priority behaviors before it was even started", t);
+                            + "with priority "+tmu.getPriority()+ " for higher priority behaviors before it was even started", t);
                 }
                 log.debug("Dropping {}:{}",tmu.getBMLId(),tmu.getId());
                 Set<String> cleanup = new HashSet<String>(tmu.getKinematicJoints());
