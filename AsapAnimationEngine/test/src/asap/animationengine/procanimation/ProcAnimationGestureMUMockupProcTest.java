@@ -1,6 +1,6 @@
 package asap.animationengine.procanimation;
 
-import static hmi.elckerlyc.util.TimePegUtil.createTimePeg;
+import static hmi.elckerlyc.util.TimePegUtil.createAbsoluteTimePeg;
 import static org.junit.Assert.assertEquals;
 import static org.mockito.AdditionalMatchers.eq;
 import static org.mockito.Matchers.any;
@@ -46,6 +46,8 @@ public class ProcAnimationGestureMUMockupProcTest
     private ProcAnimationGestureMU pag;
     private PegBoard pegBoard = new PegBoard();
     private static final double TIMING_PRECISION = 0.001;
+    private static final double RELAX_DURATION = 0.5d;
+    private static final double PREFERED_STROKE_DURATION = 1d;
     
     @SuppressWarnings("unchecked")
     @Before
@@ -55,12 +57,12 @@ public class ProcAnimationGestureMUMockupProcTest
         VJoint vNext = HanimBody.getLOA1HanimBody();
         when(mockAnimationPlayer.getVCurr()).thenReturn(vCurr);
         when(mockAnimationPlayer.getVNext()).thenReturn(vNext);
-        when(mockProcAnimation.getPrefDuration()).thenReturn(1d);
-        when(mockProcAnimation.getPreferedDuration()).thenReturn(1d);
+        when(mockProcAnimation.getPrefDuration()).thenReturn(PREFERED_STROKE_DURATION);
+        when(mockProcAnimation.getPreferedDuration()).thenReturn(PREFERED_STROKE_DURATION);        
         when(mockProcAnimation.copy(mockAnimationPlayer)).thenReturn(mockProcAnimation);
         when(mockProcAnimation.copy((VJoint)any())).thenReturn(mockProcAnimationCopy);
-        when(mockProcAnimationCopy.getPrefDuration()).thenReturn(1d);
-        when(mockProcAnimationCopy.getPreferedDuration()).thenReturn(1d);
+        when(mockProcAnimationCopy.getPrefDuration()).thenReturn(PREFERED_STROKE_DURATION);
+        when(mockProcAnimationCopy.getPreferedDuration()).thenReturn(PREFERED_STROKE_DURATION);
         
         
         KeyPositionMocker.stubKeyPositions(mockProcAnimation,new KeyPosition("start",0),new KeyPosition("ready",0.4),
@@ -86,7 +88,7 @@ public class ProcAnimationGestureMUMockupProcTest
         RestPose mockRestPose = mock(RestPose.class);
         AnimationUnit mockRelaxMU = mock(AnimationUnit.class);
         when(mockAnimationPlayer.getRestPose()).thenReturn(mockRestPose);
-        when(mockRestPose.getTransitionToRestDuration((VJoint)any(), (Set<String>)any())).thenReturn(0.5d);
+        when(mockRestPose.getTransitionToRestDuration((VJoint)any(), (Set<String>)any())).thenReturn(RELAX_DURATION);
         when(mockRestPose.createTransitionToRest((Set<String>)any())).thenReturn(mockRelaxMU);
         pag.setupRelaxUnit();
     }
@@ -125,8 +127,8 @@ public class ProcAnimationGestureMUMockupProcTest
         pegBoard.addBMLBlockPeg(new BMLBlockPeg("bml1",0));
         TimedAnimationUnit tmu = pag.createTMU(mockFeedbackManager, BMLBlockPeg.GLOBALPEG, "bml1", "g1",pegBoard);        
         tmu.resolveDefaultBMLKeyPositions();
-        tmu.setTimePeg(BMLGestureSync.START.getId(), createTimePeg(0));
-        tmu.setTimePeg(BMLGestureSync.END.getId(), createTimePeg(2));
+        tmu.setTimePeg(BMLGestureSync.START.getId(), createAbsoluteTimePeg(0));
+        tmu.setTimePeg(BMLGestureSync.END.getId(), createAbsoluteTimePeg(2));
         tmu.setState(TimedPlanUnitState.LURKING);
         tmu.start(0);
         tmu.play(1.1);

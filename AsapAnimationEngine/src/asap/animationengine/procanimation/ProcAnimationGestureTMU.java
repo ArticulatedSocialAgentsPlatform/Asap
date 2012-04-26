@@ -99,18 +99,25 @@ public class ProcAnimationGestureTMU extends TimedAnimationUnit
         return null;
     }
 
-    public double getPreparationDuration()
+    public void updatePreparationDuration()
     {
-        if (isLurking() || isPlaying()||isPending())
+        if (isLurking() || isPending())
         {
-            return mu.getPreparationDuration();
+            prepDuration = mu.getPreparationDuration();
         }
-        return mu.getPreparationFromRestDuration();
+        else if (isInPrep())
+        {
+            prepDuration = mu.getPreparationFromRestDuration();
+        }
     }
 
-    public double getRetractionDuration()
+    public double updateRetractionDuration()
     {
-        return mu.getRetractionDuration();
+        if (!isSubsiding())
+        {
+            relaxDuration = mu.getRetractionDuration();
+        }
+        return relaxDuration;
     }
 
     private double resolveLeftRight(double defaultDuration, TimePeg pegLeft, TimePeg pegRight, Set<TimePeg> changeAblePegs)
@@ -218,6 +225,10 @@ public class ProcAnimationGestureTMU extends TimedAnimationUnit
             {
                 pegs[i].setGlobalValue(tpRef.getGlobalValue() + offset);
             }
+            else if (!changeAblePegs.contains(pegs[i]) && pegs[i].getGlobalValue() != TimePeg.VALUE_UNKNOWN)
+            {
+                offset = pegs[i].getGlobalValue() - tpRef.getGlobalValue();
+            }
         }
 
         // backward setting
@@ -234,6 +245,10 @@ public class ProcAnimationGestureTMU extends TimedAnimationUnit
             if (pegs[i] != null && changeAblePegs.contains(pegs[i]))
             {
                 pegs[i].setGlobalValue(globalValue);
+            }
+            else if (!changeAblePegs.contains(pegs[i]) && pegs[i].getGlobalValue() != TimePeg.VALUE_UNKNOWN)
+            {
+                offset = tpRef.getGlobalValue() - pegs[i].getGlobalValue();
             }
         }
     }
@@ -446,8 +461,8 @@ public class ProcAnimationGestureTMU extends TimedAnimationUnit
         strokeStartDuration = resolveLeftRight(strokeStartDuration, strokeStartPeg, strokePeg, changeAblePegs);
         strokeEndDuration = resolveLeftRight(strokeEndDuration, strokePeg, strokeEndPeg, changeAblePegs);
 
-        prepDuration = getPreparationDuration();
-        relaxDuration = getRetractionDuration();
+        updatePreparationDuration();
+        updateRetractionDuration();
         if (startPeg != null && endPeg != null)
         {
             if (!changeAblePegs.contains(startPeg) && !changeAblePegs.contains(endPeg))
@@ -460,8 +475,7 @@ public class ProcAnimationGestureTMU extends TimedAnimationUnit
                 else
                 {
                     double scale = totalDuration
-                            / (preStrokeHoldDuration + postStrokeHoldDuration + strokeStartDuration + 
-                                    strokeEndDuration + prepDuration + relaxDuration);
+                            / (preStrokeHoldDuration + postStrokeHoldDuration + strokeStartDuration + strokeEndDuration + prepDuration + relaxDuration);
                     prepDuration *= scale;
                     relaxDuration *= scale;
                 }
@@ -479,6 +493,7 @@ public class ProcAnimationGestureTMU extends TimedAnimationUnit
     @Override
     public void startUnit(double time) throws TimedPlanUnitPlayException
     {
+        prepDuration = mu.getPreparationDuration();
         setAllDefaultPegs();
         try
         {
