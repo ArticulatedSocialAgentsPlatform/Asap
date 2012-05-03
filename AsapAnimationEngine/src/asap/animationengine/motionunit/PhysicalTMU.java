@@ -31,4 +31,9 @@ public class PhysicalTMU extends TimedAnimationUnit
         pc.reset();
         logger.debug("Resetting controller {}:{}", getBMLId(), getId());
     }
+    
+    public int getPriority()
+    {
+        return ((ControllerMU)getMotionUnit()).getPriority();
+    }
 }

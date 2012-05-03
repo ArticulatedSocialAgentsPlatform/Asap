@@ -63,7 +63,7 @@ public class AnimationPlanner extends AbstractPlanner<TimedAnimationUnit>
     private GestureBinding gestureBinding;
     static
     {
-        BMLInfo.addBehaviourType(MURMLGestureBehaviour.xmlTag(), MURMLGestureBehaviour.class);        
+        BMLInfo.addBehaviourType(MURMLGestureBehaviour.xmlTag(), MURMLGestureBehaviour.class);
         BMLInfo.addDescriptionExtension(MURMLGestureBehaviour.xmlTag(), MURMLGestureBehaviour.class);
     }
     

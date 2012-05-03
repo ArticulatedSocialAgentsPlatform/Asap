@@ -52,7 +52,7 @@ public class ProcAnimationGestureTMUTest extends TimedMotionUnitTest
     private PegBoard pegBoard = new PegBoard();
     private static final double STROKE_DURATION = 1;
     private static final double TIME_PRECISION = 0.0001;
-    
+    private static final double RETRACTION_DURATION = 1;
     @SuppressWarnings("unchecked")
     protected ProcAnimationGestureTMU setupPlanUnit(FeedbackManager bfm, BMLBlockPeg bbPeg, String id, String bmlId)
     {
@@ -69,12 +69,13 @@ public class ProcAnimationGestureTMUTest extends TimedMotionUnitTest
         when(mockProcAnimation.copy((VJoint) any())).thenReturn(mockProcAnimation);
         when(mockProcAnimation.getPreferedDuration()).thenReturn(STROKE_DURATION);
         when(mockProcAnimation.getPrefDuration()).thenReturn(STROKE_DURATION);
+        
         KeyPositionMocker.stubKeyPositions(mockProcAnimation, new KeyPosition("start", 0), new KeyPosition("ready", 0.4), new KeyPosition(
                 "strokeStart", 0.4), new KeyPosition("stroke", 0.5), new KeyPosition("strokeEnd", 0.8), new KeyPosition("relax", 0.8),
                 new KeyPosition("end", 1));
 
         RestPose mockRestPose = mock(RestPose.class);
-        when(mockRestPose.getTransitionToRestDuration((VJoint) any(), (Set<String>) any())).thenReturn(1d);
+        when(mockRestPose.getTransitionToRestDuration((VJoint) any(), (Set<String>) any())).thenReturn(RETRACTION_DURATION);
 
         AnimationUnit mockRelaxMU = mock(AnimationUnit.class);
         when(mockAnimationPlayer.getRestPose()).thenReturn(mockRestPose);
@@ -250,5 +251,21 @@ public class ProcAnimationGestureTMUTest extends TimedMotionUnitTest
         assertEquals(STROKE_DURATION, tpu.getTime("strokeEnd") - tpu.getTime("strokeStart"), TIME_PRECISION);
         assertThat(tpu.getTimePeg("start").getLocalValue(), greaterThanOrEqualTo(0d));
         assertThat(tpu.getTimePeg("start").getGlobalValue(), greaterThanOrEqualTo(0d));
+    }
+    
+    @Test
+    public void testUpdateTimingStartRelaxSet() throws TMUPlayException
+    {
+        ProcAnimationGestureTMU tpu = setupPlanUnit(fbManager, BMLBlockPeg.GLOBALPEG, "id1", "bml1");
+        TimePeg tpStart = TimePegUtil.createAbsoluteTimePeg(0);
+        TimePeg tpRelax = TimePegUtil.createAbsoluteTimePeg(4);
+        tpu.setTimePeg("start", tpStart);
+        tpu.setTimePeg("relax", tpRelax);
+        
+        tpu.updateTiming(0);
+        assertEquals(0, tpu.getTimePeg("start").getGlobalValue(), TIME_PRECISION);
+        assertEquals(4, tpu.getTimePeg("relax").getGlobalValue(), TIME_PRECISION);
+        assertEquals(STROKE_DURATION, tpu.getTime("strokeEnd") - tpu.getTime("strokeStart"), TIME_PRECISION);
+        assertEquals(RETRACTION_DURATION, tpu.getTime("end")-tpu.getTime("relax"), TIME_PRECISION);
     }
 }
