@@ -1,6 +1,9 @@
 package asap.faceengine;
 
-import static org.junit.Assert.*;
+import static org.hamcrest.CoreMatchers.instanceOf;
+import static org.hamcrest.MatcherAssert.assertThat;
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertNotNull;
 import static org.mockito.Matchers.any;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
@@ -39,8 +42,6 @@ import asap.faceengine.facebinding.FaceBinding;
 import asap.faceengine.faceunit.FaceUnit;
 import asap.faceengine.faceunit.KeyframeMorphFU;
 import asap.faceengine.faceunit.TimedFaceUnit;
-import static org.hamcrest.MatcherAssert.assertThat;
-import static org.hamcrest.CoreMatchers.*;
 
 /**
  * Unit testcases for the FacePlanner
