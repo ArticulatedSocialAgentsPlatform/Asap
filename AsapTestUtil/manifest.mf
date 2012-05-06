@@ -1,0 +1,10 @@
+Manifest-Version: 1.0
+Main-Class: 
+
+Name: hmi/testutil/
+Specification-Title:    AsapTestUtil
+Specification-Version:  0.1
+Specification-Vendor:   Asap
+Implementation-Title:   AsapTestUtil
+Implementation-Version: April 27 2012  02:24 PM
+Implementation-Vendor:  Asap
