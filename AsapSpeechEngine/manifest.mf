@@ -1,0 +1,10 @@
+Manifest-Version: 1.0
+Main-Class: undefined
+
+Name: hmi/speechengine/
+Specification-Title:    AsapSpeechEngine
+Specification-Version:  0.2
+Specification-Vendor:   Asap
+Implementation-Title:   AsapSpeechEngine
+Implementation-Version: May 05 2012  04:06 PM
+Implementation-Vendor:  Asap

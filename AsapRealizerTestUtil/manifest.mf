@@ -1,0 +1,10 @@
+Manifest-Version: 1.0
+Main-Class: undefined
+
+Name: hmi/elckerlyctestutil/
+Specification-Title:    AsapRealizerTestUtil
+Specification-Version:  0.2
+Specification-Vendor:   Asap
+Implementation-Title:   AsapRealizerTestUtil
+Implementation-Version: May 05 2012  03:14 PM
+Implementation-Vendor:  Asap

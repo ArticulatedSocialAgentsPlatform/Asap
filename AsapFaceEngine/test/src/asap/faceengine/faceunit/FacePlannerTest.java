@@ -5,7 +5,7 @@ import static org.mockito.Matchers.any;
 import static org.mockito.Matchers.eq;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
-import hmi.bml.core.FaceBehaviour;
+import hmi.bml.core.FaceLexemeBehaviour;
 import hmi.bml.feedback.BMLExceptionFeedback;
 import hmi.bml.feedback.ListBMLExceptionListener;
 import hmi.bml.parser.Constraint;
@@ -59,7 +59,7 @@ public class FacePlannerTest
     private EmotionConverter mockEmotionConverter = mock(EmotionConverter.class);
     private FACSConverter mockFACSConverter = mock(FACSConverter.class);
     private FaceUnit mockFaceUnit = mock(FaceUnit.class);
-    private FaceBehaviour mockFaceBehaviour = mock(FaceBehaviour.class);
+    private FaceLexemeBehaviour mockFaceBehaviour = mock(FaceLexemeBehaviour.class);
 
     private List<BMLExceptionFeedback> beList;
     private Player facePlayer;
@@ -70,9 +70,10 @@ public class FacePlannerTest
     private static final String BMLID = "bml1";
     private final BMLBlockPeg bbPeg = new BMLBlockPeg("Peg1", 0.3);
 
-    private FaceBehaviour createFaceBehaviour() throws IOException
+    private FaceLexemeBehaviour createFaceLexemeBehaviour() throws IOException
     {
-        return new FaceBehaviour(BMLID, new XMLTokenizer("<face id=\"f1\" type=\"FACS\" au=\"1\" amount=\"0\"/>"));
+        //return new FaceLexemeBehaviour(BMLID, new XMLTokenizer("<faceLexeme id=\"f1\" type=\"FACS\" au=\"1\" amount=\"0\"/>"));
+        return new FaceLexemeBehaviour(BMLID, new XMLTokenizer("<faceLexeme id=\"f1\" lexeme=\"BLINK\" amount=\"0\"/>"));
     }
 
     @Before
@@ -90,7 +91,7 @@ public class FacePlannerTest
         List<TimedFaceUnit> fmus = new ArrayList<TimedFaceUnit>();
         TimedFaceUnit tfu = new TimedFaceUnit(fbManager, bbPeg, BMLID, "f1", mockFaceUnit);
         fmus.add(tfu);
-        when(mockFaceBinding.getFaceUnit((FeedbackManager) any(), (BMLBlockPeg) any(), (FaceBehaviour) any(), eq(mockFaceController),
+        when(mockFaceBinding.getFaceUnit((FeedbackManager) any(), (BMLBlockPeg) any(), (FaceLexemeBehaviour) any(), eq(mockFaceController),
                         eq(mockFACSConverter), eq(mockEmotionConverter))).thenReturn(fmus);
         when(mockFaceUnit.getPreferedDuration()).thenReturn(3.0);
     }
@@ -98,19 +99,19 @@ public class FacePlannerTest
     @Test
     public void testResolveUnsetStart() throws BehaviourPlanningException, IOException
     {
-        plannerTests.testResolveUnsetStart(createFaceBehaviour());
+        plannerTests.testResolveUnsetStart(createFaceLexemeBehaviour());
     }
 
     @Test(expected = BehaviourPlanningException.class)
     public void testResolveNonExistingSync() throws IOException, BehaviourPlanningException
     {
-        plannerTests.testResolveNonExistingSync(createFaceBehaviour());
+        plannerTests.testResolveNonExistingSync(createFaceLexemeBehaviour());
     }
 
     @Test
     public void testResolveStartOffset() throws BehaviourPlanningException, IOException
     {
-        plannerTests.testResolveStartOffset(createFaceBehaviour());
+        plannerTests.testResolveStartOffset(createFaceLexemeBehaviour());
     }
 
     @Test

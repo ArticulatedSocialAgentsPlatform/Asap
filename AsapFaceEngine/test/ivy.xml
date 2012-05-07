@@ -7,7 +7,7 @@
       <dependency org="powermock"			name="powermock-mockito" rev="latest.release"  />
       <dependency org="hamcrest" name="hamcrest-all"       rev="latest.release"  />
       <dependency org="HMI"      transitive="false" name="HmiTestUtil"        rev="latest.{$resolve.status}"  />
-      <dependency org="HMI"      transitive="false" name="HmiElckerlycTestUtil"        rev="latest.{$resolve.status}"  />
+      <dependency org="Asap"      transitive="false" name="AsapRealizerTestUtil"        rev="latest.{$resolve.status}"  />
       <dependency org="logback" name="logback-classic"     rev="latest.release"  />
       <dependency org="logback" name="logback-core"        rev="latest.release"  />
    </dependencies>

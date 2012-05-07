@@ -1,0 +1,127 @@
+package asap.audioengine;
+
+import static org.mockito.Mockito.mock;
+import hmi.audioenvironment.ClipSoundManager;
+import hmi.audioenvironment.LWJGLJoalSoundManager;
+import hmi.audioenvironment.SoundManager;
+import hmi.elckerlyc.feedback.FeedbackManager;
+import hmi.elckerlyc.pegboard.BMLBlockPeg;
+import hmi.elckerlyc.pegboard.TimePeg;
+import hmi.elckerlyc.planunit.TimedPlanUnitPlayException;
+import hmi.elckerlyc.planunit.TimedPlanUnitState;
+import hmi.elckerlyc.scheduler.BMLBlockManager;
+import hmi.util.Resources;
+import lombok.extern.slf4j.Slf4j;
+
+import org.junit.After;
+import org.junit.Before;
+import org.junit.Test;
+import org.junit.runner.RunWith;
+import org.powermock.core.classloader.annotations.PrepareForTest;
+import org.powermock.modules.junit4.PowerMockRunner;
+
+import asap.audioengine.AudioUnitPlanningException;
+import asap.audioengine.TimedWavAudioUnit;
+
+/**
+ * Integration test for the TimedWavAudioUnit (using an actual .wav file)
+ * @author welberge
+ *
+ */
+@RunWith(PowerMockRunner.class)
+@PrepareForTest(BMLBlockManager.class)
+@Slf4j
+public class TimedWavAudioUnitIntegrationTest
+{
+    private FeedbackManager mockFeedBackManager = mock(FeedbackManager.class);
+    private SoundManager soundManager;
+    
+    
+    @Before
+    public void setup()
+    {
+        soundManager = new LWJGLJoalSoundManager();
+        try{
+            soundManager.init();    
+        }
+        catch (Exception e)
+        {
+            log.error("Cannot create LWJGLJoalSoundManager, falling back on ClipSoundManager");
+            soundManager = new ClipSoundManager();
+            soundManager.init();
+        }
+    }
+    
+    @After
+    public void tearDown()
+    {
+        soundManager.shutdown();
+    }
+    
+    @Test
+    public void test() throws TimedPlanUnitPlayException, AudioUnitPlanningException, InterruptedException
+    {
+        BMLBlockPeg bbPeg = new BMLBlockPeg("peg1", 0);
+        Resources res = new Resources("");
+        TimedWavAudioUnit twau = new TimedWavAudioUnit(soundManager,mockFeedBackManager,bbPeg, 
+                res.getInputStream("audio/audience.wav"), "bml1", "audio1");
+        TimePeg start = new TimePeg(bbPeg);
+        start.setGlobalValue(0);
+        twau.setStart(start);
+        twau.setup();
+        twau.setState(TimedPlanUnitState.LURKING);
+        twau.start(0);
+        twau.play(0);
+        Thread.sleep(5000);
+        twau.stop(10);
+        Thread.sleep(1000);
+    }
+    
+    @Test
+    public void testMono() throws TimedPlanUnitPlayException, AudioUnitPlanningException, InterruptedException
+    {
+        BMLBlockPeg bbPeg = new BMLBlockPeg("peg1", 0);
+        Resources res = new Resources("");
+        TimedWavAudioUnit twau = new TimedWavAudioUnit(soundManager,mockFeedBackManager,bbPeg, 
+                res.getInputStream("audio/audience_mono.wav"), "bml1", "audio1");
+        TimePeg start = new TimePeg(bbPeg);
+        start.setGlobalValue(0);
+        twau.setStart(start);
+        twau.setup();
+        twau.setState(TimedPlanUnitState.LURKING);
+        twau.start(0);
+        twau.play(0);
+        Thread.sleep(5000);
+        twau.stop(10);
+        Thread.sleep(1000);
+    }
+    
+
+    @Test
+    public void testSimultaneousAudio() throws TimedPlanUnitPlayException, AudioUnitPlanningException, InterruptedException
+    {
+        BMLBlockPeg bbPeg = new BMLBlockPeg("peg1", 0);
+        Resources res = new Resources("");
+        final int NUMCHANNELS = 20;
+        TimedWavAudioUnit twau[] = new TimedWavAudioUnit[NUMCHANNELS];  
+        for(int i=0;i<NUMCHANNELS;i++)
+        {
+            twau[i] = new TimedWavAudioUnit(soundManager,mockFeedBackManager,bbPeg, 
+                    res.getInputStream("audio/audience_mono.wav"), "bml1", "audio1");
+            TimePeg start = new TimePeg(bbPeg);
+            start.setGlobalValue(0);
+            twau[i].setStart(start);
+            twau[i].setup();
+            twau[i].setState(TimedPlanUnitState.LURKING);
+            twau[i].start(0);
+            twau[i].play(0);
+        }        
+        Thread.sleep(5000);
+        
+        for(int i=0;i<NUMCHANNELS;i++)
+        {
+            twau[i].stop(10);
+        }
+        Thread.sleep(1000);
+    }
+}

@@ -2,6 +2,7 @@ package asap.realizertester;
 
 import hmi.animation.VJoint;
 import hmi.audioenvironment.AudioEnvironment;
+import hmi.bml.ext.bmlt.BMLTInfo;
 import hmi.elckerlyc.anticipator.Anticipator;
 import hmi.elckerlyc.pegboard.BMLBlockPeg;
 import hmi.elckerlyc.pegboard.TimePeg;
@@ -38,6 +39,7 @@ import asap.utils.Environment;
  */
 public class PersistentFixtureAsapRealizerTest extends AbstractASAPRealizerTest
 {
+    
     private static AsapEnvironment staticEnvironment;
 
     private static final Logger logger = LoggerFactory.getLogger(PersistentFixtureAsapRealizerTest.class.getName());
@@ -78,6 +80,7 @@ public class PersistentFixtureAsapRealizerTest extends AbstractASAPRealizerTest
     public static void setupEnvironment() throws Exception
     {
         logger.debug("Started setup");
+        BMLTInfo.init();
         HmiRenderEnvironment hre = new HmiRenderEnvironment();
         OdePhysicsEnvironment ope = new OdePhysicsEnvironment();
         MixedAnimationEnvironment mae = new MixedAnimationEnvironment();
@@ -144,7 +147,7 @@ public class PersistentFixtureAsapRealizerTest extends AbstractASAPRealizerTest
         realizerPort.addListeners(this);
         anticipator = new DummyAnticipator(1000000d, 2000000d);
         vHuman.getElckerlycRealizer().getScheduler().addAnticipator("dummyanticipator", anticipator);
-        realizerPort.performBML("<bml id=\"replacesetup\" scheduling=\"replace\"/>");
+        realizerPort.performBML("<bml id=\"replacesetup\" composition=\"replace\"/>");
         waitForBMLEndFeedback("replacesetup");
         clearFeedbackLists();
     }

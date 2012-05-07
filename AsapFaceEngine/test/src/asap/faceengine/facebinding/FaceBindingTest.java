@@ -6,7 +6,7 @@ import static org.mockito.Mockito.mock;
 import java.io.IOException;
 import java.util.List;
 
-import hmi.bml.core.FaceBehaviour;
+import hmi.bml.core.FaceLexemeBehaviour;
 import hmi.elckerlyc.feedback.FeedbackManager;
 import hmi.xml.XMLTokenizer;
 
@@ -39,8 +39,8 @@ public class FaceBindingTest
     @Before
     public void setup()
     {
-        String binding = "<facebinding>" + "<FaceUnitSpec type=\"face\">" + "<constraints>"
-                + "<constraint name=\"type\" value=\"LEXICALIZED\"/>" + "<constraint name=\"lexeme\" value=\"smile\"/>" + "</constraints>"
+        String binding = "<facebinding>" + "<FaceUnitSpec type=\"faceLexeme\">" + "<constraints>"
+                + "<constraint name=\"lexeme\" value=\"smile\"/>" + "</constraints>"
                 + "<parametermap>" + "<parameter src=\"amount\" dst=\"intensity\"/>" + "</parametermap>" + "<parameterdefaults>"
                 + "<parameterdefault name=\"angle\" value=\"315\"/>" + "<parameterdefault name=\"activation\" value=\"1\"/>"
                 + "</parameterdefaults>" + "<FaceUnit type=\"Plutchik\"/>" + "</FaceUnitSpec>" + "<FaceUnitSpec type=\"face\">"
@@ -53,15 +53,15 @@ public class FaceBindingTest
         faceBinding.readXML(binding);
     }
 
-    private FaceBehaviour createFaceBehaviour(String bmlId, String bml) throws IOException
+    private FaceLexemeBehaviour createFaceLexemeBehaviour(String bmlId, String bml) throws IOException
     {
-        return new FaceBehaviour(bmlId, new XMLTokenizer(bml));
+        return new FaceLexemeBehaviour(bmlId, new XMLTokenizer(bml));
     }
 
     @Test
     public void testReadXML() throws IOException, ParameterException
     {
-        FaceBehaviour fbeh = createFaceBehaviour("bml1", "<face amount=\"3\" id=\"face1\" type=\"LEXICALIZED\" lexeme=\"smile\"/>");
+        FaceLexemeBehaviour fbeh = createFaceLexemeBehaviour("bml1", "<faceLexeme amount=\"3\" id=\"face1\" lexeme=\"smile\"/>");
 
         BMLBlockPeg bbPeg = new BMLBlockPeg("bml1", 0.3);
         List<TimedFaceUnit> fus = faceBinding.getFaceUnit(mockFeedbackManager, bbPeg, fbeh, mockFaceController, mockFacsConverter,

@@ -1,0 +1,9 @@
+Manifest-Version: 1.0
+
+Name: asap/environment
+Specification-Title:    AsapEnvironment
+Specification-Version:  0.9
+Specification-Vendor:   Asap
+Implementation-Title:   AsapEnvironment
+Implementation-Version: May 05 2012  03:45 PM
+Implementation-Vendor:  Asap

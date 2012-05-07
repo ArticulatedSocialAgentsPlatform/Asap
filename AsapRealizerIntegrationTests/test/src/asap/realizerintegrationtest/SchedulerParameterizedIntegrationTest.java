@@ -32,6 +32,7 @@ import hmi.bml.core.BMLBehaviorAttributeExtension;
 import hmi.bml.core.HeadBehaviour;
 import hmi.bml.core.SpeechBehaviour;
 import hmi.bml.ext.bmlt.BMLTBMLBehaviorAttributes;
+import hmi.bml.ext.bmlt.BMLTInfo;
 import hmi.bml.feedback.BMLExceptionFeedback;
 import hmi.bml.feedback.BMLExceptionListener;
 import hmi.bml.feedback.BMLWarningFeedback;
@@ -170,6 +171,11 @@ class TTSEngineFactory implements SpeechEngineFactory
 @RunWith(LabelledParameterized.class)
 public class SchedulerParameterizedIntegrationTest
 {
+    static
+    {
+        BMLTInfo.init();
+    }
+    
     private static final double PEGBOARD_PRECISION = 0.0001;
     protected Resources res;
     protected ElckerlycRealizer realizer;

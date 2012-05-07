@@ -1,0 +1,23 @@
+
+- bijna iedereen is afhankelijk van asaputils :) 
+
+- engines zijn afh van env, asaputils, en elck
+
+- envs zijn NIET afh van elckerlyc (!!)
+
+- embodimentlaoders zijn deel van de environmentimplementatie
+
+-------------------------
+
+SHUTDOWN
+
+altijd: prepareShutdown() + isShutdown(), omdat je soms niet weet of de shutdown in 1 x gelukt is (soms moet je op de volgende kloktik wachten voor completion of shutdown)
+
+denk erom: niet de klok uitzetten voordat alle shutdowns complete zijn want sommige environemtns kunnen de shutdown pas op de volgende kloktik afmaken
+
+virtualhumans: voordat de realizer en engines uitgezet worden moet je even de deur dicht gooien bij de realizer (dwz dat verdere BML verzoeken tot een warning leiden)
+
+synchroniseer je shutdown, zodat je niet bv rendert terwijl het canvas al weg is, of torques gaat toevoegen terwijl de physicsworld al weg is.
+-via shutdownsync object (bv asapenvironment)
+-via poisonpillrunnable (bv physicsenvironment)
+

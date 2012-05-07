@@ -3,5 +3,6 @@
    <dependencies>
       <dependency org="junit" name="junit"            rev="latest.release" />            
 	  <dependency org="saiba"     name="saibabml"           rev="latest.release"    />
+	  <dependency org="Asap"     name="AsapBML"           rev="latest.release"    />
    </dependencies>
 </ivy-module>

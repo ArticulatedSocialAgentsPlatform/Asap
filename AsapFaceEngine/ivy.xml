@@ -10,14 +10,14 @@
       <dependency org="HMI"   name="HmiMath"            rev="latest.${resolve.status}"   />
       <dependency org="HMI"   name="HmiAnimation"       rev="latest.${resolve.status}"   />
       <dependency org="HMI"   name="HmiFaceAnimation"   rev="latest.${resolve.status}"   />
-      <dependency org="HMI"   name="HmiBML"             rev="latest.${resolve.status}"   />
+      
 	  <dependency org="HMI"   name="HmiTTS"             transitive="false" rev="latest.${resolve.status}"   />
-	  <dependency org="HMI"   name="HmiElckerlyc"             transitive="false" rev="latest.${resolve.status}"   />
-	  <dependency org="HMI"   name="AsapEnvironment"             transitive="false" rev="latest.${resolve.status}"   />
-      <dependency org="HMI"   transitive="false" name="HmiElckerlyc"       rev="latest.${resolve.status}"   />
+	  <dependency org="Asap"   name="AsapRealizer"             transitive="false" rev="latest.${resolve.status}"   />
+	  <dependency org="Asap"   name="AsapEnvironment"             transitive="false" rev="latest.${resolve.status}"   />
       <dependency org="HMI"   transitive="false" name="AsapUtils"     rev="latest.${resolve.status}"   />    
-      <dependency org="HMI"   transitive="false" name="AsapEnvironment"     rev="latest.${resolve.status}"   />    
-      <dependency org="lombok"   name="lombok"     rev="latest.${resolve.status}"   />
+      
+	  <dependency org="saiba"     name="saibabml"           rev="latest.release"    />
+	  <dependency org="lombok"   name="lombok"     rev="latest.${resolve.status}"   />
 	  <dependency org="google"   name="guava"     rev="latest.${resolve.status}"   />
    </dependencies>
 </ivy-module>

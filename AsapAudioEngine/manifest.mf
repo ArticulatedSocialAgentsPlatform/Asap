@@ -1,0 +1,10 @@
+Manifest-Version: 1.0
+Main-Class: hmi.audioengine.Info
+
+Name: hmi/audioengine/
+Specification-Title:    AsapAudioEngine
+Specification-Version:  0.2
+Specification-Vendor:   Asap
+Implementation-Title:   AsapAudioEngine
+Implementation-Version: May 04 2012  09:20 PM
+Implementation-Vendor:  Asap

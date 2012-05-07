@@ -1,0 +1,79 @@
+package hmi.elckerlyc.interrupt;
+
+import static org.junit.Assert.assertEquals;
+import static org.powermock.api.mockito.PowerMockito.mock;
+import static org.powermock.api.mockito.PowerMockito.when;
+import hmi.bml.ext.bmlt.BMLTInterruptBehaviour;
+import hmi.bml.parser.Constraint;
+import hmi.elckerlyc.BehaviourPlanningException;
+import hmi.elckerlyc.DefaultPlayer;
+import hmi.elckerlyc.Player;
+import hmi.elckerlyc.feedback.FeedbackManager;
+import hmi.elckerlyc.pegboard.BMLBlockPeg;
+import hmi.elckerlyc.pegboard.TimePeg;
+import hmi.elckerlyc.planunit.PlanManager;
+import hmi.elckerlyc.planunit.SingleThreadedPlanPlayer;
+import hmi.elckerlyc.planunit.TimedPlanUnitState;
+import hmi.elckerlyc.scheduler.BMLScheduler;
+import hmi.elckerlyc.scheduler.TimePegAndConstraint;
+import hmi.xml.XMLTokenizer;
+
+import java.io.IOException;
+import java.util.ArrayList;
+import java.util.HashSet;
+
+import org.junit.Before;
+import org.junit.Test;
+import org.junit.runner.RunWith;
+import org.powermock.core.classloader.annotations.PrepareForTest;
+import org.powermock.modules.junit4.PowerMockRunner;
+
+/**
+ * Integration tests for the InterruptPlanner
+ * 
+ * @author welberge
+ */
+@RunWith(PowerMockRunner.class)
+@PrepareForTest(BMLScheduler.class)
+public class InterruptPlannerIntegrationTest
+{
+    private InterruptPlanner interruptPlanner;
+
+    private FeedbackManager mockFeedbackManager = mock(FeedbackManager.class);
+    
+    private BMLScheduler mockScheduler = mock(BMLScheduler.class);
+    
+    private PlanManager<TimedInterruptUnit> planManager = new PlanManager<TimedInterruptUnit>();
+    private Player player;
+    
+    private BMLTInterruptBehaviour createInteruptBehaviour(String bmlId, String bml) throws IOException
+    {
+        return new BMLTInterruptBehaviour(bmlId, new XMLTokenizer(bml));
+    }
+
+    @Before
+    public void setup()
+    {
+        player = new DefaultPlayer(new SingleThreadedPlanPlayer<TimedInterruptUnit>(mockFeedbackManager, planManager));
+        interruptPlanner = new InterruptPlanner(mockFeedbackManager, mockScheduler, planManager);
+    }
+
+    @Test
+    public void testPlay() throws BehaviourPlanningException, IOException
+    {
+        BMLTInterruptBehaviour ipb = createInteruptBehaviour("bml1",
+                "<interrupt xmlns=\"http://hmi.ewi.utwente.nl/bmlt\" target=\"bml3\" id=\"i1\"/>");
+        ArrayList<TimePegAndConstraint> sac = new ArrayList<TimePegAndConstraint>();
+        TimePeg tp = new TimePeg(BMLBlockPeg.GLOBALPEG);
+
+        sac.add(new TimePegAndConstraint("start", tp, new Constraint(), 0));
+        TimedInterruptUnit p = interruptPlanner.resolveSynchs(BMLBlockPeg.GLOBALPEG, ipb, sac);
+        interruptPlanner.addBehaviour(BMLBlockPeg.GLOBALPEG, ipb, sac, p);
+
+        planManager.setBMLBlockState("bml1", TimedPlanUnitState.LURKING);
+        when(mockScheduler.getBehaviours("bml3")).thenReturn(new HashSet<String>());
+
+        player.play(0);
+        assertEquals(TimedPlanUnitState.DONE, p.getState());
+    }
+}

@@ -8,7 +8,7 @@ import static org.mockito.Matchers.any;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
 import hmi.bml.core.Behaviour;
-import hmi.bml.core.FaceBehaviour;
+import hmi.bml.core.FaceLexemeBehaviour;
 import hmi.bml.parser.Constraint;
 import hmi.elckerlyc.BehaviourPlanningException;
 import hmi.elckerlyc.PlannerTests;
@@ -81,9 +81,9 @@ public class FacePlannerTest
         when(mockUnit.hasValidParameters()).thenReturn(true);
     }
 
-    public FaceBehaviour createFaceBehaviour() throws IOException
+    public FaceLexemeBehaviour createFaceBehaviour() throws IOException
     {
-        return new FaceBehaviour(BMLID, new XMLTokenizer("<face id=\"face1\" type=\"BLINK\"/>"));
+        return new FaceLexemeBehaviour(BMLID, new XMLTokenizer("<faceLexeme id=\"face1\" lexeme=\"BLINK\"/>"));
     }
 
     @Test

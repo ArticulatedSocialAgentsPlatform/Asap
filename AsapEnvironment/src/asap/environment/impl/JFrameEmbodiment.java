@@ -1,0 +1,263 @@
+/*******************************************************************************
+ * 
+ * Copyright (C) 2009 Human Media Interaction, University of Twente, the Netherlands
+ * 
+ * This file is part of the Elckerlyc BML realizer.
+ * 
+ * Elckerlyc is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
+ * 
+ * Elckerlyc is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ * 
+ * You should have received a copy of the GNU General Public License
+ * along with Elckerlyc.  If not, see http://www.gnu.org/licenses/.
+ ******************************************************************************/
+package asap.environment.impl;
+import hmi.bml.bridge.TCPIPToBMLRealizerAdapter;
+import hmi.bml.bridge.ui.BridgeServerUI;
+import hmi.bml.bridge.ui.FeedbackPanel;
+import hmi.bml.bridge.ui.RealizerBridgeUI;
+import hmi.xml.XMLStructureAdapter;
+import hmi.xml.XMLTokenizer;
+
+import java.awt.Toolkit;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
+import java.awt.event.WindowEvent;
+import java.io.IOException;
+import java.lang.reflect.InvocationTargetException;
+import java.util.HashMap;
+
+import javax.swing.BorderFactory;
+import javax.swing.BoxLayout;
+import javax.swing.JButton;
+import javax.swing.JComponent;
+import javax.swing.JFrame;
+import javax.swing.JPanel;
+import javax.swing.SwingUtilities;
+
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
+import asap.environment.AsapVirtualHuman;
+import asap.environment.EmbodimentLoader;
+import asap.environment.Loader;
+import asap.utils.Embodiment;
+import asap.utils.Environment;
+
+/** This "embodiment" alles a VH to create Swing GUI components. */
+public class JFrameEmbodiment implements JComponentEmbodiment, EmbodimentLoader
+{
+    private Logger logger = LoggerFactory.getLogger(JFrameEmbodiment.class.getName());
+
+    private XMLStructureAdapter adapter = new XMLStructureAdapter();
+
+    private AsapVirtualHuman theVirtualHuman = null;
+
+    /** The button to kill the virtualhuman */
+    private JButton killVH;
+
+    private JFrame theUI = null;
+    private JPanel contentPanel;
+
+    public JFrameEmbodiment()
+    {
+        try
+        {
+            SwingUtilities.invokeAndWait(new Runnable()
+            {
+
+                @Override
+                public void run()
+                {
+                    contentPanel = new JPanel();
+                }
+            });
+        }
+        catch (InterruptedException e)
+        {
+            logger.warn("Exception constructing contentPanel",e);
+            Thread.interrupted();
+        }
+        catch (InvocationTargetException e)
+        {
+            logger.warn("Exception constructing contentPanel",e);
+        }
+        
+    }
+
+    private String id = "";
+
+    public void setId(String id)
+    {
+        this.id = id;
+    }
+
+    @Override
+    public String getId()
+    {
+        return id;
+    }
+
+    /** No loading necessary, actually! Empty content expected. No required embodiments */
+    @Override
+    public void readXML(XMLTokenizer tokenizer, String newId, AsapVirtualHuman avh,
+            Environment[] environments, Loader... requiredLoaders) throws IOException
+    {
+        setId(newId);
+        theVirtualHuman = avh;
+
+        
+        final XMLTokenizer tok = tokenizer;
+        try
+        {
+            SwingUtilities.invokeAndWait(new Runnable()
+            {
+
+                @Override
+                public void run()
+                {
+                    // make UI frame
+                    theUI = new JFrame(theVirtualHuman.getName());
+                    theUI.setLocation(650, 50);
+                    theUI.setSize(600, 500);
+                    theUI.setDefaultCloseOperation(JFrame.DO_NOTHING_ON_CLOSE);
+                    theUI.setVisible(true);
+                    contentPanel.setLayout(new BoxLayout(contentPanel, BoxLayout.PAGE_AXIS));
+                    contentPanel.setAlignmentX(JFrame.LEFT_ALIGNMENT);
+                    contentPanel.setBorder(BorderFactory.createEmptyBorder(10, 10, 10, 10));
+                    theUI.getContentPane().add(contentPanel);
+
+                    
+                    // if specified by XML, create serverUI and/or BML test interface and/or feedbackpanel based on the elckerlycrealizer
+                    try
+                    {
+                        while (!tok.atETag("Loader"))
+                        {
+                            readSection(tok);
+                        }
+                    }
+                    catch (IOException e)
+                    {
+                        logger.warn("IOException reading section",e);
+                    }
+                }
+            });
+        }
+        catch (InterruptedException e)
+        {
+            logger.warn("Exception JFrameEmbodiment from XML",e);
+            Thread.interrupted();
+        }
+        catch (InvocationTargetException e)
+        {
+            logger.warn("Exception JFrameEmbodiment from XML",e);
+        }
+        
+
+        
+    }
+
+    protected void readSection(XMLTokenizer tokenizer) throws IOException
+    {
+        HashMap<String, String> attrMap = null;
+        if (tokenizer.atSTag("ServerUI"))
+        {
+            TCPIPToBMLRealizerAdapter theServer = theVirtualHuman.getTcpipToBMLRealizerAdapter();
+            BridgeServerUI bsui = null;
+            if (theServer == null)
+            {
+                bsui = new BridgeServerUI(theVirtualHuman.getRealizerPort(), 7521, 1257);
+            }
+            else
+            {
+                bsui = new BridgeServerUI(theVirtualHuman.getRealizerPort(), theServer);
+            }
+            addJComponent(bsui);
+            tokenizer.takeSTag("ServerUI");
+            tokenizer.takeETag("ServerUI");
+        }
+        else if (tokenizer.atSTag("BmlUI"))
+        {
+            attrMap = tokenizer.getAttributes();
+            String demoscriptdir = adapter.getOptionalAttribute("demoscriptresources", attrMap, "bml/defaultexamples");
+            addJComponent(new RealizerBridgeUI(theVirtualHuman.getRealizerPort(), demoscriptdir));
+            tokenizer.takeSTag("BmlUI");
+            tokenizer.takeETag("BmlUI");
+        }
+        else if (tokenizer.atSTag("FeedbackUI"))
+        {
+            addJComponent(new FeedbackPanel(theVirtualHuman.getRealizerPort()));
+            tokenizer.takeSTag("FeedbackUI");
+            tokenizer.takeETag("FeedbackUI");
+        }
+        else if (tokenizer.atSTag("KillButton"))
+        {
+
+            // make kill button
+            // make the 'kill VH' button and add it to this UI
+            killVH = new JButton("KILL VH");
+            killVH.addActionListener(new ActionListener()
+            {
+                public void actionPerformed(ActionEvent e)
+                {
+                    theVirtualHuman.unload();
+                }
+            });
+            addJComponent(killVH);
+            tokenizer.takeSTag("KillButton");
+            tokenizer.takeETag("KillButton");
+        }
+        else
+        {
+            throw tokenizer.getXMLScanException("Unknown tag in Loader content");
+        }
+
+    }
+
+    @Override
+    public void unload()
+    {
+        pullThePlug();
+    }
+
+    public void addJComponent(JComponent jc)
+    {
+        jc.setAlignmentX(JFrame.LEFT_ALIGNMENT);
+        contentPanel.add(jc);
+        contentPanel.revalidate();
+        contentPanel.repaint();
+    }
+
+    public void removeJComponent(JComponent jc)
+    {
+        contentPanel.remove(jc);
+        contentPanel.revalidate();
+        contentPanel.repaint();
+    }
+
+    /** Return this embodiment */
+    @Override
+    public Embodiment getEmbodiment()
+    {
+        return this;
+    }
+    
+    /**
+     * method to programatically close the frame, from
+     * http://stackoverflow.com/questions
+     * /1234912/how-to-programmatically-close-a-jframe
+     */
+    public void pullThePlug()
+    {
+        theUI.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
+        WindowEvent wev = new WindowEvent(theUI, WindowEvent.WINDOW_CLOSING);
+        Toolkit.getDefaultToolkit().getSystemEventQueue().postEvent(wev);
+    }
+
+}

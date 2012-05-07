@@ -1,0 +1,125 @@
+package hmi.elckerlyc.bridge;
+
+import hmi.bml.bridge.RealizerPort;
+import hmi.bml.ext.bmlt.feedback.BMLTSchedulingFinishedFeedback;
+import hmi.bml.ext.bmlt.feedback.BMLTSchedulingListener;
+import hmi.bml.ext.bmlt.feedback.BMLTSchedulingStartFeedback;
+import hmi.bml.ext.bmlt.feedback.XMLBMLTSchedulingFinishedFeedback;
+import hmi.bml.ext.bmlt.feedback.XMLBMLTSchedulingStartFeedback;
+import hmi.bml.feedback.BMLExceptionFeedback;
+import hmi.bml.feedback.BMLExceptionListener;
+import hmi.bml.feedback.BMLFeedbackListener;
+import hmi.bml.feedback.BMLListener;
+import hmi.bml.feedback.BMLPerformanceStartFeedback;
+import hmi.bml.feedback.BMLPerformanceStopFeedback;
+import hmi.bml.feedback.BMLSyncPointProgressFeedback;
+import hmi.bml.feedback.BMLWarningFeedback;
+import hmi.bml.feedback.BMLWarningListener;
+import hmi.bml.feedback.XMLBMLExceptionFeedback;
+import hmi.bml.feedback.XMLBMLPerformanceStartFeedback;
+import hmi.bml.feedback.XMLBMLPerformanceStopFeedback;
+import hmi.bml.feedback.XMLBMLSyncPointProgressFeedback;
+import hmi.bml.feedback.XMLBMLWarningFeedback;
+
+import org.slf4j.Logger;
+
+import asap.utils.SchedulingClock;
+
+
+/**
+ * A LoggingRealizerBridge can be put between two bridges to log their communication. 
+ * It logs feedback from its output bridge and logs BML requests from its input bridge.
+ * On construction, it is provided with a Elckerlyc.SchedulingClock; the timestamps from this clock
+ * are logged together with the requests.
+ * @author welberge
+ * @author reidsma
+ */
+public class LoggingRealizerBridge implements RealizerPort, BMLFeedbackListener, BMLExceptionListener,
+        BMLWarningListener, BMLTSchedulingListener
+{
+    private final Logger logger;
+    private final RealizerPort outputBridge;
+    private final SchedulingClock clock;
+    private final boolean logRequests;
+    private final boolean logFeedback;
+    
+    public LoggingRealizerBridge(Logger logger, RealizerPort outBridge, SchedulingClock clock)
+    {
+      this(logger, outBridge, clock, true, true);
+    }
+    public LoggingRealizerBridge(Logger logger, RealizerPort outBridge, SchedulingClock clock, boolean logR, boolean logF)
+    {
+        this.logger = logger;
+        this.outputBridge = outBridge;
+        this.clock = clock;
+        this.logRequests = logR;
+        this.logFeedback = logF;
+        outputBridge.addListeners(this);        
+    }
+
+    @Override
+    public void performanceStop(BMLPerformanceStopFeedback psf)
+    {
+        if (logFeedback)logger.info(new XMLBMLPerformanceStopFeedback(psf).toXMLString());
+    }
+
+    @Override
+    public void performanceStart(BMLPerformanceStartFeedback psf)
+    {
+        if (logFeedback)logger.info(new XMLBMLPerformanceStartFeedback(psf).toXMLString());
+    }
+
+    @Override
+    public void syncProgress(BMLSyncPointProgressFeedback spp)
+    {
+        if (logFeedback)logger.info(new XMLBMLSyncPointProgressFeedback(spp).toXMLString());
+    }
+
+    @Override
+    public void exception(BMLExceptionFeedback be)
+    {
+        if (logFeedback)logger.info(new XMLBMLExceptionFeedback(be).toXMLString());
+    }
+
+    @Override
+    public void warn(BMLWarningFeedback bw)
+    {
+        if (logFeedback)logger.info(new XMLBMLWarningFeedback(bw).toXMLString());
+    }
+
+    @Override
+    public void schedulingFinished(BMLTSchedulingFinishedFeedback pff)
+    {
+        if (logFeedback)logger.info(new XMLBMLTSchedulingFinishedFeedback(pff).toXMLString());
+    }
+
+    @Override
+    public void schedulingStart(BMLTSchedulingStartFeedback psf)
+    {
+        if (logFeedback)logger.info(new XMLBMLTSchedulingStartFeedback(psf).toXMLString());
+    }
+
+    @Override
+    public void addListeners(BMLListener... listeners)
+    {
+        outputBridge.addListeners(listeners);
+    }
+
+    @Override
+    public void performBML(String bmlString)
+    {
+      if (logRequests)
+      {
+        logger.info("<entry name=\"{}\" time=\"{}\">", logger.getName(), clock.getTime());
+        logger.info(bmlString);
+        logger.info("</entry>");
+      }
+      outputBridge.performBML(bmlString);
+    }
+
+    @Override
+    public void removeAllListeners()
+    {
+        outputBridge.removeAllListeners();        
+    }
+}

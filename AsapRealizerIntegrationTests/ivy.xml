@@ -29,7 +29,7 @@
       <dependency org="HMI"   name="HmiTTSSapi5" transitive="false" rev="latest.${resolve.status}"   />
       <dependency org="HMI"   name="HmiTTSMary" transitive="false" rev="latest.${resolve.status}"   />
       <dependency org="HMI"   name="HmiNeurophysics" transitive="false" rev="latest.${resolve.status}"   />
-      <dependency org="HMI"   name="AsapEnvironment" transitive="false" rev="latest.${resolve.status}"   />
+      <dependency org="Asap"   name="AsapEnvironment" transitive="false" rev="latest.${resolve.status}"   />
       <dependency org="Asap"   name="AsapBML" transitive="false" rev="latest.${resolve.status}"   />
       <dependency org="Asap"   name="AsapAnimationEngine" transitive="false" rev="latest.${resolve.status}"   />
       <dependency org="Asap"   name="AsapRealizer" transitive="false" rev="latest.${resolve.status}"   />

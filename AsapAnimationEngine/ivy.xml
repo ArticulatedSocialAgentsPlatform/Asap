@@ -2,21 +2,19 @@
    <info organisation="Asap" module="AsapAnimationEngine"/>
    <dependencies>
       <dependency org="Asap"     name="AsapBML"           rev="latest.${resolve.status}"    />
-      <dependency org="Asap"     name="AsapRealizer"           rev="latest.${resolve.status}"    />
-      <dependency org="Asap"     name="AsapMotionUnit"           rev="latest.${resolve.status}"    />
-      <dependency org="Asap"     name="AsapMURML"           rev="latest.${resolve.status}"    />
-
-      <dependency org="HMI"     name="HmiBML"           rev="latest.${resolve.status}"    />
-      <dependency org="HMI"     name="HmiElckerlyc"           rev="latest.${resolve.status}"    />
+	  <dependency org="Asap"     name="AsapRealizer"           rev="latest.${resolve.status}"    />      	  
+	  <dependency org="Asap"     name="AsapMotionUnit"           rev="latest.${resolve.status}"    />
+	  <dependency org="Asap"     name="AsapMURML"           rev="latest.${resolve.status}"    />
+	  <dependency org="Asap"   transitive="false" name="AsapEnvironment"     rev="latest.${resolve.status}"   />    
+      
+      <dependency org="saiba"     name="saibabml"           rev="latest.release"    />
       <dependency org="HMI"   transitive="false" name="AsapUtils"     rev="latest.${resolve.status}"   />    
-      <dependency org="HMI"   transitive="false" name="AsapEnvironment"     rev="latest.${resolve.status}"   />    
       <dependency org="HMI"   transitive="false" name="HmiMixedAnimationEnvironment"     rev="latest.${resolve.status}"   />    
 	  <dependency org="HMI"   transitive="false" name="HmiPhysicsEnvironment"     rev="latest.${resolve.status}"   />    
       <dependency org="HMI"     name="HmiUtil"           rev="latest.${resolve.status}"    />
       <dependency org="HMI"     name="HmiXml"            rev="latest.${resolve.status}"    />
       <dependency org="HMI"     name="HmiPhysics"            rev="latest.${resolve.status}"    />
-      <dependency org="HMI"     name="HmiNeurophysics"            rev="latest.${resolve.status}"    />
-      <dependency org="HMI"     name="HmiAnimationEngine"    transitive="false"        rev="latest.${resolve.status}"    />
+      <dependency org="HMI"     name="HmiNeurophysics"            rev="latest.${resolve.status}"    />      
 	  <dependency org="HMI"     name="HmiTTS"    transitive="false"        rev="latest.${resolve.status}"    />
 
 

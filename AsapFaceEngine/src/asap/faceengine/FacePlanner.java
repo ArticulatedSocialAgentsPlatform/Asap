@@ -20,7 +20,8 @@ package asap.faceengine;
 
 import hmi.bml.BMLInfo;
 import hmi.bml.core.Behaviour;
-import hmi.bml.core.FaceBehaviour;
+import hmi.bml.core.FaceLexemeBehaviour;
+import hmi.bml.core.ext.FaceFacsBehaviour;
 import hmi.bml.ext.bmlt.BMLTFaceMorphBehaviour;
 import hmi.elckerlyc.AbstractPlanner;
 import hmi.elckerlyc.BehaviourPlanningException;
@@ -176,7 +177,8 @@ public class FacePlanner extends AbstractPlanner<TimedFaceUnit>
     public List<Class<? extends Behaviour>> getSupportedBehaviours()
     {
         List<Class<? extends Behaviour>> list = new ArrayList<Class<? extends Behaviour>>();
-        list.add(FaceBehaviour.class);
+        list.add(FaceLexemeBehaviour.class);
+        list.add(FaceFacsBehaviour.class);
         list.add(BMLTFaceMorphBehaviour.class);
         list.add(MURMLFaceBehaviour.class);
         return list;

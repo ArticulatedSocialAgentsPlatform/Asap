@@ -1,11 +1,12 @@
 <ivy-module version="2.0">
    <info organisation="Asap" module="AsapBML"/>
    <dependencies>
-      <dependency org="HMI"     name="HmiBML"           rev="latest.${resolve.status}"    />
+      
       <dependency org="HMI"     name="HmiUtil"           rev="latest.${resolve.status}"    />
       <dependency org="HMI"     name="HmiXml"            rev="latest.${resolve.status}"    />
       <dependency org="Asap"    name="AsapMURML"            rev="latest.${resolve.status}"    />
 
+	  <dependency org="saiba"     name="saibabml"           rev="latest.release"    />
       <dependency org="google"  name="guava"             rev="latest.release"    />
       <dependency org="lombok"  name="lombok"            rev="latest.release"    />
       <dependency org="jcip"    name="jcip-annotations"  rev="latest.release"  />
