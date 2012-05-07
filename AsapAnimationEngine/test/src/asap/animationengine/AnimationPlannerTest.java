@@ -79,7 +79,7 @@ public class AnimationPlannerTest
 
     public HeadBehaviour createHeadBehaviour() throws IOException
     {
-        return new HeadBehaviour(BMLID, new XMLTokenizer("<head id=\"nod1\" action=\"ROTATION\" rotation=\"NOD\"/>"));
+        return new HeadBehaviour(BMLID, new XMLTokenizer("<head id=\"nod1\" lexeme=\"NOD\"/>"));
     }
 
     @Test
@@ -103,7 +103,7 @@ public class AnimationPlannerTest
     @Test
     public void testAddedToPlanManager() throws IOException, BehaviourPlanningException
     {
-        HeadBehaviour beh = new HeadBehaviour(BMLID, new XMLTokenizer("<head id=\"nod1\" action=\"ROTATION\" rotation=\"NOD\"/>"));
+        HeadBehaviour beh = new HeadBehaviour(BMLID, new XMLTokenizer("<head id=\"nod1\" lexeme=\"NOD\"/>"));
         ArrayList<TimePegAndConstraint> sacs = new ArrayList<TimePegAndConstraint>();
         TimePeg sp = new TimePeg(bbPeg);
         sacs.add(new TimePegAndConstraint("start", sp, new Constraint(), 0, false));
@@ -115,7 +115,7 @@ public class AnimationPlannerTest
     @Test
     public void testUnknownStart() throws BehaviourPlanningException, IOException
     {
-        HeadBehaviour beh = new HeadBehaviour(BMLID, new XMLTokenizer("<head id=\"nod1\" action=\"ROTATION\" rotation=\"NOD\"/>"));
+        HeadBehaviour beh = new HeadBehaviour(BMLID, new XMLTokenizer("<head id=\"nod1\" lexeme=\"NOD\"/>"));
 
         ArrayList<TimePegAndConstraint> sacs = new ArrayList<TimePegAndConstraint>();
         TimePeg sp = new TimePeg(bbPeg);

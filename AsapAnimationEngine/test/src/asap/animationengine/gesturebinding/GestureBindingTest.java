@@ -65,12 +65,20 @@ public class GestureBindingTest
         Resources r = new Resources("");
         gestureBinding = new GestureBinding(r, mockFeedbackManager);
         String s = "<gesturebinding>" + "<MotionUnitSpec type=\"head\">" + "<constraints>"
-                + "<constraint name=\"action\" value=\"ROTATION\"/>" + "<constraint name=\"rotation\" value=\"NOD\"/>" + "</constraints>"
-                + "<parametermap>" + "<parameter src=\"amount\" dst=\"a\"/>" + "<parameter src=\"repeats\" dst=\"r\"/>" + "</parametermap>"
+                + "<constraint name=\"lexeme\" value=\"NOD\"/>" 
+                + "</constraints>"
+                + "<parametermap>"  
+                + "<parameter src=\"amount\" dst=\"a\"/>" 
+                + "<parameter src=\"repetition\" dst=\"r\"/>" 
+                + "</parametermap>"
                 + "<MotionUnit type=\"ProcAnimation\" file=\"Humanoids/shared/procanimation/smartbody/nod.xml\"/>" + "</MotionUnitSpec>"
-                + "<MotionUnitSpec type=\"head\">" + "<constraints>" + "<constraint name=\"action\" value=\"ROTATION\"/>"
-                + "<constraint name=\"rotation\" value=\"SHAKE\"/>" + "</constraints>" + "<parametermap>"
-                + "<parameter src=\"amount\" dst=\"a\"/>" + "<parameter src=\"repeats\" dst=\"r\"/>" + "</parametermap>"
+                
+                + "<MotionUnitSpec type=\"head\">" + "<constraints>" 
+                + "<constraint name=\"lexeme\" value=\"SHAKE\"/>" 
+                + "</constraints>" 
+                + "<parametermap>"
+                + "<parameter src=\"amount\" dst=\"a\"/>" 
+                + "<parameter src=\"repetition\" dst=\"r\"/>" + "</parametermap>"
                 + "<MotionUnit type=\"ProcAnimation\" file=\"Humanoids/shared/procanimation/smartbody/shake.xml\"/>" + "</MotionUnitSpec>"
                 + "<MotionUnitSpec type=\"keyframe\" namespace=\"http://hmi.ewi.utwente.nl/bmlt\">" + "<constraints>"
                 + "<constraint name=\"name\" value=\"vlakte\"/>" + "</constraints>"
@@ -93,7 +101,7 @@ public class GestureBindingTest
     @Test
     public void testGetHeadNodWithRepeats2() throws IOException, ParameterException
     {
-        HeadBehaviour b = createHeadBehaviour("bml1", "<head id=\"head1\" action=\"ROTATION\" rotation=\"NOD\" repeats=\"2\"/>");
+        HeadBehaviour b = createHeadBehaviour("bml1", "<head id=\"head1\" lexeme=\"NOD\" repetition=\"2\"/>");
 
         List<TimedAnimationUnit> m = gestureBinding.getMotionUnit(BMLBlockPeg.GLOBALPEG, b, mockAniPlayer, pegBoard);
         assertEquals(1, m.size());
@@ -106,12 +114,12 @@ public class GestureBindingTest
     @Test
     public void testGetHeadNodWithAmount2() throws IOException, ParameterException
     {
-        HeadBehaviour b = createHeadBehaviour("bml1", "<head id=\"head1\" action=\"ROTATION\" rotation=\"SHAKE\" repeats=\"2\"/>");
+        HeadBehaviour b = createHeadBehaviour("bml1", "<head id=\"head1\" lexeme=\"SHAKE\" amount=\"2\"/>");
 
         List<TimedAnimationUnit> m = gestureBinding.getMotionUnit(BMLBlockPeg.GLOBALPEG, b, mockAniPlayer, pegBoard);
         assertEquals(1, m.size());
-        assertEquals(2, Float.parseFloat(m.get(0).getMotionUnit().getParameterValue("r")), PARAMETER_PRECISION);
-        assertEquals(0.5, Float.parseFloat(m.get(0).getMotionUnit().getParameterValue("a")), PARAMETER_PRECISION);
+        assertEquals(1, Float.parseFloat(m.get(0).getMotionUnit().getParameterValue("r")), PARAMETER_PRECISION);
+        assertEquals(2, Float.parseFloat(m.get(0).getMotionUnit().getParameterValue("a")), PARAMETER_PRECISION);
         assertEquals(m.get(0).getBMLId(), "bml1");
         assertEquals(m.get(0).getId(), "head1");
     }
