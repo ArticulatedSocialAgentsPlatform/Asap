@@ -2,6 +2,7 @@ package asap.realizertester;
 
 import hmi.animation.VJoint;
 import hmi.audioenvironment.AudioEnvironment;
+import hmi.bml.bridge.RealizerPort;
 import hmi.bml.ext.bmlt.BMLTInfo;
 import hmi.elckerlyc.anticipator.Anticipator;
 import hmi.elckerlyc.pegboard.BMLBlockPeg;
@@ -142,14 +143,15 @@ public class PersistentFixtureAsapRealizerTest extends AbstractASAPRealizerTest
     public void setup() throws InterruptedException
     {
         env = staticEnvironment;
-        realizerPort = vHuman.getRealizerPort();
-        realizerPort.removeAllListeners();
-        realizerPort.addListeners(this);
+        RealizerPort realizerPort = vHuman.getRealizerPort();
+        realizerPort.removeAllListeners();  
+        realizerHandler.setRealizerTestPort(new AsapRealizerPort(realizerPort));
+        
         anticipator = new DummyAnticipator(1000000d, 2000000d);
         vHuman.getElckerlycRealizer().getScheduler().addAnticipator("dummyanticipator", anticipator);
-        realizerPort.performBML("<bml id=\"replacesetup\" composition=\"replace\"/>");
-        waitForBMLEndFeedback("replacesetup");
-        clearFeedbackLists();
+        realizerHandler.performBML("<bml id=\"replacesetup\" composition=\"replace\"/>");
+        realizerHandler.waitForBMLEndFeedback("replacesetup");
+        realizerHandler.clearFeedbackLists();
     }
 
     @Override
@@ -173,33 +175,32 @@ public class PersistentFixtureAsapRealizerTest extends AbstractASAPRealizerTest
         String bmlString5 = "<bml id=\"bml5\" composition=\"append\">"
                 + "<speech id=\"sp1\"><text>Hello hello hello hello hello hello </text></speech></bml>";
         String bmlString6 = "<bml id=\"bml6\" xmlns:bmlt=\"http://hmi.ewi.utwente.nl/bmlt\" bmlt:onStart=\"bml1\"></bml>";
-        realizerPort.performBML(bmlString1);
-        realizerPort.performBML(bmlString2);
-        realizerPort.performBML(bmlString3);
-        realizerPort.performBML(bmlString4);
-        realizerPort.performBML(bmlString5);
-        realizerPort.performBML(bmlString6);
-        waitForBMLStartFeedback("bml1");
+        realizerHandler.performBML(bmlString1);
+        realizerHandler.performBML(bmlString2);
+        realizerHandler.performBML(bmlString3);
+        realizerHandler.performBML(bmlString4);
+        realizerHandler.performBML(bmlString5);
+        realizerHandler.performBML(bmlString6);
+        realizerHandler.waitForBMLStartFeedback("bml1");
 
-        anticipator.setTime1(getBMLPerformanceStartFeedback("bml1").predictedEnd + 10);
-        realizerPort.performBML("<bml id=\"bmlx\"/>");
-        waitForBMLStartFeedback("bml3");
-        realizerPort.performBML("<bml id=\"bmly\"/>");
-        anticipator.setTime2(getBMLPerformanceStartFeedback("bml3").predictedEnd + 10);
-        realizerPort.performBML("<bml id=\"bmlz\"/>");
-        waitForBMLEndFeedback("bml5");
+        anticipator.setTime1(realizerHandler.getBMLPerformanceStartFeedback("bml1").predictedEnd + 10);
+        realizerHandler.performBML("<bml id=\"bmlx\"/>");
+        realizerHandler.waitForBMLStartFeedback("bml3");
+        realizerHandler.performBML("<bml id=\"bmly\"/>");
+        anticipator.setTime2(realizerHandler.getBMLPerformanceStartFeedback("bml3").predictedEnd + 10);
+        realizerHandler.performBML("<bml id=\"bmlz\"/>");
+        realizerHandler.waitForBMLEndFeedback("bml5");
 
-        assertNoDuplicateFeedbacks();
-        assertNoExceptions();
-        assertNoWarnings();
-
+        realizerHandler.assertNoDuplicateFeedbacks();
+        realizerHandler.assertNoExceptions();
+        realizerHandler.assertNoWarnings();
     }
 
     @After
     public void teardownEnvironment() throws InterruptedException
     {
-        realizerPort.performBML("<bml id=\"cleanup\" composition=\"replace\"/>");
-        waitForBMLEndFeedback("cleanup");
+        realizerHandler.performBML("<bml id=\"cleanup\" composition=\"replace\"/>");
+        realizerHandler.waitForBMLEndFeedback("cleanup");
     }
 
     @AfterClass
