@@ -5,7 +5,7 @@ import static org.hamcrest.Matchers.instanceOf;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNull;
 import hmi.bml.BMLInfo;
-import hmi.bml.core.FaceBehaviour;
+import hmi.bml.core.GestureBehaviour;
 import hmi.xml.XMLTokenizer;
 
 import java.io.IOException;
@@ -43,8 +43,8 @@ public class MURMLGestureBehaviourTest
         String murmlString = "<murml:murmlgesture xmlns:murml=\"http://www.techfak.uni-bielefeld.de/ags/soa/murml\" "
                 + "id=\"a1\">" + "<definition><keyframing><phase><frame ftime=\"0\"><posture>Humanoid "
                 + "(dB_Smile 3 70 0 0)</posture></frame></phase></keyframing></definition>" + "</murml:murmlgesture>";
-        String bmlString = "<face id=\"a1\" type=\"BLINK\"><description priority=\"1\" type=\"murmlgesture\">"+murmlString+"</description></face>";
-        FaceBehaviour f = new FaceBehaviour("bmla",new XMLTokenizer(bmlString));
+        String bmlString = "<gesture id=\"a1\" type=\"BEAT\"><description priority=\"1\" type=\"murmlgesture\">"+murmlString+"</description></gesture>";
+        GestureBehaviour f = new GestureBehaviour("bmla",new XMLTokenizer(bmlString));
         assertThat(f.descBehaviour, instanceOf(MURMLGestureBehaviour.class));
         MURMLGestureBehaviour beh = (MURMLGestureBehaviour)f.descBehaviour;
         assertEquals("bmla", beh.getBmlId());

@@ -65,7 +65,7 @@ public class MorphVisemeBinding implements VisemeBinding
 
         TimedFaceUnit tfu = visemeFU.copy(fc, null, null).createTFU(bfm, bbPeg, b.getBmlId(), b.id);
         // time pegs not yet set. Here we just arrange relative timing
-        tfu.getKeyPosition("ready").time = 0.5;
+        tfu.getKeyPosition("attackPeak").time = 0.5;
         tfu.getKeyPosition("relax").time = 0.5;
         
         return tfu;

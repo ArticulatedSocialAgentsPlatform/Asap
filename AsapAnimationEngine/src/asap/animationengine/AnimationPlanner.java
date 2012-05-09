@@ -98,7 +98,7 @@ public class AnimationPlanner extends AbstractPlanner<TimedAnimationUnit>
         }
 
         // apply syncs to tmu
-        tmu.resolveDefaultBMLKeyPositions();
+        tmu.resolveGestureKeyPositions();
         linkSynchs(tmu, sacs);
 
         planManager.addPlanUnit(tmu);
@@ -115,7 +115,7 @@ public class AnimationPlanner extends AbstractPlanner<TimedAnimationUnit>
     public TimedAnimationUnit resolveSynchs(BMLBlockPeg bbPeg, Behaviour b, List<TimePegAndConstraint> sac) throws BehaviourPlanningException
     {
         TimedAnimationUnit tmu = createTAU(bbPeg, b);
-        tmu.resolveDefaultBMLKeyPositions();
+        tmu.resolveGestureKeyPositions();
         tmu.resolveSynchs(bbPeg, b, sac);
         return tmu;
     }

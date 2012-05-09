@@ -142,7 +142,7 @@ public class PersistentFixtureAsapRealizerTest extends AbstractASAPRealizerTest
     @Before
     public void setup() throws InterruptedException
     {
-        env = staticEnvironment;
+        //env = staticEnvironment;
         RealizerPort realizerPort = vHuman.getRealizerPort();
         realizerPort.removeAllListeners();  
         realizerHandler.setRealizerTestPort(new AsapRealizerPort(realizerPort));

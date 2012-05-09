@@ -75,7 +75,7 @@ public class TimedMotionUnitTest extends AbstractTimedPlanUnitTest
     @Test
     public void testGetAvailableSyncs()
     {
-        tmu.resolveDefaultBMLKeyPositions();
+        tmu.resolveGestureKeyPositions();
         assertThat(tmu.getAvailableSyncs(), contains("start", "ready", "strokeStart", "stroke", "strokeEnd", "relax", "end"));        
     }
 
@@ -90,7 +90,7 @@ public class TimedMotionUnitTest extends AbstractTimedPlanUnitTest
     public void getRelativeTimeResolved() throws SyncPointNotFoundException
     {
         muMock.addKeyPosition(new KeyPosition(BMLGestureSync.STROKE.getId(), 0.4, 1));
-        tmu.resolveDefaultBMLKeyPositions();
+        tmu.resolveGestureKeyPositions();
         assertEquals(0.0, tmu.getRelativeTime(BMLGestureSync.START.getId()), TIMING_PRECISION);
         assertEquals(0.0, tmu.getRelativeTime(BMLGestureSync.READY.getId()), TIMING_PRECISION);
         assertEquals(0.0, tmu.getRelativeTime(BMLGestureSync.STROKE_START.getId()), TIMING_PRECISION);
@@ -322,7 +322,7 @@ public class TimedMotionUnitTest extends AbstractTimedPlanUnitTest
     protected TimedPlanUnit setupPlanUnit(FeedbackManager bfm, BMLBlockPeg bbPeg, String id, String bmlId, double startTime)
     {
         tmu = new TimedAnimationUnit(bfm, bbPeg, bmlId, id, new StubMotionUnit(),pegBoard);
-        tmu.resolveDefaultBMLKeyPositions();
+        tmu.resolveGestureKeyPositions();
         tmu.setTimePeg("start", TimePegUtil.createTimePeg(bbPeg, startTime));
         return tmu;
     }

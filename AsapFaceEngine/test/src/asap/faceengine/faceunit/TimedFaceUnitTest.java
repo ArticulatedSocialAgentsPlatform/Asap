@@ -96,16 +96,19 @@ public class TimedFaceUnitTest extends AbstractTimedPlanUnitTest
         assertEquals(0.5,fbList.get(0).bmlBlockTime,TIMING_PRECISION);       
         verify(fuMock,times(1)).play(0.5);
     }
-
+    
+    @Override //no stroke peg
+    public void testSetStrokePeg()
+    {
+        
+    }
+    
     @Override
     protected TimedPlanUnit setupPlanUnit(FeedbackManager bfm, BMLBlockPeg bbPeg, String id, String bmlId, double startTime)
     {
         TimedFaceUnit tfu = new TimedFaceUnit(bfm,bbPeg, bmlId, id, fuMock);
         KeyPositionMocker.stubKeyPositions(fuMock,new KeyPosition("start",0,1),
-                                                  new KeyPosition("ready",0,1),
-                                                  new KeyPosition("strokeStart",0,1),
-                                                  new KeyPosition("stroke",0.5,1),
-                                                  new KeyPosition("strokeEnd",1,1),
+                                                  new KeyPosition("attackPeak",0,1),
                                                   new KeyPosition("relax",1,1),
                                                   new KeyPosition("end",1,1));
         TimePeg start = new TimePeg(bbPeg);

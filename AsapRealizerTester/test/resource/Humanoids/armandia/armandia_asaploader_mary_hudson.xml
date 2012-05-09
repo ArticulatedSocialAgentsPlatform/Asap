@@ -78,7 +78,7 @@
 <!--
     <GestureBinding basedir="" resources="Humanoids/armandia/gesturebinding/" filename="gesturebinding.xml"/>
    -->
-    <GestureBinding basedir="" resources="Humanoids/shared/gesturebinding/" filename="asapgesturebinding.xml"/>
+    <GestureBinding basedir="" resources="Humanoids/shared/gesturebinding/" filename="gesturebinding.xml"/>
 
 
     <StartPose resources="Humanoids/armandia/restposes/" filename="looselyhangingarms.xml"/>

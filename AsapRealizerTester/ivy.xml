@@ -4,12 +4,14 @@
       <include file="${ivy.settings.dir}/configurations.xml"/>
    </configurations>
    <dependencies>
+         
       <dependency org="Asap"     name="AsapBML"            rev="latest.${resolve.status}"  />
       <dependency org="Asap"     name="AsapMotionUnit"            rev="latest.${resolve.status}"  />
       <dependency org="Asap"     name="AsapRealizer"            rev="latest.${resolve.status}"  />
-      <dependency org="Asap"     name="AsapAnimationEngine"            rev="latest.${resolve.status}"  />
-
+      <dependency org="Asap"     name="AsapAnimationEngine"            rev="latest.${resolve.status}"  />      
       <dependency org="Asap"     name="AsapFaceEngine"            rev="latest.${resolve.status}"  />
+       
+      
       <dependency org="HMI"      name="HmiAnimation"       rev="latest.${resolve.status}"  />
       <dependency org="HMI"      name="HmiTTS"             rev="latest.${resolve.status}"  />
       <dependency org="HMI"      name="HmiTTSMary"         rev="latest.${resolve.status}"  />
@@ -17,27 +19,32 @@
       <dependency org="HMI"      name="HmiNeurophysics"    rev="latest.${resolve.status}"  />
       <dependency org="HMI"      name="HmiGraphics"        transitive="false" rev="latest.${resolve.status}"  />
       <dependency org="HMI"      name="HmiFaceGraphics"    transitive="false" rev="latest.${resolve.status}"  />
-      
       <dependency org="HMI"      name="HmiXml"             rev="latest.${resolve.status}"  />
       <dependency org="HMI"      name="HmiUtil"            rev="latest.${resolve.status}"  />
       <dependency org="HMI"      name="HmiTTSnative"       rev="latest.${resolve.status}"  />
-      
-	  
-	  <dependency org="Asap"   name="AsapEnvironment"     rev="latest.${resolve.status}"   />    
+      <dependency org="Asap"   name="AsapEnvironment"     rev="latest.${resolve.status}"   />    
       <dependency org="HMI"   name="AsapUtils"     rev="latest.${resolve.status}"   />    
+      
+      
       <dependency org="HMI"   name="HmiMixedAnimationEnvironment"     rev="latest.${resolve.status}"   />    
+      
       <dependency org="HMI"   name="HmiRenderEnvironment"     rev="latest.${resolve.status}"   />    
+      
       <dependency org="HMI"   name="HmiPhysicsEnvironment"     rev="latest.${resolve.status}"   />    
+      
       <dependency org="HMI"   name="HmiFaceAnimation"     rev="latest.${resolve.status}"   />    
+      
       <dependency org="HMI"   name="HmiAudioEnvironment"     rev="latest.${resolve.status}"   />    
+      
       <dependency org="Asap"   name="AsapAudioEngine"     rev="latest.${resolve.status}"   />    
+      
+      
       <dependency org="Asap"   name="AsapSpeechEngine"     transitive="false" rev="latest.${resolve.status}"   />    
-      <dependency org="Asap"   name="AsapEmitterEngine"     rev="latest.${resolve.status}"   /> 
-	  <dependency org="HMI"   name="HmiRealizerTester"     transitive="false" rev="latest.${resolve.status}"   /> 
-	  
+      <!--
+      <dependency org="Asap"   name="AsapEmitterEngine"     rev="latest.${resolve.status}"   /> 	  
+	  -->
 	  
       <dependency org="HMI"      transitive="false" name="HmiTestUtil"        rev="latest.${resolve.status}"/>
-
       <dependency org="odejava"  name="odejava"            rev="latest.release"  />   
       <dependency org="Sun" name="jogl" rev="latest.release"  />                                 
       
@@ -57,6 +64,7 @@
       <dependency org="junit"    name="junit"                rev="latest.release" />
       <dependency org="hamcrest" name="hamcrest-all"         rev="latest.release"  />
       <dependency org="bml" name="realizertester"         rev="latest.release"  />
+      <dependency org="bml" name="realizertester-utils-bml1"         rev="latest.release"  />
       <dependency org="lwjgl" name="lwjgl" rev="latest.release"  />
 
    </dependencies>

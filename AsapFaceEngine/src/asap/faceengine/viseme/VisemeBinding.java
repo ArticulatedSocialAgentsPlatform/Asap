@@ -36,7 +36,7 @@ public interface VisemeBinding
     /**
      * Get a viseme unit for viseme viseme. If the viseme is not found, an 'empty' TimedFaceUnit is returned.
      * 
-     * note: each viseme has ready=relax=peak, and start=prev.peak and
+     * note: each viseme has attackPeak=relax=peak, and start=prev.peak and
      * end=next.peak for timing. Ugly but effective.<br>
      * 
      */
@@ -47,7 +47,7 @@ public interface VisemeBinding
      * Get a visime unit that is not hooked up to the feedbackmanager
      * If the viseme is not found, an 'empty' TimedFaceUnit is returned.
      * 
-     * note: each viseme has ready=relax=peak, and start=prev.peak and
+     * note: each viseme has attackPeak=relax=peak, and start=prev.peak and
      * end=next.peak for timing. Ugly but effective.<br>
      */
     TimedFaceUnit getVisemeUnit(BMLBlockPeg bbPeg, Behaviour b, int viseme,            

@@ -50,12 +50,12 @@ public class KeyframeMorphFU extends KeyFrameMotionUnit implements FaceUnit
 
         prevWeights = new float[targets.size()];
         this.targets = targets.toArray(new String[targets.size()]);
-        KeyPosition ready = new KeyPosition("ready", 0.1d, 1d);
+        KeyPosition attackPeak = new KeyPosition("attackPeak", 0.1d, 1d);
         KeyPosition relax = new KeyPosition("relax", 0.9d, 1d);
         KeyPosition start = new KeyPosition("start", 0d, 1d);
         KeyPosition end = new KeyPosition("end", 1d, 1d);
         addKeyPosition(start);
-        addKeyPosition(ready);
+        addKeyPosition(attackPeak);
         addKeyPosition(relax);
         addKeyPosition(end);
     }

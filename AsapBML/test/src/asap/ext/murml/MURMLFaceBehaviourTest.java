@@ -3,7 +3,7 @@ package asap.ext.murml;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNull;
 import hmi.bml.BMLInfo;
-import hmi.bml.core.FaceBehaviour;
+import hmi.bml.core.FaceLexemeBehaviour;
 import hmi.xml.XMLTokenizer;
 
 import java.io.IOException;
@@ -42,8 +42,8 @@ public class MURMLFaceBehaviourTest
         String murmlString = "<murml:murmlface xmlns:murml=\"http://www.techfak.uni-bielefeld.de/ags/soa/murml\" "
                 + "id=\"a1\">" + "<definition><keyframing><phase><frame ftime=\"0\"><posture>Humanoid "
                 + "(dB_Smile 3 70 0 0)</posture></frame></phase></keyframing></definition>" + "</murml:murmlface>";
-        String bmlString = "<face id=\"a1\" type=\"BLINK\"><description priority=\"1\" type=\"murmlface\">"+murmlString+"</description></face>";
-        FaceBehaviour f = new FaceBehaviour("bmla",new XMLTokenizer(bmlString));
+        String bmlString = "<faceLexeme id=\"a1\" lexeme=\"BLINK\"><description priority=\"1\" type=\"murmlface\">"+murmlString+"</description></faceLexeme>";
+        FaceLexemeBehaviour f = new FaceLexemeBehaviour("bmla",new XMLTokenizer(bmlString));
         assertThat(f.descBehaviour, instanceOf(MURMLFaceBehaviour.class));
         MURMLFaceBehaviour beh = (MURMLFaceBehaviour)f.descBehaviour;
         assertEquals("bmla", beh.getBmlId());

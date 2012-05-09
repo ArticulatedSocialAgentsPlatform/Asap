@@ -86,7 +86,7 @@ public class ProcAnimationGestureTMUTest extends TimedMotionUnitTest
         mu.setAnimationPlayer(mockAnimationPlayer);
 
         ProcAnimationGestureTMU tmu = new ProcAnimationGestureTMU(bfm, bbPeg, bmlId, id, mu, pegBoard);
-        tmu.resolveDefaultBMLKeyPositions();
+        tmu.resolveGestureKeyPositions();
         return tmu;
     }
 

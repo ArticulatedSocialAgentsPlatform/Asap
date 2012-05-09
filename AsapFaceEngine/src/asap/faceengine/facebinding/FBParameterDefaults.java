@@ -18,6 +18,7 @@
  ******************************************************************************/
 package asap.faceengine.facebinding;
 
+import hmi.xml.XMLScanException;
 import hmi.xml.XMLStructureAdapter;
 import hmi.xml.XMLTokenizer;
 
@@ -48,6 +49,10 @@ public class FBParameterDefaults extends XMLStructureAdapter
                 FaceUnitParameterDefault fupc = new FaceUnitParameterDefault();
                 fupc.readXML(tokenizer);
                 spec.addParameterDefault(fupc);
+            }
+            else
+            {
+                throw new XMLScanException("Invalid content in parameterdefaults: "+tag);
             }
         }
     }

@@ -161,7 +161,7 @@ public class RemoteMPEG4FU extends Thread implements FaceUnit
 
     /**
      * Executes the face unit, by applying the face configuration. Linear
-     * interpolate from intensity 0..max between start and ready; keep at max
+     * interpolate from intensity 0..max between start and attackPeak; keep at max
      * till relax; then back to zero from relax till end.
      * 
      * @param t

@@ -49,7 +49,7 @@ public class TransitionTMUTest extends AbstractTimedPlanUnitTest
                 new KeyPosition("strokeEnd",1,1),
                 new KeyPosition("relax",1,1),
                 new KeyPosition("end",1,1));
-        tmu.resolveDefaultBMLKeyPositions();
+        tmu.resolveGestureKeyPositions();
         tmu.setTimePeg("start", TimePegUtil.createTimePeg(bbPeg, startTime));
         return tmu;       
     }    

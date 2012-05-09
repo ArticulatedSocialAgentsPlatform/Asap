@@ -129,7 +129,7 @@ public class EmitterPlanner extends AbstractPlanner<TimedEmitterUnit>
         }        
 
         // apply syncs to tnu
-        teu.resolveDefaultBMLKeyPositions();
+        teu.resolveStartAndEndKeyPositions();
         linkSynchs(teu, sacs);
 
         planManager.addPlanUnit(teu);
@@ -198,7 +198,7 @@ public class EmitterPlanner extends AbstractPlanner<TimedEmitterUnit>
         }
 
 
-        teu.resolveDefaultBMLKeyPositions();
+        teu.resolveStartAndEndKeyPositions();
         resolver.resolveSynchs(bbPeg, b, sac, teu);
         return teu;
     }

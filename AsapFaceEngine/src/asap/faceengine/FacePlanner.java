@@ -129,7 +129,7 @@ public class FacePlanner extends AbstractPlanner<TimedFaceUnit>
         }
 
         // apply syncs to tfu
-        tfu.resolveDefaultBMLKeyPositions();
+        tfu.resolveFaceKeyPositions();
         linkSynchs(tfu, sacs);
 
         planManager.addPlanUnit(tfu);
@@ -146,7 +146,7 @@ public class FacePlanner extends AbstractPlanner<TimedFaceUnit>
     public TimedFaceUnit resolveSynchs(BMLBlockPeg bbPeg, Behaviour b, List<TimePegAndConstraint> sac) throws BehaviourPlanningException
     {
         TimedFaceUnit tfu = createTfu(bbPeg, b);
-        tfu.resolveDefaultBMLKeyPositions();
+        tfu.resolveFaceKeyPositions();
         resolver.resolveSynchs(bbPeg, b, sac, tfu);
         return tfu;
     }

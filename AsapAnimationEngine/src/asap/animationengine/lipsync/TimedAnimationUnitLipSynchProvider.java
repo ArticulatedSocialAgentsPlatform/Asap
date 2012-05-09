@@ -55,7 +55,7 @@ public class TimedAnimationUnitLipSynchProvider implements LipSynchProvider
         try
         {
             tmu = speechBinding.getMotionUnit(0, bbPeg, beh.getBmlId(), beh.id, animationPlayer, pegBoard);
-            tmu.resolveDefaultBMLKeyPositions();
+            tmu.resolveGestureKeyPositions();
             startTimes.put(tmu, Double.valueOf(0d));
             endTimes.put(tmu, Double.valueOf(0d));
             tmus.add(tmu);
@@ -84,7 +84,7 @@ public class TimedAnimationUnitLipSynchProvider implements LipSynchProvider
                 startTimes.put(tmu, start);
                 endTimes.put(tmu, end);
                 tmus.add(tmu);
-                tmu.resolveDefaultBMLKeyPositions();
+                tmu.resolveGestureKeyPositions();
                 totalDuration += vis.getDuration();
                 prevDuration = vis.getDuration();
             }

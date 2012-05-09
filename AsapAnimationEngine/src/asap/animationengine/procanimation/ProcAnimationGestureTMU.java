@@ -258,7 +258,7 @@ public class ProcAnimationGestureTMU extends TimedAnimationUnit
     {
         if (sac.isEmpty()) return;
 
-        resolveDefaultBMLKeyPositions();
+        resolveGestureKeyPositions();
         validateSyncs(b, sac);
 
         // sort sac

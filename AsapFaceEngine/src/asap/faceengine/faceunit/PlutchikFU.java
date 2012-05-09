@@ -39,8 +39,8 @@ import asap.utils.AnimationSync;
 /**
  * A basic facial animation unit consisting of one position on Plutchiks emotion
  * disc (see hmi.faceanimation.converters.EmotionConverter The key positions
- * are: start, ready, relax, end. This descripes an apex-like intensity
- * development: Between start and ready, the face configuration is blended in;
+ * are: start, attackPeak, relax, end. This descripes an apex-like intensity
+ * development: Between start and attackPeak, the face configuration is blended in;
  * between relax and end the face configuration is blended out.
  * 
  * Parameter constraint: 0 <= angle <= 360
@@ -71,12 +71,12 @@ public class PlutchikFU implements FaceUnit
     }
     public PlutchikFU()
     {
-        KeyPosition ready = new KeyPosition("ready", 0.1d, 1d);
+        KeyPosition attackPeak = new KeyPosition("attackPeak", 0.1d, 1d);
         KeyPosition relax = new KeyPosition("relax", 0.9d, 1d);
         KeyPosition start = new KeyPosition("start", 0d, 1d);
         KeyPosition end = new KeyPosition("end", 1d, 1d);
         addKeyPosition(start);
-        addKeyPosition(ready);
+        addKeyPosition(attackPeak);
         addKeyPosition(relax);
         addKeyPosition(end);
     }
@@ -142,7 +142,7 @@ public class PlutchikFU implements FaceUnit
 
     /**
      * Executes the face unit, by applying the face configuration. Linear
-     * interpolate from intensity 0..max between start and ready; keep at max
+     * interpolate from intensity 0..max between start and attackPeak; keep at max
      * till relax; then back to zero from relax till end.
      * 
      * @param t
@@ -153,16 +153,16 @@ public class PlutchikFU implements FaceUnit
     public void play(double t) throws FUPlayException
     {
         // between where and where? Linear interpolate from intensity 0..max
-        // between start&Ready; then down from relax till end
-        double ready = getKeyPosition("ready").time;
+        // between start&attackPeak; then down from relax till end
+        double attackPeak = getKeyPosition("attackPeak").time;
         double relax = getKeyPosition("relax").time;
         float newAppliedWeight = 0;
 
-        if (t < ready && t > 0)
+        if (t < attackPeak && t > 0)
         {
-            newAppliedWeight = intensity * (float) (t / ready);
+            newAppliedWeight = intensity * (float) (t / attackPeak);
         }
-        else if (t >= ready && t <= relax)
+        else if (t >= attackPeak && t <= relax)
         {
             newAppliedWeight = intensity;
         }

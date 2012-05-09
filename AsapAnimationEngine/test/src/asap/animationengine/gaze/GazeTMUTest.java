@@ -69,7 +69,7 @@ public class GazeTMUTest extends AbstractTimedPlanUnitTest
         mu.setupRelaxUnit();
         
         GazeTMU tmu = new GazeTMU(bfm,bbPeg,bmlId,id,mu, pegBoard);
-        tmu.resolveDefaultBMLKeyPositions();
+        tmu.resolveGestureKeyPositions();
         tmu.setTimePeg("start", TimePegUtil.createTimePeg(bbPeg, startTime));
         return tmu;
     }

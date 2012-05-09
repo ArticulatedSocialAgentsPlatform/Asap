@@ -68,7 +68,7 @@ public class PointingTMUTest extends AbstractTimedPlanUnitTest
         mu.setupRelaxUnit();
         
         PointingTMU tmu = new PointingTMU(bfm,bbPeg,bmlId,id,mu,pegBoard);
-        tmu.resolveDefaultBMLKeyPositions();
+        tmu.resolveGestureKeyPositions();
         tmu.setTimePeg("start", TimePegUtil.createTimePeg(bbPeg, startTime));
         return tmu;
     }

@@ -31,8 +31,8 @@ import hmi.faceanimation.model.FACS.Side;
 import hmi.faceanimation.model.FACSConfiguration;
 
 /**
- * A basic facial animation unit consisting of one AU value. The key positions are: start, ready,
- * relax, end. This descripes an apex-like intensity development: Between start and ready, the face
+ * A basic facial animation unit consisting of one AU value. The key positions are: start, attackPeak,
+ * relax, end. This descripes an apex-like intensity development: Between start and attackPeak, the face
  * configuration is blended in; between relax and end the face configuration is blended out.
  * 
  * Parameter cosntraints: side valuefits with AU... (e.g., no null for asymmetric AU, no RIGHT, LEFT

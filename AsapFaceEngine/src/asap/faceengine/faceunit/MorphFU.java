@@ -41,8 +41,8 @@ import asap.utils.AnimationSync;
 
 /**
  * A basic facial animation unit consisting of one morph target. The key
- * positions are: start, ready, relax, end. This descripes an apex-like
- * intensity development: The between start and ready, the morph target is
+ * positions are: start, attackPeak, relax, end. This descripes an apex-like
+ * intensity development: The between start and attackPeak, the morph target is
  * blended in; between relax and end the morph target is blended out. The max
  * intensity for the morph target can also be specified.
  * 
@@ -80,12 +80,12 @@ public class MorphFU implements FaceUnit
 
     public MorphFU()
     {
-        KeyPosition ready = new KeyPosition("ready", 0.1d, 1d);
+        KeyPosition attackPeak = new KeyPosition("attackPeak", 0.1d, 1d);
         KeyPosition relax = new KeyPosition("relax", 0.9d, 1d);
         KeyPosition start = new KeyPosition("start", 0d, 1d);
         KeyPosition end = new KeyPosition("end", 1d, 1d);
         addKeyPosition(start);
-        addKeyPosition(ready);
+        addKeyPosition(attackPeak);
         addKeyPosition(relax);
         addKeyPosition(end);
     }
@@ -182,17 +182,17 @@ public class MorphFU implements FaceUnit
         // between where and where? Linear interpolate from intensity 0..max
         // between start&Ready; then down from relax till end
 
-        double ready = getKeyPosition("ready").time;
+        double attackPeak = getKeyPosition("attackPeak").time;
         double relax = getKeyPosition("relax").time;
         // System.out.println("ready: "+ready);
         // System.out.println("relax: "+relax);
         float newMorphedWeight = 0;
 
-        if (t < ready && t > 0)
+        if (t < attackPeak && t > 0)
         {
-            newMorphedWeight = intensity * (float) (t / ready);
+            newMorphedWeight = intensity * (float) (t / attackPeak);
         }
-        else if (t >= ready && t <= relax)
+        else if (t >= attackPeak && t <= relax)
         {
             newMorphedWeight = intensity;
         }

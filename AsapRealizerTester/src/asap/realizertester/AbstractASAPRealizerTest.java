@@ -1,21 +1,331 @@
 package asap.realizertester;
 
 
-import hmi.realizertester.AbstractElckerlycRealizerTest;
+import static org.junit.Assert.*;
+import hmi.bml.ext.bmlt.BMLTAudioFileBehaviour;
+import hmi.bml.ext.bmlt.BMLTParameterValueChangeBehaviour;
+import hmi.bml.ext.bmlt.BMLTTransitionBehaviour;
+import hmi.bml.ext.bmlt.feedback.BMLTSchedulingFinishedFeedback;
+import hmi.bml.ext.bmlt.feedback.BMLTSchedulingListener;
+import hmi.bml.ext.bmlt.feedback.BMLTSchedulingStartFeedback;
 
 import java.io.IOException;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.List;
 
 import org.junit.Test;
-
 import bml.bmlinfo.DefaultSyncPoints;
+import bml.realizertest.AbstractBML1RealizerTest;
 
 /**
  * Asap/MURML specific testcases for the AsapRealizer 
  * @author hvanwelbergen
  *
  */
-public abstract class AbstractASAPRealizerTest extends AbstractElckerlycRealizerTest
+public abstract class AbstractASAPRealizerTest extends AbstractBML1RealizerTest implements BMLTSchedulingListener 
 {
+    private List<BMLTSchedulingStartFeedback> schedulingStartList = Collections
+    .synchronizedList(new ArrayList<BMLTSchedulingStartFeedback>());
+    private List<BMLTSchedulingFinishedFeedback> schedulingFinishedList = Collections
+    .synchronizedList(new ArrayList<BMLTSchedulingFinishedFeedback>());
+    
+    protected void clearFeedbackLists()
+    {
+        schedulingStartList.clear();
+        schedulingFinishedList.clear();
+        realizerHandler.clearFeedbackLists();
+    }
+    
+    protected BMLTSchedulingFinishedFeedback getBMLSchedulingFinishedFeedback(String bmlId)
+    {
+        synchronized (schedulingFinishedList)
+        {
+            for (BMLTSchedulingFinishedFeedback bpfs : schedulingFinishedList)
+            {
+                if (bpfs.bmlId.equals(bmlId))
+                {
+                    return bpfs;
+                }
+            }
+        }
+        return null;
+    }
+    
+    protected synchronized void waitForBMLSchedulingFinishedFeedback(String bmlId) throws InterruptedException
+    {
+        while (!hasBMLFinishedFeedbacks(bmlId))
+        {
+            wait();
+            
+        }
+    }
+    
+    protected boolean hasBMLFinishedFeedbacks(String bmlId)
+    {
+        synchronized (schedulingFinishedList)
+        {
+            for (BMLTSchedulingFinishedFeedback fb : schedulingFinishedList)
+            {
+                if (fb.bmlId.equals(bmlId)) return true;
+            }
+        }
+        return false;
+    }
+    
+    @Override
+    public synchronized void schedulingFinished(BMLTSchedulingFinishedFeedback pff)
+    {
+        schedulingFinishedList.add(pff);
+        notifyAll();
+    }
+    
+    @Override
+    public synchronized void schedulingStart(BMLTSchedulingStartFeedback psf)
+    {
+        schedulingStartList.add(psf);
+        notifyAll();
+    }
+    
+    @Test
+    public void testParameterValueChangeWithTightMerge() throws IOException, InterruptedException
+    {
+        String bmlString1 = readTestFile("bmlt/tightmerge/speechandnod.xml");
+        String bmlString2 = readTestFile("bmlt/tightmerge/volumechange.xml");
+        realizerHandler.performBML(bmlString1);
+        realizerHandler.performBML(bmlString2);
+        realizerHandler.waitForBMLEndFeedback("bml1");
+        realizerHandler.waitForBMLEndFeedback("bml2");
+        realizerHandler.assertNoExceptions();
+        realizerHandler.assertNoWarnings();        
+        realizerHandler.assertNoDuplicateSyncs();
+        
+        
+        realizerHandler.assertSyncsInOrder("bml1", "speech1", "start","s1","end");
+        realizerHandler.assertSyncsInOrder("bml1", "speech2", DefaultSyncPoints.getDefaultSyncPoints("speech"));
+        realizerHandler.assertSyncsInOrder("bml2", "pvc1", BMLTParameterValueChangeBehaviour.
+                getDefaultSyncPoints().toArray(new String[0]));
+        
+        realizerHandler.assertLinkedSyncs("bml1", "speech1", "start","bml2", "pvc1", "start");
+        realizerHandler.assertLinkedSyncs("bml1", "speech1", "end", "bml2", "pvc1", "end");        
+    }
+
+    @Test
+    public void testActivate() throws IOException, InterruptedException
+    {
+        String bmlString1 = readTestFile("bmlt/activate/testpreplannedspeech1.xml");
+        String bmlString2 = readTestFile("bmlt/activate/testactivate.xml");
+        realizerHandler.performBML(bmlString1);
+        waitForBMLSchedulingFinishedFeedback("bml1");
+        
+        realizerHandler.performBML(bmlString2);
+        realizerHandler.waitForBMLEndFeedback("bml2");
+        realizerHandler.waitForBMLEndFeedback("bml1");        
+        
+        realizerHandler.assertSyncsInOrder("bml1", "speech1", DefaultSyncPoints.getDefaultSyncPoints("speech"));
+        realizerHandler.assertSyncsInOrder("bml2", "nod1", DefaultSyncPoints.getDefaultSyncPoints("head"));
+        realizerHandler.assertLinkedSyncs("bml1", "speech1", "start", "bml2", "nod1", "end");
+        realizerHandler.assertNoExceptions();
+        realizerHandler.assertNoWarnings();
+        realizerHandler.assertNoDuplicateFeedbacks();
+    }
+    
+    @Test
+    public void testParameterValueChange() throws InterruptedException, IOException
+    {
+        String bmlString1 = readTestFile("bmlt/parametervaluechange.xml");
+        realizerHandler.performBML(bmlString1);
+
+        realizerHandler.waitForBMLEndFeedback("bml1");
+        realizerHandler.assertNoExceptions();
+        realizerHandler.assertNoWarnings();        
+        realizerHandler.assertNoDuplicateSyncs();        
+        
+        realizerHandler.assertSyncsInOrder("bml1", "speech1",DefaultSyncPoints.getDefaultSyncPoints("speech"));
+        realizerHandler.assertSyncsInOrder("bml1", "speech2",DefaultSyncPoints.getDefaultSyncPoints("speech"));
+        realizerHandler.assertSyncsInOrder("bml1", "pvc1", BMLTParameterValueChangeBehaviour.getDefaultSyncPoints().toArray(new String[0]));
+        realizerHandler.assertLinkedSyncs("bml1", "speech1", "end", "bml1", "pvc1", "end");        
+    }
+
+    @Test
+    public void testPreplan() throws InterruptedException, IOException
+    {
+        final double DELAY = 3;
+        String bmlString1 = readTestFile("bmlt/preplan/testspeech1.xml");
+        String bmlString2 = readTestFile("bmlt/preplan/testspeechinterrupt.xml");
+        String bmlString3 = readTestFile("bmlt/preplan/testnod.xml");
+
+        realizerHandler.performBML(bmlString1);
+        realizerHandler.performBML(bmlString2);
+        Thread.sleep((long) (DELAY * 1000));
+        realizerHandler.performBML(bmlString3);
+
+        realizerHandler.waitForBMLEndFeedback("bml1");
+        realizerHandler.waitForBMLEndFeedback("bml2");
+        realizerHandler.waitForBMLEndFeedback("bml3");
+        realizerHandler.assertNoExceptions();
+        realizerHandler.assertNoWarnings();
+        realizerHandler.assertNoDuplicateFeedbacks();
+    }
+
+    @Test
+    public void testAppendAfter() throws InterruptedException, IOException
+    {
+        String bmlString1 = readTestFile("bmlt/appendafter/testspeech1.xml");
+        String bmlString2 = readTestFile("bmlt/appendafter/testspeech2.xml");
+        String bmlString3 = readTestFile("bmlt/appendafter/testspeech3.xml");
+        String bmlString4 = readTestFile("bmlt/appendafter/testnodappendafter.xml");
+
+        realizerHandler.performBML(bmlString1);
+        realizerHandler.performBML(bmlString2);
+        realizerHandler.performBML(bmlString3);
+        realizerHandler.performBML(bmlString4);
+
+        realizerHandler.waitForBMLEndFeedback("bml3");
+        realizerHandler.waitForBMLEndFeedback("bml4");
+
+        realizerHandler.assertNoExceptions();
+        realizerHandler.assertNoWarnings();
+        realizerHandler.assertNoDuplicateFeedbacks();
+        realizerHandler.assertSyncsInOrder("bml1", "speech1",DefaultSyncPoints.getDefaultSyncPoints("speech"));
+        realizerHandler.assertSyncsInOrder("bml2", "speech1",DefaultSyncPoints.getDefaultSyncPoints("speech"));
+        realizerHandler.assertSyncsInOrder("bml3", "speech1",DefaultSyncPoints.getDefaultSyncPoints("speech"));
+        realizerHandler.assertSyncsInOrder("bml4", "nod1",DefaultSyncPoints.getDefaultSyncPoints("head"));
+        
+        realizerHandler.assertBlockStartLinkedToBlockStop("bml2", "bml1");
+        realizerHandler.assertBlockStartLinkedToBlockStop("bml3", "bml2");
+        realizerHandler.assertBlockStartLinkedToBlockStop("bml4", "bml2");
+    }
+
+    
+    
+    @Test
+    public void testInterrupt() throws InterruptedException, IOException
+    {
+        String bmlString1 = readTestFile("bmlt/interruptblock/testlongspeechandnod.xml");
+        String bmlString2 = readTestFile("bmlt/interruptblock/testinterruptbml1.xml");
+        realizerHandler.performBML(bmlString1);
+        realizerHandler.performBML(bmlString2);
+
+        realizerHandler.waitForBMLEndFeedback("bml1");
+        realizerHandler.waitForBMLEndFeedback("bml2");
+
+        realizerHandler.assertNoExceptions();
+        realizerHandler.assertNoWarnings();
+        realizerHandler.assertNoDuplicateFeedbacks();
+        
+        realizerHandler.assertBlockStartLinkedToBlockStop("bml2","bml1");        
+    }
+
+    @Test
+    public void testInterruptBehaviour() throws InterruptedException, IOException
+    {
+        String bmlString1 = readTestFile("bmlt/interrupt/testlongspeechandnod.xml");
+        String bmlString2 = readTestFile("bmlt/interrupt/testspeechinterrupt.xml");
+        realizerHandler.performBML(bmlString1);
+        realizerHandler.performBML(bmlString2);
+
+        realizerHandler.waitForBMLEndFeedback("bml1");
+        realizerHandler.waitForBMLEndFeedback("bml2");
+        Thread.sleep(1000);
+        realizerHandler.assertNoExceptions();
+        realizerHandler.assertNoWarnings();
+        realizerHandler.assertNoDuplicateFeedbacks();
+        assertEquals(realizerHandler.getBMLPerformanceStopFeedback("bml1").timeStamp, 
+                realizerHandler.getBMLPerformanceStartFeedback("bml2").timeStamp + 2, 0.2);
+    }
+
+    @Test
+    public void testInterruptBehaviour2() throws InterruptedException, IOException
+    {
+        String bmlString1 = readTestFile("bmlt/interruptbehavior/testlongspeechandnod.xml");
+        String bmlString2 = readTestFile("bmlt/interruptbehavior/testspeechinterrupt.xml");
+        String bmlString3 = readTestFile("bmlt/interruptbehavior/testinterruptionspeech.xml");
+
+        realizerHandler.performBML(bmlString1);
+        realizerHandler.performBML(bmlString3);
+        realizerHandler.performBML(bmlString2);
+
+        realizerHandler.waitForBMLEndFeedback("bml1");
+        realizerHandler.waitForBMLEndFeedback("bml2");
+        realizerHandler.waitForBMLEndFeedback("bml3");
+
+        realizerHandler.assertNoExceptions();
+        realizerHandler.assertNoWarnings();
+        realizerHandler.assertNoDuplicateFeedbacks();
+        realizerHandler.assertSyncLinkedToBlockStart("bml1", "speech1", "s1", "bml3");        
+    }
+
+    @Test
+    public void testInterruptBehaviourRestart() throws InterruptedException, IOException
+    {
+        String bmlString1 = readTestFile("bmlt/interruptbehavior/testlongspeechandnod.xml");
+        String bmlString2 = readTestFile("bmlt/interruptbehavior/testspeechinterrupt.xml");
+        String bmlString3 = readTestFile("bmlt/interruptbehavior/testinterruptionspeech.xml");
+        String bmlString4 = "<bml id=\"bmlrep\" composition=\"replace\"/>";
+
+        realizerHandler.performBML(bmlString1);
+        realizerHandler.performBML(bmlString3);
+        realizerHandler.performBML(bmlString2);
+
+        realizerHandler.waitForBMLEndFeedback("bml1");
+        realizerHandler.waitForBMLEndFeedback("bml2");
+        realizerHandler.waitForBMLEndFeedback("bml3");
+        realizerHandler.assertSyncsInOrder("bml3", "speech1",DefaultSyncPoints.getDefaultSyncPoints("speech"));
+        
+        realizerHandler.assertNoDuplicateFeedbacks();
+        realizerHandler.assertSyncLinkedToBlockStart("bml1", "speech1", "s1", "bml3");        
+
+        // reset and do it again        
+        realizerHandler.performBML(bmlString4);
+        realizerHandler.waitForBMLEndFeedback("bmlrep");
+        clearFeedbackLists();
+        realizerHandler.performBML(bmlString1);
+        realizerHandler.performBML(bmlString3);
+        realizerHandler.performBML(bmlString2);
+
+        realizerHandler.waitForBMLEndFeedback("bml1");
+        realizerHandler.waitForBMLEndFeedback("bml2");
+        realizerHandler.waitForBMLEndFeedback("bml3");
+        
+
+        realizerHandler.assertNoExceptions();
+        realizerHandler.assertNoWarnings();
+        realizerHandler.assertNoDuplicateSyncs();
+        realizerHandler.assertSyncsInOrder("bml3", "speech1",DefaultSyncPoints.getDefaultSyncPoints("speech"));
+        realizerHandler.assertSyncLinkedToBlockStart("bml1", "speech1", "s1", "bml3");        
+    }
+
+    @Test
+    public void testBMLTAudio() throws InterruptedException, IOException
+    {
+        String bmlString1 = readTestFile("bmlt/bmltaudio.xml");
+        realizerHandler.performBML(bmlString1);
+        realizerHandler.waitForBMLEndFeedback("bml1");
+        
+        realizerHandler.assertNoExceptions();
+        realizerHandler.assertNoWarnings();
+        realizerHandler.assertNoDuplicateFeedbacks();
+        realizerHandler.assertSyncsInOrder("bml1", "audio1",BMLTAudioFileBehaviour.getDefaultSyncPoints().toArray(new String[0]));
+    }
+    
+    @Test
+    public void testTransition() throws InterruptedException, IOException
+    {
+        String bmlString1 = readTestFile("bmlt/transition.xml");
+        realizerHandler.performBML(bmlString1);
+        realizerHandler.waitForBMLEndFeedback("bml1");
+        Thread.sleep(1000);
+        
+        realizerHandler.assertNoExceptions();
+        realizerHandler.assertNoWarnings();
+        realizerHandler.assertNoDuplicateFeedbacks();
+        realizerHandler.assertSyncsInOrder("bml1", "transition1",BMLTTransitionBehaviour.getDefaultSyncPoints().toArray(new String[0]));
+        realizerHandler.assertSyncsInOrder("bml1", "nod1",DefaultSyncPoints.getDefaultSyncPoints("head"));
+        realizerHandler.assertBlockStartAndStopFeedbacks("bml1");
+        realizerHandler.assertFeedbackForBehaviors("bml1", "transition1","nod1");        
+    }
+    
     @Test
     public void testChunk() throws InterruptedException, IOException
     {

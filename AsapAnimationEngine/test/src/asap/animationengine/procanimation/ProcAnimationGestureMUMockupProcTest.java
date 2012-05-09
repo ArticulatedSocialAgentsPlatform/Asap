@@ -126,7 +126,7 @@ public class ProcAnimationGestureMUMockupProcTest
     {
         pegBoard.addBMLBlockPeg(new BMLBlockPeg("bml1",0));
         TimedAnimationUnit tmu = pag.createTMU(mockFeedbackManager, BMLBlockPeg.GLOBALPEG, "bml1", "g1",pegBoard);        
-        tmu.resolveDefaultBMLKeyPositions();
+        tmu.resolveGestureKeyPositions();
         tmu.setTimePeg(BMLGestureSync.START.getId(), createAbsoluteTimePeg(0));
         tmu.setTimePeg(BMLGestureSync.END.getId(), createAbsoluteTimePeg(2));
         tmu.setState(TimedPlanUnitState.LURKING);

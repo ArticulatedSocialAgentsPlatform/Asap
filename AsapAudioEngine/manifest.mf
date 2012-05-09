@@ -3,8 +3,8 @@ Main-Class: hmi.audioengine.Info
 
 Name: hmi/audioengine/
 Specification-Title:    AsapAudioEngine
-Specification-Version:  0.2
+Specification-Version:  0.2.1
 Specification-Vendor:   Asap
 Implementation-Title:   AsapAudioEngine
-Implementation-Version: May 04 2012  09:20 PM
+Implementation-Version: May 09 2012  02:41 PM
 Implementation-Vendor:  Asap

@@ -253,6 +253,36 @@ public class PlanUnitTimeManager
         pegs.put(kp, sp);        
     }
     
+    public void resolveStartAndEndKeyPositions()
+    {
+        KeyPosition kp = kpManager.getKeyPosition("start");
+        if (kp == null)
+        {
+            kpManager.addKeyPosition(new KeyPosition("start", 0, 0));
+        }
+        kp = kpManager.getKeyPosition("end");
+        if (kp == null)
+        {
+            kpManager.addKeyPosition(new KeyPosition("end", 1, 1));
+        }
+    }
+    
+    public void resolveFaceKeyPositions()
+    {
+        resolveStartAndEndKeyPositions();
+        KeyPosition kp = kpManager.getKeyPosition("attackPeak");
+        if (kp == null)
+        {
+            kpManager.addKeyPosition(new KeyPosition("attackPeak", 0.25, 0.01));
+        }
+        
+        kp = kpManager.getKeyPosition("relax");
+        if (kp == null)
+        {
+            kpManager.addKeyPosition(new KeyPosition("relax", 0.75, 0.01));
+        }
+    }
+    
     /**
      * Fills out default BML keypositions that are not yet in the TimedMotionUnit. 
      * Conventions:
@@ -263,24 +293,13 @@ public class PlanUnitTimeManager
      * missing stroke => stroke = strokeStart
      * 
      */
-    public void resolveDefaultBMLKeyPositions()
+    public void resolveGestureKeyPositions()
     {
         double left = 0;
         double right = 1;
 
-        KeyPosition kp = kpManager.getKeyPosition(BMLGestureSync.START.getId());
-        if (kp == null)
-        {
-            kpManager.addKeyPosition(new KeyPosition(BMLGestureSync.START.getId(), 0, 0));
-        }
-
-        kp = kpManager.getKeyPosition(BMLGestureSync.END.getId());
-        if (kp == null)
-        {
-            kpManager.addKeyPosition(new KeyPosition(BMLGestureSync.END.getId(), 1, 1));
-        }
-
-        kp = kpManager.getKeyPosition(BMLGestureSync.READY.getId());
+        resolveStartAndEndKeyPositions();
+        KeyPosition kp = kpManager.getKeyPosition(BMLGestureSync.READY.getId());
         if (kp == null)
         {
             kpManager.addKeyPosition(new KeyPosition(BMLGestureSync.READY.getId(), 0, 0.01));
