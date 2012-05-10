@@ -48,7 +48,7 @@ public class BMLBBMLBehaviorAttributes implements BMLBehaviorAttributeExtension
     @Override
     public BMLBlockComposition handleComposition(String sm)
     {
-        if (sm.startsWith("chunk-after"))
+        if (sm.startsWith("CHUNK-AFTER"))
         {
             getParameterList(sm, chunkAfterList);
             return BMLBComposition.CHUNK_AFTER;

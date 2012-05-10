@@ -24,7 +24,9 @@ import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
 import hmi.animation.VJoint;
 import hmi.bml.core.Behaviour;
+import hmi.bml.core.GestureBehaviour;
 import hmi.bml.core.HeadBehaviour;
+import hmi.bml.core.PointingBehaviour;
 import hmi.bml.ext.bmlt.BMLTKeyframeBehaviour;
 import hmi.elckerlyc.feedback.FeedbackManager;
 import hmi.elckerlyc.pegboard.BMLBlockPeg;
@@ -82,12 +84,42 @@ public class GestureBindingTest
                 + "<MotionUnit type=\"ProcAnimation\" file=\"Humanoids/shared/procanimation/smartbody/shake.xml\"/>" + "</MotionUnitSpec>"
                 + "<MotionUnitSpec type=\"keyframe\" namespace=\"http://hmi.ewi.utwente.nl/bmlt\">" + "<constraints>"
                 + "<constraint name=\"name\" value=\"vlakte\"/>" + "</constraints>"
-                + "<MotionUnit type=\"Keyframe\" file=\"Humanoids/shared/keyframe/clench_fists.xml\"/>" + "</MotionUnitSpec>"
+                + "<MotionUnit type=\"Keyframe\" file=\"Humanoids/shared/keyframe/clench_fists.xml\"/>" 
+                + "</MotionUnitSpec>"
+                + "<MotionUnitSpec type=\"gesture\">"
+                + "<constraints>"
+                + "<constraint name=\"lexeme\" value=\"BEAT\"/>"                        
+                + "<constraint name=\"mode\" value=\"RIGHT_HAND\"/>"    
+                + "</constraints>"
+                + "<parametermap/>"
+                + "<parameterdefaults>"
+                + "<parameterdefault name=\"file\" value=\"Humanoids/shared/procanimation/greta/beat1right_norest.xml\"/>"
+                + "<parameterdefault name=\"postStrokeHoldDuration\" value=\"0.2\"/>"                       
+                + "</parameterdefaults>"
+                + "<MotionUnit type=\"Gesture\" class=\"asap.animationengine.procanimation.ProcAnimationGestureMU\"/>"
+                + "</MotionUnitSpec>"
+                + "<MotionUnitSpec type=\"pointing\">"
+                + "<parametermap>"
+                +    "<parameter src=\"target\" dst=\"target\"/>"          
+                +    "<parameter src=\"mode\" dst=\"hand\"/>"          
+                +"</parametermap>"
+                + "<MotionUnit type=\"class\" class=\"asap.animationengine.pointing.PointingMU\"/>"
+                + "</MotionUnitSpec>"
                 + "</gesturebinding>";
         gestureBinding.readXML(s);
         when(mockAniPlayer.getVNext()).thenReturn(human);
     }
 
+    public PointingBehaviour createPointingBehaviour(String bmlId, String bml)throws IOException
+    {
+        return new PointingBehaviour(bmlId,new XMLTokenizer(bml));
+    }
+    
+    public GestureBehaviour createGestureBehaviour(String bmlId, String bml) throws IOException
+    {
+        return new GestureBehaviour(bmlId,new XMLTokenizer(bml));
+    }
+    
     public HeadBehaviour createHeadBehaviour(String bmlId, String bml) throws IOException
     {
         return new HeadBehaviour(bmlId, new XMLTokenizer(bml));
@@ -135,5 +167,25 @@ public class GestureBindingTest
         assertEquals(1, m.size());
         assertEquals("bml1", m.get(0).getBMLId());
         assertEquals("v1", m.get(0).getId());
+    }
+    
+    @Test
+    public void testReadGesture() throws IOException
+    {
+        GestureBehaviour beh = createGestureBehaviour("bml1", "<gesture id=\"g1\" mode=\"RIGHT_HAND\" lexeme=\"BEAT\"/>");
+        List<TimedAnimationUnit> m = gestureBinding.getMotionUnit(BMLBlockPeg.GLOBALPEG, beh, mockAniPlayer, pegBoard);
+        assertEquals(1, m.size());
+        assertEquals("bml1", m.get(0).getBMLId());
+        assertEquals("g1", m.get(0).getId());
+    }
+    
+    @Test
+    public void testReadPointin() throws IOException
+    {
+        PointingBehaviour beh = createPointingBehaviour("bml1", "<pointing id=\"point1\" mode=\"RIGHT_HAND\" target=\"bluebox\"/>");
+        List<TimedAnimationUnit> m = gestureBinding.getMotionUnit(BMLBlockPeg.GLOBALPEG, beh, mockAniPlayer, pegBoard);
+        assertEquals(1, m.size());
+        assertEquals("bml1", m.get(0).getBMLId());
+        assertEquals("point1", m.get(0).getId());
     }
 }

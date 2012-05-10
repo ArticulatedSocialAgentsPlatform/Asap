@@ -27,7 +27,7 @@ public class BMLBCompositionTest
     @Test
     public void testChunkAfter()
     {
-        String bmlString = "<bml id=\"bml1\" composition=\"chunk-after(bml2,bml3)\"/>";        
+        String bmlString = "<bml id=\"bml1\" composition=\"CHUNK-AFTER(bml2,bml3)\"/>";        
         block.readXML(bmlString);
         assertEquals(BMLBComposition.CHUNK_AFTER, block.getSchedulingMechanism());
         assertThat(bbmlbExt.getChunkAfterList(), hasItems("bml2", "bml3"));

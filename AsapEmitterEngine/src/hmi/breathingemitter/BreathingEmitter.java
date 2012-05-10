@@ -112,7 +112,7 @@ public class BreathingEmitter extends Emitter implements Runnable
     protected void emitBreath()
     {
         lastbreath = System.currentTimeMillis();
-        scheduling = "composition=\"append-after(breathbml" + breathcount + ")\"";
+        scheduling = "composition=\"APPEND-AFTER(breathbml" + breathcount + ")\"";
         String bml = "<bml id=\"breathbml" + (breathcount + 1) + "\" " + scheduling
                 + " xmlns:bmlt=\"http://hmi.ewi.utwente.nl/bmlt\">"
                 + "<gesture id=\"b1\" type=\"LEXICALIZED\" lexeme=\"breathe\" start=\"0\" " +

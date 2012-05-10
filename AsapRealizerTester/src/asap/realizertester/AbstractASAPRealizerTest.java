@@ -262,7 +262,7 @@ public abstract class AbstractASAPRealizerTest extends AbstractBML1RealizerTest 
         String bmlString1 = readTestFile("bmlt/interruptbehavior/testlongspeechandnod.xml");
         String bmlString2 = readTestFile("bmlt/interruptbehavior/testspeechinterrupt.xml");
         String bmlString3 = readTestFile("bmlt/interruptbehavior/testinterruptionspeech.xml");
-        String bmlString4 = "<bml id=\"bmlrep\" composition=\"replace\"/>";
+        String bmlString4 = "<bml id=\"bmlrep\" composition=\"REPLACE\"/>";
 
         realizerHandler.performBML(bmlString1);
         realizerHandler.performBML(bmlString3);

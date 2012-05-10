@@ -43,7 +43,7 @@ public class MURMLGestureBehaviourTest
         String murmlString = "<murml:murmlgesture xmlns:murml=\"http://www.techfak.uni-bielefeld.de/ags/soa/murml\" "
                 + "id=\"a1\">" + "<definition><keyframing><phase><frame ftime=\"0\"><posture>Humanoid "
                 + "(dB_Smile 3 70 0 0)</posture></frame></phase></keyframing></definition>" + "</murml:murmlgesture>";
-        String bmlString = "<gesture id=\"a1\" type=\"BEAT\"><description priority=\"1\" type=\"murmlgesture\">"+murmlString+"</description></gesture>";
+        String bmlString = "<gesture id=\"a1\" lexeme=\"BEAT\"><description priority=\"1\" type=\"murmlgesture\">"+murmlString+"</description></gesture>";
         GestureBehaviour f = new GestureBehaviour("bmla",new XMLTokenizer(bmlString));
         assertThat(f.descBehaviour, instanceOf(MURMLGestureBehaviour.class));
         MURMLGestureBehaviour beh = (MURMLGestureBehaviour)f.descBehaviour;

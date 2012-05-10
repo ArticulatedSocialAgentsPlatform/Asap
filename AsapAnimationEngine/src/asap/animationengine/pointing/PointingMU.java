@@ -214,14 +214,14 @@ public class PointingMU implements AnimationUnit
 
     public void setHand(String hand)
     {
-        if (hand.equals("LEFT"))
+        if (hand.equals("LEFT_HAND"))
         {
             shoulderId = Hanim.l_shoulder;
             elbowId = Hanim.l_elbow;
             wristId = Hanim.l_wrist;// Hanim.l_index2;//Hanim.l_index3;//
             fingerTipId = Hanim.l_index3;
         }
-        else if (hand.equals("RIGHT"))
+        else if (hand.equals("RIGHT_HAND"))
         {
             shoulderId = Hanim.r_shoulder;
             elbowId = Hanim.r_elbow;

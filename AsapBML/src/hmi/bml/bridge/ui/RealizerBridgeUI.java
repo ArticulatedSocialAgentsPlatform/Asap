@@ -305,7 +305,7 @@ public class RealizerBridgeUI extends JPanel
     /** Play the content of the BML input box; set the resulting output in the outputArea */
     public void playBMLContent()
     {
-        realizerBridge.performBML("<bml id=\"clear\" composition=\"replace\"></bml>");
+        realizerBridge.performBML("<bml id=\"clear\" composition=\"REPLACE\"></bml>");
         realizerBridge.performBML(bmlInput.getText());
     }
 

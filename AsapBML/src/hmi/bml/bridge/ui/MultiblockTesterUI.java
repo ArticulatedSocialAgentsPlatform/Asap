@@ -294,7 +294,7 @@ public class MultiblockTesterUI extends JFrame
         {
             clearSpecs();
             loadSpecs();
-            realizerBridge.performBML("<bml id=\"clear\" composition=\"replace\"></bml>");
+            realizerBridge.performBML("<bml id=\"clear\" composition=\"REPLACE\"></bml>");
             for (int i = 0; i < fireButtons.size(); i++)
             {
                 fireButtons.get(i).setEnabled(true);

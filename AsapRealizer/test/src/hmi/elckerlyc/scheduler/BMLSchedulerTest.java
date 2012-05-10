@@ -383,7 +383,7 @@ public class BMLSchedulerTest
     public void testAppend()
     {
         parseBML(createNonEmptyBML("bml1"));
-        parseBML(createNonEmptyBML("bml2", "composition=\"append\""));
+        parseBML(createNonEmptyBML("bml2", "composition=\"APPEND\""));
         scheduler.schedule();
         assertEquals(1, startFeedbackList.size());
         assertEquals("bml1", startFeedbackList.get(0).bmlId);
@@ -400,7 +400,7 @@ public class BMLSchedulerTest
     @Test
     public void testEmptyMerge()
     {
-        parseBML(createEmptyBML("bml1", "composition=\"merge\""));
+        parseBML(createEmptyBML("bml1", "composition=\"MERGE\""));
         scheduler.schedule();
 
         assertEquals(1, startFeedbackList.size());
@@ -412,7 +412,7 @@ public class BMLSchedulerTest
     @Test
     public void testEmptyReplace()
     {
-        parseBML(createEmptyBML("bml1", "composition=\"replace\""));
+        parseBML(createEmptyBML("bml1", "composition=\"REPLACE\""));
         scheduler.schedule();
 
         assertEquals(1, startFeedbackList.size());
@@ -424,7 +424,7 @@ public class BMLSchedulerTest
     @Test
     public void testEmptyAppend()
     {
-        parseBML(createNonEmptyBML("bml1", "composition=\"append\""));
+        parseBML(createNonEmptyBML("bml1", "composition=\"APPEND\""));
         scheduler.schedule();
         assertEquals(1, startFeedbackList.size());
         assertEquals("bml1", startFeedbackList.get(0).bmlId);
@@ -439,7 +439,7 @@ public class BMLSchedulerTest
     {
         parseBML(createNonEmptyBML("bml1"));
         scheduler.schedule();
-        parseBML(createNonEmptyBML("bml2", "composition=\"append\""));
+        parseBML(createNonEmptyBML("bml2", "composition=\"APPEND\""));
         scheduler.schedule();
 
         assertEquals(1, startFeedbackList.size());
@@ -458,7 +458,7 @@ public class BMLSchedulerTest
         parseBML(createNonEmptyBML("bml1"));
         parseBML(createNonEmptyBML("bml2"));
         parseBML(createNonEmptyBML("bml3"));
-        parseBML(createNonEmptyBML("bml4", "composition=\"append-after(bml2,bml3)\""));
+        parseBML(createNonEmptyBML("bml4", "composition=\"APPEND-AFTER(bml2,bml3)\""));
         scheduler.schedule();
 
         assertEquals(3, startFeedbackList.size());
@@ -483,7 +483,7 @@ public class BMLSchedulerTest
         parseBML(createNonEmptyBML("bml1"));
         parseBML(createNonEmptyBML("bml2"));
         parseBML(createNonEmptyBML("bml3"));
-        parseBML(createNonEmptyBML("bml4", "composition=\"append-after(bml2,bml3,bml5)\""));
+        parseBML(createNonEmptyBML("bml4", "composition=\"APPEND-AFTER(bml2,bml3,bml5)\""));
         parseBML(createNonEmptyBML("bml5"));
         scheduler.schedule();
 
@@ -559,7 +559,7 @@ public class BMLSchedulerTest
     public void testInterruptAppender()
     {
         parseBML(createNonEmptyBML("bml1"));
-        parseBML(createNonEmptyBML("bml2", "composition=\"append\""));
+        parseBML(createNonEmptyBML("bml2", "composition=\"APPEND\""));
         scheduler.schedule();
         assertEquals(1, startFeedbackList.size());
 
@@ -576,7 +576,7 @@ public class BMLSchedulerTest
     {
         // interrupting bml1 should start bml2
         parseBML(createNonEmptyBML("bml1"));
-        parseBML(createNonEmptyBML("bml2", "composition=\"append\""));
+        parseBML(createNonEmptyBML("bml2", "composition=\"APPEND\""));
         scheduler.schedule();
         assertEquals(1, startFeedbackList.size());
         assertEquals("bml1", startFeedbackList.get(0).bmlId);
@@ -624,7 +624,7 @@ public class BMLSchedulerTest
     public void testPreplanAndAppend()
     {
         parseBML(createNonEmptyBML("bml1"));
-        parseBML(createNonEmptyBML("bml2", "composition=\"append\" bmlt:preplan=\"true\""));
+        parseBML(createNonEmptyBML("bml2", "composition=\"APPEND\" bmlt:preplan=\"true\""));
         scheduler.schedule();
         assertEquals(1, startFeedbackList.size());
         assertEquals("bml1", startFeedbackList.get(0).bmlId);
@@ -652,7 +652,7 @@ public class BMLSchedulerTest
     public void testPreplanAndActivateAndAppend()
     {
         parseBML(createNonEmptyBML("bml1"));
-        parseBML(createNonEmptyBML("bml2", "composition=\"append\" preplan=\"true\""));
+        parseBML(createNonEmptyBML("bml2", "composition=\"APPEND\" preplan=\"true\""));
         scheduler.schedule();
         assertEquals(1, startFeedbackList.size());
         assertEquals("bml1", startFeedbackList.get(0).bmlId);
@@ -690,11 +690,11 @@ public class BMLSchedulerTest
         parseBML(createNonEmptyBML("bml1"));
         scheduler.schedule();
 
-        parseBML(createNonEmptyBML("bml2", "composition=\"append\""));
+        parseBML(createNonEmptyBML("bml2", "composition=\"APPEND\""));
         scheduler.schedule();
         // scheduler.blockStopFeedback("bml1"); // feedback: bml1 end
         scheduler.interruptBlock("bml1");
-        parseBML(createEmptyBML("bml3", "composition=\"replace\"")); // end
+        parseBML(createEmptyBML("bml3", "composition=\"REPLACE\"")); // end
                                                                      // feedback
                                                                      // for
                                                                      // behaviors
@@ -713,12 +713,12 @@ public class BMLSchedulerTest
         parseBML(createNonEmptyBML("bml1"));
         scheduler.schedule();
 
-        parseBML(createNonEmptyBML("bml2", "composition=\"append\""));
+        parseBML(createNonEmptyBML("bml2", "composition=\"APPEND\""));
         scheduler.schedule();
         // scheduler.blockStopFeedback("bml1"); // feedback: bml1 end
         scheduler.interruptBlock("bml1");
 
-        parseBML(createNonEmptyBML("bml3", "composition=\"replace\"")); // end
+        parseBML(createNonEmptyBML("bml3", "composition=\"REPLACE\"")); // end
                                                                         // feedback
                                                                         // for
                                                                         // behaviors
@@ -735,7 +735,7 @@ public class BMLSchedulerTest
     @Test
     public void testReplace()
     {
-        parseBML(createNonEmptyBML("bml3", "composition=\"replace\""));
+        parseBML(createNonEmptyBML("bml3", "composition=\"REPLACE\""));
         scheduler.schedule();
 
         assertThat(getBMLIdsFromStartFeedback(startFeedbackList), IsIterableContainingInOrder.contains("bml3"));
@@ -790,7 +790,7 @@ public class BMLSchedulerTest
         parseBML(createNonEmptyBML("bml3", "bmlt:preplan=\"true\""));
         scheduler.schedule();
 
-        parseBML(createNonEmptyBML("bml2", "bmlt:preplan=\"true\" composition=\"append-after(bml1)\" onStart=\"bml3\""));
+        parseBML(createNonEmptyBML("bml2", "bmlt:preplan=\"true\" composition=\"APPEND-AFTER(bml1)\" onStart=\"bml3\""));
         scheduler.schedule();
 
         assertEquals(0, startFeedbackList.size());
@@ -802,7 +802,7 @@ public class BMLSchedulerTest
         parseBML(createNonEmptyBML("bml1", "bmlt:preplan=\"true\""));
         scheduler.schedule();
 
-        parseBML(createNonEmptyBML("bml2", "composition=\"append-after(bml1)\""));
+        parseBML(createNonEmptyBML("bml2", "composition=\"APPEND-AFTER(bml1)\""));
         scheduler.schedule();
 
         assertEquals(0, startFeedbackList.size());
@@ -825,7 +825,7 @@ public class BMLSchedulerTest
         parseBML(createNonEmptyBML("bml1", "bmlt:preplan=\"true\""));
         scheduler.schedule();
 
-        parseBML(createNonEmptyBML("bml2", "composition=\"append\""));
+        parseBML(createNonEmptyBML("bml2", "composition=\"APPEND\""));
         scheduler.schedule();
 
         assertEquals(0, startFeedbackList.size());
@@ -847,7 +847,7 @@ public class BMLSchedulerTest
     {
         pegBoard.addBMLBlockPeg(new BMLBlockPeg("bml1", 1));
 
-        parseBML(createNonEmptyBML("bml2", "composition=\"replace\""));
+        parseBML(createNonEmptyBML("bml2", "composition=\"REPLACE\""));
         scheduler.schedule();
 
         assertNull(pegBoard.getBMLBlockPeg("bml1"));
@@ -860,7 +860,7 @@ public class BMLSchedulerTest
         stubEngine.addBlockEnd("bml2", 1);
         parseBML(createNonEmptyBML("bml1"));
         parseBML(createNonEmptyBML("bml2"));
-        parseBML(createNonEmptyBML("bml3", "composition=\"append\""));
+        parseBML(createNonEmptyBML("bml3", "composition=\"APPEND\""));
         scheduler.schedule();
         assertEquals(3, planningStartFeedback.size());
         assertEquals(2d, planningStartFeedback.get(2).predictedStart, PREDICTION_PRECISION);
@@ -873,8 +873,8 @@ public class BMLSchedulerTest
         stubEngine.addBlockEnd("bml1", 2);
         stubEngine.addBlockEnd("bml2", 3);
         parseBML(createNonEmptyBML("bml1", "preplan=\"true\""));
-        parseBML(createNonEmptyBML("bml2", "composition=\"append\""));
-        parseBML(createNonEmptyBML("bml3", "composition=\"append\""));
+        parseBML(createNonEmptyBML("bml2", "composition=\"APPEND\""));
+        parseBML(createNonEmptyBML("bml3", "composition=\"APPEND\""));
         scheduler.schedule();
         assertEquals(3, planningStartFeedback.size());
         assertEquals(0d, planningStartFeedback.get(0).predictedStart, PREDICTION_PRECISION);
@@ -891,7 +891,7 @@ public class BMLSchedulerTest
         stubEngine.addBlockEnd("bml3", 5);
         parseBML(createNonEmptyBML("bml1"));
         parseBML(createNonEmptyBML("bml2"));
-        parseBML(createNonEmptyBML("bml3", "composition=\"append-after(bml2)\""));
+        parseBML(createNonEmptyBML("bml3", "composition=\"APPEND-AFTER(bml2)\""));
         scheduler.schedule();
         assertEquals(3, planningStartFeedback.size());
         assertEquals(1d, planningStartFeedback.get(2).predictedStart, PREDICTION_PRECISION);
@@ -909,7 +909,7 @@ public class BMLSchedulerTest
         stubEngine.addBlockEnd("bml3", 6);
         parseBML(createNonEmptyBML("bml1"));
         parseBML(createNonEmptyBML("bml2"));
-        parseBML(createNonEmptyBML("bml3", "composition=\"append\""));
+        parseBML(createNonEmptyBML("bml3", "composition=\"APPEND\""));
         scheduler.schedule();
         assertEquals(3, planningStartFeedback.size());
         assertEquals(5d, planningStartFeedback.get(2).predictedStart, PREDICTION_PRECISION);

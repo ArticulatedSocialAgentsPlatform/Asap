@@ -283,6 +283,22 @@ public class PlanUnitTimeManager
         }
     }
     
+    public void resolveGazeKeyPositions()
+    {
+        resolveStartAndEndKeyPositions();
+        KeyPosition kp = kpManager.getKeyPosition("ready");
+        if (kp == null)
+        {
+            kpManager.addKeyPosition(new KeyPosition("ready", 0.25, 0.01));
+        }
+        
+        kp = kpManager.getKeyPosition("relax");
+        if (kp == null)
+        {
+            kpManager.addKeyPosition(new KeyPosition("relax", 0.75, 0.01));
+        }
+    }
+    
     /**
      * Fills out default BML keypositions that are not yet in the TimedMotionUnit. 
      * Conventions:

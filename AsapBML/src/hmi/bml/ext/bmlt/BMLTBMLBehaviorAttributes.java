@@ -89,7 +89,7 @@ public class BMLTBMLBehaviorAttributes implements BMLBehaviorAttributeExtension
     @Override
     public BMLBlockComposition handleComposition(String sm)
     {
-        if (sm.startsWith("append-after"))
+        if (sm.startsWith("APPEND-AFTER"))
         {
             getParameterList(sm, appendList);
             return BMLTSchedulingMechanism.APPEND_AFTER;

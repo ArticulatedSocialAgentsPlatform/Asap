@@ -188,7 +188,7 @@ public class AsapEnvironment implements Environment, ClockListener
             if (shutdownPrepared) return;
             for (AsapVirtualHuman vh : virtualHumans.values())
             {
-                vh.getRealizerPort().performBML("<bml id=\"clear\" composition=\"replace\"></bml>");
+                vh.getRealizerPort().performBML("<bml id=\"clear\" composition=\"REPLACE\"></bml>");
             }
             /*
              * For some reason the first execution of the physics thread after resetting the clock to 0 is quite late (100ms or so). 

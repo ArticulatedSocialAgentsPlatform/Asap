@@ -16,7 +16,7 @@ public enum BMLTSchedulingMechanism implements BMLBlockComposition
     {
         switch(this)
         {
-        case APPEND_AFTER: return "append-after";
+        case APPEND_AFTER: return "APPEND-AFTER";
         default: return toCoreSchedulingMechanism().getNameStart();
         }        
     }    

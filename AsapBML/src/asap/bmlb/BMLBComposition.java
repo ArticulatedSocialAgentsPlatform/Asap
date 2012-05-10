@@ -16,7 +16,7 @@ public enum BMLBComposition implements BMLBlockComposition
     {
         switch(this)
         {
-        case CHUNK_AFTER: return "chunk-after";
+        case CHUNK_AFTER: return "CHUNK-AFTER";
         default: return toBMLTSchedulingMechanism().getNameStart();
         }        
     }

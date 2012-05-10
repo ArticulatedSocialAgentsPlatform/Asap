@@ -145,11 +145,12 @@ public class PersistentFixtureAsapRealizerTest extends AbstractASAPRealizerTest
         //env = staticEnvironment;
         RealizerPort realizerPort = vHuman.getRealizerPort();
         realizerPort.removeAllListeners();  
+        realizerPort.addListeners(this);
         realizerHandler.setRealizerTestPort(new AsapRealizerPort(realizerPort));
         
         anticipator = new DummyAnticipator(1000000d, 2000000d);
         vHuman.getElckerlycRealizer().getScheduler().addAnticipator("dummyanticipator", anticipator);
-        realizerHandler.performBML("<bml id=\"replacesetup\" composition=\"replace\"/>");
+        realizerHandler.performBML("<bml id=\"replacesetup\" composition=\"REPLACE\"/>");
         realizerHandler.waitForBMLEndFeedback("replacesetup");
         realizerHandler.clearFeedbackLists();
     }
@@ -166,13 +167,13 @@ public class PersistentFixtureAsapRealizerTest extends AbstractASAPRealizerTest
     {
         String bmlString1 = "<bml id=\"bml1\" xmlns:bmlt=\"http://hmi.ewi.utwente.nl/bmlt\" "
                 + "bmlt:preplan=\"true\"><speech id=\"sp1\"><text>Hello</text></speech></bml>";
-        String bmlString2 = "<bml id=\"bml2\" composition=\"append\">"
+        String bmlString2 = "<bml id=\"bml2\" composition=\"APPEND\">"
                 + "<wait id=\"w1\" start=\"0\" end=\"anticipators:dummyanticipator:dummy1\"/></bml>";
-        String bmlString3 = "<bml id=\"bml3\" composition=\"append\">"
+        String bmlString3 = "<bml id=\"bml3\" composition=\"APPEND\">"
                 + "<speech id=\"sp1\"><text>Hello hello hello hello hello hello </text></speech></bml>";
-        String bmlString4 = "<bml id=\"bml4\" composition=\"append\">"
+        String bmlString4 = "<bml id=\"bml4\" composition=\"APPEND\">"
                 + "<wait id=\"w1\" start=\"0\" end=\"anticipators:dummyanticipator:dummy2\"/></bml>";
-        String bmlString5 = "<bml id=\"bml5\" composition=\"append\">"
+        String bmlString5 = "<bml id=\"bml5\" composition=\"APPEND\">"
                 + "<speech id=\"sp1\"><text>Hello hello hello hello hello hello </text></speech></bml>";
         String bmlString6 = "<bml id=\"bml6\" xmlns:bmlt=\"http://hmi.ewi.utwente.nl/bmlt\" bmlt:onStart=\"bml1\"></bml>";
         realizerHandler.performBML(bmlString1);
@@ -199,7 +200,7 @@ public class PersistentFixtureAsapRealizerTest extends AbstractASAPRealizerTest
     @After
     public void teardownEnvironment() throws InterruptedException
     {
-        realizerHandler.performBML("<bml id=\"cleanup\" composition=\"replace\"/>");
+        realizerHandler.performBML("<bml id=\"cleanup\" composition=\"REPLACE\"/>");
         realizerHandler.waitForBMLEndFeedback("cleanup");
     }
 

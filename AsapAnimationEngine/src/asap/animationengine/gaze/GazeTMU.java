@@ -109,6 +109,8 @@ public class GazeTMU extends TimedAnimationUnit
     protected void relaxUnit(double time) throws TimedPlanUnitPlayException
     {
         super.relaxUnit(time);
-        gmu.setupRelaxUnit();
+        gmu.setupRelaxUnit();        
     }
+    
+    
 }

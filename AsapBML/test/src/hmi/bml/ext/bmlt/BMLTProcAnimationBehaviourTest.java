@@ -62,7 +62,7 @@ public class BMLTProcAnimationBehaviourTest
     {
         // BMLInfo.addDescriptionExtension(BMLTProcAnimationBehaviour.xmlTag(), BMLTProcAnimationBehaviour.class);
         BMLInfo.supportedExtensions.add(BMLTProcAnimationBehaviour.class);
-        String bmlString = "<gesture id=\"a1\" start=\"nod1:end\" type=\"BEAT\">" + "<description priority=\"1\" type=\"procanimation\">"
+        String bmlString = "<gesture id=\"a1\" start=\"nod1:end\" lexeme=\"BEAT\">" + "<description priority=\"1\" type=\"procanimation\">"
                 + "<bmlt:procanimation xmlns:bmlt=\"http://hmi.ewi.utwente.nl/bmlt\" id=\"a1\" start=\"nod1:end\" name=\"ani1\">"
                 + "<bmlt:parameter name=\"amplitude\" value=\"10\"/>" + "</bmlt:procanimation>" + "</description>" + "</gesture>";
         GestureBehaviour g = new GestureBehaviour("bmla", new XMLTokenizer(bmlString));

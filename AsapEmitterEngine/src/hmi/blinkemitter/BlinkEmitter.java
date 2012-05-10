@@ -123,7 +123,7 @@ public class BlinkEmitter extends Emitter implements Runnable
     protected void emitBlink()
     {
         lastblink = System.currentTimeMillis();
-        scheduling = "composition=\"append-after(blinkbml" + blinkcount + ")\"";
+        scheduling = "composition=\"APPEND-AFTER(blinkbml" + blinkcount + ")\"";
         String bml = "<bml id=\"blinkbml" + (blinkcount + 1) + "\" " + scheduling
                 + "xmlns:bmlt=\"http://hmi.ewi.utwente.nl/bmlt\"><face id=\"b1\" type=\"LEXICALIZED\" lexeme=\"blink\" start=\"0\" end=\"0.15\" "
                 + "amount=\"1\" ready=\"0.03\" relax=\"0.12\"/>";

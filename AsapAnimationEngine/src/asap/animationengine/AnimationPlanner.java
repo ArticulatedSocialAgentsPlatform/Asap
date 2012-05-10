@@ -23,6 +23,7 @@ import hmi.bml.core.Behaviour;
 import hmi.bml.core.GazeBehaviour;
 import hmi.bml.core.GestureBehaviour;
 import hmi.bml.core.HeadBehaviour;
+import hmi.bml.core.PointingBehaviour;
 import hmi.bml.core.PostureBehaviour;
 import hmi.bml.ext.bmlt.BMLTControllerBehaviour;
 import hmi.bml.ext.bmlt.BMLTKeyframeBehaviour;
@@ -81,7 +82,17 @@ public class AnimationPlanner extends AbstractPlanner<TimedAnimationUnit>
         gestureBinding = g;
     }
 
-    
+    public void resolveDefaultKeyPositions(Behaviour b, TimedAnimationUnit tmu)
+    {
+        if(b instanceof GazeBehaviour)
+        {
+            tmu.resolveGazeKeyPositions();
+        }
+        else
+        {
+            tmu.resolveGestureKeyPositions();
+        }
+    }
     /**
      * Creates a TimedMotionUnit that satisfies sacs and adds it to the motion plan. All registered BMLFeedbackListener are linked to this
      * TimedMotionUnit.
@@ -98,7 +109,7 @@ public class AnimationPlanner extends AbstractPlanner<TimedAnimationUnit>
         }
 
         // apply syncs to tmu
-        tmu.resolveGestureKeyPositions();
+        resolveDefaultKeyPositions(b,tmu);        
         linkSynchs(tmu, sacs);
 
         planManager.addPlanUnit(tmu);
@@ -115,7 +126,7 @@ public class AnimationPlanner extends AbstractPlanner<TimedAnimationUnit>
     public TimedAnimationUnit resolveSynchs(BMLBlockPeg bbPeg, Behaviour b, List<TimePegAndConstraint> sac) throws BehaviourPlanningException
     {
         TimedAnimationUnit tmu = createTAU(bbPeg, b);
-        tmu.resolveGestureKeyPositions();
+        resolveDefaultKeyPositions(b, tmu);        
         tmu.resolveSynchs(bbPeg, b, sac);
         return tmu;
     }
@@ -181,6 +192,7 @@ public class AnimationPlanner extends AbstractPlanner<TimedAnimationUnit>
         list.add(GazeBehaviour.class);
         list.add(GestureBehaviour.class);
         list.add(PostureBehaviour.class);
+        list.add(PointingBehaviour.class);
         list.add(BMLTProcAnimationBehaviour.class);
         list.add(BMLTControllerBehaviour.class);
         list.add(BMLTTransitionBehaviour.class);
