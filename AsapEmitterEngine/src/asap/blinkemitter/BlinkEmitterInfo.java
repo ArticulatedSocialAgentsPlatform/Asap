@@ -16,11 +16,13 @@
  * You should have received a copy of the GNU General Public License
  * along with Elckerlyc.  If not, see http://www.gnu.org/licenses/.
  ******************************************************************************/
-package hmi.emitterengine;
-import hmi.emitterengine.bml.*;
+package asap.blinkemitter;
 
 
 import java.util.*;
+
+import asap.emitterengine.*;
+import asap.emitterengine.bml.*;
 
 //import org.slf4j.Logger;
 //import org.slf4j.LoggerFactory;
@@ -29,39 +31,74 @@ import java.util.*;
  
  * @author Dennis Reidsma
  */
-public abstract class EmitterInfo 
+public class BlinkEmitterInfo extends EmitterInfo
 {
     
-    public abstract String getNamespace();
+    public BlinkEmitterInfo()
+    {
+      optionalParameters.add("range");
+      optionalParameters.add("avgwaitingtime");
+    }
+      
+    static final String BMLTNAMESPACE = "http://hmi.ewi.utwente.nl/bmlt";
+    
     public static String namespace()
     {
-      return null;
+      return BMLTNAMESPACE;
     }
-    public abstract String getXMLTag();
+    @Override
+    public String getNamespace()
+    {
+      return BMLTNAMESPACE;
+    }
+    
+    static final String XMLTAG = "blinkemitter";
+    
     public static String xmlTag()
     {
-      return null;
+      return XMLTAG;
+    }
+    @Override
+    public String getXMLTag()
+    {
+      return XMLTAG;
     }
 
+    @Override
     public  boolean specifiesFloatParameter(String name)
     {
-      return false;
+      return optionalParameters.contains(name) || requiredParameters.contains(name);
     }
+    @Override
     public  boolean specifiesStringParameter(String name)
     {
       return false;
     }
     
+    private  ArrayList<String> optionalParameters = new ArrayList<String>();
+    private  ArrayList<String> requiredParameters = new ArrayList<String>();
+    
+    @Override
     public  ArrayList<String> getOptionalParameters()
     {
-      return new ArrayList<String>();
+      return optionalParameters;
     }
+
+    @Override
     public  ArrayList<String> getRequiredParameters()
     {
-      return new ArrayList<String>();
+      return requiredParameters;
     }
-    
-    public abstract Class<? extends Emitter> getEmitterClass();
-    public abstract Class<? extends CreateEmitterBehaviour> getCreateEmitterBehaviour();
-     
+
+    @Override
+    public Class<? extends Emitter> getEmitterClass()
+    {
+      return BlinkEmitter.class;
+    }
+    @Override
+    public Class<? extends CreateEmitterBehaviour> getCreateEmitterBehaviour()
+    {
+      return CreateBlinkEmitterBehaviour.class;
+    }
+         
 }

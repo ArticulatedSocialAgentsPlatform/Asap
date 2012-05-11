@@ -16,23 +16,39 @@
  * You should have received a copy of the GNU General Public License
  * along with Elckerlyc.  If not, see http://www.gnu.org/licenses/.
  ******************************************************************************/
-package hmi.emitterengine.planunit;
+package asap.emitterengine.bml;
 
-import hmi.elckerlyc.planunit.TimedPlanUnitPlayException;
+import java.util.List;
 
+import com.google.common.collect.ImmutableList;
+
+import hmi.bml.ext.bmlt.*;
+import hmi.bml.parser.SyncPoint;
 /**
- * Thrown when playback of a TEU fails
- * @author Dennis
- *
+ * Abstract class for all emitter engine specific Behaviours.
+ * 
+ * @author Dennis Reidsma
  */
-public class TEUPlayException extends TimedPlanUnitPlayException
+public class EmitterBehaviour extends BMLTBehaviour
 {
-    public TimedEmitterUnit timedEU;
-    public TEUPlayException(String str, TimedEmitterUnit teu)
+    public EmitterBehaviour(String bmlId)
     {
-        super(str,teu);
-        timedEU = teu;        
+        super(bmlId);        
+    }
+
+    @Override
+    public void addDefaultSyncPoints()
+    {
+        for(String s:getDefaultSyncPoints())
+        {
+            addSyncPoint(new SyncPoint(bmlId, id, s));
+        }        
     }
     
-    private static final long serialVersionUID = -6983533422653209435L;
+    private static final List<String> DEFAULT_SYNCS = ImmutableList.of("start","end");
+    public static List<String> getDefaultSyncPoints()
+    {
+        return DEFAULT_SYNCS;
+    }
+
 }

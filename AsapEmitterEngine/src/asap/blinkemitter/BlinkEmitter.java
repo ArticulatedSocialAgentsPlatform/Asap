@@ -16,16 +16,17 @@
  * You should have received a copy of the GNU General Public License
  * along with Elckerlyc.  If not, see http://www.gnu.org/licenses/.
  ******************************************************************************/
-package hmi.blinkemitter;
+package asap.blinkemitter;
 
 import hmi.bml.bridge.RealizerPort;
-import hmi.emitterengine.*;
 import hmi.util.*;
 
 import java.util.*;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+
+import asap.emitterengine.*;
 
 /**
  * Emits blink behaviors to a RealizerBridge with a certain probabilitydistribution. Distribution

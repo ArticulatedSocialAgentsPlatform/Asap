@@ -1,7 +1,8 @@
-package hmi.blinkemitter;
+package asap.blinkemitter;
 
-import hmi.emitterengine.bml.*;
 import java.io.IOException;
+
+import asap.emitterengine.bml.*;
 import hmi.xml.XMLTokenizer;
 
 /**

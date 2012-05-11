@@ -16,12 +16,13 @@
  * You should have received a copy of the GNU General Public License
  * along with Elckerlyc.  If not, see http://www.gnu.org/licenses/.
  ******************************************************************************/
-package hmi.blinkemitter;
+package asap.breathingemitter;
 
-import hmi.emitterengine.*;
-import hmi.emitterengine.bml.*;
 
 import java.util.*;
+
+import asap.emitterengine.*;
+import asap.emitterengine.bml.*;
 
 //import org.slf4j.Logger;
 //import org.slf4j.LoggerFactory;
@@ -30,15 +31,15 @@ import java.util.*;
  
  * @author Dennis Reidsma
  */
-public class BlinkEmitterInfo extends EmitterInfo
+public class BreathingEmitterInfo extends EmitterInfo
 {
-    
-    public BlinkEmitterInfo()
+
+    public BreathingEmitterInfo()
     {
       optionalParameters.add("range");
       optionalParameters.add("avgwaitingtime");
     }
-      
+    
     static final String BMLTNAMESPACE = "http://hmi.ewi.utwente.nl/bmlt";
     
     public static String namespace()
@@ -51,7 +52,7 @@ public class BlinkEmitterInfo extends EmitterInfo
       return BMLTNAMESPACE;
     }
     
-    static final String XMLTAG = "blinkemitter";
+    static final String XMLTAG = "breathingemitter";
     
     public static String xmlTag()
     {
@@ -92,12 +93,12 @@ public class BlinkEmitterInfo extends EmitterInfo
     @Override
     public Class<? extends Emitter> getEmitterClass()
     {
-      return BlinkEmitter.class;
+      return BreathingEmitter.class;
     }
     @Override
     public Class<? extends CreateEmitterBehaviour> getCreateEmitterBehaviour()
     {
-      return CreateBlinkEmitterBehaviour.class;
+      return CreateBreathingEmitterBehaviour.class;
     }
          
 }

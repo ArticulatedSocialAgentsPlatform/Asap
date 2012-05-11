@@ -16,12 +16,12 @@
  * You should have received a copy of the GNU General Public License
  * along with Elckerlyc.  If not, see http://www.gnu.org/licenses/.
  ******************************************************************************/
-package hmi.breathingemitter;
+package asap.emitterengine;
 
-import hmi.emitterengine.*;
-import hmi.emitterengine.bml.*;
 
 import java.util.*;
+
+import asap.emitterengine.bml.*;
 
 //import org.slf4j.Logger;
 //import org.slf4j.LoggerFactory;
@@ -30,74 +30,39 @@ import java.util.*;
  
  * @author Dennis Reidsma
  */
-public class BreathingEmitterInfo extends EmitterInfo
+public abstract class EmitterInfo 
 {
-
-    public BreathingEmitterInfo()
-    {
-      optionalParameters.add("range");
-      optionalParameters.add("avgwaitingtime");
-    }
     
-    static final String BMLTNAMESPACE = "http://hmi.ewi.utwente.nl/bmlt";
-    
+    public abstract String getNamespace();
     public static String namespace()
     {
-      return BMLTNAMESPACE;
+      return null;
     }
-    @Override
-    public String getNamespace()
-    {
-      return BMLTNAMESPACE;
-    }
-    
-    static final String XMLTAG = "breathingemitter";
-    
+    public abstract String getXMLTag();
     public static String xmlTag()
     {
-      return XMLTAG;
-    }
-    @Override
-    public String getXMLTag()
-    {
-      return XMLTAG;
+      return null;
     }
 
-    @Override
     public  boolean specifiesFloatParameter(String name)
     {
-      return optionalParameters.contains(name) || requiredParameters.contains(name);
+      return false;
     }
-    @Override
     public  boolean specifiesStringParameter(String name)
     {
       return false;
     }
     
-    private  ArrayList<String> optionalParameters = new ArrayList<String>();
-    private  ArrayList<String> requiredParameters = new ArrayList<String>();
-    
-    @Override
     public  ArrayList<String> getOptionalParameters()
     {
-      return optionalParameters;
+      return new ArrayList<String>();
     }
-
-    @Override
     public  ArrayList<String> getRequiredParameters()
     {
-      return requiredParameters;
+      return new ArrayList<String>();
     }
-
-    @Override
-    public Class<? extends Emitter> getEmitterClass()
-    {
-      return BreathingEmitter.class;
-    }
-    @Override
-    public Class<? extends CreateEmitterBehaviour> getCreateEmitterBehaviour()
-    {
-      return CreateBreathingEmitterBehaviour.class;
-    }
-         
+    
+    public abstract Class<? extends Emitter> getEmitterClass();
+    public abstract Class<? extends CreateEmitterBehaviour> getCreateEmitterBehaviour();
+     
 }

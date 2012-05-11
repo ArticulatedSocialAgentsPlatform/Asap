@@ -16,7 +16,7 @@
  * You should have received a copy of the GNU General Public License
  * along with Elckerlyc.  If not, see http://www.gnu.org/licenses/.
  ******************************************************************************/
-package hmi.emitterengine;
+package asap.emitterengine;
 
 import hmi.bml.bridge.RealizerPort;
 import java.util.*;

@@ -17,7 +17,7 @@
  * You should have received a copy of the GNU General Public License
  * along with Elckerlyc.  If not, see http://www.gnu.org/licenses/.
  ******************************************************************************/
-package hmi.emitterengine.loader;
+package asap.emitterengine.loader;
 
 import hmi.elckerlyc.DefaultEngine;
 import hmi.elckerlyc.DefaultPlayer;
@@ -26,15 +26,15 @@ import hmi.elckerlyc.Player;
 import hmi.elckerlyc.planunit.PlanManager;
 import hmi.elckerlyc.planunit.PlanPlayer;
 import hmi.elckerlyc.planunit.SingleThreadedPlanPlayer;
-import hmi.emitterengine.EmitterInfo;
-import hmi.emitterengine.EmitterPlanner;
-import hmi.emitterengine.planunit.TimedEmitterUnit;
 import hmi.xml.XMLStructureAdapter;
 import hmi.xml.XMLTokenizer;
 
 import java.io.IOException;
 import java.util.HashMap;
 
+import asap.emitterengine.EmitterInfo;
+import asap.emitterengine.EmitterPlanner;
+import asap.emitterengine.planunit.TimedEmitterUnit;
 import asap.environment.AsapVirtualHuman;
 import asap.environment.EngineLoader;
 import asap.environment.Loader;
