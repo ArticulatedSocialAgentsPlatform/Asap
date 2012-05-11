@@ -24,6 +24,7 @@ import hmi.bml.feedback.ListFeedbackListener;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
+import org.powermock.core.classloader.annotations.PowerMockIgnore;
 import org.powermock.core.classloader.annotations.PrepareForTest;
 import org.powermock.modules.junit4.PowerMockRunner;
 
@@ -49,6 +50,9 @@ import static org.hamcrest.collection.IsIterableContainingInAnyOrder.*;
  * @author Herwin
  * 
  */
+@PowerMockIgnore({ "javax.management.*", "javax.xml.parsers.*",
+    "com.sun.org.apache.xerces.internal.jaxp.*", "ch.qos.logback.*",
+    "org.slf4j.*" })
 @RunWith(PowerMockRunner.class)
 @PrepareForTest({ BMLBlockManager.class })
 public class AnimationPlanPlayerTest

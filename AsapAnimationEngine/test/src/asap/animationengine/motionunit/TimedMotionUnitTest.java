@@ -32,6 +32,7 @@ import java.util.List;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
+import org.powermock.core.classloader.annotations.PowerMockIgnore;
 import org.powermock.core.classloader.annotations.PrepareForTest;
 import org.powermock.modules.junit4.PowerMockRunner;
 
@@ -41,6 +42,9 @@ import asap.motionunit.MUPlayException;
  * Testcases for the TimedMotionUnit
  * @author welberge
  */
+@PowerMockIgnore({ "javax.management.*", "javax.xml.parsers.*",
+    "com.sun.org.apache.xerces.internal.jaxp.*", "ch.qos.logback.*",
+    "org.slf4j.*" })
 @RunWith(PowerMockRunner.class)
 @PrepareForTest({BMLBlockManager.class})
 public class TimedMotionUnitTest extends AbstractTimedPlanUnitTest

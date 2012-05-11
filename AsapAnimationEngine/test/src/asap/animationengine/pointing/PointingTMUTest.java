@@ -7,6 +7,7 @@ import static org.mockito.Mockito.when;
 import java.util.Set;
 
 import org.junit.runner.RunWith;
+import org.powermock.core.classloader.annotations.PowerMockIgnore;
 import org.powermock.core.classloader.annotations.PrepareForTest;
 import org.powermock.modules.junit4.PowerMockRunner;
 
@@ -32,6 +33,9 @@ import hmi.testutil.animation.HanimBody;
  * Unit test cases for the PointingTMU
  * @author hvanwelbergen
  */
+@PowerMockIgnore({ "javax.management.*", "javax.xml.parsers.*",
+    "com.sun.org.apache.xerces.internal.jaxp.*", "ch.qos.logback.*",
+    "org.slf4j.*" })
 @RunWith(PowerMockRunner.class)
 @PrepareForTest(BMLBlockManager.class)
 public class PointingTMUTest extends AbstractTimedPlanUnitTest

@@ -22,6 +22,7 @@ import hmi.elckerlyc.world.WorldObjectManager;
 import hmi.testutil.animation.HanimBody;
 
 import org.junit.runner.RunWith;
+import org.powermock.core.classloader.annotations.PowerMockIgnore;
 import org.powermock.core.classloader.annotations.PrepareForTest;
 import org.powermock.modules.junit4.PowerMockRunner;
 
@@ -33,6 +34,9 @@ import asap.animationengine.restpose.RestPose;
  * Unit test cases for the GazeTMU
  * @author hvanwelbergen
  */
+@PowerMockIgnore({ "javax.management.*", "javax.xml.parsers.*",
+    "com.sun.org.apache.xerces.internal.jaxp.*", "ch.qos.logback.*",
+    "org.slf4j.*" })
 @RunWith(PowerMockRunner.class)
 @PrepareForTest(BMLBlockManager.class)
 public class GazeTMUTest extends AbstractTimedPlanUnitTest
