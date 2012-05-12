@@ -11,7 +11,7 @@
       <dependency org="Asap"   name="AsapAudioEngine"       transitive="false" rev="latest.${resolve.status}"   />
 	  <dependency org="Asap"   name="AsapBML"       transitive="false" rev="latest.${resolve.status}"   />
       <dependency org="HMI"   name="AsapUtils"     transitive="false" rev="latest.${resolve.status}"   />
-      <dependency org="HMI"   name="AsapEnvironment"     transitive="false" rev="latest.${resolve.status}"   />
+      <dependency org="Asap"   name="AsapEnvironment"     transitive="false" rev="latest.${resolve.status}"   />
       <dependency org="HMI"   name="HmiAudioEnvironment"     transitive="false" rev="latest.${resolve.status}"   />
 
 
