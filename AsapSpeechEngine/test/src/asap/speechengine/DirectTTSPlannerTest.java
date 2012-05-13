@@ -4,7 +4,7 @@ import static org.mockito.Matchers.any;
 import static org.mockito.Matchers.anyString;
 import static org.mockito.Matchers.eq;
 import static org.mockito.Mockito.when;
-import hmi.bml.core.SpeechBehaviour;
+import saiba.bml.core.SpeechBehaviour;
 import hmi.elckerlyc.pegboard.BMLBlockPeg;
 import hmi.tts.Bookmark;
 import hmi.tts.Phoneme;

@@ -4,9 +4,9 @@ import static org.junit.Assert.*;
 
 import java.util.HashMap;
 
-import hmi.bml.core.BMLBehaviorAttributeExtension;
-import hmi.bml.core.BehaviourBlock;
-import hmi.bml.core.BMLBlockComposition;
+import saiba.bml.core.BMLBehaviorAttributeExtension;
+import saiba.bml.core.BehaviourBlock;
+import saiba.bml.core.BMLBlockComposition;
 import hmi.xml.XMLTokenizer;
 
 import org.junit.Test;

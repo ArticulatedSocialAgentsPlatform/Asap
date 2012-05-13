@@ -18,10 +18,11 @@
  ******************************************************************************/
 package asap.animationengine.noise;
 
+import saiba.bml.feedback.BMLSyncPointProgressFeedback;
 import asap.animationengine.motionunit.*;
 import asap.motionunit.MUPlayException;
 import asap.motionunit.TMUPlayException;
-import hmi.bml.feedback.*;
+import saiba.bml.feedback.*;
 import hmi.elckerlyc.feedback.FeedbackManager;
 import hmi.elckerlyc.pegboard.BMLBlockPeg;
 import hmi.elckerlyc.pegboard.PegBoard;

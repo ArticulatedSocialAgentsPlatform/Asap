@@ -1,6 +1,6 @@
 package hmi.elckerlyc.parametervaluechange;
 
-import hmi.bml.BMLGestureSync;
+import saiba.bml.BMLGestureSync;
 import hmi.elckerlyc.BehaviorNotFoundException;
 import hmi.elckerlyc.SyncPointNotFoundException;
 import hmi.elckerlyc.feedback.FeedbackManager;

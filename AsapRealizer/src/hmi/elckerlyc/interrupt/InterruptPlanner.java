@@ -1,6 +1,6 @@
 package hmi.elckerlyc.interrupt;
 
-import hmi.bml.core.Behaviour;
+import saiba.bml.core.Behaviour;
 import hmi.bml.ext.bmlt.BMLTInterruptBehaviour;
 import hmi.elckerlyc.AbstractPlanner;
 import hmi.elckerlyc.BehaviourPlanningException;

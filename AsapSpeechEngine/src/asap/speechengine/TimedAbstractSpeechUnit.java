@@ -3,7 +3,7 @@ package asap.speechengine;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import hmi.bml.feedback.BMLSyncPointProgressFeedback;
+import saiba.bml.feedback.BMLSyncPointProgressFeedback;
 import hmi.elckerlyc.feedback.FeedbackManager;
 import hmi.elckerlyc.pegboard.BMLBlockPeg;
 import hmi.elckerlyc.pegboard.TimePeg;

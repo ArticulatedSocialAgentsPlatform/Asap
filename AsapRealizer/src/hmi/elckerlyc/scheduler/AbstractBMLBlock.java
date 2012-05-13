@@ -1,6 +1,6 @@
 package hmi.elckerlyc.scheduler;
 
-import hmi.bml.BMLGestureSync;
+import saiba.bml.BMLGestureSync;
 import hmi.elckerlyc.planunit.TimedPlanUnitState;
 
 import java.util.HashSet;

@@ -1,6 +1,6 @@
 package hmi.bml.ext.bmlt.feedback;
 
-import hmi.bml.feedback.BMLFeedback;
+import saiba.bml.feedback.BMLFeedback;
 import net.jcip.annotations.Immutable;
 
 /**

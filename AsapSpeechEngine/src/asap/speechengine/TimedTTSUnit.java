@@ -18,8 +18,8 @@
  ******************************************************************************/
 package asap.speechengine;
 
-import hmi.bml.BMLGestureSync;
-import hmi.bml.core.Behaviour;
+import saiba.bml.BMLGestureSync;
+import saiba.bml.core.Behaviour;
 import hmi.elckerlyc.*;
 import hmi.elckerlyc.feedback.FeedbackManager;
 import hmi.elckerlyc.pegboard.BMLBlockPeg;

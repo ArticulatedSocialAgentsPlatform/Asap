@@ -18,7 +18,7 @@
  ******************************************************************************/
 package hmi.elckerlyc.planunit;
 
-import hmi.bml.BMLGestureSync;
+import saiba.bml.BMLGestureSync;
 import hmi.xml.XMLFormatting;
 import hmi.xml.XMLStructureAdapter;
 import hmi.xml.XMLTokenizer;

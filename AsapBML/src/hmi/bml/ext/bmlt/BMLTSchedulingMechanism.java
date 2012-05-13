@@ -1,7 +1,7 @@
 package hmi.bml.ext.bmlt;
 
-import hmi.bml.core.BMLBlockComposition;
-import hmi.bml.core.CoreComposition;
+import saiba.bml.core.BMLBlockComposition;
+import saiba.bml.core.CoreComposition;
 
 /**
  * APPEND_AFTER: start when a selected set of previously sent behavior is finished<br> 

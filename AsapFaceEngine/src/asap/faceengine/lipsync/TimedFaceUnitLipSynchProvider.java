@@ -1,6 +1,6 @@
 package asap.faceengine.lipsync;
 
-import hmi.bml.core.Behaviour;
+import saiba.bml.core.Behaviour;
 import hmi.elckerlyc.lipsync.LipSynchProvider;
 import hmi.elckerlyc.pegboard.BMLBlockPeg;
 import hmi.elckerlyc.pegboard.OffsetPeg;

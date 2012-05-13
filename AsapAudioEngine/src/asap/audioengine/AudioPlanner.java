@@ -32,7 +32,7 @@ import hmi.elckerlyc.pegboard.TimePeg;
 import hmi.elckerlyc.planunit.PlanManager;
 import hmi.elckerlyc.scheduler.TimePegAndConstraint;
 import hmi.util.Resources;
-import hmi.bml.core.Behaviour;
+import saiba.bml.core.Behaviour;
 import hmi.bml.ext.bmlt.*;
 import hmi.audioenvironment.*;
 

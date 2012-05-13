@@ -1,6 +1,6 @@
 package hmi.bml.ext.ssml;
 
-import hmi.bml.core.SpeechBehaviour;
+import saiba.bml.core.SpeechBehaviour;
 import hmi.xml.XMLTokenizer;
 
 import java.io.IOException;

@@ -1,6 +1,6 @@
 package asap.speechengine.ttsbinding;
 
-import hmi.bml.core.Behaviour;
+import saiba.bml.core.Behaviour;
 import hmi.elckerlyc.planunit.ParameterException;
 import hmi.elckerlyc.planunit.ParameterNotFoundException;
 import hmi.tts.AbstractTTSGenerator;

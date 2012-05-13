@@ -18,10 +18,10 @@
  ******************************************************************************/
 package asap.faceengine;
 
-import hmi.bml.BMLInfo;
-import hmi.bml.core.Behaviour;
-import hmi.bml.core.FaceLexemeBehaviour;
-import hmi.bml.core.ext.FaceFacsBehaviour;
+import saiba.bml.BMLInfo;
+import saiba.bml.core.Behaviour;
+import saiba.bml.core.FaceLexemeBehaviour;
+import saiba.bml.core.ext.FaceFacsBehaviour;
 import hmi.bml.ext.bmlt.BMLTFaceMorphBehaviour;
 import hmi.elckerlyc.AbstractPlanner;
 import hmi.elckerlyc.BehaviourPlanningException;

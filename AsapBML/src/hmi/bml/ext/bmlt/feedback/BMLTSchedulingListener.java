@@ -1,6 +1,6 @@
 package hmi.bml.ext.bmlt.feedback;
 
-import hmi.bml.feedback.BMLListener;
+import saiba.bml.feedback.BMLListener;
 /**
  * Listener interface for Scheduling feedback messages
  * @author welberge

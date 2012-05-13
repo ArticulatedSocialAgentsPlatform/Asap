@@ -1,6 +1,6 @@
 package hmi.elckerlyc.wait;
 
-import hmi.bml.BMLGestureSync;
+import saiba.bml.BMLGestureSync;
 import hmi.elckerlyc.feedback.FeedbackManager;
 import hmi.elckerlyc.pegboard.BMLBlockPeg;
 import hmi.elckerlyc.pegboard.TimePeg;

@@ -1,7 +1,7 @@
 package asap.speechengine;
 
-import hmi.bml.core.Behaviour;
-import hmi.bml.core.SpeechBehaviour;
+import saiba.bml.core.Behaviour;
+import saiba.bml.core.SpeechBehaviour;
 import hmi.elckerlyc.BehaviourPlanningException;
 import hmi.elckerlyc.SyncAndTimePeg;
 import hmi.elckerlyc.feedback.FeedbackManager;

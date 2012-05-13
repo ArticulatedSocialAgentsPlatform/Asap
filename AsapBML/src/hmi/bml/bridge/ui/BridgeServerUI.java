@@ -19,7 +19,7 @@
 package hmi.bml.bridge.ui;
 
 import hmi.bml.bridge.ConnectionStateListener;
-import hmi.bml.bridge.RealizerPort;
+import saiba.bml.bridge.RealizerPort;
 import hmi.bml.bridge.TCPIPToBMLRealizerAdapter;
 import hmi.bml.bridge.TCPIPToBMLRealizerAdapter.ServerState;
 

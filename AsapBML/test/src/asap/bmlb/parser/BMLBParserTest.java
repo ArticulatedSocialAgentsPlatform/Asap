@@ -3,10 +3,10 @@ package asap.bmlb.parser;
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.instanceOf;
 import static org.junit.Assert.assertEquals;
-import hmi.bml.BMLInfo;
-import hmi.bml.core.Behaviour;
-import hmi.bml.core.BehaviourBlock;
-import hmi.bml.parser.BMLParser;
+import saiba.bml.BMLInfo;
+import saiba.bml.core.Behaviour;
+import saiba.bml.core.BehaviourBlock;
+import saiba.bml.parser.BMLParser;
 import hmi.util.Resources;
 
 import java.io.IOException;

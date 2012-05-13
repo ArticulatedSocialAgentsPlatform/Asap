@@ -18,7 +18,7 @@
  ******************************************************************************/
 package hmi.bml.ext.bmlt;
 
-import hmi.bml.parser.SyncPoint;
+import saiba.bml.parser.SyncPoint;
 import hmi.xml.XMLTokenizer;
 
 import java.io.IOException;

@@ -5,7 +5,7 @@ import static org.hamcrest.MatcherAssert.assertThat;
 import static org.junit.Assert.assertEquals;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
-import hmi.bml.core.SpeechBehaviour;
+import saiba.bml.core.SpeechBehaviour;
 import hmi.elckerlyc.pegboard.BMLBlockPeg;
 import hmi.elckerlyc.pegboard.TimePeg;
 import hmi.elckerlyc.planunit.PlanManager;

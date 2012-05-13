@@ -18,13 +18,13 @@
  ******************************************************************************/
 package asap.animationengine;
 
-import hmi.bml.BMLInfo;
-import hmi.bml.core.Behaviour;
-import hmi.bml.core.GazeBehaviour;
-import hmi.bml.core.GestureBehaviour;
-import hmi.bml.core.HeadBehaviour;
-import hmi.bml.core.PointingBehaviour;
-import hmi.bml.core.PostureBehaviour;
+import saiba.bml.BMLInfo;
+import saiba.bml.core.Behaviour;
+import saiba.bml.core.GazeBehaviour;
+import saiba.bml.core.GestureBehaviour;
+import saiba.bml.core.HeadBehaviour;
+import saiba.bml.core.PointingBehaviour;
+import saiba.bml.core.PostureBehaviour;
 import hmi.bml.ext.bmlt.BMLTControllerBehaviour;
 import hmi.bml.ext.bmlt.BMLTKeyframeBehaviour;
 import hmi.bml.ext.bmlt.BMLTNoiseBehaviour;

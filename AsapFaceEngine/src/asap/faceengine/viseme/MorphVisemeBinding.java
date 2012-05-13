@@ -20,7 +20,7 @@ package asap.faceengine.viseme;
 
 import asap.faceengine.faceunit.MorphFU;
 import asap.faceengine.faceunit.TimedFaceUnit;
-import hmi.bml.core.Behaviour;
+import saiba.bml.core.Behaviour;
 import hmi.elckerlyc.feedback.FeedbackManager;
 import hmi.elckerlyc.feedback.NullFeedbackManager;
 import hmi.elckerlyc.pegboard.BMLBlockPeg;

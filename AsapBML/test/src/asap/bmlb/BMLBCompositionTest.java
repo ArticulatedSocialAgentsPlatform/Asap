@@ -3,7 +3,7 @@ package asap.bmlb;
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.hasItems;
 import static org.junit.Assert.*;
-import hmi.bml.core.BehaviourBlock;
+import saiba.bml.core.BehaviourBlock;
 
 import org.junit.Test;
 

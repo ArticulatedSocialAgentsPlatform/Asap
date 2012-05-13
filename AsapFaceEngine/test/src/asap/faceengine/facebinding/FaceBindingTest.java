@@ -6,7 +6,7 @@ import static org.mockito.Mockito.mock;
 import java.io.IOException;
 import java.util.List;
 
-import hmi.bml.core.FaceLexemeBehaviour;
+import saiba.bml.core.FaceLexemeBehaviour;
 import hmi.elckerlyc.feedback.FeedbackManager;
 import hmi.xml.XMLTokenizer;
 

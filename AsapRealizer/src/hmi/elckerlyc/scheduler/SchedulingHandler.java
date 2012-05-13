@@ -1,6 +1,6 @@
 package hmi.elckerlyc.scheduler;
 
-import hmi.bml.core.BehaviourBlock;
+import saiba.bml.core.BehaviourBlock;
 
 public interface SchedulingHandler
 {

@@ -1,7 +1,7 @@
 package asap.ext.murml;
 
-import hmi.bml.core.GestureBehaviour;
-import hmi.bml.parser.SyncPoint;
+import saiba.bml.core.GestureBehaviour;
+import saiba.bml.parser.SyncPoint;
 import hmi.xml.XMLTokenizer;
 
 import java.io.IOException;

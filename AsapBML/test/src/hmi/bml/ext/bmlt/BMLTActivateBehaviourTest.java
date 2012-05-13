@@ -4,7 +4,7 @@ import static org.junit.Assert.*;
 
 import java.io.IOException;
 
-import hmi.bml.core.BehaviourBlock;
+import saiba.bml.core.BehaviourBlock;
 import hmi.xml.XMLFormatting;
 import hmi.xml.XMLTokenizer;
 

@@ -5,7 +5,7 @@ import java.io.IOException;
 import lombok.Getter;
 
 import asap.murml.Definition;
-import hmi.bml.core.Behaviour;
+import saiba.bml.core.Behaviour;
 import hmi.xml.XMLTokenizer;
 
 /**

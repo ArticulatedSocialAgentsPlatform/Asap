@@ -1,6 +1,6 @@
 package hmi.elckerlyc.scheduler;
 
-import hmi.bml.core.Behaviour;
+import saiba.bml.core.Behaviour;
 import hmi.elckerlyc.BehaviourPlanningException;
 import hmi.elckerlyc.pegboard.BMLBlockPeg;
 import hmi.elckerlyc.planunit.TimedPlanUnit;

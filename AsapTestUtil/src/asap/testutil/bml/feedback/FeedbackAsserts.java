@@ -1,4 +1,4 @@
-package hmi.testutil.bml.feedback;
+package asap.testutil.bml.feedback;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
@@ -6,8 +6,8 @@ import java.util.List;
 
 import hmi.bml.ext.bmlt.feedback.BMLTSchedulingFinishedFeedback;
 import hmi.bml.ext.bmlt.feedback.BMLTSchedulingStartFeedback;
-import hmi.bml.feedback.BMLExceptionFeedback;
-import hmi.bml.feedback.BMLSyncPointProgressFeedback;
+import saiba.bml.feedback.BMLExceptionFeedback;
+import saiba.bml.feedback.BMLSyncPointProgressFeedback;
 
 /**
  * Custom asserts for BML feedbacks 

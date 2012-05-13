@@ -8,9 +8,9 @@ import org.slf4j.LoggerFactory;
 import asap.speechengine.ttsbinding.TTSBinding;
 
 
-import hmi.bml.core.Behaviour;
-import hmi.bml.core.SpeechBehaviour;
-import hmi.bml.feedback.BMLSyncPointProgressFeedback;
+import saiba.bml.core.Behaviour;
+import saiba.bml.core.SpeechBehaviour;
+import saiba.bml.feedback.BMLSyncPointProgressFeedback;
 import hmi.elckerlyc.feedback.FeedbackManager;
 import hmi.elckerlyc.feedback.NullFeedbackManager;
 import hmi.elckerlyc.pegboard.BMLBlockPeg;

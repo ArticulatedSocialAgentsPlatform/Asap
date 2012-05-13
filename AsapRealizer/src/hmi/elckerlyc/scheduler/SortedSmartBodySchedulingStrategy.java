@@ -1,10 +1,10 @@
 package hmi.elckerlyc.scheduler;
 
-import hmi.bml.core.BMLBlockComposition;
-import hmi.bml.core.Behaviour;
-import hmi.bml.core.BehaviourBlock;
-import hmi.bml.parser.Constraint;
-import hmi.bml.parser.SyncPoint;
+import saiba.bml.core.BMLBlockComposition;
+import saiba.bml.core.Behaviour;
+import saiba.bml.core.BehaviourBlock;
+import saiba.bml.parser.Constraint;
+import saiba.bml.parser.SyncPoint;
 import hmi.elckerlyc.pegboard.BMLBlockPeg;
 import hmi.elckerlyc.pegboard.PegBoard;
 

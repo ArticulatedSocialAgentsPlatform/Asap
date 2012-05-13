@@ -11,7 +11,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import hmi.bml.ext.bmlt.BMLTParameterValueChangeBehaviour;
-import hmi.bml.parser.Constraint;
+import saiba.bml.parser.Constraint;
 import hmi.elckerlyc.BehaviorNotFoundException;
 import hmi.elckerlyc.BehaviourPlanningException;
 import hmi.elckerlyc.PlannerTests;

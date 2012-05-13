@@ -1,6 +1,6 @@
 package asap.ext.murml;
 
-import hmi.bml.parser.SyncPoint;
+import saiba.bml.parser.SyncPoint;
 import hmi.xml.XMLTokenizer;
 
 import java.io.IOException;

@@ -18,7 +18,7 @@
  ******************************************************************************/
 package hmi.bml.ext.bmlt;
 
-import hmi.bml.core.Behaviour;
+import saiba.bml.core.Behaviour;
 import hmi.xml.XMLFormatting;
 import hmi.xml.XMLTokenizer;
 

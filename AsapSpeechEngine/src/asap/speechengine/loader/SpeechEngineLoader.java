@@ -20,7 +20,7 @@
 package asap.speechengine.loader;
 
 import hmi.audioenvironment.AudioEnvironment;
-import hmi.bml.core.SpeechBehaviour;
+import saiba.bml.core.SpeechBehaviour;
 import hmi.elckerlyc.DefaultEngine;
 import hmi.elckerlyc.DefaultPlayer;
 import hmi.elckerlyc.Engine;

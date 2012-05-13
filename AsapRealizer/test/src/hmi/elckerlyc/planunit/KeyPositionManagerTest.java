@@ -1,6 +1,6 @@
 package hmi.elckerlyc.planunit;
 import static org.junit.Assert.assertEquals;
-import hmi.bml.BMLGestureSync;
+import saiba.bml.BMLGestureSync;
 import hmi.elckerlyc.pegboard.BMLBlockPeg;
 import hmi.elckerlyc.pegboard.TimePeg;
 

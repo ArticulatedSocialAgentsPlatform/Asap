@@ -1,7 +1,7 @@
 package asap.animationengine.procanimation;
 
-import hmi.bml.BMLGestureSync;
-import hmi.bml.core.Behaviour;
+import saiba.bml.BMLGestureSync;
+import saiba.bml.core.Behaviour;
 import hmi.elckerlyc.BehaviourPlanningException;
 import hmi.elckerlyc.feedback.FeedbackManager;
 import hmi.elckerlyc.pegboard.BMLBlockPeg;

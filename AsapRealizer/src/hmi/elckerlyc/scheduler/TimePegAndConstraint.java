@@ -18,7 +18,7 @@
  ******************************************************************************/
 package hmi.elckerlyc.scheduler;
 
-import hmi.bml.parser.Constraint;
+import saiba.bml.parser.Constraint;
 import hmi.elckerlyc.pegboard.TimePeg;
 
 /**

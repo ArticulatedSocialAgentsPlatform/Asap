@@ -16,7 +16,7 @@ import asap.animationengine.motionunit.AnimationUnit;
 import asap.animationengine.restpose.RestPose;
 import hmi.animation.Hanim;
 import hmi.animation.VJoint;
-import hmi.bml.BMLGestureSync;
+import saiba.bml.BMLGestureSync;
 import hmi.elckerlyc.feedback.FeedbackManager;
 import hmi.elckerlyc.pegboard.BMLBlockPeg;
 import hmi.elckerlyc.pegboard.PegBoard;

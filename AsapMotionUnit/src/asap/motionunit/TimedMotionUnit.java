@@ -17,7 +17,7 @@ import hmi.elckerlyc.feedback.FeedbackManager;
 import hmi.elckerlyc.planunit.ParameterException;
 import hmi.elckerlyc.planunit.ParameterNotFoundException;
 
-import hmi.bml.feedback.BMLSyncPointProgressFeedback;
+import saiba.bml.feedback.BMLSyncPointProgressFeedback;
 
 /**
  * A timedmotionunit is an abstract plan unit that delegates playback of motion to a motion unit.

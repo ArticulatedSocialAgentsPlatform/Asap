@@ -1,6 +1,6 @@
 package hmi.elckerlyc.planunit;
 
-import hmi.bml.BMLGestureSync;
+import saiba.bml.BMLGestureSync;
 import hmi.elckerlyc.SyncPointNotFoundException;
 import hmi.elckerlyc.pegboard.TimePeg;
 

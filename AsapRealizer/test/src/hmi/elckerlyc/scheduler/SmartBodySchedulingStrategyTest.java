@@ -1,7 +1,7 @@
 package hmi.elckerlyc.scheduler;
 
-import hmi.bml.core.BehaviourBlock;
-import hmi.bml.core.CoreComposition;
+import saiba.bml.core.BehaviourBlock;
+import saiba.bml.core.CoreComposition;
 import hmi.elckerlyc.pegboard.BMLBlockPeg;
 import hmi.elckerlyc.pegboard.PegBoard;
 import static org.powermock.api.mockito.PowerMockito.mock;

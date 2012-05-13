@@ -19,12 +19,12 @@
  ******************************************************************************/
 package asap.environment;
 
-import hmi.bml.bridge.RealizerPort;
+import saiba.bml.bridge.RealizerPort;
 import hmi.bml.bridge.TCPIPToBMLRealizerAdapter;
-import hmi.bml.core.BMLBehaviorAttributeExtension;
-import hmi.bml.core.Behaviour;
+import saiba.bml.core.BMLBehaviorAttributeExtension;
+import saiba.bml.core.Behaviour;
 import hmi.bml.ext.bmlt.BMLTBMLBehaviorAttributes;
-import hmi.bml.parser.BMLParser;
+import saiba.bml.parser.BMLParser;
 import hmi.elckerlyc.ElckerlycRealizer;
 import hmi.elckerlyc.Engine;
 import hmi.elckerlyc.bridge.LogPipe;

@@ -18,7 +18,7 @@
  ******************************************************************************/
 package asap.animationengine.motionunit;
 
-import hmi.bml.core.Behaviour;
+import saiba.bml.core.Behaviour;
 import hmi.elckerlyc.BehaviourPlanningException;
 import hmi.elckerlyc.feedback.FeedbackManager;
 import hmi.elckerlyc.feedback.NullFeedbackManager;

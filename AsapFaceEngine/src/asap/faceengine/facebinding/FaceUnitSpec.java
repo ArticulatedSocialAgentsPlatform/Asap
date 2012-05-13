@@ -18,7 +18,7 @@
  ******************************************************************************/
 package asap.faceengine.facebinding;
 
-import hmi.bml.core.Behaviour;
+import saiba.bml.core.Behaviour;
 import hmi.xml.XMLStructureAdapter;
 import hmi.xml.XMLTokenizer;
 

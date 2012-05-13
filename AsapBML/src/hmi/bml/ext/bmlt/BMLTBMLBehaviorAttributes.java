@@ -1,9 +1,9 @@
 package hmi.bml.ext.bmlt;
 
-import hmi.bml.core.BMLBehaviorAttributeExtension;
-import hmi.bml.core.BMLBlockComposition;
-import hmi.bml.core.BehaviourBlock;
-import hmi.bml.core.CoreComposition;
+import saiba.bml.core.BMLBehaviorAttributeExtension;
+import saiba.bml.core.BMLBlockComposition;
+import saiba.bml.core.BehaviourBlock;
+import saiba.bml.core.CoreComposition;
 import hmi.util.StringUtil;
 import hmi.xml.XMLScanException;
 import hmi.xml.XMLTokenizer;

@@ -4,7 +4,7 @@ import static org.junit.Assert.assertEquals;
 import static org.powermock.api.mockito.PowerMockito.mock;
 import static org.powermock.api.mockito.PowerMockito.when;
 import hmi.bml.ext.bmlt.BMLTInterruptBehaviour;
-import hmi.bml.parser.Constraint;
+import saiba.bml.parser.Constraint;
 import hmi.elckerlyc.BehaviourPlanningException;
 import hmi.elckerlyc.DefaultPlayer;
 import hmi.elckerlyc.Player;

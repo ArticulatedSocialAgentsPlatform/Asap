@@ -1,6 +1,6 @@
 package asap.environment;
 
-import hmi.bml.core.BMLBehaviorAttributeExtension;
+import saiba.bml.core.BMLBehaviorAttributeExtension;
 import hmi.xml.XMLScanException;
 import hmi.xml.XMLStructureAdapter;
 import hmi.xml.XMLTokenizer;

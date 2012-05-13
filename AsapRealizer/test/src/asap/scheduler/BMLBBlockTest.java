@@ -8,7 +8,7 @@ import static org.mockito.Mockito.when;
 import hmi.elckerlyc.pegboard.PegBoard;
 import hmi.elckerlyc.planunit.TimedPlanUnitState;
 import hmi.elckerlyc.scheduler.BMLScheduler;
-import hmi.bml.BMLGestureSync;
+import saiba.bml.BMLGestureSync;
 import java.util.HashSet;
 
 import org.junit.Test;

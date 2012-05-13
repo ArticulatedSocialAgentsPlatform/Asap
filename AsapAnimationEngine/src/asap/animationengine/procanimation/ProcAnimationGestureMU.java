@@ -3,7 +3,7 @@ package asap.animationengine.procanimation;
 import hmi.animation.Hanim;
 import hmi.animation.VJoint;
 import hmi.animation.VJointUtils;
-import hmi.bml.BMLGestureSync;
+import saiba.bml.BMLGestureSync;
 import hmi.elckerlyc.feedback.FeedbackManager;
 import hmi.elckerlyc.pegboard.BMLBlockPeg;
 import hmi.elckerlyc.pegboard.PegBoard;

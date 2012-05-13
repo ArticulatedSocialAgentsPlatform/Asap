@@ -3,8 +3,8 @@ package hmi.bml.ext.bmlt;
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.instanceOf;
 import static org.junit.Assert.assertEquals;
-import hmi.bml.BMLInfo;
-import hmi.bml.core.GestureBehaviour;
+import saiba.bml.BMLInfo;
+import saiba.bml.core.GestureBehaviour;
 import hmi.xml.XMLFormatting;
 import hmi.xml.XMLTokenizer;
 

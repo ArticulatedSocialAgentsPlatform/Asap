@@ -30,7 +30,7 @@ import java.util.ArrayList;
 
 import lombok.Delegate;
 import hmi.elckerlyc.planunit.KeyPosition;
-import hmi.bml.feedback.BMLSyncPointProgressFeedback;
+import saiba.bml.feedback.BMLSyncPointProgressFeedback;
 
 /**
  * 

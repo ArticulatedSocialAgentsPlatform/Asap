@@ -18,7 +18,7 @@
  ******************************************************************************/
 package hmi.elckerlyc;
 
-import hmi.bml.core.Behaviour;
+import saiba.bml.core.Behaviour;
 
 /**
  * Thrown by Planners when a behavior cannot be constructed 

@@ -2,7 +2,7 @@ package asap.faceengine.viseme;
 
 import static org.junit.Assert.assertEquals;
 import static org.mockito.Mockito.mock;
-import hmi.bml.core.SpeechBehaviour;
+import saiba.bml.core.SpeechBehaviour;
 import hmi.elckerlyc.pegboard.BMLBlockPeg;
 import hmi.elckerlyc.planunit.ParameterException;
 import hmi.faceanimation.FaceController;

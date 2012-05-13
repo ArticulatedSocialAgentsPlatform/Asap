@@ -1,7 +1,7 @@
 package asap.speechengine;
 
 import asap.speechengine.ttsbinding.TTSBinding;
-import hmi.bml.core.Behaviour;
+import saiba.bml.core.Behaviour;
 import hmi.elckerlyc.feedback.FeedbackManager;
 import hmi.elckerlyc.pegboard.BMLBlockPeg;
 

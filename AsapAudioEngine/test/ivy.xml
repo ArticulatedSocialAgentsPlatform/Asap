@@ -9,6 +9,8 @@
 	  <dependency org="jboss"			name="javassist" rev="latest.release"  />
       <dependency org="powermock"			name="powermock-mockito" rev="latest.release"  />
 	  <dependency org="Asap"      transitive="false" name="AsapRealizerTestUtil"        rev="latest.{$resolve.status}"  />
+	  <dependency org="Asap"      transitive="false" name="AsapTestUtil"        rev="latest.{$resolve.status}"  />
+	  <dependency org="HMI"      transitive="false" name="HmiTestUtil"        rev="latest.{$resolve.status}"  />
 	  <dependency org="HMI"      transitive="false" name="HmiTestUtil"        rev="latest.{$resolve.status}"  />
    </dependencies>
 </ivy-module>

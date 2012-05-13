@@ -5,7 +5,7 @@ import static org.mockito.Matchers.any;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
 import hmi.animation.VJoint;
-import hmi.bml.BMLGestureSync;
+import saiba.bml.BMLGestureSync;
 import hmi.elckerlyc.pegboard.PegBoard;
 import hmi.elckerlyc.planunit.KeyPosition;
 import hmi.math.Quat4f;

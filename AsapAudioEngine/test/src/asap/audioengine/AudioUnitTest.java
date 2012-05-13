@@ -6,7 +6,7 @@ import static org.mockito.Mockito.*;
 import java.util.ArrayList;
 import java.util.List;
 
-import hmi.bml.feedback.BMLSyncPointProgressFeedback;
+import saiba.bml.feedback.BMLSyncPointProgressFeedback;
 import hmi.elckerlyc.feedback.FeedbackManager;
 import hmi.elckerlyc.feedback.FeedbackManagerImpl;
 import hmi.elckerlyc.pegboard.BMLBlockPeg;
@@ -14,7 +14,7 @@ import hmi.elckerlyc.pegboard.TimePeg;
 import hmi.elckerlyc.planunit.TimedPlanUnitPlayException;
 import hmi.elckerlyc.planunit.TimedPlanUnitState;
 import hmi.elckerlyc.scheduler.BMLBlockManager;
-import hmi.bml.feedback.ListFeedbackListener;
+import saiba.bml.feedback.ListFeedbackListener;
 
 import org.junit.Before;
 import org.junit.Test;

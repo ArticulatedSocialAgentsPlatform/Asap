@@ -5,6 +5,9 @@ import static org.junit.Assert.assertTrue;
 
 import java.util.List;
 
+import saiba.bml.parser.Constraint;
+import saiba.bml.parser.SyncPoint;
+
 /**
  * Test utilities for BMLParser testing
  * @author hvanwelbergen

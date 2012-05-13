@@ -1,7 +1,7 @@
 package asap.realizerintegrationtest;
 
 import static org.mockito.Mockito.mock;
-import hmi.bml.parser.BMLParser;
+import saiba.bml.parser.BMLParser;
 import hmi.elckerlyc.feedback.NullFeedbackManager;
 import hmi.elckerlyc.pegboard.PegBoard;
 import hmi.elckerlyc.scheduler.BMLBlockManager;

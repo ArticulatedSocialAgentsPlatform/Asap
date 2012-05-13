@@ -1,6 +1,6 @@
 package hmi.elckerlyc.util;
 
-import hmi.bml.feedback.BMLSyncPointProgressFeedback;
+import saiba.bml.feedback.BMLSyncPointProgressFeedback;
 
 import java.util.ArrayList;
 import java.util.List;

@@ -1,6 +1,6 @@
 package asap.bmlb;
 
-import hmi.bml.core.BMLBlockComposition;
+import saiba.bml.core.BMLBlockComposition;
 import hmi.bml.ext.bmlt.BMLTSchedulingMechanism;
 
 /**

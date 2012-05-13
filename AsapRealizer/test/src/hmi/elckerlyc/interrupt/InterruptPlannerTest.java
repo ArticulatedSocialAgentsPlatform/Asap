@@ -8,7 +8,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import hmi.bml.ext.bmlt.BMLTInterruptBehaviour;
-import hmi.bml.parser.Constraint;
+import saiba.bml.parser.Constraint;
 import hmi.elckerlyc.BehaviourPlanningException;
 import hmi.elckerlyc.PlannerTests;
 import hmi.elckerlyc.SyncAndTimePeg;

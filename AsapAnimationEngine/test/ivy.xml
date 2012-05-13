@@ -9,6 +9,8 @@
 	  <dependency org="odejava" name="odejava"       rev="latest.release"  />
       <dependency org="HMI"      transitive="false" name="HmiTestUtil"        rev="latest.{$resolve.status}"  />
       <dependency org="Asap"      transitive="false" name="AsapRealizerTestUtil"        rev="latest.{$resolve.status}"  />
+      <dependency org="Asap"      transitive="false" name="AsapTestUtil"        rev="latest.{$resolve.status}"  />
+      <dependency org="logback" name="logback-classic"     rev="latest.release"  />
       <dependency org="logback" name="logback-classic"     rev="latest.release"  />
       <dependency org="logback" name="logback-core"        rev="latest.release"  />
    </dependencies>

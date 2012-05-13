@@ -1,6 +1,6 @@
 package hmi.elckerlyc.scheduler;
 
-import hmi.bml.core.BehaviourBlock;
+import saiba.bml.core.BehaviourBlock;
 import hmi.bml.ext.bmlt.BMLTBMLBehaviorAttributes;
 import hmi.bml.ext.bmlt.BMLTSchedulingMechanism;
 import hmi.elckerlyc.pegboard.BMLBlockPeg;

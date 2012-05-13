@@ -4,7 +4,7 @@ import java.io.IOException;
 import java.util.List;
 
 import hmi.animation.VJoint;
-import hmi.bml.core.SpeechBehaviour;
+import saiba.bml.core.SpeechBehaviour;
 import hmi.elckerlyc.pegboard.BMLBlockPeg;
 import hmi.elckerlyc.pegboard.PegBoard;
 import hmi.elckerlyc.pegboard.TimePeg;

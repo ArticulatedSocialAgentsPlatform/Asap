@@ -1,6 +1,6 @@
 package hmi.elckerlyc.parametervaluechange;
 
-import hmi.bml.core.Behaviour;
+import saiba.bml.core.Behaviour;
 import hmi.bml.ext.bmlt.BMLTParameterValueChangeBehaviour;
 import hmi.elckerlyc.AbstractPlanner;
 import hmi.elckerlyc.BehaviourPlanningException;

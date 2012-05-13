@@ -28,7 +28,7 @@ import asap.motionunit.MUPlayException;
 
 
 import hmi.animation.*;
-import hmi.bml.core.OffsetDirection;
+import saiba.bml.core.OffsetDirection;
 import hmi.elckerlyc.feedback.FeedbackManager;
 import hmi.elckerlyc.pegboard.BMLBlockPeg;
 import hmi.elckerlyc.pegboard.PegBoard;

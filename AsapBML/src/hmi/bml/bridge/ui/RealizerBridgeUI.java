@@ -18,7 +18,7 @@
  ******************************************************************************/
 package hmi.bml.bridge.ui;
 
-import hmi.bml.bridge.RealizerPort;
+import saiba.bml.bridge.RealizerPort;
 import hmi.util.Resources;
 
 import java.awt.Dimension;

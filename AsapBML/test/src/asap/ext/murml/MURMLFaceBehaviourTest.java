@@ -2,8 +2,8 @@ package asap.ext.murml;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNull;
-import hmi.bml.BMLInfo;
-import hmi.bml.core.FaceLexemeBehaviour;
+import saiba.bml.BMLInfo;
+import saiba.bml.core.FaceLexemeBehaviour;
 import hmi.xml.XMLTokenizer;
 
 import java.io.IOException;

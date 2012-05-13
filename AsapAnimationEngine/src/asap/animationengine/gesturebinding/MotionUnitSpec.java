@@ -23,7 +23,7 @@ import java.util.*;
 
 import lombok.Getter;
 
-import hmi.bml.core.Behaviour;
+import saiba.bml.core.Behaviour;
 
 import hmi.util.*;
 import hmi.xml.*;

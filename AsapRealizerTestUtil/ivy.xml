@@ -5,6 +5,11 @@
    </configurations>
    <dependencies>
       <dependency org="Asap"     name="AsapRealizer"              rev="latest.${resolve.status}"  />
+      <dependency org="Asap"     name="AsapBML"              rev="latest.${resolve.status}"  />
+
+      <dependency org="Asap"     name="AsapTestUtil"              rev="latest.${resolve.status}"  />
+
+      <dependency org="saiba"     name="saibabml"              rev="latest.release}"  />
       <dependency org="HMI"     name="HmiTestUtil"                 rev="latest.${resolve.status}"  />
       <dependency org="jcip"    name="jcip-annotations"            rev="latest.release"  />   
       <dependency org="slf4j"   name="slf4j-api"                   rev="latest.release"  />   

@@ -5,7 +5,7 @@ import static org.mockito.Mockito.*;
 
 import java.util.HashSet;
 
-import hmi.bml.BMLGestureSync;
+import saiba.bml.BMLGestureSync;
 import hmi.elckerlyc.planunit.TimedPlanUnitState;
 
 import org.junit.Test;

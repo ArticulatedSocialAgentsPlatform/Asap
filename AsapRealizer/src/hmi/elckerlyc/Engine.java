@@ -1,6 +1,6 @@
 package hmi.elckerlyc;
 
-import hmi.bml.core.Behaviour;
+import saiba.bml.core.Behaviour;
 import hmi.elckerlyc.pegboard.BMLBlockPeg;
 import hmi.elckerlyc.pegboard.OffsetPeg;
 import hmi.elckerlyc.planunit.ParameterException;

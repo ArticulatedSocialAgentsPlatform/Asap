@@ -1,7 +1,7 @@
 package hmi.elckerlyc.wait;
 
-import hmi.bml.core.Behaviour;
-import hmi.bml.core.WaitBehaviour;
+import saiba.bml.core.Behaviour;
+import saiba.bml.core.WaitBehaviour;
 import hmi.elckerlyc.AbstractPlanner;
 import hmi.elckerlyc.BehaviourPlanningException;
 import hmi.elckerlyc.SyncAndTimePeg;

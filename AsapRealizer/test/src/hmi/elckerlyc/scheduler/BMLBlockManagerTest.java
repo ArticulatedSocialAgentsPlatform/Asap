@@ -6,7 +6,7 @@ import static org.mockito.Mockito.mock;
 import java.util.HashSet;
 import java.util.Set;
 
-import hmi.bml.feedback.BMLSyncPointProgressFeedback;
+import saiba.bml.feedback.BMLSyncPointProgressFeedback;
 import hmi.elckerlyc.planunit.TimedPlanUnitState;
 
 import org.junit.Before;

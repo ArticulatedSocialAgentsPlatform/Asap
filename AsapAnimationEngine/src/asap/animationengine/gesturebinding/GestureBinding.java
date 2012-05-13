@@ -35,7 +35,7 @@ import asap.animationengine.AnimationPlayer;
 import asap.animationengine.motionunit.*;
 
 
-import hmi.bml.core.Behaviour;
+import saiba.bml.core.Behaviour;
 
 /**
  * The GestureBinding maps from BML to a set of motionunits

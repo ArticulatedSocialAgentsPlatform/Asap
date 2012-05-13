@@ -14,6 +14,8 @@
       <dependency org="HMI"      name="HmiMath" rev="latest.{$resolve.status}"  />	  
       <dependency org="HMI"      name="HmiAnimation" rev="latest.{$resolve.status}"  />
       <dependency org="Asap"      name="AsapSpeechEngine"  transitive="false" rev="latest.{$resolve.status}"  />
+      <dependency org="Asap"      name="AsapTestUtil"  transitive="false" rev="latest.{$resolve.status}"  />
+      <dependency org="HMI"      name="HmiFaceAnimation"  transitive="false" rev="latest.{$resolve.status}"  />
       <dependency org="HMI"      name="HmiFaceAnimation"  transitive="false" rev="latest.{$resolve.status}"  />
       <dependency org="HMI"      name="HmiFaceGraphics"  transitive="false" rev="latest.{$resolve.status}"  />
       <dependency org="Asap"      name="AsapFaceEngine"  transitive="false" rev="latest.{$resolve.status}"  />

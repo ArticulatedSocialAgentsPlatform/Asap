@@ -1,6 +1,6 @@
 package hmi.elckerlyc.scheduler;
 
-import hmi.bml.core.Behaviour;
+import saiba.bml.core.Behaviour;
 import hmi.elckerlyc.BehaviourPlanningException;
 import hmi.elckerlyc.SyncPointNotFoundException;
 import hmi.elckerlyc.pegboard.BMLBlockPeg;

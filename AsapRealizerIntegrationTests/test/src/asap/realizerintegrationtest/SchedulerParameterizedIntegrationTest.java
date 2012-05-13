@@ -18,7 +18,7 @@
  ******************************************************************************/
 package asap.realizerintegrationtest;
 
-import static hmi.testutil.bml.feedback.FeedbackAsserts.assertEqualException;
+import static asap.testutil.bml.feedback.FeedbackAsserts.assertEqualException;
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.number.OrderingComparison.greaterThan;
 import static org.junit.Assert.assertEquals;
@@ -28,16 +28,16 @@ import asap.audioengine.AudioPlanner;
 import asap.audioengine.TimedAbstractAudioUnit;
 import hmi.audioenvironment.LWJGLJoalSoundManager;
 import hmi.audioenvironment.SoundManager;
-import hmi.bml.core.BMLBehaviorAttributeExtension;
-import hmi.bml.core.HeadBehaviour;
-import hmi.bml.core.SpeechBehaviour;
+import saiba.bml.core.BMLBehaviorAttributeExtension;
+import saiba.bml.core.HeadBehaviour;
+import saiba.bml.core.SpeechBehaviour;
 import hmi.bml.ext.bmlt.BMLTBMLBehaviorAttributes;
 import hmi.bml.ext.bmlt.BMLTInfo;
-import hmi.bml.feedback.BMLExceptionFeedback;
-import hmi.bml.feedback.BMLExceptionListener;
-import hmi.bml.feedback.BMLWarningFeedback;
-import hmi.bml.feedback.BMLWarningListener;
-import hmi.bml.parser.BMLParser;
+import saiba.bml.feedback.BMLExceptionFeedback;
+import saiba.bml.feedback.BMLExceptionListener;
+import saiba.bml.feedback.BMLWarningFeedback;
+import saiba.bml.feedback.BMLWarningListener;
+import saiba.bml.parser.BMLParser;
 import hmi.elckerlyc.DefaultEngine;
 import hmi.elckerlyc.DefaultPlayer;
 import hmi.elckerlyc.ElckerlycRealizer;

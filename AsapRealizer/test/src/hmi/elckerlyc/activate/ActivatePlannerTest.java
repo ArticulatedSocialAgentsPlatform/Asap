@@ -11,7 +11,7 @@ import org.junit.Before;
 import org.junit.Test;
 
 import hmi.bml.ext.bmlt.BMLTActivateBehaviour;
-import hmi.bml.parser.Constraint;
+import saiba.bml.parser.Constraint;
 import hmi.elckerlyc.BehaviourPlanningException;
 import hmi.elckerlyc.PlannerTests;
 import hmi.elckerlyc.SyncAndTimePeg;

@@ -6,8 +6,8 @@ import static org.powermock.api.mockito.PowerMockito.mock;
 import java.io.IOException;
 import java.util.ArrayList;
 
-import hmi.bml.core.WaitBehaviour;
-import hmi.bml.parser.Constraint;
+import saiba.bml.core.WaitBehaviour;
+import saiba.bml.parser.Constraint;
 import hmi.elckerlyc.BehaviourPlanningException;
 import hmi.elckerlyc.PlannerTests;
 import hmi.elckerlyc.feedback.FeedbackManager;

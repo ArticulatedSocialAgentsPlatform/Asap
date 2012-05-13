@@ -1,7 +1,7 @@
 package hmi.bml.ext.bmlt;
 
-import hmi.bml.BMLInfo;
-import hmi.bml.core.Behaviour;
+import saiba.bml.BMLInfo;
+import saiba.bml.core.Behaviour;
 import hmi.bml.ext.maryxml.MaryAllophonesBehaviour;
 import hmi.bml.ext.maryxml.MaryWordsBehaviour;
 import hmi.bml.ext.maryxml.MaryXMLBehaviour;
