@@ -3,8 +3,8 @@ Main-Class:
 
 Name: hmi/testutil/
 Specification-Title:    AsapTestUtil
-Specification-Version:  0.1.5
+Specification-Version:  0.2
 Specification-Vendor:   Asap
 Implementation-Title:   AsapTestUtil
-Implementation-Version: May 15 2012  11:00 AM
+Implementation-Version: May 15 2012  03:52 PM
 Implementation-Vendor:  Asap

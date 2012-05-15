@@ -3,8 +3,8 @@ Main-Class: hmi.bml.reader.Info
 
 Name: asap/bmlb/
 Specification-Title:    AsapMotionUnit
-Specification-Version:  0.4
+Specification-Version:  0.5
 Specification-Vendor:   Asap
 Implementation-Title:   AsapMotionUnit
-Implementation-Version: May 05 2012  05:14 PM
+Implementation-Version: May 15 2012  04:27 PM
 Implementation-Vendor:  Asap

@@ -3,8 +3,8 @@ Main-Class: hmi.emitterengine.EmitterDemo
 
 Name: hmi/emitterengine/
 Specification-Title:    AsapEmitterEngine
-Specification-Version:  0.2.1
+Specification-Version:  0.3-dev1234
 Specification-Vendor:   Asap
 Implementation-Title:   AsapEmitterEngine
-Implementation-Version: May 09 2012  02:47 PM
+Implementation-Version: May 15 2012  03:22 PM
 Implementation-Vendor:  Asap

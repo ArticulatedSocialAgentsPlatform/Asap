@@ -3,8 +3,8 @@ Main-Class: hmi.bml.reader.Info
 
 Name: asap/bmlb/
 Specification-Title:    AsapBML
-Specification-Version:  0.24
+Specification-Version:  0.25
 Specification-Vendor:   Asap
 Implementation-Title:   AsapBML
-Implementation-Version: May 09 2012  11:38 AM
+Implementation-Version: May 15 2012  05:35 PM
 Implementation-Vendor:  Asap

@@ -3,8 +3,8 @@ Main-Class: undefined
 
 Name: hmi/speechengine/
 Specification-Title:    AsapSpeechEngine
-Specification-Version:  0.2
+Specification-Version:  0.3
 Specification-Vendor:   Asap
 Implementation-Title:   AsapSpeechEngine
-Implementation-Version: May 05 2012  04:06 PM
+Implementation-Version: May 15 2012  05:43 PM
 Implementation-Vendor:  Asap
