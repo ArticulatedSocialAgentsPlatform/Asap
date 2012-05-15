@@ -1,11 +1,11 @@
 package asap.speechengine.ttsbinding;
 
+import asap.bml.ext.msapi.MSApiBehaviour;
+import asap.bml.ext.ssml.SSMLBehaviour;
 import asap.realizer.planunit.InvalidParameterException;
 import asap.realizer.planunit.ParameterException;
 import asap.realizer.planunit.ParameterNotFoundException;
 import saiba.bml.core.SpeechBehaviour;
-import hmi.bml.ext.msapi.MSApiBehaviour;
-import hmi.bml.ext.ssml.SSMLBehaviour;
 import hmi.tts.BMLTTSBridge;
 import hmi.tts.sapi5.SAPI5SSMLTTSBridge;
 import hmi.tts.sapi5.SAPI5TTSGenerator;

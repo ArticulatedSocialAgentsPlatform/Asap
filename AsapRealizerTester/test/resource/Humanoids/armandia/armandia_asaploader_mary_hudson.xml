@@ -1,8 +1,8 @@
 <AsapVirtualHuman>
   <BMLRealizer loader="hmi.environment.vhloader.ElckerlycRealizerLoader">
     <BMLParser>
-      <BMLAttributeExtension class="asap.bmlb.BMLBBMLBehaviorAttributes"/>
-      <BMLAttributeExtension class="hmi.bml.ext.bmlt.BMLTBMLBehaviorAttributes"/>
+      <BMLAttributeExtension class="asap.bml.ext.bmlb.BMLBBMLBehaviorAttributes"/>
+      <BMLAttributeExtension class="asap.bml.ext.bmlt.BMLTBMLBehaviorAttributes"/>
     </BMLParser>
     <BMLScheduler>
       <SchedulingHandler class="asap.realizer.scheduler.BMLBandTSchedulingHandler" schedulingStrategy="asap.realizer.scheduler.SortedSmartBodySchedulingStrategy"/>

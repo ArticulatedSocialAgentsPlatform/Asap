@@ -22,7 +22,6 @@ import saiba.bml.BMLInfo;
 import saiba.bml.core.BMLBlockComposition;
 import saiba.bml.core.Behaviour;
 import saiba.bml.core.BehaviourBlock;
-import hmi.bml.ext.bmlt.BMLTBMLBehaviorAttributes;
 import saiba.bml.feedback.BMLExceptionFeedback;
 import saiba.bml.feedback.BMLWarningFeedback;
 import saiba.bml.parser.Constraint;
@@ -38,6 +37,7 @@ import java.util.Set;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import asap.bml.ext.bmlt.BMLTBMLBehaviorAttributes;
 import asap.realizer.BehaviourPlanningException;
 import asap.realizer.Engine;
 import asap.realizer.SyncAndTimePeg;

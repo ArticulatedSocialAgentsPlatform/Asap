@@ -30,7 +30,7 @@ import org.junit.runner.RunWith;
 import org.powermock.core.classloader.annotations.PrepareForTest;
 import org.powermock.modules.junit4.PowerMockRunner;
 
-import asap.ext.murml.MURMLFaceBehaviour;
+import asap.bml.ext.murml.MURMLFaceBehaviour;
 import asap.faceengine.facebinding.FaceBinding;
 import asap.faceengine.faceunit.FaceUnit;
 import asap.faceengine.faceunit.KeyframeMorphFU;

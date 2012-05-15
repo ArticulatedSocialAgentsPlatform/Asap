@@ -14,8 +14,8 @@ import java.io.IOException;
 import org.junit.Before;
 import org.junit.Test;
 
-import asap.bmlb.BMLBBMLBehaviorAttributes;
-import asap.ext.murml.MURMLFaceBehaviour;
+import asap.bml.ext.bmlb.BMLBBMLBehaviorAttributes;
+import asap.bml.ext.murml.MURMLFaceBehaviour;
 
 /**
  * Unit test cases for a BML parser that can parse BMLB

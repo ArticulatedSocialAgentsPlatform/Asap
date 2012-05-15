@@ -1,11 +1,11 @@
 package asap.realizer.activate;
 
 import saiba.bml.core.Behaviour;
-import hmi.bml.ext.bmlt.BMLTActivateBehaviour;
 
 import java.util.ArrayList;
 import java.util.List;
 
+import asap.bml.ext.bmlt.BMLTActivateBehaviour;
 import asap.realizer.AbstractPlanner;
 import asap.realizer.BehaviourPlanningException;
 import asap.realizer.SyncAndTimePeg;

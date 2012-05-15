@@ -1,20 +1,16 @@
 package asap.realizer.bridge;
 
 import static asap.testutil.bml.feedback.FeedbackAsserts.assertOneFeedback;
-import static org.junit.Assert.*;
+import static org.junit.Assert.assertEquals;
+import static org.mockito.Matchers.anyString;
+import static org.mockito.Matchers.contains;
+import static org.mockito.Mockito.times;
+import static org.mockito.Mockito.verify;
+import static org.powermock.api.mockito.PowerMockito.mock;
+import static org.powermock.api.mockito.PowerMockito.when;
 
 import java.util.ArrayList;
 import java.util.List;
-
-import saiba.bml.bridge.RealizerPort;
-import saiba.bml.feedback.BMLFeedback;
-import saiba.bml.feedback.BMLListener;
-import saiba.bml.feedback.BMLSyncPointProgressFeedback;
-import saiba.bml.feedback.XMLBMLSyncPointProgressFeedback;
-import hmi.bml.util.BMLFeedbackManager;
-import asap.realizer.bridge.LoggingRealizerBridge;
-import asap.utils.SchedulingClock;
-import saiba.bml.feedback.ListFeedbackListener;
 
 import org.junit.Before;
 import org.junit.Test;
@@ -25,10 +21,14 @@ import org.powermock.modules.junit4.PowerMockRunner;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import static org.powermock.api.mockito.PowerMockito.*;
-import static org.mockito.Mockito.times;
-import static org.mockito.Mockito.verify;
-import static org.mockito.Matchers.*;
+import saiba.bml.bridge.RealizerPort;
+import saiba.bml.feedback.BMLFeedback;
+import saiba.bml.feedback.BMLListener;
+import saiba.bml.feedback.BMLSyncPointProgressFeedback;
+import saiba.bml.feedback.ListFeedbackListener;
+import saiba.bml.feedback.XMLBMLSyncPointProgressFeedback;
+import asap.bml.util.BMLFeedbackManager;
+import asap.utils.SchedulingClock;
 /**
  * Unit tests for the LoggingRealizerBridge
  * @author Herwin

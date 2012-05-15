@@ -4,8 +4,8 @@ import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
 import java.util.List;
 
-import hmi.bml.ext.bmlt.feedback.BMLTSchedulingFinishedFeedback;
-import hmi.bml.ext.bmlt.feedback.BMLTSchedulingStartFeedback;
+import asap.bml.ext.bmlt.feedback.BMLTSchedulingFinishedFeedback;
+import asap.bml.ext.bmlt.feedback.BMLTSchedulingStartFeedback;
 import saiba.bml.feedback.BMLExceptionFeedback;
 import saiba.bml.feedback.BMLSyncPointProgressFeedback;
 

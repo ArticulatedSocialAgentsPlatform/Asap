@@ -3,7 +3,6 @@ package asap.realizer.scheduler;
 import java.util.Set;
 
 import saiba.bml.core.BehaviourBlock;
-import hmi.bml.ext.bmlt.BMLTBMLBehaviorAttributes;
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.*;
 import org.junit.Before;
@@ -18,7 +17,8 @@ import com.google.common.collect.ImmutableSet;
 import static org.junit.Assert.*;
 import static org.mockito.Mockito.*;
 
-import asap.bmlb.BMLBBMLBehaviorAttributes;
+import asap.bml.ext.bmlb.BMLBBMLBehaviorAttributes;
+import asap.bml.ext.bmlt.BMLTBMLBehaviorAttributes;
 import asap.realizer.pegboard.BMLBlockPeg;
 import asap.realizer.pegboard.PegBoard;
 import asap.realizer.planunit.TimedPlanUnitState;

@@ -22,7 +22,6 @@ import saiba.bml.BMLInfo;
 import saiba.bml.core.BMLBehaviorAttributeExtension;
 import saiba.bml.core.Behaviour;
 import saiba.bml.core.BehaviourBlock;
-import hmi.bml.ext.bmlt.feedback.BMLTSchedulingListener;
 import saiba.bml.feedback.BMLExceptionFeedback;
 import saiba.bml.feedback.BMLExceptionListener;
 import saiba.bml.feedback.BMLFeedbackListener;
@@ -40,6 +39,7 @@ import java.util.Set;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import asap.bml.ext.bmlt.feedback.BMLTSchedulingListener;
 import asap.realizer.anticipator.Anticipator;
 import asap.realizer.feedback.FeedbackManager;
 import asap.realizer.pegboard.PegBoard;

@@ -1,11 +1,11 @@
 package asap.realizer.interrupt;
 
 import saiba.bml.core.Behaviour;
-import hmi.bml.ext.bmlt.BMLTInterruptBehaviour;
 
 import java.util.ArrayList;
 import java.util.List;
 
+import asap.bml.ext.bmlt.BMLTInterruptBehaviour;
 import asap.realizer.AbstractPlanner;
 import asap.realizer.BehaviourPlanningException;
 import asap.realizer.SyncAndTimePeg;

@@ -12,6 +12,8 @@ import java.io.IOException;
 
 import org.junit.Test;
 
+import asap.bml.ext.murml.MURMLGestureBehaviour;
+
 /**
  * Unit test cases for the MURML gesture behaviour
  * @author hvanwelbergen

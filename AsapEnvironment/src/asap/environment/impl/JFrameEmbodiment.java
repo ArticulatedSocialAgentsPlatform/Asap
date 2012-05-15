@@ -18,10 +18,10 @@
  * along with Elckerlyc.  If not, see http://www.gnu.org/licenses/.
  ******************************************************************************/
 package asap.environment.impl;
-import hmi.bml.bridge.TCPIPToBMLRealizerAdapter;
-import hmi.bml.bridge.ui.BridgeServerUI;
-import hmi.bml.bridge.ui.FeedbackPanel;
-import hmi.bml.bridge.ui.RealizerBridgeUI;
+import asap.bml.bridge.TCPIPToBMLRealizerAdapter;
+import asap.bml.bridge.ui.BridgeServerUI;
+import asap.bml.bridge.ui.FeedbackPanel;
+import asap.bml.bridge.ui.RealizerBridgeUI;
 import hmi.xml.XMLStructureAdapter;
 import hmi.xml.XMLTokenizer;
 

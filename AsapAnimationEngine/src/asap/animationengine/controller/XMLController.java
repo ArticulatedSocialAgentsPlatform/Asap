@@ -3,7 +3,8 @@ package asap.animationengine.controller;
 import java.io.IOException;
 import java.util.HashMap;
 
-import hmi.bml.ext.bmlt.BMLTParameter;
+import asap.bml.ext.bmlt.BMLTParameter;
+
 
 import hmi.physics.controller.ControllerParameterException;
 import hmi.physics.controller.PhysicalController;

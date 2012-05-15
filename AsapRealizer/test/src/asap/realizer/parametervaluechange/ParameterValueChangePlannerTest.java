@@ -10,8 +10,8 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
-import hmi.bml.ext.bmlt.BMLTParameterValueChangeBehaviour;
 import saiba.bml.parser.Constraint;
+import asap.bml.ext.bmlt.BMLTParameterValueChangeBehaviour;
 import asap.realizertestutil.PlannerTests;
 import hmi.xml.XMLTokenizer;
 

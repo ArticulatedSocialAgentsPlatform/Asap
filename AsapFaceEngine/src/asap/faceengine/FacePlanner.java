@@ -22,7 +22,6 @@ import saiba.bml.BMLInfo;
 import saiba.bml.core.Behaviour;
 import saiba.bml.core.FaceLexemeBehaviour;
 import saiba.bml.core.ext.FaceFacsBehaviour;
-import hmi.bml.ext.bmlt.BMLTFaceMorphBehaviour;
 import hmi.faceanimation.FaceController;
 import hmi.faceanimation.converters.EmotionConverter;
 import hmi.faceanimation.converters.FACSConverter;
@@ -30,7 +29,8 @@ import hmi.faceanimation.converters.FACSConverter;
 import java.util.ArrayList;
 import java.util.List;
 
-import asap.ext.murml.MURMLFaceBehaviour;
+import asap.bml.ext.bmlt.BMLTFaceMorphBehaviour;
+import asap.bml.ext.murml.MURMLFaceBehaviour;
 import asap.faceengine.facebinding.FaceBinding;
 import asap.faceengine.facebinding.MURMLFUBuilder;
 import asap.faceengine.faceunit.FaceUnit;

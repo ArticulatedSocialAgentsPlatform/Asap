@@ -24,6 +24,7 @@ import java.util.List;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import asap.bml.ext.bmlt.*;
 import asap.realizer.*;
 import asap.realizer.feedback.FeedbackManager;
 import asap.realizer.pegboard.BMLBlockPeg;
@@ -34,7 +35,6 @@ import asap.realizer.scheduler.TimePegAndConstraint;
 
 import hmi.util.Resources;
 import saiba.bml.core.Behaviour;
-import hmi.bml.ext.bmlt.*;
 import hmi.audioenvironment.*;
 
 /**

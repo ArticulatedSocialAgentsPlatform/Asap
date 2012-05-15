@@ -20,10 +20,10 @@
 package asap.environment;
 
 import saiba.bml.bridge.RealizerPort;
-import hmi.bml.bridge.TCPIPToBMLRealizerAdapter;
+import asap.bml.bridge.TCPIPToBMLRealizerAdapter;
 import saiba.bml.core.BMLBehaviorAttributeExtension;
 import saiba.bml.core.Behaviour;
-import hmi.bml.ext.bmlt.BMLTBMLBehaviorAttributes;
+import asap.bml.ext.bmlt.BMLTBMLBehaviorAttributes;
 import saiba.bml.parser.BMLParser;
 import hmi.xml.XMLStructureAdapter;
 import hmi.xml.XMLTokenizer;

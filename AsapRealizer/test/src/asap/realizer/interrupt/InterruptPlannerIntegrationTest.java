@@ -3,7 +3,6 @@ package asap.realizer.interrupt;
 import static org.junit.Assert.assertEquals;
 import static org.powermock.api.mockito.PowerMockito.mock;
 import static org.powermock.api.mockito.PowerMockito.when;
-import hmi.bml.ext.bmlt.BMLTInterruptBehaviour;
 import saiba.bml.parser.Constraint;
 import hmi.xml.XMLTokenizer;
 
@@ -17,6 +16,7 @@ import org.junit.runner.RunWith;
 import org.powermock.core.classloader.annotations.PrepareForTest;
 import org.powermock.modules.junit4.PowerMockRunner;
 
+import asap.bml.ext.bmlt.BMLTInterruptBehaviour;
 import asap.realizer.BehaviourPlanningException;
 import asap.realizer.DefaultPlayer;
 import asap.realizer.Player;

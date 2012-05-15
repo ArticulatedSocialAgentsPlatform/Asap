@@ -1,14 +1,14 @@
 package asap.realizer.scheduler;
 
 import saiba.bml.core.BehaviourBlock;
-import hmi.bml.ext.bmlt.BMLTBMLBehaviorAttributes;
 
 import java.util.HashSet;
 import java.util.Set;
 
 import lombok.extern.slf4j.Slf4j;
-import asap.bmlb.BMLBBMLBehaviorAttributes;
-import asap.bmlb.BMLBComposition;
+import asap.bml.ext.bmlb.BMLBBMLBehaviorAttributes;
+import asap.bml.ext.bmlb.BMLBComposition;
+import asap.bml.ext.bmlt.BMLTBMLBehaviorAttributes;
 import asap.realizer.pegboard.BMLBlockPeg;
 import asap.realizer.pegboard.PegBoard;
 import asap.realizer.planunit.TimedPlanUnitState;

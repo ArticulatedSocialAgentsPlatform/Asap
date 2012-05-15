@@ -10,6 +10,7 @@ import java.util.List;
 import org.junit.Before;
 import org.junit.Test;
 
+import asap.bml.ext.bmlt.BMLTActivateBehaviour;
 import asap.realizer.BehaviourPlanningException;
 import asap.realizer.SyncAndTimePeg;
 import asap.realizer.activate.ActivatePlanner;
@@ -20,7 +21,6 @@ import asap.realizer.pegboard.TimePeg;
 import asap.realizer.planunit.PlanManager;
 import asap.realizer.scheduler.TimePegAndConstraint;
 
-import hmi.bml.ext.bmlt.BMLTActivateBehaviour;
 import saiba.bml.parser.Constraint;
 import asap.realizertestutil.PlannerTests;
 import asap.realizertestutil.util.TimePegUtil;

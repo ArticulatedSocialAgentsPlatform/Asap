@@ -1,7 +1,7 @@
 package asap.realizer.bridge;
 
+import asap.bml.bridge.LinkedBlockingQueuePipe;
 import asap.realizer.ElckerlycRealizer;
-import hmi.bml.bridge.LinkedBlockingQueuePipe;
 import saiba.bml.bridge.RealizerPort;
 import saiba.bml.feedback.BMLListener;
 

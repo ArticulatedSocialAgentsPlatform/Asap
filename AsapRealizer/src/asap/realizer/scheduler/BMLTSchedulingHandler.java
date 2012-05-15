@@ -1,8 +1,6 @@
 package asap.realizer.scheduler;
 
 import saiba.bml.core.BehaviourBlock;
-import hmi.bml.ext.bmlt.BMLTBMLBehaviorAttributes;
-import hmi.bml.ext.bmlt.BMLTSchedulingMechanism;
 
 import java.util.HashSet;
 import java.util.Set;
@@ -10,6 +8,8 @@ import java.util.Set;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import asap.bml.ext.bmlt.BMLTBMLBehaviorAttributes;
+import asap.bml.ext.bmlt.BMLTSchedulingMechanism;
 import asap.realizer.pegboard.BMLBlockPeg;
 import asap.realizer.pegboard.PegBoard;
 import asap.realizer.planunit.TimedPlanUnitState;

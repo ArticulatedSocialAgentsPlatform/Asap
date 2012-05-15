@@ -22,7 +22,7 @@ import java.util.List;
 
 import com.google.common.collect.ImmutableList;
 
-import hmi.bml.ext.bmlt.*;
+import asap.bml.ext.bmlt.*;
 import saiba.bml.parser.SyncPoint;
 /**
  * Abstract class for all emitter engine specific Behaviours.

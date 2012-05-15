@@ -7,8 +7,8 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
-import hmi.bml.ext.bmlt.BMLTInterruptBehaviour;
 import saiba.bml.parser.Constraint;
+import asap.bml.ext.bmlt.BMLTInterruptBehaviour;
 import asap.realizertestutil.PlannerTests;
 import asap.realizertestutil.util.TimePegUtil;
 import hmi.xml.XMLTokenizer;

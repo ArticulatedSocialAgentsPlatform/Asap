@@ -2,7 +2,6 @@ package asap.audioengine;
 
 import static org.mockito.Mockito.mock;
 import hmi.audioenvironment.ClipSoundManager;
-import hmi.bml.ext.bmlt.BMLTAudioFileBehaviour;
 import asap.realizertestutil.PlannerTests;
 import asap.realizer.planunit.PlanManager;
 import hmi.util.Resources;
@@ -15,6 +14,7 @@ import org.junit.Test;
 
 import asap.audioengine.AudioPlanner;
 import asap.audioengine.TimedAbstractAudioUnit;
+import asap.bml.ext.bmlt.BMLTAudioFileBehaviour;
 import asap.realizer.BehaviourPlanningException;
 import asap.realizer.feedback.FeedbackManager;
 import asap.realizer.pegboard.BMLBlockPeg;

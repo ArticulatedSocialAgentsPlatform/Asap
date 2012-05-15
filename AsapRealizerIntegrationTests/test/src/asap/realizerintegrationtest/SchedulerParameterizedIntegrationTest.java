@@ -31,8 +31,6 @@ import hmi.audioenvironment.SoundManager;
 import saiba.bml.core.BMLBehaviorAttributeExtension;
 import saiba.bml.core.HeadBehaviour;
 import saiba.bml.core.SpeechBehaviour;
-import hmi.bml.ext.bmlt.BMLTBMLBehaviorAttributes;
-import hmi.bml.ext.bmlt.BMLTInfo;
 import saiba.bml.feedback.BMLExceptionFeedback;
 import saiba.bml.feedback.BMLExceptionListener;
 import saiba.bml.feedback.BMLWarningFeedback;
@@ -106,6 +104,8 @@ import asap.animationengine.gesturebinding.SpeechBinding;
 import asap.animationengine.motionunit.TimedAnimationUnit;
 import asap.animationengine.restpose.RestPose;
 import asap.animationengine.restpose.SkeletonPoseRestPose;
+import asap.bml.ext.bmlt.BMLTBMLBehaviorAttributes;
+import asap.bml.ext.bmlt.BMLTInfo;
 import asap.utils.SystemSchedulingClock;
 
 import com.google.common.collect.ImmutableSet;

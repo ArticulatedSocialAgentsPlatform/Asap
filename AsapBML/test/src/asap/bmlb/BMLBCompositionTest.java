@@ -7,6 +7,9 @@ import saiba.bml.core.BehaviourBlock;
 
 import org.junit.Test;
 
+import asap.bml.ext.bmlb.BMLBBMLBehaviorAttributes;
+import asap.bml.ext.bmlb.BMLBComposition;
+
 /**
  *  
  * @author hvanwelbergen

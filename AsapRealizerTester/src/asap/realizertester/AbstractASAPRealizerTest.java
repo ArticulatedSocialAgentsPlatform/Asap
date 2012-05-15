@@ -2,12 +2,6 @@ package asap.realizertester;
 
 
 import static org.junit.Assert.*;
-import hmi.bml.ext.bmlt.BMLTAudioFileBehaviour;
-import hmi.bml.ext.bmlt.BMLTParameterValueChangeBehaviour;
-import hmi.bml.ext.bmlt.BMLTTransitionBehaviour;
-import hmi.bml.ext.bmlt.feedback.BMLTSchedulingFinishedFeedback;
-import hmi.bml.ext.bmlt.feedback.BMLTSchedulingListener;
-import hmi.bml.ext.bmlt.feedback.BMLTSchedulingStartFeedback;
 
 import java.io.IOException;
 import java.util.ArrayList;
@@ -15,6 +9,13 @@ import java.util.Collections;
 import java.util.List;
 
 import org.junit.Test;
+
+import asap.bml.ext.bmlt.BMLTAudioFileBehaviour;
+import asap.bml.ext.bmlt.BMLTParameterValueChangeBehaviour;
+import asap.bml.ext.bmlt.BMLTTransitionBehaviour;
+import asap.bml.ext.bmlt.feedback.BMLTSchedulingFinishedFeedback;
+import asap.bml.ext.bmlt.feedback.BMLTSchedulingListener;
+import asap.bml.ext.bmlt.feedback.BMLTSchedulingStartFeedback;
 import bml.bmlinfo.DefaultSyncPoints;
 import bml.realizertest.AbstractBML1RealizerTest;
 

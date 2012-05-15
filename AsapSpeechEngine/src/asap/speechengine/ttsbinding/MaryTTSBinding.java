@@ -1,10 +1,10 @@
 package asap.speechengine.ttsbinding;
 
+import asap.bml.ext.maryxml.MaryAllophonesBehaviour;
+import asap.bml.ext.maryxml.MaryWordsBehaviour;
+import asap.bml.ext.maryxml.MaryXMLBehaviour;
+import asap.bml.ext.ssml.SSMLBehaviour;
 import saiba.bml.core.SpeechBehaviour;
-import hmi.bml.ext.maryxml.MaryXMLBehaviour;
-import hmi.bml.ext.maryxml.MaryWordsBehaviour;
-import hmi.bml.ext.maryxml.MaryAllophonesBehaviour;
-import hmi.bml.ext.ssml.SSMLBehaviour;
 import hmi.tts.BMLTTSBridge;
 import hmi.tts.mary.MarySSMLTTSBridge;
 import hmi.tts.mary.MaryTTSGenerator;

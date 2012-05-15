@@ -9,6 +9,8 @@ import hmi.xml.XMLTokenizer;
 import java.io.IOException;
 
 import org.junit.Test;
+
+import asap.bml.ext.murml.MURMLFaceBehaviour;
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.instanceOf;
 /**
