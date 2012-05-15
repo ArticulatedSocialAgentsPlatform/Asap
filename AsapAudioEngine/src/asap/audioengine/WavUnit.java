@@ -1,6 +1,6 @@
 package asap.audioengine;
 
-import hmi.elckerlyc.planunit.ParameterException;
+import asap.realizer.planunit.ParameterException;
 
 /**
  * Interface for the playback of (wav) audio units

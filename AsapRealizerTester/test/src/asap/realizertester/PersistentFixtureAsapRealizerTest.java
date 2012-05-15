@@ -4,10 +4,6 @@ import hmi.animation.VJoint;
 import hmi.audioenvironment.AudioEnvironment;
 import saiba.bml.bridge.RealizerPort;
 import hmi.bml.ext.bmlt.BMLTInfo;
-import hmi.elckerlyc.anticipator.Anticipator;
-import hmi.elckerlyc.pegboard.BMLBlockPeg;
-import hmi.elckerlyc.pegboard.TimePeg;
-import hmi.elckerlyc.world.WorldObject;
 import hmi.mixedanimationenvironment.MixedAnimationEnvironment;
 import hmi.physicsenvironment.OdePhysicsEnvironment;
 import hmi.renderenvironment.HmiRenderEnvironment;
@@ -31,6 +27,10 @@ import org.slf4j.LoggerFactory;
 
 import asap.environment.AsapEnvironment;
 import asap.environment.AsapVirtualHuman;
+import asap.realizer.anticipator.Anticipator;
+import asap.realizer.pegboard.BMLBlockPeg;
+import asap.realizer.pegboard.TimePeg;
+import asap.realizer.world.WorldObject;
 import asap.utils.Environment;
 
 /**

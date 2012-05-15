@@ -18,9 +18,9 @@
  ******************************************************************************/
 package asap.faceengine.faceunit;
 
-import hmi.elckerlyc.planunit.KeyPosition;
-import hmi.elckerlyc.planunit.ParameterException;
-import hmi.elckerlyc.planunit.ParameterNotFoundException;
+import asap.realizer.planunit.KeyPosition;
+import asap.realizer.planunit.ParameterException;
+import asap.realizer.planunit.ParameterNotFoundException;
 import hmi.faceanimation.FaceController;
 import hmi.faceanimation.converters.EmotionConverter;
 import hmi.faceanimation.converters.FACSConverter;

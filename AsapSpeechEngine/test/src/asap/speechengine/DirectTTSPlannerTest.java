@@ -5,7 +5,6 @@ import static org.mockito.Matchers.anyString;
 import static org.mockito.Matchers.eq;
 import static org.mockito.Mockito.when;
 import saiba.bml.core.SpeechBehaviour;
-import hmi.elckerlyc.pegboard.BMLBlockPeg;
 import hmi.tts.Bookmark;
 import hmi.tts.Phoneme;
 import hmi.tts.TimingInfo;
@@ -15,6 +14,7 @@ import hmi.tts.WordDescription;
 import java.util.ArrayList;
 import java.util.List;
 
+import asap.realizer.pegboard.BMLBlockPeg;
 import asap.speechengine.TimedDirectTTSUnit;
 
 /**

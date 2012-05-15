@@ -4,12 +4,6 @@ import static org.mockito.Mockito.mock;
 import hmi.audioenvironment.ClipSoundManager;
 import hmi.audioenvironment.LWJGLJoalSoundManager;
 import hmi.audioenvironment.SoundManager;
-import hmi.elckerlyc.feedback.FeedbackManager;
-import hmi.elckerlyc.pegboard.BMLBlockPeg;
-import hmi.elckerlyc.pegboard.TimePeg;
-import hmi.elckerlyc.planunit.TimedPlanUnitPlayException;
-import hmi.elckerlyc.planunit.TimedPlanUnitState;
-import hmi.elckerlyc.scheduler.BMLBlockManager;
 import hmi.util.Resources;
 import lombok.extern.slf4j.Slf4j;
 
@@ -22,6 +16,12 @@ import org.powermock.modules.junit4.PowerMockRunner;
 
 import asap.audioengine.AudioUnitPlanningException;
 import asap.audioengine.TimedWavAudioUnit;
+import asap.realizer.feedback.FeedbackManager;
+import asap.realizer.pegboard.BMLBlockPeg;
+import asap.realizer.pegboard.TimePeg;
+import asap.realizer.planunit.TimedPlanUnitPlayException;
+import asap.realizer.planunit.TimedPlanUnitState;
+import asap.realizer.scheduler.BMLBlockManager;
 
 /**
  * Integration test for the TimedWavAudioUnit (using an actual .wav file)

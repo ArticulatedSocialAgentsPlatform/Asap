@@ -9,18 +9,10 @@ import static org.mockito.Mockito.when;
 import saiba.bml.core.Behaviour;
 import saiba.bml.core.HeadBehaviour;
 import saiba.bml.parser.Constraint;
-import hmi.elckerlyc.BehaviourPlanningException;
-import hmi.elckerlyc.PlannerTests;
-import hmi.elckerlyc.feedback.FeedbackManager;
-import hmi.elckerlyc.feedback.FeedbackManagerImpl;
-import hmi.elckerlyc.pegboard.BMLBlockPeg;
-import hmi.elckerlyc.pegboard.PegBoard;
-import hmi.elckerlyc.pegboard.TimePeg;
-import hmi.elckerlyc.planunit.KeyPosition;
-import hmi.elckerlyc.planunit.PlanManager;
-import hmi.elckerlyc.scheduler.BMLBlockManager;
-import hmi.elckerlyc.scheduler.TimePegAndConstraint;
-import hmi.elckerlyc.util.KeyPositionMocker;
+import asap.realizertestutil.PlannerTests;
+import asap.realizer.scheduler.BMLBlockManager;
+import asap.realizer.scheduler.TimePegAndConstraint;
+import asap.realizertestutil.util.KeyPositionMocker;
 import hmi.xml.XMLTokenizer;
 
 import java.io.IOException;
@@ -38,6 +30,14 @@ import org.powermock.modules.junit4.PowerMockRunner;
 import asap.animationengine.gesturebinding.GestureBinding;
 import asap.animationengine.motionunit.AnimationUnit;
 import asap.animationengine.motionunit.TimedAnimationUnit;
+import asap.realizer.BehaviourPlanningException;
+import asap.realizer.feedback.FeedbackManager;
+import asap.realizer.feedback.FeedbackManagerImpl;
+import asap.realizer.pegboard.BMLBlockPeg;
+import asap.realizer.pegboard.PegBoard;
+import asap.realizer.pegboard.TimePeg;
+import asap.realizer.planunit.KeyPosition;
+import asap.realizer.planunit.PlanManager;
 
 
 /**

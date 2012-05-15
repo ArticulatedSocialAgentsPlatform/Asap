@@ -2,9 +2,6 @@ package asap.realizerintegrationtest;
 
 import static org.mockito.Mockito.mock;
 import saiba.bml.parser.BMLParser;
-import hmi.elckerlyc.feedback.NullFeedbackManager;
-import hmi.elckerlyc.pegboard.PegBoard;
-import hmi.elckerlyc.scheduler.BMLBlockManager;
 import hmi.xml.XMLTokenizer;
 
 import java.io.IOException;
@@ -12,6 +9,9 @@ import java.io.IOException;
 import org.junit.Test;
 
 import asap.environment.BMLSchedulerAssembler;
+import asap.realizer.feedback.NullFeedbackManager;
+import asap.realizer.pegboard.PegBoard;
+import asap.realizer.scheduler.BMLBlockManager;
 import asap.utils.SchedulingClock;
 
 /**
@@ -29,8 +29,8 @@ public class EnvironmentLoadingTest
     {
         BMLSchedulerAssembler asm = new BMLSchedulerAssembler("id1", new BMLParser(), NullFeedbackManager.getInstance(), bbm, mockClock,
                 pegBoard);
-        String str = "<BMLScheduler>" + "<SchedulingHandler class=\"asap.scheduler.BMLBandTSchedulingHandler\" "
-                + "schedulingStrategy=\"hmi.elckerlyc.scheduler.SortedSmartBodySchedulingStrategy\"/>" + "</BMLScheduler>";
+        String str = "<BMLScheduler>" + "<SchedulingHandler class=\"asap.realizer.scheduler.BMLBandTSchedulingHandler\" "
+                + "schedulingStrategy=\"asap.realizer.scheduler.SortedSmartBodySchedulingStrategy\"/>" + "</BMLScheduler>";
         asm.readXML(new XMLTokenizer(str));
     }
 }

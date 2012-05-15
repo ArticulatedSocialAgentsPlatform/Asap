@@ -11,12 +11,12 @@ import asap.animationengine.AnimationPlayer;
 import asap.animationengine.motionunit.MUSetupException;
 import asap.animationengine.motionunit.AnimationUnit;
 import asap.animationengine.motionunit.TimedAnimationUnit;
+import asap.realizer.feedback.FeedbackManager;
+import asap.realizer.feedback.NullFeedbackManager;
+import asap.realizer.pegboard.BMLBlockPeg;
+import asap.realizer.pegboard.PegBoard;
+import asap.realizer.planunit.ParameterException;
 
-import hmi.elckerlyc.feedback.FeedbackManager;
-import hmi.elckerlyc.feedback.NullFeedbackManager;
-import hmi.elckerlyc.pegboard.BMLBlockPeg;
-import hmi.elckerlyc.pegboard.PegBoard;
-import hmi.elckerlyc.planunit.ParameterException;
 import hmi.util.Resources;
 import hmi.xml.XMLStructureAdapter;
 import hmi.xml.XMLTokenizer;

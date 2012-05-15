@@ -7,13 +7,9 @@ import hmi.audioenvironment.LWJGLJoalSoundManager;
 import hmi.audioenvironment.SoundManager;
 import saiba.bml.core.SpeechBehaviour;
 import saiba.bml.feedback.ListFeedbackListener;
-import hmi.elckerlyc.feedback.FeedbackManager;
-import hmi.elckerlyc.pegboard.BMLBlockPeg;
-import hmi.elckerlyc.pegboard.TimePeg;
-import hmi.elckerlyc.planunit.AbstractTimedPlanUnitTest;
-import hmi.elckerlyc.planunit.TimedPlanUnit;
-import hmi.elckerlyc.planunit.TimedPlanUnitPlayException;
-import hmi.elckerlyc.planunit.TimedPlanUnitState;
+import asap.realizertestutil.planunit.AbstractTimedPlanUnitTest;
+import asap.realizer.planunit.TimedPlanUnit;
+import asap.realizer.planunit.TimedPlanUnitState;
 import hmi.tts.Bookmark;
 
 import org.hamcrest.collection.IsIterableContainingInOrder;
@@ -23,6 +19,10 @@ import org.junit.Before;
 import org.junit.BeforeClass;
 import org.junit.Test;
 
+import asap.realizer.feedback.FeedbackManager;
+import asap.realizer.pegboard.BMLBlockPeg;
+import asap.realizer.pegboard.TimePeg;
+import asap.realizer.planunit.TimedPlanUnitPlayException;
 import asap.speechengine.SpeechUnitPlanningException;
 import asap.speechengine.TimedWavTTSUnit;
 import asap.speechengine.ttsbinding.TTSBinding;

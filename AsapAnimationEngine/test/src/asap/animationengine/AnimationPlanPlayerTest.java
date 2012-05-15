@@ -1,26 +1,24 @@
 package asap.animationengine;
 
-import static org.junit.Assert.*;
+import static asap.realizertestutil.util.KeyPositionMocker.stubKeyPositions;
+import static org.hamcrest.MatcherAssert.assertThat;
+import static org.hamcrest.collection.IsIterableContainingInAnyOrder.containsInAnyOrder;
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertTrue;
+import static org.mockito.AdditionalMatchers.eq;
+import static org.mockito.Matchers.anyDouble;
+import static org.mockito.Matchers.eq;
+import static org.mockito.Mockito.atLeastOnce;
+import static org.mockito.Mockito.doThrow;
+import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.times;
+import static org.mockito.Mockito.verify;
+import static org.mockito.Mockito.when;
 
 import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
 
-import hmi.elckerlyc.pegboard.BMLBlockPeg;
-import hmi.elckerlyc.pegboard.PegBoard;
-import hmi.elckerlyc.pegboard.TimePeg;
-import hmi.elckerlyc.planunit.KeyPosition;
-import saiba.bml.feedback.BMLExceptionFeedback;
-import saiba.bml.feedback.BMLSyncPointProgressFeedback;
-import hmi.elckerlyc.feedback.FeedbackManager;
-import hmi.elckerlyc.feedback.FeedbackManagerImpl;
-import hmi.elckerlyc.feedback.NullFeedbackManager;
-import hmi.elckerlyc.planunit.DefaultTimedPlanUnitPlayer;
-import hmi.elckerlyc.planunit.PlanManager;
-import hmi.elckerlyc.planunit.TimedPlanUnitState;
-import hmi.elckerlyc.scheduler.BMLBlockManager;
-import saiba.bml.feedback.ListBMLExceptionListener;
-import saiba.bml.feedback.ListFeedbackListener;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -28,21 +26,29 @@ import org.powermock.core.classloader.annotations.PowerMockIgnore;
 import org.powermock.core.classloader.annotations.PrepareForTest;
 import org.powermock.modules.junit4.PowerMockRunner;
 
-import com.google.common.collect.ImmutableSet;
-
+import saiba.bml.feedback.BMLExceptionFeedback;
+import saiba.bml.feedback.BMLSyncPointProgressFeedback;
+import saiba.bml.feedback.ListBMLExceptionListener;
+import saiba.bml.feedback.ListFeedbackListener;
 import asap.animationengine.motionunit.AnimationUnit;
 import asap.animationengine.motionunit.TimedAnimationUnit;
 import asap.animationengine.restpose.RestPose;
 import asap.animationengine.transitions.TransitionMU;
 import asap.animationengine.transitions.TransitionTMU;
 import asap.motionunit.MUPlayException;
+import asap.realizer.feedback.FeedbackManager;
+import asap.realizer.feedback.FeedbackManagerImpl;
+import asap.realizer.feedback.NullFeedbackManager;
+import asap.realizer.pegboard.BMLBlockPeg;
+import asap.realizer.pegboard.PegBoard;
+import asap.realizer.pegboard.TimePeg;
+import asap.realizer.planunit.DefaultTimedPlanUnitPlayer;
+import asap.realizer.planunit.KeyPosition;
+import asap.realizer.planunit.PlanManager;
+import asap.realizer.planunit.TimedPlanUnitState;
+import asap.realizer.scheduler.BMLBlockManager;
 
-import static org.mockito.Mockito.*;
-import static org.mockito.AdditionalMatchers.*;
-import static hmi.elckerlyc.util.KeyPositionMocker.*;
-
-import static org.hamcrest.MatcherAssert.assertThat;
-import static org.hamcrest.collection.IsIterableContainingInAnyOrder.*;
+import com.google.common.collect.ImmutableSet;
 
 /**
  * Unit test cases for a PlanPlayer using TimedMotionUnits

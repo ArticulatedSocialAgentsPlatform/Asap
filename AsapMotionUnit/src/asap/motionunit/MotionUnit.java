@@ -1,7 +1,7 @@
 package asap.motionunit;
 
-import hmi.elckerlyc.planunit.KeyPositionManager;
-import hmi.elckerlyc.planunit.ParameterException;
+import asap.realizer.planunit.KeyPositionManager;
+import asap.realizer.planunit.ParameterException;
 
 /**
  * A unit of playable motion 

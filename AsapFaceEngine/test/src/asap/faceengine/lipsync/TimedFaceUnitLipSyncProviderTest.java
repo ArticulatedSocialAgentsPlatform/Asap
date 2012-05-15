@@ -6,10 +6,6 @@ import static org.junit.Assert.assertEquals;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
 import saiba.bml.core.SpeechBehaviour;
-import hmi.elckerlyc.pegboard.BMLBlockPeg;
-import hmi.elckerlyc.pegboard.TimePeg;
-import hmi.elckerlyc.planunit.PlanManager;
-import hmi.elckerlyc.planunit.TimedPlanUnit;
 import hmi.faceanimation.FaceController;
 import hmi.tts.Visime;
 import hmi.xml.XMLTokenizer;
@@ -24,6 +20,10 @@ import asap.faceengine.faceunit.TimedFaceUnit;
 import asap.faceengine.viseme.MorphVisemeBinding;
 import asap.faceengine.viseme.VisemeBinding;
 import asap.faceengine.viseme.VisemeToMorphMapping;
+import asap.realizer.pegboard.BMLBlockPeg;
+import asap.realizer.pegboard.TimePeg;
+import asap.realizer.planunit.PlanManager;
+import asap.realizer.planunit.TimedPlanUnit;
 
 import com.google.common.collect.ImmutableList;
 

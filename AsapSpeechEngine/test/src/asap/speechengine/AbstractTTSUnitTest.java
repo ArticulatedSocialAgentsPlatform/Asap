@@ -10,14 +10,7 @@ import static org.junit.Assert.assertTrue;
 import static org.mockito.Mockito.mock;
 import saiba.bml.feedback.BMLSyncPointProgressFeedback;
 import saiba.bml.feedback.ListFeedbackListener;
-import hmi.elckerlyc.feedback.FeedbackManager;
-import hmi.elckerlyc.feedback.FeedbackManagerImpl;
-import hmi.elckerlyc.pegboard.BMLBlockPeg;
-import hmi.elckerlyc.pegboard.TimePeg;
-import hmi.elckerlyc.planunit.TimedPlanUnitPlayException;
-import hmi.elckerlyc.planunit.TimedPlanUnitState;
-import hmi.elckerlyc.scheduler.BMLBlockManager;
-import hmi.elckerlyc.util.FeedbackListUtils;
+import asap.realizertestutil.util.FeedbackListUtils;
 
 import java.util.List;
 
@@ -26,6 +19,13 @@ import org.junit.Test;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import asap.realizer.feedback.FeedbackManager;
+import asap.realizer.feedback.FeedbackManagerImpl;
+import asap.realizer.pegboard.BMLBlockPeg;
+import asap.realizer.pegboard.TimePeg;
+import asap.realizer.planunit.TimedPlanUnitPlayException;
+import asap.realizer.planunit.TimedPlanUnitState;
+import asap.realizer.scheduler.BMLBlockManager;
 import asap.speechengine.SpeechUnitPlanningException;
 import asap.speechengine.TimedTTSUnit;
 

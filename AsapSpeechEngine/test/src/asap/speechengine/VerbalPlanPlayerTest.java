@@ -7,15 +7,6 @@ import saiba.bml.core.Behaviour;
 import saiba.bml.core.SpeechBehaviour;
 import saiba.bml.feedback.BMLExceptionFeedback;
 import saiba.bml.feedback.ListBMLExceptionListener;
-import hmi.elckerlyc.feedback.FeedbackManager;
-import hmi.elckerlyc.pegboard.BMLBlockPeg;
-import hmi.elckerlyc.pegboard.TimePeg;
-import hmi.elckerlyc.planunit.MultiThreadedPlanPlayer;
-import hmi.elckerlyc.planunit.PlanManager;
-import hmi.elckerlyc.planunit.PlanUnitFloatParameterNotFoundException;
-import hmi.elckerlyc.planunit.PlanUnitParameterNotFoundException;
-import hmi.elckerlyc.planunit.TimedPlanUnitPlayException;
-import hmi.elckerlyc.planunit.TimedPlanUnitState;
 import hmi.tts.TimingInfo;
 
 import java.util.ArrayList;
@@ -23,6 +14,15 @@ import java.util.List;
 
 import org.junit.Test;
 
+import asap.realizer.feedback.FeedbackManager;
+import asap.realizer.pegboard.BMLBlockPeg;
+import asap.realizer.pegboard.TimePeg;
+import asap.realizer.planunit.MultiThreadedPlanPlayer;
+import asap.realizer.planunit.PlanManager;
+import asap.realizer.planunit.PlanUnitFloatParameterNotFoundException;
+import asap.realizer.planunit.PlanUnitParameterNotFoundException;
+import asap.realizer.planunit.TimedPlanUnitPlayException;
+import asap.realizer.planunit.TimedPlanUnitState;
 import asap.speechengine.SpeechUnitPlanningException;
 import asap.speechengine.TimedAbstractSpeechUnit;
 import asap.speechengine.TimedTTSUnit;

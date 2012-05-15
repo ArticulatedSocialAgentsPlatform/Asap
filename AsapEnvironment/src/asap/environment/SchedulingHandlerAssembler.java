@@ -1,8 +1,5 @@
 package asap.environment;
 
-import hmi.elckerlyc.pegboard.PegBoard;
-import hmi.elckerlyc.scheduler.SchedulingHandler;
-import hmi.elckerlyc.scheduler.SchedulingStrategy;
 import hmi.xml.XMLScanException;
 import hmi.xml.XMLStructureAdapter;
 import hmi.xml.XMLTokenizer;
@@ -10,6 +7,10 @@ import hmi.xml.XMLTokenizer;
 import java.lang.reflect.Constructor;
 import java.lang.reflect.InvocationTargetException;
 import java.util.HashMap;
+
+import asap.realizer.pegboard.PegBoard;
+import asap.realizer.scheduler.SchedulingHandler;
+import asap.realizer.scheduler.SchedulingStrategy;
 
 /**
  * Constructs a SchedulingHandler from an xml description

@@ -19,18 +19,18 @@
 package asap.animationengine.transitions;
 
 
-import hmi.elckerlyc.feedback.FeedbackManager;
-import hmi.elckerlyc.feedback.NullFeedbackManager;
-import hmi.elckerlyc.pegboard.BMLBlockPeg;
-import hmi.elckerlyc.pegboard.PegBoard;
-import hmi.elckerlyc.pegboard.TimePeg;
-import hmi.elckerlyc.planunit.TimedPlanUnitPlayException;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import asap.animationengine.gaze.GazeMU;
 import asap.animationengine.motionunit.TimedAnimationUnit;
+import asap.realizer.feedback.FeedbackManager;
+import asap.realizer.feedback.NullFeedbackManager;
+import asap.realizer.pegboard.BMLBlockPeg;
+import asap.realizer.pegboard.PegBoard;
+import asap.realizer.pegboard.TimePeg;
+import asap.realizer.planunit.TimedPlanUnitPlayException;
 
 
 /**

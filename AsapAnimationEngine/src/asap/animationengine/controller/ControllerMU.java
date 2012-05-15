@@ -18,15 +18,6 @@
  ******************************************************************************/
 package asap.animationengine.controller;
 
-import hmi.elckerlyc.feedback.FeedbackManager;
-import hmi.elckerlyc.pegboard.BMLBlockPeg;
-import hmi.elckerlyc.pegboard.PegBoard;
-import hmi.elckerlyc.planunit.InvalidParameterException;
-import hmi.elckerlyc.planunit.KeyPosition;
-import hmi.elckerlyc.planunit.KeyPositionManager;
-import hmi.elckerlyc.planunit.KeyPositionManagerImpl;
-import hmi.elckerlyc.planunit.ParameterException;
-import hmi.elckerlyc.planunit.ParameterNotFoundException;
 import hmi.physics.controller.ControllerParameterException;
 import hmi.physics.controller.ControllerParameterNotFoundException;
 import hmi.physics.controller.PhysicalController;
@@ -40,6 +31,15 @@ import com.google.common.collect.ImmutableSet;
 import asap.animationengine.AnimationPlayer;
 import asap.animationengine.motionunit.*;
 import asap.motionunit.MUPlayException;
+import asap.realizer.feedback.FeedbackManager;
+import asap.realizer.pegboard.BMLBlockPeg;
+import asap.realizer.pegboard.PegBoard;
+import asap.realizer.planunit.InvalidParameterException;
+import asap.realizer.planunit.KeyPosition;
+import asap.realizer.planunit.KeyPositionManager;
+import asap.realizer.planunit.KeyPositionManagerImpl;
+import asap.realizer.planunit.ParameterException;
+import asap.realizer.planunit.ParameterNotFoundException;
 
 /**
  * MotionUnit for a physical controller

@@ -19,14 +19,6 @@
  ******************************************************************************/
 package asap.environment.impl;
 
-import hmi.elckerlyc.DefaultEngine;
-import hmi.elckerlyc.DefaultPlayer;
-import hmi.elckerlyc.Engine;
-import hmi.elckerlyc.Player;
-import hmi.elckerlyc.planunit.PlanManager;
-import hmi.elckerlyc.planunit.SingleThreadedPlanPlayer;
-import hmi.elckerlyc.wait.TimedWaitUnit;
-import hmi.elckerlyc.wait.WaitPlanner;
 import hmi.xml.XMLTokenizer;
 
 import java.io.IOException;
@@ -34,6 +26,14 @@ import java.io.IOException;
 import asap.environment.AsapVirtualHuman;
 import asap.environment.EngineLoader;
 import asap.environment.Loader;
+import asap.realizer.DefaultEngine;
+import asap.realizer.DefaultPlayer;
+import asap.realizer.Engine;
+import asap.realizer.Player;
+import asap.realizer.planunit.PlanManager;
+import asap.realizer.planunit.SingleThreadedPlanPlayer;
+import asap.realizer.wait.TimedWaitUnit;
+import asap.realizer.wait.WaitPlanner;
 import asap.utils.Environment;
 
 /**

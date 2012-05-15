@@ -1,21 +1,10 @@
 package asap.speechengine;
 
+import static org.hamcrest.MatcherAssert.assertThat;
+import static org.hamcrest.number.OrderingComparison.greaterThan;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
 import static org.mockito.Mockito.mock;
-import saiba.bml.core.SpeechBehaviour;
-import saiba.bml.parser.Constraint;
-import hmi.elckerlyc.BehaviourPlanningException;
-import hmi.elckerlyc.Planner;
-import hmi.elckerlyc.PlannerTests;
-import hmi.elckerlyc.Player;
-import hmi.elckerlyc.feedback.FeedbackManager;
-import hmi.elckerlyc.pegboard.BMLBlockPeg;
-import hmi.elckerlyc.pegboard.OffsetPeg;
-import hmi.elckerlyc.pegboard.TimePeg;
-import hmi.elckerlyc.planunit.PlanManager;
-import hmi.elckerlyc.scheduler.BMLBlockManager;
-import hmi.elckerlyc.scheduler.TimePegAndConstraint;
 import hmi.xml.XMLTokenizer;
 
 import java.io.IOException;
@@ -23,9 +12,17 @@ import java.util.ArrayList;
 
 import org.junit.Test;
 
-import asap.speechengine.TimedAbstractSpeechUnit;
-import static org.hamcrest.MatcherAssert.assertThat;
-import static org.hamcrest.number.OrderingComparison.greaterThan;
+import saiba.bml.core.SpeechBehaviour;
+import saiba.bml.parser.Constraint;
+import asap.realizer.BehaviourPlanningException;
+import asap.realizer.Planner;
+import asap.realizer.feedback.FeedbackManager;
+import asap.realizer.pegboard.BMLBlockPeg;
+import asap.realizer.pegboard.OffsetPeg;
+import asap.realizer.pegboard.TimePeg;
+import asap.realizer.planunit.PlanManager;
+import asap.realizer.scheduler.TimePegAndConstraint;
+import asap.realizertestutil.PlannerTests;
 /**
  * Generic unit test cases and utility functions for different types of SpeechPlanners 
  * 

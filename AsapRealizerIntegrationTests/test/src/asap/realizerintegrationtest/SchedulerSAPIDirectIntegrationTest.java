@@ -1,7 +1,7 @@
 package asap.realizerintegrationtest;
 
-import hmi.elckerlyc.feedback.FeedbackManagerImpl;
-import hmi.elckerlyc.scheduler.BMLBlockManager;
+import asap.realizer.feedback.FeedbackManagerImpl;
+import asap.realizer.scheduler.BMLBlockManager;
 import asap.speechengine.DirectTTSUnitFactory;
 import asap.speechengine.TimedTTSUnitFactory;
 import asap.speechengine.ttsbinding.SAPITTSBindingFactory;

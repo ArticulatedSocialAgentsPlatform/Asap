@@ -20,10 +20,6 @@ package asap.speechengine;
 
 import saiba.bml.BMLGestureSync;
 import saiba.bml.core.Behaviour;
-import hmi.elckerlyc.*;
-import hmi.elckerlyc.feedback.FeedbackManager;
-import hmi.elckerlyc.pegboard.BMLBlockPeg;
-import hmi.elckerlyc.pegboard.TimePeg;
 import hmi.tts.*;
 
 import java.util.*;
@@ -31,6 +27,10 @@ import java.util.*;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import asap.realizer.*;
+import asap.realizer.feedback.FeedbackManager;
+import asap.realizer.pegboard.BMLBlockPeg;
+import asap.realizer.pegboard.TimePeg;
 import asap.speechengine.ttsbinding.TTSBinding;
 
 /**

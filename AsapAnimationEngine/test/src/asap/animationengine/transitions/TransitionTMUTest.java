@@ -6,25 +6,26 @@ import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
-import hmi.elckerlyc.feedback.FeedbackManager;
-import hmi.elckerlyc.pegboard.BMLBlockPeg;
-import hmi.elckerlyc.pegboard.PegBoard;
-import hmi.elckerlyc.pegboard.TimePeg;
-import hmi.elckerlyc.planunit.AbstractTimedPlanUnitTest;
-import hmi.elckerlyc.planunit.KeyPosition;
-import hmi.elckerlyc.planunit.TimedPlanUnit;
-import hmi.elckerlyc.planunit.TimedPlanUnitPlayException;
-import hmi.elckerlyc.planunit.TimedPlanUnitState;
-import hmi.elckerlyc.scheduler.BMLBlockManager;
-import hmi.elckerlyc.scheduler.BMLScheduler;
-import hmi.elckerlyc.util.KeyPositionMocker;
-import hmi.elckerlyc.util.TimePegUtil;
+import asap.realizertestutil.planunit.AbstractTimedPlanUnitTest;
+import asap.realizertestutil.util.KeyPositionMocker;
+import asap.realizertestutil.util.TimePegUtil;
 
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.powermock.core.classloader.annotations.PowerMockIgnore;
 import org.powermock.core.classloader.annotations.PrepareForTest;
 import org.powermock.modules.junit4.PowerMockRunner;
+
+import asap.realizer.feedback.FeedbackManager;
+import asap.realizer.pegboard.BMLBlockPeg;
+import asap.realizer.pegboard.PegBoard;
+import asap.realizer.pegboard.TimePeg;
+import asap.realizer.planunit.KeyPosition;
+import asap.realizer.planunit.TimedPlanUnit;
+import asap.realizer.planunit.TimedPlanUnitPlayException;
+import asap.realizer.planunit.TimedPlanUnitState;
+import asap.realizer.scheduler.BMLBlockManager;
+import asap.realizer.scheduler.BMLScheduler;
 /**
  * Unit test cases for transition timed motion units
  * @author Herwin

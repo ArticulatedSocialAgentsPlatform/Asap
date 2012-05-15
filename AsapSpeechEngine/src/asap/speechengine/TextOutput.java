@@ -1,6 +1,6 @@
 package asap.speechengine;
 
-import hmi.elckerlyc.planunit.ParameterException;
+import asap.realizer.planunit.ParameterException;
 
 
 /**

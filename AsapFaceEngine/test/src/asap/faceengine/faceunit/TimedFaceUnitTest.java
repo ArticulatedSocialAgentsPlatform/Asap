@@ -9,17 +9,8 @@ import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
 import saiba.bml.feedback.BMLSyncPointProgressFeedback;
 import saiba.bml.feedback.ListFeedbackListener;
-import hmi.elckerlyc.feedback.FeedbackManager;
-import hmi.elckerlyc.feedback.FeedbackManagerImpl;
-import hmi.elckerlyc.pegboard.BMLBlockPeg;
-import hmi.elckerlyc.pegboard.TimePeg;
-import hmi.elckerlyc.planunit.AbstractTimedPlanUnitTest;
-import hmi.elckerlyc.planunit.KeyPosition;
-import hmi.elckerlyc.planunit.TimedPlanUnit;
-import hmi.elckerlyc.planunit.TimedPlanUnitPlayException;
-import hmi.elckerlyc.planunit.TimedPlanUnitState;
-import hmi.elckerlyc.scheduler.BMLBlockManager;
-import hmi.elckerlyc.util.KeyPositionMocker;
+import asap.realizertestutil.planunit.AbstractTimedPlanUnitTest;
+import asap.realizertestutil.util.KeyPositionMocker;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -30,6 +21,15 @@ import org.powermock.core.classloader.annotations.PrepareForTest;
 import org.powermock.modules.junit4.PowerMockRunner;
 
 import asap.motionunit.MUPlayException;
+import asap.realizer.feedback.FeedbackManager;
+import asap.realizer.feedback.FeedbackManagerImpl;
+import asap.realizer.pegboard.BMLBlockPeg;
+import asap.realizer.pegboard.TimePeg;
+import asap.realizer.planunit.KeyPosition;
+import asap.realizer.planunit.TimedPlanUnit;
+import asap.realizer.planunit.TimedPlanUnitPlayException;
+import asap.realizer.planunit.TimedPlanUnitState;
+import asap.realizer.scheduler.BMLBlockManager;
 
 /**
  * Test cases for the TimedFaceUnit

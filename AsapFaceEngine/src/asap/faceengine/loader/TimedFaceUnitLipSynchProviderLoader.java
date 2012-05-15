@@ -3,7 +3,6 @@ package asap.faceengine.loader;
 import java.io.IOException;
 import java.util.HashMap;
 
-import hmi.elckerlyc.lipsync.LipSynchProvider;
 import asap.faceengine.lipsync.TimedFaceUnitLipSynchProvider;
 import asap.faceengine.viseme.MorphVisemeBinding;
 import asap.faceengine.viseme.VisemeBinding;
@@ -14,6 +13,7 @@ import hmi.xml.XMLTokenizer;
 import asap.environment.AsapVirtualHuman;
 import asap.environment.LipSynchProviderLoader;
 import asap.environment.Loader;
+import asap.realizer.lipsync.LipSynchProvider;
 import asap.utils.Environment;
 
 /**

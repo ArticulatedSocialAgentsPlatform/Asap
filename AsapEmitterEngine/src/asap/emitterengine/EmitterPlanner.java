@@ -18,17 +18,7 @@
  ******************************************************************************/
 package asap.emitterengine;
 
-import hmi.elckerlyc.pegboard.BMLBlockPeg;
-import hmi.elckerlyc.pegboard.OffsetPeg;
-import hmi.elckerlyc.pegboard.TimePeg;
-import hmi.elckerlyc.planunit.KeyPosition;
 import saiba.bml.bridge.*;
-import hmi.elckerlyc.*;
-import hmi.elckerlyc.feedback.FeedbackManager;
-import hmi.elckerlyc.planunit.PlanManager;
-import hmi.elckerlyc.scheduler.LinearStretchResolver;
-import hmi.elckerlyc.scheduler.TimePegAndConstraint;
-import hmi.elckerlyc.scheduler.UniModalResolver;
 
 
 import java.util.ArrayList;
@@ -36,6 +26,16 @@ import java.util.List;
 
 import asap.emitterengine.bml.*;
 import asap.emitterengine.planunit.*;
+import asap.realizer.*;
+import asap.realizer.feedback.FeedbackManager;
+import asap.realizer.pegboard.BMLBlockPeg;
+import asap.realizer.pegboard.OffsetPeg;
+import asap.realizer.pegboard.TimePeg;
+import asap.realizer.planunit.KeyPosition;
+import asap.realizer.planunit.PlanManager;
+import asap.realizer.scheduler.LinearStretchResolver;
+import asap.realizer.scheduler.TimePegAndConstraint;
+import asap.realizer.scheduler.UniModalResolver;
 
 //import org.slf4j.Logger;
 //import org.slf4j.LoggerFactory;

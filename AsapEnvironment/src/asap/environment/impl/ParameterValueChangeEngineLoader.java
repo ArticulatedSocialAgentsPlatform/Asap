@@ -19,15 +19,6 @@
  ******************************************************************************/
 package asap.environment.impl;
 
-import hmi.elckerlyc.DefaultEngine;
-import hmi.elckerlyc.DefaultPlayer;
-import hmi.elckerlyc.Engine;
-import hmi.elckerlyc.Player;
-import hmi.elckerlyc.parametervaluechange.ParameterValueChangePlanner;
-import hmi.elckerlyc.parametervaluechange.TimedParameterValueChangeUnit;
-import hmi.elckerlyc.parametervaluechange.TrajectoryBinding;
-import hmi.elckerlyc.planunit.PlanManager;
-import hmi.elckerlyc.planunit.SingleThreadedPlanPlayer;
 import hmi.xml.XMLTokenizer;
 
 import java.io.IOException;
@@ -35,6 +26,15 @@ import java.io.IOException;
 import asap.environment.AsapVirtualHuman;
 import asap.environment.EngineLoader;
 import asap.environment.Loader;
+import asap.realizer.DefaultEngine;
+import asap.realizer.DefaultPlayer;
+import asap.realizer.Engine;
+import asap.realizer.Player;
+import asap.realizer.parametervaluechange.ParameterValueChangePlanner;
+import asap.realizer.parametervaluechange.TimedParameterValueChangeUnit;
+import asap.realizer.parametervaluechange.TrajectoryBinding;
+import asap.realizer.planunit.PlanManager;
+import asap.realizer.planunit.SingleThreadedPlanPlayer;
 import asap.utils.Environment;
 
 /**

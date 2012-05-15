@@ -22,9 +22,9 @@ import java.util.Set;
 
 import asap.animationengine.AnimationPlayer;
 import asap.motionunit.MotionUnit;
-import hmi.elckerlyc.feedback.FeedbackManager;
-import hmi.elckerlyc.pegboard.BMLBlockPeg;
-import hmi.elckerlyc.pegboard.PegBoard;
+import asap.realizer.feedback.FeedbackManager;
+import asap.realizer.pegboard.BMLBlockPeg;
+import asap.realizer.pegboard.PegBoard;
 
 /**
  * An animation, typically with a peak-like structure, parameterized by a parameter set 

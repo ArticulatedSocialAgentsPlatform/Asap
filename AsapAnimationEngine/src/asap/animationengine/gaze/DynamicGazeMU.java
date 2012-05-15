@@ -20,8 +20,8 @@ package asap.animationengine.gaze;
 
 import asap.animationengine.AnimationPlayer;
 import asap.motionunit.MUPlayException;
-import hmi.elckerlyc.planunit.KeyPosition;
-import hmi.elckerlyc.util.timemanipulator.*;
+import asap.realizer.planunit.KeyPosition;
+import asap.realizer.util.timemanipulator.*;
 import hmi.animation.*;
 import hmi.math.*;
 

@@ -1,13 +1,13 @@
 package asap.speechengine.util;
 
 import saiba.bml.core.Behaviour;
-import hmi.elckerlyc.feedback.FeedbackManager;
-import hmi.elckerlyc.pegboard.BMLBlockPeg;
-import hmi.elckerlyc.planunit.TimedPlanUnitPlayException;
 import hmi.tts.Bookmark;
 import hmi.tts.TimingInfo;
 import java.util.List;
 
+import asap.realizer.feedback.FeedbackManager;
+import asap.realizer.pegboard.BMLBlockPeg;
+import asap.realizer.planunit.TimedPlanUnitPlayException;
 import asap.speechengine.SpeechUnitPlanningException;
 import asap.speechengine.TimedTTSUnit;
 import asap.speechengine.ttsbinding.TTSBinding;

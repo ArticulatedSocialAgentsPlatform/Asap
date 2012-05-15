@@ -19,20 +19,20 @@
 package asap.animationengine.motionunit;
 
 import saiba.bml.core.Behaviour;
-import hmi.elckerlyc.BehaviourPlanningException;
-import hmi.elckerlyc.feedback.FeedbackManager;
-import hmi.elckerlyc.feedback.NullFeedbackManager;
-import hmi.elckerlyc.pegboard.BMLBlockPeg;
-import hmi.elckerlyc.pegboard.PegBoard;
-import hmi.elckerlyc.scheduler.LinearStretchResolver;
-import hmi.elckerlyc.scheduler.TimePegAndConstraint;
-import hmi.elckerlyc.scheduler.UniModalResolver;
 
 import java.util.List;
 import java.util.Set;
 
 import asap.motionunit.TMUPlayException;
 import asap.motionunit.TimedMotionUnit;
+import asap.realizer.BehaviourPlanningException;
+import asap.realizer.feedback.FeedbackManager;
+import asap.realizer.feedback.NullFeedbackManager;
+import asap.realizer.pegboard.BMLBlockPeg;
+import asap.realizer.pegboard.PegBoard;
+import asap.realizer.scheduler.LinearStretchResolver;
+import asap.realizer.scheduler.TimePegAndConstraint;
+import asap.realizer.scheduler.UniModalResolver;
 /**
  * When you do not set an end time peg, 'UNKNOWN' is assumed. This leads to the TimedMotionUnit being timed as
  * starttime..starttime+mu.getpreferredduration() When you do not set a start time peg, the animation cannot be played

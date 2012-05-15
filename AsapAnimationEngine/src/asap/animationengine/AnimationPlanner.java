@@ -30,17 +30,6 @@ import hmi.bml.ext.bmlt.BMLTKeyframeBehaviour;
 import hmi.bml.ext.bmlt.BMLTNoiseBehaviour;
 import hmi.bml.ext.bmlt.BMLTProcAnimationBehaviour;
 import hmi.bml.ext.bmlt.BMLTTransitionBehaviour;
-import hmi.elckerlyc.AbstractPlanner;
-import hmi.elckerlyc.BehaviourPlanningException;
-import hmi.elckerlyc.SyncAndTimePeg;
-import hmi.elckerlyc.feedback.FeedbackManager;
-import hmi.elckerlyc.pegboard.BMLBlockPeg;
-import hmi.elckerlyc.pegboard.OffsetPeg;
-import hmi.elckerlyc.pegboard.PegBoard;
-import hmi.elckerlyc.pegboard.TimePeg;
-import hmi.elckerlyc.planunit.KeyPosition;
-import hmi.elckerlyc.planunit.PlanManager;
-import hmi.elckerlyc.scheduler.TimePegAndConstraint;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -51,6 +40,17 @@ import asap.animationengine.motionunit.AnimationUnit;
 import asap.animationengine.motionunit.MUSetupException;
 import asap.animationengine.motionunit.TimedAnimationUnit;
 import asap.ext.murml.MURMLGestureBehaviour;
+import asap.realizer.AbstractPlanner;
+import asap.realizer.BehaviourPlanningException;
+import asap.realizer.SyncAndTimePeg;
+import asap.realizer.feedback.FeedbackManager;
+import asap.realizer.pegboard.BMLBlockPeg;
+import asap.realizer.pegboard.OffsetPeg;
+import asap.realizer.pegboard.PegBoard;
+import asap.realizer.pegboard.TimePeg;
+import asap.realizer.planunit.KeyPosition;
+import asap.realizer.planunit.PlanManager;
+import asap.realizer.scheduler.TimePegAndConstraint;
 
 /**
  * Main use: take BML based behaviors, resolve timepegs, add to player. Uses GestureBinding to map BML behavior classes to, e.g., ProcAnimations

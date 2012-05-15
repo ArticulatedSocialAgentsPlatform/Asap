@@ -1,6 +1,6 @@
 package asap.audioengine;
 
-import hmi.elckerlyc.planunit.TimedPlanUnitPlayException;
+import asap.realizer.planunit.TimedPlanUnitPlayException;
 /**
  * TimedPlanUnitPlayException implementation for a TimedAudioUnit 
  * @author welberge

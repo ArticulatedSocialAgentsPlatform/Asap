@@ -1,12 +1,6 @@
 package asap.faceengine.lipsync;
 
 import saiba.bml.core.Behaviour;
-import hmi.elckerlyc.lipsync.LipSynchProvider;
-import hmi.elckerlyc.pegboard.BMLBlockPeg;
-import hmi.elckerlyc.pegboard.OffsetPeg;
-import hmi.elckerlyc.pegboard.TimePeg;
-import hmi.elckerlyc.planunit.PlanManager;
-import hmi.elckerlyc.planunit.TimedPlanUnit;
 import hmi.faceanimation.FaceController;
 import hmi.tts.Visime;
 
@@ -17,6 +11,12 @@ import java.util.List;
 import lombok.extern.slf4j.Slf4j;
 import asap.faceengine.faceunit.TimedFaceUnit;
 import asap.faceengine.viseme.VisemeBinding;
+import asap.realizer.lipsync.LipSynchProvider;
+import asap.realizer.pegboard.BMLBlockPeg;
+import asap.realizer.pegboard.OffsetPeg;
+import asap.realizer.pegboard.TimePeg;
+import asap.realizer.planunit.PlanManager;
+import asap.realizer.planunit.TimedPlanUnit;
 
 /**
  * Creates TimedFaceUnits for lipsync 

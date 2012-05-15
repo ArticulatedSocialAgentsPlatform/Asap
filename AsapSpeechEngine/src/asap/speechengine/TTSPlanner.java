@@ -20,16 +20,6 @@ package asap.speechengine;
 
 import saiba.bml.core.Behaviour;
 import saiba.bml.core.SpeechBehaviour;
-import hmi.elckerlyc.AbstractPlanner;
-import hmi.elckerlyc.BehaviourPlanningException;
-import hmi.elckerlyc.SyncAndTimePeg;
-import hmi.elckerlyc.feedback.FeedbackManager;
-import hmi.elckerlyc.lipsync.LipSynchProvider;
-import hmi.elckerlyc.pegboard.BMLBlockPeg;
-import hmi.elckerlyc.pegboard.OffsetPeg;
-import hmi.elckerlyc.pegboard.TimePeg;
-import hmi.elckerlyc.planunit.PlanManager;
-import hmi.elckerlyc.scheduler.TimePegAndConstraint;
 import hmi.tts.Bookmark;
 
 import java.util.ArrayList;
@@ -39,6 +29,16 @@ import java.util.List;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import asap.realizer.AbstractPlanner;
+import asap.realizer.BehaviourPlanningException;
+import asap.realizer.SyncAndTimePeg;
+import asap.realizer.feedback.FeedbackManager;
+import asap.realizer.lipsync.LipSynchProvider;
+import asap.realizer.pegboard.BMLBlockPeg;
+import asap.realizer.pegboard.OffsetPeg;
+import asap.realizer.pegboard.TimePeg;
+import asap.realizer.planunit.PlanManager;
+import asap.realizer.scheduler.TimePegAndConstraint;
 import asap.speechengine.ttsbinding.TTSBinding;
 
 /**

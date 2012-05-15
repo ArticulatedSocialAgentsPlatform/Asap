@@ -7,13 +7,10 @@ import java.io.IOException;
 import java.util.List;
 
 import saiba.bml.core.FaceLexemeBehaviour;
-import hmi.elckerlyc.feedback.FeedbackManager;
 import hmi.xml.XMLTokenizer;
 
 import org.junit.Before;
 
-import hmi.elckerlyc.pegboard.BMLBlockPeg;
-import hmi.elckerlyc.planunit.ParameterException;
 import hmi.faceanimation.FaceController;
 import hmi.faceanimation.converters.EmotionConverter;
 import hmi.faceanimation.converters.FACSConverter;
@@ -21,6 +18,9 @@ import hmi.faceanimation.converters.FACSConverter;
 import org.junit.Test;
 
 import asap.faceengine.faceunit.TimedFaceUnit;
+import asap.realizer.feedback.FeedbackManager;
+import asap.realizer.pegboard.BMLBlockPeg;
+import asap.realizer.planunit.ParameterException;
 
 /**
  * Unit testcases for the facebinding

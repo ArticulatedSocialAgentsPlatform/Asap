@@ -9,14 +9,6 @@ import static org.powermock.api.mockito.PowerMockito.mock;
 import static org.powermock.api.mockito.PowerMockito.when;
 import saiba.bml.feedback.BMLExceptionFeedback;
 import saiba.bml.feedback.ListBMLExceptionListener;
-import hmi.elckerlyc.feedback.FeedbackManager;
-import hmi.elckerlyc.feedback.FeedbackManagerImpl;
-import hmi.elckerlyc.pegboard.PegBoard;
-import hmi.elckerlyc.planunit.DefaultTimedPlanUnitPlayer;
-import hmi.elckerlyc.planunit.PlanManager;
-import hmi.elckerlyc.planunit.TimedPlanUnitPlayException;
-import hmi.elckerlyc.planunit.TimedPlanUnitState;
-import hmi.elckerlyc.scheduler.BMLBlockManager;
 import hmi.physics.PhysicalHumanoid;
 import hmi.physics.mixed.MixedSystem;
 import hmi.testutil.animation.HanimBody;
@@ -33,6 +25,14 @@ import org.powermock.modules.junit4.PowerMockRunner;
 
 import asap.animationengine.motionunit.TimedAnimationUnit;
 import asap.animationengine.restpose.SkeletonPoseRestPose;
+import asap.realizer.feedback.FeedbackManager;
+import asap.realizer.feedback.FeedbackManagerImpl;
+import asap.realizer.pegboard.PegBoard;
+import asap.realizer.planunit.DefaultTimedPlanUnitPlayer;
+import asap.realizer.planunit.PlanManager;
+import asap.realizer.planunit.TimedPlanUnitPlayException;
+import asap.realizer.planunit.TimedPlanUnitState;
+import asap.realizer.scheduler.BMLBlockManager;
 
 /**
  * Test cases for the AnimationPlayer 

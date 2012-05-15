@@ -18,12 +18,12 @@
  ******************************************************************************/
 package asap.faceengine.faceunit;
 
-import hmi.elckerlyc.feedback.FeedbackManager;
-import hmi.elckerlyc.pegboard.BMLBlockPeg;
 import hmi.faceanimation.FaceController;
 import hmi.faceanimation.converters.EmotionConverter;
 import hmi.faceanimation.converters.FACSConverter;
 import asap.motionunit.MotionUnit;
+import asap.realizer.feedback.FeedbackManager;
+import asap.realizer.pegboard.BMLBlockPeg;
 
 /**
  * A facial animation, typically with a peak-like structure. 

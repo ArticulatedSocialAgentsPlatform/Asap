@@ -19,19 +19,19 @@
 package asap.animationengine.transitions;
 
 import hmi.animation.VJoint;
-import hmi.elckerlyc.feedback.FeedbackManager;
-import hmi.elckerlyc.pegboard.BMLBlockPeg;
-import hmi.elckerlyc.pegboard.PegBoard;
-import hmi.elckerlyc.planunit.KeyPosition;
-import hmi.elckerlyc.planunit.KeyPositionManager;
-import hmi.elckerlyc.planunit.KeyPositionManagerImpl;
-import hmi.elckerlyc.planunit.ParameterNotFoundException;
 
 import java.util.*;
 
 import asap.animationengine.AnimationPlayer;
 import asap.animationengine.motionunit.AnimationUnit;
 import asap.animationengine.motionunit.TimedAnimationUnit;
+import asap.realizer.feedback.FeedbackManager;
+import asap.realizer.pegboard.BMLBlockPeg;
+import asap.realizer.pegboard.PegBoard;
+import asap.realizer.planunit.KeyPosition;
+import asap.realizer.planunit.KeyPositionManager;
+import asap.realizer.planunit.KeyPositionManagerImpl;
+import asap.realizer.planunit.ParameterNotFoundException;
 
 
 /**

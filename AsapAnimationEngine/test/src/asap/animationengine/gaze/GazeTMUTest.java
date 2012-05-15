@@ -9,16 +9,10 @@ import java.util.Set;
 import hmi.animation.Hanim;
 import hmi.animation.VJoint;
 import saiba.bml.BMLGestureSync;
-import hmi.elckerlyc.feedback.FeedbackManager;
-import hmi.elckerlyc.pegboard.BMLBlockPeg;
-import hmi.elckerlyc.pegboard.PegBoard;
-import hmi.elckerlyc.planunit.AbstractTimedPlanUnitTest;
-import hmi.elckerlyc.planunit.KeyPosition;
-import hmi.elckerlyc.planunit.TimedPlanUnit;
-import hmi.elckerlyc.scheduler.BMLBlockManager;
-import hmi.elckerlyc.util.TimePegUtil;
-import hmi.elckerlyc.world.WorldObject;
-import hmi.elckerlyc.world.WorldObjectManager;
+import asap.realizertestutil.planunit.AbstractTimedPlanUnitTest;
+import asap.realizer.planunit.KeyPosition;
+import asap.realizer.planunit.TimedPlanUnit;
+import asap.realizertestutil.util.TimePegUtil;
 import hmi.testutil.animation.HanimBody;
 
 import org.junit.runner.RunWith;
@@ -29,6 +23,12 @@ import org.powermock.modules.junit4.PowerMockRunner;
 import asap.animationengine.AnimationPlayer;
 import asap.animationengine.motionunit.AnimationUnit;
 import asap.animationengine.restpose.RestPose;
+import asap.realizer.feedback.FeedbackManager;
+import asap.realizer.pegboard.BMLBlockPeg;
+import asap.realizer.pegboard.PegBoard;
+import asap.realizer.scheduler.BMLBlockManager;
+import asap.realizer.world.WorldObject;
+import asap.realizer.world.WorldObjectManager;
 
 /**
  * Unit test cases for the GazeTMU

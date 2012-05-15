@@ -18,7 +18,7 @@
  ******************************************************************************/
 package asap.motionunit;
 
-import hmi.elckerlyc.PlayException;
+import asap.realizer.PlayException;
 
 /**
  * Thrown whenever a MotionUnit fails during play

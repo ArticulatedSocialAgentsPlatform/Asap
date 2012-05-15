@@ -1,8 +1,6 @@
 package asap.speechengine.ttsbinding;
 
 import saiba.bml.core.Behaviour;
-import hmi.elckerlyc.planunit.ParameterException;
-import hmi.elckerlyc.planunit.ParameterNotFoundException;
 import hmi.tts.AbstractTTSGenerator;
 import hmi.tts.TTSBridge;
 import hmi.tts.TTSCallback;
@@ -13,6 +11,9 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+
+import asap.realizer.planunit.ParameterException;
+import asap.realizer.planunit.ParameterNotFoundException;
 
 /**
  * Binds a BML behavior to a TTSBridge 

@@ -18,10 +18,6 @@
  ******************************************************************************/
 package asap.animationengine.gesturebinding;
 
-import hmi.elckerlyc.feedback.FeedbackManager;
-import hmi.elckerlyc.pegboard.BMLBlockPeg;
-import hmi.elckerlyc.pegboard.PegBoard;
-import hmi.elckerlyc.planunit.ParameterException;
 import hmi.util.*;
 import hmi.xml.*;
 
@@ -33,6 +29,10 @@ import org.slf4j.LoggerFactory;
 
 import asap.animationengine.AnimationPlayer;
 import asap.animationengine.motionunit.*;
+import asap.realizer.feedback.FeedbackManager;
+import asap.realizer.pegboard.BMLBlockPeg;
+import asap.realizer.pegboard.PegBoard;
+import asap.realizer.planunit.ParameterException;
 
 
 import saiba.bml.core.Behaviour;

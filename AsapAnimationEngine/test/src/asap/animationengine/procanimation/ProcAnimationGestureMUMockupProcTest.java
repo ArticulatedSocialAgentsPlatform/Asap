@@ -1,6 +1,6 @@
 package asap.animationengine.procanimation;
 
-import static hmi.elckerlyc.util.TimePegUtil.createAbsoluteTimePeg;
+import static asap.realizertestutil.util.TimePegUtil.createAbsoluteTimePeg;
 import static org.junit.Assert.assertEquals;
 import static org.mockito.AdditionalMatchers.eq;
 import static org.mockito.Matchers.any;
@@ -11,13 +11,7 @@ import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 import hmi.animation.VJoint;
 import saiba.bml.BMLGestureSync;
-import hmi.elckerlyc.feedback.FeedbackManager;
-import hmi.elckerlyc.pegboard.BMLBlockPeg;
-import hmi.elckerlyc.pegboard.PegBoard;
-import hmi.elckerlyc.planunit.KeyPosition;
-import hmi.elckerlyc.planunit.TimedPlanUnitPlayException;
-import hmi.elckerlyc.planunit.TimedPlanUnitState;
-import hmi.elckerlyc.util.KeyPositionMocker;
+import asap.realizertestutil.util.KeyPositionMocker;
 import hmi.testutil.animation.HanimBody;
 
 import java.util.Set;
@@ -30,6 +24,12 @@ import asap.animationengine.motionunit.AnimationUnit;
 import asap.animationengine.motionunit.TimedAnimationUnit;
 import asap.animationengine.restpose.RestPose;
 import asap.motionunit.MUPlayException;
+import asap.realizer.feedback.FeedbackManager;
+import asap.realizer.pegboard.BMLBlockPeg;
+import asap.realizer.pegboard.PegBoard;
+import asap.realizer.planunit.KeyPosition;
+import asap.realizer.planunit.TimedPlanUnitPlayException;
+import asap.realizer.planunit.TimedPlanUnitState;
 
 /**
  * Unit test cases for ProcAnimationGestureMU

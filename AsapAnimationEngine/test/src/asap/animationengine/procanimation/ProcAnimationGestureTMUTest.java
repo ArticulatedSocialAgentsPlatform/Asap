@@ -11,16 +11,8 @@ import static org.mockito.Mockito.when;
 import hmi.animation.VJoint;
 import saiba.bml.BMLGestureSync;
 import saiba.bml.parser.Constraint;
-import hmi.elckerlyc.BehaviourPlanningException;
-import hmi.elckerlyc.feedback.FeedbackManager;
-import hmi.elckerlyc.pegboard.BMLBlockPeg;
-import hmi.elckerlyc.pegboard.PegBoard;
-import hmi.elckerlyc.pegboard.TimePeg;
-import hmi.elckerlyc.planunit.KeyPosition;
-import hmi.elckerlyc.scheduler.BMLBlockManager;
-import hmi.elckerlyc.scheduler.TimePegAndConstraint;
-import hmi.elckerlyc.util.KeyPositionMocker;
-import hmi.elckerlyc.util.TimePegUtil;
+import asap.realizertestutil.util.KeyPositionMocker;
+import asap.realizertestutil.util.TimePegUtil;
 import hmi.testutil.animation.HanimBody;
 
 import java.util.ArrayList;
@@ -38,6 +30,14 @@ import asap.animationengine.motionunit.AnimationUnit;
 import asap.animationengine.motionunit.TimedMotionUnitTest;
 import asap.animationengine.restpose.RestPose;
 import asap.motionunit.TMUPlayException;
+import asap.realizer.BehaviourPlanningException;
+import asap.realizer.feedback.FeedbackManager;
+import asap.realizer.pegboard.BMLBlockPeg;
+import asap.realizer.pegboard.PegBoard;
+import asap.realizer.pegboard.TimePeg;
+import asap.realizer.planunit.KeyPosition;
+import asap.realizer.scheduler.BMLBlockManager;
+import asap.realizer.scheduler.TimePegAndConstraint;
 
 /**
  * Unit test cases for ProcAnimationGestureTMUs

@@ -6,19 +6,8 @@ import static org.mockito.Mockito.doThrow;
 import static org.mockito.Mockito.mock;
 import saiba.bml.feedback.BMLExceptionFeedback;
 import saiba.bml.feedback.ListBMLExceptionListener;
-import hmi.elckerlyc.DefaultPlayer;
-import hmi.elckerlyc.Player;
-import hmi.elckerlyc.feedback.FeedbackManager;
-import hmi.elckerlyc.feedback.FeedbackManagerImpl;
-import hmi.elckerlyc.pegboard.BMLBlockPeg;
-import hmi.elckerlyc.planunit.KeyPosition;
-import hmi.elckerlyc.planunit.PlanManager;
-import hmi.elckerlyc.planunit.SingleThreadedPlanPlayer;
-import hmi.elckerlyc.planunit.TimedPlanUnitPlayException;
-import hmi.elckerlyc.planunit.TimedPlanUnitState;
-import hmi.elckerlyc.scheduler.BMLBlockManager;
-import hmi.elckerlyc.util.KeyPositionMocker;
-import hmi.elckerlyc.util.TimePegUtil;
+import asap.realizertestutil.util.KeyPositionMocker;
+import asap.realizertestutil.util.TimePegUtil;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -29,6 +18,18 @@ import org.junit.runner.RunWith;
 import org.powermock.api.mockito.PowerMockito;
 import org.powermock.core.classloader.annotations.PrepareForTest;
 import org.powermock.modules.junit4.PowerMockRunner;
+
+import asap.realizer.DefaultPlayer;
+import asap.realizer.Player;
+import asap.realizer.feedback.FeedbackManager;
+import asap.realizer.feedback.FeedbackManagerImpl;
+import asap.realizer.pegboard.BMLBlockPeg;
+import asap.realizer.planunit.KeyPosition;
+import asap.realizer.planunit.PlanManager;
+import asap.realizer.planunit.SingleThreadedPlanPlayer;
+import asap.realizer.planunit.TimedPlanUnitPlayException;
+import asap.realizer.planunit.TimedPlanUnitState;
+import asap.realizer.scheduler.BMLBlockManager;
 
 /**
  * Unit Test cases for the FacePlayer

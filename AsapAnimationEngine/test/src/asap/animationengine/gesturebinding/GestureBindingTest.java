@@ -28,10 +28,6 @@ import saiba.bml.core.GestureBehaviour;
 import saiba.bml.core.HeadBehaviour;
 import saiba.bml.core.PointingBehaviour;
 import hmi.bml.ext.bmlt.BMLTKeyframeBehaviour;
-import hmi.elckerlyc.feedback.FeedbackManager;
-import hmi.elckerlyc.pegboard.BMLBlockPeg;
-import hmi.elckerlyc.pegboard.PegBoard;
-import hmi.elckerlyc.planunit.ParameterException;
 import hmi.testutil.animation.HanimBody;
 import hmi.util.Resources;
 import hmi.xml.XMLTokenizer;
@@ -44,6 +40,10 @@ import org.junit.Test;
 
 import asap.animationengine.AnimationPlayer;
 import asap.animationengine.motionunit.TimedAnimationUnit;
+import asap.realizer.feedback.FeedbackManager;
+import asap.realizer.pegboard.BMLBlockPeg;
+import asap.realizer.pegboard.PegBoard;
+import asap.realizer.planunit.ParameterException;
 
 /**
  * Test cases for GestureBinding.

@@ -5,13 +5,13 @@ import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
 import hmi.animation.Hanim;
 import hmi.animation.VJoint;
-import hmi.elckerlyc.planunit.ParameterNotFoundException;
 import hmi.testutil.animation.HanimBody;
 
 import org.junit.Before;
 import org.junit.Test;
 
 import asap.animationengine.AnimationPlayer;
+import asap.realizer.planunit.ParameterNotFoundException;
 /**
  * generic TransitionMU testcases
  * @author welberge

@@ -23,9 +23,6 @@ import hmi.animation.Skeleton;
 import hmi.animation.SkeletonPose;
 import hmi.animation.VJoint;
 import hmi.animation.VObjectTransformCopier;
-import hmi.elckerlyc.Player;
-import hmi.elckerlyc.planunit.TimedPlanUnitState;
-import hmi.elckerlyc.world.WorldObjectManager;
 import hmi.mixedanimationenvironment.MixedAnimationPlayer;
 import hmi.physics.PhysicalHumanoid;
 import hmi.physics.PhysicalSegment;
@@ -41,6 +38,9 @@ import net.jcip.annotations.GuardedBy;
 import asap.animationengine.mixed.MixedPlayer;
 import asap.animationengine.mixed.MixedSystemGenerator;
 import asap.animationengine.restpose.RestPose;
+import asap.realizer.Player;
+import asap.realizer.planunit.TimedPlanUnitState;
+import asap.realizer.world.WorldObjectManager;
 import asap.utils.PhysicsSync;
 
 /**

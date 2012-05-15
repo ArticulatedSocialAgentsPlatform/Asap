@@ -7,8 +7,6 @@ import static org.mockito.Mockito.when;
 import hmi.animation.Hanim;
 import hmi.animation.VJoint;
 import saiba.bml.BMLGestureSync;
-import hmi.elckerlyc.pegboard.PegBoard;
-import hmi.elckerlyc.planunit.KeyPosition;
 import hmi.math.Vec3f;
 import hmi.neurophysics.FittsLaw;
 import hmi.testutil.animation.HanimBody;
@@ -19,6 +17,8 @@ import org.junit.Test;
 import asap.animationengine.AnimationPlayer;
 import asap.animationengine.restpose.SkeletonPoseRestPose;
 import asap.motionunit.MUPlayException;
+import asap.realizer.pegboard.PegBoard;
+import asap.realizer.planunit.KeyPosition;
 
 /**
  * Unit tests for a ProcAnimationGestureMU that specifies an endeffector translation

@@ -2,12 +2,6 @@ package asap.animationengine;
 
 import static org.junit.Assert.assertEquals;
 import static org.mockito.Mockito.mock;
-import hmi.elckerlyc.DefaultEngine;
-import hmi.elckerlyc.feedback.FeedbackManager;
-import hmi.elckerlyc.pegboard.BMLBlockPeg;
-import hmi.elckerlyc.pegboard.PegBoard;
-import hmi.elckerlyc.planunit.DefaultTimedPlanUnitPlayer;
-import hmi.elckerlyc.planunit.PlanManager;
 import hmi.physics.PhysicalHumanoid;
 import hmi.physics.mixed.MixedSystem;
 import hmi.testutil.animation.HanimBody;
@@ -22,6 +16,12 @@ import asap.animationengine.gesturebinding.GestureBinding;
 import asap.animationengine.motionunit.AnimationUnit;
 import asap.animationengine.motionunit.TimedAnimationUnit;
 import asap.animationengine.restpose.SkeletonPoseRestPose;
+import asap.realizer.DefaultEngine;
+import asap.realizer.feedback.FeedbackManager;
+import asap.realizer.pegboard.BMLBlockPeg;
+import asap.realizer.pegboard.PegBoard;
+import asap.realizer.planunit.DefaultTimedPlanUnitPlayer;
+import asap.realizer.planunit.PlanManager;
 
 /**
  * Tests if visemeunits are properly added and removed from the animation plan

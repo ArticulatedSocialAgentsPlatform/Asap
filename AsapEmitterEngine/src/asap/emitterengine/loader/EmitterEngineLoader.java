@@ -19,13 +19,6 @@
  ******************************************************************************/
 package asap.emitterengine.loader;
 
-import hmi.elckerlyc.DefaultEngine;
-import hmi.elckerlyc.DefaultPlayer;
-import hmi.elckerlyc.Engine;
-import hmi.elckerlyc.Player;
-import hmi.elckerlyc.planunit.PlanManager;
-import hmi.elckerlyc.planunit.PlanPlayer;
-import hmi.elckerlyc.planunit.SingleThreadedPlanPlayer;
 import hmi.xml.XMLStructureAdapter;
 import hmi.xml.XMLTokenizer;
 
@@ -38,6 +31,13 @@ import asap.emitterengine.planunit.TimedEmitterUnit;
 import asap.environment.AsapVirtualHuman;
 import asap.environment.EngineLoader;
 import asap.environment.Loader;
+import asap.realizer.DefaultEngine;
+import asap.realizer.DefaultPlayer;
+import asap.realizer.Engine;
+import asap.realizer.Player;
+import asap.realizer.planunit.PlanManager;
+import asap.realizer.planunit.PlanPlayer;
+import asap.realizer.planunit.SingleThreadedPlanPlayer;
 import asap.utils.Environment;
 
 /**

@@ -3,12 +3,12 @@ package asap.motionunit.keyframe;
 import java.util.List;
 import asap.motionunit.MUPlayException;
 import asap.motionunit.MotionUnit;
-import hmi.elckerlyc.planunit.KeyPositionManager;
-import hmi.elckerlyc.planunit.KeyPositionManagerImpl;
-import hmi.elckerlyc.planunit.ParameterException;
-import hmi.elckerlyc.planunit.ParameterNotFoundException;
 
 import lombok.Delegate;
+import asap.realizer.planunit.KeyPositionManager;
+import asap.realizer.planunit.KeyPositionManagerImpl;
+import asap.realizer.planunit.ParameterException;
+import asap.realizer.planunit.ParameterNotFoundException;
 import asap.timemanipulator.TimeManipulator;
 import asap.timemanipulator.LinearManipulator;
 

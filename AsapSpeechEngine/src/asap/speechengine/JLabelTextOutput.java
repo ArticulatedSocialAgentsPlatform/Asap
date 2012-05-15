@@ -1,13 +1,14 @@
 package asap.speechengine;
 
-import hmi.elckerlyc.planunit.InvalidParameterException;
-import hmi.elckerlyc.planunit.ParameterException;
-import hmi.elckerlyc.planunit.ParameterNotFoundException;
 import hmi.util.StringUtil;
 
 import java.awt.Font;
 
 import javax.swing.JLabel;
+
+import asap.realizer.planunit.InvalidParameterException;
+import asap.realizer.planunit.ParameterException;
+import asap.realizer.planunit.ParameterNotFoundException;
 
 /**
  * TextOutput that prints the text to a JLabel. The volume parameter is linked to font size.

@@ -19,7 +19,7 @@
 package asap.emitterengine.planunit;
 
 
-import hmi.elckerlyc.PlayException;
+import asap.realizer.PlayException;
 
 /**
  * Thrown whenever an EmitterUnit fails during play

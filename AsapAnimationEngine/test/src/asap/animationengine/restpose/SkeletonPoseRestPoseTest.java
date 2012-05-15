@@ -4,15 +4,15 @@ import static hmi.testutil.math.Quat4fTestUtil.assertQuat4fEquals;
 import static org.junit.Assert.assertEquals;
 import hmi.animation.Hanim;
 import hmi.animation.SkeletonPose;
-import hmi.elckerlyc.feedback.NullFeedbackManager;
-import hmi.elckerlyc.pegboard.BMLBlockPeg;
-import hmi.elckerlyc.pegboard.PegBoard;
-import hmi.elckerlyc.planunit.TimedPlanUnitPlayException;
 import hmi.math.Quat4f;
 
 import org.junit.Test;
 
 import asap.animationengine.motionunit.TimedAnimationUnit;
+import asap.realizer.feedback.NullFeedbackManager;
+import asap.realizer.pegboard.BMLBlockPeg;
+import asap.realizer.pegboard.PegBoard;
+import asap.realizer.planunit.TimedPlanUnitPlayException;
 
 import com.google.common.collect.Sets;
 

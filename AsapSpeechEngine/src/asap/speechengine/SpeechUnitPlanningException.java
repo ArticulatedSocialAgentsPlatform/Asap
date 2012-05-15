@@ -1,6 +1,6 @@
 package asap.speechengine;
 
-import hmi.elckerlyc.planunit.TimedPlanUnit;
+import asap.realizer.planunit.TimedPlanUnit;
 
 /**
  * Exception in the planning of a timed speech unit 

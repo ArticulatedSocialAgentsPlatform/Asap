@@ -18,13 +18,6 @@
  * along with Elckerlyc.  If not, see http://www.gnu.org/licenses/.
  ******************************************************************************/
 package asap.environment.impl;
-import hmi.elckerlyc.DefaultEngine;
-import hmi.elckerlyc.DefaultPlayer;
-import hmi.elckerlyc.Engine;
-import hmi.elckerlyc.activate.ActivatePlanner;
-import hmi.elckerlyc.activate.TimedActivateUnit;
-import hmi.elckerlyc.planunit.PlanManager;
-import hmi.elckerlyc.planunit.SingleThreadedPlanPlayer;
 import hmi.xml.XMLTokenizer;
 
 import java.io.IOException;
@@ -32,6 +25,13 @@ import java.io.IOException;
 import asap.environment.AsapVirtualHuman;
 import asap.environment.EngineLoader;
 import asap.environment.Loader;
+import asap.realizer.DefaultEngine;
+import asap.realizer.DefaultPlayer;
+import asap.realizer.Engine;
+import asap.realizer.activate.ActivatePlanner;
+import asap.realizer.activate.TimedActivateUnit;
+import asap.realizer.planunit.PlanManager;
+import asap.realizer.planunit.SingleThreadedPlanPlayer;
 import asap.utils.Environment;
 
 /**

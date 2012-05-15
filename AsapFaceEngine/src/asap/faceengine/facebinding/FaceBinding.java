@@ -19,9 +19,6 @@
 package asap.faceengine.facebinding;
 
 import saiba.bml.core.Behaviour;
-import hmi.elckerlyc.feedback.FeedbackManager;
-import hmi.elckerlyc.pegboard.BMLBlockPeg;
-import hmi.elckerlyc.planunit.ParameterException;
 import hmi.faceanimation.FaceController;
 import hmi.faceanimation.converters.EmotionConverter;
 import hmi.faceanimation.converters.FACSConverter;
@@ -37,6 +34,9 @@ import org.slf4j.LoggerFactory;
 
 import asap.faceengine.faceunit.FaceUnit;
 import asap.faceengine.faceunit.TimedFaceUnit;
+import asap.realizer.feedback.FeedbackManager;
+import asap.realizer.pegboard.BMLBlockPeg;
+import asap.realizer.planunit.ParameterException;
 
 /**
  * The FaceBinding maps from BML to a set of faceunits

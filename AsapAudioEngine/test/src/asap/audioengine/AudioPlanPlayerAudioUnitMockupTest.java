@@ -3,13 +3,13 @@ package asap.audioengine;
 import static org.junit.Assert.assertEquals;
 import static org.mockito.Mockito.when;
 import static org.powermock.api.mockito.PowerMockito.mock;
-import hmi.elckerlyc.feedback.FeedbackManager;
-import hmi.elckerlyc.planunit.MultiThreadedPlanPlayer;
-import hmi.elckerlyc.planunit.PlanManager;
 
 import org.junit.Test;
 
 import asap.audioengine.TimedAbstractAudioUnit;
+import asap.realizer.feedback.FeedbackManager;
+import asap.realizer.planunit.MultiThreadedPlanPlayer;
+import asap.realizer.planunit.PlanManager;
 
 public class AudioPlanPlayerAudioUnitMockupTest
 {

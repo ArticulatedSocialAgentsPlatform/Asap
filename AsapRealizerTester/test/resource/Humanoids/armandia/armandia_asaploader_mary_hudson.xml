@@ -5,7 +5,7 @@
       <BMLAttributeExtension class="hmi.bml.ext.bmlt.BMLTBMLBehaviorAttributes"/>
     </BMLParser>
     <BMLScheduler>
-      <SchedulingHandler class="asap.scheduler.BMLBandTSchedulingHandler" schedulingStrategy="hmi.elckerlyc.scheduler.SortedSmartBodySchedulingStrategy"/>
+      <SchedulingHandler class="asap.realizer.scheduler.BMLBandTSchedulingHandler" schedulingStrategy="asap.realizer.scheduler.SortedSmartBodySchedulingStrategy"/>
     </BMLScheduler>
   </BMLRealizer>
 

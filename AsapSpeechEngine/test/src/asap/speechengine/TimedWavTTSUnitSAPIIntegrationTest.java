@@ -8,10 +8,10 @@ import org.junit.runner.RunWith;
 import org.powermock.core.classloader.annotations.PrepareForTest;
 import org.powermock.modules.junit4.PowerMockRunner;
 
+import asap.realizer.scheduler.BMLBlockManager;
 import asap.speechengine.ttsbinding.SAPITTSBinding;
 
 
-import hmi.elckerlyc.scheduler.BMLBlockManager;
 import hmi.util.OS;
 
 @RunWith(PowerMockRunner.class)

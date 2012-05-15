@@ -18,8 +18,6 @@
  ******************************************************************************/
 package asap.environment;
 
-import hmi.elckerlyc.Engine;
-import hmi.elckerlyc.world.WorldObjectManager;
 import hmi.util.ClockListener;
 
 import java.io.IOException;
@@ -36,6 +34,8 @@ import net.jcip.annotations.GuardedBy;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import asap.realizer.Engine;
+import asap.realizer.world.WorldObjectManager;
 import asap.utils.Environment;
 import asap.utils.SchedulingClock;
 

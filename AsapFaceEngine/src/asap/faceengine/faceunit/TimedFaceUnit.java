@@ -18,9 +18,9 @@
  ******************************************************************************/
 package asap.faceengine.faceunit;
 
-import hmi.elckerlyc.feedback.FeedbackManager;
-import hmi.elckerlyc.pegboard.BMLBlockPeg;
 import asap.motionunit.TimedMotionUnit;
+import asap.realizer.feedback.FeedbackManager;
+import asap.realizer.pegboard.BMLBlockPeg;
 /**
  * When you do not set an end time peg, 'UNKNOWN' is assumed. This leads to the faceunit being timed
  * as starttime..starttime+getpreferredduration

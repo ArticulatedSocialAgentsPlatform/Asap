@@ -6,16 +6,16 @@ import static org.junit.Assert.assertNotNull;
 import static org.mockito.Mockito.mock;
 import saiba.bml.core.BehaviourBlock;
 import saiba.bml.parser.BMLParser;
-import hmi.elckerlyc.feedback.FeedbackManager;
-import hmi.elckerlyc.pegboard.PegBoard;
-import hmi.elckerlyc.scheduler.BMLBlockManager;
-import hmi.elckerlyc.scheduler.BMLScheduler;
-import hmi.elckerlyc.scheduler.SchedulingHandler;
-import hmi.elckerlyc.scheduler.SchedulingStrategy;
-import hmi.elckerlyc.scheduler.SmartBodySchedulingStrategy;
 
 import org.junit.Test;
 
+import asap.realizer.feedback.FeedbackManager;
+import asap.realizer.pegboard.PegBoard;
+import asap.realizer.scheduler.BMLBlockManager;
+import asap.realizer.scheduler.BMLScheduler;
+import asap.realizer.scheduler.SchedulingHandler;
+import asap.realizer.scheduler.SchedulingStrategy;
+import asap.realizer.scheduler.SmartBodySchedulingStrategy;
 import asap.utils.SchedulingClock;
 
 /**

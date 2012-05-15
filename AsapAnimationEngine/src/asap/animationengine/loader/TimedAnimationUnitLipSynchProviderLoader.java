@@ -2,7 +2,6 @@ package asap.animationengine.loader;
 
 import asap.animationengine.gesturebinding.SpeechBinding;
 import asap.animationengine.lipsync.TimedAnimationUnitLipSynchProvider;
-import hmi.elckerlyc.lipsync.LipSynchProvider;
 import hmi.util.Resources;
 import hmi.xml.XMLStructureAdapter;
 import hmi.xml.XMLTokenizer;
@@ -13,6 +12,7 @@ import java.util.HashMap;
 import asap.environment.AsapVirtualHuman;
 import asap.environment.LipSynchProviderLoader;
 import asap.environment.Loader;
+import asap.realizer.lipsync.LipSynchProvider;
 import asap.utils.Environment;
 
 /**

@@ -6,8 +6,6 @@ import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
 import hmi.animation.VJoint;
 import saiba.bml.BMLGestureSync;
-import hmi.elckerlyc.pegboard.PegBoard;
-import hmi.elckerlyc.planunit.KeyPosition;
 import hmi.math.Quat4f;
 import hmi.testutil.animation.HanimBody;
 
@@ -21,6 +19,8 @@ import asap.animationengine.motionunit.AnimationUnit;
 import asap.animationengine.restpose.RestPose;
 import asap.animationengine.restpose.SkeletonPoseRestPose;
 import asap.motionunit.MUPlayException;
+import asap.realizer.pegboard.PegBoard;
+import asap.realizer.planunit.KeyPosition;
 
 /**
  * Unit test case for a ProcAnimationGestureMU that specifies keyframes

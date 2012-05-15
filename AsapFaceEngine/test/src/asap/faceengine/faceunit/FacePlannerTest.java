@@ -9,23 +9,11 @@ import saiba.bml.core.FaceLexemeBehaviour;
 import saiba.bml.feedback.BMLExceptionFeedback;
 import saiba.bml.feedback.ListBMLExceptionListener;
 import saiba.bml.parser.Constraint;
-import hmi.elckerlyc.BehaviourPlanningException;
-import hmi.elckerlyc.DefaultPlayer;
-import hmi.elckerlyc.PlannerTests;
-import hmi.elckerlyc.Player;
-import hmi.elckerlyc.feedback.FeedbackManager;
-import hmi.elckerlyc.feedback.FeedbackManagerImpl;
-import hmi.elckerlyc.pegboard.BMLBlockPeg;
-import hmi.elckerlyc.pegboard.TimePeg;
-import hmi.elckerlyc.planunit.KeyPosition;
-import hmi.elckerlyc.planunit.PlanManager;
-import hmi.elckerlyc.planunit.SingleThreadedPlanPlayer;
-import hmi.elckerlyc.planunit.TimedPlanUnitPlayException;
-import hmi.elckerlyc.planunit.TimedPlanUnitState;
-import hmi.elckerlyc.scheduler.BMLBlockManager;
-import hmi.elckerlyc.scheduler.TimePegAndConstraint;
-import hmi.elckerlyc.util.KeyPositionMocker;
-import hmi.elckerlyc.util.TimePegUtil;
+import asap.realizertestutil.PlannerTests;
+import asap.realizer.planunit.SingleThreadedPlanPlayer;
+import asap.realizer.planunit.TimedPlanUnitPlayException;
+import asap.realizertestutil.util.KeyPositionMocker;
+import asap.realizertestutil.util.TimePegUtil;
 import hmi.faceanimation.FaceController;
 import hmi.faceanimation.converters.EmotionConverter;
 import hmi.faceanimation.converters.FACSConverter;
@@ -44,6 +32,18 @@ import org.powermock.modules.junit4.PowerMockRunner;
 
 import asap.faceengine.FacePlanner;
 import asap.faceengine.facebinding.FaceBinding;
+import asap.realizer.BehaviourPlanningException;
+import asap.realizer.DefaultPlayer;
+import asap.realizer.Player;
+import asap.realizer.feedback.FeedbackManager;
+import asap.realizer.feedback.FeedbackManagerImpl;
+import asap.realizer.pegboard.BMLBlockPeg;
+import asap.realizer.pegboard.TimePeg;
+import asap.realizer.planunit.KeyPosition;
+import asap.realizer.planunit.PlanManager;
+import asap.realizer.planunit.TimedPlanUnitState;
+import asap.realizer.scheduler.BMLBlockManager;
+import asap.realizer.scheduler.TimePegAndConstraint;
 
 /**
  * Unit test cases for the FacePlanner

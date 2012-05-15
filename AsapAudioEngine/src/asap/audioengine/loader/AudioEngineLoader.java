@@ -20,12 +20,6 @@
 package asap.audioengine.loader;
 
 import hmi.audioenvironment.AudioEnvironment;
-import hmi.elckerlyc.DefaultEngine;
-import hmi.elckerlyc.DefaultPlayer;
-import hmi.elckerlyc.Engine;
-import hmi.elckerlyc.Player;
-import hmi.elckerlyc.planunit.MultiThreadedPlanPlayer;
-import hmi.elckerlyc.planunit.PlanManager;
 import hmi.util.Resources;
 import hmi.xml.XMLTokenizer;
 
@@ -36,6 +30,12 @@ import asap.audioengine.TimedAbstractAudioUnit;
 import asap.environment.AsapVirtualHuman;
 import asap.environment.EngineLoader;
 import asap.environment.Loader;
+import asap.realizer.DefaultEngine;
+import asap.realizer.DefaultPlayer;
+import asap.realizer.Engine;
+import asap.realizer.Player;
+import asap.realizer.planunit.MultiThreadedPlanPlayer;
+import asap.realizer.planunit.PlanManager;
 import asap.utils.Environment;
 
 /**

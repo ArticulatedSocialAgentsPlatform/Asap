@@ -4,7 +4,6 @@ import static hmi.testutil.math.Quat4fTestUtil.assertQuat4fRotationEquivalent;
 import static hmi.testutil.math.Vec3fTestUtil.assertVec3fEquals;
 import static org.junit.Assert.assertEquals;
 import hmi.animation.VJoint;
-import hmi.elckerlyc.planunit.ParameterException;
 import hmi.math.Quat4f;
 import hmi.math.Vec3f;
 import hmi.testutil.animation.HanimBody;
@@ -16,6 +15,7 @@ import org.junit.Test;
 
 import asap.animationengine.motionunit.AnimationUnit;
 import asap.motionunit.MUPlayException;
+import asap.realizer.planunit.ParameterException;
 /**
  * Unit test cases for the ProcAnimationMU
  * @author hvanwelbergen

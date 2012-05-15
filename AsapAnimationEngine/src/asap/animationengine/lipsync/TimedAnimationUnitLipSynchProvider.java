@@ -1,13 +1,6 @@
 package asap.animationengine.lipsync;
 
 import saiba.bml.core.Behaviour;
-import hmi.elckerlyc.lipsync.LipSynchProvider;
-import hmi.elckerlyc.pegboard.BMLBlockPeg;
-import hmi.elckerlyc.pegboard.OffsetPeg;
-import hmi.elckerlyc.pegboard.PegBoard;
-import hmi.elckerlyc.pegboard.TimePeg;
-import hmi.elckerlyc.planunit.PlanManager;
-import hmi.elckerlyc.planunit.TimedPlanUnit;
 import hmi.tts.Visime;
 
 import java.util.ArrayList;
@@ -19,6 +12,13 @@ import asap.animationengine.AnimationPlayer;
 import asap.animationengine.gesturebinding.SpeechBinding;
 import asap.animationengine.motionunit.MUSetupException;
 import asap.animationengine.motionunit.TimedAnimationUnit;
+import asap.realizer.lipsync.LipSynchProvider;
+import asap.realizer.pegboard.BMLBlockPeg;
+import asap.realizer.pegboard.OffsetPeg;
+import asap.realizer.pegboard.PegBoard;
+import asap.realizer.pegboard.TimePeg;
+import asap.realizer.planunit.PlanManager;
+import asap.realizer.planunit.TimedPlanUnit;
 
 /**
  * Creates TimedMotionUnit for lipsync

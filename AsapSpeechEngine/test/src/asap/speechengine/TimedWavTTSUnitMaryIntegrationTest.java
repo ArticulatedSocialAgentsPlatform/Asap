@@ -7,10 +7,10 @@ import org.junit.runner.RunWith;
 import org.powermock.core.classloader.annotations.PrepareForTest;
 import org.powermock.modules.junit4.PowerMockRunner;
 
+import asap.realizer.scheduler.BMLBlockManager;
 import asap.speechengine.ttsbinding.MaryTTSBinding;
 
 
-import hmi.elckerlyc.scheduler.BMLBlockManager;
 import hmi.tts.util.NullPhonemeToVisemeMapping;
 
 @RunWith(PowerMockRunner.class)

@@ -1,14 +1,14 @@
 package asap.animationengine.restpose;
 
 import hmi.animation.VJoint;
-import hmi.elckerlyc.feedback.FeedbackManager;
-import hmi.elckerlyc.pegboard.BMLBlockPeg;
 
 import java.util.Set;
 
 import asap.animationengine.AnimationPlayer;
 import asap.animationengine.motionunit.AnimationUnit;
 import asap.animationengine.motionunit.TimedAnimationUnit;
+import asap.realizer.feedback.FeedbackManager;
+import asap.realizer.pegboard.BMLBlockPeg;
 
 /**
  * The restpose is a dynamic controller that handles all animation

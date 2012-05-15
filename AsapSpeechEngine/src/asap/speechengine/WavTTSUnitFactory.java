@@ -1,10 +1,10 @@
 package asap.speechengine;
 
+import asap.realizer.feedback.FeedbackManager;
+import asap.realizer.pegboard.BMLBlockPeg;
 import asap.speechengine.ttsbinding.TTSBinding;
 import hmi.audioenvironment.SoundManager;
 import saiba.bml.core.Behaviour;
-import hmi.elckerlyc.feedback.FeedbackManager;
-import hmi.elckerlyc.pegboard.BMLBlockPeg;
 
 /**
  * Factory to generate WavSpeechUnit

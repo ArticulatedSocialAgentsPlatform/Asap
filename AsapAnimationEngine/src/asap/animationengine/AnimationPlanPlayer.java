@@ -1,14 +1,6 @@
 package asap.animationengine;
 
 import saiba.bml.feedback.BMLExceptionListener;
-import hmi.elckerlyc.feedback.FeedbackManager;
-import hmi.elckerlyc.feedback.NullFeedbackManager;
-import hmi.elckerlyc.planunit.PlanManager;
-import hmi.elckerlyc.planunit.PlanPlayer;
-import hmi.elckerlyc.planunit.SingleThreadedPlanPlayer;
-import hmi.elckerlyc.planunit.TimedPlanUnit;
-import hmi.elckerlyc.planunit.TimedPlanUnitPlayer;
-import hmi.elckerlyc.planunit.TimedPlanUnitState;
 
 import java.util.ArrayList;
 import java.util.Collections;
@@ -20,7 +12,15 @@ import lombok.extern.slf4j.Slf4j;
 import asap.animationengine.motionunit.TimedAnimationUnit;
 import asap.animationengine.restpose.RestPose;
 import asap.motionunit.TMUPlayException;
-import asap.planunit.PlanUnitPriorityComparator;
+import asap.realizer.feedback.FeedbackManager;
+import asap.realizer.feedback.NullFeedbackManager;
+import asap.realizer.planunit.PlanManager;
+import asap.realizer.planunit.PlanPlayer;
+import asap.realizer.planunit.PlanUnitPriorityComparator;
+import asap.realizer.planunit.SingleThreadedPlanPlayer;
+import asap.realizer.planunit.TimedPlanUnit;
+import asap.realizer.planunit.TimedPlanUnitPlayer;
+import asap.realizer.planunit.TimedPlanUnitState;
 
 import com.google.common.collect.Sets;
 

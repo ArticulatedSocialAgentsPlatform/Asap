@@ -1,7 +1,7 @@
 package asap.speechengine;
 
-import hmi.elckerlyc.planunit.ParameterException;
-import hmi.elckerlyc.planunit.ParameterNotFoundException;
+import asap.realizer.planunit.ParameterException;
+import asap.realizer.planunit.ParameterNotFoundException;
 
 /**
  * TextOutput that prints the text to the stdout

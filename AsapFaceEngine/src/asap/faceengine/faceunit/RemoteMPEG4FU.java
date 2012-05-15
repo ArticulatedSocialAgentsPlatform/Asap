@@ -18,13 +18,6 @@
  ******************************************************************************/
 package asap.faceengine.faceunit;
 
-import hmi.elckerlyc.feedback.FeedbackManager;
-import hmi.elckerlyc.pegboard.BMLBlockPeg;
-import hmi.elckerlyc.planunit.KeyPosition;
-import hmi.elckerlyc.planunit.KeyPositionManager;
-import hmi.elckerlyc.planunit.KeyPositionManagerImpl;
-import hmi.elckerlyc.planunit.ParameterException;
-import hmi.elckerlyc.planunit.ParameterNotFoundException;
 import hmi.faceanimation.FaceController;
 import hmi.faceanimation.converters.EmotionConverter;
 import hmi.faceanimation.converters.FACSConverter;
@@ -37,6 +30,13 @@ import java.net.Socket;
 import java.net.UnknownHostException;
 import lombok.Delegate;
 
+import asap.realizer.feedback.FeedbackManager;
+import asap.realizer.pegboard.BMLBlockPeg;
+import asap.realizer.planunit.KeyPosition;
+import asap.realizer.planunit.KeyPositionManager;
+import asap.realizer.planunit.KeyPositionManagerImpl;
+import asap.realizer.planunit.ParameterException;
+import asap.realizer.planunit.ParameterNotFoundException;
 import asap.utils.AnimationSync;
 
 /**

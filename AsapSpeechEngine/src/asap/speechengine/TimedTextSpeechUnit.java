@@ -1,13 +1,6 @@
 package asap.speechengine;
 
 import saiba.bml.feedback.BMLSyncPointProgressFeedback;
-import hmi.elckerlyc.feedback.FeedbackManager;
-import hmi.elckerlyc.feedback.NullFeedbackManager;
-import hmi.elckerlyc.pegboard.BMLBlockPeg;
-import hmi.elckerlyc.pegboard.TimePeg;
-import hmi.elckerlyc.planunit.ParameterException;
-import hmi.elckerlyc.planunit.ParameterNotFoundException;
-import hmi.elckerlyc.planunit.TimedPlanUnitPlayException;
 import hmi.tts.util.BMLTextUtil;
 import hmi.tts.util.SyncAndOffset;
 
@@ -18,6 +11,14 @@ import java.util.Map;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+
+import asap.realizer.feedback.FeedbackManager;
+import asap.realizer.feedback.NullFeedbackManager;
+import asap.realizer.pegboard.BMLBlockPeg;
+import asap.realizer.pegboard.TimePeg;
+import asap.realizer.planunit.ParameterException;
+import asap.realizer.planunit.ParameterNotFoundException;
+import asap.realizer.planunit.TimedPlanUnitPlayException;
 
 /**
  * Implements a SpeechBehaviour by sending the speech text at a certain SPEECH_RATE

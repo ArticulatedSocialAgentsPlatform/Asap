@@ -23,18 +23,6 @@ import saiba.bml.core.Behaviour;
 import saiba.bml.core.FaceLexemeBehaviour;
 import saiba.bml.core.ext.FaceFacsBehaviour;
 import hmi.bml.ext.bmlt.BMLTFaceMorphBehaviour;
-import hmi.elckerlyc.AbstractPlanner;
-import hmi.elckerlyc.BehaviourPlanningException;
-import hmi.elckerlyc.SyncAndTimePeg;
-import hmi.elckerlyc.feedback.FeedbackManager;
-import hmi.elckerlyc.pegboard.BMLBlockPeg;
-import hmi.elckerlyc.pegboard.OffsetPeg;
-import hmi.elckerlyc.pegboard.TimePeg;
-import hmi.elckerlyc.planunit.KeyPosition;
-import hmi.elckerlyc.planunit.PlanManager;
-import hmi.elckerlyc.scheduler.LinearStretchResolver;
-import hmi.elckerlyc.scheduler.TimePegAndConstraint;
-import hmi.elckerlyc.scheduler.UniModalResolver;
 import hmi.faceanimation.FaceController;
 import hmi.faceanimation.converters.EmotionConverter;
 import hmi.faceanimation.converters.FACSConverter;
@@ -47,6 +35,18 @@ import asap.faceengine.facebinding.FaceBinding;
 import asap.faceengine.facebinding.MURMLFUBuilder;
 import asap.faceengine.faceunit.FaceUnit;
 import asap.faceengine.faceunit.TimedFaceUnit;
+import asap.realizer.AbstractPlanner;
+import asap.realizer.BehaviourPlanningException;
+import asap.realizer.SyncAndTimePeg;
+import asap.realizer.feedback.FeedbackManager;
+import asap.realizer.pegboard.BMLBlockPeg;
+import asap.realizer.pegboard.OffsetPeg;
+import asap.realizer.pegboard.TimePeg;
+import asap.realizer.planunit.KeyPosition;
+import asap.realizer.planunit.PlanManager;
+import asap.realizer.scheduler.LinearStretchResolver;
+import asap.realizer.scheduler.TimePegAndConstraint;
+import asap.realizer.scheduler.UniModalResolver;
 
 /**
  * This planner will in the future support planning of face behaviors -- i.e. face expressions and such. In addition, the faceplanner allows for the

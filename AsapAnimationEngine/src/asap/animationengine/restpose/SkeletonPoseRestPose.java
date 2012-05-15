@@ -3,13 +3,6 @@ package asap.animationengine.restpose;
 import hmi.animation.SkeletonPose;
 import hmi.animation.VJoint;
 import hmi.animation.VObjectTransformCopier;
-import hmi.elckerlyc.feedback.FeedbackManager;
-import hmi.elckerlyc.pegboard.BMLBlockPeg;
-import hmi.elckerlyc.pegboard.OffsetPeg;
-import hmi.elckerlyc.pegboard.PegBoard;
-import hmi.elckerlyc.pegboard.TimePeg;
-import hmi.elckerlyc.planunit.KeyPosition;
-import hmi.elckerlyc.planunit.TimedPlanUnitState;
 import hmi.math.Quat4f;
 
 import java.util.ArrayList;
@@ -22,6 +15,13 @@ import asap.animationengine.motionunit.TimedAnimationUnit;
 import asap.animationengine.transitions.SlerpTransitionToPoseMU;
 import asap.animationengine.transitions.TransitionMU;
 import asap.animationengine.transitions.TransitionTMU;
+import asap.realizer.feedback.FeedbackManager;
+import asap.realizer.pegboard.BMLBlockPeg;
+import asap.realizer.pegboard.OffsetPeg;
+import asap.realizer.pegboard.PegBoard;
+import asap.realizer.pegboard.TimePeg;
+import asap.realizer.planunit.KeyPosition;
+import asap.realizer.planunit.TimedPlanUnitState;
 
 /**
  * A simple static rest-pose implementation; the restpose is specified by a SkeletonPose

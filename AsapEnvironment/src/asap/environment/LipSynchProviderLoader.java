@@ -1,6 +1,6 @@
 package asap.environment;
 
-import hmi.elckerlyc.lipsync.LipSynchProvider;
+import asap.realizer.lipsync.LipSynchProvider;
 
 /**
  * Loader interface for LipSynchProvider  

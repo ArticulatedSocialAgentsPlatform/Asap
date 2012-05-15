@@ -2,14 +2,6 @@ package asap.animationengine.procanimation;
 
 import saiba.bml.BMLGestureSync;
 import saiba.bml.core.Behaviour;
-import hmi.elckerlyc.BehaviourPlanningException;
-import hmi.elckerlyc.feedback.FeedbackManager;
-import hmi.elckerlyc.pegboard.BMLBlockPeg;
-import hmi.elckerlyc.pegboard.OffsetPeg;
-import hmi.elckerlyc.pegboard.PegBoard;
-import hmi.elckerlyc.pegboard.TimePeg;
-import hmi.elckerlyc.planunit.TimedPlanUnitPlayException;
-import hmi.elckerlyc.scheduler.TimePegAndConstraint;
 
 import java.util.ArrayList;
 import java.util.HashSet;
@@ -19,7 +11,15 @@ import java.util.Set;
 import lombok.extern.slf4j.Slf4j;
 import asap.animationengine.motionunit.TimedAnimationUnit;
 import asap.motionunit.TMUPlayException;
-import asap.planunit.Priority;
+import asap.realizer.BehaviourPlanningException;
+import asap.realizer.feedback.FeedbackManager;
+import asap.realizer.pegboard.BMLBlockPeg;
+import asap.realizer.pegboard.OffsetPeg;
+import asap.realizer.pegboard.PegBoard;
+import asap.realizer.pegboard.TimePeg;
+import asap.realizer.planunit.Priority;
+import asap.realizer.planunit.TimedPlanUnitPlayException;
+import asap.realizer.scheduler.TimePegAndConstraint;
 
 /**
  * TimedMotionUnit for ProcAnimationGestureMU
