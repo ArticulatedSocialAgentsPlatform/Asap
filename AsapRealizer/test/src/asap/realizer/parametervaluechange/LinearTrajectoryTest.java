@@ -1,10 +1,8 @@
 package asap.realizer.parametervaluechange;
 
-import static org.junit.Assert.*;
+import static org.junit.Assert.assertEquals;
 
 import org.junit.Test;
-
-import asap.realizer.parametervaluechange.LinearTrajectory;
 
 /**
  * Unit test cases for the LinearTrajectory trajectory

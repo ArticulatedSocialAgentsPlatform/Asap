@@ -1,20 +1,20 @@
 package asap.realizer.scheduler;
 
-import static org.junit.Assert.*;
-import static org.mockito.Mockito.*;
+import static org.junit.Assert.assertEquals;
+import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.times;
+import static org.mockito.Mockito.verify;
+import static org.mockito.Mockito.when;
 
 import java.util.HashSet;
-
-import saiba.bml.BMLGestureSync;
 
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.powermock.core.classloader.annotations.PrepareForTest;
 import org.powermock.modules.junit4.PowerMockRunner;
 
+import saiba.bml.BMLGestureSync;
 import asap.realizer.planunit.TimedPlanUnitState;
-import asap.realizer.scheduler.BMLScheduler;
-import asap.realizer.scheduler.BMLTBlock;
 
 import com.google.common.collect.ImmutableMap;
 import com.google.common.collect.Sets;

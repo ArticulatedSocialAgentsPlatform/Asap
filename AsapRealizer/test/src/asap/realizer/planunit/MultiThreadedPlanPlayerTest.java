@@ -2,9 +2,6 @@ package asap.realizer.planunit;
 
 import org.junit.After;
 
-import asap.realizer.planunit.MultiThreadedPlanPlayer;
-import asap.realizer.planunit.PlanPlayer;
-import asap.realizer.planunit.TimedPlanUnit;
 import asap.realizertestutil.planunit.AbstractPlanPlayerTest;
 
 /**

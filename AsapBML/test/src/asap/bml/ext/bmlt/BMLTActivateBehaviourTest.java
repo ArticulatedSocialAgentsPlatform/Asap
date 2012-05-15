@@ -1,17 +1,14 @@
 package asap.bml.ext.bmlt;
 
-import static org.junit.Assert.*;
-
-import java.io.IOException;
-
-import saiba.bml.core.BehaviourBlock;
+import static org.junit.Assert.assertEquals;
 import hmi.xml.XMLFormatting;
 import hmi.xml.XMLTokenizer;
 
+import java.io.IOException;
+
 import org.junit.Test;
 
-import asap.bml.ext.bmlt.BMLTActivateBehaviour;
-import asap.bml.ext.bmlt.BMLTInfo;
+import saiba.bml.core.BehaviourBlock;
 
 /**
  * Unit tests for the activate behavior

@@ -1,22 +1,24 @@
 package asap.realizer.parametervaluechange;
 
+import static asap.realizertestutil.util.TimePegUtil.createTimePeg;
+import static org.hamcrest.MatcherAssert.assertThat;
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertFalse;
+import static org.junit.Assert.assertTrue;
+import static org.mockito.Mockito.times;
+import static org.mockito.Mockito.verify;
+import static org.powermock.api.mockito.PowerMockito.doThrow;
+import static org.powermock.api.mockito.PowerMockito.mock;
+import static org.powermock.api.mockito.PowerMockito.when;
+
+import org.hamcrest.collection.IsIterableContainingInOrder;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.powermock.core.classloader.annotations.PrepareForTest;
 import org.powermock.modules.junit4.PowerMockRunner;
 
-import asap.realizertestutil.planunit.AbstractTimedPlanUnitTest;
-import asap.realizertestutil.util.FeedbackListUtils;
-import static org.hamcrest.MatcherAssert.assertThat;
-import static org.junit.Assert.*;
-
-import org.hamcrest.collection.*;
-
 import asap.realizer.BehaviorNotFoundException;
 import asap.realizer.feedback.FeedbackManager;
-import asap.realizer.parametervaluechange.ParameterValueInfo;
-import asap.realizer.parametervaluechange.ParameterValueTrajectory;
-import asap.realizer.parametervaluechange.TimedParameterValueChangeUnit;
 import asap.realizer.pegboard.BMLBlockPeg;
 import asap.realizer.pegboard.TimePeg;
 import asap.realizer.planunit.ParameterException;
@@ -26,13 +28,10 @@ import asap.realizer.planunit.TimedPlanUnitPlayException;
 import asap.realizer.planunit.TimedPlanUnitState;
 import asap.realizer.scheduler.BMLBlockManager;
 import asap.realizer.scheduler.BMLScheduler;
+import asap.realizertestutil.planunit.AbstractTimedPlanUnitTest;
+import asap.realizertestutil.util.FeedbackListUtils;
 
 import com.google.common.collect.ImmutableSet;
-
-import static org.powermock.api.mockito.PowerMockito.*;
-import static org.mockito.Mockito.times;
-import static org.mockito.Mockito.verify;
-import static asap.realizertestutil.util.TimePegUtil.*;
 
 /**
  * Unit testcases for TimedParameterValueChangeUnit

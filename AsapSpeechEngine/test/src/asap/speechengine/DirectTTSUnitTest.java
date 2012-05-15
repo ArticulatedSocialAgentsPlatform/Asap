@@ -4,10 +4,6 @@ import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
 import static org.mockito.Mockito.mock;
 import static org.powermock.api.mockito.PowerMockito.when;
-import saiba.bml.core.SpeechBehaviour;
-import saiba.bml.feedback.BMLSyncPointProgressFeedback;
-import saiba.bml.feedback.ListFeedbackListener;
-import asap.realizertestutil.planunit.AbstractTimedPlanUnitTest;
 import hmi.tts.TimingInfo;
 
 import java.util.ArrayList;
@@ -18,6 +14,9 @@ import org.junit.runner.RunWith;
 import org.powermock.core.classloader.annotations.PrepareForTest;
 import org.powermock.modules.junit4.PowerMockRunner;
 
+import saiba.bml.core.SpeechBehaviour;
+import saiba.bml.feedback.BMLSyncPointProgressFeedback;
+import saiba.bml.feedback.ListFeedbackListener;
 import asap.realizer.feedback.FeedbackManager;
 import asap.realizer.feedback.FeedbackManagerImpl;
 import asap.realizer.pegboard.BMLBlockPeg;
@@ -26,9 +25,7 @@ import asap.realizer.planunit.TimedPlanUnit;
 import asap.realizer.planunit.TimedPlanUnitPlayException;
 import asap.realizer.planunit.TimedPlanUnitState;
 import asap.realizer.scheduler.BMLBlockManager;
-import asap.speechengine.SpeechUnitPlanningException;
-import asap.speechengine.TimedDirectTTSUnit;
-import asap.speechengine.TimedTTSUnit;
+import asap.realizertestutil.planunit.AbstractTimedPlanUnitTest;
 import asap.speechengine.ttsbinding.TTSBinding;
 
 /**

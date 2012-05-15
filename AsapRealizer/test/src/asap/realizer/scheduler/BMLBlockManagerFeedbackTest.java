@@ -1,9 +1,11 @@
 package asap.realizer.scheduler;
 
-import saiba.bml.feedback.BMLExceptionFeedback;
-import saiba.bml.feedback.BMLPerformanceStopFeedback;
-import saiba.bml.feedback.BMLSyncPointProgressFeedback;
-import asap.realizertestutil.util.TimePegUtil;
+import static org.mockito.Mockito.atLeastOnce;
+import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.never;
+import static org.mockito.Mockito.times;
+import static org.mockito.Mockito.verify;
+import static org.mockito.Mockito.when;
 
 import java.util.HashSet;
 import java.util.Set;
@@ -14,13 +16,13 @@ import org.junit.runner.RunWith;
 import org.powermock.core.classloader.annotations.PrepareForTest;
 import org.powermock.modules.junit4.PowerMockRunner;
 
+import saiba.bml.feedback.BMLExceptionFeedback;
+import saiba.bml.feedback.BMLPerformanceStopFeedback;
+import saiba.bml.feedback.BMLSyncPointProgressFeedback;
 import asap.realizer.pegboard.PegBoard;
 import asap.realizer.pegboard.TimePeg;
 import asap.realizer.planunit.TimedPlanUnitState;
-import asap.realizer.scheduler.BMLBlockManager;
-import asap.realizer.scheduler.BMLScheduler;
-
-import static org.mockito.Mockito.*;
+import asap.realizertestutil.util.TimePegUtil;
 
 /**
  * Unit tests cases to verify feedback sent by the BMLBlocks/Blockmanager

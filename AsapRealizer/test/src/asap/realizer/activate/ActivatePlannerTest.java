@@ -1,7 +1,8 @@
 package asap.realizer.activate;
 
-import static org.junit.Assert.*;
-import static org.mockito.Mockito.*;
+import static org.junit.Assert.assertEquals;
+import static org.mockito.Mockito.mock;
+import hmi.xml.XMLTokenizer;
 
 import java.io.IOException;
 import java.util.ArrayList;
@@ -10,21 +11,17 @@ import java.util.List;
 import org.junit.Before;
 import org.junit.Test;
 
+import saiba.bml.parser.Constraint;
 import asap.bml.ext.bmlt.BMLTActivateBehaviour;
 import asap.realizer.BehaviourPlanningException;
 import asap.realizer.SyncAndTimePeg;
-import asap.realizer.activate.ActivatePlanner;
-import asap.realizer.activate.TimedActivateUnit;
 import asap.realizer.feedback.FeedbackManager;
 import asap.realizer.pegboard.BMLBlockPeg;
 import asap.realizer.pegboard.TimePeg;
 import asap.realizer.planunit.PlanManager;
 import asap.realizer.scheduler.TimePegAndConstraint;
-
-import saiba.bml.parser.Constraint;
 import asap.realizertestutil.PlannerTests;
 import asap.realizertestutil.util.TimePegUtil;
-import hmi.xml.XMLTokenizer;
 
 /**
  * Test cases for the ActivatePlanner

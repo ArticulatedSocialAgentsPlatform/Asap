@@ -1,8 +1,6 @@
 package asap.realizer.planunit;
 
 import asap.realizertestutil.planunit.AbstractTimedPlanUnitPlayerTest;
-import asap.realizer.planunit.DefaultTimedPlanUnitPlayer;
-import asap.realizer.planunit.TimedPlanUnitPlayer;
 
 
 /**

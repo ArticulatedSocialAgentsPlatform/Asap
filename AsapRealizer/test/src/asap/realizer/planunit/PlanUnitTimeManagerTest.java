@@ -10,10 +10,6 @@ import org.junit.Test;
 import asap.realizer.SyncPointNotFoundException;
 import asap.realizer.pegboard.BMLBlockPeg;
 import asap.realizer.pegboard.TimePeg;
-import asap.realizer.planunit.KeyPosition;
-import asap.realizer.planunit.KeyPositionManager;
-import asap.realizer.planunit.KeyPositionManagerImpl;
-import asap.realizer.planunit.PlanUnitTimeManager;
 
 /**
  * PlanUnitTimeManager unit test cases

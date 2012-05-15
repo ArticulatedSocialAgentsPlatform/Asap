@@ -1,7 +1,5 @@
 package asap.realizer.scheduler;
 
-import saiba.bml.core.BehaviourBlock;
-import saiba.bml.core.CoreComposition;
 import static org.powermock.api.mockito.PowerMockito.mock;
 
 import org.junit.Test;
@@ -9,10 +7,10 @@ import org.junit.runner.RunWith;
 import org.powermock.core.classloader.annotations.PrepareForTest;
 import org.powermock.modules.junit4.PowerMockRunner;
 
+import saiba.bml.core.BehaviourBlock;
+import saiba.bml.core.CoreComposition;
 import asap.realizer.pegboard.BMLBlockPeg;
 import asap.realizer.pegboard.PegBoard;
-import asap.realizer.scheduler.BMLScheduler;
-import asap.realizer.scheduler.SmartBodySchedulingStrategy;
 /**
  * Unit tests for the SmartBodySchedulingStrategy
  */

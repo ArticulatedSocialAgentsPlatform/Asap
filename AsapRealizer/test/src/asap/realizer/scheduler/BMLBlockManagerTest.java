@@ -1,12 +1,17 @@
 package asap.realizer.scheduler;
 
-import static org.junit.Assert.*;
+import static org.hamcrest.core.IsCollectionContaining.hasItem;
+import static org.hamcrest.core.IsCollectionContaining.hasItems;
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertThat;
+import static org.junit.Assert.assertTrue;
 import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.times;
+import static org.mockito.Mockito.verify;
+import static org.mockito.Mockito.when;
 
 import java.util.HashSet;
 import java.util.Set;
-
-import saiba.bml.feedback.BMLSyncPointProgressFeedback;
 
 import org.junit.Before;
 import org.junit.Test;
@@ -14,13 +19,8 @@ import org.junit.runner.RunWith;
 import org.powermock.core.classloader.annotations.PrepareForTest;
 import org.powermock.modules.junit4.PowerMockRunner;
 
+import saiba.bml.feedback.BMLSyncPointProgressFeedback;
 import asap.realizer.planunit.TimedPlanUnitState;
-import asap.realizer.scheduler.BMLBlockManager;
-import asap.realizer.scheduler.BMLScheduler;
-import asap.realizer.scheduler.BMLTBlock;
-
-import static org.hamcrest.core.IsCollectionContaining.*;
-import static org.mockito.Mockito.*;
 /**
  * Unit test cases for the BMLBlockManager
  * @author Herwin

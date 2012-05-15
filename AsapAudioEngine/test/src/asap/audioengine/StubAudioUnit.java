@@ -3,7 +3,6 @@ package asap.audioengine;
 
 import java.io.InputStream;
 
-import asap.audioengine.TimedAbstractAudioUnit;
 import asap.realizer.feedback.FeedbackManager;
 import asap.realizer.pegboard.BMLBlockPeg;
 import asap.realizer.planunit.PlanUnitFloatParameterNotFoundException;

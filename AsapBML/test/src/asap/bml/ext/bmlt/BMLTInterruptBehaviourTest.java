@@ -1,19 +1,15 @@
 package asap.bml.ext.bmlt;
 
-import static org.junit.Assert.*;
+import static org.hamcrest.MatcherAssert.assertThat;
+import static org.junit.Assert.assertEquals;
+import hmi.xml.XMLFormatting;
+import hmi.xml.XMLTokenizer;
 
 import java.io.IOException;
 
-import hmi.xml.XMLFormatting;
-import hmi.xml.XMLTokenizer;
-import org.junit.Test;
-
-import static org.hamcrest.MatcherAssert.assertThat;
-
 import org.hamcrest.Matchers;
-import org.hamcrest.collection.*;
-
-import asap.bml.ext.bmlt.BMLTInterruptBehaviour;
+import org.hamcrest.collection.IsIterableContainingInAnyOrder;
+import org.junit.Test;
 
 /**
  * Unit test cases for interruptbehaviour parsing

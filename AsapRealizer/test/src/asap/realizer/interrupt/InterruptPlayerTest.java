@@ -1,10 +1,9 @@
 package asap.realizer.interrupt;
 
-import static org.powermock.api.mockito.PowerMockito.*;
 import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
-
-
+import static org.powermock.api.mockito.PowerMockito.mock;
+import static org.powermock.api.mockito.PowerMockito.when;
 
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -13,7 +12,6 @@ import org.powermock.modules.junit4.PowerMockRunner;
 
 import asap.realizer.DefaultPlayer;
 import asap.realizer.feedback.FeedbackManager;
-import asap.realizer.interrupt.TimedInterruptUnit;
 import asap.realizer.planunit.PlanManager;
 import asap.realizer.planunit.SingleThreadedPlanPlayer;
 import asap.realizer.planunit.TimedPlanUnitPlayException;

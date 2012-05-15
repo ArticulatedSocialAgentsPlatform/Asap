@@ -1,16 +1,12 @@
 package asap.realizer.planunit;
 import static org.junit.Assert.assertEquals;
-import saiba.bml.BMLGestureSync;
 
 import org.junit.Before;
 import org.junit.Test;
 
+import saiba.bml.BMLGestureSync;
 import asap.realizer.pegboard.BMLBlockPeg;
 import asap.realizer.pegboard.TimePeg;
-import asap.realizer.planunit.KeyPosition;
-import asap.realizer.planunit.KeyPositionManager;
-import asap.realizer.planunit.KeyPositionManagerImpl;
-import asap.realizer.planunit.PlanUnitTimeManager;
 
 /**
  * KeyPositionManager test cases

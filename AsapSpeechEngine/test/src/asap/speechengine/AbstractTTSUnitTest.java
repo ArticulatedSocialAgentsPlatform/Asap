@@ -8,9 +8,6 @@ import static org.hamcrest.number.OrderingComparison.greaterThan;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
 import static org.mockito.Mockito.mock;
-import saiba.bml.feedback.BMLSyncPointProgressFeedback;
-import saiba.bml.feedback.ListFeedbackListener;
-import asap.realizertestutil.util.FeedbackListUtils;
 
 import java.util.List;
 
@@ -19,6 +16,8 @@ import org.junit.Test;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import saiba.bml.feedback.BMLSyncPointProgressFeedback;
+import saiba.bml.feedback.ListFeedbackListener;
 import asap.realizer.feedback.FeedbackManager;
 import asap.realizer.feedback.FeedbackManagerImpl;
 import asap.realizer.pegboard.BMLBlockPeg;
@@ -26,8 +25,7 @@ import asap.realizer.pegboard.TimePeg;
 import asap.realizer.planunit.TimedPlanUnitPlayException;
 import asap.realizer.planunit.TimedPlanUnitState;
 import asap.realizer.scheduler.BMLBlockManager;
-import asap.speechengine.SpeechUnitPlanningException;
-import asap.speechengine.TimedTTSUnit;
+import asap.realizertestutil.util.FeedbackListUtils;
 
 /**
  * Generic Unit test cases for classes implementing AbstractTTSUnit

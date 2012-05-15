@@ -18,14 +18,12 @@
  ******************************************************************************/
 package asap.realizer.world;
 
-import static org.junit.Assert.*;
+import static org.junit.Assert.assertTrue;
 import hmi.animation.VJoint;
 import hmi.math.Quat4f;
 import hmi.math.Vec3f;
 
 import org.junit.Test;
-
-import asap.realizer.world.WorldObject;
 
 /**
  * Unit testcases for WorldObject

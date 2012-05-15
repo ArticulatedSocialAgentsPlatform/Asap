@@ -2,7 +2,6 @@ package asap.speechengine;
 
 import hmi.audioenvironment.LWJGLJoalSoundManager;
 import hmi.audioenvironment.SoundManager;
-import saiba.bml.core.SpeechBehaviour;
 import hmi.util.OS;
 
 import org.junit.After;
@@ -14,11 +13,9 @@ import org.junit.runner.RunWith;
 import org.powermock.core.classloader.annotations.PrepareForTest;
 import org.powermock.modules.junit4.PowerMockRunner;
 
+import saiba.bml.core.SpeechBehaviour;
 import asap.realizer.pegboard.BMLBlockPeg;
 import asap.realizer.scheduler.BMLBlockManager;
-import asap.speechengine.SpeechUnitPlanningException;
-import asap.speechengine.TimedTTSUnit;
-import asap.speechengine.TimedWavTTSUnit;
 import asap.speechengine.ttsbinding.SAPITTSBinding;
 
 /**

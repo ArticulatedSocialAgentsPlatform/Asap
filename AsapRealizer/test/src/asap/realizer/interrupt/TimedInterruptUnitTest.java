@@ -1,7 +1,12 @@
 package asap.realizer.interrupt;
 
+import static org.junit.Assert.assertEquals;
+import static org.mockito.Mockito.times;
+import static org.mockito.Mockito.verify;
+import static org.powermock.api.mockito.PowerMockito.mock;
+import static org.powermock.api.mockito.PowerMockito.when;
+
 import java.util.HashSet;
-import asap.realizertestutil.planunit.AbstractTimedPlanUnitTest;
 
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -9,7 +14,6 @@ import org.powermock.core.classloader.annotations.PrepareForTest;
 import org.powermock.modules.junit4.PowerMockRunner;
 
 import asap.realizer.feedback.FeedbackManager;
-import asap.realizer.interrupt.TimedInterruptUnit;
 import asap.realizer.pegboard.BMLBlockPeg;
 import asap.realizer.pegboard.TimePeg;
 import asap.realizer.planunit.TimedPlanUnit;
@@ -17,13 +21,9 @@ import asap.realizer.planunit.TimedPlanUnitPlayException;
 import asap.realizer.planunit.TimedPlanUnitState;
 import asap.realizer.scheduler.BMLBlockManager;
 import asap.realizer.scheduler.BMLScheduler;
+import asap.realizertestutil.planunit.AbstractTimedPlanUnitTest;
 
 import com.google.common.collect.ImmutableSet;
-
-import static org.powermock.api.mockito.PowerMockito.*;
-import static org.junit.Assert.assertEquals;
-import static org.mockito.Mockito.times;
-import static org.mockito.Mockito.verify;
 
 /**
  * Test cases for the TimedInterruptUnit

@@ -5,7 +5,7 @@ import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
-import saiba.bml.BMLGestureSync;
+
 import java.util.HashSet;
 
 import org.junit.Test;
@@ -13,10 +13,9 @@ import org.junit.runner.RunWith;
 import org.powermock.core.classloader.annotations.PrepareForTest;
 import org.powermock.modules.junit4.PowerMockRunner;
 
+import saiba.bml.BMLGestureSync;
 import asap.realizer.pegboard.PegBoard;
 import asap.realizer.planunit.TimedPlanUnitState;
-import asap.realizer.scheduler.BMLBBlock;
-import asap.realizer.scheduler.BMLScheduler;
 
 import com.google.common.collect.ImmutableMap;
 import com.google.common.collect.Sets;

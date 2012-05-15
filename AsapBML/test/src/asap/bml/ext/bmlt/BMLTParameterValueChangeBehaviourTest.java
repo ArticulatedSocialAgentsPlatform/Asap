@@ -1,15 +1,12 @@
 package asap.bml.ext.bmlt;
 
 import static org.junit.Assert.assertEquals;
-
-import java.io.IOException;
-
 import hmi.xml.XMLFormatting;
 import hmi.xml.XMLTokenizer;
 
-import org.junit.Test;
+import java.io.IOException;
 
-import asap.bml.ext.bmlt.BMLTParameterValueChangeBehaviour;
+import org.junit.Test;
 
 /**
  * Unit tests for the parametervaluechange behavior

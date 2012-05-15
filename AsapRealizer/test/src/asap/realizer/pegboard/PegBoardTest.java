@@ -11,14 +11,6 @@ import static org.junit.Assert.assertTrue;
 
 import org.junit.Test;
 
-import asap.realizer.pegboard.BMLBlockPeg;
-import asap.realizer.pegboard.BehaviorCluster;
-import asap.realizer.pegboard.BehaviorKey;
-import asap.realizer.pegboard.OffsetPeg;
-import asap.realizer.pegboard.PegBoard;
-import asap.realizer.pegboard.PegKey;
-import asap.realizer.pegboard.TimePeg;
-
 import com.google.common.collect.ImmutableSet;
 
 /**

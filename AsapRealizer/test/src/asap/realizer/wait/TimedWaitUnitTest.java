@@ -12,8 +12,6 @@ import asap.realizer.pegboard.TimePeg;
 import asap.realizer.planunit.TimedPlanUnit;
 import asap.realizer.planunit.TimedPlanUnitState;
 import asap.realizer.scheduler.BMLBlockManager;
-import asap.realizer.wait.TimedWaitUnit;
-
 import asap.realizertestutil.planunit.AbstractTimedPlanUnitTest;
 
 /**

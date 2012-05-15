@@ -3,8 +3,6 @@ package asap.bml.ext.bmlt;
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.instanceOf;
 import static org.junit.Assert.assertEquals;
-import saiba.bml.BMLInfo;
-import saiba.bml.core.GestureBehaviour;
 import hmi.xml.XMLFormatting;
 import hmi.xml.XMLTokenizer;
 
@@ -12,8 +10,8 @@ import java.io.IOException;
 
 import org.junit.Test;
 
-import asap.bml.ext.bmlt.BMLTInfo;
-import asap.bml.ext.bmlt.BMLTProcAnimationBehaviour;
+import saiba.bml.BMLInfo;
+import saiba.bml.core.GestureBehaviour;
 
 /**
  * Unit test cases for the bmlt procanimation behavior

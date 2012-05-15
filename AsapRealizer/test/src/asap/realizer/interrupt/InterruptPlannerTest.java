@@ -1,30 +1,27 @@
 package asap.realizer.interrupt;
 
-import static org.junit.Assert.*;
-import static org.mockito.Mockito.*;
+import static org.junit.Assert.assertEquals;
+import static org.mockito.Mockito.mock;
+import hmi.xml.XMLTokenizer;
 
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
-import saiba.bml.parser.Constraint;
-import asap.bml.ext.bmlt.BMLTInterruptBehaviour;
-import asap.realizertestutil.PlannerTests;
-import asap.realizertestutil.util.TimePegUtil;
-import hmi.xml.XMLTokenizer;
-
 import org.junit.Before;
 import org.junit.Test;
 
+import saiba.bml.parser.Constraint;
+import asap.bml.ext.bmlt.BMLTInterruptBehaviour;
 import asap.realizer.BehaviourPlanningException;
 import asap.realizer.SyncAndTimePeg;
 import asap.realizer.feedback.FeedbackManager;
-import asap.realizer.interrupt.InterruptPlanner;
-import asap.realizer.interrupt.TimedInterruptUnit;
 import asap.realizer.pegboard.BMLBlockPeg;
 import asap.realizer.pegboard.TimePeg;
 import asap.realizer.planunit.PlanManager;
 import asap.realizer.scheduler.TimePegAndConstraint;
+import asap.realizertestutil.PlannerTests;
+import asap.realizertestutil.util.TimePegUtil;
 
 /**
  * Unit tests for the InterruptPlanner

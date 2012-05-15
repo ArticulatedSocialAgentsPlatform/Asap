@@ -5,11 +5,6 @@ import static org.hamcrest.Matchers.instanceOf;
 
 import org.junit.Test;
 
-import asap.realizer.parametervaluechange.LinearTrajectory;
-import asap.realizer.parametervaluechange.ParameterValueTrajectory;
-import asap.realizer.parametervaluechange.TrajectoryBinding;
-import asap.realizer.parametervaluechange.TrajectoryBindingException;
-
 /**
  * Test cases for the trajectory binding
  * @author welberge

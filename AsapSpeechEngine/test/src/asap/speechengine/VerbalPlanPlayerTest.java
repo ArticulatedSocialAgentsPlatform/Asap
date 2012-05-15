@@ -3,10 +3,6 @@ package asap.speechengine;
 import static org.junit.Assert.assertEquals;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
-import saiba.bml.core.Behaviour;
-import saiba.bml.core.SpeechBehaviour;
-import saiba.bml.feedback.BMLExceptionFeedback;
-import saiba.bml.feedback.ListBMLExceptionListener;
 import hmi.tts.TimingInfo;
 
 import java.util.ArrayList;
@@ -14,6 +10,10 @@ import java.util.List;
 
 import org.junit.Test;
 
+import saiba.bml.core.Behaviour;
+import saiba.bml.core.SpeechBehaviour;
+import saiba.bml.feedback.BMLExceptionFeedback;
+import saiba.bml.feedback.ListBMLExceptionListener;
 import asap.realizer.feedback.FeedbackManager;
 import asap.realizer.pegboard.BMLBlockPeg;
 import asap.realizer.pegboard.TimePeg;
@@ -23,9 +23,6 @@ import asap.realizer.planunit.PlanUnitFloatParameterNotFoundException;
 import asap.realizer.planunit.PlanUnitParameterNotFoundException;
 import asap.realizer.planunit.TimedPlanUnitPlayException;
 import asap.realizer.planunit.TimedPlanUnitState;
-import asap.speechengine.SpeechUnitPlanningException;
-import asap.speechengine.TimedAbstractSpeechUnit;
-import asap.speechengine.TimedTTSUnit;
 import asap.speechengine.ttsbinding.TTSBinding;
 
 

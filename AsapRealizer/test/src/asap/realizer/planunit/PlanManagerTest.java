@@ -8,7 +8,6 @@ import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
-import asap.realizertestutil.util.TimePegUtil;
 
 import java.util.Arrays;
 
@@ -21,11 +20,7 @@ import asap.realizer.SyncPointNotFoundException;
 import asap.realizer.TimePegAlreadySetException;
 import asap.realizer.pegboard.OffsetPeg;
 import asap.realizer.pegboard.TimePeg;
-import asap.realizer.planunit.ParameterException;
-import asap.realizer.planunit.PlanManager;
-import asap.realizer.planunit.TimedPlanUnit;
-import asap.realizer.planunit.TimedPlanUnitPlayException;
-import asap.realizer.planunit.TimedPlanUnitState;
+import asap.realizertestutil.util.TimePegUtil;
 
 /**
  * Unit testcases for the PlanManager

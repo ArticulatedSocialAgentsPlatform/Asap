@@ -4,7 +4,6 @@ import static org.junit.Assert.assertEquals;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
 import hmi.audioenvironment.SoundManager;
-import asap.realizertestutil.planunit.AbstractTimedPlanUnitTest;
 
 import java.io.InputStream;
 
@@ -12,14 +11,13 @@ import org.junit.runner.RunWith;
 import org.powermock.core.classloader.annotations.PrepareForTest;
 import org.powermock.modules.junit4.PowerMockRunner;
 
-import asap.audioengine.TimedWavAudioUnit;
-import asap.audioengine.WavUnit;
 import asap.realizer.feedback.FeedbackManager;
 import asap.realizer.pegboard.BMLBlockPeg;
 import asap.realizer.pegboard.TimePeg;
 import asap.realizer.planunit.TimedPlanUnit;
 import asap.realizer.planunit.TimedPlanUnitState;
 import asap.realizer.scheduler.BMLBlockManager;
+import asap.realizertestutil.planunit.AbstractTimedPlanUnitTest;
 
 /**
  * Test cases for the TimedWavAudioUnit

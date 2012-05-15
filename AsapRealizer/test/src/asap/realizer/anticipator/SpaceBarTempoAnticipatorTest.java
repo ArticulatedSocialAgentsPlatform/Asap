@@ -1,18 +1,19 @@
 package asap.realizer.anticipator;
 
-import static org.junit.Assert.*;
+import static org.junit.Assert.assertEquals;
+import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.times;
+import static org.mockito.Mockito.verify;
+import static org.mockito.Mockito.when;
+import hmi.util.SystemClock;
 
 import java.awt.event.KeyEvent;
-
-import hmi.util.SystemClock;
 
 import org.junit.Before;
 import org.junit.Test;
 
-import asap.realizer.anticipator.SpaceBarTempoAnticipator;
 import asap.realizer.pegboard.BMLBlockPeg;
 import asap.realizer.pegboard.TimePeg;
-import static org.mockito.Mockito.*;
 /**
  * Unit test cases for the SpaceBarTempoAnticipator
  * @author hvanwelbergen

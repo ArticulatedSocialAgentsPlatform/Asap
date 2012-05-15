@@ -18,6 +18,7 @@ import com.google.common.collect.ImmutableMap;
  */
 public final class BMLTInfo
 {
+    private BMLTInfo(){}
     // /Behaviors that are parsed
     private static final ImmutableMap<String, Class<? extends Behaviour>> BEHAVIOR_TYPES =
             new ImmutableMap.Builder<String, Class<? extends Behaviour>>()

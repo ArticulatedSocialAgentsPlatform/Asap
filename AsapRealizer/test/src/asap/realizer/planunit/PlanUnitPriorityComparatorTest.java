@@ -1,18 +1,16 @@
 package asap.realizer.planunit;
 
 
+import static org.hamcrest.MatcherAssert.assertThat;
+import static org.hamcrest.collection.IsIterableContainingInOrder.contains;
+import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.when;
+
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
 import org.junit.Test;
-
-import asap.realizer.planunit.PlanUnitPriorityComparator;
-import asap.realizer.planunit.TimedPlanUnit;
-import static org.mockito.Mockito.*;
-
-import static org.hamcrest.MatcherAssert.assertThat;
-import static org.hamcrest.collection.IsIterableContainingInOrder.*;
 
 
 /**

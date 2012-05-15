@@ -1,10 +1,18 @@
 package asap.realizer.scheduler;
 
+import static org.hamcrest.MatcherAssert.assertThat;
+import static org.hamcrest.Matchers.instanceOf;
+import static org.junit.Assert.assertEquals;
+import static org.mockito.Matchers.any;
+import static org.mockito.Matchers.anyDouble;
+import static org.mockito.Matchers.eq;
+import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.times;
+import static org.mockito.Mockito.verify;
+import static org.mockito.Mockito.when;
+
 import java.util.Set;
 
-import saiba.bml.core.BehaviourBlock;
-import static org.hamcrest.MatcherAssert.assertThat;
-import static org.hamcrest.Matchers.*;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -12,21 +20,14 @@ import org.mockito.ArgumentCaptor;
 import org.powermock.core.classloader.annotations.PrepareForTest;
 import org.powermock.modules.junit4.PowerMockRunner;
 
-import com.google.common.collect.ImmutableSet;
-
-import static org.junit.Assert.*;
-import static org.mockito.Mockito.*;
-
+import saiba.bml.core.BehaviourBlock;
 import asap.bml.ext.bmlb.BMLBBMLBehaviorAttributes;
 import asap.bml.ext.bmlt.BMLTBMLBehaviorAttributes;
 import asap.realizer.pegboard.BMLBlockPeg;
 import asap.realizer.pegboard.PegBoard;
 import asap.realizer.planunit.TimedPlanUnitState;
-import asap.realizer.scheduler.BMLBBlock;
-import asap.realizer.scheduler.BMLBandTSchedulingHandler;
-import asap.realizer.scheduler.BMLBlock;
-import asap.realizer.scheduler.BMLScheduler;
-import asap.realizer.scheduler.SmartBodySchedulingStrategy;
+
+import com.google.common.collect.ImmutableSet;
 
 
 /**

@@ -1,14 +1,11 @@
 package asap.bml.ext.bmlt;
 import static org.junit.Assert.assertEquals;
-
-import java.io.IOException;
-
 import hmi.xml.XMLFormatting;
 import hmi.xml.XMLTokenizer;
 
-import org.junit.Test;
+import java.io.IOException;
 
-import asap.bml.ext.bmlt.BMLTAudioFileBehaviour;
+import org.junit.Test;
 
 /**
  * Unit testcases for the BMLTAudioFileBehaviour

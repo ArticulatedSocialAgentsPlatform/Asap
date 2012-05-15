@@ -5,11 +5,6 @@ import static org.hamcrest.number.OrderingComparison.greaterThan;
 import static org.junit.Assert.assertEquals;
 import hmi.audioenvironment.LWJGLJoalSoundManager;
 import hmi.audioenvironment.SoundManager;
-import saiba.bml.core.SpeechBehaviour;
-import saiba.bml.feedback.ListFeedbackListener;
-import asap.realizertestutil.planunit.AbstractTimedPlanUnitTest;
-import asap.realizer.planunit.TimedPlanUnit;
-import asap.realizer.planunit.TimedPlanUnitState;
 import hmi.tts.Bookmark;
 
 import org.hamcrest.collection.IsIterableContainingInOrder;
@@ -19,12 +14,15 @@ import org.junit.Before;
 import org.junit.BeforeClass;
 import org.junit.Test;
 
+import saiba.bml.core.SpeechBehaviour;
+import saiba.bml.feedback.ListFeedbackListener;
 import asap.realizer.feedback.FeedbackManager;
 import asap.realizer.pegboard.BMLBlockPeg;
 import asap.realizer.pegboard.TimePeg;
+import asap.realizer.planunit.TimedPlanUnit;
 import asap.realizer.planunit.TimedPlanUnitPlayException;
-import asap.speechengine.SpeechUnitPlanningException;
-import asap.speechengine.TimedWavTTSUnit;
+import asap.realizer.planunit.TimedPlanUnitState;
+import asap.realizertestutil.planunit.AbstractTimedPlanUnitTest;
 import asap.speechengine.ttsbinding.TTSBinding;
 
 

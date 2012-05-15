@@ -6,9 +6,6 @@ import static org.mockito.Matchers.anyString;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
-import saiba.bml.feedback.BMLSyncPointProgressFeedback;
-import saiba.bml.feedback.ListFeedbackListener;
-import asap.realizertestutil.planunit.AbstractTimedPlanUnitTest;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -18,6 +15,8 @@ import org.junit.runner.RunWith;
 import org.powermock.core.classloader.annotations.PrepareForTest;
 import org.powermock.modules.junit4.PowerMockRunner;
 
+import saiba.bml.feedback.BMLSyncPointProgressFeedback;
+import saiba.bml.feedback.ListFeedbackListener;
 import asap.realizer.feedback.FeedbackManager;
 import asap.realizer.feedback.FeedbackManagerImpl;
 import asap.realizer.pegboard.BMLBlockPeg;
@@ -26,8 +25,7 @@ import asap.realizer.planunit.TimedPlanUnit;
 import asap.realizer.planunit.TimedPlanUnitPlayException;
 import asap.realizer.planunit.TimedPlanUnitState;
 import asap.realizer.scheduler.BMLBlockManager;
-import asap.speechengine.TextOutput;
-import asap.speechengine.TimedTextSpeechUnit;
+import asap.realizertestutil.planunit.AbstractTimedPlanUnitTest;
 
 /**
  * Unit test cases for the TextSpeechUnit

@@ -12,9 +12,6 @@ import org.junit.Test;
 
 import asap.realizer.feedback.FeedbackManager;
 import asap.realizer.pegboard.BMLBlockPeg;
-import asap.realizer.planunit.TimedAbstractPlanUnit;
-import asap.realizer.planunit.TimedPlanUnitPlayException;
-import asap.realizer.planunit.TimedPlanUnitState;
 import asap.realizertestutil.planunit.StubPlanUnit;
 
 /**

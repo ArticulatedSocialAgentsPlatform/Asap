@@ -8,10 +8,6 @@ import static org.mockito.Matchers.anyDouble;
 import static org.powermock.api.mockito.PowerMockito.doThrow;
 import static org.powermock.api.mockito.PowerMockito.mock;
 import static org.powermock.api.mockito.PowerMockito.spy;
-import saiba.bml.core.SpeechBehaviour;
-import saiba.bml.feedback.BMLExceptionFeedback;
-import saiba.bml.feedback.ListBMLExceptionListener;
-import saiba.bml.parser.Constraint;
 import hmi.xml.XMLTokenizer;
 
 import java.io.IOException;
@@ -23,6 +19,10 @@ import org.junit.runner.RunWith;
 import org.powermock.core.classloader.annotations.PrepareForTest;
 import org.powermock.modules.junit4.PowerMockRunner;
 
+import saiba.bml.core.SpeechBehaviour;
+import saiba.bml.feedback.BMLExceptionFeedback;
+import saiba.bml.feedback.ListBMLExceptionListener;
+import saiba.bml.parser.Constraint;
 import asap.realizer.BehaviourPlanningException;
 import asap.realizer.DefaultPlayer;
 import asap.realizer.Player;
@@ -36,9 +36,6 @@ import asap.realizer.planunit.TimedPlanUnitPlayException;
 import asap.realizer.planunit.TimedPlanUnitState;
 import asap.realizer.scheduler.BMLBlockManager;
 import asap.realizer.scheduler.TimePegAndConstraint;
-import asap.speechengine.TextOutput;
-import asap.speechengine.TextPlanner;
-import asap.speechengine.TimedTextSpeechUnit;
 
 /**
  * Tests the combination of a TextPlanner, (default) player and 'real' TimedTextUnits

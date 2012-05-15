@@ -6,9 +6,6 @@ import static org.junit.Assert.assertTrue;
 import static org.mockito.Matchers.anyString;
 import static org.mockito.Matchers.eq;
 import static org.powermock.api.mockito.PowerMockito.when;
-import saiba.bml.core.SpeechBehaviour;
-import saiba.bml.parser.Constraint;
-import asap.realizertestutil.util.FeedbackListUtils;
 import hmi.tts.Bookmark;
 import hmi.tts.Phoneme;
 import hmi.tts.TimingInfo;
@@ -25,6 +22,8 @@ import org.junit.runner.RunWith;
 import org.powermock.core.classloader.annotations.PrepareForTest;
 import org.powermock.modules.junit4.PowerMockRunner;
 
+import saiba.bml.core.SpeechBehaviour;
+import saiba.bml.parser.Constraint;
 import asap.realizer.BehaviourPlanningException;
 import asap.realizer.SyncAndTimePeg;
 import asap.realizer.pegboard.PegBoard;
@@ -33,8 +32,7 @@ import asap.realizer.planunit.TimedPlanUnitState;
 import asap.realizer.scheduler.BMLBlockManager;
 import asap.realizer.scheduler.BMLScheduler;
 import asap.realizer.scheduler.TimePegAndConstraint;
-import asap.speechengine.TimedDirectTTSUnit;
-import asap.speechengine.TimedTTSUnit;
+import asap.realizertestutil.util.FeedbackListUtils;
 
 @RunWith(PowerMockRunner.class)
 @PrepareForTest({ BMLBlockManager.class, BMLScheduler.class })

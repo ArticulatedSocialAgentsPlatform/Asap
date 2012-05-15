@@ -9,9 +9,6 @@ import org.powermock.modules.junit4.PowerMockRunner;
 
 import asap.realizer.planunit.PlanManager;
 import asap.realizer.scheduler.BMLBlockManager;
-import asap.speechengine.TextOutput;
-import asap.speechengine.TextPlanner;
-import asap.speechengine.TimedTextSpeechUnit;
 
 /**
  * Unit test cases for SpeechBehaviour planning using a TextPlanner 
