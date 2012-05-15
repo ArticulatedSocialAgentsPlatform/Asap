@@ -63,7 +63,7 @@ public class BMLSchedulerAssemblerTest
                 mockSchedulingClock, pegBoard);
         String str = "<BMLScheduler>"
                 + "<SchedulingHandler class=\"asap.environment.BMLSchedulerAssemblerTest$StubSchedulingHandler\""
-                + " schedulingStrategy=\"hmi.elckerlyc.scheduler.SmartBodySchedulingStrategy\"/>" + "</BMLScheduler>";
+                + " schedulingStrategy=\"asap.realizer.scheduler.SmartBodySchedulingStrategy\"/>" + "</BMLScheduler>";
         assembler.readXML(str);
         assertNotNull(stubbedSchedulingHandler);
         assertThat(stubbedSchedulingHandler, instanceOf(StubSchedulingHandler.class));

@@ -1,5 +1,5 @@
 <AsapVirtualHuman>
-  <BMLRealizer loader="hmi.environment.vhloader.ElckerlycRealizerLoader">
+  <BMLRealizer>
     <BMLParser>
       <BMLAttributeExtension class="asap.bml.ext.bmlb.BMLBBMLBehaviorAttributes"/>
       <BMLAttributeExtension class="asap.bml.ext.bmlt.BMLTBMLBehaviorAttributes"/>
