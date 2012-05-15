@@ -36,26 +36,15 @@ public class SchedulerSAPIDirectIntegrationTest extends SchedulerParameterizedIn
     @Parameters
     public static Collection<Object[]> configs() throws Exception
     {
-        ArrayList<TTSBindingFactory> ttsBinders = new ArrayList<TTSBindingFactory>();
-        ttsBinders.add(new SAPITTSBindingFactory());
-        
-        ArrayList<TimedTTSUnitFactory> ttsUnitFactories = new ArrayList<TimedTTSUnitFactory>();
-        
-        if(OS.equalsOS(OS.WINDOWS))
-        {
-            ttsUnitFactories.add(new DirectTTSUnitFactory(new FeedbackManagerImpl(new BMLBlockManager(),"character1")));
-        }
+        bbm = new BMLBlockManager();
+        bfm = new FeedbackManagerImpl(bbm, "character1");
 
         ArrayList<SpeechEngineFactory> speechEngineFactories = new ArrayList<SpeechEngineFactory>();
 
-        // generate all permutations of TTSUnitFactories and
-        // AbstractTTSGenerators
-        for (TTSBindingFactory ttsBind : ttsBinders)
+        if (OS.equalsOS(OS.WINDOWS))
         {
-            for (TimedTTSUnitFactory ttsUFac : ttsUnitFactories)
-            {
-                speechEngineFactories.add(new TTSEngineFactory(ttsUFac, ttsBind,soundManager));
-            }
+            speechEngineFactories.add(new TTSEngineFactory(new DirectTTSUnitFactory(bfm), 
+                    new SAPITTSBindingFactory(), soundManager));            
         }
 
         Collection<Object[]> objs = new ArrayList<Object[]>();
