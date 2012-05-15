@@ -121,9 +121,9 @@ public class BMLTNoiseBehaviour extends BMLTBehaviour
     @Override
     public void decodeAttributes(HashMap<String, String> attrMap, XMLTokenizer tokenizer)
     {
-        super.decodeAttributes(attrMap, tokenizer);
         joint = getRequiredAttribute("joint", attrMap, tokenizer);
         type = getRequiredAttribute("type", attrMap, tokenizer);
+        super.decodeAttributes(attrMap, tokenizer);
     }
 
     /*

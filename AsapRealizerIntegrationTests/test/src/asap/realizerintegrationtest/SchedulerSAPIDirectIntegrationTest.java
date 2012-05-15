@@ -1,11 +1,5 @@
 package asap.realizerintegrationtest;
 
-import asap.realizer.feedback.FeedbackManagerImpl;
-import asap.realizer.scheduler.BMLBlockManager;
-import asap.speechengine.DirectTTSUnitFactory;
-import asap.speechengine.TimedTTSUnitFactory;
-import asap.speechengine.ttsbinding.SAPITTSBindingFactory;
-import asap.speechengine.ttsbinding.TTSBindingFactory;
 import hmi.testutil.LabelledParameterized;
 import hmi.util.OS;
 
@@ -15,6 +9,11 @@ import java.util.Collection;
 
 import org.junit.runner.RunWith;
 import org.junit.runners.Parameterized.Parameters;
+
+import asap.realizer.feedback.FeedbackManagerImpl;
+import asap.realizer.scheduler.BMLBlockManager;
+import asap.speechengine.DirectTTSUnitFactory;
+import asap.speechengine.ttsbinding.SAPITTSBindingFactory;
 
 /**
  * Rapid test using TestSchedulerParameterized with only SAPI ttsgeneration
