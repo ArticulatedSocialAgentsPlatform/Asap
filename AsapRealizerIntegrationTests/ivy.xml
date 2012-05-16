@@ -1,5 +1,5 @@
 <ivy-module version="2.0">
-   <info organisation="Asap" module="AsapRealizerIntegrationsTests"/>
+   <info organisation="Asap" module="AsapRealizerIntegrationTests"/>
    <dependencies>
       <dependency org="junit"    name="cpsuite"              rev="latest.release"  />
       <dependency org="google"    name="junit-ext"              rev="latest.release"  />

@@ -3,8 +3,8 @@ Main-Class: asap.asaprealizer.Info
 
 Name: hmi/elckerlyc/
 Specification-Title:    AsapRealizerIntegrationTests
-Specification-Version:  0.1
+Specification-Version:  1333.1
 Specification-Vendor:   Asap
 Implementation-Title:   AsapRealizerIntegrationTests
-Implementation-Version: May 15 2012  10:37 PM
+Implementation-Version: May 16 2012  09:41 AM
 Implementation-Vendor:  Asap
