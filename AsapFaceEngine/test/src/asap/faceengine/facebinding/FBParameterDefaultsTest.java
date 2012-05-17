@@ -12,8 +12,9 @@ import static org.mockito.Mockito.mock;
 public class FBParameterDefaultsTest
 {
     private FaceUnitSpec mockFUSpec = mock(FaceUnitSpec.class);
+    private final int READ_TIMEOUT = 100;
     
-    @Test(timeout=100,expected=XMLScanException.class)    
+    @Test(timeout=READ_TIMEOUT,expected=XMLScanException.class)    
     public void testInvalidContent()
     {
         String str = "<parameterdefaults><invalid/></parameterdefaults>";

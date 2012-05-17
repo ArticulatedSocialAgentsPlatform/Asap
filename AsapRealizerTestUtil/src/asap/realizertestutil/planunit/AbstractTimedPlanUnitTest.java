@@ -181,7 +181,8 @@ public abstract class AbstractTimedPlanUnitTest
         tpu.start(0);
         tpu.play(0);
         tpu.play(0);
-        assertThat(tpu.getState(), anyOf(equalTo(TimedPlanUnitState.SUBSIDING), equalTo(TimedPlanUnitState.IN_EXEC), equalTo(TimedPlanUnitState.DONE)));
+        assertThat(tpu.getState(), anyOf(equalTo(TimedPlanUnitState.SUBSIDING), 
+                equalTo(TimedPlanUnitState.IN_EXEC), equalTo(TimedPlanUnitState.DONE)));
     }
 
     @Test

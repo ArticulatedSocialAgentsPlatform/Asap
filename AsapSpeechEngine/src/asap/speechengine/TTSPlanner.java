@@ -99,7 +99,8 @@ public class TTSPlanner extends AbstractPlanner<TimedTTSUnit>
         try
         {
             SpeechBehaviour bSpeech = (SpeechBehaviour) b;
-            String voiceId = "voice1";//TODO: ultimately, this should be the characterId from the behavior -- but remember that characterId may be empty
+            //TODO: ultimately, this should be the characterId from the behavior -- but remember that characterId may be empty
+            String voiceId = "voice1";
             TimedTTSUnit bs = suFactory.createTimedTTSUnit(bbPeg, bSpeech.getContent(), voiceId, bSpeech.getBmlId(), bSpeech.id, ttsBinding,
                     b.getClass());
 
