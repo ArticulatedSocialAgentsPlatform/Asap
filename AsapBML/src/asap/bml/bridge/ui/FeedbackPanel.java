@@ -1,14 +1,7 @@
 package asap.bml.bridge.ui;
 
-import saiba.bml.bridge.RealizerPort;
-import saiba.bml.feedback.BMLExceptionFeedback;
-import saiba.bml.feedback.BMLExceptionListener;
-import saiba.bml.feedback.BMLFeedbackListener;
-import saiba.bml.feedback.BMLPerformanceStartFeedback;
-import saiba.bml.feedback.BMLPerformanceStopFeedback;
+import saiba.bml.feedback.BMLBlockProgress;
 import saiba.bml.feedback.BMLSyncPointProgressFeedback;
-import saiba.bml.feedback.BMLWarningFeedback;
-import saiba.bml.feedback.BMLWarningListener;
 
 import java.awt.Dimension;
 import java.awt.event.ActionEvent;
@@ -20,15 +13,20 @@ import javax.swing.JScrollPane;
 import javax.swing.JTabbedPane;
 import javax.swing.JTextArea;
 
+import saiba.bml.feedback.BMLWarningFeedback;
+
+import asap.bml.bridge.RealizerPort;
 import asap.bml.ext.bmlt.feedback.BMLTSchedulingFinishedFeedback;
 import asap.bml.ext.bmlt.feedback.BMLTSchedulingListener;
 import asap.bml.ext.bmlt.feedback.BMLTSchedulingStartFeedback;
+import asap.bml.feedback.BMLFeedbackListener;
+import asap.bml.feedback.BMLWarningListener;
 
 /**
  * User interface element to hook up to BML feedback information
  * @author reidsma, welberge
  */
-public class FeedbackPanel extends JPanel implements BMLWarningListener, BMLFeedbackListener, BMLTSchedulingListener, BMLExceptionListener
+public class FeedbackPanel extends JPanel implements BMLWarningListener, BMLFeedbackListener, BMLTSchedulingListener
 {
     // XXX class is not serializable (see findbugs). Better to make this class HAVE a panel rather than BE a panel
     private static final long serialVersionUID = 1L;
@@ -89,27 +87,15 @@ public class FeedbackPanel extends JPanel implements BMLWarningListener, BMLFeed
     }
 
     @Override
-    public void performanceStop(BMLPerformanceStopFeedback psf)
+    public void blockProgress(BMLBlockProgress psf)
     {
         feedbackOutput.append(psf.toString());
-    }
-
-    @Override
-    public void performanceStart(BMLPerformanceStartFeedback psf)
-    {
-        feedbackOutput.append(psf.toString());
-    }
+    }    
 
     @Override
     public void syncProgress(BMLSyncPointProgressFeedback spp)
     {
         feedbackOutput.append(spp.toString());
-    }
-
-    @Override
-    public void exception(BMLExceptionFeedback be)
-    {
-        warningOutput.append(be.toString());
     }
 
     @Override

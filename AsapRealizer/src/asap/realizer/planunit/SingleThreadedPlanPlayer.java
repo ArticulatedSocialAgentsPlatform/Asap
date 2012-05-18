@@ -1,18 +1,17 @@
 package asap.realizer.planunit;
 
-import saiba.bml.feedback.BMLExceptionFeedback;
-import saiba.bml.feedback.BMLExceptionListener;
-
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
 import java.util.Set;
 
+import saiba.bml.feedback.BMLWarningFeedback;
+
+import net.jcip.annotations.ThreadSafe;
+import asap.bml.feedback.BMLWarningListener;
 import asap.realizer.feedback.FeedbackManager;
 import asap.realizer.feedback.NullFeedbackManager;
 import asap.realizer.pegboard.TimePeg;
-
-import net.jcip.annotations.ThreadSafe;
 
 /**
  * Generic PlanUnit player. Plays the correct PlanUnit at time t, taking into account replacement groups etc.
@@ -49,19 +48,19 @@ public final class SingleThreadedPlanPlayer<T extends TimedPlanUnit> implements 
         this(NullFeedbackManager.getInstance(), planManager);
     }
 
-    public void exception(BMLExceptionFeedback e)
+    public void warn(BMLWarningFeedback e)
     {
-        fbManager.exception(e);
+        fbManager.warn(e);
     }
 
-    public void addExceptionListener(BMLExceptionListener ws)
+    public void addWarningListener(BMLWarningListener ws)
     {
-        fbManager.addExceptionListener(ws);
+        fbManager.addWarningListener(ws);
     }
 
-    public void removeAllExceptionListeners()
+    public void removeAllWarningListeners()
     {
-        fbManager.removeAllExceptionListeners();
+        fbManager.removeAllWarningListeners();
     }
 
     private List<T> playingPlanUnits = new ArrayList<T>();

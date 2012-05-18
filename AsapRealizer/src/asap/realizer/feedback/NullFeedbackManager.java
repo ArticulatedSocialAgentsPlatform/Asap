@@ -1,20 +1,17 @@
 package asap.realizer.feedback;
 
-import saiba.bml.feedback.BMLExceptionFeedback;
-import saiba.bml.feedback.BMLExceptionListener;
-import saiba.bml.feedback.BMLFeedbackListener;
-import saiba.bml.feedback.BMLPerformanceStartFeedback;
-import saiba.bml.feedback.BMLPerformanceStopFeedback;
+import saiba.bml.feedback.BMLBlockProgress;
 import saiba.bml.feedback.BMLSyncPointProgressFeedback;
-import saiba.bml.feedback.BMLWarningFeedback;
-import saiba.bml.feedback.BMLWarningListener;
 
 import java.util.List;
 
 import asap.bml.ext.bmlt.feedback.BMLTSchedulingFinishedFeedback;
 import asap.bml.ext.bmlt.feedback.BMLTSchedulingListener;
 import asap.bml.ext.bmlt.feedback.BMLTSchedulingStartFeedback;
+import asap.bml.feedback.BMLFeedbackListener;
+import asap.bml.feedback.BMLWarningListener;
 import asap.realizer.planunit.TimedPlanUnit;
+import saiba.bml.feedback.BMLWarningFeedback;
 
 import com.google.common.collect.ImmutableSet;
 
@@ -55,28 +52,13 @@ public final class NullFeedbackManager implements FeedbackManager
     }
 
     @Override
-    public void blockStopFeedback(BMLPerformanceStopFeedback psf){}
+    public void blockProgress(BMLBlockProgress psf){}
     
-    @Override
-    public void blockStartFeedback(BMLPerformanceStartFeedback psf){}
-    
-    @Override
-    public void exception(BMLExceptionFeedback e){}
-    
-    @Override
-    public void addExceptionListener(BMLExceptionListener es){}
-    
-    @Override
-    public void removeAllExceptionListeners(){}
     
     @Override
     public void puException(TimedPlanUnit timedMU, String message, double time){}
 
-    @Override
-    public void removeExceptionListener(BMLExceptionListener e)
-    {
-    }
-
+    
     @Override
     public void addPlanningListener(BMLTSchedulingListener p)
     {

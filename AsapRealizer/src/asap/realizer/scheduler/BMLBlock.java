@@ -1,8 +1,6 @@
 package asap.realizer.scheduler;
 
 
-import java.util.Set;
-
 import asap.realizer.planunit.TimedPlanUnitState;
 
 import com.google.common.collect.ImmutableMap;
@@ -33,9 +31,9 @@ public interface BMLBlock
     void behaviorProgress(String behaviorId, String syncId);
     
     /**
-     * Called to inform the BMLBlock that a set of its behaviors is dropped 
+     * Called to inform the BMLBlock that on of its behaviors is dropped 
      */
-    void dropBehaviours(Set<String> behs);
+    void dropBehaviour(String behs);
     
     /**
      * Called to potentially update the BMLBlock's state 

@@ -7,6 +7,7 @@ import java.util.List;
 
 import org.junit.Test;
 
+import asap.bml.feedback.ListFeedbackListener;
 import asap.realizer.feedback.FeedbackManager;
 import asap.realizer.feedback.FeedbackManagerImpl;
 import asap.realizer.pegboard.BMLBlockPeg;
@@ -18,7 +19,6 @@ import asap.realizer.scheduler.BMLBlockManager;
 
 import saiba.bml.BMLGestureSync;
 import saiba.bml.feedback.BMLSyncPointProgressFeedback;
-import saiba.bml.feedback.ListFeedbackListener;
 import static asap.testutil.bml.feedback.FeedbackAsserts.*;
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.anyOf;

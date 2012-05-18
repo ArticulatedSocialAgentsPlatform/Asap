@@ -16,7 +16,7 @@ import org.powermock.modules.junit4.PowerMockRunner;
 
 import saiba.bml.core.SpeechBehaviour;
 import saiba.bml.feedback.BMLSyncPointProgressFeedback;
-import saiba.bml.feedback.ListFeedbackListener;
+import asap.bml.feedback.ListFeedbackListener;
 import asap.realizer.feedback.FeedbackManager;
 import asap.realizer.feedback.FeedbackManagerImpl;
 import asap.realizer.pegboard.BMLBlockPeg;

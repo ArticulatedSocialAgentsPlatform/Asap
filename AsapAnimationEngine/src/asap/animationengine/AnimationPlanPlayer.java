@@ -1,6 +1,5 @@
 package asap.animationengine;
 
-import saiba.bml.feedback.BMLExceptionListener;
 
 import java.util.ArrayList;
 import java.util.Collections;
@@ -11,6 +10,7 @@ import java.util.Set;
 import lombok.extern.slf4j.Slf4j;
 import asap.animationengine.motionunit.TimedAnimationUnit;
 import asap.animationengine.restpose.RestPose;
+import asap.bml.feedback.BMLWarningListener;
 import asap.motionunit.TMUPlayException;
 import asap.realizer.feedback.FeedbackManager;
 import asap.realizer.feedback.NullFeedbackManager;
@@ -196,9 +196,9 @@ public class AnimationPlanPlayer implements PlanPlayer
         defPlayer.shutdown();
     }
 
-    public void addExceptionListener(BMLExceptionListener ws)
+    public void addWarningListener(BMLWarningListener ws)
     {
-        defPlayer.addExceptionListener(ws);
+        defPlayer.addWarningListener(ws);
     }
     
     public void updateTiming(String bmlId)

@@ -18,7 +18,6 @@
  ******************************************************************************/
 package asap.blinkemitter;
 
-import saiba.bml.bridge.RealizerPort;
 import hmi.util.*;
 
 import java.util.*;
@@ -26,6 +25,7 @@ import java.util.*;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import asap.bml.bridge.RealizerPort;
 import asap.emitterengine.*;
 
 /**

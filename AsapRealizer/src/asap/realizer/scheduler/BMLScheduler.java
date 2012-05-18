@@ -20,14 +20,7 @@ package asap.realizer.scheduler;
 
 import saiba.bml.core.Behaviour;
 import saiba.bml.core.BehaviourBlock;
-import saiba.bml.feedback.BMLExceptionFeedback;
-import saiba.bml.feedback.BMLExceptionListener;
-import saiba.bml.feedback.BMLFeedbackListener;
-import saiba.bml.feedback.BMLPerformanceStartFeedback;
-import saiba.bml.feedback.BMLPerformanceStopFeedback;
 import saiba.bml.feedback.BMLSyncPointProgressFeedback;
-import saiba.bml.feedback.BMLWarningFeedback;
-import saiba.bml.feedback.BMLWarningListener;
 import saiba.bml.parser.BMLParser;
 
 import java.util.ArrayList;
@@ -47,6 +40,8 @@ import org.slf4j.LoggerFactory;
 import asap.bml.ext.bmlt.feedback.BMLTSchedulingFinishedFeedback;
 import asap.bml.ext.bmlt.feedback.BMLTSchedulingListener;
 import asap.bml.ext.bmlt.feedback.BMLTSchedulingStartFeedback;
+import asap.bml.feedback.BMLFeedbackListener;
+import asap.bml.feedback.BMLWarningListener;
 import asap.realizer.BehaviorNotFoundException;
 import asap.realizer.Engine;
 import asap.realizer.SyncPointNotFoundException;
@@ -59,6 +54,9 @@ import asap.realizer.pegboard.TimePeg;
 import asap.realizer.planunit.ParameterException;
 import asap.realizer.planunit.TimedPlanUnitState;
 import asap.utils.SchedulingClock;
+import saiba.bml.feedback.BMLWarningFeedback;
+import saiba.bml.feedback.BMLBlockProgress;
+
 import com.google.common.collect.ImmutableSet;
 
 /**
@@ -94,13 +92,7 @@ public final class BMLScheduler
         void removeWarningListener(BMLWarningListener ws);
 
         void removeAllWarningListeners();
-
-        void removeAllExceptionListeners();
-
-        void addExceptionListener(BMLExceptionListener e);
-
-        void removeExceptionListener(BMLExceptionListener e);
-
+        
         void addPlanningListener(BMLTSchedulingListener p);
 
         void removeAllPlanningListeners();
@@ -109,9 +101,7 @@ public final class BMLScheduler
 
         void planningStart(BMLTSchedulingStartFeedback bpsf);
 
-        void planningFinished(BMLTSchedulingFinishedFeedback bpff);
-
-        void exception(BMLExceptionFeedback e);
+        void planningFinished(BMLTSchedulingFinishedFeedback bpff);        
 
         void addFeedbackListener(BMLFeedbackListener e);
 
@@ -358,14 +348,15 @@ public final class BMLScheduler
      */
     public void blockStopFeedback(String bmlId)
     {
-        BMLPerformanceStopFeedback psf = new BMLPerformanceStopFeedback(bmlId, "", schedulingClock.getTime());
-        fbManager.blockStopFeedback(psf);
+        BMLBlockProgress psf = new BMLBlockProgress(bmlId, "end", schedulingClock.getTime());
+        fbManager.blockProgress(psf);
     }
 
     public void blockStartFeedback(String bmlId)
     {
-        BMLPerformanceStartFeedback psf = new BMLPerformanceStartFeedback(bmlId, schedulingClock.getTime(), predictEndTime(bmlId));
-        fbManager.blockStartFeedback(psf);
+        //BMLBlockProgress psf = new BMLPerformanceStartFeedback(bmlId, schedulingClock.getTime(), predictEndTime(bmlId));
+        BMLBlockProgress psf = new BMLBlockProgress(bmlId, "start", schedulingClock.getTime());
+        fbManager.blockProgress(psf);
     }
 
     /**
@@ -579,12 +570,8 @@ public final class BMLScheduler
                 if (bmlId.equals(bmlBlock))
                 {
                     String behId = id.substring(bmlId.length() + 1);
-                    Set<String> droppedBehaviours = new HashSet<String>();
-                    droppedBehaviours.add(behId);
-                    Set<String> modifiedConstraints = new HashSet<String>();
                     String warningText = "Invalid timing for behavior " + id + ", behavior ommitted";
-                    exception(new BMLExceptionFeedback(bmlId, schedulingClock.getTime(), droppedBehaviours, modifiedConstraints,
-                            warningText, false));
+                    warn(new BMLWarningFeedback(bmlId+":"+behId, "INVALID_TIMING", warningText));
                     removeBehaviour(bmlId, behId);
                 }
             }
@@ -603,12 +590,8 @@ public final class BMLScheduler
             {
                 String bmlId = id.split(":")[0];
                 String behId = id.substring(bmlId.length() + 1);
-                Set<String> droppedBehaviours = new HashSet<String>();
-                droppedBehaviours.add(behId);
-                Set<String> modifiedConstraints = new HashSet<String>();
                 String warningText = "Invalid timing for behavior " + id + ", behavior ommitted";
-                exception(new BMLExceptionFeedback(bmlId, schedulingClock.getTime(), droppedBehaviours, modifiedConstraints, warningText,
-                        false));
+                warn(new BMLWarningFeedback(bmlId+":"+behId, "INVALID_TIMING", warningText));
                 removeBehaviour(bmlId, behId);
             }
         }

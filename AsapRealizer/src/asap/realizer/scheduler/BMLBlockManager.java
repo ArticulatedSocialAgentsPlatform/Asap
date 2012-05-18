@@ -1,10 +1,7 @@
 package asap.realizer.scheduler;
 
-import saiba.bml.feedback.BMLExceptionFeedback;
-import saiba.bml.feedback.BMLPerformanceStartFeedback;
-import saiba.bml.feedback.BMLPerformanceStopFeedback;
+import saiba.bml.feedback.BMLBlockProgress;
 import saiba.bml.feedback.BMLSyncPointProgressFeedback;
-import saiba.bml.feedback.BMLWarningFeedback;
 
 import java.util.HashMap;
 import java.util.HashSet;
@@ -16,6 +13,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import asap.realizer.planunit.TimedPlanUnitState;
+import saiba.bml.feedback.BMLWarningFeedback;
 
 import com.google.common.base.Objects;
 import com.google.common.collect.HashMultimap;
@@ -167,35 +165,31 @@ public final class BMLBlockManager
         updateBlocks();
     }
 
-    public synchronized void performanceStop(BMLPerformanceStopFeedback psf)
+    public synchronized void blockProgress(BMLBlockProgress psf)
     {
-        BMLBlock block = BMLBlocks.get(psf.bmlId);
-        if (block == null)
+        if(psf.getSyncId().equals("end"))
         {
-            logger.warn("Performance stop of block " + psf.bmlId + " not managed by the BMLBlockManager");
-            return;
+            BMLBlock block = BMLBlocks.get(psf.getBmlId());
+            if (block == null)
+            {
+                logger.warn("Performance stop of block " + psf.getBmlId() + " not managed by the BMLBlockManager");
+                return;
+            }
         }
-        updateBlocks();
-    }
-
-    public synchronized void performanceStart(BMLPerformanceStartFeedback psf)
-    {
         updateBlocks();
     }
 
     public synchronized void warn(BMLWarningFeedback bw)
     {
-        updateBlocks();
-
-    }
-
-    public synchronized void exception(BMLExceptionFeedback be)
-    {
-        for (BMLBlock block : BMLBlocks.values())
+        String idSplit[] = bw.getId().split(":");
+        if (idSplit.length == 2)
         {
-            if (block.getBMLId().equals(be.bmlId))
+            for (BMLBlock block : BMLBlocks.values())
             {
-                block.dropBehaviours(be.failedBehaviours);
+                if (block.getBMLId().equals(idSplit[0]))
+                {
+                    block.dropBehaviour(idSplit[1]);
+                }
             }
         }
         updateBlocks();

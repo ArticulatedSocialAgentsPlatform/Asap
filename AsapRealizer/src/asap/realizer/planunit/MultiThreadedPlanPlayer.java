@@ -18,8 +18,6 @@
  ******************************************************************************/
 package asap.realizer.planunit;
 
-import saiba.bml.feedback.BMLExceptionFeedback;
-import saiba.bml.feedback.BMLExceptionListener;
 import hmi.util.RuntimeExceptionLoggingRunnable;
 
 import java.util.ArrayList;
@@ -36,8 +34,10 @@ import java.util.concurrent.TimeUnit;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import asap.bml.feedback.BMLWarningListener;
 import asap.realizer.feedback.FeedbackManager;
 import asap.realizer.feedback.NullFeedbackManager;
+import saiba.bml.feedback.BMLWarningFeedback;
 
 import com.google.common.collect.ImmutableList;
 
@@ -190,7 +190,7 @@ public class MultiThreadedPlanPlayer<T extends TimedPlanUnit>  implements PlanPl
 
         Set<String> modifiedConstraints = new HashSet<String>();
         String warningText = message + "\nBehavior " + su.getBMLId() + ":" + su.getId() + " dropped.";
-        exception(new BMLExceptionFeedback(bmlId, time, droppedBehaviours, modifiedConstraints, warningText, false));
+        warning(new BMLWarningFeedback(bmlId, "EXECUTION_EXCEPTION", warningText));
     }
 
     protected void playUnit(T su, double t) throws TimedPlanUnitPlayException
@@ -255,18 +255,18 @@ public class MultiThreadedPlanPlayer<T extends TimedPlanUnit>  implements PlanPl
         }
     }
 
-    public void exception(BMLExceptionFeedback e)
+    public void warning(BMLWarningFeedback e)
     {
-        fbManager.exception(e);
+        fbManager.warn(e);
     }
 
-    public void addExceptionListener(BMLExceptionListener ws)
+    public void addWarningListener(BMLWarningListener ws)
     {
-        fbManager.addExceptionListener(ws);
+        fbManager.addWarningListener(ws);
     }
 
-    public void removeAllExceptionListeners()
+    public void removeAllWarningListeners()
     {
-        fbManager.removeAllExceptionListeners();
+        fbManager.removeAllWarningListeners();
     }
 }

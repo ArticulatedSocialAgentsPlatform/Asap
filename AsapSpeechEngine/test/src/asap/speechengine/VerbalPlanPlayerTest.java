@@ -10,10 +10,11 @@ import java.util.List;
 
 import org.junit.Test;
 
+import saiba.bml.feedback.BMLWarningFeedback;
+
 import saiba.bml.core.Behaviour;
 import saiba.bml.core.SpeechBehaviour;
-import saiba.bml.feedback.BMLExceptionFeedback;
-import saiba.bml.feedback.ListBMLExceptionListener;
+import asap.bml.feedback.ListBMLWarningListener;
 import asap.realizer.feedback.FeedbackManager;
 import asap.realizer.pegboard.BMLBlockPeg;
 import asap.realizer.pegboard.TimePeg;
@@ -103,7 +104,7 @@ public class VerbalPlanPlayerTest
     @Test
     public void testPlayTTSUnit() throws InterruptedException
     {
-        List<BMLExceptionFeedback> bwList = new ArrayList<BMLExceptionFeedback>();
+        List<BMLWarningFeedback> bwList = new ArrayList<BMLWarningFeedback>();
 
         StubTTSUnit ttsUnitStub = new StubTTSUnit(mockFeedbackManager, BMLBlockPeg.GLOBALPEG, "Hello world", "id1", "bml1", mockTTSBind,
                 SpeechBehaviour.class);
@@ -113,7 +114,7 @@ public class VerbalPlanPlayerTest
         ttsUnitStub.setStart(tpStart);
 
         MultiThreadedPlanPlayer<TimedAbstractSpeechUnit> vpp = new MultiThreadedPlanPlayer<TimedAbstractSpeechUnit>(mockFeedbackManager,planManager);
-        vpp.addExceptionListener(new ListBMLExceptionListener(bwList));
+        vpp.addWarningListener(new ListBMLWarningListener(bwList));
 
         planManager.addPlanUnit(ttsUnitStub);
         vpp.play(0);

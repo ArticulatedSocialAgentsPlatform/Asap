@@ -16,8 +16,9 @@ import org.junit.runner.RunWith;
 import org.powermock.core.classloader.annotations.PrepareForTest;
 import org.powermock.modules.junit4.PowerMockRunner;
 
-import saiba.bml.feedback.BMLExceptionFeedback;
-import saiba.bml.feedback.BMLPerformanceStopFeedback;
+import saiba.bml.feedback.BMLBlockProgress;
+import saiba.bml.feedback.BMLWarningFeedback;
+
 import saiba.bml.feedback.BMLSyncPointProgressFeedback;
 import asap.realizer.pegboard.PegBoard;
 import asap.realizer.pegboard.TimePeg;
@@ -209,7 +210,7 @@ public class BMLBlockManagerFeedbackTest
         bbm.startBlock("bml1");
         when(mockScheduler.getBehaviours("bml1")).thenReturn(new HashSet<String>());
         
-        bbm.exception(new BMLExceptionFeedback("bml1", 0, new HashSet<String>(),new HashSet<String>(), "",false));  
+        bbm.warn(new BMLWarningFeedback("bml1", "TEST",""));  
         verify(mockScheduler,times(1)).blockStopFeedback("bml1");
     }
     
@@ -252,8 +253,8 @@ public class BMLBlockManagerFeedbackTest
         bbm.startBlock("bml2");
         bbm.startBlock("bml3");
         
-        bbm.performanceStop(new BMLPerformanceStopFeedback("bml2", "", 1));
-        bbm.performanceStop(new BMLPerformanceStopFeedback("bml3", "", 1));
+        bbm.blockProgress(new BMLBlockProgress("bml2", "end", 1));
+        bbm.blockProgress(new BMLBlockProgress("bml3", "end", 1));        
         
         verify(mockScheduler,times(1)).startBlock("bml1");
         verify(mockScheduler,never()).startBlock("bml2");
@@ -274,7 +275,7 @@ public class BMLBlockManagerFeedbackTest
         bbm.activateBlock("bml1");
         bbm.startBlock("bml2");
         bbm.startBlock("bml3");        
-        bbm.performanceStop(new BMLPerformanceStopFeedback("bml2", "", 1));
+        bbm.blockProgress(new BMLBlockProgress("bml2", "end", 1));
         bbm.removeBMLBlock("bml3");
         
         verify(mockScheduler,times(1)).startBlock("bml1");
@@ -297,7 +298,7 @@ public class BMLBlockManagerFeedbackTest
         bbm.startBlock("bml2");
         bbm.startBlock("bml3");
         
-        bbm.performanceStop(new BMLPerformanceStopFeedback("bml2", "", 1));   
+        bbm.blockProgress(new BMLBlockProgress("bml2", "end", 1));   
         
         verify(mockScheduler,never()).startBlock("bml1");
         verify(mockScheduler,never()).startBlock("bml2");

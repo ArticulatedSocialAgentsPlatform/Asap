@@ -7,7 +7,6 @@ import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
 import static org.powermock.api.mockito.PowerMockito.mock;
 import saiba.bml.feedback.BMLSyncPointProgressFeedback;
-import saiba.bml.feedback.ListFeedbackListener;
 import asap.realizertestutil.util.KeyPositionMocker;
 
 import java.util.ArrayList;
@@ -18,6 +17,7 @@ import org.junit.runner.RunWith;
 import org.powermock.core.classloader.annotations.PrepareForTest;
 import org.powermock.modules.junit4.PowerMockRunner;
 
+import asap.bml.feedback.ListFeedbackListener;
 import asap.faceengine.faceunit.FaceUnit;
 import asap.faceengine.faceunit.TimedFaceUnit;
 import asap.motionunit.MUPlayException;

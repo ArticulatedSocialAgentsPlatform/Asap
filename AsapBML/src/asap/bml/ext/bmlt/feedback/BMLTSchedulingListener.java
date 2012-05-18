@@ -1,6 +1,6 @@
 package asap.bml.ext.bmlt.feedback;
 
-import saiba.bml.feedback.BMLListener;
+import asap.bml.feedback.BMLListener;
 /**
  * Listener interface for Scheduling feedback messages
  * @author welberge

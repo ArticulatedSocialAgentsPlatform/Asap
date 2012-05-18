@@ -4,10 +4,6 @@ import static org.junit.Assert.assertEquals;
 import static org.mockito.Matchers.anyDouble;
 import static org.mockito.Mockito.doThrow;
 import static org.mockito.Mockito.mock;
-import saiba.bml.feedback.BMLExceptionFeedback;
-import saiba.bml.feedback.ListBMLExceptionListener;
-import asap.realizertestutil.util.KeyPositionMocker;
-import asap.realizertestutil.util.TimePegUtil;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -19,6 +15,9 @@ import org.powermock.api.mockito.PowerMockito;
 import org.powermock.core.classloader.annotations.PrepareForTest;
 import org.powermock.modules.junit4.PowerMockRunner;
 
+import saiba.bml.feedback.BMLWarningFeedback;
+
+import asap.bml.feedback.ListBMLWarningListener;
 import asap.realizer.DefaultPlayer;
 import asap.realizer.Player;
 import asap.realizer.feedback.FeedbackManager;
@@ -30,6 +29,8 @@ import asap.realizer.planunit.SingleThreadedPlanPlayer;
 import asap.realizer.planunit.TimedPlanUnitPlayException;
 import asap.realizer.planunit.TimedPlanUnitState;
 import asap.realizer.scheduler.BMLBlockManager;
+import asap.realizertestutil.util.KeyPositionMocker;
+import asap.realizertestutil.util.TimePegUtil;
 
 /**
  * Unit Test cases for the FacePlayer
@@ -39,7 +40,7 @@ import asap.realizer.scheduler.BMLBlockManager;
 @PrepareForTest({BMLBlockManager.class,TimedFaceUnit.class})
 public class FacePlayerTest
 {
-    private List<BMLExceptionFeedback> beList;
+    private List<BMLWarningFeedback> beList;
 
     private Player facePlayer;
 
@@ -55,8 +56,8 @@ public class FacePlayerTest
     public void setup()
     {
         facePlayer = new DefaultPlayer(new SingleThreadedPlanPlayer<TimedFaceUnit>(fbManager, planManager));
-        beList = new ArrayList<BMLExceptionFeedback>();
-        fbManager.addExceptionListener(new ListBMLExceptionListener(beList));
+        beList = new ArrayList<BMLWarningFeedback>();
+        fbManager.addWarningListener(new ListBMLWarningListener(beList));
     }
 
     @Test

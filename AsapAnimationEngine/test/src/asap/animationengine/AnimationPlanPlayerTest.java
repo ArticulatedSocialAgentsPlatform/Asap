@@ -26,15 +26,15 @@ import org.powermock.core.classloader.annotations.PowerMockIgnore;
 import org.powermock.core.classloader.annotations.PrepareForTest;
 import org.powermock.modules.junit4.PowerMockRunner;
 
-import saiba.bml.feedback.BMLExceptionFeedback;
 import saiba.bml.feedback.BMLSyncPointProgressFeedback;
-import saiba.bml.feedback.ListBMLExceptionListener;
-import saiba.bml.feedback.ListFeedbackListener;
+import saiba.bml.feedback.BMLWarningFeedback;
 import asap.animationengine.motionunit.AnimationUnit;
 import asap.animationengine.motionunit.TimedAnimationUnit;
 import asap.animationengine.restpose.RestPose;
 import asap.animationengine.transitions.TransitionMU;
 import asap.animationengine.transitions.TransitionTMU;
+import asap.bml.feedback.ListBMLWarningListener;
+import asap.bml.feedback.ListFeedbackListener;
 import asap.motionunit.MUPlayException;
 import asap.realizer.feedback.FeedbackManager;
 import asap.realizer.feedback.FeedbackManagerImpl;
@@ -47,6 +47,7 @@ import asap.realizer.planunit.KeyPosition;
 import asap.realizer.planunit.PlanManager;
 import asap.realizer.planunit.TimedPlanUnitState;
 import asap.realizer.scheduler.BMLBlockManager;
+
 
 import com.google.common.collect.ImmutableSet;
 
@@ -68,7 +69,7 @@ public class AnimationPlanPlayerTest
     private TransitionMU muMockTransition = mock(TransitionMU.class);
 
     private List<BMLSyncPointProgressFeedback> fbList = new ArrayList<BMLSyncPointProgressFeedback>();
-    private List<BMLExceptionFeedback> exList = new ArrayList<BMLExceptionFeedback>();
+    private List<BMLWarningFeedback> exList = new ArrayList<BMLWarningFeedback>();
     private BMLBlockManager mockBmlBlockManager = mock(BMLBlockManager.class);
     private RestPose mockRestPose = mock(RestPose.class);
     private FeedbackManager fbManager = new FeedbackManagerImpl(mockBmlBlockManager, "character1");
@@ -84,7 +85,7 @@ public class AnimationPlanPlayerTest
     {
         fbl = new ListFeedbackListener(fbList);
         app = new AnimationPlanPlayer(mockRestPose, fbManager, planManager, new DefaultTimedPlanUnitPlayer());
-        app.addExceptionListener(new ListBMLExceptionListener(exList));
+        app.addWarningListener(new ListBMLWarningListener(exList));
         fbManager.addFeedbackListener(fbl);
     }
 
@@ -314,7 +315,7 @@ public class AnimationPlanPlayerTest
         tmu.setState(TimedPlanUnitState.LURKING);
         app.play(0.5);
         assertTrue(exList.size() == 1);
-        assertTrue(exList.get(0).failedBehaviours.contains(tmu.getId()));
+        assertEquals("bml1:behaviour1",exList.get(0).getId());
         assertEquals(TimedPlanUnitState.DONE, tmu.getState());
         verify(muMock1, atLeastOnce()).getKeyPosition("start");
         verify(muMock1, atLeastOnce()).getKeyPosition("end");

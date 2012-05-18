@@ -26,11 +26,10 @@ import org.powermock.modules.junit4.PowerMockRunner;
 
 import saiba.bml.core.Behaviour;
 import saiba.bml.core.SpeechBehaviour;
-import saiba.bml.feedback.BMLExceptionFeedback;
 import saiba.bml.feedback.BMLSyncPointProgressFeedback;
-import saiba.bml.feedback.ListBMLExceptionListener;
-import saiba.bml.feedback.ListFeedbackListener;
 import saiba.bml.parser.Constraint;
+import asap.bml.feedback.ListBMLWarningListener;
+import asap.bml.feedback.ListFeedbackListener;
 import asap.realizer.BehaviourPlanningException;
 import asap.realizer.DefaultEngine;
 import asap.realizer.DefaultPlayer;
@@ -50,6 +49,7 @@ import asap.realizer.scheduler.BMLBlockManager;
 import asap.realizer.scheduler.TimePegAndConstraint;
 import asap.speechengine.ttsbinding.TTSBinding;
 import asap.speechengine.util.TTSUnitStub;
+import saiba.bml.feedback.BMLWarningFeedback;
 
 import com.google.common.collect.ImmutableList;
 
@@ -100,7 +100,7 @@ public class TTSPlannerIntegrationTest
     protected Planner<TimedTTSUnit> ttsPlanner;
     protected Player verbalPlayer;
 
-    protected List<BMLExceptionFeedback> exceptionList;
+    protected List<BMLWarningFeedback> exceptionList;
 
     protected List<BMLSyncPointProgressFeedback> feedbackList;
 
@@ -147,9 +147,9 @@ public class TTSPlannerIntegrationTest
         verbalPlayer = new DefaultPlayer(new MultiThreadedPlanPlayer<TimedTTSUnit>(fbManager,planManager));
         ttsPlanner = new TTSPlanner(fbManager,mockTTSUnitFactory, mockTTSBinding,planManager);
         ttsEngine = new DefaultEngine<TimedTTSUnit>(ttsPlanner,verbalPlayer, planManager);
-        exceptionList = Collections.synchronizedList(new ArrayList<BMLExceptionFeedback>());
+        exceptionList = Collections.synchronizedList(new ArrayList<BMLWarningFeedback>());
 
-        fbManager.addExceptionListener(new ListBMLExceptionListener(exceptionList));
+        fbManager.addWarningListener(new ListBMLWarningListener(exceptionList));
         feedbackList = Collections.synchronizedList(new ArrayList<BMLSyncPointProgressFeedback>());
         fbManager.addFeedbackListener(new ListFeedbackListener(feedbackList));
     }
@@ -203,7 +203,7 @@ public class TTSPlannerIntegrationTest
     {
         mockTTSUnitFactoryExpectationsTTSUnitPlayException();
 
-        // checks if TTSUnit failure properly appears as BMLExceptionFeedback
+        // checks if TTSUnit failure properly appears as BMLWarningFeedback
         SpeechBehaviour beh = createSpeechBehaviour(SPEECHID, BMLID, SPEECHTEXT);
 
         ArrayList<TimePegAndConstraint> sacs = new ArrayList<TimePegAndConstraint>();

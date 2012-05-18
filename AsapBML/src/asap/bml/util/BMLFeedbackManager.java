@@ -1,20 +1,9 @@
 package asap.bml.util;
 
-import saiba.bml.feedback.BMLExceptionFeedback;
-import saiba.bml.feedback.BMLExceptionListener;
+import saiba.bml.feedback.BMLBlockProgress;
 import saiba.bml.feedback.BMLFeedback;
-import saiba.bml.feedback.BMLFeedbackListener;
-import saiba.bml.feedback.BMLListener;
-import saiba.bml.feedback.BMLPerformanceStartFeedback;
-import saiba.bml.feedback.BMLPerformanceStopFeedback;
 import saiba.bml.feedback.BMLSyncPointProgressFeedback;
-import saiba.bml.feedback.BMLWarningFeedback;
-import saiba.bml.feedback.BMLWarningListener;
-import saiba.bml.feedback.XMLBMLExceptionFeedback;
-import saiba.bml.feedback.XMLBMLPerformanceStartFeedback;
-import saiba.bml.feedback.XMLBMLPerformanceStopFeedback;
 import saiba.bml.feedback.XMLBMLSyncPointProgressFeedback;
-import saiba.bml.feedback.XMLBMLWarningFeedback;
 import hmi.xml.XMLTokenizer;
 
 import java.io.IOException;
@@ -24,23 +13,25 @@ import java.util.List;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import saiba.bml.feedback.BMLWarningFeedback;
+
 import asap.bml.ext.bmlt.feedback.BMLTSchedulingFinishedFeedback;
 import asap.bml.ext.bmlt.feedback.BMLTSchedulingListener;
 import asap.bml.ext.bmlt.feedback.BMLTSchedulingStartFeedback;
 import asap.bml.ext.bmlt.feedback.XMLBMLTSchedulingFinishedFeedback;
 import asap.bml.ext.bmlt.feedback.XMLBMLTSchedulingStartFeedback;
+import asap.bml.feedback.BMLFeedbackListener;
+import asap.bml.feedback.BMLListener;
+import asap.bml.feedback.BMLWarningListener;
 
 /**
  * Utility class to send out feedback to registered listeners
  * @author welberge
- *
+ * 
  */
 public class BMLFeedbackManager
 {
     private static Logger logger = LoggerFactory.getLogger(BMLFeedbackManager.class.getName());
-
-    /** This listener should receive feedback that comes in over the network connection */
-    private List<BMLExceptionListener> bmlExceptionListeners = new ArrayList<BMLExceptionListener>();
 
     /** This listener should receive feedback that comes in over the network connection */
     private List<BMLWarningListener> bmlWarningListeners = new ArrayList<BMLWarningListener>();
@@ -50,24 +41,18 @@ public class BMLFeedbackManager
 
     private List<BMLTSchedulingListener> bmlPlanningListeners = new ArrayList<BMLTSchedulingListener>();
 
-    
     public void removeAllListeners()
     {
-        bmlExceptionListeners.clear();
         bmlWarningListeners.clear();
         bmlFeedbackListeners.clear();
         bmlPlanningListeners.clear();
-        
+
     }
-    
+
     public void addListeners(BMLListener... bmlListeners)
     {
         for (BMLListener listener : bmlListeners)
         {
-            if (listener instanceof BMLExceptionListener)
-            {
-                bmlExceptionListeners.add((BMLExceptionListener) listener);
-            }
             if (listener instanceof BMLWarningListener)
             {
                 bmlWarningListeners.add((BMLWarningListener) listener);
@@ -92,29 +77,17 @@ public class BMLFeedbackManager
         XMLTokenizer tok = new XMLTokenizer(feedbackString);
         try
         {
-            if (tok.atSTag(XMLBMLWarningFeedback.xmlTag()))
+            if (tok.atSTag(BMLWarningFeedback.xmlTag()))
             {
-                XMLBMLWarningFeedback feedback = new XMLBMLWarningFeedback();
+                BMLWarningFeedback feedback = new BMLWarningFeedback();
                 feedback.readXML(tok);
-                sendWarning(feedback.getBMLWarningFeedback());
-            }
-            else if (tok.atSTag(XMLBMLExceptionFeedback.xmlTag()))
+                sendWarning(feedback);
+            }         
+            else if (tok.atSTag(BMLBlockProgress.xmlTag()))
             {
-                XMLBMLExceptionFeedback feedback = new XMLBMLExceptionFeedback();
+                BMLBlockProgress feedback = new BMLBlockProgress();
                 feedback.readXML(tok);
-                sendException(feedback.getBMLExceptionFeedback());
-            }
-            else if (tok.atSTag(XMLBMLPerformanceStartFeedback.xmlTag()))
-            {
-                XMLBMLPerformanceStartFeedback feedback = new XMLBMLPerformanceStartFeedback();
-                feedback.readXML(tok);
-                sendPerformanceStartFeedback(feedback.getBMLPerformanceStartFeedback());
-            }
-            else if (tok.atSTag(XMLBMLPerformanceStopFeedback.xmlTag()))
-            {
-                XMLBMLPerformanceStopFeedback feedback = new XMLBMLPerformanceStopFeedback();
-                feedback.readXML(tok);
-                sendPerformanceStopFeedback(feedback.getBMLPerformanceStopFeedback());
+                sendBlockProgress(feedback);
             }
             else if (tok.atSTag(XMLBMLSyncPointProgressFeedback.xmlTag()))
             {
@@ -141,9 +114,7 @@ public class BMLFeedbackManager
         }
         catch (IOException e)
         {
-            logger.warn(
-                    "Error reading feedback from message {}, error: {}. Disconnecting from server.",
-                    feedbackString, e.getMessage());
+            logger.warn("Error reading feedback from message {}, error: {}. Disconnecting from server.", feedbackString, e.getMessage());
         }
         catch (Exception e)
         {
@@ -151,50 +122,29 @@ public class BMLFeedbackManager
         }
     }
 
+    public void sendFeedback(BMLWarningFeedback feedback)
+    {
+        sendWarning(feedback);
+    }
+
     public void sendFeedback(BMLFeedback feedback)
     {
         // send feedback to appropriate listeners...
-        if (feedback instanceof BMLExceptionFeedback)
-        {
-            sendException((BMLExceptionFeedback) feedback);
-        }
-        else if (feedback instanceof BMLWarningFeedback)
-        {
-            sendWarning((BMLWarningFeedback) feedback);
-        }
-        else if (feedback instanceof BMLSyncPointProgressFeedback)
+        if (feedback instanceof BMLSyncPointProgressFeedback)
         {
             sendSyncProgress((BMLSyncPointProgressFeedback) feedback);
         }
-        else if (feedback instanceof BMLPerformanceStopFeedback)
+        else if (feedback instanceof BMLBlockProgress)
         {
-            sendPerformanceStopFeedback((BMLPerformanceStopFeedback) feedback);
-        }
-        else if (feedback instanceof BMLPerformanceStartFeedback)
-        {
-            sendPerformanceStartFeedback((BMLPerformanceStartFeedback) feedback);
+            sendBlockProgress((BMLBlockProgress)feedback);
         }
         else if (feedback instanceof BMLTSchedulingStartFeedback)
         {
-            sendPlanningStart((BMLTSchedulingStartFeedback)feedback);
+            sendPlanningStart((BMLTSchedulingStartFeedback) feedback);
         }
         else if (feedback instanceof BMLTSchedulingFinishedFeedback)
         {
-            sendPlanningFinished((BMLTSchedulingFinishedFeedback)feedback);
-        }
-    }
-
-    public void sendException(BMLExceptionFeedback bef)
-    {
-        for (BMLExceptionListener b : bmlExceptionListeners)
-        {
-            b.exception(bef);
-        }
-        if (bmlExceptionListeners.isEmpty())
-        {
-            logger.warn(
-                    "BMLExceptionFeedback {} occured and was not captured by a BMLExceptionListener",
-                    bef.toString());
+            sendPlanningFinished((BMLTSchedulingFinishedFeedback) feedback);
         }
     }
 
@@ -230,19 +180,11 @@ public class BMLFeedbackManager
         }
     }
 
-    private void sendPerformanceStartFeedback(BMLPerformanceStartFeedback psf)
+    private void sendBlockProgress(BMLBlockProgress psf)
     {
         for (BMLFeedbackListener f : bmlFeedbackListeners)
         {
-            f.performanceStart(psf);
+            f.blockProgress(psf);
         }
-    }
-
-    private void sendPerformanceStopFeedback(BMLPerformanceStopFeedback psf)
-    {
-        for (BMLFeedbackListener f : bmlFeedbackListeners)
-        {
-            f.performanceStop(psf);
-        }
-    }
+    }    
 }

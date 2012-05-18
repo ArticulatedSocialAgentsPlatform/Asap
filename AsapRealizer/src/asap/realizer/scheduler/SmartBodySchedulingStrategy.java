@@ -22,8 +22,6 @@ import saiba.bml.BMLInfo;
 import saiba.bml.core.BMLBlockComposition;
 import saiba.bml.core.Behaviour;
 import saiba.bml.core.BehaviourBlock;
-import saiba.bml.feedback.BMLExceptionFeedback;
-import saiba.bml.feedback.BMLWarningFeedback;
 import saiba.bml.parser.Constraint;
 import saiba.bml.parser.SyncPoint;
 
@@ -36,6 +34,8 @@ import java.util.Set;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+
+import saiba.bml.feedback.BMLWarningFeedback;
 
 import asap.bml.ext.bmlt.BMLTBMLBehaviorAttributes;
 import asap.realizer.BehaviourPlanningException;
@@ -124,16 +124,12 @@ public class SmartBodySchedulingStrategy implements SchedulingStrategy
                         }
                         else if (tpac.peg.getGlobalValue()<0 || tpac.peg.getBmlId().equals(bb.id))
                         {
+                            String warningText = "Can't satisfy time constraints "+tpac+" on <" + b.getXMLTag() + ">, behavior ommitted";
+                            scheduler.warn(new BMLWarningFeedback(b.getBmlId()+":"+b.id,"CANNOT_SATISFY_CONSTRAINTS",warningText));
+                            
                             // TODO: create error and cancel the block if the
                             // behaviour is a
-                            // required behavior/its constraints are required
-                            String bmlId = b.getBmlId();
-                            Set<String> droppedBehaviours = new HashSet<String>();
-                            droppedBehaviours.add(b.id);
-                            Set<String> modifiedConstraints = new HashSet<String>();
-                            String warningText = "Can't satisfy time constraints "+tpac+" on <" + b.getXMLTag() + ">, behavior ommitted";
-                            scheduler.exception(new BMLExceptionFeedback(bmlId, scheduleTime, droppedBehaviours, modifiedConstraints,
-                                    warningText, false));
+                            // required behavior/its constraints are required                            
                             behToRemove.add(b);
                         }
                         else
@@ -217,12 +213,8 @@ public class SmartBodySchedulingStrategy implements SchedulingStrategy
                                         TimePeg sp = ap.getSynchronisationPoint(str[1]);
                                         if(sp==null)
                                         {
-                                            Set<String> modifiedBehaviours = new HashSet<String>();
-                                            modifiedBehaviours.add(b.id);
-                                            Set<String> modifiedConstraints = new HashSet<String>();
                                             String warningText = "Unknown anticipator synchronization point " + s.getName() + " sync ignored.";
-                                            scheduler.warn(new BMLWarningFeedback(bmlId, scheduleTime, modifiedBehaviours,
-                                                    modifiedConstraints, warningText));
+                                            scheduler.warn(new BMLWarningFeedback(bmlId+":"+b.id, "UNKNOWN_ANTICIPATOR_SYNC", warningText));
                                             break;
                                         }
                                         
@@ -234,12 +226,8 @@ public class SmartBodySchedulingStrategy implements SchedulingStrategy
                                     }
                                     else
                                     {
-                                        Set<String> modifiedBehaviours = new HashSet<String>();
-                                        modifiedBehaviours.add(b.id);
-                                        Set<String> modifiedConstraints = new HashSet<String>();
                                         String warningText = "Unknown sync point " + s.getName() + " sync ignored.";
-                                        scheduler.warn(new BMLWarningFeedback(bmlId, scheduleTime, modifiedBehaviours,
-                                                modifiedConstraints, warningText));
+                                        scheduler.warn(new BMLWarningFeedback(bmlId+":"+b.id, "UNKNOWN_SYNCPOINT", warningText));
                                         break;
                                     }
                                 }
@@ -273,8 +261,7 @@ public class SmartBodySchedulingStrategy implements SchedulingStrategy
                                 Set<String> modifiedConstraints = new HashSet<String>();
                                 modifiedBehaviours.add(b.id);
                                 String warningText = "Unknown sync point " + s.getBmlId()+":"+s.getBehaviourId()+":"+s.getName() + " sync ignored.";
-                                scheduler.warn(new BMLWarningFeedback(bmlId, scheduleTime, modifiedBehaviours,
-                                        modifiedConstraints, warningText));
+                                scheduler.warn(new BMLWarningFeedback(bmlId+":"+s.getBehaviourId(), "UNKNOWN_SYNCPOINT", warningText));
                                 break;                                
                             }
                         }
@@ -327,13 +314,8 @@ public class SmartBodySchedulingStrategy implements SchedulingStrategy
             {
                 // TODO: create error and cancel the block if the behaviour
                 // is a required
-                // behavior/its constraints are required
-                Set<String> droppedBehaviours = new HashSet<String>();
-                droppedBehaviours.add(b.id);
-                Set<String> modifiedConstraints = new HashSet<String>();
-                String warningText = ex.getMessage();
-                scheduler.exception(new BMLExceptionFeedback(bmlId, scheduleTime, droppedBehaviours, modifiedConstraints, warningText,
-                        false));
+                // behavior/its constraints are required                
+                scheduler.warn(new BMLWarningFeedback(bmlId+":"+b.id, "BehaviourPlanningException", ex.getMessage()));
                 return;
             }
         }
@@ -342,12 +324,8 @@ public class SmartBodySchedulingStrategy implements SchedulingStrategy
             // TODO: create error and cancel the block if the behaviour is a
             // required
             // behavior/its constraints are required
-            Set<String> droppedBehaviours = new HashSet<String>();
-            droppedBehaviours.add(b.id);
-            Set<String> modifiedConstraints = new HashSet<String>();
-            String warningText = "No planner found to plan behavior of type <" + b.getXMLTag() + ">, behavior ommitted";
-            scheduler.exception(new BMLExceptionFeedback(bmlId, scheduleTime, droppedBehaviours, modifiedConstraints, warningText,
-                    false));
+            String warningText = "No planner found to plan behavior of type <" + b.getXMLTag() + ">, behavior ommitted";            
+            scheduler.warn(new BMLWarningFeedback(bmlId+":"+b.id, BMLWarningFeedback.CANNOT_CREATE_BEHAVIOR,warningText));
             return;
         }
         syncMap.put(b, syncList);

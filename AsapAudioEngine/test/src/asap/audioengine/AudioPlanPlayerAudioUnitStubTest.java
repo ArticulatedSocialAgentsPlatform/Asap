@@ -9,8 +9,9 @@ import java.util.List;
 import org.junit.Before;
 import org.junit.Test;
 
-import saiba.bml.feedback.BMLExceptionFeedback;
-import saiba.bml.feedback.ListBMLExceptionListener;
+import saiba.bml.feedback.BMLWarningFeedback;
+
+import asap.bml.feedback.ListBMLWarningListener;
 import asap.realizer.feedback.FeedbackManager;
 import asap.realizer.pegboard.BMLBlockPeg;
 import asap.realizer.pegboard.TimePeg;
@@ -35,7 +36,7 @@ public class AudioPlanPlayerAudioUnitStubTest
     @Test
     public void testPlayAudioUnit() throws InterruptedException, TimedPlanUnitPlayException
     {
-        List<BMLExceptionFeedback> beList = new ArrayList<BMLExceptionFeedback>();
+        List<BMLWarningFeedback> beList = new ArrayList<BMLWarningFeedback>();
         
         StubAudioUnit auStub = new StubAudioUnit(mockFeedbackManager,BMLBlockPeg.GLOBALPEG,null,"id1","bml1");
         
@@ -44,7 +45,7 @@ public class AudioPlanPlayerAudioUnitStubTest
         tpStart.setGlobalValue(0);
         auStub.setStart(tpStart);
         
-        app.addExceptionListener(new ListBMLExceptionListener(beList));        
+        app.addWarningListener(new ListBMLWarningListener(beList));        
         planManager.addPlanUnit(auStub);
         app.play(0);
         

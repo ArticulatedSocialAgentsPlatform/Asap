@@ -1,9 +1,9 @@
 package asap.realizer.bridge;
 
 import asap.bml.bridge.LinkedBlockingQueuePipe;
-import asap.realizer.ElckerlycRealizer;
-import saiba.bml.bridge.RealizerPort;
-import saiba.bml.feedback.BMLListener;
+import asap.bml.bridge.RealizerPort;
+import asap.bml.feedback.BMLListener;
+import asap.realizer.AsapRealizer;
 
 
 /**
@@ -16,7 +16,7 @@ public class MultiThreadedElckerlycRealizerBridge implements RealizerPort
 {
     private final LinkedBlockingQueuePipe queueBridge;
     private final ElckerlycRealizerPipe elrBridge;
-    public MultiThreadedElckerlycRealizerBridge(ElckerlycRealizer realizer)
+    public MultiThreadedElckerlycRealizerBridge(AsapRealizer realizer)
     {
         elrBridge = new ElckerlycRealizerPipe(realizer);
         queueBridge = new LinkedBlockingQueuePipe(elrBridge);

@@ -25,15 +25,14 @@ import saiba.bml.core.Behaviour;
 import saiba.bml.core.BehaviourBlock;
 import saiba.bml.core.GestureBehaviour;
 import saiba.bml.core.SpeechBehaviour;
-import saiba.bml.feedback.BMLPerformanceStartFeedback;
-import saiba.bml.feedback.BMLPerformanceStopFeedback;
+import saiba.bml.feedback.BMLBlockProgress;
 import saiba.bml.feedback.BMLSyncPointProgressFeedback;
-import saiba.bml.feedback.ListFeedbackListener;
 import saiba.bml.parser.BMLParser;
 import asap.bml.ext.bmlt.BMLTBMLBehaviorAttributes;
 import asap.bml.ext.bmlt.feedback.BMLTSchedulingFinishedFeedback;
 import asap.bml.ext.bmlt.feedback.BMLTSchedulingStartFeedback;
 import asap.bml.ext.bmlt.feedback.ListBMLTSchedulingListener;
+import asap.bml.feedback.ListFeedbackListener;
 import asap.realizer.BehaviorNotFoundException;
 import asap.realizer.BehaviourPlanningException;
 import asap.realizer.Engine;
@@ -280,9 +279,7 @@ public class BMLSchedulerTest
 
     private List<BMLSyncPointProgressFeedback> feedBackList;
 
-    private List<BMLPerformanceStartFeedback> startFeedbackList;
-
-    private List<BMLPerformanceStopFeedback> endFeedbackList;
+    private List<BMLBlockProgress> blockProgressFeedbackList;
 
     private List<BMLTSchedulingStartFeedback> planningStartFeedback = new ArrayList<BMLTSchedulingStartFeedback>();
 
@@ -293,22 +290,28 @@ public class BMLSchedulerTest
     private BMLBlockManager bbManager = new BMLBlockManager();
     private FeedbackManager fbManager = new FeedbackManagerImpl(bbManager, "character1");
 
-    private List<String> getBMLIdsFromStartFeedback(List<BMLPerformanceStartFeedback> fbList)
+    private List<String> getBMLIdsFromStartFeedback(List<BMLBlockProgress> fbList)
     {
         List<String> bmlIds = new ArrayList<String>();
-        for (BMLPerformanceStartFeedback fb : fbList)
+        for (BMLBlockProgress fb : fbList)
         {
-            bmlIds.add(fb.bmlId);
+            if(fb.getSyncId().equals("start"))
+            {
+                bmlIds.add(fb.getBmlId());
+            }
         }
         return bmlIds;
     }
 
-    private List<String> getBMLIdsFromEndFeedback(List<BMLPerformanceStopFeedback> fbList)
+    private List<String> getBMLIdsFromEndFeedback(List<BMLBlockProgress> fbList)
     {
         List<String> bmlIds = new ArrayList<String>();
-        for (BMLPerformanceStopFeedback fb : fbList)
+        for (BMLBlockProgress fb : fbList)
         {
-            bmlIds.add(fb.bmlId);
+            if(fb.getSyncId().equals("end"))
+            {
+                bmlIds.add(fb.getBmlId());
+            }
         }
         return bmlIds;
     }
@@ -355,9 +358,8 @@ public class BMLSchedulerTest
         scheduler.addEngine(SpeechBehaviour.class, stubEngine);
 
         feedBackList = new ArrayList<BMLSyncPointProgressFeedback>();
-        startFeedbackList = new ArrayList<BMLPerformanceStartFeedback>();
-        endFeedbackList = new ArrayList<BMLPerformanceStopFeedback>();
-        listFeedbackListener = new ListFeedbackListener(feedBackList, startFeedbackList, endFeedbackList);
+        blockProgressFeedbackList = new ArrayList<BMLBlockProgress>();
+        listFeedbackListener = new ListFeedbackListener(feedBackList, blockProgressFeedbackList);
         scheduler.addFeedbackListener(listFeedbackListener);
 
         scheduler.addPlanningListener(new ListBMLTSchedulingListener(planningStartFeedback, planningFinishedFeedback));
@@ -375,8 +377,8 @@ public class BMLSchedulerTest
     {
         parseBML("<bml id=\"bml1\"/>");
         scheduler.schedule();
-        assertEquals(1, startFeedbackList.size());
-        assertEquals("bml1", startFeedbackList.get(0).bmlId);
+        assertEquals(1, getBMLIdsFromStartFeedback(blockProgressFeedbackList).size());
+        assertEquals("bml1", getBMLIdsFromStartFeedback(blockProgressFeedbackList).get(0));
     }
 
     @Test
@@ -385,16 +387,16 @@ public class BMLSchedulerTest
         parseBML(createNonEmptyBML("bml1"));
         parseBML(createNonEmptyBML("bml2", "composition=\"APPEND\""));
         scheduler.schedule();
-        assertEquals(1, startFeedbackList.size());
-        assertEquals("bml1", startFeedbackList.get(0).bmlId);
+        assertEquals(1, getBMLIdsFromStartFeedback(blockProgressFeedbackList).size());
+        assertEquals("bml1", getBMLIdsFromStartFeedback(blockProgressFeedbackList).get(0));
         scheduler.getBMLBlockManager().finishBlock("bml1");
-        assertEquals(1, endFeedbackList.size());
-        assertEquals("bml1", endFeedbackList.get(0).bmlId);
-        assertEquals(2, startFeedbackList.size());
-        assertEquals("bml2", startFeedbackList.get(1).bmlId);
+        assertEquals(1, getBMLIdsFromEndFeedback(blockProgressFeedbackList).size());
+        assertEquals("bml1", getBMLIdsFromEndFeedback(blockProgressFeedbackList).get(0));
+        assertEquals(2, getBMLIdsFromStartFeedback(blockProgressFeedbackList).size());
+        assertEquals("bml2", getBMLIdsFromStartFeedback(blockProgressFeedbackList).get(1));
 
-        assertThat(listFeedbackListener.getIndex(startFeedbackList.get(1)),
-                greaterThan(listFeedbackListener.getIndex(endFeedbackList.get(0))));
+        assertThat(listFeedbackListener.getIndex(listFeedbackListener.getBlockProgress("bml2","start")),
+                greaterThan(listFeedbackListener.getIndex(listFeedbackListener.getBlockProgress("bml1","start"))));
     }
 
     @Test
@@ -403,10 +405,10 @@ public class BMLSchedulerTest
         parseBML(createEmptyBML("bml1", "composition=\"MERGE\""));
         scheduler.schedule();
 
-        assertEquals(1, startFeedbackList.size());
-        assertEquals("bml1", startFeedbackList.get(0).bmlId);
-        assertEquals(1, endFeedbackList.size());
-        assertEquals("bml1", endFeedbackList.get(0).bmlId);
+        assertEquals(1, getBMLIdsFromStartFeedback(blockProgressFeedbackList).size());
+        assertEquals("bml1", getBMLIdsFromStartFeedback(blockProgressFeedbackList).get(0));
+        assertEquals(1, getBMLIdsFromEndFeedback(blockProgressFeedbackList).size());
+        assertEquals("bml1", getBMLIdsFromEndFeedback(blockProgressFeedbackList).get(0));
     }
 
     @Test
@@ -415,10 +417,10 @@ public class BMLSchedulerTest
         parseBML(createEmptyBML("bml1", "composition=\"REPLACE\""));
         scheduler.schedule();
 
-        assertEquals(1, startFeedbackList.size());
-        assertEquals("bml1", startFeedbackList.get(0).bmlId);
-        assertEquals(1, endFeedbackList.size());
-        assertEquals("bml1", endFeedbackList.get(0).bmlId);
+        assertEquals(1, getBMLIdsFromStartFeedback(blockProgressFeedbackList).size());
+        assertEquals("bml1", getBMLIdsFromStartFeedback(blockProgressFeedbackList).get(0));
+        assertEquals(1, getBMLIdsFromEndFeedback(blockProgressFeedbackList).size());
+        assertEquals("bml1", getBMLIdsFromEndFeedback(blockProgressFeedbackList).get(0));
     }
 
     @Test
@@ -426,12 +428,12 @@ public class BMLSchedulerTest
     {
         parseBML(createNonEmptyBML("bml1", "composition=\"APPEND\""));
         scheduler.schedule();
-        assertEquals(1, startFeedbackList.size());
-        assertEquals("bml1", startFeedbackList.get(0).bmlId);
+        assertEquals(1, getBMLIdsFromStartFeedback(blockProgressFeedbackList).size());
+        assertEquals("bml1", getBMLIdsFromStartFeedback(blockProgressFeedbackList).get(0));
 
         scheduler.blockStopFeedback("bml1");
-        assertEquals(1, endFeedbackList.size());
-        assertEquals("bml1", endFeedbackList.get(0).bmlId);
+        assertEquals(1, getBMLIdsFromEndFeedback(blockProgressFeedbackList).size());
+        assertEquals("bml1", getBMLIdsFromEndFeedback(blockProgressFeedbackList).get(0));
     }
 
     @Test
@@ -442,14 +444,14 @@ public class BMLSchedulerTest
         parseBML(createNonEmptyBML("bml2", "composition=\"APPEND\""));
         scheduler.schedule();
 
-        assertEquals(1, startFeedbackList.size());
-        assertEquals("bml1", startFeedbackList.get(0).bmlId);
+        assertEquals(1, getBMLIdsFromStartFeedback(blockProgressFeedbackList).size());
+        assertEquals("bml1", getBMLIdsFromStartFeedback(blockProgressFeedbackList).get(0));
 
         scheduler.getBMLBlockManager().finishBlock("bml1");
-        assertEquals(1, endFeedbackList.size());
-        assertEquals("bml1", endFeedbackList.get(0).bmlId);
-        assertEquals(2, startFeedbackList.size());
-        assertEquals("bml2", startFeedbackList.get(1).bmlId);
+        assertEquals(1, getBMLIdsFromEndFeedback(blockProgressFeedbackList).size());
+        assertEquals("bml1", getBMLIdsFromEndFeedback(blockProgressFeedbackList).get(0));
+        assertEquals(2, getBMLIdsFromStartFeedback(blockProgressFeedbackList).size());
+        assertEquals("bml2", getBMLIdsFromStartFeedback(blockProgressFeedbackList).get(1));
     }
 
     @Test
@@ -461,19 +463,19 @@ public class BMLSchedulerTest
         parseBML(createNonEmptyBML("bml4", "composition=\"APPEND-AFTER(bml2,bml3)\""));
         scheduler.schedule();
 
-        assertEquals(3, startFeedbackList.size());
-        assertEquals("bml1", startFeedbackList.get(0).bmlId);
-        assertEquals("bml2", startFeedbackList.get(1).bmlId);
-        assertEquals("bml3", startFeedbackList.get(2).bmlId);
+        assertEquals(3, getBMLIdsFromStartFeedback(blockProgressFeedbackList).size());
+        assertEquals("bml1", getBMLIdsFromStartFeedback(blockProgressFeedbackList).get(0));
+        assertEquals("bml2", getBMLIdsFromStartFeedback(blockProgressFeedbackList).get(1));
+        assertEquals("bml3", getBMLIdsFromStartFeedback(blockProgressFeedbackList).get(2));
 
         scheduler.getBMLBlockManager().finishBlock("bml2");
-        assertEquals(3, startFeedbackList.size());
-        assertEquals(1, endFeedbackList.size());
+        assertEquals(3, getBMLIdsFromStartFeedback(blockProgressFeedbackList).size());
+        assertEquals(1, getBMLIdsFromEndFeedback(blockProgressFeedbackList).size());
 
         scheduler.getBMLBlockManager().finishBlock("bml3");
-        assertEquals(4, startFeedbackList.size());
-        assertEquals(2, endFeedbackList.size());
-        assertEquals("bml4", startFeedbackList.get(3).bmlId);
+        assertEquals(4, getBMLIdsFromStartFeedback(blockProgressFeedbackList).size());
+        assertEquals(2, getBMLIdsFromEndFeedback(blockProgressFeedbackList).size());
+        assertEquals("bml4", getBMLIdsFromStartFeedback(blockProgressFeedbackList).get(3));
     }
 
     @Test
@@ -487,34 +489,34 @@ public class BMLSchedulerTest
         parseBML(createNonEmptyBML("bml5"));
         scheduler.schedule();
 
-        assertEquals(4, startFeedbackList.size());
-        assertEquals("bml1", startFeedbackList.get(0).bmlId);
-        assertEquals("bml2", startFeedbackList.get(1).bmlId);
-        assertEquals("bml3", startFeedbackList.get(2).bmlId);
+        assertEquals(4, getBMLIdsFromStartFeedback(blockProgressFeedbackList).size());
+        assertEquals("bml1", getBMLIdsFromStartFeedback(blockProgressFeedbackList).get(0));
+        assertEquals("bml2", getBMLIdsFromStartFeedback(blockProgressFeedbackList).get(1));
+        assertEquals("bml3", getBMLIdsFromStartFeedback(blockProgressFeedbackList).get(2));
 
         scheduler.getBMLBlockManager().finishBlock("bml2");
-        assertEquals(4, startFeedbackList.size());
-        assertEquals(1, endFeedbackList.size());
+        assertEquals(4, getBMLIdsFromStartFeedback(blockProgressFeedbackList).size());
+        assertEquals(1, getBMLIdsFromEndFeedback(blockProgressFeedbackList).size());
 
         scheduler.getBMLBlockManager().finishBlock("bml3");
-        assertEquals(5, startFeedbackList.size());
-        assertEquals(2, endFeedbackList.size());
-        assertEquals("bml4", startFeedbackList.get(4).bmlId);
+        assertEquals(5, getBMLIdsFromStartFeedback(blockProgressFeedbackList).size());
+        assertEquals(2, getBMLIdsFromEndFeedback(blockProgressFeedbackList).size());
+        assertEquals("bml4", getBMLIdsFromStartFeedback(blockProgressFeedbackList).get(4));
     }
 
     @Test
     public void testStartNonExisting()
     {
         scheduler.startBlock("bml1");
-        assertEquals(0, startFeedbackList.size());
+        assertEquals(0, getBMLIdsFromStartFeedback(blockProgressFeedbackList).size());
     }
 
     @Test
     public void testInteruptNonExisting()
     {
         scheduler.interruptBlock("bml1");
-        assertEquals(0, startFeedbackList.size());
-        assertEquals(0, endFeedbackList.size());
+        assertEquals(0, getBMLIdsFromStartFeedback(blockProgressFeedbackList).size());
+        assertEquals(0, getBMLIdsFromEndFeedback(blockProgressFeedbackList).size());
     }
 
     @Test
@@ -522,10 +524,10 @@ public class BMLSchedulerTest
     {
         parseBML(createNonEmptyBML("bml1"));
         scheduler.schedule();
-        assertEquals(1, startFeedbackList.size());
+        assertEquals(1, getBMLIdsFromStartFeedback(blockProgressFeedbackList).size());
 
         scheduler.interruptBlock("bml1");
-        assertEquals(1, endFeedbackList.size());
+        assertEquals(1, getBMLIdsFromEndFeedback(blockProgressFeedbackList).size());
     }
 
     @Test
@@ -534,20 +536,20 @@ public class BMLSchedulerTest
         parseBML(createNonEmptyBML("bml1"));
         parseBML(createNonEmptyBML("bml2"));
         scheduler.schedule();
-        assertEquals(2, startFeedbackList.size());
+        assertEquals(2, getBMLIdsFromStartFeedback(blockProgressFeedbackList).size());
 
         parseBML(createNonEmptyBML("bml3", "bmlt:interrupt=\"bml1,bml2\""));
         scheduler.schedule();
-        assertEquals(3, startFeedbackList.size());
+        assertEquals(3, getBMLIdsFromStartFeedback(blockProgressFeedbackList).size());
 
-        assertEquals(2, endFeedbackList.size());
-        if (endFeedbackList.get(0).bmlId.equals("bml1"))
+        assertEquals(2, getBMLIdsFromEndFeedback(blockProgressFeedbackList).size());
+        if (getBMLIdsFromEndFeedback(blockProgressFeedbackList).get(0).equals("bml1"))
         {
-            assertEquals("bml2", endFeedbackList.get(1).bmlId);
+            assertEquals("bml2", getBMLIdsFromEndFeedback(blockProgressFeedbackList).get(1));
         }
-        else if (endFeedbackList.get(0).bmlId.equals("bml2"))
+        else if (getBMLIdsFromEndFeedback(blockProgressFeedbackList).get(0).equals("bml2"))
         {
-            assertEquals("bml1", endFeedbackList.get(1).bmlId);
+            assertEquals("bml1", getBMLIdsFromEndFeedback(blockProgressFeedbackList).get(1));
         }
         else
         {
@@ -561,14 +563,14 @@ public class BMLSchedulerTest
         parseBML(createNonEmptyBML("bml1"));
         parseBML(createNonEmptyBML("bml2", "composition=\"APPEND\""));
         scheduler.schedule();
-        assertEquals(1, startFeedbackList.size());
+        assertEquals(1, getBMLIdsFromStartFeedback(blockProgressFeedbackList).size());
 
         scheduler.interruptBlock("bml2");
-        assertEquals(0, endFeedbackList.size());
+        assertEquals(0, getBMLIdsFromEndFeedback(blockProgressFeedbackList).size());
 
         scheduler.blockStopFeedback("bml1");
-        assertEquals(1, startFeedbackList.size());
-        assertEquals(1, endFeedbackList.size());
+        assertEquals(1, getBMLIdsFromStartFeedback(blockProgressFeedbackList).size());
+        assertEquals(1, getBMLIdsFromEndFeedback(blockProgressFeedbackList).size());
     }
 
     @Test
@@ -578,17 +580,17 @@ public class BMLSchedulerTest
         parseBML(createNonEmptyBML("bml1"));
         parseBML(createNonEmptyBML("bml2", "composition=\"APPEND\""));
         scheduler.schedule();
-        assertEquals(1, startFeedbackList.size());
-        assertEquals("bml1", startFeedbackList.get(0).bmlId);
+        assertEquals(1, getBMLIdsFromStartFeedback(blockProgressFeedbackList).size());
+        assertEquals("bml1", getBMLIdsFromStartFeedback(blockProgressFeedbackList).get(0));
 
         scheduler.interruptBlock("bml1");
-        assertEquals(1, endFeedbackList.size());
-        assertEquals("bml1", endFeedbackList.get(0).bmlId);
+        assertEquals(1, getBMLIdsFromEndFeedback(blockProgressFeedbackList).size());
+        assertEquals("bml1", getBMLIdsFromEndFeedback(blockProgressFeedbackList).get(0));
 
-        assertEquals(2, startFeedbackList.size());
-        assertEquals("bml2", startFeedbackList.get(1).bmlId);
-        assertEquals(1, endFeedbackList.size());
-        assertEquals("bml1", endFeedbackList.get(0).bmlId);
+        assertEquals(2, getBMLIdsFromStartFeedback(blockProgressFeedbackList).size());
+        assertEquals("bml2", getBMLIdsFromStartFeedback(blockProgressFeedbackList).get(1));
+        assertEquals(1, getBMLIdsFromEndFeedback(blockProgressFeedbackList).size());
+        assertEquals("bml1", getBMLIdsFromEndFeedback(blockProgressFeedbackList).get(0));
     }
 
     @Test
@@ -596,8 +598,8 @@ public class BMLSchedulerTest
     {
         parseBML(createNonEmptyBML("bml2", "bmlt:preplan=\"true\""));
         scheduler.schedule();
-        assertEquals(0, startFeedbackList.size());
-        assertEquals(0, endFeedbackList.size());
+        assertEquals(0, getBMLIdsFromStartFeedback(blockProgressFeedbackList).size());
+        assertEquals(0, getBMLIdsFromEndFeedback(blockProgressFeedbackList).size());
     }
 
     @Test
@@ -605,8 +607,8 @@ public class BMLSchedulerTest
     {
         parseBML(createEmptyBML("bml2", "bmlt:preplan=\"true\""));
         scheduler.schedule();
-        assertEquals(0, startFeedbackList.size());
-        assertEquals(0, endFeedbackList.size());
+        assertEquals(0, getBMLIdsFromStartFeedback(blockProgressFeedbackList).size());
+        assertEquals(0, getBMLIdsFromEndFeedback(blockProgressFeedbackList).size());
     }
 
     @Test
@@ -616,8 +618,8 @@ public class BMLSchedulerTest
         scheduler.schedule();
         parseBML(createEmptyBML("bml3", "bmlt:onStart=\"bml2\""));
         scheduler.schedule();
-        assertEquals(2, startFeedbackList.size());
-        assertEquals(2, endFeedbackList.size());
+        assertEquals(2, getBMLIdsFromStartFeedback(blockProgressFeedbackList).size());
+        assertEquals(2, getBMLIdsFromEndFeedback(blockProgressFeedbackList).size());
     }
 
     @Test
@@ -626,11 +628,11 @@ public class BMLSchedulerTest
         parseBML(createNonEmptyBML("bml1"));
         parseBML(createNonEmptyBML("bml2", "composition=\"APPEND\" bmlt:preplan=\"true\""));
         scheduler.schedule();
-        assertEquals(1, startFeedbackList.size());
-        assertEquals("bml1", startFeedbackList.get(0).bmlId);
+        assertEquals(1, getBMLIdsFromStartFeedback(blockProgressFeedbackList).size());
+        assertEquals("bml1", getBMLIdsFromStartFeedback(blockProgressFeedbackList).get(0));
 
         scheduler.blockStopFeedback("bml1");
-        assertEquals(1, startFeedbackList.size());
+        assertEquals(1, getBMLIdsFromStartFeedback(blockProgressFeedbackList).size());
     }
 
     @Test
@@ -638,14 +640,14 @@ public class BMLSchedulerTest
     {
         parseBML(createNonEmptyBML("bml1", "bmlt:preplan=\"true\""));
         scheduler.schedule();
-        assertEquals(0, startFeedbackList.size());
+        assertEquals(0, getBMLIdsFromStartFeedback(blockProgressFeedbackList).size());
 
         parseBML(createNonEmptyBML("bml2", "bmlt:onStart=\"bml1\""));
         scheduler.schedule();
-        assertEquals(2, startFeedbackList.size());
+        assertEquals(2, getBMLIdsFromStartFeedback(blockProgressFeedbackList).size());
 
-        assertEquals("bml2", startFeedbackList.get(0).bmlId);
-        assertEquals("bml1", startFeedbackList.get(1).bmlId);
+        assertEquals("bml2", getBMLIdsFromStartFeedback(blockProgressFeedbackList).get(0));
+        assertEquals("bml1", getBMLIdsFromStartFeedback(blockProgressFeedbackList).get(1));
     }
 
     @Test
@@ -654,17 +656,17 @@ public class BMLSchedulerTest
         parseBML(createNonEmptyBML("bml1"));
         parseBML(createNonEmptyBML("bml2", "composition=\"APPEND\" preplan=\"true\""));
         scheduler.schedule();
-        assertEquals(1, startFeedbackList.size());
-        assertEquals("bml1", startFeedbackList.get(0).bmlId);
+        assertEquals(1, getBMLIdsFromStartFeedback(blockProgressFeedbackList).size());
+        assertEquals("bml1", getBMLIdsFromStartFeedback(blockProgressFeedbackList).get(0));
 
         parseBML(createNonEmptyBML("bml3", "onStart=\"bml2\""));
         scheduler.schedule();
-        assertEquals(2, startFeedbackList.size());
-        assertEquals("bml3", startFeedbackList.get(1).bmlId);
+        assertEquals(2, getBMLIdsFromStartFeedback(blockProgressFeedbackList).size());
+        assertEquals("bml3", getBMLIdsFromStartFeedback(blockProgressFeedbackList).get(1));
 
         scheduler.getBMLBlockManager().finishBlock("bml1");
-        assertEquals(3, startFeedbackList.size());
-        assertEquals("bml2", startFeedbackList.get(2).bmlId);
+        assertEquals(3, getBMLIdsFromStartFeedback(blockProgressFeedbackList).size());
+        assertEquals("bml2", getBMLIdsFromStartFeedback(blockProgressFeedbackList).get(2));
     }
 
     @Test
@@ -673,15 +675,15 @@ public class BMLSchedulerTest
         parseBML(createNonEmptyBML("bml1", "bmlt:preplan=\"true\""));
         scheduler.schedule();
 
-        assertEquals(0, startFeedbackList.size());
+        assertEquals(0, getBMLIdsFromStartFeedback(blockProgressFeedbackList).size());
 
         parseBML(createNonEmptyBML("bml2", "bmlt:onStart=\"bml1\""));
         scheduler.schedule();
-        assertEquals(2, startFeedbackList.size());
+        assertEquals(2, getBMLIdsFromStartFeedback(blockProgressFeedbackList).size());
 
         parseBML(createNonEmptyBML("bml3", "onStart=\"bml1\""));
         scheduler.schedule();
-        assertEquals(3, startFeedbackList.size());
+        assertEquals(3, getBMLIdsFromStartFeedback(blockProgressFeedbackList).size());
     }
 
     @Test
@@ -703,8 +705,8 @@ public class BMLSchedulerTest
                                                                      // way
         scheduler.schedule();
 
-        assertThat(getBMLIdsFromStartFeedback(startFeedbackList), IsIterableContainingInOrder.contains("bml1", "bml2", "bml3"));
-        assertThat(getBMLIdsFromEndFeedback(endFeedbackList), IsIterableContainingInOrder.contains("bml1", "bml2", "bml3"));
+        assertThat(getBMLIdsFromStartFeedback(blockProgressFeedbackList), IsIterableContainingInOrder.contains("bml1", "bml2", "bml3"));
+        assertThat(getBMLIdsFromEndFeedback(blockProgressFeedbackList), IsIterableContainingInOrder.contains("bml1", "bml2", "bml3"));
     }
 
     @Test
@@ -728,8 +730,8 @@ public class BMLSchedulerTest
                                                                         // way
         scheduler.schedule();
 
-        assertThat(getBMLIdsFromStartFeedback(startFeedbackList), IsIterableContainingInOrder.contains("bml1", "bml2", "bml3"));
-        assertThat(getBMLIdsFromEndFeedback(endFeedbackList), IsIterableContainingInOrder.contains("bml1", "bml2"));
+        assertThat(getBMLIdsFromStartFeedback(blockProgressFeedbackList), IsIterableContainingInOrder.contains("bml1", "bml2", "bml3"));
+        assertThat(getBMLIdsFromEndFeedback(blockProgressFeedbackList), IsIterableContainingInOrder.contains("bml1", "bml2"));
     }
 
     @Test
@@ -738,8 +740,8 @@ public class BMLSchedulerTest
         parseBML(createNonEmptyBML("bml3", "composition=\"REPLACE\""));
         scheduler.schedule();
 
-        assertThat(getBMLIdsFromStartFeedback(startFeedbackList), IsIterableContainingInOrder.contains("bml3"));
-        assertThat(getBMLIdsFromEndFeedback(endFeedbackList), hasSize(0));
+        assertThat(getBMLIdsFromStartFeedback(blockProgressFeedbackList), IsIterableContainingInOrder.contains("bml3"));
+        assertThat(getBMLIdsFromEndFeedback(blockProgressFeedbackList), hasSize(0));
     }
 
     @Test
@@ -751,8 +753,8 @@ public class BMLSchedulerTest
         parseBML(createNonEmptyBML("bml2", "bmlt:preplan=\"true\" bmlt:interrupt=\"bml1\""));
         scheduler.schedule();
 
-        assertEquals(1, startFeedbackList.size());
-        assertEquals(1, endFeedbackList.size());
+        assertEquals(1, getBMLIdsFromStartFeedback(blockProgressFeedbackList).size());
+        assertEquals(1, getBMLIdsFromEndFeedback(blockProgressFeedbackList).size());
     }
 
     @Test
@@ -764,8 +766,8 @@ public class BMLSchedulerTest
         parseBML(createNonEmptyBML("bml2", "bmlt:preplan=\"true\" bmlt:interrupt=\"bml1\""));
         scheduler.schedule();
 
-        assertEquals(0, startFeedbackList.size());
-        assertEquals(0, endFeedbackList.size());
+        assertEquals(0, getBMLIdsFromStartFeedback(blockProgressFeedbackList).size());
+        assertEquals(0, getBMLIdsFromEndFeedback(blockProgressFeedbackList).size());
         assertEquals(0, scheduler.getBehaviours("bml1").size());
     }
 
@@ -778,7 +780,7 @@ public class BMLSchedulerTest
         parseBML(createNonEmptyBML("bml2", "bmlt:preplan=\"true\" onStart=\"bml1\""));
         scheduler.schedule();
 
-        assertEquals(0, startFeedbackList.size());
+        assertEquals(0, getBMLIdsFromStartFeedback(blockProgressFeedbackList).size());
     }
 
     @Test
@@ -793,7 +795,7 @@ public class BMLSchedulerTest
         parseBML(createNonEmptyBML("bml2", "bmlt:preplan=\"true\" composition=\"APPEND-AFTER(bml1)\" onStart=\"bml3\""));
         scheduler.schedule();
 
-        assertEquals(0, startFeedbackList.size());
+        assertEquals(0, getBMLIdsFromStartFeedback(blockProgressFeedbackList).size());
     }
 
     @Test
@@ -805,18 +807,18 @@ public class BMLSchedulerTest
         parseBML(createNonEmptyBML("bml2", "composition=\"APPEND-AFTER(bml1)\""));
         scheduler.schedule();
 
-        assertEquals(0, startFeedbackList.size());
+        assertEquals(0, getBMLIdsFromStartFeedback(blockProgressFeedbackList).size());
 
         parseBML(createEmptyBML("bml3", "bmlt:onStart=\"bml1\""));
         scheduler.schedule();
 
-        assertEquals(2, startFeedbackList.size());
-        assertEquals("bml3", startFeedbackList.get(0).bmlId);
-        assertEquals("bml1", startFeedbackList.get(1).bmlId);
+        assertEquals(2, getBMLIdsFromStartFeedback(blockProgressFeedbackList).size());
+        assertEquals("bml3", getBMLIdsFromStartFeedback(blockProgressFeedbackList).get(0));
+        assertEquals("bml1", getBMLIdsFromStartFeedback(blockProgressFeedbackList).get(1));
 
         scheduler.getBMLBlockManager().finishBlock("bml1");
-        assertEquals(3, startFeedbackList.size());
-        assertEquals("bml2", startFeedbackList.get(2).bmlId);
+        assertEquals(3, getBMLIdsFromStartFeedback(blockProgressFeedbackList).size());
+        assertEquals("bml2", getBMLIdsFromStartFeedback(blockProgressFeedbackList).get(2));
     }
 
     @Test
@@ -828,18 +830,18 @@ public class BMLSchedulerTest
         parseBML(createNonEmptyBML("bml2", "composition=\"APPEND\""));
         scheduler.schedule();
 
-        assertEquals(0, startFeedbackList.size());
+        assertEquals(0, getBMLIdsFromStartFeedback(blockProgressFeedbackList).size());
 
         parseBML(createEmptyBML("bml3", "bmlt:onStart=\"bml1\""));
         scheduler.schedule();
 
-        assertEquals(2, startFeedbackList.size());
-        assertEquals("bml3", startFeedbackList.get(0).bmlId);
-        assertEquals("bml1", startFeedbackList.get(1).bmlId);
+        assertEquals(2, getBMLIdsFromStartFeedback(blockProgressFeedbackList).size());
+        assertEquals("bml3", getBMLIdsFromStartFeedback(blockProgressFeedbackList).get(0));
+        assertEquals("bml1", getBMLIdsFromStartFeedback(blockProgressFeedbackList).get(1));
 
         scheduler.getBMLBlockManager().finishBlock("bml1");
-        assertEquals(3, startFeedbackList.size());
-        assertEquals("bml2", startFeedbackList.get(2).bmlId);
+        assertEquals(3, getBMLIdsFromStartFeedback(blockProgressFeedbackList).size());
+        assertEquals("bml2", getBMLIdsFromStartFeedback(blockProgressFeedbackList).get(2));
     }
 
     @Test

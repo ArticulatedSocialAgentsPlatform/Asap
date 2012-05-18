@@ -1,13 +1,7 @@
 package asap.realizer.feedback;
 
-import saiba.bml.feedback.BMLExceptionFeedback;
-import saiba.bml.feedback.BMLExceptionListener;
-import saiba.bml.feedback.BMLFeedbackListener;
-import saiba.bml.feedback.BMLPerformanceStartFeedback;
-import saiba.bml.feedback.BMLPerformanceStopFeedback;
+import saiba.bml.feedback.BMLBlockProgress;
 import saiba.bml.feedback.BMLSyncPointProgressFeedback;
-import saiba.bml.feedback.BMLWarningFeedback;
-import saiba.bml.feedback.BMLWarningListener;
 
 import java.util.ArrayList;
 import java.util.Collections;
@@ -23,11 +17,19 @@ import org.slf4j.LoggerFactory;
 import asap.bml.ext.bmlt.feedback.BMLTSchedulingFinishedFeedback;
 import asap.bml.ext.bmlt.feedback.BMLTSchedulingListener;
 import asap.bml.ext.bmlt.feedback.BMLTSchedulingStartFeedback;
+import asap.bml.feedback.BMLFeedbackListener;
+import asap.bml.feedback.BMLWarningListener;
 import asap.realizer.planunit.TimedPlanUnit;
 import asap.realizer.scheduler.BMLBlockManager;
+import saiba.bml.feedback.BMLWarningFeedback;
 
 import com.google.common.collect.ImmutableSet;
 
+/**
+ * Default implementation for the FeedbackManager
+ * @author Herwin
+ *
+ */
 public class FeedbackManagerImpl implements FeedbackManager
 {
     private final BMLBlockManager bmlBlockManager;
@@ -36,9 +38,6 @@ public class FeedbackManagerImpl implements FeedbackManager
 
     @GuardedBy("feedbackListeners")
     private final List<BMLFeedbackListener> feedbackListeners = Collections.synchronizedList(new ArrayList<BMLFeedbackListener>());
-
-    @GuardedBy("exceptionListeners")
-    private final List<BMLExceptionListener> exceptionListeners = Collections.synchronizedList(new ArrayList<BMLExceptionListener>());
 
     @GuardedBy("warningListeners")
     private final List<BMLWarningListener> warningListeners = Collections.synchronizedList(new ArrayList<BMLWarningListener>());
@@ -54,56 +53,19 @@ public class FeedbackManagerImpl implements FeedbackManager
     }
 
     @Override
-    public void exception(BMLExceptionFeedback e)
-    {
-        e.setCharacterId(characterId);
-        synchronized (exceptionListeners)
-        {
-            for (BMLExceptionListener el : exceptionListeners)
-            {
-                try
-                {
-                    el.exception(e);
-                }
-                catch (Exception ex)
-                {
-                    LOGGER.warn("Broken ExceptionListener: {}", ex);
-                }
-            }
-        }
-        bmlBlockManager.exception(e);
-    }
-
-    @Override
-    public void addExceptionListener(BMLExceptionListener es)
-    {
-        exceptionListeners.add(es);
-    }
-
-    @Override
-    public void removeAllExceptionListeners()
-    {
-        exceptionListeners.clear();
-    }
-
-    @Override
-    public void puException(TimedPlanUnit timedMU, String message, double time)
-    {
-        String bmlId = timedMU.getBMLId();
-        Set<String> failedBehaviours = new HashSet<String>();
-        failedBehaviours.add(timedMU.getId());
-        Set<String> failedConstraints = new HashSet<String>();
-        String exceptionText = message + "\nBehavior " + timedMU.getBMLId() + ":" + timedMU.getId() + " dropped.";
-        // TODO: handle performance failed
-        exception(new BMLExceptionFeedback(bmlId, time, failedBehaviours, failedConstraints, exceptionText, false));
-    }
-
-    @Override
     public void addFeedbackListener(BMLFeedbackListener fb)
     {
         feedbackListeners.add(fb);
     }
 
+    @Override
+    public void puException(TimedPlanUnit timedMU, String message, double time)
+    {
+        String bmlId = timedMU.getBMLId();        
+        String exceptionText = message + "\nBehavior " + timedMU.getBMLId() + ":" + timedMU.getId() + " dropped.";
+        warn(new BMLWarningFeedback(bmlId+":"+timedMU.getId(), "EXECUTION_FAILURE",exceptionText));
+    }
+    
     @Override
     public void feedback(BMLSyncPointProgressFeedback fb)
     {
@@ -175,7 +137,7 @@ public class FeedbackManagerImpl implements FeedbackManager
     }
 
     @Override
-    public void blockStopFeedback(BMLPerformanceStopFeedback psf)
+    public void blockProgress(BMLBlockProgress psf)
     {
         psf.setCharacterId(characterId);
         synchronized (feedbackListeners)
@@ -184,7 +146,7 @@ public class FeedbackManagerImpl implements FeedbackManager
             {
                 try
                 {
-                    fbl.performanceStop(psf);
+                    fbl.blockProgress(psf);
                 }
                 catch (Exception ex)
                 {
@@ -192,35 +154,8 @@ public class FeedbackManagerImpl implements FeedbackManager
                 }
             }
         }
-        bmlBlockManager.performanceStop(psf);
-    }
-
-    @Override
-    public void blockStartFeedback(BMLPerformanceStartFeedback psf)
-    {
-        psf.setCharacterId(characterId);
-        synchronized (feedbackListeners)
-        {
-            for (BMLFeedbackListener fbl : feedbackListeners)
-            {
-                try
-                {
-                    fbl.performanceStart(psf);
-                }
-                catch (Exception ex)
-                {
-                    LOGGER.warn("Broken FeedbackListener: {}", ex);
-                }
-            }
-        }
-        bmlBlockManager.performanceStart(psf);
-    }
-
-    @Override
-    public void removeExceptionListener(BMLExceptionListener e)
-    {
-        exceptionListeners.remove(e);
-    }
+        bmlBlockManager.blockProgress(psf);
+    }    
 
     @Override
     public void addPlanningListener(BMLTSchedulingListener p)
@@ -271,6 +206,7 @@ public class FeedbackManagerImpl implements FeedbackManager
         }
     }
 
+    
     @Override
     public void planningFinished(BMLTSchedulingFinishedFeedback bpff)
     {
