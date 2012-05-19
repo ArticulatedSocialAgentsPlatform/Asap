@@ -55,7 +55,7 @@ import asap.realizer.planunit.ParameterException;
 import asap.realizer.planunit.TimedPlanUnitState;
 import asap.utils.SchedulingClock;
 import saiba.bml.feedback.BMLWarningFeedback;
-import saiba.bml.feedback.BMLBlockProgress;
+import saiba.bml.feedback.BMLBlockProgressFeedback;
 
 import com.google.common.collect.ImmutableSet;
 
@@ -348,14 +348,14 @@ public final class BMLScheduler
      */
     public void blockStopFeedback(String bmlId)
     {
-        BMLBlockProgress psf = new BMLBlockProgress(bmlId, "end", schedulingClock.getTime());
+        BMLBlockProgressFeedback psf = new BMLBlockProgressFeedback(bmlId, "end", schedulingClock.getTime());
         fbManager.blockProgress(psf);
     }
 
     public void blockStartFeedback(String bmlId)
     {
         //BMLBlockProgress psf = new BMLPerformanceStartFeedback(bmlId, schedulingClock.getTime(), predictEndTime(bmlId));
-        BMLBlockProgress psf = new BMLBlockProgress(bmlId, "start", schedulingClock.getTime());
+        BMLBlockProgressFeedback psf = new BMLBlockProgressFeedback(bmlId, "start", schedulingClock.getTime());
         fbManager.blockProgress(psf);
     }
 

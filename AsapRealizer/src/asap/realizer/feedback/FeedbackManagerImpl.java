@@ -1,19 +1,17 @@
 package asap.realizer.feedback;
 
-import saiba.bml.feedback.BMLBlockProgress;
-import saiba.bml.feedback.BMLSyncPointProgressFeedback;
-
 import java.util.ArrayList;
 import java.util.Collections;
-import java.util.HashSet;
 import java.util.List;
-import java.util.Set;
 
 import net.jcip.annotations.GuardedBy;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import saiba.bml.feedback.BMLBlockProgressFeedback;
+import saiba.bml.feedback.BMLSyncPointProgressFeedback;
+import saiba.bml.feedback.BMLWarningFeedback;
 import asap.bml.ext.bmlt.feedback.BMLTSchedulingFinishedFeedback;
 import asap.bml.ext.bmlt.feedback.BMLTSchedulingListener;
 import asap.bml.ext.bmlt.feedback.BMLTSchedulingStartFeedback;
@@ -21,7 +19,6 @@ import asap.bml.feedback.BMLFeedbackListener;
 import asap.bml.feedback.BMLWarningListener;
 import asap.realizer.planunit.TimedPlanUnit;
 import asap.realizer.scheduler.BMLBlockManager;
-import saiba.bml.feedback.BMLWarningFeedback;
 
 import com.google.common.collect.ImmutableSet;
 
@@ -137,7 +134,7 @@ public class FeedbackManagerImpl implements FeedbackManager
     }
 
     @Override
-    public void blockProgress(BMLBlockProgress psf)
+    public void blockProgress(BMLBlockProgressFeedback psf)
     {
         psf.setCharacterId(characterId);
         synchronized (feedbackListeners)

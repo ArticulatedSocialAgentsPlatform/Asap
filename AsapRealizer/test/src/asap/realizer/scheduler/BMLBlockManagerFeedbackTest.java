@@ -16,7 +16,7 @@ import org.junit.runner.RunWith;
 import org.powermock.core.classloader.annotations.PrepareForTest;
 import org.powermock.modules.junit4.PowerMockRunner;
 
-import saiba.bml.feedback.BMLBlockProgress;
+import saiba.bml.feedback.BMLBlockProgressFeedback;
 import saiba.bml.feedback.BMLWarningFeedback;
 
 import saiba.bml.feedback.BMLSyncPointProgressFeedback;
@@ -253,8 +253,8 @@ public class BMLBlockManagerFeedbackTest
         bbm.startBlock("bml2");
         bbm.startBlock("bml3");
         
-        bbm.blockProgress(new BMLBlockProgress("bml2", "end", 1));
-        bbm.blockProgress(new BMLBlockProgress("bml3", "end", 1));        
+        bbm.blockProgress(new BMLBlockProgressFeedback("bml2", "end", 1));
+        bbm.blockProgress(new BMLBlockProgressFeedback("bml3", "end", 1));        
         
         verify(mockScheduler,times(1)).startBlock("bml1");
         verify(mockScheduler,never()).startBlock("bml2");
@@ -275,7 +275,7 @@ public class BMLBlockManagerFeedbackTest
         bbm.activateBlock("bml1");
         bbm.startBlock("bml2");
         bbm.startBlock("bml3");        
-        bbm.blockProgress(new BMLBlockProgress("bml2", "end", 1));
+        bbm.blockProgress(new BMLBlockProgressFeedback("bml2", "end", 1));
         bbm.removeBMLBlock("bml3");
         
         verify(mockScheduler,times(1)).startBlock("bml1");
@@ -298,7 +298,7 @@ public class BMLBlockManagerFeedbackTest
         bbm.startBlock("bml2");
         bbm.startBlock("bml3");
         
-        bbm.blockProgress(new BMLBlockProgress("bml2", "end", 1));   
+        bbm.blockProgress(new BMLBlockProgressFeedback("bml2", "end", 1));   
         
         verify(mockScheduler,never()).startBlock("bml1");
         verify(mockScheduler,never()).startBlock("bml2");

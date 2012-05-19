@@ -1,8 +1,7 @@
 package asap.realizer.bridge;
 
-import saiba.bml.feedback.BMLBlockProgress;
+import saiba.bml.feedback.BMLBlockProgressFeedback;
 import saiba.bml.feedback.BMLSyncPointProgressFeedback;
-import saiba.bml.feedback.XMLBMLSyncPointProgressFeedback;
 
 import org.slf4j.Logger;
 
@@ -51,7 +50,7 @@ public class LoggingRealizerBridge implements RealizerPort, BMLFeedbackListener,
     }
 
     @Override
-    public void blockProgress(BMLBlockProgress psf)
+    public void blockProgress(BMLBlockProgressFeedback psf)
     {
         if (logFeedback) logger.info(psf.toXMLString());
     }
@@ -59,7 +58,7 @@ public class LoggingRealizerBridge implements RealizerPort, BMLFeedbackListener,
     @Override
     public void syncProgress(BMLSyncPointProgressFeedback spp)
     {
-        if (logFeedback) logger.info(new XMLBMLSyncPointProgressFeedback(spp).toXMLString());
+        if (logFeedback) logger.info(spp.toXMLString());
     }
 
     @Override

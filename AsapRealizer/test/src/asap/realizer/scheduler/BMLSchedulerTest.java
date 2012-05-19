@@ -25,7 +25,7 @@ import saiba.bml.core.Behaviour;
 import saiba.bml.core.BehaviourBlock;
 import saiba.bml.core.GestureBehaviour;
 import saiba.bml.core.SpeechBehaviour;
-import saiba.bml.feedback.BMLBlockProgress;
+import saiba.bml.feedback.BMLBlockProgressFeedback;
 import saiba.bml.feedback.BMLSyncPointProgressFeedback;
 import saiba.bml.parser.BMLParser;
 import asap.bml.ext.bmlt.BMLTBMLBehaviorAttributes;
@@ -279,7 +279,7 @@ public class BMLSchedulerTest
 
     private List<BMLSyncPointProgressFeedback> feedBackList;
 
-    private List<BMLBlockProgress> blockProgressFeedbackList;
+    private List<BMLBlockProgressFeedback> blockProgressFeedbackList;
 
     private List<BMLTSchedulingStartFeedback> planningStartFeedback = new ArrayList<BMLTSchedulingStartFeedback>();
 
@@ -290,10 +290,10 @@ public class BMLSchedulerTest
     private BMLBlockManager bbManager = new BMLBlockManager();
     private FeedbackManager fbManager = new FeedbackManagerImpl(bbManager, "character1");
 
-    private List<String> getBMLIdsFromStartFeedback(List<BMLBlockProgress> fbList)
+    private List<String> getBMLIdsFromStartFeedback(List<BMLBlockProgressFeedback> fbList)
     {
         List<String> bmlIds = new ArrayList<String>();
-        for (BMLBlockProgress fb : fbList)
+        for (BMLBlockProgressFeedback fb : fbList)
         {
             if(fb.getSyncId().equals("start"))
             {
@@ -303,10 +303,10 @@ public class BMLSchedulerTest
         return bmlIds;
     }
 
-    private List<String> getBMLIdsFromEndFeedback(List<BMLBlockProgress> fbList)
+    private List<String> getBMLIdsFromEndFeedback(List<BMLBlockProgressFeedback> fbList)
     {
         List<String> bmlIds = new ArrayList<String>();
-        for (BMLBlockProgress fb : fbList)
+        for (BMLBlockProgressFeedback fb : fbList)
         {
             if(fb.getSyncId().equals("end"))
             {
@@ -358,7 +358,7 @@ public class BMLSchedulerTest
         scheduler.addEngine(SpeechBehaviour.class, stubEngine);
 
         feedBackList = new ArrayList<BMLSyncPointProgressFeedback>();
-        blockProgressFeedbackList = new ArrayList<BMLBlockProgress>();
+        blockProgressFeedbackList = new ArrayList<BMLBlockProgressFeedback>();
         listFeedbackListener = new ListFeedbackListener(feedBackList, blockProgressFeedbackList);
         scheduler.addFeedbackListener(listFeedbackListener);
 

@@ -20,10 +20,11 @@ public final class FeedbackAsserts
 
     public static void assertEqualSyncPointProgress(BMLSyncPointProgressFeedback expected, BMLSyncPointProgressFeedback actual)
     {
-        assertEquals(expected.bmlId, actual.bmlId);
-        assertEquals(expected.syncId, actual.syncId);
-        assertEquals(expected.timeStamp, actual.timeStamp, 0.01f);
-        assertEquals(expected.bmlBlockTime, actual.bmlBlockTime, 0.01f);
+        assertEquals(expected.getBMLId(), actual.getBMLId());
+        assertEquals(expected.getBehaviourId(),actual.getBehaviourId());
+        assertEquals(expected.getSyncId(), actual.getSyncId());
+        assertEquals(expected.getTime(), actual.getTime(), 0.01f);
+        assertEquals(expected.getGlobalTime(), actual.getGlobalTime(), 0.01f);
     }
 
     public static void assertEqualPlanningStart(BMLTSchedulingStartFeedback expected, BMLTSchedulingStartFeedback actual)

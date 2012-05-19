@@ -18,7 +18,7 @@
  ******************************************************************************/
 package asap.bml.feedback;
 
-import saiba.bml.feedback.BMLBlockProgress;
+import saiba.bml.feedback.BMLBlockProgressFeedback;
 import saiba.bml.feedback.BMLSyncPointProgressFeedback;
 
 /**
@@ -29,7 +29,7 @@ public class StdoutFeedbackListener implements BMLFeedbackListener
 {
 
     @Override
-    public void blockProgress(BMLBlockProgress psf)
+    public void blockProgress(BMLBlockProgressFeedback psf)
     {
         System.out.println(psf);        
     }

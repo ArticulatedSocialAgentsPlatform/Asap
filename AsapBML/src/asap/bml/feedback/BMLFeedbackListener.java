@@ -18,7 +18,7 @@
  ******************************************************************************/
 package asap.bml.feedback;
 
-import saiba.bml.feedback.BMLBlockProgress;
+import saiba.bml.feedback.BMLBlockProgressFeedback;
 import saiba.bml.feedback.BMLSyncPointProgressFeedback;
 import asap.bml.feedback.BMLListener;
 
@@ -29,5 +29,5 @@ import asap.bml.feedback.BMLListener;
 public interface BMLFeedbackListener extends BMLListener
 {
     void syncProgress(BMLSyncPointProgressFeedback spp);
-    void blockProgress(BMLBlockProgress psf);    
+    void blockProgress(BMLBlockProgressFeedback psf);    
 }

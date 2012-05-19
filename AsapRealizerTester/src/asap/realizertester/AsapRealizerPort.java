@@ -50,7 +50,7 @@ public class AsapRealizerPort implements RealizerTestPort
         realizerPort.addListeners(new asap.bml.feedback.BMLFeedbackListener()
         {
             @Override
-            public void blockProgress(saiba.bml.feedback.BMLBlockProgress fb)
+            public void blockProgress(saiba.bml.feedback.BMLBlockProgressFeedback fb)
             {
                 if(fb.getSyncId().equals("start"))
                 {
@@ -67,7 +67,7 @@ public class AsapRealizerPort implements RealizerTestPort
             public void syncProgress(saiba.bml.feedback.BMLSyncPointProgressFeedback fb)
             {
                 l.syncProgress(new bml.realizertestport.BMLSyncPointProgressFeedback(fb.getCharacterId(), 
-                        fb.bmlId, fb.behaviorId, fb.syncId, fb.bmlBlockTime, fb.timeStamp));
+                        fb.getBMLId(), fb.getBehaviourId(), fb.getSyncId(), fb.getTime(), fb.getGlobalTime()));
             }
         });
     }

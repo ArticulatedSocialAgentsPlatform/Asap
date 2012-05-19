@@ -1,6 +1,6 @@
 package asap.realizer.feedback;
 
-import saiba.bml.feedback.BMLBlockProgress;
+import saiba.bml.feedback.BMLBlockProgressFeedback;
 import saiba.bml.feedback.BMLSyncPointProgressFeedback;
 
 import java.util.List;
@@ -52,7 +52,7 @@ public final class NullFeedbackManager implements FeedbackManager
     }
 
     @Override
-    public void blockProgress(BMLBlockProgress psf){}
+    public void blockProgress(BMLBlockProgressFeedback psf){}
     
     
     @Override

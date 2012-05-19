@@ -1,6 +1,6 @@
 package asap.bml.bridge.ui;
 
-import saiba.bml.feedback.BMLBlockProgress;
+import saiba.bml.feedback.BMLBlockProgressFeedback;
 import saiba.bml.feedback.BMLSyncPointProgressFeedback;
 
 import java.awt.Dimension;
@@ -87,7 +87,7 @@ public class FeedbackPanel extends JPanel implements BMLWarningListener, BMLFeed
     }
 
     @Override
-    public void blockProgress(BMLBlockProgress psf)
+    public void blockProgress(BMLBlockProgressFeedback psf)
     {
         feedbackOutput.append(psf.toString());
     }    

@@ -1,9 +1,8 @@
 package asap.bml.util;
 
-import saiba.bml.feedback.BMLBlockProgress;
+import saiba.bml.feedback.BMLBlockProgressFeedback;
 import saiba.bml.feedback.BMLFeedback;
 import saiba.bml.feedback.BMLSyncPointProgressFeedback;
-import saiba.bml.feedback.XMLBMLSyncPointProgressFeedback;
 import hmi.xml.XMLTokenizer;
 
 import java.io.IOException;
@@ -83,17 +82,17 @@ public class BMLFeedbackManager
                 feedback.readXML(tok);
                 sendWarning(feedback);
             }         
-            else if (tok.atSTag(BMLBlockProgress.xmlTag()))
+            else if (tok.atSTag(BMLBlockProgressFeedback.xmlTag()))
             {
-                BMLBlockProgress feedback = new BMLBlockProgress();
+                BMLBlockProgressFeedback feedback = new BMLBlockProgressFeedback();
                 feedback.readXML(tok);
                 sendBlockProgress(feedback);
             }
-            else if (tok.atSTag(XMLBMLSyncPointProgressFeedback.xmlTag()))
+            else if (tok.atSTag(BMLSyncPointProgressFeedback.xmlTag()))
             {
-                XMLBMLSyncPointProgressFeedback feedback = new XMLBMLSyncPointProgressFeedback();
+                BMLSyncPointProgressFeedback feedback = new BMLSyncPointProgressFeedback();
                 feedback.readXML(tok);
-                sendSyncProgress(feedback.getBMLSyncPointProgressFeedback());
+                sendSyncProgress(feedback);
             }
             else if (tok.atSTag(XMLBMLTSchedulingStartFeedback.xmlTag()))
             {
@@ -134,9 +133,9 @@ public class BMLFeedbackManager
         {
             sendSyncProgress((BMLSyncPointProgressFeedback) feedback);
         }
-        else if (feedback instanceof BMLBlockProgress)
+        else if (feedback instanceof BMLBlockProgressFeedback)
         {
-            sendBlockProgress((BMLBlockProgress)feedback);
+            sendBlockProgress((BMLBlockProgressFeedback)feedback);
         }
         else if (feedback instanceof BMLTSchedulingStartFeedback)
         {
@@ -180,7 +179,7 @@ public class BMLFeedbackManager
         }
     }
 
-    private void sendBlockProgress(BMLBlockProgress psf)
+    private void sendBlockProgress(BMLBlockProgressFeedback psf)
     {
         for (BMLFeedbackListener f : bmlFeedbackListeners)
         {

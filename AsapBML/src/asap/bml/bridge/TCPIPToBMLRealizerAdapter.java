@@ -1,8 +1,7 @@
 package asap.bml.bridge;
 
-import saiba.bml.feedback.BMLBlockProgress;
+import saiba.bml.feedback.BMLBlockProgressFeedback;
 import saiba.bml.feedback.BMLSyncPointProgressFeedback;
-import saiba.bml.feedback.XMLBMLSyncPointProgressFeedback;
 import hmi.xml.XMLTokenizer;
 
 import java.io.BufferedReader;
@@ -152,10 +151,10 @@ public final class TCPIPToBMLRealizerAdapter implements Runnable, BMLWarningList
 
     public void syncProgress(BMLSyncPointProgressFeedback spp)
     {
-        queueFeedback(new XMLBMLSyncPointProgressFeedback(spp).toXMLString());
+        queueFeedback(spp.toXMLString());
     }
 
-    public void blockProgress(BMLBlockProgress psf)
+    public void blockProgress(BMLBlockProgressFeedback psf)
     {
         queueFeedback(psf.toXMLString());
     }   

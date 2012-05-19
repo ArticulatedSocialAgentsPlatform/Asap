@@ -20,8 +20,8 @@ import org.slf4j.LoggerFactory;
 import saiba.bml.feedback.BMLWarningFeedback;
 
 import saiba.bml.feedback.BMLFeedback;
-import saiba.bml.feedback.BMLBlockProgress;
-import saiba.bml.feedback.XMLBMLSyncPointProgressFeedback;
+import saiba.bml.feedback.BMLBlockProgressFeedback;
+import saiba.bml.feedback.BMLSyncPointProgressFeedback;
 import asap.bml.ext.bmlt.feedback.XMLBMLTSchedulingFinishedFeedback;
 import asap.bml.ext.bmlt.feedback.XMLBMLTSchedulingStartFeedback;
 import asap.bml.feedback.BMLListener;
@@ -339,19 +339,19 @@ public final class BMLRealizerToTCPIPAdapter implements RealizerPort, Runnable
                         // feedbackRedirectorThread.interrupt() when new feedback was put in queue!
                         // let op SecurityException
                     }                    
-                    else if (tok.atSTag(BMLBlockProgress.xmlTag()))
+                    else if (tok.atSTag(BMLBlockProgressFeedback.xmlTag()))
                     {
-                        BMLBlockProgress feedback = new BMLBlockProgress();
+                        BMLBlockProgressFeedback feedback = new BMLBlockProgressFeedback();
                         feedback.readXML(tok);
                         feedbackQ.add(feedback);
                         // feedbackRedirectorThread.interrupt() when new feedback was put in queue!
                         // let op SecurityException
                     }                 
-                    else if (tok.atSTag(XMLBMLSyncPointProgressFeedback.xmlTag()))
+                    else if (tok.atSTag(BMLSyncPointProgressFeedback.xmlTag()))
                     {
-                        XMLBMLSyncPointProgressFeedback feedback = new XMLBMLSyncPointProgressFeedback();
+                        BMLSyncPointProgressFeedback feedback = new BMLSyncPointProgressFeedback();
                         feedback.readXML(tok);
-                        feedbackQ.add(feedback.getBMLSyncPointProgressFeedback());
+                        feedbackQ.add(feedback);
                         // feedbackRedirectorThread.interrupt() when new feedback was put in queue!
                         // let op SecurityException
                     } 

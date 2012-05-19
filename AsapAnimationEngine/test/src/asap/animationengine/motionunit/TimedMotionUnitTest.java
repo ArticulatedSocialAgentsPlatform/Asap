@@ -69,11 +69,11 @@ public class TimedMotionUnitTest extends AbstractTimedPlanUnitTest
 
     private void assertEqualBMLSyncPointProgressFeedback(BMLSyncPointProgressFeedback expected, BMLSyncPointProgressFeedback actual)
     {
-        assertEquals(expected.behaviorId, actual.behaviorId);
-        assertEquals(expected.bmlId, actual.bmlId);
-        assertEquals(expected.syncId, actual.syncId);
-        assertEquals(expected.bmlBlockTime, actual.bmlBlockTime, TIMING_PRECISION);
-        assertEquals(expected.timeStamp, actual.timeStamp, TIMING_PRECISION);
+        assertEquals(expected.getBehaviourId(), actual.getBehaviourId());
+        assertEquals(expected.getBMLId(), actual.getBMLId());
+        assertEquals(expected.getSyncId(), actual.getSyncId());
+        assertEquals(expected.getTime(), actual.getTime(), TIMING_PRECISION);
+        assertEquals(expected.getGlobalTime(), actual.getGlobalTime(), TIMING_PRECISION);
     }
 
     @Test
