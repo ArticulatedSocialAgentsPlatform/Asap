@@ -142,8 +142,7 @@ public class BMLTInterruptBehaviour extends Behaviour
     @Override
     public float getFloatParameterValue(String name)
     {
-        // TODO: throw exception?
-        return 0;
+        throw new IllegalArgumentException("Parameter " + name + " not found/not a float.");
     }
 
     @Override
