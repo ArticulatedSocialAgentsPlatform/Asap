@@ -38,6 +38,7 @@ import org.slf4j.LoggerFactory;
 import saiba.bml.feedback.BMLWarningFeedback;
 
 import asap.bml.ext.bmlt.BMLTBMLBehaviorAttributes;
+import asap.bml.ext.bmlt.BMLTInfo;
 import asap.realizer.BehaviourPlanningException;
 import asap.realizer.Engine;
 import asap.realizer.SyncAndTimePeg;
@@ -200,7 +201,7 @@ public class SmartBodySchedulingStrategy implements SchedulingStrategy
                     {
                         if (s.getBehaviourId() == null)
                         {
-                            if (s.getBmlId().equals(BMLInfo.ANTICIPATORBLOCKID))
+                            if (s.getBmlId().equals(BMLTInfo.ANTICIPATORBLOCKID))
                             {
                                 // synched to anticipator
                                 String str[] = s.getName().split(":");
