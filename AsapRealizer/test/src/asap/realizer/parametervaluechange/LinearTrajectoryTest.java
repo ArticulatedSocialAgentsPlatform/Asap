@@ -11,9 +11,9 @@ import org.junit.Test;
 public class LinearTrajectoryTest
 {
     private LinearTrajectory trajectory = new LinearTrajectory();
-    private final float START_VALUE = 20;
-    private final float END_VALUE = 100;
-    private final float INTERPOLATION_PRECISION = 0.0001f;
+    private static final float START_VALUE = 20;
+    private static final float END_VALUE = 100;
+    private static final float INTERPOLATION_PRECISION = 0.0001f;
     
     @Test
     public void testStart()

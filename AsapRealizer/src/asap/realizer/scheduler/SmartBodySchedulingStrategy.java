@@ -257,9 +257,6 @@ public class SmartBodySchedulingStrategy implements SchedulingStrategy
                             }
                             else
                             {
-                                Set<String> modifiedBehaviours = new HashSet<String>();
-                                Set<String> modifiedConstraints = new HashSet<String>();
-                                modifiedBehaviours.add(b.id);
                                 String warningText = "Unknown sync point " + s.getBmlId()+":"+s.getBehaviourId()+":"+s.getName() + " sync ignored.";
                                 scheduler.warn(new BMLWarningFeedback(bmlId+":"+s.getBehaviourId(), "UNKNOWN_SYNCPOINT", warningText));
                                 break;                                

@@ -185,10 +185,6 @@ public class MultiThreadedPlanPlayer<T extends TimedPlanUnit>  implements PlanPl
     {
         logger.debug("suException with {}:{}", su.getBMLId(), su.getId());
         String bmlId = su.getBMLId();
-        Set<String> droppedBehaviours = new HashSet<String>();
-        droppedBehaviours.add(su.getId());
-
-        Set<String> modifiedConstraints = new HashSet<String>();
         String warningText = message + "\nBehavior " + su.getBMLId() + ":" + su.getId() + " dropped.";
         warning(new BMLWarningFeedback(bmlId, "EXECUTION_EXCEPTION", warningText));
     }
