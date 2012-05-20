@@ -35,8 +35,8 @@ import java.util.Set;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import asap.bml.ext.bmlt.feedback.BMLTSchedulingListener;
 import asap.bml.feedback.BMLFeedbackListener;
+import asap.bml.feedback.BMLPredictionListener;
 import asap.bml.feedback.BMLWarningListener;
 import asap.realizer.anticipator.Anticipator;
 import asap.realizer.feedback.FeedbackManager;
@@ -167,9 +167,9 @@ public class AsapRealizer
         scheduler.addWarningListener(w);
     }
 
-    public void addPlanningListener(BMLTSchedulingListener bp)
+    public void addPredictionListener(BMLPredictionListener bp)
     {
-        scheduler.addPlanningListener(bp);
+        scheduler.addPredictionListener(bp);
     }
 
     /**

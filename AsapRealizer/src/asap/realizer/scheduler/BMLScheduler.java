@@ -37,11 +37,9 @@ import lombok.Delegate;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import asap.bml.ext.bmlt.feedback.BMLTSchedulingFinishedFeedback;
-import asap.bml.ext.bmlt.feedback.BMLTSchedulingListener;
-import asap.bml.ext.bmlt.feedback.BMLTSchedulingStartFeedback;
 import asap.bml.feedback.BMLFeedbackListener;
 import asap.bml.feedback.BMLWarningListener;
+import asap.bml.feedback.BMLPredictionListener;
 import asap.realizer.BehaviorNotFoundException;
 import asap.realizer.Engine;
 import asap.realizer.SyncPointNotFoundException;
@@ -54,6 +52,8 @@ import asap.realizer.pegboard.TimePeg;
 import asap.realizer.planunit.ParameterException;
 import asap.realizer.planunit.TimedPlanUnitState;
 import asap.utils.SchedulingClock;
+import saiba.bml.feedback.BMLBlockPredictionFeedback;
+import saiba.bml.feedback.BMLPredictionFeedback;
 import saiba.bml.feedback.BMLWarningFeedback;
 import saiba.bml.feedback.BMLBlockProgressFeedback;
 
@@ -93,15 +93,13 @@ public final class BMLScheduler
 
         void removeAllWarningListeners();
         
-        void addPlanningListener(BMLTSchedulingListener p);
+        void addPredictionListener(BMLPredictionListener p);
 
-        void removeAllPlanningListeners();
+        void removeAllPredictionListeners();
 
         void warn(BMLWarningFeedback w);
 
-        void planningStart(BMLTSchedulingStartFeedback bpsf);
-
-        void planningFinished(BMLTSchedulingFinishedFeedback bpff);        
+        void prediction(BMLPredictionFeedback bpf);        
 
         void addFeedbackListener(BMLFeedbackListener e);
 
@@ -330,14 +328,22 @@ public final class BMLScheduler
         return anticipators.values().size();
     }
 
+    private BMLPredictionFeedback createSingleBlockPrediction(String bmlId, double predictedStart, double predictedEnd)
+    {
+        BMLPredictionFeedback bpf = new BMLPredictionFeedback();
+        BMLBlockPredictionFeedback bp = new BMLBlockPredictionFeedback(bmlId, predictedStart, predictedEnd);
+        bpf.addBMLBlockPrediction(bp);
+        return bpf;
+    }
+    
     public void planningStart(String bmlId, double predictedStart)
     {
-        planningStart(new BMLTSchedulingStartFeedback("ps-" + bmlId, bmlId, schedulingClock.getTime(), predictedStart));
+        prediction(createSingleBlockPrediction(bmlId,predictedStart,BMLBlockPredictionFeedback.UNKNOWN_TIME));
     }
 
     public void planningFinished(String bmlId, double predictedStart, double predictedEnd)
     {
-        planningFinished(new BMLTSchedulingFinishedFeedback("ps-" + bmlId, bmlId, schedulingClock.getTime(), predictedStart, predictedEnd));
+        prediction(createSingleBlockPrediction(bmlId,predictedStart,predictedEnd));        
     }
 
     /**

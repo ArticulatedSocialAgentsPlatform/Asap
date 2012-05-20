@@ -2,6 +2,7 @@ package asap.bml.util;
 
 import saiba.bml.feedback.BMLBlockProgressFeedback;
 import saiba.bml.feedback.BMLFeedback;
+import saiba.bml.feedback.BMLPredictionFeedback;
 import saiba.bml.feedback.BMLSyncPointProgressFeedback;
 import hmi.xml.XMLTokenizer;
 
@@ -14,13 +15,9 @@ import org.slf4j.LoggerFactory;
 
 import saiba.bml.feedback.BMLWarningFeedback;
 
-import asap.bml.ext.bmlt.feedback.BMLTSchedulingFinishedFeedback;
-import asap.bml.ext.bmlt.feedback.BMLTSchedulingListener;
-import asap.bml.ext.bmlt.feedback.BMLTSchedulingStartFeedback;
-import asap.bml.ext.bmlt.feedback.XMLBMLTSchedulingFinishedFeedback;
-import asap.bml.ext.bmlt.feedback.XMLBMLTSchedulingStartFeedback;
 import asap.bml.feedback.BMLFeedbackListener;
 import asap.bml.feedback.BMLListener;
+import asap.bml.feedback.BMLPredictionListener;
 import asap.bml.feedback.BMLWarningListener;
 
 /**
@@ -38,13 +35,13 @@ public class BMLFeedbackManager
     /** This listener should receive feedback that comes in over the network connection */
     private List<BMLFeedbackListener> bmlFeedbackListeners = new ArrayList<BMLFeedbackListener>();
 
-    private List<BMLTSchedulingListener> bmlPlanningListeners = new ArrayList<BMLTSchedulingListener>();
+    private List<BMLPredictionListener> bmlPredictionListeners = new ArrayList<BMLPredictionListener>();
 
     public void removeAllListeners()
     {
         bmlWarningListeners.clear();
         bmlFeedbackListeners.clear();
-        bmlPlanningListeners.clear();
+        bmlPredictionListeners.clear();
 
     }
 
@@ -60,9 +57,9 @@ public class BMLFeedbackManager
             {
                 bmlFeedbackListeners.add((BMLFeedbackListener) listener);
             }
-            if (listener instanceof BMLTSchedulingListener)
+            if (listener instanceof BMLPredictionListener)
             {
-                bmlPlanningListeners.add((BMLTSchedulingListener) listener);
+                bmlPredictionListeners.add((BMLPredictionListener) listener);
             }
         }
     }
@@ -94,17 +91,11 @@ public class BMLFeedbackManager
                 feedback.readXML(tok);
                 sendSyncProgress(feedback);
             }
-            else if (tok.atSTag(XMLBMLTSchedulingStartFeedback.xmlTag()))
+            else if (tok.atSTag(BMLPredictionFeedback.xmlTag()))
             {
-                XMLBMLTSchedulingStartFeedback feedback = new XMLBMLTSchedulingStartFeedback();
+                BMLPredictionFeedback feedback = new BMLPredictionFeedback();
                 feedback.readXML(tok);
-                sendPlanningStart(feedback.getBMLTPlanningStartFeedback());
-            }
-            else if (tok.atSTag(XMLBMLTSchedulingFinishedFeedback.xmlTag()))
-            {
-                XMLBMLTSchedulingFinishedFeedback feedback = new XMLBMLTSchedulingFinishedFeedback();
-                feedback.readXML(tok);
-                sendPlanningFinished(feedback.getBMLTPlanningFinishedFeedback());
+                sendPrediction(feedback);
             }
             else
             { // give up when not a feedback tag...
@@ -137,31 +128,19 @@ public class BMLFeedbackManager
         {
             sendBlockProgress((BMLBlockProgressFeedback)feedback);
         }
-        else if (feedback instanceof BMLTSchedulingStartFeedback)
+        else if (feedback instanceof BMLPredictionFeedback)
         {
-            sendPlanningStart((BMLTSchedulingStartFeedback) feedback);
-        }
-        else if (feedback instanceof BMLTSchedulingFinishedFeedback)
-        {
-            sendPlanningFinished((BMLTSchedulingFinishedFeedback) feedback);
-        }
+            sendPrediction((BMLPredictionFeedback) feedback);
+        }        
     }
 
-    private void sendPlanningStart(BMLTSchedulingStartFeedback psf)
+    private void sendPrediction(BMLPredictionFeedback bpf)
     {
-        for (BMLTSchedulingListener b : bmlPlanningListeners)
+        for (BMLPredictionListener b : bmlPredictionListeners)
         {
-            b.schedulingStart(psf);
+            b.prediction(bpf);
         }
-    }
-
-    private void sendPlanningFinished(BMLTSchedulingFinishedFeedback psf)
-    {
-        for (BMLTSchedulingListener b : bmlPlanningListeners)
-        {
-            b.schedulingFinished(psf);
-        }
-    }
+    }    
 
     private void sendWarning(BMLWarningFeedback wfb)
     {

@@ -1,14 +1,13 @@
 package asap.realizer.feedback;
 
 import saiba.bml.feedback.BMLBlockProgressFeedback;
+import saiba.bml.feedback.BMLPredictionFeedback;
 import saiba.bml.feedback.BMLSyncPointProgressFeedback;
 
 import java.util.List;
 
-import asap.bml.ext.bmlt.feedback.BMLTSchedulingFinishedFeedback;
-import asap.bml.ext.bmlt.feedback.BMLTSchedulingListener;
-import asap.bml.ext.bmlt.feedback.BMLTSchedulingStartFeedback;
 import asap.bml.feedback.BMLFeedbackListener;
+import asap.bml.feedback.BMLPredictionListener;
 import asap.bml.feedback.BMLWarningListener;
 import asap.realizer.planunit.TimedPlanUnit;
 import saiba.bml.feedback.BMLWarningFeedback;
@@ -60,12 +59,12 @@ public final class NullFeedbackManager implements FeedbackManager
 
     
     @Override
-    public void addPlanningListener(BMLTSchedulingListener p)
+    public void addPredictionListener(BMLPredictionListener p)
     {
     }
 
     @Override
-    public void removeAllPlanningListeners()
+    public void removeAllPredictionListeners()
     {
     }
 
@@ -85,12 +84,7 @@ public final class NullFeedbackManager implements FeedbackManager
     }
 
     @Override
-    public void planningStart(BMLTSchedulingStartFeedback bpsf)
-    {
-    }
-
-    @Override
-    public void planningFinished(BMLTSchedulingFinishedFeedback bpff)
+    public void prediction(BMLPredictionFeedback bpsf)
     {
     }
 

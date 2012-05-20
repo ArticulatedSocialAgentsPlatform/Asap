@@ -1,9 +1,9 @@
 package asap.realizer.bridge;
 
 import asap.bml.bridge.RealizerPort;
-import asap.bml.ext.bmlt.feedback.BMLTSchedulingListener;
 import asap.bml.feedback.BMLFeedbackListener;
 import asap.bml.feedback.BMLListener;
+import asap.bml.feedback.BMLPredictionListener;
 import asap.bml.feedback.BMLWarningListener;
 import asap.realizer.AsapRealizer;
 
@@ -24,9 +24,9 @@ public class ElckerlycRealizerPipe implements RealizerPort
         realizer.scheduleBML(bmlString);
     }
     
-    public void addPlanningListener(BMLTSchedulingListener bpl)
+    public void addPredictionListener(BMLPredictionListener bpl)
     {
-        realizer.addPlanningListener(bpl);
+        realizer.addPredictionListener(bpl);
     }
     
     @Override
@@ -34,7 +34,7 @@ public class ElckerlycRealizerPipe implements RealizerPort
     {
         realizer.getScheduler().removeAllWarningListeners();
         realizer.getScheduler().removeAllFeedbackListeners();
-        realizer.getScheduler().removeAllPlanningListeners();
+        realizer.getScheduler().removeAllPredictionListeners();
     }
     
     @Override
@@ -51,9 +51,9 @@ public class ElckerlycRealizerPipe implements RealizerPort
             {
                 realizer.addFeedbackListener((BMLFeedbackListener)listener);
             }
-            if (listener instanceof BMLTSchedulingListener)
+            if (listener instanceof BMLPredictionListener)
             {
-                realizer.addPlanningListener((BMLTSchedulingListener)listener);
+                realizer.addPredictionListener((BMLPredictionListener)listener);
             }
         }
     }

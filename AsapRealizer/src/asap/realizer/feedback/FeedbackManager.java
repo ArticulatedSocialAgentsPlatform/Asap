@@ -3,12 +3,11 @@ package asap.realizer.feedback;
 import java.util.List;
 
 import saiba.bml.feedback.BMLBlockProgressFeedback;
+import saiba.bml.feedback.BMLPredictionFeedback;
 import saiba.bml.feedback.BMLSyncPointProgressFeedback;
 import saiba.bml.feedback.BMLWarningFeedback;
-import asap.bml.ext.bmlt.feedback.BMLTSchedulingFinishedFeedback;
-import asap.bml.ext.bmlt.feedback.BMLTSchedulingListener;
-import asap.bml.ext.bmlt.feedback.BMLTSchedulingStartFeedback;
 import asap.bml.feedback.BMLFeedbackListener;
+import asap.bml.feedback.BMLPredictionListener;
 import asap.bml.feedback.BMLWarningListener;
 import asap.realizer.planunit.TimedPlanUnit;
 
@@ -37,13 +36,11 @@ public interface FeedbackManager
     
     void puException(TimedPlanUnit timedMU, String message, double time);
     
-    void addPlanningListener(BMLTSchedulingListener p);
+    void addPredictionListener(BMLPredictionListener p);
     
-    void removeAllPlanningListeners();
+    void removeAllPredictionListeners();
     
-    void planningStart(BMLTSchedulingStartFeedback bpsf);
-    
-    void planningFinished(BMLTSchedulingFinishedFeedback bpff);
+    void prediction(BMLPredictionFeedback bpsf);    
     
     /**
      * Generates a feedback message on only the start time of a BML block

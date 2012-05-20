@@ -10,12 +10,11 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import saiba.bml.feedback.BMLBlockProgressFeedback;
+import saiba.bml.feedback.BMLPredictionFeedback;
 import saiba.bml.feedback.BMLSyncPointProgressFeedback;
 import saiba.bml.feedback.BMLWarningFeedback;
-import asap.bml.ext.bmlt.feedback.BMLTSchedulingFinishedFeedback;
-import asap.bml.ext.bmlt.feedback.BMLTSchedulingListener;
-import asap.bml.ext.bmlt.feedback.BMLTSchedulingStartFeedback;
 import asap.bml.feedback.BMLFeedbackListener;
+import asap.bml.feedback.BMLPredictionListener;
 import asap.bml.feedback.BMLWarningListener;
 import asap.realizer.planunit.TimedPlanUnit;
 import asap.realizer.scheduler.BMLBlockManager;
@@ -40,7 +39,7 @@ public class FeedbackManagerImpl implements FeedbackManager
     private final List<BMLWarningListener> warningListeners = Collections.synchronizedList(new ArrayList<BMLWarningListener>());
 
     @GuardedBy("planningListeners")
-    private final List<BMLTSchedulingListener> planningListeners = Collections.synchronizedList(new ArrayList<BMLTSchedulingListener>());
+    private final List<BMLPredictionListener> predictionListeners = Collections.synchronizedList(new ArrayList<BMLPredictionListener>());
     private final String characterId;
 
     public FeedbackManagerImpl(BMLBlockManager bbm, String characterId)
@@ -155,15 +154,15 @@ public class FeedbackManagerImpl implements FeedbackManager
     }    
 
     @Override
-    public void addPlanningListener(BMLTSchedulingListener p)
+    public void addPredictionListener(BMLPredictionListener p)
     {
-        planningListeners.add(p);
+        predictionListeners.add(p);
     }
 
     @Override
-    public void removeAllPlanningListeners()
+    public void removeAllPredictionListeners()
     {
-        planningListeners.clear();
+        predictionListeners.clear();
     }
 
     @Override
@@ -185,15 +184,15 @@ public class FeedbackManagerImpl implements FeedbackManager
     }
 
     @Override
-    public void planningStart(BMLTSchedulingStartFeedback bpsf)
+    public void prediction(BMLPredictionFeedback bpf)
     {
-        synchronized (planningListeners)
+        synchronized (predictionListeners)
         {
-            for (BMLTSchedulingListener pl : planningListeners)
+            for (BMLPredictionListener pl : predictionListeners)
             {
                 try
                 {
-                    pl.schedulingStart(bpsf);
+                    pl.prediction(bpf);
                 }
                 catch (Exception ex)
                 {
@@ -201,27 +200,7 @@ public class FeedbackManagerImpl implements FeedbackManager
                 }
             }
         }
-    }
-
-    
-    @Override
-    public void planningFinished(BMLTSchedulingFinishedFeedback bpff)
-    {
-        synchronized (planningListeners)
-        {
-            for (BMLTSchedulingListener pl : planningListeners)
-            {
-                try
-                {
-                    pl.schedulingFinished(bpff);
-                }
-                catch (Exception ex)
-                {
-                    LOGGER.warn("Broken SchedulingListener: {}", ex);
-                }
-            }
-        }
-    }
+    }    
 
     @Override
     public void warn(BMLWarningFeedback w)

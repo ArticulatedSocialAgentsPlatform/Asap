@@ -1,6 +1,7 @@
 package asap.realizer.bridge;
 
 import saiba.bml.feedback.BMLBlockProgressFeedback;
+import saiba.bml.feedback.BMLPredictionFeedback;
 import saiba.bml.feedback.BMLSyncPointProgressFeedback;
 
 import org.slf4j.Logger;
@@ -8,13 +9,9 @@ import org.slf4j.Logger;
 import saiba.bml.feedback.BMLWarningFeedback;
 
 import asap.bml.bridge.RealizerPort;
-import asap.bml.ext.bmlt.feedback.BMLTSchedulingFinishedFeedback;
-import asap.bml.ext.bmlt.feedback.BMLTSchedulingListener;
-import asap.bml.ext.bmlt.feedback.BMLTSchedulingStartFeedback;
-import asap.bml.ext.bmlt.feedback.XMLBMLTSchedulingFinishedFeedback;
-import asap.bml.ext.bmlt.feedback.XMLBMLTSchedulingStartFeedback;
 import asap.bml.feedback.BMLFeedbackListener;
 import asap.bml.feedback.BMLListener;
+import asap.bml.feedback.BMLPredictionListener;
 import asap.bml.feedback.BMLWarningListener;
 import asap.utils.SchedulingClock;
 
@@ -26,7 +23,7 @@ import asap.utils.SchedulingClock;
  * @author welberge
  * @author reidsma
  */
-public class LoggingRealizerBridge implements RealizerPort, BMLFeedbackListener, BMLWarningListener, BMLTSchedulingListener
+public class LoggingRealizerBridge implements RealizerPort, BMLFeedbackListener, BMLWarningListener, BMLPredictionListener
 {
     private final Logger logger;
     private final RealizerPort outputBridge;
@@ -68,15 +65,9 @@ public class LoggingRealizerBridge implements RealizerPort, BMLFeedbackListener,
     }
 
     @Override
-    public void schedulingFinished(BMLTSchedulingFinishedFeedback pff)
+    public void prediction(BMLPredictionFeedback bpf)
     {
-        if (logFeedback) logger.info(new XMLBMLTSchedulingFinishedFeedback(pff).toXMLString());
-    }
-
-    @Override
-    public void schedulingStart(BMLTSchedulingStartFeedback psf)
-    {
-        if (logFeedback) logger.info(new XMLBMLTSchedulingStartFeedback(psf).toXMLString());
+        if (logFeedback) logger.info(bpf.toXMLString());
     }
 
     @Override

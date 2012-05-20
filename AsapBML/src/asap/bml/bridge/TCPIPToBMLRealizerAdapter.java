@@ -1,6 +1,7 @@
 package asap.bml.bridge;
 
 import saiba.bml.feedback.BMLBlockProgressFeedback;
+import saiba.bml.feedback.BMLPredictionFeedback;
 import saiba.bml.feedback.BMLSyncPointProgressFeedback;
 import hmi.xml.XMLTokenizer;
 
@@ -23,12 +24,8 @@ import org.slf4j.LoggerFactory;
 
 import saiba.bml.feedback.BMLWarningFeedback;
 
-import asap.bml.ext.bmlt.feedback.BMLTSchedulingFinishedFeedback;
-import asap.bml.ext.bmlt.feedback.BMLTSchedulingListener;
-import asap.bml.ext.bmlt.feedback.BMLTSchedulingStartFeedback;
-import asap.bml.ext.bmlt.feedback.XMLBMLTSchedulingFinishedFeedback;
-import asap.bml.ext.bmlt.feedback.XMLBMLTSchedulingStartFeedback;
 import asap.bml.feedback.BMLFeedbackListener;
+import asap.bml.feedback.BMLPredictionListener;
 import asap.bml.feedback.BMLWarningListener;
 
 /**
@@ -40,7 +37,7 @@ import asap.bml.feedback.BMLWarningListener;
  * @author Dennis Reidsma
  */
 public final class TCPIPToBMLRealizerAdapter implements Runnable, BMLWarningListener, BMLFeedbackListener,
-        BMLTSchedulingListener
+        BMLPredictionListener
 {
 
     private static Logger logger = LoggerFactory.getLogger(TCPIPToBMLRealizerAdapter.class.getName());
@@ -143,32 +140,30 @@ public final class TCPIPToBMLRealizerAdapter implements Runnable, BMLWarningList
      * =========================================================================================
      */
 
-   
+    @Override
     public void warn(BMLWarningFeedback bw)
     {
         queueFeedback(bw.toXMLString());
     }
 
+    @Override
     public void syncProgress(BMLSyncPointProgressFeedback spp)
     {
         queueFeedback(spp.toXMLString());
     }
-
+    
+    @Override
     public void blockProgress(BMLBlockProgressFeedback psf)
     {
         queueFeedback(psf.toXMLString());
     }   
 
-    public void schedulingFinished(BMLTSchedulingFinishedFeedback pff)
+    @Override
+    public void prediction(BMLPredictionFeedback bpf)
     {
-        queueFeedback(new XMLBMLTSchedulingFinishedFeedback(pff).toXMLString());
+        queueFeedback(bpf.toXMLString());
     }
-
-    public void schedulingStart(BMLTSchedulingStartFeedback psf)
-    {
-        queueFeedback(new XMLBMLTSchedulingStartFeedback(psf).toXMLString());
-    }
-
+   
     private void queueFeedback(String fb)
     {
         boolean send = true;

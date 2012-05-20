@@ -21,9 +21,8 @@ import saiba.bml.feedback.BMLWarningFeedback;
 
 import saiba.bml.feedback.BMLFeedback;
 import saiba.bml.feedback.BMLBlockProgressFeedback;
+import saiba.bml.feedback.BMLPredictionFeedback;
 import saiba.bml.feedback.BMLSyncPointProgressFeedback;
-import asap.bml.ext.bmlt.feedback.XMLBMLTSchedulingFinishedFeedback;
-import asap.bml.ext.bmlt.feedback.XMLBMLTSchedulingStartFeedback;
 import asap.bml.feedback.BMLListener;
 import asap.bml.util.BMLFeedbackManager;
 
@@ -355,22 +354,14 @@ public final class BMLRealizerToTCPIPAdapter implements RealizerPort, Runnable
                         // feedbackRedirectorThread.interrupt() when new feedback was put in queue!
                         // let op SecurityException
                     } 
-                    else if (tok.atSTag(XMLBMLTSchedulingFinishedFeedback.xmlTag()))
+                    else if (tok.atSTag(BMLPredictionFeedback.xmlTag()))
                     {
-                        XMLBMLTSchedulingFinishedFeedback feedback = new XMLBMLTSchedulingFinishedFeedback();
+                        BMLPredictionFeedback feedback = new BMLPredictionFeedback();
                         feedback.readXML(tok);
-                        feedbackQ.add(feedback.getBMLTPlanningFinishedFeedback());
+                        feedbackQ.add(feedback);
                         // feedbackRedirectorThread.interrupt() when new feedback was put in queue!
                         // let op SecurityException
-                    } 
-                    else if (tok.atSTag(XMLBMLTSchedulingStartFeedback.xmlTag()))
-                    {
-                        XMLBMLTSchedulingStartFeedback feedback = new XMLBMLTSchedulingStartFeedback();
-                        feedback.readXML(tok);
-                        feedbackQ.add(feedback.getBMLTPlanningStartFeedback());
-                        // feedbackRedirectorThread.interrupt() when new feedback was put in queue!
-                        // let op SecurityException
-                    } 
+                    }                    
                     else
                     { // give up when not a feedback tag...
                         logger.warn("Failed to read feedback from server, unexpected feedback format. Disconnecting from server.");

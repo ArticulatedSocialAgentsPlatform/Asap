@@ -4,8 +4,7 @@ import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
 import java.util.List;
 
-import asap.bml.ext.bmlt.feedback.BMLTSchedulingFinishedFeedback;
-import asap.bml.ext.bmlt.feedback.BMLTSchedulingStartFeedback;
+import saiba.bml.feedback.BMLBlockPredictionFeedback;
 import saiba.bml.feedback.BMLSyncPointProgressFeedback;
 
 /**
@@ -14,6 +13,7 @@ import saiba.bml.feedback.BMLSyncPointProgressFeedback;
  */
 public final class FeedbackAsserts
 {
+    private static double TIME_PRECISION = 0.01;
     private FeedbackAsserts()
     {
     }
@@ -23,22 +23,21 @@ public final class FeedbackAsserts
         assertEquals(expected.getBMLId(), actual.getBMLId());
         assertEquals(expected.getBehaviourId(),actual.getBehaviourId());
         assertEquals(expected.getSyncId(), actual.getSyncId());
-        assertEquals(expected.getTime(), actual.getTime(), 0.01f);
-        assertEquals(expected.getGlobalTime(), actual.getGlobalTime(), 0.01f);
+        assertEquals(expected.getTime(), actual.getTime(), TIME_PRECISION);
+        assertEquals(expected.getGlobalTime(), actual.getGlobalTime(),TIME_PRECISION);
     }
 
-    public static void assertEqualPlanningStart(BMLTSchedulingStartFeedback expected, BMLTSchedulingStartFeedback actual)
+    public static void assertEqualPlanningStart(BMLBlockPredictionFeedback expected, BMLBlockPredictionFeedback actual)
     {
-        assertEquals(expected.bmlId, actual.bmlId);
-        assertEquals(expected.timeStamp, actual.timeStamp, 0.01f);
+        assertEquals(expected.getId(), actual.getId());
+        assertEquals(expected.getGlobalStart(), actual.getGlobalStart(), TIME_PRECISION);
     }
 
-    public static void assertEqualPlanningFinished(BMLTSchedulingFinishedFeedback expected, BMLTSchedulingFinishedFeedback actual)
+    public static void assertEqualPlanningFinished(BMLBlockPredictionFeedback expected, BMLBlockPredictionFeedback actual)
     {
-        assertEquals(expected.bmlId, actual.bmlId);
-        assertEquals(expected.timeStamp, actual.timeStamp, 0.01f);
-        assertEquals(expected.predictedEnd, actual.predictedEnd, 0.01f);
-        assertEquals(expected.predictedStart, actual.predictedStart, 0.01f);
+        assertEquals(expected.getId(), actual.getId());
+        assertEquals(expected.getGlobalStart(), actual.getGlobalStart(), TIME_PRECISION);
+        assertEquals(expected.getGlobalEnd(), actual.getGlobalEnd(), TIME_PRECISION);
     }
 
     public static void assertOneFeedback(BMLSyncPointProgressFeedback expected, List<BMLSyncPointProgressFeedback> actual)
@@ -47,15 +46,9 @@ public final class FeedbackAsserts
         assertEqualSyncPointProgress(expected, actual.get(0));
     }
 
-    public static void assertOneFeedback(BMLTSchedulingStartFeedback expected, List<BMLTSchedulingStartFeedback> actual)
+    public static void assertOneFeedback(BMLBlockPredictionFeedback expected, List<BMLBlockPredictionFeedback> actual)
     {
-        assertTrue("Expected one BMLTSchedulingStartFeedback, got " + actual, 1 == actual.size());
+        assertTrue("Expected one BMLBlockPredictionFeedback, got " + actual, 1 == actual.size());
         assertEqualPlanningStart(expected, actual.get(0));
-    }
-
-    public static void assertOneFeedback(BMLTSchedulingFinishedFeedback expected, List<BMLTSchedulingFinishedFeedback> actual)
-    {
-        assertTrue("Expected one BMLTSchedulingFinishedFeedback, got " + actual, 1 == actual.size());
-        assertEqualPlanningFinished(expected, actual.get(0));
     }
 }
