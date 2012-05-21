@@ -3,8 +3,8 @@ Main-Class: undefined
 
 Name: hmi/elckerlyctestutil/
 Specification-Title:    AsapRealizerTestUtil
-Specification-Version:  0.3
+Specification-Version:  0.4-dev12345
 Specification-Vendor:   Asap
 Implementation-Title:   AsapRealizerTestUtil
-Implementation-Version: May 15 2012  03:51 PM
+Implementation-Version: May 16 2012  09:56 AM
 Implementation-Vendor:  Asap
