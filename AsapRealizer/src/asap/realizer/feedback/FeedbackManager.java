@@ -1,23 +1,23 @@
 package asap.realizer.feedback;
 
-import saiba.bml.feedback.BMLExceptionFeedback;
-import saiba.bml.feedback.BMLExceptionListener;
-import saiba.bml.feedback.BMLFeedbackListener;
-import saiba.bml.feedback.BMLPerformanceStartFeedback;
-import saiba.bml.feedback.BMLPerformanceStopFeedback;
-import saiba.bml.feedback.BMLSyncPointProgressFeedback;
-import saiba.bml.feedback.BMLWarningFeedback;
-import saiba.bml.feedback.BMLWarningListener;
-
 import java.util.List;
 
-import asap.bml.ext.bmlt.feedback.BMLTSchedulingFinishedFeedback;
-import asap.bml.ext.bmlt.feedback.BMLTSchedulingListener;
-import asap.bml.ext.bmlt.feedback.BMLTSchedulingStartFeedback;
+import saiba.bml.feedback.BMLBlockProgressFeedback;
+import saiba.bml.feedback.BMLPredictionFeedback;
+import saiba.bml.feedback.BMLSyncPointProgressFeedback;
+import saiba.bml.feedback.BMLWarningFeedback;
+import asap.bml.feedback.BMLFeedbackListener;
+import asap.bml.feedback.BMLPredictionListener;
+import asap.bml.feedback.BMLWarningListener;
 import asap.realizer.planunit.TimedPlanUnit;
 
 import com.google.common.collect.ImmutableSet;
 
+/**
+ * Interface for classes that manage and keep track of BML feedback
+ * @author Herwin
+ *
+ */
 public interface FeedbackManager
 {
     void addFeedbackListener(BMLFeedbackListener fb);
@@ -32,28 +32,15 @@ public interface FeedbackManager
     
     ImmutableSet<String> getSyncsPassed(String bmlId, String behaviorId);
     
-    void blockStopFeedback(BMLPerformanceStopFeedback psf);
-    
-    void blockStartFeedback(BMLPerformanceStartFeedback psf);
-    
-    
-    void exception(BMLExceptionFeedback e);
-    
-    void addExceptionListener(BMLExceptionListener es);
-    
-    void removeAllExceptionListeners();
+    void blockProgress(BMLBlockProgressFeedback psf);
     
     void puException(TimedPlanUnit timedMU, String message, double time);
     
-    void removeExceptionListener(BMLExceptionListener e);
+    void addPredictionListener(BMLPredictionListener p);
     
-    void addPlanningListener(BMLTSchedulingListener p);
+    void removeAllPredictionListeners();
     
-    void removeAllPlanningListeners();
-    
-    void planningStart(BMLTSchedulingStartFeedback bpsf);
-    
-    void planningFinished(BMLTSchedulingFinishedFeedback bpff);
+    void prediction(BMLPredictionFeedback bpsf);    
     
     /**
      * Generates a feedback message on only the start time of a BML block

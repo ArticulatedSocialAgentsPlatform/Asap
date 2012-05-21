@@ -43,66 +43,71 @@ import asap.utils.Environment;
 */
 public class AudioEngineLoader implements EngineLoader
 {
-  
-  private Engine engine = null;
-  private Player audioPlayer = null;
-  private PlanManager<TimedAbstractAudioUnit> audioPlanManager = null;
-  private String id = "";
-  //some variables cached during loading
-  private AsapVirtualHuman theVirtualHuman = null;
-  private AudioEnvironment aue = null;
-  
-  @Override
-  public void readXML(XMLTokenizer tokenizer, String newId, AsapVirtualHuman avh, Environment[] environments, Loader ... requiredLoaders) throws IOException
-  {
-    id=newId;
-    theVirtualHuman = avh;
-    for (Environment e : environments)
-    {
-      if (e instanceof AudioEnvironment) aue = (AudioEnvironment)e;
-    }
-    if (aue == null)
-    {
-      throw new RuntimeException("AudioEngineLoader requires an Environment of type AudioEnvironment");
-    }
-    audioPlanManager = new PlanManager<TimedAbstractAudioUnit>();
-    audioPlayer = new DefaultPlayer(new MultiThreadedPlanPlayer<TimedAbstractAudioUnit>(theVirtualHuman.getElckerlycRealizer().getFeedbackManager(), audioPlanManager));
-    AudioPlanner audioPlanner = new AudioPlanner(theVirtualHuman.getElckerlycRealizer().getFeedbackManager(), new Resources(""), 
-            audioPlanManager, aue.getSoundManager());
-    engine = new DefaultEngine<TimedAbstractAudioUnit>(audioPlanner,audioPlayer,audioPlanManager);
-    engine.setId(id);
-    
-    //add engine to realizer; 
-    theVirtualHuman.getElckerlycRealizer().addEngine(engine);
-    
-  }
-  @Override
-  public void unload()
-  {
-    //engine.shutdown();already done in scheduler...
-  }
-  
-    
-  /** Return the Engine that was constructed from the XML specification */
-  public Engine getEngine()
-  {
-    return engine;
-  }
-  public Player getAudioPlayer()
-  {
-    return audioPlayer;
-  }
-  public PlanManager<TimedAbstractAudioUnit> getPlanManager()
-  {
-    return audioPlanManager;
-  }
 
-  public String getId()
-  {
-    return id;
-  }
-  public void setId(String newId)
-  {
-    id = newId;
-  }
+    private Engine engine = null;
+    private Player audioPlayer = null;
+    private PlanManager<TimedAbstractAudioUnit> audioPlanManager = null;
+    private String id = "";
+    // some variables cached during loading
+    private AsapVirtualHuman theVirtualHuman = null;
+    private AudioEnvironment aue = null;
+
+    @Override
+    public void readXML(XMLTokenizer tokenizer, String newId, AsapVirtualHuman avh, Environment[] environments, Loader... requiredLoaders)
+            throws IOException
+    {
+        id = newId;
+        theVirtualHuman = avh;
+        for (Environment e : environments)
+        {
+            if (e instanceof AudioEnvironment) aue = (AudioEnvironment) e;
+        }
+        if (aue == null)
+        {
+            throw new RuntimeException("AudioEngineLoader requires an Environment of type AudioEnvironment");
+        }
+        audioPlanManager = new PlanManager<TimedAbstractAudioUnit>();
+        audioPlayer = new DefaultPlayer(new MultiThreadedPlanPlayer<TimedAbstractAudioUnit>(theVirtualHuman.getElckerlycRealizer()
+                .getFeedbackManager(), audioPlanManager));
+        AudioPlanner audioPlanner = new AudioPlanner(theVirtualHuman.getElckerlycRealizer().getFeedbackManager(), new Resources(""),
+                audioPlanManager, aue.getSoundManager());
+        engine = new DefaultEngine<TimedAbstractAudioUnit>(audioPlanner, audioPlayer, audioPlanManager);
+        engine.setId(id);
+
+        // add engine to realizer;
+        theVirtualHuman.getElckerlycRealizer().addEngine(engine);
+
+    }
+
+    @Override
+    public void unload()
+    {
+        // engine.shutdown();already done in scheduler...
+    }
+
+    /** Return the Engine that was constructed from the XML specification */
+    public Engine getEngine()
+    {
+        return engine;
+    }
+
+    public Player getAudioPlayer()
+    {
+        return audioPlayer;
+    }
+
+    public PlanManager<TimedAbstractAudioUnit> getPlanManager()
+    {
+        return audioPlanManager;
+    }
+
+    public String getId()
+    {
+        return id;
+    }
+
+    public void setId(String newId)
+    {
+        id = newId;
+    }
 }

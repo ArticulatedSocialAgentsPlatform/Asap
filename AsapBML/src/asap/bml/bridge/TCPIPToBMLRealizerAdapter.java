@@ -1,19 +1,8 @@
 package asap.bml.bridge;
 
-import saiba.bml.bridge.RealizerPort;
-import saiba.bml.feedback.BMLExceptionFeedback;
-import saiba.bml.feedback.BMLExceptionListener;
-import saiba.bml.feedback.BMLFeedbackListener;
-import saiba.bml.feedback.BMLPerformanceStartFeedback;
-import saiba.bml.feedback.BMLPerformanceStopFeedback;
+import saiba.bml.feedback.BMLBlockProgressFeedback;
+import saiba.bml.feedback.BMLPredictionFeedback;
 import saiba.bml.feedback.BMLSyncPointProgressFeedback;
-import saiba.bml.feedback.BMLWarningFeedback;
-import saiba.bml.feedback.BMLWarningListener;
-import saiba.bml.feedback.XMLBMLExceptionFeedback;
-import saiba.bml.feedback.XMLBMLPerformanceStartFeedback;
-import saiba.bml.feedback.XMLBMLPerformanceStopFeedback;
-import saiba.bml.feedback.XMLBMLSyncPointProgressFeedback;
-import saiba.bml.feedback.XMLBMLWarningFeedback;
 import hmi.xml.XMLTokenizer;
 
 import java.io.BufferedReader;
@@ -33,22 +22,22 @@ import java.util.concurrent.ConcurrentLinkedQueue;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import asap.bml.ext.bmlt.feedback.BMLTSchedulingFinishedFeedback;
-import asap.bml.ext.bmlt.feedback.BMLTSchedulingListener;
-import asap.bml.ext.bmlt.feedback.BMLTSchedulingStartFeedback;
-import asap.bml.ext.bmlt.feedback.XMLBMLTSchedulingFinishedFeedback;
-import asap.bml.ext.bmlt.feedback.XMLBMLTSchedulingStartFeedback;
+import saiba.bml.feedback.BMLWarningFeedback;
+
+import asap.bml.feedback.BMLFeedbackListener;
+import asap.bml.feedback.BMLPredictionListener;
+import asap.bml.feedback.BMLWarningListener;
 
 /**
- * Takes a {@link hmi.bml.bridge.RealizerPort RealizerBridge}, and exposes access to it through a
+ * Takes a {@link asap.bml.bridge.bml.bridge.RealizerPort RealizerBridge}, and exposes access to it through a
  * tcp/ip connection. The connection is "self-healing".
  * 
  * Detailed documentation can be found in the project report.
  * 
  * @author Dennis Reidsma
  */
-public final class TCPIPToBMLRealizerAdapter implements Runnable, BMLExceptionListener, BMLWarningListener, BMLFeedbackListener,
-        BMLTSchedulingListener
+public final class TCPIPToBMLRealizerAdapter implements Runnable, BMLWarningListener, BMLFeedbackListener,
+        BMLPredictionListener
 {
 
     private static Logger logger = LoggerFactory.getLogger(TCPIPToBMLRealizerAdapter.class.getName());
@@ -151,41 +140,30 @@ public final class TCPIPToBMLRealizerAdapter implements Runnable, BMLExceptionLi
      * =========================================================================================
      */
 
-    public void exception(BMLExceptionFeedback be)
-    {
-        queueFeedback(new XMLBMLExceptionFeedback(be).toXMLString());
-    }
-
+    @Override
     public void warn(BMLWarningFeedback bw)
     {
-        queueFeedback(new XMLBMLWarningFeedback(bw).toXMLString());
+        queueFeedback(bw.toXMLString());
     }
 
+    @Override
     public void syncProgress(BMLSyncPointProgressFeedback spp)
     {
-        queueFeedback(new XMLBMLSyncPointProgressFeedback(spp).toXMLString());
+        queueFeedback(spp.toXMLString());
     }
-
-    public void performanceStop(BMLPerformanceStopFeedback psf)
+    
+    @Override
+    public void blockProgress(BMLBlockProgressFeedback psf)
     {
-        queueFeedback(new XMLBMLPerformanceStopFeedback(psf).toXMLString());
-    }
+        queueFeedback(psf.toXMLString());
+    }   
 
-    public void performanceStart(BMLPerformanceStartFeedback psf)
+    @Override
+    public void prediction(BMLPredictionFeedback bpf)
     {
-        queueFeedback(new XMLBMLPerformanceStartFeedback(psf).toXMLString());
+        queueFeedback(bpf.toXMLString());
     }
-
-    public void schedulingFinished(BMLTSchedulingFinishedFeedback pff)
-    {
-        queueFeedback(new XMLBMLTSchedulingFinishedFeedback(pff).toXMLString());
-    }
-
-    public void schedulingStart(BMLTSchedulingStartFeedback psf)
-    {
-        queueFeedback(new XMLBMLTSchedulingStartFeedback(psf).toXMLString());
-    }
-
+   
     private void queueFeedback(String fb)
     {
         boolean send = true;

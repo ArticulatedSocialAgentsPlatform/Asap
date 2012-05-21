@@ -10,12 +10,13 @@ import java.util.List;
 
 import org.junit.Test;
 
+import saiba.bml.feedback.BMLBlockPredictionFeedback;
+import saiba.bml.feedback.BMLPredictionFeedback;
+
 import asap.bml.ext.bmlt.BMLTAudioFileBehaviour;
 import asap.bml.ext.bmlt.BMLTParameterValueChangeBehaviour;
 import asap.bml.ext.bmlt.BMLTTransitionBehaviour;
-import asap.bml.ext.bmlt.feedback.BMLTSchedulingFinishedFeedback;
-import asap.bml.ext.bmlt.feedback.BMLTSchedulingListener;
-import asap.bml.ext.bmlt.feedback.BMLTSchedulingStartFeedback;
+import asap.bml.feedback.BMLPredictionListener;
 import bml.bmlinfo.DefaultSyncPoints;
 import bml.realizertest.AbstractBML1RealizerTest;
 
@@ -24,29 +25,33 @@ import bml.realizertest.AbstractBML1RealizerTest;
  * @author hvanwelbergen
  *
  */
-public abstract class AbstractASAPRealizerTest extends AbstractBML1RealizerTest implements BMLTSchedulingListener 
+public abstract class AbstractASAPRealizerTest extends AbstractBML1RealizerTest implements BMLPredictionListener 
 {
-    private List<BMLTSchedulingStartFeedback> schedulingStartList = Collections
-    .synchronizedList(new ArrayList<BMLTSchedulingStartFeedback>());
-    private List<BMLTSchedulingFinishedFeedback> schedulingFinishedList = Collections
-    .synchronizedList(new ArrayList<BMLTSchedulingFinishedFeedback>());
+    private List<BMLPredictionFeedback> predictionList = Collections
+    .synchronizedList(new ArrayList<BMLPredictionFeedback>());
+    
     
     protected void clearFeedbackLists()
     {
-        schedulingStartList.clear();
-        schedulingFinishedList.clear();
+        predictionList.clear();
         realizerHandler.clearFeedbackLists();
     }
     
-    protected BMLTSchedulingFinishedFeedback getBMLSchedulingFinishedFeedback(String bmlId)
+    protected BMLBlockPredictionFeedback getBMLSchedulingFinishedFeedback(String bmlId)
     {
-        synchronized (schedulingFinishedList)
+        synchronized (predictionList)
         {
-            for (BMLTSchedulingFinishedFeedback bpfs : schedulingFinishedList)
+            for (BMLPredictionFeedback bpf : predictionList)
             {
-                if (bpfs.bmlId.equals(bmlId))
+                for(BMLBlockPredictionFeedback bp:bpf.getBmlBlockPredictions())
                 {
-                    return bpfs;
+                    if (bp.getId().equals(bmlId))
+                    {
+                        if(bp.getGlobalEnd()!=BMLBlockPredictionFeedback.UNKNOWN_TIME)
+                        {
+                            return bp;
+                        }
+                    }
                 }
             }
         }
@@ -64,27 +69,14 @@ public abstract class AbstractASAPRealizerTest extends AbstractBML1RealizerTest 
     
     protected boolean hasBMLFinishedFeedbacks(String bmlId)
     {
-        synchronized (schedulingFinishedList)
-        {
-            for (BMLTSchedulingFinishedFeedback fb : schedulingFinishedList)
-            {
-                if (fb.bmlId.equals(bmlId)) return true;
-            }
-        }
-        return false;
+        if(getBMLSchedulingFinishedFeedback(bmlId)!=null)return true;
+        return false;        
     }
     
     @Override
-    public synchronized void schedulingFinished(BMLTSchedulingFinishedFeedback pff)
+    public synchronized void prediction(BMLPredictionFeedback bpf)
     {
-        schedulingFinishedList.add(pff);
-        notifyAll();
-    }
-    
-    @Override
-    public synchronized void schedulingStart(BMLTSchedulingStartFeedback psf)
-    {
-        schedulingStartList.add(psf);
+        predictionList.add(bpf);
         notifyAll();
     }
     

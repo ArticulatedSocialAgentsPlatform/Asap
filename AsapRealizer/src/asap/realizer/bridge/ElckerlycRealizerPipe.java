@@ -1,19 +1,18 @@
 package asap.realizer.bridge;
 
-import asap.bml.ext.bmlt.feedback.BMLTSchedulingListener;
-import asap.realizer.ElckerlycRealizer;
-import saiba.bml.bridge.RealizerPort;
-import saiba.bml.feedback.BMLExceptionListener;
-import saiba.bml.feedback.BMLFeedbackListener;
-import saiba.bml.feedback.BMLListener;
-import saiba.bml.feedback.BMLWarningListener;
+import asap.bml.bridge.RealizerPort;
+import asap.bml.feedback.BMLFeedbackListener;
+import asap.bml.feedback.BMLListener;
+import asap.bml.feedback.BMLPredictionListener;
+import asap.bml.feedback.BMLWarningListener;
+import asap.realizer.AsapRealizer;
 
 /** Access to an Elckerlyc VH through the RealizerBridge interface. */
 public class ElckerlycRealizerPipe implements RealizerPort
 {
-    private ElckerlycRealizer realizer;
+    private AsapRealizer realizer;
     
-    public ElckerlycRealizerPipe(ElckerlycRealizer realizer)
+    public ElckerlycRealizerPipe(AsapRealizer realizer)
     {
         this.realizer = realizer;
     }
@@ -25,18 +24,17 @@ public class ElckerlycRealizerPipe implements RealizerPort
         realizer.scheduleBML(bmlString);
     }
     
-    public void addPlanningListener(BMLTSchedulingListener bpl)
+    public void addPredictionListener(BMLPredictionListener bpl)
     {
-        realizer.addPlanningListener(bpl);
+        realizer.addPredictionListener(bpl);
     }
     
     @Override
     public void removeAllListeners()
     {
-        realizer.getScheduler().removeAllExceptionListeners();
         realizer.getScheduler().removeAllWarningListeners();
         realizer.getScheduler().removeAllFeedbackListeners();
-        realizer.getScheduler().removeAllPlanningListeners();
+        realizer.getScheduler().removeAllPredictionListeners();
     }
     
     @Override
@@ -44,11 +42,7 @@ public class ElckerlycRealizerPipe implements RealizerPort
     {
         for (BMLListener listener: listeners)
         {
-            //note: one listener may be of more than one type!
-            if(listener instanceof BMLExceptionListener)
-            {
-                realizer.addExceptionListener((BMLExceptionListener)listener);
-            }
+            //note: one listener may be of more than one type!            
             if (listener instanceof BMLWarningListener)
             {
                 realizer.addWarningListener((BMLWarningListener)listener);
@@ -57,9 +51,9 @@ public class ElckerlycRealizerPipe implements RealizerPort
             {
                 realizer.addFeedbackListener((BMLFeedbackListener)listener);
             }
-            if (listener instanceof BMLTSchedulingListener)
+            if (listener instanceof BMLPredictionListener)
             {
-                realizer.addPlanningListener((BMLTSchedulingListener)listener);
+                realizer.addPredictionListener((BMLPredictionListener)listener);
             }
         }
     }

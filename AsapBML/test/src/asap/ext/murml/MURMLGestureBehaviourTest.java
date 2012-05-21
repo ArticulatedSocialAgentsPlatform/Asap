@@ -17,12 +17,12 @@ import asap.bml.ext.murml.MURMLGestureBehaviour;
 /**
  * Unit test cases for the MURML gesture behaviour
  * @author hvanwelbergen
- *
+ * 
  */
 public class MURMLGestureBehaviourTest
 {
     private static final double FRAME_PRECISION = 0.0001;
-    
+
     @Test
     public void testReadKeyframe() throws IOException
     {
@@ -36,19 +36,20 @@ public class MURMLGestureBehaviourTest
         assertNull(beh.getMurmlDefinition().getPosture());
         assertEquals(0, beh.getMurmlDefinition().getKeyframing().getPhases().get(0).getFrames().get(0).getFtime(), FRAME_PRECISION);
     }
-    
+
     @Test
     public void testExtension() throws IOException
     {
         BMLInfo.addDescriptionExtension(MURMLGestureBehaviour.xmlTag(), MURMLGestureBehaviour.class);
         BMLInfo.supportedExtensions.add(MURMLGestureBehaviour.class);
-        String murmlString = "<murml:murmlgesture xmlns:murml=\"http://www.techfak.uni-bielefeld.de/ags/soa/murml\" "
-                + "id=\"a1\">" + "<definition><keyframing><phase><frame ftime=\"0\"><posture>Humanoid "
+        String murmlString = "<murml:murmlgesture xmlns:murml=\"http://www.techfak.uni-bielefeld.de/ags/soa/murml\" " + "id=\"a1\">"
+                + "<definition><keyframing><phase><frame ftime=\"0\"><posture>Humanoid "
                 + "(dB_Smile 3 70 0 0)</posture></frame></phase></keyframing></definition>" + "</murml:murmlgesture>";
-        String bmlString = "<gesture id=\"a1\" lexeme=\"BEAT\"><description priority=\"1\" type=\"murmlgesture\">"+murmlString+"</description></gesture>";
-        GestureBehaviour f = new GestureBehaviour("bmla",new XMLTokenizer(bmlString));
+        String bmlString = "<gesture id=\"a1\" lexeme=\"BEAT\">" + "<description priority=\"1\" type=\"murmlgesture\">" + murmlString
+                + "</description></gesture>";
+        GestureBehaviour f = new GestureBehaviour("bmla", new XMLTokenizer(bmlString));
         assertThat(f.descBehaviour, instanceOf(MURMLGestureBehaviour.class));
-        MURMLGestureBehaviour beh = (MURMLGestureBehaviour)f.descBehaviour;
+        MURMLGestureBehaviour beh = (MURMLGestureBehaviour) f.descBehaviour;
         assertEquals("bmla", beh.getBmlId());
         assertEquals("a1", beh.id);
 

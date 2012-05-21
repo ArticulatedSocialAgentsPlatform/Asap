@@ -18,7 +18,6 @@
  ******************************************************************************/
 package asap.bml.bridge.ui;
 
-import saiba.bml.bridge.RealizerPort;
 import hmi.util.Resources;
 
 import java.awt.Dimension;
@@ -59,6 +58,8 @@ import javax.swing.undo.UndoManager;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+
+import asap.bml.bridge.RealizerPort;
 
 
 /**

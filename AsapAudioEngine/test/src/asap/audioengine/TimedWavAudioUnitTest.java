@@ -20,7 +20,7 @@ import asap.realizer.scheduler.BMLBlockManager;
 import asap.realizertestutil.planunit.AbstractTimedPlanUnitTest;
 
 /**
- * Test cases for the TimedWavAudioUnit
+ * Unit test cases for the TimedWavAudioUnit
  * @author welberge
  * 
  */

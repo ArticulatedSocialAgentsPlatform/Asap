@@ -1,14 +1,8 @@
 package asap.bml.bridge.ui;
 
-import saiba.bml.bridge.RealizerPort;
-import saiba.bml.feedback.BMLExceptionFeedback;
-import saiba.bml.feedback.BMLExceptionListener;
-import saiba.bml.feedback.BMLFeedbackListener;
-import saiba.bml.feedback.BMLPerformanceStartFeedback;
-import saiba.bml.feedback.BMLPerformanceStopFeedback;
+import saiba.bml.feedback.BMLBlockProgressFeedback;
+import saiba.bml.feedback.BMLPredictionFeedback;
 import saiba.bml.feedback.BMLSyncPointProgressFeedback;
-import saiba.bml.feedback.BMLWarningFeedback;
-import saiba.bml.feedback.BMLWarningListener;
 
 import java.awt.Dimension;
 import java.awt.event.ActionEvent;
@@ -20,22 +14,25 @@ import javax.swing.JScrollPane;
 import javax.swing.JTabbedPane;
 import javax.swing.JTextArea;
 
-import asap.bml.ext.bmlt.feedback.BMLTSchedulingFinishedFeedback;
-import asap.bml.ext.bmlt.feedback.BMLTSchedulingListener;
-import asap.bml.ext.bmlt.feedback.BMLTSchedulingStartFeedback;
+import saiba.bml.feedback.BMLWarningFeedback;
+
+import asap.bml.bridge.RealizerPort;
+import asap.bml.feedback.BMLFeedbackListener;
+import asap.bml.feedback.BMLPredictionListener;
+import asap.bml.feedback.BMLWarningListener;
 
 /**
  * User interface element to hook up to BML feedback information
  * @author reidsma, welberge
  */
-public class FeedbackPanel extends JPanel implements BMLWarningListener, BMLFeedbackListener, BMLTSchedulingListener, BMLExceptionListener
+public class FeedbackPanel extends JPanel implements BMLWarningListener, BMLFeedbackListener, BMLPredictionListener
 {
     // XXX class is not serializable (see findbugs). Better to make this class HAVE a panel rather than BE a panel
     private static final long serialVersionUID = 1L;
     /** Text area to give output feedback */
     private JTextArea feedbackOutput = null;
     private JTextArea warningOutput = null;
-    private JTextArea planningOutput = null;
+    private JTextArea predictionOutput = null;
     private JTabbedPane tabPane;
 
     public FeedbackPanel(RealizerPort bridge)
@@ -47,9 +44,9 @@ public class FeedbackPanel extends JPanel implements BMLWarningListener, BMLFeed
         JScrollPane resultScroll = new JScrollPane(feedbackOutput);
         resultScroll.setPreferredSize(new Dimension(500, 80));
 
-        planningOutput = new JTextArea();
-        planningOutput.setEditable(false);
-        JScrollPane planningScroll = new JScrollPane(planningOutput);
+        predictionOutput = new JTextArea();
+        predictionOutput.setEditable(false);
+        JScrollPane planningScroll = new JScrollPane(predictionOutput);
         planningScroll.setPreferredSize(new Dimension(500, 80));
 
         warningOutput = new JTextArea();
@@ -60,7 +57,7 @@ public class FeedbackPanel extends JPanel implements BMLWarningListener, BMLFeed
         tabPane = new JTabbedPane();
         tabPane.addTab("Warnings", warningScroll);
         tabPane.addTab("Feedback", resultScroll);
-        tabPane.addTab("Planning", planningScroll);
+        tabPane.addTab("Prediction", planningScroll);
         add(tabPane);
         JButton clearButton = new JButton("clear");
         clearButton.addActionListener(new ActionListener()
@@ -79,7 +76,7 @@ public class FeedbackPanel extends JPanel implements BMLWarningListener, BMLFeed
     {
         feedbackOutput.setText("");
         warningOutput.setText("");
-        planningOutput.setText("");
+        predictionOutput.setText("");
     }
 
     public void appendWarning(String text)
@@ -89,16 +86,10 @@ public class FeedbackPanel extends JPanel implements BMLWarningListener, BMLFeed
     }
 
     @Override
-    public void performanceStop(BMLPerformanceStopFeedback psf)
+    public void blockProgress(BMLBlockProgressFeedback psf)
     {
         feedbackOutput.append(psf.toString());
-    }
-
-    @Override
-    public void performanceStart(BMLPerformanceStartFeedback psf)
-    {
-        feedbackOutput.append(psf.toString());
-    }
+    }    
 
     @Override
     public void syncProgress(BMLSyncPointProgressFeedback spp)
@@ -107,21 +98,9 @@ public class FeedbackPanel extends JPanel implements BMLWarningListener, BMLFeed
     }
 
     @Override
-    public void exception(BMLExceptionFeedback be)
+    public void prediction(BMLPredictionFeedback bpf)
     {
-        warningOutput.append(be.toString());
-    }
-
-    @Override
-    public void schedulingFinished(BMLTSchedulingFinishedFeedback pff)
-    {
-        planningOutput.append(pff.toString());
-    }
-
-    @Override
-    public void schedulingStart(BMLTSchedulingStartFeedback psf)
-    {
-        planningOutput.append(psf.toString());
+        predictionOutput.append(bpf.toString());
     }
 
     @Override

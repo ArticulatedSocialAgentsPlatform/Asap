@@ -7,8 +7,6 @@ import static org.mockito.Mockito.verify;
 import static org.powermock.api.mockito.PowerMockito.doThrow;
 import static org.powermock.api.mockito.PowerMockito.mock;
 import static org.powermock.api.mockito.PowerMockito.when;
-import saiba.bml.feedback.BMLExceptionFeedback;
-import saiba.bml.feedback.ListBMLExceptionListener;
 import hmi.physics.PhysicalHumanoid;
 import hmi.physics.mixed.MixedSystem;
 import hmi.testutil.animation.HanimBody;
@@ -23,8 +21,12 @@ import org.powermock.core.classloader.annotations.PowerMockIgnore;
 import org.powermock.core.classloader.annotations.PrepareForTest;
 import org.powermock.modules.junit4.PowerMockRunner;
 
+import saiba.bml.feedback.BMLWarningFeedback;
+
+
 import asap.animationengine.motionunit.TimedAnimationUnit;
 import asap.animationengine.restpose.SkeletonPoseRestPose;
+import asap.bml.feedback.ListBMLWarningListener;
 import asap.realizer.feedback.FeedbackManager;
 import asap.realizer.feedback.FeedbackManagerImpl;
 import asap.realizer.pegboard.PegBoard;
@@ -47,7 +49,7 @@ import asap.realizer.scheduler.BMLBlockManager;
 public class AnimationPlayerTest
 {
     private AnimationPlayer animationPlayer;
-    private List<BMLExceptionFeedback> beList;
+    private List<BMLWarningFeedback> beList;
 
     private PhysicalHumanoid mockPhysicalHumanoid = mock(PhysicalHumanoid.class);
     private TimedAnimationUnit mockTimedMotionUnit = mock(TimedAnimationUnit.class);
@@ -72,8 +74,8 @@ public class AnimationPlayerTest
                 new AnimationPlanPlayer(new SkeletonPoseRestPose(pegBoard), fbManager, planManager,
                         new DefaultTimedPlanUnitPlayer())                
                 );
-        beList = new ArrayList<BMLExceptionFeedback>();
-        fbManager.addExceptionListener(new ListBMLExceptionListener(beList));
+        beList = new ArrayList<BMLWarningFeedback>();
+        fbManager.addWarningListener(new ListBMLWarningListener(beList));
     }    
 
     @Test

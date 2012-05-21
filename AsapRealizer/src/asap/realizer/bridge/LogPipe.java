@@ -1,28 +1,16 @@
 package asap.realizer.bridge;
 
-import saiba.bml.bridge.RealizerPort;
-import saiba.bml.feedback.BMLExceptionFeedback;
-import saiba.bml.feedback.BMLExceptionListener;
-import saiba.bml.feedback.BMLFeedbackListener;
-import saiba.bml.feedback.BMLListener;
-import saiba.bml.feedback.BMLPerformanceStartFeedback;
-import saiba.bml.feedback.BMLPerformanceStopFeedback;
-import saiba.bml.feedback.BMLSyncPointProgressFeedback;
-import saiba.bml.feedback.BMLWarningFeedback;
-import saiba.bml.feedback.BMLWarningListener;
-import saiba.bml.feedback.XMLBMLExceptionFeedback;
-import saiba.bml.feedback.XMLBMLPerformanceStartFeedback;
-import saiba.bml.feedback.XMLBMLPerformanceStopFeedback;
-import saiba.bml.feedback.XMLBMLSyncPointProgressFeedback;
-import saiba.bml.feedback.XMLBMLWarningFeedback;
-
 import org.slf4j.Logger;
 
-import asap.bml.ext.bmlt.feedback.BMLTSchedulingFinishedFeedback;
-import asap.bml.ext.bmlt.feedback.BMLTSchedulingListener;
-import asap.bml.ext.bmlt.feedback.BMLTSchedulingStartFeedback;
-import asap.bml.ext.bmlt.feedback.XMLBMLTSchedulingFinishedFeedback;
-import asap.bml.ext.bmlt.feedback.XMLBMLTSchedulingStartFeedback;
+import saiba.bml.feedback.BMLBlockProgressFeedback;
+import saiba.bml.feedback.BMLPredictionFeedback;
+import saiba.bml.feedback.BMLSyncPointProgressFeedback;
+import saiba.bml.feedback.BMLWarningFeedback;
+import asap.bml.bridge.RealizerPort;
+import asap.bml.feedback.BMLFeedbackListener;
+import asap.bml.feedback.BMLListener;
+import asap.bml.feedback.BMLPredictionListener;
+import asap.bml.feedback.BMLWarningListener;
 import asap.utils.SchedulingClock;
 
 
@@ -35,8 +23,7 @@ import asap.utils.SchedulingClock;
  * @author welberge
  * @author reidsma
  */
-public class LogPipe implements RealizerPort, BMLFeedbackListener, BMLExceptionListener,
-        BMLWarningListener, BMLTSchedulingListener
+public class LogPipe implements RealizerPort, BMLFeedbackListener, BMLWarningListener, BMLPredictionListener
 {
     private final Logger requestLogger;
     private final Logger feedbackLogger;
@@ -57,46 +44,29 @@ public class LogPipe implements RealizerPort, BMLFeedbackListener, BMLExceptionL
     }
 
     @Override
-    public void performanceStop(BMLPerformanceStopFeedback psf)
+    public void blockProgress(BMLBlockProgressFeedback psf)
     {
-        if (logFeedback)feedbackLogger.info(new XMLBMLPerformanceStopFeedback(psf).toXMLString());
-    }
-
-    @Override
-    public void performanceStart(BMLPerformanceStartFeedback psf)
-    {
-        if (logFeedback)feedbackLogger.info(new XMLBMLPerformanceStartFeedback(psf).toXMLString());
+        if (logFeedback)feedbackLogger.info(psf.toXMLString());
     }
 
     @Override
     public void syncProgress(BMLSyncPointProgressFeedback spp)
     {
-        if (logFeedback)feedbackLogger.info(new XMLBMLSyncPointProgressFeedback(spp).toXMLString());
-    }
-
-    @Override
-    public void exception(BMLExceptionFeedback be)
-    {
-        if (logFeedback)feedbackLogger.info(new XMLBMLExceptionFeedback(be).toXMLString());
+        if (logFeedback)feedbackLogger.info(spp.toXMLString());
     }
 
     @Override
     public void warn(BMLWarningFeedback bw)
     {
-        if (logFeedback)feedbackLogger.info(new XMLBMLWarningFeedback(bw).toXMLString());
+        if (logFeedback)feedbackLogger.info(bw.toXMLString());
     }
 
     @Override
-    public void schedulingFinished(BMLTSchedulingFinishedFeedback pff)
+    public void prediction(BMLPredictionFeedback bpf)
     {
-        if (logFeedback)feedbackLogger.info(new XMLBMLTSchedulingFinishedFeedback(pff).toXMLString());
+        if (logFeedback)feedbackLogger.info(bpf.toXMLString());
     }
-
-    @Override
-    public void schedulingStart(BMLTSchedulingStartFeedback psf)
-    {
-        if (logFeedback)feedbackLogger.info(new XMLBMLTSchedulingStartFeedback(psf).toXMLString());
-    }
+    
 
     @Override
     public void addListeners(BMLListener... listeners)

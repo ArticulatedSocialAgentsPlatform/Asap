@@ -19,7 +19,7 @@
  ******************************************************************************/
 package asap.environment;
 
-import saiba.bml.bridge.RealizerPort;
+import asap.bml.bridge.RealizerPort;
 import asap.bml.bridge.TCPIPToBMLRealizerAdapter;
 import saiba.bml.core.BMLBehaviorAttributeExtension;
 import saiba.bml.core.Behaviour;
@@ -44,7 +44,7 @@ import asap.environment.impl.ActivateEngineLoader;
 import asap.environment.impl.InterruptEngineLoader;
 import asap.environment.impl.ParameterValueChangeEngineLoader;
 import asap.environment.impl.WaitEngineLoader;
-import asap.realizer.ElckerlycRealizer;
+import asap.realizer.AsapRealizer;
 import asap.realizer.Engine;
 import asap.realizer.bridge.LogPipe;
 import asap.realizer.bridge.MultiThreadedElckerlycRealizerBridge;
@@ -74,7 +74,7 @@ public class AsapVirtualHuman
      */
     @Getter
     @Setter(AccessLevel.PROTECTED)
-    private ElckerlycRealizer elckerlycRealizer = null;
+    private AsapRealizer elckerlycRealizer = null;
 
     /** Use the RealizerPort to send BML to the Realizer */
     @Getter
@@ -297,7 +297,7 @@ public class AsapVirtualHuman
 
         // ========= construct realizer and realizerport
 
-        elckerlycRealizer = new ElckerlycRealizer(parser, feedbackManager, theSchedulingClock, bmlScheduler);
+        elckerlycRealizer = new AsapRealizer(parser, feedbackManager, theSchedulingClock, bmlScheduler);
 
         //we can't ensure that the port will only be called singlethreaded
         realizerPort = new MultiThreadedElckerlycRealizerBridge(elckerlycRealizer); 

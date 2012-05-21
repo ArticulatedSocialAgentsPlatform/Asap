@@ -6,8 +6,6 @@ import static org.mockito.Matchers.eq;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
 import saiba.bml.core.FaceLexemeBehaviour;
-import saiba.bml.feedback.BMLExceptionFeedback;
-import saiba.bml.feedback.ListBMLExceptionListener;
 import saiba.bml.parser.Constraint;
 import asap.realizertestutil.PlannerTests;
 import asap.realizer.planunit.SingleThreadedPlanPlayer;
@@ -30,6 +28,7 @@ import org.powermock.api.mockito.PowerMockito;
 import org.powermock.core.classloader.annotations.PrepareForTest;
 import org.powermock.modules.junit4.PowerMockRunner;
 
+import asap.bml.feedback.ListBMLWarningListener;
 import asap.faceengine.FacePlanner;
 import asap.faceengine.facebinding.FaceBinding;
 import asap.realizer.BehaviourPlanningException;
@@ -44,6 +43,7 @@ import asap.realizer.planunit.PlanManager;
 import asap.realizer.planunit.TimedPlanUnitState;
 import asap.realizer.scheduler.BMLBlockManager;
 import asap.realizer.scheduler.TimePegAndConstraint;
+import saiba.bml.feedback.BMLWarningFeedback;
 
 /**
  * Unit test cases for the FacePlanner
@@ -61,7 +61,7 @@ public class FacePlannerTest
     private FaceUnit mockFaceUnit = mock(FaceUnit.class);
     private FaceLexemeBehaviour mockFaceBehaviour = mock(FaceLexemeBehaviour.class);
 
-    private List<BMLExceptionFeedback> beList;
+    private List<BMLWarningFeedback> beList;
     private Player facePlayer;
     private BMLBlockManager mockBmlBlockManager = mock(BMLBlockManager.class);
     private FeedbackManager fbManager = new FeedbackManagerImpl(mockBmlBlockManager,"character1");
@@ -81,8 +81,8 @@ public class FacePlannerTest
     {
         facePlayer = new DefaultPlayer(new SingleThreadedPlanPlayer<TimedFaceUnit>(fbManager, planManager));
         facePlanner = new FacePlanner(fbManager, mockFaceController, mockFACSConverter, mockEmotionConverter, mockFaceBinding, planManager);
-        beList = new ArrayList<BMLExceptionFeedback>();
-        fbManager.addExceptionListener(new ListBMLExceptionListener(beList));
+        beList = new ArrayList<BMLWarningFeedback>();
+        fbManager.addWarningListener(new ListBMLWarningListener(beList));
         plannerTests = new PlannerTests<TimedFaceUnit>(facePlanner, bbPeg);
 
         when(mockFaceUnit.hasValidParameters()).thenReturn(true);

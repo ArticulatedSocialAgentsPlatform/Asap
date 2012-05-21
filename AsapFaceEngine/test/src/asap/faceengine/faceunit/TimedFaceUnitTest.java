@@ -7,10 +7,6 @@ import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.never;
 import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
-import saiba.bml.feedback.BMLSyncPointProgressFeedback;
-import saiba.bml.feedback.ListFeedbackListener;
-import asap.realizertestutil.planunit.AbstractTimedPlanUnitTest;
-import asap.realizertestutil.util.KeyPositionMocker;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -20,6 +16,8 @@ import org.junit.runner.RunWith;
 import org.powermock.core.classloader.annotations.PrepareForTest;
 import org.powermock.modules.junit4.PowerMockRunner;
 
+import saiba.bml.feedback.BMLSyncPointProgressFeedback;
+import asap.bml.feedback.ListFeedbackListener;
 import asap.motionunit.MUPlayException;
 import asap.realizer.feedback.FeedbackManager;
 import asap.realizer.feedback.FeedbackManagerImpl;
@@ -30,6 +28,9 @@ import asap.realizer.planunit.TimedPlanUnit;
 import asap.realizer.planunit.TimedPlanUnitPlayException;
 import asap.realizer.planunit.TimedPlanUnitState;
 import asap.realizer.scheduler.BMLBlockManager;
+import asap.realizertestutil.planunit.AbstractTimedPlanUnitTest;
+import asap.realizertestutil.util.KeyPositionMocker;
+import asap.testutil.bml.feedback.FeedbackAsserts;
 
 /**
  * Test cases for the TimedFaceUnit
@@ -42,8 +43,7 @@ public class TimedFaceUnitTest extends AbstractTimedPlanUnitTest
 {
     private FaceUnit fuMock = mock(FaceUnit.class);
     private BMLBlockManager mockBmlBlockManager = mock(BMLBlockManager.class);
-    private FeedbackManager fbManager = new FeedbackManagerImpl(mockBmlBlockManager,"character1");
-    private static final double TIMING_PRECISION = 0.0001;
+    private FeedbackManager fbManager = new FeedbackManagerImpl(mockBmlBlockManager,"character1");    
     
     public TimedFaceUnit createTimedFaceUnit(String behId, String bmlId, FaceUnit fu)
     {
@@ -88,12 +88,8 @@ public class TimedFaceUnitTest extends AbstractTimedPlanUnitTest
         tfu.setState(TimedPlanUnitState.LURKING);
         tfu.start(0.5);
         tfu.play(0.5);        
-        assertTrue(fbList.size()==1);
-        assertEquals("behaviour1",fbList.get(0).behaviorId);
-        assertEquals("bml1",fbList.get(0).bmlId);
-        assertEquals("start",fbList.get(0).syncId);
-        assertEquals(0.5,fbList.get(0).timeStamp,TIMING_PRECISION);
-        assertEquals(0.5,fbList.get(0).bmlBlockTime,TIMING_PRECISION);       
+        assertEquals(1,fbList.size());
+        FeedbackAsserts.assertEqualSyncPointProgress(new BMLSyncPointProgressFeedback("bml1","behaviour1","start",0.5,0.5), fbList.get(0));               
         verify(fuMock,times(1)).play(0.5);
     }
     

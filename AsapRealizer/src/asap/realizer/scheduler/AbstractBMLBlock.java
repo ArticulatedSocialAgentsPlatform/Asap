@@ -110,9 +110,9 @@ public abstract class AbstractBMLBlock implements BMLBlock
         return state.get();
     }
 
-    public void dropBehaviours(Set<String> behs)
+    public void dropBehaviour(String beh)
     {
-        droppedBehaviours.addAll(behs);
+        droppedBehaviours.add(beh);
     }
 
     /**

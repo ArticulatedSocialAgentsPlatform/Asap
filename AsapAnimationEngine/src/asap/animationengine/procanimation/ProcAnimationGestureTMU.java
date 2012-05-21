@@ -475,7 +475,8 @@ public class ProcAnimationGestureTMU extends TimedAnimationUnit
                 else
                 {
                     double scale = totalDuration
-                            / (preStrokeHoldDuration + postStrokeHoldDuration + strokeStartDuration + strokeEndDuration + prepDuration + relaxDuration);
+                            / (preStrokeHoldDuration + postStrokeHoldDuration + strokeStartDuration + 
+                                    strokeEndDuration + prepDuration + relaxDuration);
                     prepDuration *= scale;
                     relaxDuration *= scale;
                 }

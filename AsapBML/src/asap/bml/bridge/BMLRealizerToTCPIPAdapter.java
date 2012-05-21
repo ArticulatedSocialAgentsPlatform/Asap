@@ -1,14 +1,5 @@
 package asap.bml.bridge;
 
-import saiba.bml.bridge.RealizerPort;
-import saiba.bml.feedback.BMLExceptionFeedback;
-import saiba.bml.feedback.BMLFeedback;
-import saiba.bml.feedback.BMLListener;
-import saiba.bml.feedback.XMLBMLExceptionFeedback;
-import saiba.bml.feedback.XMLBMLPerformanceStartFeedback;
-import saiba.bml.feedback.XMLBMLPerformanceStopFeedback;
-import saiba.bml.feedback.XMLBMLSyncPointProgressFeedback;
-import saiba.bml.feedback.XMLBMLWarningFeedback;
 import hmi.xml.XMLTokenizer;
 
 import java.io.BufferedReader;
@@ -21,18 +12,22 @@ import java.net.Socket;
 import java.net.SocketException;
 import java.net.SocketTimeoutException;
 import java.nio.channels.IllegalBlockingModeException;
-import java.util.HashSet;
 import java.util.concurrent.ConcurrentLinkedQueue;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import asap.bml.ext.bmlt.feedback.XMLBMLTSchedulingFinishedFeedback;
-import asap.bml.ext.bmlt.feedback.XMLBMLTSchedulingStartFeedback;
+import saiba.bml.feedback.BMLWarningFeedback;
+
+import saiba.bml.feedback.BMLFeedback;
+import saiba.bml.feedback.BMLBlockProgressFeedback;
+import saiba.bml.feedback.BMLPredictionFeedback;
+import saiba.bml.feedback.BMLSyncPointProgressFeedback;
+import asap.bml.feedback.BMLListener;
 import asap.bml.util.BMLFeedbackManager;
 
 /**
- * A {@link hmi.bml.bridge.RealizerPort RealizerBridge} that uses a tcp/ip connection to provide
+ * A {@link asap.bml.bridge.bml.bridge.RealizerPort RealizerBridge} that uses a tcp/ip connection to provide
  * transparent access to a BML Realizer running on a remote machine. The connection is
  * "self-healing".
  * 
@@ -165,11 +160,10 @@ public final class BMLRealizerToTCPIPAdapter implements RealizerPort, Runnable
         else
         {
             // log failure; send feedback
-            BMLExceptionFeedback feedback = new BMLExceptionFeedback(null, 0, new HashSet<String>(), new HashSet<String>(),
-                    "Failure to send BML: no connection to BML Realizer Server.", true);
+            BMLWarningFeedback feedback = new BMLWarningFeedback("", "CANNOT_SEND", "Failure to send BML: no connection to BML Realizer Server.");
             synchronized (feedbackLock)
             {
-                fbManager.sendException(feedback);
+                fbManager.sendFeedback(feedback);
             }
         }
     }
@@ -336,62 +330,38 @@ public final class BMLRealizerToTCPIPAdapter implements RealizerPort, Runnable
                      * ); try { Thread.sleep(WAIT_IF_NO_FEEDBACK); } catch(InterruptedException ex)
                      * { } continue; }
                      */
-                    if (tok.atSTag(XMLBMLWarningFeedback.xmlTag()))
+                    if (tok.atSTag(BMLWarningFeedback.xmlTag()))
                     {
-                        XMLBMLWarningFeedback feedback = new XMLBMLWarningFeedback();
+                        BMLWarningFeedback feedback = new BMLWarningFeedback();
                         feedback.readXML(tok);
-                        feedbackQ.add(feedback.getBMLWarningFeedback());
+                        feedbackQ.add(feedback);
                         // feedbackRedirectorThread.interrupt() when new feedback was put in queue!
                         // let op SecurityException
-                    }
-                    else if (tok.atSTag(XMLBMLExceptionFeedback.xmlTag()))
+                    }                    
+                    else if (tok.atSTag(BMLBlockProgressFeedback.xmlTag()))
                     {
-                        XMLBMLExceptionFeedback feedback = new XMLBMLExceptionFeedback();
+                        BMLBlockProgressFeedback feedback = new BMLBlockProgressFeedback();
                         feedback.readXML(tok);
-                        feedbackQ.add(feedback.getBMLExceptionFeedback());
+                        feedbackQ.add(feedback);
                         // feedbackRedirectorThread.interrupt() when new feedback was put in queue!
                         // let op SecurityException
-                    }
-                    else if (tok.atSTag(XMLBMLPerformanceStartFeedback.xmlTag()))
+                    }                 
+                    else if (tok.atSTag(BMLSyncPointProgressFeedback.xmlTag()))
                     {
-                        XMLBMLPerformanceStartFeedback feedback = new XMLBMLPerformanceStartFeedback();
+                        BMLSyncPointProgressFeedback feedback = new BMLSyncPointProgressFeedback();
                         feedback.readXML(tok);
-                        feedbackQ.add(feedback.getBMLPerformanceStartFeedback());
-                        // feedbackRedirectorThread.interrupt() when new feedback was put in queue!
-                        // let op SecurityException
-                    }
-                    else if (tok.atSTag(XMLBMLPerformanceStopFeedback.xmlTag()))
-                    {
-                        XMLBMLPerformanceStopFeedback feedback = new XMLBMLPerformanceStopFeedback();
-                        feedback.readXML(tok);
-                        feedbackQ.add(feedback.getBMLPerformanceStopFeedback());
-                        // feedbackRedirectorThread.interrupt() when new feedback was put in queue!
-                        // let op SecurityException
-                    }
-                    else if (tok.atSTag(XMLBMLSyncPointProgressFeedback.xmlTag()))
-                    {
-                        XMLBMLSyncPointProgressFeedback feedback = new XMLBMLSyncPointProgressFeedback();
-                        feedback.readXML(tok);
-                        feedbackQ.add(feedback.getBMLSyncPointProgressFeedback());
+                        feedbackQ.add(feedback);
                         // feedbackRedirectorThread.interrupt() when new feedback was put in queue!
                         // let op SecurityException
                     } 
-                    else if (tok.atSTag(XMLBMLTSchedulingFinishedFeedback.xmlTag()))
+                    else if (tok.atSTag(BMLPredictionFeedback.xmlTag()))
                     {
-                        XMLBMLTSchedulingFinishedFeedback feedback = new XMLBMLTSchedulingFinishedFeedback();
+                        BMLPredictionFeedback feedback = new BMLPredictionFeedback();
                         feedback.readXML(tok);
-                        feedbackQ.add(feedback.getBMLTPlanningFinishedFeedback());
+                        feedbackQ.add(feedback);
                         // feedbackRedirectorThread.interrupt() when new feedback was put in queue!
                         // let op SecurityException
-                    } 
-                    else if (tok.atSTag(XMLBMLTSchedulingStartFeedback.xmlTag()))
-                    {
-                        XMLBMLTSchedulingStartFeedback feedback = new XMLBMLTSchedulingStartFeedback();
-                        feedback.readXML(tok);
-                        feedbackQ.add(feedback.getBMLTPlanningStartFeedback());
-                        // feedbackRedirectorThread.interrupt() when new feedback was put in queue!
-                        // let op SecurityException
-                    } 
+                    }                    
                     else
                     { // give up when not a feedback tag...
                         logger.warn("Failed to read feedback from server, unexpected feedback format. Disconnecting from server.");

@@ -12,7 +12,6 @@ import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
 import saiba.bml.BMLGestureSync;
 import saiba.bml.feedback.BMLSyncPointProgressFeedback;
-import saiba.bml.feedback.ListFeedbackListener;
 import asap.realizertestutil.planunit.AbstractTimedPlanUnitTest;
 import asap.realizertestutil.util.TimePegUtil;
 
@@ -26,6 +25,7 @@ import org.powermock.core.classloader.annotations.PowerMockIgnore;
 import org.powermock.core.classloader.annotations.PrepareForTest;
 import org.powermock.modules.junit4.PowerMockRunner;
 
+import asap.bml.feedback.ListFeedbackListener;
 import asap.motionunit.MUPlayException;
 import asap.realizer.SyncPointNotFoundException;
 import asap.realizer.feedback.FeedbackManager;
@@ -69,11 +69,11 @@ public class TimedMotionUnitTest extends AbstractTimedPlanUnitTest
 
     private void assertEqualBMLSyncPointProgressFeedback(BMLSyncPointProgressFeedback expected, BMLSyncPointProgressFeedback actual)
     {
-        assertEquals(expected.behaviorId, actual.behaviorId);
-        assertEquals(expected.bmlId, actual.bmlId);
-        assertEquals(expected.syncId, actual.syncId);
-        assertEquals(expected.bmlBlockTime, actual.bmlBlockTime, TIMING_PRECISION);
-        assertEquals(expected.timeStamp, actual.timeStamp, TIMING_PRECISION);
+        assertEquals(expected.getBehaviourId(), actual.getBehaviourId());
+        assertEquals(expected.getBMLId(), actual.getBMLId());
+        assertEquals(expected.getSyncId(), actual.getSyncId());
+        assertEquals(expected.getTime(), actual.getTime(), TIMING_PRECISION);
+        assertEquals(expected.getGlobalTime(), actual.getGlobalTime(), TIMING_PRECISION);
     }
 
     @Test

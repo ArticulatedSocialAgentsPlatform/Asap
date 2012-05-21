@@ -21,12 +21,11 @@ import org.powermock.modules.junit4.PowerMockRunner;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import saiba.bml.bridge.RealizerPort;
 import saiba.bml.feedback.BMLFeedback;
-import saiba.bml.feedback.BMLListener;
 import saiba.bml.feedback.BMLSyncPointProgressFeedback;
-import saiba.bml.feedback.ListFeedbackListener;
-import saiba.bml.feedback.XMLBMLSyncPointProgressFeedback;
+import asap.bml.bridge.RealizerPort;
+import asap.bml.feedback.BMLListener;
+import asap.bml.feedback.ListFeedbackListener;
 import asap.bml.util.BMLFeedbackManager;
 import asap.utils.SchedulingClock;
 /**
@@ -139,7 +138,7 @@ public class LoggingRealizerBridgeTest
         outputBridge.sendFeedback(spp);
         assertOneFeedback(spp,fbList);
         
-        final String logString = new XMLBMLSyncPointProgressFeedback(spp).toXMLString();
+        final String logString = spp.toXMLString();
         verify(mockLogger,times(1)).info(logString);        
     }
 }

@@ -22,10 +22,6 @@ import saiba.bml.BMLInfo;
 import saiba.bml.core.BMLBehaviorAttributeExtension;
 import saiba.bml.core.Behaviour;
 import saiba.bml.core.BehaviourBlock;
-import saiba.bml.feedback.BMLExceptionFeedback;
-import saiba.bml.feedback.BMLExceptionListener;
-import saiba.bml.feedback.BMLFeedbackListener;
-import saiba.bml.feedback.BMLWarningListener;
 import saiba.bml.parser.BMLParser;
 import hmi.xml.XMLScanException;
 import hmi.xml.XMLTokenizer;
@@ -39,7 +35,9 @@ import java.util.Set;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import asap.bml.ext.bmlt.feedback.BMLTSchedulingListener;
+import asap.bml.feedback.BMLFeedbackListener;
+import asap.bml.feedback.BMLPredictionListener;
+import asap.bml.feedback.BMLWarningListener;
 import asap.realizer.anticipator.Anticipator;
 import asap.realizer.feedback.FeedbackManager;
 import asap.realizer.pegboard.PegBoard;
@@ -49,6 +47,7 @@ import asap.realizer.scheduler.BMLScheduler;
 import asap.realizer.scheduler.BMLTSchedulingHandler;
 import asap.realizer.scheduler.SortedSmartBodySchedulingStrategy;
 import asap.utils.SchedulingClock;
+import saiba.bml.feedback.BMLWarningFeedback;
 
 import com.google.common.collect.ImmutableSet;
 
@@ -64,14 +63,12 @@ import com.google.common.collect.ImmutableSet;
  * <ul>
  * <li>An AudioPlanner to process BMLTAudioFile elements into audio
  * <li>A ttsPlanner to process SpeechBehaviour elements into speech
- * <li>An AnimationPlanner to process Head and BMLTProcAnimation behaviors into animation 
- * (and more, later?), constructed from an AnimationPlayer (to control the body of the
+ * <li>An AnimationPlanner to process Head and BMLTProcAnimation behaviors into animation (and more, later?), constructed from an AnimationPlayer (to control the body of the
  * VH) and a GestureBinding (to map BML behavior specifications to MotionUnits
  * <li>A facePlanner to control the face
  * <li>And in the future, possibly more planners
  * </ul>
- * <li>A BMLScheduler (e.g. SmartBodyScheduler) that combines the parser and several planners 
- * (verbal, animation) registered for several behaviors (head, BMLTProc, speech) to
+ * <li>A BMLScheduler (e.g. SmartBodyScheduler) that combines the parser and several planners (verbal, animation) registered for several behaviors (head, BMLTProc, speech) to
  * play behavior sent from XML
  * <li>Possibly a number of Anticipators [DOCUMENT WHAT THESE DO!]
  * </ul>
@@ -83,9 +80,9 @@ import com.google.common.collect.ImmutableSet;
  * @author Herwin van Welbergen
  * 
  */
-public class ElckerlycRealizer
+public class AsapRealizer
 {
-    private final static Logger LOGGER = LoggerFactory.getLogger(ElckerlycRealizer.class.getName());
+    private final static Logger LOGGER = LoggerFactory.getLogger(AsapRealizer.class.getName());
 
     private final SchedulingClock schedulingClock;
     /**
@@ -105,7 +102,7 @@ public class ElckerlycRealizer
     /**
      * Constructs a ElckerlycRealizer facade and hooks up the planners to it
      */
-    public ElckerlycRealizer(BMLParser bmlparser, FeedbackManager fbm, SchedulingClock c, BMLScheduler bmlScheduler, Engine... engines)
+    public AsapRealizer(BMLParser bmlparser, FeedbackManager fbm, SchedulingClock c, BMLScheduler bmlScheduler, Engine... engines)
     {
         schedulingClock = c;
         fbManager = fbm;
@@ -123,7 +120,7 @@ public class ElckerlycRealizer
     /**
      * Constructs a ElckerlycRealizer facade and hooks up the planners to it Uses a BMLScheduler with a SortedSmartBodySchedulingStrategy
      */
-    public ElckerlycRealizer(String characterId, BMLParser p, FeedbackManager fbm, SchedulingClock c, BMLBlockManager bbm, PegBoard pb,
+    public AsapRealizer(String characterId, BMLParser p, FeedbackManager fbm, SchedulingClock c, BMLBlockManager bbm, PegBoard pb,
             Engine... engines)
     {
         this(p, fbm, c, new BMLScheduler(characterId, p, fbm, c, new BMLTSchedulingHandler(new SortedSmartBodySchedulingStrategy(pb)), bbm,
@@ -134,8 +131,7 @@ public class ElckerlycRealizer
      * Constructs a ElckerlycRealizer facade and hooks up the planners to it Uses the default BMLParser as BMLParser and a BMLScheduler with a
      * SmartBodySchedulingStrategy.
      */
-    public ElckerlycRealizer(String characterId, FeedbackManager fbm, SchedulingClock c, BMLBlockManager bbm, PegBoard pb,
-            Engine... engines)
+    public AsapRealizer(String characterId, FeedbackManager fbm, SchedulingClock c, BMLBlockManager bbm, PegBoard pb, Engine... engines)
     {
         this(characterId, new BMLParser(new ImmutableSet.Builder<Class<? extends BMLBehaviorAttributeExtension>>().build()), fbm, c, bbm,
                 pb, engines);
@@ -171,26 +167,9 @@ public class ElckerlycRealizer
         scheduler.addWarningListener(w);
     }
 
-    /**
-     * Remove all exception listeners and set a new one for the scheduler and animation player.
-     */
-    public void setExceptionListener(BMLExceptionListener e)
+    public void addPredictionListener(BMLPredictionListener bp)
     {
-        scheduler.removeAllExceptionListeners();
-        scheduler.addExceptionListener(e);
-    }
-
-    /**
-     * adds an exception listener to the realizer. This listener will be registered with the scheduler.
-     */
-    public void addExceptionListener(BMLExceptionListener newListener)
-    {
-        scheduler.addExceptionListener(newListener);
-    }
-
-    public void addPlanningListener(BMLTSchedulingListener bp)
-    {
-        scheduler.addPlanningListener(bp);
+        scheduler.addPredictionListener(bp);
     }
 
     /**
@@ -298,23 +277,15 @@ public class ElckerlycRealizer
         catch (InstantiationException e)
         {
             String bmlId = "<no id>";
-            Set<String> failedBehaviours = new HashSet<String>();
-            Set<String> failedConstraints = new HashSet<String>();
             String exceptionText = "InstantiationException " + e.getLocalizedMessage() + "\n" + Arrays.toString(e.getStackTrace()) + "\n";
-            // e.printStackTrace();
-            scheduler.exception(new BMLExceptionFeedback(bmlId, schedulingClock.getTime(), failedBehaviours, failedConstraints,
-                    exceptionText, true));
+            scheduler.warn(new BMLWarningFeedback(bmlId, "InstantiationException", exceptionText));
             return;
         }
         catch (IllegalAccessException e)
         {
             String bmlId = "<no id>";
-            Set<String> failedBehaviours = new HashSet<String>();
-            Set<String> failedConstraints = new HashSet<String>();
             String exceptionText = "IllegalAccessException " + e.getLocalizedMessage() + "\n" + Arrays.toString(e.getStackTrace()) + "\n";
-            // e.printStackTrace();
-            scheduler.exception(new BMLExceptionFeedback(bmlId, schedulingClock.getTime(), failedBehaviours, failedConstraints,
-                    exceptionText, true));
+            scheduler.warn(new BMLWarningFeedback(bmlId, "IllegalAccessException", exceptionText));
             return;
         }
         try
@@ -323,37 +294,25 @@ public class ElckerlycRealizer
         }
         catch (XMLScanException e)
         {
-            String bmlId = block.id;
-            Set<String> failedBehaviours = new HashSet<String>();
-            Set<String> failedConstraints = new HashSet<String>();
+            String bmlId = "<no id>";
             String exceptionText = "Parsing XML failed: see stack trace for more info. " + e.getLocalizedMessage() + "\n"
                     + Arrays.toString(e.getStackTrace()) + "\n";
-            // e.printStackTrace();
-            scheduler.exception(new BMLExceptionFeedback(bmlId, schedulingClock.getTime(), failedBehaviours, failedConstraints,
-                    exceptionText, true));
+            scheduler.warn(new BMLWarningFeedback(bmlId, BMLWarningFeedback.PARSING_FAILURE, exceptionText));
             return;
         }
         catch (IOException e)
         {
             String bmlId = "<no id>";
-            Set<String> failedBehaviours = new HashSet<String>();
-            Set<String> failedConstraints = new HashSet<String>();
             String exceptionText = "IO Exception. " + e.getLocalizedMessage() + "\n" + Arrays.toString(e.getStackTrace()) + "\n";
-            // e.printStackTrace();
-            scheduler.exception(new BMLExceptionFeedback(bmlId, schedulingClock.getTime(), failedBehaviours, failedConstraints,
-                    exceptionText, true));
+            scheduler.warn(new BMLWarningFeedback(bmlId, "IOException", exceptionText));
             return;
         }
         catch (Exception e)
         { // DO NOT REMOVE THIS CLAUSE!
             String bmlId = "<no id>";
-            Set<String> failedBehaviours = new HashSet<String>();
-            Set<String> failedConstraints = new HashSet<String>();
             String exceptionText = "Exception reading the XML. " + e.getLocalizedMessage() + "\n" + Arrays.toString(e.getStackTrace())
                     + "\n";
-            // e.printStackTrace();
-            scheduler.exception(new BMLExceptionFeedback(bmlId, schedulingClock.getTime(), failedBehaviours, failedConstraints,
-                    exceptionText, true));
+            scheduler.warn(new BMLWarningFeedback(bmlId, "Exception", exceptionText));
             return;
         }
         try
@@ -362,12 +321,9 @@ public class ElckerlycRealizer
         }
         catch (Exception e)
         { // DO NOT REMOVE THIS CLAUSE!
-            Set<String> failedBehaviours = new HashSet<String>();
-            Set<String> failedConstraints = new HashSet<String>();
             String exceptionText = "Exception parsing the BML. " + e.getLocalizedMessage() + "\n" + Arrays.toString(e.getStackTrace())
                     + "\n";
-            scheduler.exception(new BMLExceptionFeedback(block.id, schedulingClock.getTime(), failedBehaviours, failedConstraints,
-                    exceptionText, true));
+            scheduler.warn(new BMLWarningFeedback(block.id, "Exception", exceptionText));
             return;
         }
         try
@@ -376,11 +332,8 @@ public class ElckerlycRealizer
         }
         catch (Exception e)
         { // DO NOT REMOVE THIS CLAUSE!
-            Set<String> failedBehaviours = new HashSet<String>();
-            Set<String> failedConstraints = new HashSet<String>();
             String exceptionText = "Exception scheduling the BML. " + e + "\n" + Arrays.toString(e.getStackTrace()) + "\n";
-            scheduler.exception(new BMLExceptionFeedback(block.id, schedulingClock.getTime(), failedBehaviours, failedConstraints,
-                    exceptionText, true));
+            scheduler.warn(new BMLWarningFeedback(block.id, "Scheduling Exception", exceptionText));
             return;
         }
     }

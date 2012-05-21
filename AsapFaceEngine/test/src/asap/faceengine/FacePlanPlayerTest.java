@@ -2,13 +2,9 @@ package asap.faceengine;
 
 
 import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertTrue;
 import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
 import static org.powermock.api.mockito.PowerMockito.mock;
-import saiba.bml.feedback.BMLSyncPointProgressFeedback;
-import saiba.bml.feedback.ListFeedbackListener;
-import asap.realizertestutil.util.KeyPositionMocker;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -18,6 +14,8 @@ import org.junit.runner.RunWith;
 import org.powermock.core.classloader.annotations.PrepareForTest;
 import org.powermock.modules.junit4.PowerMockRunner;
 
+import saiba.bml.feedback.BMLSyncPointProgressFeedback;
+import asap.bml.feedback.ListFeedbackListener;
 import asap.faceengine.faceunit.FaceUnit;
 import asap.faceengine.faceunit.TimedFaceUnit;
 import asap.motionunit.MUPlayException;
@@ -30,6 +28,8 @@ import asap.realizer.planunit.PlanManager;
 import asap.realizer.planunit.SingleThreadedPlanPlayer;
 import asap.realizer.planunit.TimedPlanUnitState;
 import asap.realizer.scheduler.BMLBlockManager;
+import asap.realizertestutil.util.KeyPositionMocker;
+import asap.testutil.bml.feedback.FeedbackAsserts;
 
 /**
  * Unit test cases for the FacePlanPlayer
@@ -46,7 +46,7 @@ public class FacePlanPlayerTest
     private FeedbackManager fbManager = new FeedbackManagerImpl(mockBmlBlockManager,"character1");
     private FeedbackManager mockFeedbackManager = mock(FeedbackManager.class);
     private PlanManager<TimedFaceUnit> planManager = new PlanManager<TimedFaceUnit>();
-    private static final double TIMING_PRECISION = 0.0001;
+    
     @Test
     public void testPlayTfu() throws MUPlayException 
     {
@@ -63,13 +63,9 @@ public class FacePlanPlayerTest
         tfu1.setTimePeg("start", tpStart);
         tfu1.setState(TimedPlanUnitState.LURKING);        
         fpp.play(0);
-        assertTrue(tfu1.getState()==TimedPlanUnitState.IN_EXEC);
-        assertTrue(fbList.size()==1);
-        assertEquals("behaviour1",fbList.get(0).behaviorId);
-        assertEquals("bml1",fbList.get(0).bmlId);
-        assertEquals("start",fbList.get(0).syncId);
-        assertEquals(0, fbList.get(0).timeStamp,TIMING_PRECISION);
-        
+        assertEquals(TimedPlanUnitState.IN_EXEC,tfu1.getState());
+        assertEquals(1, fbList.size());
+        FeedbackAsserts.assertEqualSyncPointProgress(new BMLSyncPointProgressFeedback("bml1","behaviour1","start",0,0), fbList.get(0));
         verify(fuMock1,times(1)).play(0);        
     }
 }

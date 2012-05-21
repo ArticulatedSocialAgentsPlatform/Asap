@@ -17,7 +17,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import saiba.bml.feedback.BMLSyncPointProgressFeedback;
-import saiba.bml.feedback.ListFeedbackListener;
+import asap.bml.feedback.ListFeedbackListener;
 import asap.realizer.feedback.FeedbackManager;
 import asap.realizer.feedback.FeedbackManagerImpl;
 import asap.realizer.pegboard.BMLBlockPeg;
@@ -26,6 +26,7 @@ import asap.realizer.planunit.TimedPlanUnitPlayException;
 import asap.realizer.planunit.TimedPlanUnitState;
 import asap.realizer.scheduler.BMLBlockManager;
 import asap.realizertestutil.util.FeedbackListUtils;
+import asap.testutil.bml.feedback.FeedbackAsserts;
 
 /**
  * Generic Unit test cases for classes implementing AbstractTTSUnit
@@ -87,20 +88,12 @@ public abstract class AbstractTTSUnitTest
         Thread.sleep(200);
 
         assertThat(feedbackList, hasSize(1));
-        assertEquals("bml1", feedbackList.get(0).bmlId);
-        assertEquals("speech1", feedbackList.get(0).behaviorId);
-        assertEquals(2 - BMLBLOCKSTART, feedbackList.get(0).bmlBlockTime, TIMING_PRECISION);
-        assertEquals(2, feedbackList.get(0).timeStamp, 0.0001);
-        assertEquals("start", feedbackList.get(0).syncId);
-
+        FeedbackAsserts.assertEqualSyncPointProgress(new BMLSyncPointProgressFeedback("bml1","speech1","start",2 - BMLBLOCKSTART,2),feedbackList.get(0));
+        
         ttsUnit.play(6);
         Thread.sleep(100);
         assertThat(feedbackList, hasSize(2));
-        assertEquals("bml1", feedbackList.get(1).bmlId);
-        assertEquals("speech1", feedbackList.get(1).behaviorId);
-        assertEquals(6 - BMLBLOCKSTART, feedbackList.get(1).bmlBlockTime, TIMING_PRECISION);
-        assertEquals(6, feedbackList.get(1).timeStamp, TIMING_PRECISION);
-        assertEquals("end", feedbackList.get(1).syncId);
+        FeedbackAsserts.assertEqualSyncPointProgress(new BMLSyncPointProgressFeedback("bml1","speech1","end",6 - BMLBLOCKSTART,6),feedbackList.get(1));        
     }
 
     @Test
@@ -113,21 +106,13 @@ public abstract class AbstractTTSUnitTest
         ttsUnit.play(2);
         Thread.sleep(200);
 
-        assertEquals("bml1", feedbackList.get(0).bmlId);
-        assertEquals("speech1", feedbackList.get(0).behaviorId);
-        assertEquals(2 - BMLBLOCKSTART, feedbackList.get(0).bmlBlockTime, TIMING_PRECISION);
-        assertEquals(2, feedbackList.get(0).timeStamp,TIMING_PRECISION);
-
+        FeedbackAsserts.assertEqualSyncPointProgress(new BMLSyncPointProgressFeedback("bml1","speech1","start",2 - BMLBLOCKSTART,2),feedbackList.get(0));
         assertThat(FeedbackListUtils.getSyncs(feedbackList), hasItems("start"));
 
         ttsUnit.play(6);
         Thread.sleep(200);
         assertThat(FeedbackListUtils.getSyncs(feedbackList), IsIterableContainingInOrder.contains("start", "s1", "end"));
-
-        assertEquals("bml1", feedbackList.get(2).bmlId);
-        assertEquals("speech1", feedbackList.get(2).behaviorId);
-        assertEquals(6 - BMLBLOCKSTART, feedbackList.get(2).bmlBlockTime, TIMING_PRECISION);
-        assertEquals(6, feedbackList.get(2).timeStamp, 0.0001);
-
+        
+        FeedbackAsserts.assertEqualSyncPointProgress(new BMLSyncPointProgressFeedback("bml1","speech1","end",6 - BMLBLOCKSTART,6),feedbackList.get(2));
     }
 }

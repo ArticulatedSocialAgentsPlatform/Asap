@@ -18,7 +18,6 @@
  ******************************************************************************/
 package asap.bml.bridge.ui;
 
-import saiba.bml.bridge.RealizerPort;
 import hmi.xml.XMLStructureAdapter;
 import hmi.xml.XMLTokenizer;
 
@@ -43,6 +42,8 @@ import javax.swing.filechooser.FileFilter;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+
+import asap.bml.bridge.RealizerPort;
 
 /**
  * A graphical UI to a RealizerBridge, allowing one to prepare a set of BML blocks with scheduling

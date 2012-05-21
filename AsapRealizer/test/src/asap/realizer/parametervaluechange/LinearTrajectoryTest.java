@@ -10,12 +10,26 @@ import org.junit.Test;
  */
 public class LinearTrajectoryTest
 {
+    private LinearTrajectory trajectory = new LinearTrajectory();
+    private static final float START_VALUE = 20;
+    private static final float END_VALUE = 100;
+    private static final float INTERPOLATION_PRECISION = 0.0001f;
+    
     @Test
-    public void test()
+    public void testStart()
     {
-        LinearTrajectory trajectory = new LinearTrajectory();
-        assertEquals(20, trajectory.getValue(20, 100, 0),0.0001f);
-        assertEquals(100, trajectory.getValue(20, 100, 1),0.0001f);
-        assertEquals(60, trajectory.getValue(20, 100, 0.5f),0.0001f);
+        assertEquals(START_VALUE, trajectory.getValue(START_VALUE, END_VALUE, 0), INTERPOLATION_PRECISION);
+    }
+
+    @Test
+    public void testEnd()
+    {
+        assertEquals(END_VALUE, trajectory.getValue(START_VALUE, END_VALUE, 1), INTERPOLATION_PRECISION);
+    }
+
+    @Test
+    public void testMiddle()
+    {
+        assertEquals(START_VALUE+(END_VALUE-START_VALUE)/2, trajectory.getValue(START_VALUE, END_VALUE, 0.5f), INTERPOLATION_PRECISION);        
     }
 }

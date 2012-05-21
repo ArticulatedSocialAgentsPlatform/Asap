@@ -23,6 +23,7 @@ import org.powermock.core.classloader.annotations.PrepareForTest;
 import org.powermock.modules.junit4.PowerMockRunner;
 
 import saiba.bml.core.SpeechBehaviour;
+import saiba.bml.feedback.BMLSyncPointProgressFeedback;
 import saiba.bml.parser.Constraint;
 import asap.realizer.BehaviourPlanningException;
 import asap.realizer.SyncAndTimePeg;
@@ -33,6 +34,7 @@ import asap.realizer.scheduler.BMLBlockManager;
 import asap.realizer.scheduler.BMLScheduler;
 import asap.realizer.scheduler.TimePegAndConstraint;
 import asap.realizertestutil.util.FeedbackListUtils;
+import asap.testutil.bml.feedback.FeedbackAsserts;
 
 @RunWith(PowerMockRunner.class)
 @PrepareForTest({ BMLBlockManager.class, BMLScheduler.class })
@@ -82,19 +84,12 @@ public class DirectTTSPlannerIntegrationTest extends TTSPlannerIntegrationTest
         assertEquals(0, exceptionList.size());
 
         assertThat(FeedbackListUtils.getSyncs(feedbackList), IsIterableContainingInOrder.contains("start"));
-        assertEquals("bml1", feedbackList.get(0).bmlId);
-        assertEquals("speech1", feedbackList.get(0).behaviorId);
-        assertEquals(0.7, feedbackList.get(0).bmlBlockTime, 0.0001);
-        assertEquals(1, feedbackList.get(0).timeStamp, 0.0001);
-
+        FeedbackAsserts.assertEqualSyncPointProgress(new BMLSyncPointProgressFeedback("bml1","speech1","start",0.7,1), feedbackList.get(0));
+        
         verbalPlayer.play(4);
         Thread.sleep(100);
         assertEquals(2, feedbackList.size());
-        assertEquals("bml1", feedbackList.get(1).bmlId);
-        assertEquals("speech1", feedbackList.get(1).behaviorId);
-        assertEquals(3.7, feedbackList.get(1).bmlBlockTime, 0.0001);
-        assertEquals(4, feedbackList.get(1).timeStamp, 0.0001);
-        assertEquals("end", feedbackList.get(1).syncId);
+        FeedbackAsserts.assertEqualSyncPointProgress(new BMLSyncPointProgressFeedback("bml1","speech1","end",3.7,4), feedbackList.get(1));        
     }
 
     @Test
@@ -126,21 +121,13 @@ public class DirectTTSPlannerIntegrationTest extends TTSPlannerIntegrationTest
         assertTrue(exceptionList.size() == 0);
 
         assertEquals(1, feedbackList.size());
-        assertEquals("bml1", feedbackList.get(0).bmlId);
-        assertEquals("speech1", feedbackList.get(0).behaviorId);
-        assertEquals(0.7, feedbackList.get(0).bmlBlockTime, 0.0001);
-        assertEquals(1, feedbackList.get(0).timeStamp, 0.0001);
-        assertEquals("start", feedbackList.get(0).syncId);
+        FeedbackAsserts.assertEqualSyncPointProgress(new BMLSyncPointProgressFeedback("bml1","speech1","start",0.7,1),feedbackList.get(0));        
 
         verbalPlayer.play(4);
         Thread.sleep(100);
         assertEquals(2, feedbackList.size());
-        assertEquals("bml1", feedbackList.get(1).bmlId);
-        assertEquals("speech1", feedbackList.get(1).behaviorId);
-        assertEquals(3.7, feedbackList.get(1).bmlBlockTime, 0.0001);
-        assertEquals(4, feedbackList.get(1).timeStamp, 0.0001);
-        assertEquals("end", feedbackList.get(1).syncId);
-
+        FeedbackAsserts.assertEqualSyncPointProgress(new BMLSyncPointProgressFeedback("bml1","speech1","end",3.7,4),feedbackList.get(1));
+        
         assertTrue(pu.getState() == TimedPlanUnitState.DONE);
     }
 }

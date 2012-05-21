@@ -1,10 +1,7 @@
 package asap.realizer.scheduler;
 
-import saiba.bml.feedback.BMLExceptionFeedback;
-import saiba.bml.feedback.BMLPerformanceStartFeedback;
-import saiba.bml.feedback.BMLPerformanceStopFeedback;
+import saiba.bml.feedback.BMLBlockProgressFeedback;
 import saiba.bml.feedback.BMLSyncPointProgressFeedback;
-import saiba.bml.feedback.BMLWarningFeedback;
 
 import java.util.HashMap;
 import java.util.HashSet;
@@ -16,6 +13,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import asap.realizer.planunit.TimedPlanUnitState;
+import saiba.bml.feedback.BMLWarningFeedback;
 
 import com.google.common.base.Objects;
 import com.google.common.collect.HashMultimap;
@@ -167,35 +165,31 @@ public final class BMLBlockManager
         updateBlocks();
     }
 
-    public synchronized void performanceStop(BMLPerformanceStopFeedback psf)
+    public synchronized void blockProgress(BMLBlockProgressFeedback psf)
     {
-        BMLBlock block = BMLBlocks.get(psf.bmlId);
-        if (block == null)
+        if(psf.getSyncId().equals("end"))
         {
-            logger.warn("Performance stop of block " + psf.bmlId + " not managed by the BMLBlockManager");
-            return;
+            BMLBlock block = BMLBlocks.get(psf.getBmlId());
+            if (block == null)
+            {
+                logger.warn("Performance stop of block " + psf.getBmlId() + " not managed by the BMLBlockManager");
+                return;
+            }
         }
-        updateBlocks();
-    }
-
-    public synchronized void performanceStart(BMLPerformanceStartFeedback psf)
-    {
         updateBlocks();
     }
 
     public synchronized void warn(BMLWarningFeedback bw)
     {
-        updateBlocks();
-
-    }
-
-    public synchronized void exception(BMLExceptionFeedback be)
-    {
-        for (BMLBlock block : BMLBlocks.values())
+        String idSplit[] = bw.getId().split(":");
+        if (idSplit.length == 2)
         {
-            if (block.getBMLId().equals(be.bmlId))
+            for (BMLBlock block : BMLBlocks.values())
             {
-                block.dropBehaviours(be.failedBehaviours);
+                if (block.getBMLId().equals(idSplit[0]))
+                {
+                    block.dropBehaviour(idSplit[1]);
+                }
             }
         }
         updateBlocks();
@@ -203,13 +197,13 @@ public final class BMLBlockManager
 
     public synchronized void syncProgress(BMLSyncPointProgressFeedback spp)
     {
-        behaviorProgress.put(new BehaviorKey(spp.bmlId, spp.behaviorId), spp);
-        logger.debug("Adding sync {}:{}:{} to behaviorProgress", new String[] { spp.bmlId, spp.behaviorId, spp.syncId });
+        behaviorProgress.put(new BehaviorKey(spp.getBMLId(), spp.getBehaviourId()), spp);
+        logger.debug("Adding sync {}:{}:{} to behaviorProgress", new String[] { spp.getBMLId(), spp.getBehaviourId(), spp.getSyncId() });
         for (BMLBlock block : BMLBlocks.values())
         {
-            if (block.getBMLId().equals(spp.bmlId))
+            if (block.getBMLId().equals(spp.getBMLId()))
             {
-                block.behaviorProgress(spp.behaviorId, spp.syncId);
+                block.behaviorProgress(spp.getBehaviourId(), spp.getSyncId());
             }
         }
         updateBlocks();
@@ -237,7 +231,7 @@ public final class BMLBlockManager
             Set<BMLSyncPointProgressFeedback> sppf = behaviorProgress.get(new BehaviorKey(bmlId, behaviorId));
             for (BMLSyncPointProgressFeedback spp : sppf)
             {
-                progress.add(spp.syncId);
+                progress.add(spp.getSyncId());
             }
         }
         return ImmutableSet.copyOf(progress);

@@ -19,10 +19,11 @@ import org.junit.runner.RunWith;
 import org.powermock.core.classloader.annotations.PrepareForTest;
 import org.powermock.modules.junit4.PowerMockRunner;
 
+import saiba.bml.feedback.BMLWarningFeedback;
+
 import saiba.bml.core.SpeechBehaviour;
-import saiba.bml.feedback.BMLExceptionFeedback;
-import saiba.bml.feedback.ListBMLExceptionListener;
 import saiba.bml.parser.Constraint;
+import asap.bml.feedback.ListBMLWarningListener;
 import asap.realizer.BehaviourPlanningException;
 import asap.realizer.DefaultPlayer;
 import asap.realizer.Player;
@@ -55,11 +56,11 @@ public class TextPlannerIntegrationTest
     public void testPlayExceptionLeadsToBMLException() throws BehaviourPlanningException, InterruptedException, IOException,
             TimedPlanUnitPlayException
     {
-        // checks if TextUnit failure properly appears as BMLExceptionFeedback
-        List<BMLExceptionFeedback> exceptionList = new ArrayList<BMLExceptionFeedback>();
+        // checks if TextUnit failure properly appears as BMLWarningFeedback
+        List<BMLWarningFeedback> exceptionList = new ArrayList<BMLWarningFeedback>();
         Player vp = new DefaultPlayer(new MultiThreadedPlanPlayer<TimedTextSpeechUnit>(fbManager, planManager));
         TextPlanner textP = new TextPlanner(fbManager, mockTextOutput, planManager);
-        fbManager.addExceptionListener(new ListBMLExceptionListener(exceptionList));
+        fbManager.addWarningListener(new ListBMLWarningListener(exceptionList));
         final BMLBlockPeg bbPeg = new BMLBlockPeg("Peg1", 0.3);
 
         SpeechBehaviour beh = new SpeechBehaviour("bml1", new XMLTokenizer("<speech id=\"speech1\"><text>Hello world</text></speech>"));

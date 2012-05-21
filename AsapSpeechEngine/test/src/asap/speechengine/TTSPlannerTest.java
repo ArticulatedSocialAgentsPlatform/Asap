@@ -55,6 +55,8 @@ public class TTSPlannerTest extends AbstractSpeechPlannerTest<TimedTTSUnit>
     
     public static final double SPEECH_DURATION = 3.0;
     public static final double SYNC1_OFFSET = 1.0;
+    private static final double TIMING_PRECISION = 0.0001;
+    
     private final ImmutableList<Bookmark> BOOKMARKS = new ImmutableList.Builder<Bookmark>()
             .add(new Bookmark("s1", new WordDescription("world", new ArrayList<Phoneme>(), new ArrayList<Visime>()),
                     (int) (SYNC1_OFFSET * 1000))).build();
@@ -102,16 +104,16 @@ public class TTSPlannerTest extends AbstractSpeechPlannerTest<TimedTTSUnit>
         sacs.add(new TimePegAndConstraint("start", startPeg, new Constraint(), 0, true));
 
         TimedTTSUnit pu = speechPlanner.resolveSynchs(bbPeg, beh, sacs);
-        assertEquals(5 - SPEECH_DURATION, startPeg.getGlobalValue(), 0.0001);
+        assertEquals(5 - SPEECH_DURATION, startPeg.getGlobalValue(), TIMING_PRECISION);
         TestUtil.assertInRangeExclusive(s1Peg.getGlobalValue(), startPeg.getGlobalValue(), endPeg.getGlobalValue());
-        assertEquals(5, endPeg.getGlobalValue(), 0.0001);
+        assertEquals(5, endPeg.getGlobalValue(), TIMING_PRECISION);
 
         speechPlanner.addBehaviour(bbPeg, beh, sacs, pu);
-        assertEquals(5 - SPEECH_DURATION, pu.getStartTime(), 0.0001);
-        assertEquals(5, pu.getEndTime(), 0.0001);
+        assertEquals(5 - SPEECH_DURATION, pu.getStartTime(), TIMING_PRECISION);
+        assertEquals(5, pu.getEndTime(), TIMING_PRECISION);
         assertEquals(endPeg, startPeg.getLink());
-        assertEquals(5, endPeg.getGlobalValue(), 0.0001);
-        assertEquals(5 - SPEECH_DURATION, startPeg.getGlobalValue(), 0.0001);
+        assertEquals(5, endPeg.getGlobalValue(), TIMING_PRECISION);
+        assertEquals(5 - SPEECH_DURATION, startPeg.getGlobalValue(), TIMING_PRECISION);
         TestUtil.assertInRangeExclusive(s1Peg.getGlobalValue(), startPeg.getGlobalValue(), endPeg.getGlobalValue());
     }
     

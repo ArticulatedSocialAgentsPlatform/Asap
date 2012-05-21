@@ -97,15 +97,12 @@ public class DynamicEyeGazeMU extends DynamicGazeMU
         } 
         else if (t > RELATIVE_RELAX_TIME)
         {
-            //TODO
             float tManip = (float) tmp.manip((t - RELATIVE_RELAX_TIME) / (1-RELATIVE_RELAX_TIME));
-            // Quat4f.interpolate(qTemp, qGaze,Quat4f.getIdentity(), tManip);
             lEye.getRotation(qCurr);
             Quat4f.interpolate(qGazeL, qCurr, qStartLeftEye, tManip);
             
             rEye.getRotation(qCurr);
-            Quat4f.interpolate(qGazeR, qCurr, qStartRightEye, tManip);
-            //neck.setRotation(qTemp);
+            Quat4f.interpolate(qGazeR, qCurr, qStartRightEye, tManip);            
         } 
         else
         {

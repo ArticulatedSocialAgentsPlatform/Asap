@@ -18,15 +18,18 @@
  ******************************************************************************/
 package asap.emitterengine;
 
-import saiba.bml.bridge.*;
-
-
 import java.util.ArrayList;
 import java.util.List;
 
-import asap.emitterengine.bml.*;
-import asap.emitterengine.planunit.*;
-import asap.realizer.*;
+import saiba.bml.BMLInfo;
+import saiba.bml.core.Behaviour;
+import asap.bml.bridge.RealizerPort;
+import asap.emitterengine.bml.CreateEmitterBehaviour;
+import asap.emitterengine.planunit.CreateEmitterEU;
+import asap.emitterengine.planunit.TimedEmitterUnit;
+import asap.realizer.AbstractPlanner;
+import asap.realizer.BehaviourPlanningException;
+import asap.realizer.SyncAndTimePeg;
 import asap.realizer.feedback.FeedbackManager;
 import asap.realizer.pegboard.BMLBlockPeg;
 import asap.realizer.pegboard.OffsetPeg;
@@ -36,12 +39,6 @@ import asap.realizer.planunit.PlanManager;
 import asap.realizer.scheduler.LinearStretchResolver;
 import asap.realizer.scheduler.TimePegAndConstraint;
 import asap.realizer.scheduler.UniModalResolver;
-
-//import org.slf4j.Logger;
-//import org.slf4j.LoggerFactory;
-
-import saiba.bml.BMLInfo;
-import saiba.bml.core.Behaviour;
 
 /**
  */

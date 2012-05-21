@@ -18,7 +18,6 @@
  ******************************************************************************/
 package asap.bml.bridge.ui;
 
-import saiba.bml.bridge.RealizerPort;
 
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
@@ -31,6 +30,7 @@ import javax.swing.SpinnerNumberModel;
 import javax.swing.SwingUtilities;
 
 import asap.bml.bridge.ConnectionStateListener;
+import asap.bml.bridge.RealizerPort;
 import asap.bml.bridge.TCPIPToBMLRealizerAdapter;
 import asap.bml.bridge.TCPIPToBMLRealizerAdapter.ServerState;
 

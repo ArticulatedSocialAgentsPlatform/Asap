@@ -16,7 +16,7 @@ import org.powermock.modules.junit4.PowerMockRunner;
 
 import saiba.bml.core.SpeechBehaviour;
 import saiba.bml.feedback.BMLSyncPointProgressFeedback;
-import saiba.bml.feedback.ListFeedbackListener;
+import asap.bml.feedback.ListFeedbackListener;
 import asap.realizer.feedback.FeedbackManager;
 import asap.realizer.feedback.FeedbackManagerImpl;
 import asap.realizer.pegboard.BMLBlockPeg;
@@ -27,6 +27,7 @@ import asap.realizer.planunit.TimedPlanUnitState;
 import asap.realizer.scheduler.BMLBlockManager;
 import asap.realizertestutil.planunit.AbstractTimedPlanUnitTest;
 import asap.speechengine.ttsbinding.TTSBinding;
+import asap.testutil.bml.feedback.FeedbackAsserts;
 
 /**
  * Unit testcases for the DirectTTSUnit
@@ -103,19 +104,11 @@ public class DirectTTSUnitTest extends AbstractTimedPlanUnitTest
         Thread.sleep(100);
 
         assertEquals(1, feedbackList.size());
-        assertEquals("bml1", feedbackList.get(0).bmlId);
-        assertEquals("speech1", feedbackList.get(0).behaviorId);
-        assertEquals(1.7, feedbackList.get(0).bmlBlockTime, 0.0001);
-        assertEquals(2, feedbackList.get(0).timeStamp, 0.0001);
-        assertEquals("start", feedbackList.get(0).syncId);
-
+        FeedbackAsserts.assertEqualSyncPointProgress(new BMLSyncPointProgressFeedback("bml1","speech1","start",1.7,2),feedbackList.get(0));
+        
         ttsUnit.play(6);
-        Thread.sleep(100);
+        Thread.sleep(100);        
         assertEquals(2, feedbackList.size());
-        assertEquals("bml1", feedbackList.get(1).bmlId);
-        assertEquals("speech1", feedbackList.get(1).behaviorId);
-        assertEquals(5.7, feedbackList.get(1).bmlBlockTime, 0.0001);
-        assertEquals(6, feedbackList.get(1).timeStamp, 0.0001);
-        assertEquals("end", feedbackList.get(1).syncId);
+        FeedbackAsserts.assertEqualSyncPointProgress(new BMLSyncPointProgressFeedback("bml1","speech1","end",5.7,6),feedbackList.get(1));        
     }
 }

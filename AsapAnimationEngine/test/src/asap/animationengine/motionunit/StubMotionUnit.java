@@ -1,15 +1,15 @@
 package asap.animationengine.motionunit;
 
 
-import java.util.List;
 import java.util.Set;
+
+import lombok.Delegate;
 
 import asap.animationengine.AnimationPlayer;
 import asap.motionunit.MUPlayException;
 import asap.realizer.feedback.FeedbackManager;
 import asap.realizer.pegboard.BMLBlockPeg;
 import asap.realizer.pegboard.PegBoard;
-import asap.realizer.planunit.KeyPosition;
 import asap.realizer.planunit.KeyPositionManager;
 import asap.realizer.planunit.KeyPositionManagerImpl;
 
@@ -20,33 +20,9 @@ import com.google.common.collect.ImmutableSet;
  */
 public class StubMotionUnit implements AnimationUnit
 {
+    @Delegate
     private KeyPositionManager keyPositionManager = new KeyPositionManagerImpl();    
     
-    public void addKeyPosition(KeyPosition kp)
-    {
-        keyPositionManager.addKeyPosition(kp);
-    }
-
-    public List<KeyPosition> getKeyPositions()
-    {
-        return keyPositionManager.getKeyPositions();
-    }
-
-    public void setKeyPositions(List<KeyPosition> p)
-    {
-        keyPositionManager.setKeyPositions(p);
-    }
-
-    public KeyPosition getKeyPosition(String id)
-    {
-        return keyPositionManager.getKeyPosition(id);
-    }
-
-    public void removeKeyPosition(String id)
-    {
-        keyPositionManager.removeKeyPosition(id);
-    }
-
     @Override
     public void setFloatParameterValue(String name, float value)
     {

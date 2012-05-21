@@ -17,7 +17,7 @@ public final class FeedbackListUtils
         List<String> syncs = new ArrayList<String>();
         for(BMLSyncPointProgressFeedback fb:fbList)
         {
-            syncs.add(fb.syncId);
+            syncs.add(fb.getSyncId());
         }
         return syncs;
     }
@@ -37,7 +37,7 @@ public final class FeedbackListUtils
         List<String> bmlIds = new ArrayList<String>();
         for(BMLSyncPointProgressFeedback fb:fbList)
         {
-            bmlIds.add(fb.bmlId);
+            bmlIds.add(fb.getBMLId());
         }
         return bmlIds;
     }
