@@ -126,8 +126,8 @@ public class BlinkEmitter extends Emitter implements Runnable
         lastblink = System.currentTimeMillis();
         scheduling = "composition=\"APPEND-AFTER(blinkbml" + blinkcount + ")\"";
         String bml = "<bml id=\"blinkbml" + (blinkcount + 1) + "\" " + scheduling
-                + "xmlns:bmlt=\"http://hmi.ewi.utwente.nl/bmlt\"><face id=\"b1\" type=\"LEXICALIZED\" lexeme=\"blink\" start=\"0\" end=\"0.15\" "
-                + "amount=\"1\" ready=\"0.03\" relax=\"0.12\"/>";
+                + "xmlns:bmlt=\"http://hmi.ewi.utwente.nl/bmlt\"><faceLexeme id=\"b1\"  lexeme=\"BLINK\" start=\"0\" end=\"0.15\" "
+                + "amount=\"1\" attackPeak=\"0.03\" relax=\"0.12\"/>";
          if (blinkcount > 1)  
          {
            bml += "<bmlt:interrupt id=\"interruptPrevBlink\" target=\"blinkbml" + blinkcount + "\">"

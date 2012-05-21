@@ -116,9 +116,10 @@ public class BreathingEmitter extends Emitter implements Runnable
         scheduling = "composition=\"APPEND-AFTER(breathbml" + breathcount + ")\"";
         String bml = "<bml id=\"breathbml" + (breathcount + 1) + "\" " + scheduling
                 + " xmlns:bmlt=\"http://hmi.ewi.utwente.nl/bmlt\">"
-                + "<gesture id=\"b1\" type=\"LEXICALIZED\" lexeme=\"breathe\" start=\"0\" " +
+                + "<gesture id=\"b1\" lexeme=\"breathe\" start=\"0\" " +
                 "ready=\"0\" stroke=\""+(currentwaitingtime/4)+"\" relax=\""+(2*currentwaitingtime/3)+"\" end=\""+currentwaitingtime+"\" "
-                + "amount=\"1\" />";
+                //+ "amount=\"1\"" 
+                + " />";
          if (breathcount > 1)  
          {
            bml += "<bmlt:interrupt id=\"interruptPrevBreath\" target=\"breathbml" + breathcount + "\">"
