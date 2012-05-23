@@ -35,7 +35,12 @@ import asap.animationengine.motionunit.*;
 import asap.animationengine.procanimation.*;
 import asap.animationengine.transitions.TransitionMU;
 
-
+/**
+ * Creates a motion unit from an XML description. For example:<br>
+ * &lt;MotionUnit type="PhysicalController" class="hmi.physics.controller.BalanceController"/&gt;<br>
+ * &lt;MotionUnit type="ProcAnimation" file="Humanoids/shared/procanimation/breathe_clavicular.xml"/&gt;
+ * @author welberge
+ */
 class MotionUnitAssembler extends XMLStructureAdapter
 {
     private static Logger logger = LoggerFactory

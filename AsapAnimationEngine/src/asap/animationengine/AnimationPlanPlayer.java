@@ -38,6 +38,11 @@ public class AnimationPlanPlayer implements PlanPlayer
     private final RestPose defaultRestPose;
     private RestPose currentRestPose;
 
+    public void setRestPose(RestPose rp)
+    {
+        currentRestPose = rp;
+    }
+    
     public RestPose getRestPose()
     {
         return currentRestPose;

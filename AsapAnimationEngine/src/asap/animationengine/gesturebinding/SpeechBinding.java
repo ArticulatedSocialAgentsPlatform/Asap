@@ -69,7 +69,7 @@ public class SpeechBinding extends XMLStructureAdapter
             TimedAnimationUnit tmu = muCopy.createTMU(fbm, bbPeg, bmlId, id, pegBoard);
 
             // set default parameter values
-            for (MotionUnitParameterDefault mupc : viSpec.getParameterDefaults())
+            for (SpecParameterDefault mupc : viSpec.getParameterDefaults())
             {
                 try
                 {

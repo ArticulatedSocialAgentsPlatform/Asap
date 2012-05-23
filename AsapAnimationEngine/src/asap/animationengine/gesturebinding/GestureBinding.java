@@ -53,6 +53,12 @@ public class GestureBinding extends XMLStructureAdapter
         fbManager = fbm;
         resources = r;
     }
+    /*
+    public RestPose getRestPose(BMLBlockPeg bbPeg,PostureShiftBehaviour b, AnimationPlayer player, PegBoard pegBoard)
+    {
+        
+    }
+    */
     
     /**
      * Gets a list of timed motion units that satisfy the constraints of behaviour b     
@@ -87,7 +93,7 @@ public class GestureBinding extends XMLStructureAdapter
                     
                     
                     //set default parameter values
-                    for(MotionUnitParameterDefault mupc:s.getParameterDefaults())
+                    for(SpecParameterDefault mupc:s.getParameterDefaults())
                     {
                         try
                         {

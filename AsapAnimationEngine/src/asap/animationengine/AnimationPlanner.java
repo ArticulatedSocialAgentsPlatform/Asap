@@ -25,6 +25,7 @@ import saiba.bml.core.GestureBehaviour;
 import saiba.bml.core.HeadBehaviour;
 import saiba.bml.core.PointingBehaviour;
 import saiba.bml.core.PostureBehaviour;
+import saiba.bml.core.PostureShiftBehaviour;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -192,6 +193,7 @@ public class AnimationPlanner extends AbstractPlanner<TimedAnimationUnit>
         list.add(GazeBehaviour.class);
         list.add(GestureBehaviour.class);
         list.add(PostureBehaviour.class);
+        list.add(PostureShiftBehaviour.class);
         list.add(PointingBehaviour.class);
         list.add(BMLTProcAnimationBehaviour.class);
         list.add(BMLTControllerBehaviour.class);

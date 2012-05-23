@@ -78,6 +78,11 @@ public class AnimationPlayer implements Player, MixedAnimationPlayer
     protected WorldObjectManager woManager;
     
 
+    public void setRestPose(RestPose rp)
+    {
+        app.setRestPose(rp);
+    }
+    
     public RestPose getRestPose()
     {
         return app.getRestPose();

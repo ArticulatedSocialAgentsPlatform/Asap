@@ -35,32 +35,28 @@ import asap.animationengine.motionunit.AnimationUnit;
 /**
  * XML parser for the MotionUnitSpec in a gesturebinding
  * @author Herwin
- *
+ * 
  */
-class MotionUnitSpec extends XMLStructureAdapter implements ParameterDefaultsHandler
+class MotionUnitSpec extends XMLStructureAdapter
 {
     private final static Logger logger = LoggerFactory.getLogger(MotionUnitSpec.class.getName());
 
     public AnimationUnit motionUnit;
     private String type;
     private String specnamespace;
-    
 
-    @Getter private ArrayList<MotionUnitSpecConstraint>constraints = new ArrayList<MotionUnitSpecConstraint>();
-    private HashMap<String,String>parametermap = new HashMap<String,String>();
-    private HashMap<String,MotionUnitParameterDefault>parameterdefault = new HashMap<String,MotionUnitParameterDefault>();
-    
+    @Getter
+    private SpecConstraints constraints = new SpecConstraints();
+    private SpecParameterMap parameterMap = new SpecParameterMap();
+    private SpecParameterDefaults parameterdefaults = new SpecParameterDefaults();
+
     private final Resources resources;
-    
+
     public boolean satisfiesConstraints(Behaviour b)
     {
-        for(MotionUnitSpecConstraint c:constraints)
-        {
-            if(!b.satisfiesConstraint(c.name, c.value))return false;
-        }
-        return true;
+        return constraints.satisfiesConstraints(b);
     }
-    
+
     /**
      * @return the specnamespace
      */
@@ -76,111 +72,84 @@ class MotionUnitSpec extends XMLStructureAdapter implements ParameterDefaultsHan
     {
         return type;
     }
-    
+
     public Set<String> getParameters()
     {
-        return parametermap.keySet();
+        return parameterMap.getParameters();
     }
-    
+
     public MotionUnitSpec(Resources r)
     {
         resources = r;
     }
-    
-    public void addConstraint(MotionUnitSpecConstraint c)
-    {
-        constraints.add(c);
-    }
-    
-    public void addParameter(MotionUnitParameter p)
-    {
-        parametermap.put(p.src, p.dst);
-    }
-    
-    public void addParameterDefault(MotionUnitParameterDefault p)
-    {
-        parameterdefault.put(p.name, p);
-    }
-    
+
     /**
-     * Get motion unit parameter for BML parameter src     
+     * Get motion unit parameter for BML parameter src
      */
     public String getParameter(String src)
     {
-        return parametermap.get(src);
+        return parameterMap.getParameter(src);
     }
 
-    /**
-     * Get motion unit parameter for BML parameter src     
-     */
-    public Collection<MotionUnitParameterDefault> getParameterDefaults()
+    public Collection<SpecParameterDefault> getParameterDefaults()
     {
-        return parameterdefault.values();
+        return parameterdefaults.getParameterDefaults();
     }
 
     @Override
     public void decodeAttributes(HashMap<String, String> attrMap, XMLTokenizer tokenizer)
     {
-        type = getRequiredAttribute("type", attrMap, tokenizer);        
+        type = getRequiredAttribute("type", attrMap, tokenizer);
         specnamespace = getOptionalAttribute("namespace", attrMap, null);
     }
-    
+
     @Override
     public void decodeContent(XMLTokenizer tokenizer) throws IOException
     {
-      String tag = "";
-      try
-      {
-        while (tokenizer.atSTag())
+        String tag = "";
+        try
         {
-            tag = tokenizer.getTagName();
-            if (tag.equals(MotionUnitSpecConstraints.xmlTag()))
+            while (tokenizer.atSTag())
             {
-                MotionUnitSpecConstraints musc = new MotionUnitSpecConstraints(this);
-                musc.readXML(tokenizer);                
-            }
-            else if (tag.equals(ParameterMap.xmlTag())) 
-            {
-                ParameterMap map = new ParameterMap(this);
-                map.readXML(tokenizer);
-            }
-            else if (tag.equals(ParameterDefaults.xmlTag())) 
-            {
-                ParameterDefaults def = new ParameterDefaults(this);
-                def.readXML(tokenizer);
-            }
-            else if (tag.equals(MotionUnitAssembler.xmlTag()))
-            {
-                MotionUnitAssembler mua = new MotionUnitAssembler(resources);
-                mua.readXML(tokenizer);
-                motionUnit = mua.getMotionUnit();
+                tag = tokenizer.getTagName();
+                if (tag.equals(SpecConstraints.xmlTag()))
+                {
+                    constraints.readXML(tokenizer);
+                }
+                else if (tag.equals(SpecParameterMap.xmlTag()))
+                {
+                    parameterMap.readXML(tokenizer);
+                }
+                else if (tag.equals(SpecParameterDefaults.xmlTag()))
+                {
+                    parameterdefaults.readXML(tokenizer);
+                }
+                else if (tag.equals(MotionUnitAssembler.xmlTag()))
+                {
+                    MotionUnitAssembler mua = new MotionUnitAssembler(resources);
+                    mua.readXML(tokenizer);
+                    motionUnit = mua.getMotionUnit();
+                }
             }
         }
-      }
-      catch (RuntimeException ex)
-      {
-        logger.warn("Cannot read motion unit spec, dropping element from gesture binding. Tag: {} ", tag);
-        motionUnit = null;
-      }
+        catch (RuntimeException ex)
+        {
+            logger.warn("Cannot read motion unit spec, dropping element from gesture binding. Tag: {} ", tag);
+            motionUnit = null;
+        }
     }
-    
-   /*
-    * The XML Stag for XML encoding
-    */
-   private static final String XMLTAG = "MotionUnitSpec";
- 
-   /**
-    * The XML Stag for XML encoding -- use this static method when you want to see if a given String equals
-    * the xml tag for this class
-    */
-   public static String xmlTag() { return XMLTAG; }
- 
-   /**
-    * The XML Stag for XML encoding -- use this method to find out the run-time xml tag of an object
-    */
-   @Override
-   public String getXMLTag() {
-      return XMLTAG;
-   }
+
+    private static final String XMLTAG = "MotionUnitSpec";
+
+    public static String xmlTag()
+    {
+        return XMLTAG;
+    }
+
+    @Override
+    public String getXMLTag()
+    {
+        return XMLTAG;
+    }
 
 }

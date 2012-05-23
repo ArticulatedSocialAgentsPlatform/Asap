@@ -1,30 +1,29 @@
 package asap.animationengine.gesturebinding;
 
+import hmi.util.Resources;
+import hmi.xml.XMLStructureAdapter;
+import hmi.xml.XMLTokenizer;
+
 import java.io.IOException;
 import java.util.Collection;
 import java.util.HashMap;
-import java.util.Map;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import asap.animationengine.motionunit.AnimationUnit;
 
-import hmi.util.Resources;
-import hmi.xml.XMLStructureAdapter;
-import hmi.xml.XMLTokenizer;
-
 /**
  * Specifies the connection between visimes and motionunits
  * @author hvanwelbergen
- *
+ * 
  */
-public class VisimeSpec extends XMLStructureAdapter implements ParameterDefaultsHandler
+public class VisimeSpec extends XMLStructureAdapter
 {
     private AnimationUnit motionUnit;
     private final Resources resources;
     private int visime;
-    private Map<String, MotionUnitParameterDefault> parameterdefault = new HashMap<String, MotionUnitParameterDefault>();
+    private SpecParameterDefaults parameterdefaults = new SpecParameterDefaults();
     private final static Logger logger = LoggerFactory.getLogger(VisimeSpec.class.getName());
 
     public int getVisime()
@@ -45,9 +44,9 @@ public class VisimeSpec extends XMLStructureAdapter implements ParameterDefaults
     /**
      * Get motion unit parameter for BML parameter src
      */
-    public Collection<MotionUnitParameterDefault> getParameterDefaults()
+    public Collection<SpecParameterDefault> getParameterDefaults()
     {
-        return parameterdefault.values();
+        return parameterdefaults.getParameterDefaults();
     }
 
     @Override
@@ -55,11 +54,6 @@ public class VisimeSpec extends XMLStructureAdapter implements ParameterDefaults
     {
         visime = getRequiredIntAttribute("visime", attrMap, tokenizer);
         // specnamespace = getOptionalAttribute("namespace", attrMap, null);
-    }
-
-    public void addParameterDefault(MotionUnitParameterDefault p)
-    {
-        parameterdefault.put(p.name, p);
     }
 
     @Override
@@ -71,10 +65,9 @@ public class VisimeSpec extends XMLStructureAdapter implements ParameterDefaults
             while (tokenizer.atSTag())
             {
                 tag = tokenizer.getTagName();
-                if (tag.equals(ParameterDefaults.xmlTag()))
+                if (tag.equals(SpecParameterDefaults.xmlTag()))
                 {
-                    ParameterDefaults def = new ParameterDefaults(this);
-                    def.readXML(tokenizer);
+                    parameterdefaults.readXML(tokenizer);
                 }
                 else if (tag.equals(MotionUnitAssembler.xmlTag()))
                 {
@@ -86,28 +79,18 @@ public class VisimeSpec extends XMLStructureAdapter implements ParameterDefaults
         }
         catch (RuntimeException ex)
         {
-            logger.warn("Cannot read motion unit spec, dropping element from gesture binding. Tag: {} ", tag);
+            logger.warn("Cannot read visime spec, dropping element from face binding. Tag: {} ", tag);
             motionUnit = null;
         }
     }
 
-    /*
-     * The XML Stag for XML encoding
-     */
     private static final String XMLTAG = "VisimeSpec";
 
-    /**
-     * The XML Stag for XML encoding -- use this static method when you want to see if a given String equals
-     * the xml tag for this class
-     */
     public static String xmlTag()
     {
         return XMLTAG;
     }
 
-    /**
-     * The XML Stag for XML encoding -- use this method to find out the run-time xml tag of an object
-     */
     @Override
     public String getXMLTag()
     {

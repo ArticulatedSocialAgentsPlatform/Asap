@@ -122,6 +122,15 @@ public class GestureBindingTest
                 + "</parameterdefaults>"
                 + "<MotionUnit type=\"PhysicalController\" class=\"hmi.physics.controller.BalanceController\"/>"
                 + "</MotionUnitSpec>"
+                /*
+                + "<RestPoseSpec>"
+                + "<constraints>"
+                +    "<constraint name=\"stance\" value=\"SITTING\"/>"
+                +    "<constraint name=\"LEGS\" value=\"LEGS_OPEN\"/>"
+                + "</constraints>"
+                + "<RestPose type=\"SkeletonPose\" file=\"sitting.xml\"/>"
+                + "</RestPoseSpec>"
+                */
                 + "</gesturebinding>";
         gestureBinding.readXML(s);
         when(mockAniPlayer.getVNext()).thenReturn(human);
