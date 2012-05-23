@@ -53,7 +53,10 @@ public class AnimationPlanPlayer implements PlanPlayer
         this.defaultRestPose = defaultRestPose;
         currentRestPose = defaultRestPose;
     }
-
+    
+    ///only update 5 seconds in the future (for performance reasons)
+    private static final double UPDATE_BUFFER = 5;  
+    
     private void updateTiming(double t)
     {
         List<TimedAnimationUnit> tuUpdateFailed = new ArrayList<TimedAnimationUnit>();        
@@ -62,6 +65,7 @@ public class AnimationPlanPlayer implements PlanPlayer
         {
             if(tmu.isPlaying()||tmu.isLurking())
             //if(tmu.isLurking())
+            if(tmu.getStartTime()<t+UPDATE_BUFFER)                
             {
                 try
                 {
