@@ -27,6 +27,8 @@ import saiba.bml.core.Behaviour;
 import saiba.bml.core.GestureBehaviour;
 import saiba.bml.core.HeadBehaviour;
 import saiba.bml.core.PointingBehaviour;
+import saiba.bml.core.PostureBehaviour;
+import hmi.physics.PhysicalHumanoid;
 import hmi.testutil.animation.HanimBody;
 import hmi.util.Resources;
 import hmi.xml.XMLTokenizer;
@@ -52,8 +54,9 @@ import asap.realizer.planunit.ParameterException;
  */
 public class GestureBindingTest
 {
-    AnimationPlayer mockAniPlayer = mock(AnimationPlayer.class);
-    FeedbackManager mockFeedbackManager = mock(FeedbackManager.class);
+    private AnimationPlayer mockAniPlayer = mock(AnimationPlayer.class);
+    private FeedbackManager mockFeedbackManager = mock(FeedbackManager.class);
+    private PhysicalHumanoid mockPHuman = mock(PhysicalHumanoid.class);
     private PegBoard pegBoard = new PegBoard();
 
     private VJoint human;
@@ -105,11 +108,31 @@ public class GestureBindingTest
                 +"</parametermap>"
                 + "<MotionUnit type=\"class\" class=\"asap.animationengine.pointing.PointingMU\"/>"
                 + "</MotionUnitSpec>"
+                + "<MotionUnitSpec type=\"posture\">"
+                + "<constraints>"
+                +    "<constraint name=\"stance\" value=\"STANDING\"/>"
+                +    "<constraint name=\"LEGS\" value=\"LEGS_OPEN\"/>"
+                + "</constraints>"
+                + "<parametermap>"
+                +    "<parameter src=\"priority\" dst=\"priority\"/>"
+                + "</parametermap>"
+                + "<parameterdefaults>"
+                +    "<parameterdefault name=\"pelvisheight\" value=\"1.7\"/>"
+                +    "<parameterdefault name=\"replacementgroup\" value=\"posture\"/>"
+                + "</parameterdefaults>"
+                + "<MotionUnit type=\"PhysicalController\" class=\"hmi.physics.controller.BalanceController\"/>"
+                + "</MotionUnitSpec>"
                 + "</gesturebinding>";
         gestureBinding.readXML(s);
         when(mockAniPlayer.getVNext()).thenReturn(human);
+        when(mockAniPlayer.getPHuman()).thenReturn(mockPHuman);
     }
 
+    public PostureBehaviour createPostureBehaviour(String bmlId, String bml)throws IOException
+    {
+        return new PostureBehaviour(bmlId,new XMLTokenizer(bml));
+    }
+    
     public PointingBehaviour createPointingBehaviour(String bmlId, String bml)throws IOException
     {
         return new PointingBehaviour(bmlId,new XMLTokenizer(bml));
@@ -180,12 +203,24 @@ public class GestureBindingTest
     }
     
     @Test
-    public void testReadPointin() throws IOException
+    public void testReadPointing() throws IOException
     {
         PointingBehaviour beh = createPointingBehaviour("bml1", "<pointing id=\"point1\" mode=\"RIGHT_HAND\" target=\"bluebox\"/>");
         List<TimedAnimationUnit> m = gestureBinding.getMotionUnit(BMLBlockPeg.GLOBALPEG, beh, mockAniPlayer, pegBoard);
         assertEquals(1, m.size());
         assertEquals("bml1", m.get(0).getBMLId());
         assertEquals("point1", m.get(0).getId());
+    }
+    
+    @Test
+    public void testReadPosture() throws IOException
+    {
+        String str = 
+            "<posture id=\"posture1\"><stance type=\"STANDING\"/><pose part=\"LEGS\" lexeme=\"LEGS_OPEN\"/></posture>";
+        PostureBehaviour beh = createPostureBehaviour("bml1",str);
+        List<TimedAnimationUnit> m = gestureBinding.getMotionUnit(BMLBlockPeg.GLOBALPEG, beh, mockAniPlayer, pegBoard);
+        assertEquals(1, m.size());
+        assertEquals("bml1", m.get(0).getBMLId());
+        assertEquals("posture1", m.get(0).getId());
     }
 }
