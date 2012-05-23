@@ -95,9 +95,20 @@
         <delegate target="findbugsxml" list="rebuildList"/>
    </target>
 
-   <target name="cpdAll"  description="Runs the code duplication checker on all HMI projects">     
-        <delegate target="cpd" list="rebuildList"/>
+   <target name="cpdAll"  description="Runs the code duplication checker on all Asap projects">     
+        <mkdir dir="build"/>
+        <cpd minimumTokenCount="100" format="xml" encoding="UTF-8" outputFile="build/cpd.xml"
+   	ignoreLiterals="true" ignoreIdentifiers="true">
+        <fileset dir=".">
+            <include name="**/*.java"/>
+        </fileset>
+        </cpd>
    </target>
+   
+    <target name="cpdreportAll" depends="cpdAll">
+	  <xslt in="build/cpd.xml" style="${shared.ant.dir}/pmd/etc/xslt/cpdhtml.xslt" 	  
+	  out="build/cpd.html" />
+    </target>
 
    <target name="checkstyleAll"  description="Runs checkstyle on all HMI projects">     
         <delegate target="checkstylexml" list="rebuildList"/>
