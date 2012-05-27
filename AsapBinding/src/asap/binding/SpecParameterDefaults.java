@@ -16,7 +16,7 @@
  * You should have received a copy of the GNU General Public License
  * along with Elckerlyc.  If not, see http://www.gnu.org/licenses/.
  ******************************************************************************/
-package asap.animationengine.gesturebinding;
+package asap.binding;
 
 import hmi.xml.*;
 import java.io.*;
@@ -44,6 +44,10 @@ public class SpecParameterDefaults extends XMLStructureAdapter
                 SpecParameterDefault mupc = new SpecParameterDefault();
                 mupc.readXML(tokenizer);
                 parameterdefault.put(mupc.name, mupc);
+            }
+            else
+            {
+                throw new XMLScanException("Unknown XML element "+tag+" in parameterdefaults");
             }
         }
     }

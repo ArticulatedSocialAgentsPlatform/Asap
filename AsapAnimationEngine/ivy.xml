@@ -4,8 +4,10 @@
       <dependency org="Asap"     name="AsapBML"           rev="latest.${resolve.status}"    />
 	  <dependency org="Asap"     name="AsapRealizer"           rev="latest.${resolve.status}"    />      	  
 	  <dependency org="Asap"     name="AsapMotionUnit"           rev="latest.${resolve.status}"    />
+	  <dependency org="Asap"     name="AsapBinding"           rev="latest.${resolve.status}"    />
 	  <dependency org="Asap"     name="AsapMURML"           rev="latest.${resolve.status}"    />
 	  <dependency org="Asap"   transitive="false" name="AsapEnvironment"     rev="latest.${resolve.status}"   />    
+	  <dependency org="Asap"   transitive="false" name="AsapBinding"     rev="latest.${resolve.status}"   />    
       
       <dependency org="saiba"     name="saibabml"           rev="latest.release"    />
       <dependency org="HMI"   transitive="false" name="AsapUtils"     rev="latest.${resolve.status}"   />    

@@ -11,6 +11,7 @@ import asap.animationengine.AnimationPlayer;
 import asap.animationengine.motionunit.MUSetupException;
 import asap.animationengine.motionunit.AnimationUnit;
 import asap.animationengine.motionunit.TimedAnimationUnit;
+import asap.binding.SpecParameterDefault;
 import asap.realizer.feedback.FeedbackManager;
 import asap.realizer.feedback.NullFeedbackManager;
 import asap.realizer.pegboard.BMLBlockPeg;

@@ -12,6 +12,8 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import asap.animationengine.motionunit.AnimationUnit;
+import asap.binding.SpecParameterDefault;
+import asap.binding.SpecParameterDefaults;
 
 /**
  * Specifies the connection between visimes and motionunits

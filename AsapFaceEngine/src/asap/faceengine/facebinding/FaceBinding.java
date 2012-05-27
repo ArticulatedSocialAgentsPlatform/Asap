@@ -32,6 +32,7 @@ import java.util.List;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import asap.binding.SpecParameterDefault;
 import asap.faceengine.faceunit.FaceUnit;
 import asap.faceengine.faceunit.TimedFaceUnit;
 import asap.realizer.feedback.FeedbackManager;
@@ -73,7 +74,7 @@ public class FaceBinding extends XMLStructureAdapter
 
                     // System.out.println("set def params");
                     // set default parameter values
-                    for (FaceUnitParameterDefault fupc : s.getParameterDefaults())
+                    for (SpecParameterDefault fupc : s.getParameterDefaults())
                     {
                         try
                         {

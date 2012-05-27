@@ -3,6 +3,7 @@
    <dependencies>
      <dependency org="Asap"   name="AsapMotionUnit"            rev="latest.${resolve.status}"   />
      <dependency org="Asap"   name="AsapMURML"            rev="latest.${resolve.status}"   />
+     <dependency org="Asap"   name="AsapBinding"            rev="latest.${resolve.status}"   />
      <dependency org="Asap"   name="AsapBML"            rev="latest.${resolve.status}"   />
      <dependency org="Asap"   name="AsapMath"            rev="latest.${resolve.status}"   />
      <dependency org="HMI"   name="HmiUtil"            rev="latest.${resolve.status}"   />
