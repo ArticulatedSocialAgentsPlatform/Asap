@@ -35,6 +35,7 @@
       <dependency org="Asap"   name="AsapRealizer" transitive="false" rev="latest.${resolve.status}"   />
       <dependency org="Asap"   name="AsapBinding" transitive="false" rev="latest.${resolve.status}"   />
       <dependency org="Asap"   name="AsapMotionUnit" transitive="false" rev="latest.${resolve.status}"   />
+      <dependency org="Asap"   name="AsapBinding" transitive="false" rev="latest.${resolve.status}"   />
 
       <dependency org="logback" name="logback-classic"     rev="latest.release"  />   
       <dependency org="logback" name="logback-core"        rev="latest.release"  />   

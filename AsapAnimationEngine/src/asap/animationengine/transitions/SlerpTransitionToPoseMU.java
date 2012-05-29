@@ -109,7 +109,7 @@ public class SlerpTransitionToPoseMU extends TransitionMU
                 VJoint newJ = player.getVNext().getPart(vj.getSid());
                 if (newJ != null)
                 {
-                    joints.add(newJ);
+                    newJoints.add(newJ);
                 }
             }
             return new SlerpTransitionToPoseMU(newJoints, startPoseJoints, ep);

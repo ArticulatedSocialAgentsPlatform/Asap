@@ -99,6 +99,11 @@ public final class PegBoard
         }
         return p.getGlobalValue() - bmlP.getValue();
     }
+    
+    public double getRelativePegTime(String bmlId, String behId, String syncId)
+    {
+        return getRelativePegTime(bmlId,bmlId,behId,syncId);
+    }
 
     /**
      * Get the global time of bmlId:id:syncId, returns 

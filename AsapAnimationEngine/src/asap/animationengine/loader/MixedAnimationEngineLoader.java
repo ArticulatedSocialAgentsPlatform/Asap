@@ -210,14 +210,15 @@ public class MixedAnimationEngineLoader implements EngineLoader
         RestPose pose;
         if (restpose != null)
         {
-            pose = new SkeletonPoseRestPose(restpose, theVirtualHuman.getPegBoard());
+            pose = new SkeletonPoseRestPose(restpose);
         }
         else
         {
-            pose = new SkeletonPoseRestPose(theVirtualHuman.getPegBoard());
+            pose = new SkeletonPoseRestPose();
         }
         AnimationPlanPlayer animationPlanPlayer = new AnimationPlanPlayer(pose,
-                theVirtualHuman.getElckerlycRealizer().getFeedbackManager(), animationPlanManager, new DefaultTimedPlanUnitPlayer());
+                theVirtualHuman.getElckerlycRealizer().getFeedbackManager(), animationPlanManager, new DefaultTimedPlanUnitPlayer(),
+                theVirtualHuman.getPegBoard());
 
         // public AnimationPlayer(VJoint vP, VJoint vC, VJoint vN, ArrayList<MixedSystem> m, float h, WorldObjectManager wom,
         // PlanPlayer planPlayer)

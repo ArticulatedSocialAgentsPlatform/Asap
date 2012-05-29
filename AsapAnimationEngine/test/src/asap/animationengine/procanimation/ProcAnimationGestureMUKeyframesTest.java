@@ -5,7 +5,6 @@ import static org.mockito.Matchers.any;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
 import hmi.animation.VJoint;
-import saiba.bml.BMLGestureSync;
 import hmi.math.Quat4f;
 import hmi.testutil.animation.HanimBody;
 
@@ -14,12 +13,12 @@ import java.util.Set;
 import org.junit.Before;
 import org.junit.Test;
 
+import saiba.bml.BMLGestureSync;
 import asap.animationengine.AnimationPlayer;
 import asap.animationengine.motionunit.AnimationUnit;
 import asap.animationengine.restpose.RestPose;
 import asap.animationengine.restpose.SkeletonPoseRestPose;
 import asap.motionunit.MUPlayException;
-import asap.realizer.pegboard.PegBoard;
 import asap.realizer.planunit.KeyPosition;
 
 /**
@@ -32,8 +31,7 @@ public class ProcAnimationGestureMUKeyframesTest
     private AnimationPlayer mockAnimationPlayer = mock(AnimationPlayer.class);
     private VJoint vCurr;
     private VJoint vNext;
-    private ProcAnimationGestureMU pag;
-    private PegBoard pegBoard = new PegBoard();
+    private ProcAnimationGestureMU pag;    
     private static final float ROTATION_PRECISION = 0.01f;
 
     @Before
@@ -44,8 +42,8 @@ public class ProcAnimationGestureMUKeyframesTest
 
         when(mockAnimationPlayer.getVCurr()).thenReturn(vCurr);
         when(mockAnimationPlayer.getVNext()).thenReturn(vNext);
-        SkeletonPoseRestPose pose = new SkeletonPoseRestPose(pegBoard);
-        pose.setAnimationPlayer(mockAnimationPlayer);
+        RestPose pose = new SkeletonPoseRestPose();
+        pose = pose.copy(mockAnimationPlayer);
         when(mockAnimationPlayer.getRestPose()).thenReturn(pose);
 
         ProcAnimationMU procAnimation = new ProcAnimationMU();

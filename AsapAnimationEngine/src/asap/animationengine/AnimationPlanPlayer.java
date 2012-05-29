@@ -14,6 +14,7 @@ import asap.bml.feedback.BMLWarningListener;
 import asap.motionunit.TMUPlayException;
 import asap.realizer.feedback.FeedbackManager;
 import asap.realizer.feedback.NullFeedbackManager;
+import asap.realizer.pegboard.PegBoard;
 import asap.realizer.planunit.PlanManager;
 import asap.realizer.planunit.PlanPlayer;
 import asap.realizer.planunit.PlanUnitPriorityComparator;
@@ -37,6 +38,7 @@ public class AnimationPlanPlayer implements PlanPlayer
     private final TimedPlanUnitPlayer tpuPlayer;
     private final RestPose defaultRestPose;
     private RestPose currentRestPose;
+    private PegBoard pegBoard;
 
     public void setRestPose(RestPose rp)
     {
@@ -49,13 +51,14 @@ public class AnimationPlanPlayer implements PlanPlayer
     }
 
     public AnimationPlanPlayer(RestPose defaultRestPose, FeedbackManager fbm, PlanManager<TimedAnimationUnit> planManager,
-            TimedPlanUnitPlayer tpuCallback)
+            TimedPlanUnitPlayer tpuCallback, PegBoard pegBoard)
     {
         defPlayer = new SingleThreadedPlanPlayer<TimedAnimationUnit>(fbm, planManager, tpuCallback);
         fbManager = fbm;
         tpuPlayer = tpuCallback;
         this.planManager = planManager;
         this.defaultRestPose = defaultRestPose;
+        this.pegBoard = pegBoard;
         currentRestPose = defaultRestPose;
     }
     
@@ -159,7 +162,7 @@ public class AnimationPlanPlayer implements PlanPlayer
                 cleanup.addAll(tmu.getPhysicalJoints());
                 cleanup.removeAll(physicalJoints);                
                 TimedAnimationUnit tmuCleanup = this.currentRestPose.createTransitionToRest(NullFeedbackManager.getInstance(),
-                        cleanup, t, tmu.getBMLId(), tmu.getId(), tmu.getBMLBlockPeg());
+                        cleanup, t, tmu.getBMLId(), tmu.getId(), tmu.getBMLBlockPeg(), pegBoard);
                 tmuCleanup.setSubUnit(true);
                 
                 tmuRemove.add(tmu);
