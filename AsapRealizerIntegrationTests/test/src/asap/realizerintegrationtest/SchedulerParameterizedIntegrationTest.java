@@ -360,6 +360,7 @@ public class SchedulerParameterizedIntegrationTest
         }
     }
 
+    
     @Test(timeout = SCHEDULE_TIMEOUT)
     public void timepegTestSpeechEndTimed()
     {
@@ -427,6 +428,16 @@ public class SchedulerParameterizedIntegrationTest
         assertTrue(speechStartNew - speechStartOrig == 5);
         // assertTrue(invBeh.get(0).equals("bml1:speech1"));
     }
+    
+    @Test(timeout = SCHEDULE_TIMEOUT)
+    public void testPostureShiftBehaviour()
+    {
+        readXML("testpostureshift.xml");
+        assertNoWarnings();
+        assertEquals(0, pegBoard.getRelativePegTime("bml1", "shift1", "start"), PEGBOARD_PRECISION);
+        assertEquals(3, pegBoard.getRelativePegTime("bml1", "shift1", "end"), PEGBOARD_PRECISION);
+    }
+    
 
     @Test(timeout = SCHEDULE_TIMEOUT)
     public void bmltDummyAnticipatorTest()
