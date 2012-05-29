@@ -329,7 +329,7 @@ public class AsapRealizer
         try
         {
             scheduler.schedule();
-        }
+        }        
         catch (Exception e)
         { // DO NOT REMOVE THIS CLAUSE!
             String exceptionText = "Exception scheduling the BML. " + e + "\n" + Arrays.toString(e.getStackTrace()) + "\n";

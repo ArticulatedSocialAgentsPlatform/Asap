@@ -21,6 +21,8 @@ import asap.realizer.pegboard.PegBoard;
 public interface RestPose
 {
     RestPose copy(AnimationPlayer player);
+    
+    void setAnimationPlayer(AnimationPlayer player);
     /**
      * Play the rest pose at time time, given the kinematicJoints and physicalJoint that are in use     
      */
@@ -57,5 +59,8 @@ public interface RestPose
      */
     void setRestPose();
     
-    public void setParameterValue(String name, String value);
+    void setParameterValue(String name, String value);
+    
+    PostureShiftTMU createPostureShiftTMU(FeedbackManager bbf, BMLBlockPeg bmlBlockPeg, 
+            String bmlId, String id, PegBoard pb, AnimationPlayer ap);
 }

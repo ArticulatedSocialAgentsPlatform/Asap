@@ -312,7 +312,7 @@ public class SchedulerParameterizedIntegrationTest
         AnimationPlanPlayer animationPlanPlayer = new AnimationPlanPlayer(pose, bfm, animationPlanManager,
                 new DefaultTimedPlanUnitPlayer(), pegBoard);
         AnimationPlayer aPlayer = new AnimationPlayer(human, human, human, m, 0.001f, animationPlanPlayer);
-        pose = pose.copy(aPlayer);
+        pose.setAnimationPlayer(aPlayer);
         AnimationPlanner ap = new AnimationPlanner(bfm, aPlayer, gestureBinding, animationPlanManager, pegBoard);
         Engine animationEngine = new DefaultEngine<TimedAnimationUnit>(ap, aPlayer, animationPlanManager);
 
@@ -697,7 +697,7 @@ public class SchedulerParameterizedIntegrationTest
         assertEquals(pegBoard.getPegTime("bml1", "speech2", "start"), pegBoard.getPegTime("bml1", "speech1", "end"), PEGBOARD_PRECISION);
     }
 
-    @Test(timeout = SCHEDULE_TIMEOUT)
+    @Test//(timeout = SCHEDULE_TIMEOUT)
     public void testOffset2()
     {
         readXML("testoffset2.xml");

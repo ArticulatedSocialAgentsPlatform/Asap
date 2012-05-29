@@ -52,7 +52,7 @@ public class ProcAnimationGestureMUEndEffectorTest
         when(mockAnimationPlayer.getVCurr()).thenReturn(vNext);
         when(mockAnimationPlayer.getVNext()).thenReturn(vNext);
         RestPose pose = new SkeletonPoseRestPose();
-        pose = pose.copy(mockAnimationPlayer);
+        pose.setAnimationPlayer(mockAnimationPlayer);
         when(mockAnimationPlayer.getRestPose()).thenReturn(pose);
 
         ProcAnimationMU procAnimation = new ProcAnimationMU();

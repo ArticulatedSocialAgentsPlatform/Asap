@@ -33,7 +33,7 @@ public class SkeletonPoseRestPoseTest extends AbstractRestPoseTest
         SkeletonPose pose = new SkeletonPose(poseJoints, rotations, "R");
 
         RestPose restPose = new SkeletonPoseRestPose(pose);
-        restPose = restPose.copy(mockAnimationPlayer);
+        restPose.setAnimationPlayer(mockAnimationPlayer);
         TimedAnimationUnit tmu = restPose.createTransitionToRest(NullFeedbackManager.getInstance(),
                 Sets.newHashSet("l_shoulder", "l_wrist"), 1, 2, "bml1", "transition1", BMLBlockPeg.GLOBALPEG, pegBoard);
         assertEquals(BMLBlockPeg.GLOBALPEG, tmu.getBMLBlockPeg());

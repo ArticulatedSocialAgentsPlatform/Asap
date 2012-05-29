@@ -43,7 +43,7 @@ public class SkeletonPoseRestPose implements RestPose
         this.pose = pose;
     }
 
-    private void setAnimationPlayer(AnimationPlayer player)
+    public void setAnimationPlayer(AnimationPlayer player)
     {
         this.player = player;
         poseTree = player.getVCurr().copyTree("rest-");
@@ -144,4 +144,17 @@ public class SkeletonPoseRestPose implements RestPose
 
     }
 
+    public PostureShiftTMU createPostureShiftTMU(FeedbackManager bbf, BMLBlockPeg bmlBlockPeg, 
+            String bmlId, String id, PegBoard pb, AnimationPlayer ap)
+    {
+        List<VJoint> targetJoints = new ArrayList<VJoint>();
+        List<VJoint> startJoints = new ArrayList<VJoint>();
+        for (String joint : pose.getPartIds())
+        {
+            targetJoints.add(player.getVNext().getPartBySid(joint));
+            startJoints.add(player.getVCurr().getPartBySid(joint));            
+        }
+        SlerpTransitionToPoseMU mu = new SlerpTransitionToPoseMU(startJoints,targetJoints,pose.getConfig());
+        return new PostureShiftTMU(bbf, bmlBlockPeg, bmlId, id, mu, pb, this, ap);
+    }
 }

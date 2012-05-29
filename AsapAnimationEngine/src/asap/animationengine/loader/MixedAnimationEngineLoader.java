@@ -226,7 +226,7 @@ public class MixedAnimationEngineLoader implements EngineLoader
         animationPlayer = new AnimationPlayer(mse.getPreviousVJoint(), mse.getCurrentVJoint(), mse.getNextVJoint(), pe.getMixedSystems(),
                 MixedAnimationPlayerManager.getH(), ae.getWorldObjectManager(), animationPlanPlayer);
 
-        pose = pose.copy((AnimationPlayer) animationPlayer);
+        pose.setAnimationPlayer((AnimationPlayer) animationPlayer);
         // IKBody nextBody = new IKBody(se.getNextVJoint()); not used?
 
         // make planner

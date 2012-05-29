@@ -35,6 +35,7 @@ import asap.animationengine.gesturebinding.MURMLMUBuilder;
 import asap.animationengine.motionunit.AnimationUnit;
 import asap.animationengine.motionunit.MUSetupException;
 import asap.animationengine.motionunit.TimedAnimationUnit;
+import asap.animationengine.restpose.RestPose;
 import asap.bml.ext.bmlt.BMLTControllerBehaviour;
 import asap.bml.ext.bmlt.BMLTKeyframeBehaviour;
 import asap.bml.ext.bmlt.BMLTNoiseBehaviour;
@@ -149,6 +150,11 @@ public class AnimationPlanner extends AbstractPlanner<TimedAnimationUnit>
                         + " could not be constructed.",e);
             }
             tmu = muCopy.createTMU(fbManager, bbPeg, b.getBmlId(), b.id, pegBoard);
+        }
+        else if(b instanceof PostureShiftBehaviour)
+        {
+            RestPose rp = gestureBinding.getRestPose((PostureShiftBehaviour)b, player);
+            tmu = rp.createPostureShiftTMU(fbManager, bbPeg, b.getBmlId(), b.id, pegBoard, player);
         }
         else
         {
