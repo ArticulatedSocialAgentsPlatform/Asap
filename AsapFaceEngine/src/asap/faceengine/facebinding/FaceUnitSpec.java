@@ -28,6 +28,10 @@ import java.util.Collection;
 import java.util.HashMap;
 import java.util.Set;
 
+import asap.binding.SpecConstraints;
+import asap.binding.SpecParameterDefault;
+import asap.binding.SpecParameterDefaults;
+import asap.binding.SpecParameterMap;
 import asap.faceengine.faceunit.FaceUnit;
 
 class FaceUnitSpec extends XMLStructureAdapter
@@ -51,38 +55,19 @@ class FaceUnitSpec extends XMLStructureAdapter
     }
 
 
-    private ArrayList<FaceUnitSpecConstraint>constraints = new ArrayList<FaceUnitSpecConstraint>();
-    private HashMap<String,String>parametermap = new HashMap<String,String>();
-    private HashMap<String,FaceUnitParameterDefault>parameterdefault = new HashMap<String,FaceUnitParameterDefault>();
+    private SpecConstraints constraints = new SpecConstraints();
+    private SpecParameterMap parametermap = new SpecParameterMap();
+    private SpecParameterDefaults parameterdefault = new SpecParameterDefaults();
     
     
     public boolean satisfiesConstraints(Behaviour b)
     {
-        for(FaceUnitSpecConstraint c:constraints)
-        {
-            if(!b.satisfiesConstraint(c.name, c.value))return false;
-        }
-        return true;
+        return constraints.satisfiesConstraints(b);        
     }
     
     public Set<String> getParameters()
     {
-        return parametermap.keySet();
-    }
-    
-    public void addConstraint(FaceUnitSpecConstraint c)
-    {
-        constraints.add(c);
-    }
-    
-    public void addParameter(FaceUnitParameter p)
-    {
-        parametermap.put(p.src, p.dst);
-    }
-    
-    public void addParameterDefault(FaceUnitParameterDefault p)
-    {
-        parameterdefault.put(p.name, p);
+        return parametermap.getParameters();
     }
     
     /**
@@ -90,15 +75,15 @@ class FaceUnitSpec extends XMLStructureAdapter
      */
     public String getParameter(String src)
     {
-        return parametermap.get(src);
+        return parametermap.getParameter(src);
     }
 
     /**
      * Get motion unit parameter for BML parameter src     
      */
-    public Collection<FaceUnitParameterDefault> getParameterDefaults()
+    public Collection<SpecParameterDefault> getParameterDefaults()
     {
-        return parameterdefault.values();
+        return parameterdefault.getParameterDefaults();
     }
 
     @Override
@@ -114,20 +99,17 @@ class FaceUnitSpec extends XMLStructureAdapter
         while (tokenizer.atSTag())
         {
             String tag = tokenizer.getTagName();
-            if (tag.equals(FaceUnitSpecConstraints.xmlTag()))
+            if (tag.equals(SpecConstraints.xmlTag()))
             {
-                FaceUnitSpecConstraints fusc = new FaceUnitSpecConstraints(this);
-                fusc.readXML(tokenizer);                
+                constraints.readXML(tokenizer);                                
             }
-            else if (tag.equals(FBParameterMap.xmlTag())) 
+            else if (tag.equals(SpecParameterMap.xmlTag())) 
             {
-                FBParameterMap map = new FBParameterMap(this);
-                map.readXML(tokenizer);
+                parametermap.readXML(tokenizer);                
             }
-            else if (tag.equals(FBParameterDefaults.xmlTag())) 
+            else if (tag.equals(SpecParameterDefaults.xmlTag())) 
             {
-                FBParameterDefaults def = new FBParameterDefaults(this);
-                def.readXML(tokenizer);
+                parameterdefault.readXML(tokenizer);                
             }
             else if (tag.equals(FaceUnitAssembler.xmlTag()))
             {

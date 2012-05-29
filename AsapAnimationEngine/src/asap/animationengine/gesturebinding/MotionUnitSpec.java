@@ -31,6 +31,10 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import asap.animationengine.motionunit.AnimationUnit;
+import asap.binding.SpecConstraints;
+import asap.binding.SpecParameterDefault;
+import asap.binding.SpecParameterDefaults;
+import asap.binding.SpecParameterMap;
 
 /**
  * XML parser for the MotionUnitSpec in a gesturebinding

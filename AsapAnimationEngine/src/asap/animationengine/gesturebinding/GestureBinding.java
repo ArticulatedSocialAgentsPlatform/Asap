@@ -29,6 +29,7 @@ import org.slf4j.LoggerFactory;
 
 import asap.animationengine.AnimationPlayer;
 import asap.animationengine.motionunit.*;
+import asap.binding.SpecParameterDefault;
 import asap.realizer.feedback.FeedbackManager;
 import asap.realizer.pegboard.BMLBlockPeg;
 import asap.realizer.pegboard.PegBoard;

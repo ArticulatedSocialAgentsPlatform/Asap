@@ -16,51 +16,53 @@
  * You should have received a copy of the GNU General Public License
  * along with Elckerlyc.  If not, see http://www.gnu.org/licenses/.
  ******************************************************************************/
-package asap.animationengine.gesturebinding;
+package asap.binding;
 
-import java.io.IOException;
-import java.util.ArrayList;
-import java.util.List;
+import java.io.*;
+import java.util.HashMap;
+import java.util.Set;
 
-import saiba.bml.core.Behaviour;
-
-import hmi.xml.XMLStructureAdapter;
-import hmi.xml.XMLTokenizer;
+import hmi.xml.*;
 
 /**
- * An XML element to group SpecConstraint-s
+ * Maps BML behavior parameters to planunit parameters
  * @author welberge
  *
  */
-class SpecConstraints extends XMLStructureAdapter
+public class SpecParameterMap extends XMLStructureAdapter
 {
-    private List<SpecConstraint> constraints = new ArrayList<SpecConstraint>(); 
-    
+    private HashMap<String, String> parametermap = new HashMap<String, String>();
+
     @Override
     public void decodeContent(XMLTokenizer tokenizer) throws IOException
     {
         while (tokenizer.atSTag())
         {
             String tag = tokenizer.getTagName();
-            if (tag.equals(SpecConstraint.xmlTag()))
+            if (tag.equals(SpecParameter.xmlTag()))
             {
-                SpecConstraint c = new SpecConstraint();
-                c.readXML(tokenizer);
-                constraints.add(c);
+                SpecParameter mup = new SpecParameter();
+                mup.readXML(tokenizer);
+                parametermap.put(mup.src, mup.dst);
+            }
+            else
+            {
+                throw new XMLScanException("Unknown XML element "+tag+" in parametermap");
             }
         }
     }
 
-    public boolean satisfiesConstraints(Behaviour b)
+    public Set<String> getParameters()
     {
-        for (SpecConstraint c : constraints)
-        {
-            if (!b.satisfiesConstraint(c.name, c.value)) return false;
-        }
-        return true;
+        return parametermap.keySet();
+    }
+
+    public String getParameter(String src)
+    {
+        return parametermap.get(src);
     }
     
-    private static final String XMLTAG = "constraints";
+    private static final String XMLTAG = "parametermap";
 
     public static String xmlTag()
     {
@@ -72,5 +74,4 @@ class SpecConstraints extends XMLStructureAdapter
     {
         return XMLTAG;
     }
-
 }

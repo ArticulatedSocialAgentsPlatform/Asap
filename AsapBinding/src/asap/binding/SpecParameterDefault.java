@@ -16,7 +16,7 @@
  * You should have received a copy of the GNU General Public License
  * along with Elckerlyc.  If not, see http://www.gnu.org/licenses/.
  ******************************************************************************/
-package asap.animationengine.gesturebinding;
+package asap.binding;
 
 import java.util.HashMap;
 
@@ -27,7 +27,7 @@ import hmi.xml.*;
  * @author welberge
  *
  */
-class SpecParameterDefault extends XMLStructureAdapter
+public class SpecParameterDefault extends XMLStructureAdapter
 {
     public String name;
     public String value;
