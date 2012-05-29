@@ -24,7 +24,7 @@ import com.google.common.collect.Sets;
 public class SkeletonPoseRestPoseTest extends AbstractRestPoseTest
 {
     private PegBoard pegBoard = new PegBoard();
-    
+
     @Test
     public void testcreateTransitionToRest() throws TimedPlanUnitPlayException
     {
@@ -32,9 +32,10 @@ public class SkeletonPoseRestPoseTest extends AbstractRestPoseTest
         float[] rotations = { 0, 0, 0, 1, 0, 1, 0, 0 };
         SkeletonPose pose = new SkeletonPose(poseJoints, rotations, "R");
 
-        SkeletonPoseRestPose restPose = new SkeletonPoseRestPose(pose, mockAnimationPlayer, pegBoard);
+        RestPose restPose = new SkeletonPoseRestPose(pose);
+        restPose = restPose.copy(mockAnimationPlayer);
         TimedAnimationUnit tmu = restPose.createTransitionToRest(NullFeedbackManager.getInstance(),
-                Sets.newHashSet("l_shoulder", "l_wrist"), 1, 2, "bml1", "transition1", BMLBlockPeg.GLOBALPEG);
+                Sets.newHashSet("l_shoulder", "l_wrist"), 1, 2, "bml1", "transition1", BMLBlockPeg.GLOBALPEG, pegBoard);
         assertEquals(BMLBlockPeg.GLOBALPEG, tmu.getBMLBlockPeg());
         assertEquals("transition1", tmu.getId());
         assertEquals("bml1", tmu.getBMLId());

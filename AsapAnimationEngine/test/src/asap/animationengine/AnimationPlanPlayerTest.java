@@ -48,7 +48,6 @@ import asap.realizer.planunit.PlanManager;
 import asap.realizer.planunit.TimedPlanUnitState;
 import asap.realizer.scheduler.BMLBlockManager;
 
-
 import com.google.common.collect.ImmutableSet;
 
 /**
@@ -57,9 +56,8 @@ import com.google.common.collect.ImmutableSet;
  * @author Herwin
  * 
  */
-@PowerMockIgnore({ "javax.management.*", "javax.xml.parsers.*",
-    "com.sun.org.apache.xerces.internal.jaxp.*", "ch.qos.logback.*",
-    "org.slf4j.*" })
+@PowerMockIgnore({ "javax.management.*", "javax.xml.parsers.*", "com.sun.org.apache.xerces.internal.jaxp.*", "ch.qos.logback.*",
+        "org.slf4j.*" })
 @RunWith(PowerMockRunner.class)
 @PrepareForTest({ BMLBlockManager.class })
 public class AnimationPlanPlayerTest
@@ -84,7 +82,7 @@ public class AnimationPlanPlayerTest
     public void setup()
     {
         fbl = new ListFeedbackListener(fbList);
-        app = new AnimationPlanPlayer(mockRestPose, fbManager, planManager, new DefaultTimedPlanUnitPlayer());
+        app = new AnimationPlanPlayer(mockRestPose, fbManager, planManager, new DefaultTimedPlanUnitPlayer(), pegBoard);
         app.addWarningListener(new ListBMLWarningListener(exList));
         fbManager.addFeedbackListener(fbl);
     }
@@ -315,7 +313,7 @@ public class AnimationPlanPlayerTest
         tmu.setState(TimedPlanUnitState.LURKING);
         app.play(0.5);
         assertTrue(exList.size() == 1);
-        assertEquals("bml1:behaviour1",exList.get(0).getId());
+        assertEquals("bml1:behaviour1", exList.get(0).getId());
         assertEquals(TimedPlanUnitState.DONE, tmu.getState());
         verify(muMock1, atLeastOnce()).getKeyPosition("start");
         verify(muMock1, atLeastOnce()).getKeyPosition("end");
@@ -359,7 +357,7 @@ public class AnimationPlanPlayerTest
         when(mockTmu.getState()).thenReturn(TimedPlanUnitState.LURKING);
         when(
                 mockRestPose.createTransitionToRest(eq(NullFeedbackManager.getInstance()), eq(ImmutableSet.of("r_wrist")), anyDouble(),
-                        eq("bml1"), eq("behaviour1"), eq(BMLBlockPeg.GLOBALPEG))).thenReturn(mockTmu);
+                        eq("bml1"), eq("behaviour1"), eq(BMLBlockPeg.GLOBALPEG), eq(pegBoard))).thenReturn(mockTmu);
         app.play(0);
         assertThat(planManager.getPlanUnits(), containsInAnyOrder(tmu2, mockTmu));
     }

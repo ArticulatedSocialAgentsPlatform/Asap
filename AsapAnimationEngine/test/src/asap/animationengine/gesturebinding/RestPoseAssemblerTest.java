@@ -1,12 +1,12 @@
 package asap.animationengine.gesturebinding;
 
-import hmi.util.Resources;
+import static org.hamcrest.CoreMatchers.instanceOf;
 import static org.hamcrest.MatcherAssert.assertThat;
-import static org.hamcrest.CoreMatchers.*;
+import hmi.util.Resources;
+
 import org.junit.Test;
 
 import asap.animationengine.restpose.SkeletonPoseRestPose;
-import asap.realizer.pegboard.PegBoard;
 
 /**
  * Unit tests for the RestPoseAssembler
@@ -20,7 +20,7 @@ public class RestPoseAssemblerTest
     {
         Resources res = new Resources("Humanoids/armandia/restposes");
         String str = "<RestPose type=\"SkeletonPose\" file=\"sitting.xml\"/>";
-        RestPoseAssembler rpa = new RestPoseAssembler(res, new PegBoard());
+        RestPoseAssembler rpa = new RestPoseAssembler(res);
         rpa.readXML(str);
         assertThat(rpa.getRestPose(),instanceOf(SkeletonPoseRestPose.class));
     }

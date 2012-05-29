@@ -71,8 +71,8 @@ public class AnimationPlayerTest
         animationPlayer = new AnimationPlayer(HanimBody.getLOA1HanimBody(),
                 HanimBody.getLOA1HanimBody(), HanimBody.getLOA1HanimBody(),
                 m, 0.01f,
-                new AnimationPlanPlayer(new SkeletonPoseRestPose(pegBoard), fbManager, planManager,
-                        new DefaultTimedPlanUnitPlayer())                
+                new AnimationPlanPlayer(new SkeletonPoseRestPose(), fbManager, planManager,
+                        new DefaultTimedPlanUnitPlayer(),pegBoard)                
                 );
         beList = new ArrayList<BMLWarningFeedback>();
         fbManager.addWarningListener(new ListBMLWarningListener(beList));

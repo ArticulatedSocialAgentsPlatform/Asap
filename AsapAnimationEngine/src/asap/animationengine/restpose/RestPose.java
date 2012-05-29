@@ -9,6 +9,7 @@ import asap.animationengine.motionunit.AnimationUnit;
 import asap.animationengine.motionunit.TimedAnimationUnit;
 import asap.realizer.feedback.FeedbackManager;
 import asap.realizer.pegboard.BMLBlockPeg;
+import asap.realizer.pegboard.PegBoard;
 
 /**
  * The restpose is a dynamic controller that handles all animation
@@ -19,7 +20,7 @@ import asap.realizer.pegboard.BMLBlockPeg;
  */
 public interface RestPose
 {
-    void setAnimationPlayer(AnimationPlayer player);
+    RestPose copy(AnimationPlayer player);
     /**
      * Play the rest pose at time time, given the kinematicJoints and physicalJoint that are in use     
      */
@@ -30,14 +31,14 @@ public interface RestPose
      * to a position dictated by this resting pose.  
      */
     TimedAnimationUnit createTransitionToRest(FeedbackManager fbm, Set<String>joints, double startTime, 
-            String bmlId, String id, BMLBlockPeg bmlBlockPeg);
+            String bmlId, String id, BMLBlockPeg bmlBlockPeg, PegBoard pb);
     
     /**
      * Create a transition TMU that moves the joints from their current position 
      * to a position dictated by this resting pose.  
      */
     TimedAnimationUnit createTransitionToRest(FeedbackManager fbm, Set<String>joints, double startTime, double duration, 
-            String bmlId, String id, BMLBlockPeg bmlBlockPeg);
+            String bmlId, String id, BMLBlockPeg bmlBlockPeg, PegBoard pb);
     
     /**
      * Determine the duration of a transition from vCurrent to the rest pose, taking
@@ -55,4 +56,6 @@ public interface RestPose
      * Sets the restpose to prev, next, curr on the animationplayer 
      */
     void setRestPose();
+    
+    public void setParameterValue(String name, String value);
 }

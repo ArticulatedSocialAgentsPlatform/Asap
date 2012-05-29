@@ -1,16 +1,16 @@
 package asap.animationengine.gesturebinding;
 
-import java.io.IOException;
-import java.util.HashMap;
-
-import asap.animationengine.restpose.RestPose;
-import asap.animationengine.restpose.SkeletonPoseRestPose;
-import asap.realizer.pegboard.PegBoard;
 import hmi.animation.SkeletonPose;
 import hmi.util.Resources;
 import hmi.xml.XMLScanException;
 import hmi.xml.XMLStructureAdapter;
 import hmi.xml.XMLTokenizer;
+
+import java.io.IOException;
+import java.util.HashMap;
+
+import asap.animationengine.restpose.RestPose;
+import asap.animationengine.restpose.SkeletonPoseRestPose;
 
 /**
  * Creates a RestPose from an XML description
@@ -20,17 +20,15 @@ public class RestPoseAssembler extends XMLStructureAdapter
 {
     private Resources resources;
     private RestPose restPose;
+    
     public RestPose getRestPose()
     {
         return restPose;
     }
 
-    private PegBoard pegBoard;
-
-    public RestPoseAssembler(Resources r, PegBoard pb)
+    public RestPoseAssembler(Resources r)
     {
         resources = r;
-        pegBoard = pb;
     }
 
     @Override
@@ -50,7 +48,7 @@ public class RestPoseAssembler extends XMLStructureAdapter
             {
                 throw new XMLScanException("Error reading skeletonpose file " + file, e);
             }
-            restPose = new SkeletonPoseRestPose(pose, pegBoard);
+            restPose = new SkeletonPoseRestPose(pose);
         }
     }
 

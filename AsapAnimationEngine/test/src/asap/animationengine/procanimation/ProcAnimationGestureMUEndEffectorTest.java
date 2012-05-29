@@ -6,7 +6,6 @@ import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
 import hmi.animation.Hanim;
 import hmi.animation.VJoint;
-import saiba.bml.BMLGestureSync;
 import hmi.math.Vec3f;
 import hmi.neurophysics.FittsLaw;
 import hmi.testutil.animation.HanimBody;
@@ -14,10 +13,11 @@ import hmi.testutil.animation.HanimBody;
 import org.junit.Before;
 import org.junit.Test;
 
+import saiba.bml.BMLGestureSync;
 import asap.animationengine.AnimationPlayer;
+import asap.animationengine.restpose.RestPose;
 import asap.animationengine.restpose.SkeletonPoseRestPose;
 import asap.motionunit.MUPlayException;
-import asap.realizer.pegboard.PegBoard;
 import asap.realizer.planunit.KeyPosition;
 
 /**
@@ -30,7 +30,6 @@ public class ProcAnimationGestureMUEndEffectorTest
     private VJoint vNext;
     private VJoint vCurr;
     private AnimationPlayer mockAnimationPlayer = mock(AnimationPlayer.class);
-    private PegBoard pegBoard = new PegBoard();
     private static final float POSITION_PRECISION = 0.01f;
     private static final float TIMING_PRECISION = 0.01f;
     private ProcAnimationGestureMU pag;
@@ -52,8 +51,8 @@ public class ProcAnimationGestureMUEndEffectorTest
 
         when(mockAnimationPlayer.getVCurr()).thenReturn(vNext);
         when(mockAnimationPlayer.getVNext()).thenReturn(vNext);
-        SkeletonPoseRestPose pose = new SkeletonPoseRestPose(pegBoard);
-        pose.setAnimationPlayer(mockAnimationPlayer);
+        RestPose pose = new SkeletonPoseRestPose();
+        pose = pose.copy(mockAnimationPlayer);
         when(mockAnimationPlayer.getRestPose()).thenReturn(pose);
 
         ProcAnimationMU procAnimation = new ProcAnimationMU();

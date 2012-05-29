@@ -18,6 +18,8 @@
  ******************************************************************************/
 package asap.animationengine.gesturebinding;
 
+import static org.hamcrest.CoreMatchers.instanceOf;
+import static org.hamcrest.MatcherAssert.assertThat;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
 import static org.mockito.Mockito.mock;
@@ -28,6 +30,7 @@ import saiba.bml.core.GestureBehaviour;
 import saiba.bml.core.HeadBehaviour;
 import saiba.bml.core.PointingBehaviour;
 import saiba.bml.core.PostureBehaviour;
+import saiba.bml.core.PostureShiftBehaviour;
 import hmi.physics.PhysicalHumanoid;
 import hmi.testutil.animation.HanimBody;
 import hmi.util.Resources;
@@ -41,6 +44,8 @@ import org.junit.Test;
 
 import asap.animationengine.AnimationPlayer;
 import asap.animationengine.motionunit.TimedAnimationUnit;
+import asap.animationengine.restpose.RestPose;
+import asap.animationengine.restpose.SkeletonPoseRestPose;
 import asap.bml.ext.bmlt.BMLTKeyframeBehaviour;
 import asap.realizer.feedback.FeedbackManager;
 import asap.realizer.pegboard.BMLBlockPeg;
@@ -122,21 +127,25 @@ public class GestureBindingTest
                 + "</parameterdefaults>"
                 + "<MotionUnit type=\"PhysicalController\" class=\"hmi.physics.controller.BalanceController\"/>"
                 + "</MotionUnitSpec>"
-                /*
                 + "<RestPoseSpec>"
                 + "<constraints>"
                 +    "<constraint name=\"stance\" value=\"SITTING\"/>"
                 +    "<constraint name=\"LEGS\" value=\"LEGS_OPEN\"/>"
                 + "</constraints>"
-                + "<RestPose type=\"SkeletonPose\" file=\"sitting.xml\"/>"
+                + "<RestPose type=\"SkeletonPose\" file=\"Humanoids/armandia/restposes/sitting.xml\"/>"
                 + "</RestPoseSpec>"
-                */
                 + "</gesturebinding>";
         gestureBinding.readXML(s);
         when(mockAniPlayer.getVNext()).thenReturn(human);
+        when(mockAniPlayer.getVCurr()).thenReturn(human);
         when(mockAniPlayer.getPHuman()).thenReturn(mockPHuman);
     }
 
+    public PostureShiftBehaviour createPostureShiftBehaviour(String bmlId, String bml)throws IOException
+    {
+        return new PostureShiftBehaviour(bmlId,new XMLTokenizer(bml));
+    }
+    
     public PostureBehaviour createPostureBehaviour(String bmlId, String bml)throws IOException
     {
         return new PostureBehaviour(bmlId,new XMLTokenizer(bml));
@@ -231,5 +240,15 @@ public class GestureBindingTest
         assertEquals(1, m.size());
         assertEquals("bml1", m.get(0).getBMLId());
         assertEquals("posture1", m.get(0).getId());
+    }
+    
+    @Test
+    public void testReadPostureShift() throws IOException
+    {
+        String str = 
+            "<postureShift id=\"posture1\"><stance type=\"SITTING\"/><pose part=\"LEGS\" lexeme=\"LEGS_OPEN\"/></postureShift>";
+        PostureShiftBehaviour beh = createPostureShiftBehaviour("bml1",str);
+        RestPose rp = gestureBinding.getRestPose(beh,mockAniPlayer);
+        assertThat(rp,instanceOf(SkeletonPoseRestPose.class));
     }
 }

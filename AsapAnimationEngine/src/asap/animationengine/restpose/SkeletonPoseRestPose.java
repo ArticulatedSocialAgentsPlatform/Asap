@@ -32,26 +32,18 @@ public class SkeletonPoseRestPose implements RestPose
     private AnimationPlayer player;
     private VJoint poseTree;
     private SkeletonPose pose;
-    private final PegBoard pegBoard;
 
-    public SkeletonPoseRestPose(PegBoard pb)
+    public SkeletonPoseRestPose()
     {
-        pegBoard = pb;
+
     }
 
-    public SkeletonPoseRestPose(SkeletonPose pose, PegBoard pb)
+    public SkeletonPoseRestPose(SkeletonPose pose)
     {
         this.pose = pose;
-        pegBoard = pb;
     }
 
-    public SkeletonPoseRestPose(SkeletonPose pose, AnimationPlayer player, PegBoard pb)
-    {
-        this(pose, pb);
-        setAnimationPlayer(player);
-    }
-
-    public void setAnimationPlayer(AnimationPlayer player)
+    private void setAnimationPlayer(AnimationPlayer player)
     {
         this.player = player;
         poseTree = player.getVCurr().copyTree("rest-");
@@ -69,6 +61,17 @@ public class SkeletonPoseRestPose implements RestPose
         }
     }
 
+    public RestPose copy(AnimationPlayer player)
+    {
+        SkeletonPoseRestPose copy = new SkeletonPoseRestPose();
+        if (pose!=null)
+        {
+            copy.pose = pose.untargettedCopy();
+        }
+        copy.setAnimationPlayer(player);
+        return copy;
+    }
+
     @Override
     public void play(double time, Set<String> kinematicJoints, Set<String> physicalJoints)
     {
@@ -77,19 +80,19 @@ public class SkeletonPoseRestPose implements RestPose
 
     @Override
     public TimedAnimationUnit createTransitionToRest(FeedbackManager fbm, Set<String> joints, double startTime, String bmlId, String id,
-            BMLBlockPeg bmlBlockPeg)
+            BMLBlockPeg bmlBlockPeg, PegBoard pb)
     {
-        return createTransitionToRest(fbm, joints, startTime, 1, bmlId, id, bmlBlockPeg);
+        return createTransitionToRest(fbm, joints, startTime, 1, bmlId, id, bmlBlockPeg, pb);
     }
 
     @Override
     public TimedAnimationUnit createTransitionToRest(FeedbackManager fbm, Set<String> joints, double startTime, double duration,
-            String bmlId, String id, BMLBlockPeg bmlBlockPeg)
+            String bmlId, String id, BMLBlockPeg bmlBlockPeg, PegBoard pb)
     {
         TransitionMU mu = createTransitionToRest(joints);
         mu.addKeyPosition(new KeyPosition("start", 0));
         mu.addKeyPosition(new KeyPosition("end", 1));
-        TimedAnimationUnit tmu = new TransitionTMU(fbm, bmlBlockPeg, bmlId, id, mu, pegBoard);
+        TimedAnimationUnit tmu = new TransitionTMU(fbm, bmlBlockPeg, bmlId, id, mu, pb);
         TimePeg startPeg = new TimePeg(bmlBlockPeg);
         startPeg.setGlobalValue(startTime);
         tmu.setTimePeg("start", startPeg);
@@ -133,6 +136,12 @@ public class SkeletonPoseRestPose implements RestPose
         double duration = MovementTimingUtils.getFittsMaximumLimbMovementDuration(vCurrent, poseTree, joints);
         if (duration > 0) return duration;
         return 1;
+    }
+
+    @Override
+    public void setParameterValue(String name, String value)
+    {
+
     }
 
 }
