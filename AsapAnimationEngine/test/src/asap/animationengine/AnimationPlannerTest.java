@@ -85,8 +85,8 @@ public class AnimationPlannerTest
         when(mockBinding.getMotionUnit((BMLBlockPeg) any(), (Behaviour) any(), eq(mockPlayer), eq(pegBoard))).thenReturn(tmus);
         when(mockUnit.getPreferedDuration()).thenReturn(3.0);    
         when(mockRestPose.copy(eq(mockPlayer))).thenReturn(mockRestPose);
-        when(mockRestPose.createPostureShiftTMU(eq(fbManager), (BMLBlockPeg) any(), eq(BMLID), (String)any(), eq(pegBoard), 
-                eq(mockPlayer))).thenReturn(tmups);
+        when(mockRestPose.createPostureShiftTMU(eq(fbManager), (BMLBlockPeg) any(), eq(BMLID), (String)any(), eq(pegBoard) 
+                )).thenReturn(tmups);
     }
 
     public HeadBehaviour createHeadBehaviour() throws IOException

@@ -89,6 +89,14 @@ public class AnimationPlanner extends AbstractPlanner<TimedAnimationUnit>
         if(b instanceof GazeBehaviour)
         {
             tmu.resolveGazeKeyPositions();
+        }        
+        else if(b instanceof PostureShiftBehaviour)
+        {
+            tmu.resolveStartAndEndKeyPositions();
+        }
+        else if(b instanceof PostureBehaviour)
+        {
+            tmu.resolvePostureKeyPositions();
         }
         else
         {
@@ -154,7 +162,7 @@ public class AnimationPlanner extends AbstractPlanner<TimedAnimationUnit>
         else if(b instanceof PostureShiftBehaviour)
         {
             RestPose rp = gestureBinding.getRestPose((PostureShiftBehaviour)b, player);
-            tmu = rp.createPostureShiftTMU(fbManager, bbPeg, b.getBmlId(), b.id, pegBoard, player);
+            tmu = rp.createPostureShiftTMU(fbManager, bbPeg, b.getBmlId(), b.id, pegBoard);
         }
         else
         {

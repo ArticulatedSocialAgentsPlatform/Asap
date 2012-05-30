@@ -284,6 +284,22 @@ public class PlanUnitTimeManager
         }
     }
     
+    public void resolvePostureKeyPositions()
+    {
+        resolveStartAndEndKeyPositions();
+        KeyPosition kp = kpManager.getKeyPosition("ready");
+        if (kp == null)
+        {
+            kpManager.addKeyPosition(new KeyPosition("ready", 0.25, 0.01));
+        }
+        
+        kp = kpManager.getKeyPosition("relax");
+        if (kp == null)
+        {
+            kpManager.addKeyPosition(new KeyPosition("relax", 0.75, 0.01));
+        }
+    }
+    
     public void resolveGazeKeyPositions()
     {
         resolveStartAndEndKeyPositions();

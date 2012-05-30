@@ -62,5 +62,5 @@ public interface RestPose
     void setParameterValue(String name, String value);
     
     PostureShiftTMU createPostureShiftTMU(FeedbackManager bbf, BMLBlockPeg bmlBlockPeg, 
-            String bmlId, String id, PegBoard pb, AnimationPlayer ap);
+            String bmlId, String id, PegBoard pb);
 }

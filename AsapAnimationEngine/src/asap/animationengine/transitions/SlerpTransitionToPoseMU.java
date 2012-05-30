@@ -29,6 +29,7 @@ import com.google.common.collect.ImmutableSet;
 
 import asap.animationengine.AnimationPlayer;
 import asap.motionunit.MUPlayException;
+import asap.realizer.pegboard.TimePeg;
 
 import hmi.animation.VJoint;
 import hmi.math.Quat4f;
@@ -195,6 +196,6 @@ public class SlerpTransitionToPoseMU extends TransitionMU
     @Override
     public void startUnit(double t) throws MUPlayException
     {
-                
+        setStartPose();         
     }
 }

@@ -145,7 +145,7 @@ public class SkeletonPoseRestPose implements RestPose
     }
 
     public PostureShiftTMU createPostureShiftTMU(FeedbackManager bbf, BMLBlockPeg bmlBlockPeg, 
-            String bmlId, String id, PegBoard pb, AnimationPlayer ap)
+            String bmlId, String id, PegBoard pb)
     {
         List<VJoint> targetJoints = new ArrayList<VJoint>();
         List<VJoint> startJoints = new ArrayList<VJoint>();
@@ -155,6 +155,6 @@ public class SkeletonPoseRestPose implements RestPose
             startJoints.add(player.getVCurr().getPartBySid(joint));            
         }
         SlerpTransitionToPoseMU mu = new SlerpTransitionToPoseMU(startJoints,targetJoints,pose.getConfig());
-        return new PostureShiftTMU(bbf, bmlBlockPeg, bmlId, id, mu, pb, this, ap);
+        return new PostureShiftTMU(bbf, bmlBlockPeg, bmlId, id, mu, pb, this, player);
     }
 }
