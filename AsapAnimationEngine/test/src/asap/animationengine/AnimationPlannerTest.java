@@ -30,6 +30,7 @@ import org.powermock.modules.junit4.PowerMockRunner;
 
 import asap.animationengine.gesturebinding.GestureBinding;
 import asap.animationengine.motionunit.AnimationUnit;
+import asap.animationengine.motionunit.MUSetupException;
 import asap.animationengine.motionunit.TimedAnimationUnit;
 import asap.animationengine.restpose.PostureShiftTMU;
 import asap.animationengine.restpose.RestPose;
@@ -71,7 +72,7 @@ public class AnimationPlannerTest
     private final PlanManager<TimedAnimationUnit> planManager = new PlanManager<TimedAnimationUnit>();
     private static final double TIMING_PRECISION = 0.0001;
     @Before
-    public void setup()
+    public void setup() throws MUSetupException
     {
         animationPlanner = new AnimationPlanner(fbManager, mockPlayer, mockBinding, planManager,pegBoard);
         plannerTests = new PlannerTests<TimedAnimationUnit>(animationPlanner, bbPeg);

@@ -20,7 +20,8 @@ package asap.animationengine.transitions;
 
 import hmi.animation.VJoint;
 
-import java.util.*;
+import java.util.ArrayList;
+import java.util.List;
 
 import asap.animationengine.AnimationPlayer;
 import asap.animationengine.motionunit.AnimationUnit;
@@ -49,7 +50,7 @@ import asap.realizer.planunit.ParameterNotFoundException;
  */
 public abstract class TransitionMU implements AnimationUnit
 {
-    protected Collection<VJoint> joints;
+    protected List<VJoint> joints;
     private double prefDuration = 2;
     private KeyPositionManager keyPositionManager = new KeyPositionManagerImpl();
     
@@ -91,7 +92,7 @@ public abstract class TransitionMU implements AnimationUnit
     @Override
     public TimedAnimationUnit createTMU(FeedbackManager bfm, BMLBlockPeg bbPeg, String bmlId, String id, PegBoard pb)
     {
-        return new TransitionTMU(bfm, bbPeg, bmlId, id, this, pb);
+        return new TimedAnimationUnit(bfm, bbPeg, bmlId, id, this, pb);
     }
 
     @Override

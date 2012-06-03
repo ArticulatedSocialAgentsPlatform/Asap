@@ -140,7 +140,7 @@ public class ProcAnimationMU extends XMLStructureAdapter implements AnimationUni
     /**
      * Gets the joints steered with this ProcAnimation
      */
-    public Collection<VJoint> getControlledJoints()
+    public List<VJoint> getControlledJoints()
     {
         return bodyParts;
     }

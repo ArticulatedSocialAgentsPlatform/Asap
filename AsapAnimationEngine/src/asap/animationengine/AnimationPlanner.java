@@ -162,7 +162,15 @@ public class AnimationPlanner extends AbstractPlanner<TimedAnimationUnit>
         else if(b instanceof PostureShiftBehaviour)
         {
             RestPose rp = gestureBinding.getRestPose((PostureShiftBehaviour)b, player);
-            tmu = rp.createPostureShiftTMU(fbManager, bbPeg, b.getBmlId(), b.id, pegBoard);
+            try
+            {
+                tmu = rp.createPostureShiftTMU(fbManager, bbPeg, b.getBmlId(), b.id, pegBoard);
+            }
+            catch (MUSetupException e)
+            {
+                throw new BehaviourPlanningException(b, "PostureShiftBehaviour " + b.id
+                        + " could not be constructed.",e);
+            }
         }
         else
         {

@@ -32,7 +32,6 @@ import asap.animationengine.motionunit.AnimationUnit;
 import asap.animationengine.motionunit.TimedAnimationUnit;
 import asap.animationengine.restpose.RestPose;
 import asap.animationengine.transitions.TransitionMU;
-import asap.animationengine.transitions.TransitionTMU;
 import asap.bml.feedback.ListBMLWarningListener;
 import asap.bml.feedback.ListFeedbackListener;
 import asap.motionunit.MUPlayException;
@@ -92,9 +91,9 @@ public class AnimationPlanPlayerTest
         return new TimedAnimationUnit(fbManager, BMLBlockPeg.GLOBALPEG, bmlId, behId, mu, pegBoard);
     }
 
-    private TransitionTMU createTransitionTMU(String behId, String bmlId, TransitionMU mu)
+    private TimedAnimationUnit createTransitionTMU(String behId, String bmlId, TransitionMU mu)
     {
-        return new TransitionTMU(fbManager, BMLBlockPeg.GLOBALPEG, bmlId, behId, mu, pegBoard);
+        return new TimedAnimationUnit(fbManager, BMLBlockPeg.GLOBALPEG, bmlId, behId, mu, pegBoard);
     }
 
     @Test
@@ -229,7 +228,7 @@ public class AnimationPlanPlayerTest
     {
         // play a single transition motion unit, somewhere halfway execution,
         // check feedback, state transition, call (once) to setStartPose.
-        TransitionTMU tmu = createTransitionTMU("behaviour1", "bml1", muMockTransition);
+        TimedAnimationUnit tmu = createTransitionTMU("behaviour1", "bml1", muMockTransition);
         planManager.addPlanUnit(tmu);
 
         stubKeyPositions(muMockTransition, new KeyPosition("start", 0, 1), new KeyPosition("end", 1, 1));
