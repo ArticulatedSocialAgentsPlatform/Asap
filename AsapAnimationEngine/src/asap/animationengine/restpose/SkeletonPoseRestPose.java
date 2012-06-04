@@ -11,10 +11,12 @@ import java.util.Set;
 
 import asap.animationengine.AnimationPlayer;
 import asap.animationengine.MovementTimingUtils;
+import asap.animationengine.motionunit.AnimationUnit;
+import asap.animationengine.motionunit.MUSetupException;
 import asap.animationengine.motionunit.TimedAnimationUnit;
+import asap.animationengine.transitions.T1RTransitionToPoseMU;
 import asap.animationengine.transitions.SlerpTransitionToPoseMU;
 import asap.animationengine.transitions.TransitionMU;
-import asap.animationengine.transitions.TransitionTMU;
 import asap.realizer.feedback.FeedbackManager;
 import asap.realizer.pegboard.BMLBlockPeg;
 import asap.realizer.pegboard.OffsetPeg;
@@ -22,6 +24,8 @@ import asap.realizer.pegboard.PegBoard;
 import asap.realizer.pegboard.TimePeg;
 import asap.realizer.planunit.KeyPosition;
 import asap.realizer.planunit.TimedPlanUnitState;
+
+import com.google.common.collect.ImmutableList;
 
 /**
  * A simple static rest-pose implementation; the restpose is specified by a SkeletonPose
@@ -64,7 +68,7 @@ public class SkeletonPoseRestPose implements RestPose
     public RestPose copy(AnimationPlayer player)
     {
         SkeletonPoseRestPose copy = new SkeletonPoseRestPose();
-        if (pose!=null)
+        if (pose != null)
         {
             copy.pose = pose.untargettedCopy();
         }
@@ -92,7 +96,7 @@ public class SkeletonPoseRestPose implements RestPose
         TransitionMU mu = createTransitionToRest(joints);
         mu.addKeyPosition(new KeyPosition("start", 0));
         mu.addKeyPosition(new KeyPosition("end", 1));
-        TimedAnimationUnit tmu = new TransitionTMU(fbm, bmlBlockPeg, bmlId, id, mu, pb);
+        TimedAnimationUnit tmu = new TimedAnimationUnit(fbm, bmlBlockPeg, bmlId, id, mu, pb);
         TimePeg startPeg = new TimePeg(bmlBlockPeg);
         startPeg.setGlobalValue(startTime);
         tmu.setTimePeg("start", startPeg);
@@ -144,17 +148,30 @@ public class SkeletonPoseRestPose implements RestPose
 
     }
 
-    public PostureShiftTMU createPostureShiftTMU(FeedbackManager bbf, BMLBlockPeg bmlBlockPeg, 
-            String bmlId, String id, PegBoard pb)
+    public PostureShiftTMU createPostureShiftTMU(FeedbackManager bbf, BMLBlockPeg bmlBlockPeg, String bmlId, String id, PegBoard pb)
+            throws MUSetupException
     {
         List<VJoint> targetJoints = new ArrayList<VJoint>();
         List<VJoint> startJoints = new ArrayList<VJoint>();
         for (String joint : pose.getPartIds())
         {
             targetJoints.add(player.getVNext().getPartBySid(joint));
-            startJoints.add(player.getVCurr().getPartBySid(joint));            
+            startJoints.add(player.getVCurr().getPartBySid(joint));
         }
-        SlerpTransitionToPoseMU mu = new SlerpTransitionToPoseMU(startJoints,targetJoints,pose.getConfig());
-        return new PostureShiftTMU(bbf, bmlBlockPeg, bmlId, id, mu, pb, this, player);
+
+        AnimationUnit mu = new SlerpTransitionToPoseMU(startJoints, targetJoints, pose.getConfig());
+        if (pose.getConfigType().equals("R"))
+        {
+            mu = new SlerpTransitionToPoseMU(startJoints, targetJoints, pose.getConfig());
+        }
+        else if (pose.getConfigType().equals("T1R"))
+        {
+            mu = new T1RTransitionToPoseMU(startJoints, targetJoints,  pose.getConfig());
+        }
+        else
+        {
+            return null;
+        }
+        return new PostureShiftTMU(bbf, bmlBlockPeg, bmlId, id, mu.copy(player), pb, this, player);
     }
 }

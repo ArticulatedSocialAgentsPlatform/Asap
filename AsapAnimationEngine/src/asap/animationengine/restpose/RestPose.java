@@ -6,6 +6,7 @@ import java.util.Set;
 
 import asap.animationengine.AnimationPlayer;
 import asap.animationengine.motionunit.AnimationUnit;
+import asap.animationengine.motionunit.MUSetupException;
 import asap.animationengine.motionunit.TimedAnimationUnit;
 import asap.realizer.feedback.FeedbackManager;
 import asap.realizer.pegboard.BMLBlockPeg;
@@ -62,5 +63,5 @@ public interface RestPose
     void setParameterValue(String name, String value);
     
     PostureShiftTMU createPostureShiftTMU(FeedbackManager bbf, BMLBlockPeg bmlBlockPeg, 
-            String bmlId, String id, PegBoard pb);
+            String bmlId, String id, PegBoard pb) throws MUSetupException;
 }

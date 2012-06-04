@@ -6,6 +6,8 @@ import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
+import asap.animationengine.motionunit.TimedAnimationUnit;
+import asap.motionunit.MUPlayException;
 import asap.realizertestutil.planunit.AbstractTimedPlanUnitTest;
 import asap.realizertestutil.util.KeyPositionMocker;
 import asap.realizertestutil.util.TimePegUtil;
@@ -46,7 +48,7 @@ public class TransitionTMUTest extends AbstractTimedPlanUnitTest
     @Override
     protected TimedPlanUnit setupPlanUnit(FeedbackManager bfm, BMLBlockPeg bbPeg, String id, String bmlId, double startTime)
     {
-        TransitionTMU tmu = new TransitionTMU(bfm, bbPeg, bmlId, id, mockTransitionMU, pegBoard);
+        TimedAnimationUnit tmu = new TimedAnimationUnit(bfm, bbPeg, bmlId, id, mockTransitionMU, pegBoard);
         KeyPositionMocker.stubKeyPositions(mockTransitionMU,new KeyPosition("start",0,1),
                 new KeyPosition("ready",0,1),
                 new KeyPosition("strokeStart",0,1),
@@ -60,9 +62,9 @@ public class TransitionTMUTest extends AbstractTimedPlanUnitTest
     }    
     
     @Test
-    public void testExecStates() throws TimedPlanUnitPlayException
+    public void testExecStates() throws TimedPlanUnitPlayException, MUPlayException
     {
-        TransitionTMU tmu = new TransitionTMU(mockBmlFeedbackManager,BMLBlockPeg.GLOBALPEG, "bml1", "behaviour1", mockTransitionMU, pegBoard);
+        TimedAnimationUnit tmu = new TimedAnimationUnit(mockBmlFeedbackManager,BMLBlockPeg.GLOBALPEG, "bml1", "behaviour1", mockTransitionMU, pegBoard);
         TimePeg tpStart = new TimePeg(BMLBlockPeg.GLOBALPEG);
         tpStart.setGlobalValue(0);
         TimePeg tpEnd = new TimePeg(BMLBlockPeg.GLOBALPEG);
@@ -82,7 +84,7 @@ public class TransitionTMUTest extends AbstractTimedPlanUnitTest
         
         verify(mockTransitionMU,atLeastOnce()).getKeyPosition("start");
         verify(mockTransitionMU,atLeastOnce()).getKeyPosition("end");
-        verify(mockTransitionMU,atLeastOnce()).setStartPose();
+        verify(mockTransitionMU,atLeastOnce()).startUnit(eq(0.5,0.01));
         verify(mockTransitionMU,times(1)).play(eq(0.5,0.01));
     }
 }
