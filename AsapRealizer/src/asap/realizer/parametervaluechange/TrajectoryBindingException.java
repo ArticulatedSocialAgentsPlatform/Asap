@@ -1,5 +1,9 @@
 package asap.realizer.parametervaluechange;
 
+/**
+ * Indicates that a trajectory of type type could not be constructed/found
+ * @author welberge
+ */
 public class TrajectoryBindingException extends Exception
 {
     /**
