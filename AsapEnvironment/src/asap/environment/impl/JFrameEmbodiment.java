@@ -28,6 +28,7 @@ import hmi.xml.XMLTokenizer;
 import java.awt.Toolkit;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.awt.event.KeyListener;
 import java.awt.event.WindowEvent;
 import java.io.IOException;
 import java.lang.reflect.InvocationTargetException;
@@ -50,7 +51,7 @@ import asap.environment.Loader;
 import asap.utils.Embodiment;
 import asap.utils.Environment;
 
-/** This "embodiment" alles a VH to create Swing GUI components. */
+/** This "embodiment" allows a VH to create Swing GUI components. */
 public class JFrameEmbodiment implements JComponentEmbodiment, EmbodimentLoader
 {
     private Logger logger = LoggerFactory.getLogger(JFrameEmbodiment.class.getName());
@@ -226,6 +227,11 @@ public class JFrameEmbodiment implements JComponentEmbodiment, EmbodimentLoader
         pullThePlug();
     }
 
+    public void addKeyListener(KeyListener kl)
+    {
+        theUI.addKeyListener(kl);
+    }
+    
     public void addJComponent(JComponent jc)
     {
         jc.setAlignmentX(JFrame.LEFT_ALIGNMENT);

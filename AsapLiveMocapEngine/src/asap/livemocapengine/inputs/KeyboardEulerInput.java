@@ -3,17 +3,32 @@ package asap.livemocapengine.inputs;
 import java.awt.event.KeyEvent;
 import java.awt.event.KeyListener;
 
+/**
+ * Allows control of pitch and yaw using the arrow keys
+ * @author Herwin
+ *
+ */
 public class KeyboardEulerInput implements EulerInput, KeyListener
 {
     private float pitch = 0;
     private float yaw = 0;
     private float roll = 0;
-    
+    private String id="";
     private boolean keysPressed[]=new boolean[KeyEvent.KEY_LAST];
     
     private static final float YAW_TICK = 0.5f;
     private static final float PITCH_TICK = 0.5f;
 
+    public KeyboardEulerInput()
+    {
+        
+    }
+    
+    public KeyboardEulerInput(String id)
+    {
+        this.id = id;
+    }
+    
     @Override
     public float getPitchDegrees()
     {
@@ -59,5 +74,11 @@ public class KeyboardEulerInput implements EulerInput, KeyListener
     public void keyReleased(KeyEvent e)
     {
         keysPressed[e.getKeyCode()] = false;
+    }
+
+    @Override
+    public String getId()
+    {
+        return id;
     }
 }

@@ -15,7 +15,6 @@ import asap.environment.EmbodimentLoader;
 import asap.environment.SensorLoader;
 import asap.realizer.AsapRealizer;
 import asap.realizer.feedback.FeedbackManager;
-import asap.realizer.feedback.FeedbackManagerImpl;
 import asap.utils.Environment;
 /**
  * Unit test for the LiveMocapEngineLoader
