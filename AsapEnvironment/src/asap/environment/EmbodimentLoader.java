@@ -22,8 +22,8 @@ package asap.environment;
 import asap.utils.Embodiment;
 
 /**
-
-*/
+ * Loader that provides an embodiment
+ */
 public interface EmbodimentLoader extends Loader
 {
   

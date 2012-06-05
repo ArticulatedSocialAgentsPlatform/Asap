@@ -1,4 +1,4 @@
-package asap.asaplivemocapengine.bml;
+package asap.livemocapengine.bml;
 
 import hmi.xml.XMLTokenizer;
 

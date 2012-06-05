@@ -1,8 +1,11 @@
 package asap.realizer;
 
+import java.util.List;
+
 import asap.realizer.feedback.FeedbackManager;
 import asap.realizer.planunit.PlanManager;
 import asap.realizer.planunit.TimedPlanUnit;
+import asap.realizer.scheduler.TimePegAndConstraint;
 
 
 /**
@@ -16,6 +19,30 @@ public abstract class AbstractPlanner<T extends TimedPlanUnit> implements Planne
 {
     protected final PlanManager<T> planManager;
     protected final FeedbackManager fbManager;
+    
+    protected TimePegAndConstraint getSacStart(List<TimePegAndConstraint> sacs)
+    {
+        for (TimePegAndConstraint sac : sacs)
+        {
+            if (sac.syncId.equals("start"))
+            {
+                return sac;
+            }
+        }
+        return null;
+    }
+
+    protected TimePegAndConstraint getSacEnd(List<TimePegAndConstraint> sacs)
+    {
+        for (TimePegAndConstraint sac : sacs)
+        {
+            if (sac.syncId.equals("end"))
+            {
+                return sac;
+            }
+        }
+        return null;
+    }
     
     public AbstractPlanner(FeedbackManager fbm, PlanManager<T> planManager)
     {

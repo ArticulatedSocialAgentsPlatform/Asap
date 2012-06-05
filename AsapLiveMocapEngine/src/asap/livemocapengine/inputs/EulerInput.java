@@ -1,4 +1,4 @@
-package asap.asaplivemocapengine.inputs;
+package asap.livemocapengine.inputs;
 
 /**
  * Input element for euler angles

@@ -150,29 +150,7 @@ public class ParameterValueChangePlanner extends AbstractPlanner<TimedParameterV
         return tpvu;
     }
 
-    private TimePegAndConstraint getSacStart(List<TimePegAndConstraint> sacs)
-    {
-        for (TimePegAndConstraint sac : sacs)
-        {
-            if (sac.syncId.equals("start"))
-            {
-                return sac;
-            }
-        }
-        return null;
-    }
-
-    private TimePegAndConstraint getSacEnd(List<TimePegAndConstraint> sacs)
-    {
-        for (TimePegAndConstraint sac : sacs)
-        {
-            if (sac.syncId.equals("end"))
-            {
-                return sac;
-            }
-        }
-        return null;
-    }
+    
 
     private void validateSacs(Behaviour b, List<TimePegAndConstraint> sacs) throws BehaviourPlanningException
     {

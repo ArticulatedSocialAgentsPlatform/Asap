@@ -1,32 +1,27 @@
-package asap.asaplivemocapengine.planunit;
+package asap.livemocapengine.planunit;
 
 import lombok.extern.slf4j.Slf4j;
-import asap.asaplivemocapengine.inputs.EulerInput;
 import asap.realizer.feedback.FeedbackManager;
 import asap.realizer.pegboard.BMLBlockPeg;
 import asap.realizer.pegboard.TimePeg;
 import asap.realizer.planunit.TimedAbstractPlanUnit;
 import asap.realizer.planunit.TimedPlanUnitPlayException;
-import asap.utils.EulerHeadEmbodiment;
 
 /**
- * Uses an EulerInput to remotely control a head embodiment
+ * A LivemocapTMU is a superclass for all planunits that read from some input, process it 
+ * and write it to some output. Classes implementing the LivemocapTMU should implement playUnit
+ * to do so. LivemocapTMU takes care of running tmu at the right time, sending feedback, etc.
  * @author welberge
  */
 @Slf4j
-public class RemoteHeadTMU extends TimedAbstractPlanUnit
+public abstract class LiveMocapTMU extends TimedAbstractPlanUnit
 {
-    private final EulerHeadEmbodiment headEmbodiment;
-    private final EulerInput headInput;
-    private TimePeg startPeg;
-    private TimePeg endPeg;
-
-    public RemoteHeadTMU(EulerInput headInput, EulerHeadEmbodiment headEmbodiment, FeedbackManager fbm, BMLBlockPeg bmlPeg, String bmlId,
-            String behId)
+    protected TimePeg startPeg;
+    protected TimePeg endPeg;
+    
+    public LiveMocapTMU(FeedbackManager fbm, BMLBlockPeg bmlPeg, String bmlId, String behId)
     {
-        super(fbm, bmlPeg, bmlId, behId);
-        this.headEmbodiment = headEmbodiment;
-        this.headInput = headInput;
+        super(fbm, bmlPeg, bmlId, behId);  
         endPeg = new TimePeg(bmlPeg);
         startPeg = new TimePeg(bmlPeg);
     }
@@ -101,12 +96,6 @@ public class RemoteHeadTMU extends TimedAbstractPlanUnit
     }
 
     @Override
-    protected void playUnit(double time) throws TimedPlanUnitPlayException
-    {
-        headEmbodiment.setHeadRollPitchYawDegrees(headInput.getRollDegrees(), headInput.getPitchDegrees(), headInput.getYawDegrees());
-    }
-
-    @Override
     protected void startUnit(double time) throws TimedPlanUnitPlayException
     {
         sendFeedback("start", time);
@@ -116,5 +105,5 @@ public class RemoteHeadTMU extends TimedAbstractPlanUnit
     protected void stopUnit(double time) throws TimedPlanUnitPlayException
     {
         sendFeedback("end", time);
-    }
+    } 
 }

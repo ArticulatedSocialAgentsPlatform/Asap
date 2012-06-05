@@ -1,4 +1,4 @@
-package asap.asaplivemocapengine.bml;
+package asap.livemocapengine.bml;
 
 import static org.junit.Assert.assertEquals;
 
@@ -8,6 +8,8 @@ import hmi.xml.XMLFormatting;
 import hmi.xml.XMLTokenizer;
 
 import org.junit.Test;
+
+import asap.livemocapengine.bml.RemoteHeadBehaviour;
 
 /**
  * unit tests for the RemoteHeadBehaviour
