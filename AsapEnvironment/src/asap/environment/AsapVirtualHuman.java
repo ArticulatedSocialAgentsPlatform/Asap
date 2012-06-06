@@ -230,6 +230,7 @@ public class AsapVirtualHuman
                 loaders.put(id, loader);
                 if (loader instanceof EngineLoader)
                 {
+                    logger.info("Adding engine {}",loader.getId());
                     engines.add(((EngineLoader) loader).getEngine());
                 }
             }

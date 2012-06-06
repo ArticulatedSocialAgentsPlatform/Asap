@@ -20,7 +20,6 @@ import asap.realizer.DefaultEngine;
 import asap.realizer.DefaultPlayer;
 import asap.realizer.Engine;
 import asap.realizer.feedback.FeedbackManager;
-import asap.realizer.feedback.FeedbackManagerImpl;
 import asap.realizer.planunit.PlanManager;
 import asap.realizer.planunit.SingleThreadedPlanPlayer;
 import asap.utils.Environment;
@@ -57,6 +56,9 @@ public class LiveMocapEngineLoader implements EngineLoader
         LiveMocapPlanner planner = new LiveMocapPlanner(fbm,planManager,inputBinding,outputBinding);
         DefaultPlayer player = new DefaultPlayer(new SingleThreadedPlanPlayer<LiveMocapTMU>(fbm,planManager));
         engine = new DefaultEngine<LiveMocapTMU>(planner,player,planManager);
+        
+        // add engine to realizer;
+        avh.getElckerlycRealizer().addEngine(engine);
     }
 
     private static class Input extends XMLStructureAdapter

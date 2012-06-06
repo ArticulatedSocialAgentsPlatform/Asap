@@ -1,34 +1,54 @@
 package asap.livemocapengine.inputs;
 
+import java.awt.KeyEventDispatcher;
+import java.awt.KeyboardFocusManager;
 import java.awt.event.KeyEvent;
-import java.awt.event.KeyListener;
 
 /**
  * Allows control of pitch and yaw using the arrow keys
  * @author Herwin
- *
+ * 
  */
-public class KeyboardEulerInput implements EulerInput, KeyListener
+public class KeyboardEulerInput implements EulerInput
 {
     private float pitch = 0;
     private float yaw = 0;
     private float roll = 0;
-    private String id="";
-    private boolean keysPressed[]=new boolean[KeyEvent.KEY_LAST];
-    
+    private String id = "";
+    private boolean keysPressed[] = new boolean[KeyEvent.KEY_LAST];
+
     private static final float YAW_TICK = 0.5f;
     private static final float PITCH_TICK = 0.5f;
 
+    private class MyDispatcher implements KeyEventDispatcher
+    {
+        @Override
+        public boolean dispatchKeyEvent(KeyEvent e)
+        {
+            if (e.getID() == KeyEvent.KEY_PRESSED)
+            {
+                keyPressed(e);
+            }
+            else if (e.getID() == KeyEvent.KEY_RELEASED)
+            {
+                keyReleased(e);
+            }
+            return false;
+        }
+    }
+
     public KeyboardEulerInput()
     {
-        
+        KeyboardFocusManager manager = KeyboardFocusManager.getCurrentKeyboardFocusManager();
+        manager.addKeyEventDispatcher(new MyDispatcher());
     }
-    
+
     public KeyboardEulerInput(String id)
     {
+        this();
         this.id = id;
     }
-    
+
     @Override
     public float getPitchDegrees()
     {
@@ -47,30 +67,22 @@ public class KeyboardEulerInput implements EulerInput, KeyListener
         return roll;
     }
 
-    @Override
-    public void keyTyped(KeyEvent e)
-    {
-
-    }
-
-    @Override
     public void keyPressed(KeyEvent e)
     {
         keysPressed[e.getKeyCode()] = true;
-        
+
         if (keysPressed[KeyEvent.VK_LEFT]) yaw += YAW_TICK;
         if (keysPressed[KeyEvent.VK_RIGHT]) yaw -= YAW_TICK;
-        if (keysPressed[KeyEvent.VK_DOWN]) pitch -= PITCH_TICK;
-        if (keysPressed[KeyEvent.VK_UP]) pitch += PITCH_TICK;
-        
+        if (keysPressed[KeyEvent.VK_DOWN]) pitch += PITCH_TICK;
+        if (keysPressed[KeyEvent.VK_UP]) pitch -= PITCH_TICK;
+
         if (yaw > 180) yaw = 180;
         if (yaw < -180) yaw = -180;
         if (pitch > 180) pitch = 180;
         if (pitch < -180) pitch = -180;
-        System.out.println("Pitch: "+pitch+" Yaw: "+yaw);
+        System.out.println("Pitch: " + pitch + " Yaw: " + yaw);
     }
 
-    @Override
     public void keyReleased(KeyEvent e)
     {
         keysPressed[e.getKeyCode()] = false;

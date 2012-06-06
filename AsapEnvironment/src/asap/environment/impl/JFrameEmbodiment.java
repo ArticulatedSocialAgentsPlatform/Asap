@@ -230,6 +230,7 @@ public class JFrameEmbodiment implements JComponentEmbodiment, EmbodimentLoader
     public void addKeyListener(KeyListener kl)
     {
         theUI.addKeyListener(kl);
+        //contentPanel.addKeyListener(kl);
     }
     
     public void addJComponent(JComponent jc)
