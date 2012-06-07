@@ -22,7 +22,8 @@ public class RemoteHeadInputLoaderTest
     @Test
     public void test() throws IOException
     {
-        String str = "<Loader><serverinfo host=\"localhost\" port=\"9123\"/></Loader>";
+        String str = "<Loader id=\"id1\" loader=\"asap.livemocapengine.inputs.loader.RemoteHeadInputLoader\">" +
+        		"<serverinfo host=\"localhost\" port=\"9123\"/></Loader>";
         RemoteHeadInputLoader loader = new RemoteHeadInputLoader();
         XMLTokenizer tok = new XMLTokenizer(str);
         tok.takeSTag();        

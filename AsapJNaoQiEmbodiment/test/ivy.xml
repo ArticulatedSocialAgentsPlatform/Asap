@@ -1,5 +1,5 @@
 <ivy-module version="2.0">
-   <info organisation="Asap" module="AsapJnaoQiEmbodimentTest"/>
+   <info organisation="HMI" module="HmiJnaoQiEmbodimentTest"/>
    <dependencies >
     <dependency org="mockito"   name="mockito-all"            rev="latest.release"  />
       <dependency org="junit" name="junit"  rev="latest.release" />      

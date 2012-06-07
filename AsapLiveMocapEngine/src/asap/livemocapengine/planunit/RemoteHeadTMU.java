@@ -29,4 +29,16 @@ public class RemoteHeadTMU extends LiveMocapTMU
     {
         headEmbodiment.setHeadRollPitchYawDegrees(headInput.getRollDegrees(), headInput.getPitchDegrees(), headInput.getYawDegrees());
     }
+    
+    @Override
+    protected void startUnit(double time)
+    {
+        headEmbodiment.claimHeadResource();
+    }
+    
+    @Override
+    protected void stopUnit(double time)
+    {
+        headEmbodiment.releaseHeadResource();
+    }
 }
