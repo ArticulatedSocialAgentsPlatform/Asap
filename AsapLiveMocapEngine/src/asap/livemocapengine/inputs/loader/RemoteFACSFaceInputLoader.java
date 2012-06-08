@@ -8,27 +8,33 @@ import java.io.IOException;
 import asap.environment.AsapVirtualHuman;
 import asap.environment.Loader;
 import asap.environment.SensorLoader;
-import asap.livemocapengine.inputs.RemoteHeadInput;
+import asap.livemocapengine.inputs.RemoteFACSFaceInput;
 import asap.utils.Environment;
 import asap.utils.Sensor;
 
 /**
- * Loads a RemoteHeadInput sensor 
+ * Loads a RemoteFACSFaceInput Sensor
  * @author welberge
+ *
  */
-public class RemoteHeadInputLoader implements SensorLoader
+public class RemoteFACSFaceInputLoader implements SensorLoader
 {
     private String id = "";
-    private RemoteHeadInput headInput;
+    private RemoteFACSFaceInput facsFaceInput;
     
     @Override
     public String getId()
     {
         return id;
     }
+    
+    @Override
+    public Sensor getSensor()
+    {
+       
+        return facsFaceInput;
+    }
 
-    
-    
     @Override
     public void readXML(XMLTokenizer tokenizer, String newId, AsapVirtualHuman avh, Environment[] environments, Loader... requiredLoaders)
             throws IOException
@@ -43,21 +49,14 @@ public class RemoteHeadInputLoader implements SensorLoader
         if(rh==null)
         {
             throw new XMLScanException("No inner serverinfo element in RemoteHeadInputLoader");
-        }        
-        headInput = new RemoteHeadInput();
-        headInput.connectToServer(rh.getHostName(), rh.getPort());
+        } 
+        facsFaceInput = new RemoteFACSFaceInput();
+        facsFaceInput.connectToServer(rh.getHostName(), rh.getPort());
     }
 
     @Override
     public void unload()
     {
-        // TODO stop headInput reading thread        
+     // TODO stop facsFaceInput reading thread  
     }
-
-    @Override
-    public Sensor getSensor()
-    {
-        return headInput;
-    }
-
 }

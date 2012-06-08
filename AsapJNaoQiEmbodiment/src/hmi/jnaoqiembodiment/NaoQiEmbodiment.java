@@ -2,6 +2,7 @@ package hmi.jnaoqiembodiment;
 
 import asap.utils.Embodiment;
 
+import com.aldebaran.proxy.ALLedsProxy;
 import com.aldebaran.proxy.DCMProxy;
 
 /**
@@ -13,6 +14,7 @@ public class NaoQiEmbodiment implements Embodiment
     private final String ip;
     private final int port;
     private DCMProxy dcmProxy;
+    private ALLedsProxy ledsProxy;
     private String id = "";
     
     static
@@ -41,6 +43,15 @@ public class NaoQiEmbodiment implements Embodiment
         return dcmProxy;
     }
 
+    public ALLedsProxy getLedsProxy()
+    {
+        if(ledsProxy==null)
+        {
+            ledsProxy = new ALLedsProxy(ip,port);
+        }
+        return ledsProxy;
+    }
+    
     @Override
     public String getId()
     {

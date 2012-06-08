@@ -10,11 +10,6 @@ import asap.utils.EulerHeadEmbodiment;
  */
 public class NaoHeadEmbodiment implements EulerHeadEmbodiment
 {
-    static
-    {
-      System.loadLibrary("JNaoQi");
-    }
-    
     private final String id;
     private DCMProxy dcmProxy;
     

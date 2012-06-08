@@ -174,7 +174,7 @@ public class LiveMocapEngineLoader implements EngineLoader
             Loader l = findLoader(output.getName(),requiredLoaders);
             if(l==null)
             {
-                throw new XMLScanException("Cannot find output embodiment with name: "+output.getName());
+                throw new XMLScanException("Cannot find output embodimentloader with name: "+output.getName());
             }
             
             EmbodimentLoader loader;
