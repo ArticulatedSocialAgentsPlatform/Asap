@@ -82,16 +82,20 @@ public class KeyboardInput implements EulerInput, FACSFaceInput
         if (keysPressed[KeyEvent.VK_RIGHT]) yaw -= YAW_TICK;
         if (keysPressed[KeyEvent.VK_DOWN]) pitch += PITCH_TICK;
         if (keysPressed[KeyEvent.VK_UP]) pitch -= PITCH_TICK;
-        if (keysPressed[KeyEvent.VK_Q]) au1lval += AU_TICK;
-        if (keysPressed[KeyEvent.VK_A]) au1lval -= AU_TICK;
-        if (keysPressed[KeyEvent.VK_W]) au1rval += AU_TICK;
-        if (keysPressed[KeyEvent.VK_S]) au1rval -= AU_TICK;
+        if (keysPressed[KeyEvent.VK_O]) au1lval += AU_TICK;
+        if (keysPressed[KeyEvent.VK_K]) au1lval -= AU_TICK;
+        if (keysPressed[KeyEvent.VK_P]) au1rval += AU_TICK;
+        if (keysPressed[KeyEvent.VK_L]) au1rval -= AU_TICK;
 
+        if(au1lval<0)au1lval=0;
+        if(au1lval>1)au1lval=1;
+        if(au1rval<0)au1rval=0;
+        if(au1rval>1)au1rval=1;
         if (yaw > 180) yaw = 180;
         if (yaw < -180) yaw = -180;
         if (pitch > 180) pitch = 180;
         if (pitch < -180) pitch = -180;
-        System.out.println("Pitch: " + pitch + " Yaw: " + yaw);
+        System.out.println("Pitch: " + pitch + " Yaw: " + yaw+" AU1L :"+au1lval+" AU1R "+au1rval);
     }
 
     public void keyReleased(KeyEvent e)

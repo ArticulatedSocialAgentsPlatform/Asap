@@ -75,7 +75,7 @@ public class LiveMocapPlanner extends AbstractPlanner<LiveMocapTMU>
             {
                 throw new BehaviourPlanningException(b,"No input found that matches "+b.getInput()+","+FACSFaceInput.class);
             }
-            FACSFaceEmbodiment output = outputBinding.get(b.getInput(), FACSFaceEmbodiment.class);
+            FACSFaceEmbodiment output = outputBinding.get(b.getOutput(), FACSFaceEmbodiment.class);
             if(output == null)
             {
                 throw new BehaviourPlanningException(b,"No output found that matches "+b.getOutput()+","+FACSFaceEmbodiment.class);

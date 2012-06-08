@@ -127,6 +127,23 @@ public class LiveMocapEngineLoader implements EngineLoader
         return null;
     }
     
+    private void checkInterface(String interfaceStr, Object obj)
+    {
+        Class<?> interfaceClass;
+        try
+        {
+            interfaceClass = Class.forName(interfaceStr);
+        }
+        catch (ClassNotFoundException e)
+        {
+            throw new XMLScanException("Interface "+interfaceStr+" not found.",e);
+        }
+        if( !interfaceClass.isInstance(obj))           
+        {
+            throw new XMLScanException("Object "+obj+" is not an instance of "+interfaceStr);
+        }
+    }
+    
     protected void readSection(XMLTokenizer tokenizer, Loader... requiredLoaders) throws IOException
     {
         if (tokenizer.atSTag(Input.xmlTag()))
@@ -147,6 +164,7 @@ public class LiveMocapEngineLoader implements EngineLoader
             {
                 throw new XMLScanException("input "+input+" is not coupled to an SensorLoader");
             }   
+            checkInterface(input.getInterfaceStr(), loader.getSensor());
             inputBinding.put(input.getName(), input.getInterfaceStr(), loader.getSensor());
         }
         else if (tokenizer.atSTag(Output.xmlTag()))
@@ -158,6 +176,7 @@ public class LiveMocapEngineLoader implements EngineLoader
             {
                 throw new XMLScanException("Cannot find output embodiment with name: "+output.getName());
             }
+            
             EmbodimentLoader loader;
             if(l instanceof EmbodimentLoader)
             {
@@ -166,7 +185,9 @@ public class LiveMocapEngineLoader implements EngineLoader
             else
             {
                 throw new XMLScanException("output "+output+" is not coupled to an EmbodimentLoader");
-            }            
+            }
+            
+            checkInterface(output.getInterfaceStr(),loader.getEmbodiment());
             outputBinding.put(output.getName(), output.getInterfaceStr(), loader.getEmbodiment());
         }
         else
