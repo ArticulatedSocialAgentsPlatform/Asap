@@ -62,6 +62,7 @@ public class RemoteHeadInputLoader implements SensorLoader
     public void readXML(XMLTokenizer tokenizer, String newId, AsapVirtualHuman avh, Environment[] environments, Loader... requiredLoaders)
             throws IOException
     {
+        this.id = newId;
         ServerInfo rh = null;
         if(tokenizer.atSTag(ServerInfo.xmlTag()))
         {
