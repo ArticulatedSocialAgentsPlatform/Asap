@@ -38,7 +38,7 @@ public class KeyboardEulerInputLoaderTest
     public void testLoad() throws IOException
     {
         String str="<Loader id=\"l1\" loader=\"asap.livemocapengine.inputs.loader.KeyboardEulerInputLoader\"/>";
-        KeyboardEulerInputLoader loader = new KeyboardEulerInputLoader();
+        KeyboardInputLoader loader = new KeyboardInputLoader();
         XMLTokenizer tok = new XMLTokenizer(str);
         tok.takeSTag();        
         loader.readXML(tok, "id1", mockAsapVH, new Environment[0], mockJFrameEmbodiment);

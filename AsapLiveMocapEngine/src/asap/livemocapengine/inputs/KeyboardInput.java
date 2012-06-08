@@ -4,21 +4,28 @@ import java.awt.KeyEventDispatcher;
 import java.awt.KeyboardFocusManager;
 import java.awt.event.KeyEvent;
 
+import asap.utils.AUConfig;
+import asap.utils.Side;
+
 /**
  * Allows control of pitch and yaw using the arrow keys
  * @author Herwin
  * 
  */
-public class KeyboardEulerInput implements EulerInput
+public class KeyboardInput implements EulerInput, FACSFaceInput
 {
     private float pitch = 0;
     private float yaw = 0;
     private float roll = 0;
+    private float au1lval = 0;
+    private float au1rval = 0;
+
     private String id = "";
     private boolean keysPressed[] = new boolean[KeyEvent.KEY_LAST];
 
     private static final float YAW_TICK = 0.5f;
     private static final float PITCH_TICK = 0.5f;
+    private static final float AU_TICK = 0.05f;
 
     private class MyDispatcher implements KeyEventDispatcher
     {
@@ -37,13 +44,13 @@ public class KeyboardEulerInput implements EulerInput
         }
     }
 
-    public KeyboardEulerInput()
+    public KeyboardInput()
     {
         KeyboardFocusManager manager = KeyboardFocusManager.getCurrentKeyboardFocusManager();
         manager.addKeyEventDispatcher(new MyDispatcher());
     }
 
-    public KeyboardEulerInput(String id)
+    public KeyboardInput(String id)
     {
         this();
         this.id = id;
@@ -75,6 +82,10 @@ public class KeyboardEulerInput implements EulerInput
         if (keysPressed[KeyEvent.VK_RIGHT]) yaw -= YAW_TICK;
         if (keysPressed[KeyEvent.VK_DOWN]) pitch += PITCH_TICK;
         if (keysPressed[KeyEvent.VK_UP]) pitch -= PITCH_TICK;
+        if (keysPressed[KeyEvent.VK_Q]) au1lval += AU_TICK;
+        if (keysPressed[KeyEvent.VK_A]) au1lval -= AU_TICK;
+        if (keysPressed[KeyEvent.VK_W]) au1rval += AU_TICK;
+        if (keysPressed[KeyEvent.VK_S]) au1rval -= AU_TICK;
 
         if (yaw > 180) yaw = 180;
         if (yaw < -180) yaw = -180;
@@ -92,5 +103,14 @@ public class KeyboardEulerInput implements EulerInput
     public String getId()
     {
         return id;
+    }
+
+    @Override
+    public AUConfig[] getAUConfigs()
+    {
+        AUConfig[] conf = new AUConfig[2];
+        conf[0] = new AUConfig(Side.LEFT, 1, au1lval);
+        conf[1] = new AUConfig(Side.RIGHT, 1, au1rval);
+        return conf;
     }
 }

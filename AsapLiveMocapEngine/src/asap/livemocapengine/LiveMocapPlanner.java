@@ -9,9 +9,12 @@ import saiba.bml.BMLInfo;
 import saiba.bml.core.Behaviour;
 import asap.livemocapengine.binding.NameTypeBinding;
 import asap.livemocapengine.bml.LiveMocapBehaviour;
+import asap.livemocapengine.bml.RemoteFaceFACSBehaviour;
 import asap.livemocapengine.bml.RemoteHeadBehaviour;
 import asap.livemocapengine.inputs.EulerInput;
+import asap.livemocapengine.inputs.FACSFaceInput;
 import asap.livemocapengine.planunit.LiveMocapTMU;
+import asap.livemocapengine.planunit.RemoteFaceFACSTMU;
 import asap.livemocapengine.planunit.RemoteHeadTMU;
 import asap.realizer.AbstractPlanner;
 import asap.realizer.BehaviourPlanningException;
@@ -23,6 +26,7 @@ import asap.realizer.pegboard.TimePeg;
 import asap.realizer.planunit.PlanManager;
 import asap.realizer.scheduler.TimePegAndConstraint;
 import asap.utils.EulerHeadEmbodiment;
+import asap.utils.FACSFaceEmbodiment;
 
 /**
  * A planner for LiveMocapBehaviours
@@ -34,6 +38,7 @@ public class LiveMocapPlanner extends AbstractPlanner<LiveMocapTMU>
     static
     {
         BMLInfo.addBehaviourType(RemoteHeadBehaviour.xmlTag(), RemoteHeadBehaviour.class);        
+        BMLInfo.addBehaviourType(RemoteFaceFACSBehaviour.xmlTag(), RemoteFaceFACSBehaviour.class);
     }
     
     private final NameTypeBinding inputBinding;
@@ -47,13 +52,35 @@ public class LiveMocapPlanner extends AbstractPlanner<LiveMocapTMU>
         this.outputBinding = outputBinding;
     }
 
-    private LiveMocapTMU createLiveMocapTMU(LiveMocapBehaviour b, FeedbackManager fbm, BMLBlockPeg bmlPeg)
+    private LiveMocapTMU createLiveMocapTMU(LiveMocapBehaviour b, FeedbackManager fbm, BMLBlockPeg bmlPeg) throws BehaviourPlanningException
     {
         if(b instanceof RemoteHeadBehaviour)
         {
             EulerInput input = inputBinding.get(b.getInput(), EulerInput.class);
+            if(input == null)
+            {
+                throw new BehaviourPlanningException(b,"No input found that matches "+b.getInput()+","+EulerInput.class);
+            }
             EulerHeadEmbodiment output = outputBinding.get(b.getOutput(), EulerHeadEmbodiment.class);
+            if(output == null)
+            {
+                throw new BehaviourPlanningException(b,"No output found that matches "+b.getOutput()+","+EulerHeadEmbodiment.class);
+            }
             return new RemoteHeadTMU(input,output, fbm, bmlPeg, b.getBmlId(),b.id);
+        }
+        if(b instanceof RemoteFaceFACSBehaviour)
+        {
+            FACSFaceInput input = inputBinding.get(b.getInput(), FACSFaceInput.class);
+            if(input == null)
+            {
+                throw new BehaviourPlanningException(b,"No input found that matches "+b.getInput()+","+FACSFaceInput.class);
+            }
+            FACSFaceEmbodiment output = outputBinding.get(b.getInput(), FACSFaceEmbodiment.class);
+            if(output == null)
+            {
+                throw new BehaviourPlanningException(b,"No output found that matches "+b.getOutput()+","+FACSFaceEmbodiment.class);
+            }
+            return new RemoteFaceFACSTMU(input,output, fbm, bmlPeg, b.getBmlId(),b.id);
         }
         return null;
     }
@@ -146,6 +173,7 @@ public class LiveMocapPlanner extends AbstractPlanner<LiveMocapTMU>
         //@formatter:off        
         return new ImmutableList.Builder<Class<? extends Behaviour>>()
             .add(RemoteHeadBehaviour.class)
+            .add(RemoteFaceFACSBehaviour.class)
             .build();
         //@formatter:on
     }

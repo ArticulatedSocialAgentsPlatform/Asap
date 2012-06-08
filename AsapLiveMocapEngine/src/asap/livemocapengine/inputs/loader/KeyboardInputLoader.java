@@ -7,18 +7,18 @@ import java.io.IOException;
 import asap.environment.AsapVirtualHuman;
 import asap.environment.Loader;
 import asap.environment.SensorLoader;
-import asap.livemocapengine.inputs.KeyboardEulerInput;
+import asap.livemocapengine.inputs.KeyboardInput;
 import asap.utils.Environment;
 
 /**
- * Loads the KeyboardEulerInput and couples it to a JFrameEmbodiment
+ * Loads the KeyboardInput
  * @author Herwin
  *
  */
-public class KeyboardEulerInputLoader implements SensorLoader
+public class KeyboardInputLoader implements SensorLoader
 {
     private String id="";
-    private KeyboardEulerInput sensor;
+    private KeyboardInput sensor;
     
     @Override
     public String getId()
@@ -45,7 +45,7 @@ public class KeyboardEulerInputLoader implements SensorLoader
             throw new XMLScanException("KeyboardEulerInput requires a JFrameEmbodiment");
         }     
         */   
-        sensor = new KeyboardEulerInput(id);        
+        sensor = new KeyboardInput(id);        
     }
 
     @Override
@@ -55,7 +55,7 @@ public class KeyboardEulerInputLoader implements SensorLoader
     }
 
     @Override
-    public KeyboardEulerInput getSensor()
+    public KeyboardInput getSensor()
     {
         return sensor;
     }
