@@ -224,7 +224,7 @@ public class AnimationPlanPlayerTest
     }
 
     @Test
-    public void testTransitionTMU()
+    public void testTransitionTMU() throws MUPlayException
     {
         // play a single transition motion unit, somewhere halfway execution,
         // check feedback, state transition, call (once) to setStartPose.
@@ -257,7 +257,7 @@ public class AnimationPlanPlayerTest
         verify(muMockTransition, atLeastOnce()).getKeyPosition("start");
         verify(muMockTransition, atLeastOnce()).getKeyPosition("end");
         verify(muMockTransition, times(1)).play(eq(0.5, TIMING_PRECISION));
-        verify(muMockTransition, times(1)).setStartPose();
+        verify(muMockTransition, times(1)).startUnit(eq(0.5, TIMING_PRECISION));
     }
 
     @Test
