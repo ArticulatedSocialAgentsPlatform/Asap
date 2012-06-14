@@ -255,7 +255,7 @@ public class MultiThreadedPlanPlayer<T extends TimedPlanUnit>  implements PlanPl
                     }
                 }
                 planManager.removePlanUnits(planUnitsRemove, time);
-                planManager.removeFinishedPlanUnits();
+                planManager.removeFinishedPlanUnits();                
             }
             logger.debug("stopped verbalplanplayer");
         }

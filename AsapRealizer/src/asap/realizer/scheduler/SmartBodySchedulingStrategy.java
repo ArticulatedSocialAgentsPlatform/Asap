@@ -18,25 +18,20 @@
  ******************************************************************************/
 package asap.realizer.scheduler;
 
-import saiba.bml.BMLInfo;
-import saiba.bml.core.BMLBlockComposition;
-import saiba.bml.core.Behaviour;
-import saiba.bml.core.BehaviourBlock;
-import saiba.bml.parser.Constraint;
-import saiba.bml.parser.SyncPoint;
-
 import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
-import java.util.Set;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import saiba.bml.core.BMLBlockComposition;
+import saiba.bml.core.Behaviour;
+import saiba.bml.core.BehaviourBlock;
 import saiba.bml.feedback.BMLWarningFeedback;
-
+import saiba.bml.parser.Constraint;
+import saiba.bml.parser.SyncPoint;
 import asap.bml.ext.bmlt.BMLTBMLBehaviorAttributes;
 import asap.bml.ext.bmlt.BMLTInfo;
 import asap.realizer.BehaviourPlanningException;

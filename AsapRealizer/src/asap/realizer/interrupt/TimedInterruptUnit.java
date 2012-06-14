@@ -73,7 +73,7 @@ public class TimedInterruptUnit extends TimedAbstractPlanUnit
         for(String beh:stopBehs)
         {
             logger.debug("Interrupting behavior {}:{}",target,beh);
-            scheduler.interruptBehavior(target,beh);
+            scheduler.interruptBehavior(target,beh);            
         }
         sendFeedback("start",time);        
     }

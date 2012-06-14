@@ -68,7 +68,7 @@ public abstract class AbstractBMLBlock implements BMLBlock
             if (finishedInfo == null)
             {
                 return false;
-            }
+            }            
             if (!finishedInfo.contains(BMLGestureSync.END.getId()))
             {
                 return false;

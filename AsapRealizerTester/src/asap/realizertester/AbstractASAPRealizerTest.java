@@ -220,12 +220,15 @@ public abstract class AbstractASAPRealizerTest extends AbstractBML1RealizerTest 
 
         realizerHandler.waitForBMLEndFeedback("bml1");
         realizerHandler.waitForBMLEndFeedback("bml2");
-        Thread.sleep(1000);
+        
         realizerHandler.assertNoExceptions();
         realizerHandler.assertNoWarnings();
         realizerHandler.assertNoDuplicateFeedbacks();
-        assertEquals(realizerHandler.getBMLPerformanceStopFeedback("bml1").timeStamp, 
-                realizerHandler.getBMLPerformanceStartFeedback("bml2").timeStamp + 2, 0.2);
+        
+        System.out.println(realizerHandler.getTrace());
+        assertEquals(realizerHandler.getBMLPerformanceStartFeedback("bml2").timeStamp + 2,
+                realizerHandler.getBMLPerformanceStopFeedback("bml1").timeStamp, 
+                0.2);
     }
 
     @Test

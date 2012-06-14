@@ -128,6 +128,7 @@ public final class PlanManager<T extends TimedPlanUnit>
     {
         try
         {
+            logger.debug("Interrupting " + pu.getBMLId() + ":" + pu.getId()+" "+time);
             pu.interrupt(time);
         }
         catch (TimedPlanUnitPlayException e)
@@ -154,34 +155,59 @@ public final class PlanManager<T extends TimedPlanUnit>
         {
             interruptPlanUnit(pu, time);
         }
+        removeFinishedPlanUnits();
     }
 
     /**
      * Gets the first planunit corresponding with id:bmlId (there could be more if they are
-     * subPlanUnits Should always be called inside a synchronzized(planUnits) block
+     * subPlanUnits Should always be called inside a synchronized(planUnits) block
      */
-    private T getPlanUnit(String bmlId, String id)
+    private List<T> getPlanUnits(String bmlId, String id)
+    {
+        List<T> puList = new ArrayList<T>();
+        synchronized (planUnits)
+        {
+            for (T pu : planUnits)
+            {
+                if (pu.getId().equals(id) && pu.getBMLId().equals(bmlId))
+                {
+                    puList.add(pu);
+                }
+            }
+        }
+        return puList;
+    }
+    
+    private T getMainPlanUnit(String bmlId, String id)
     {
         synchronized (planUnits)
         {
             for (T pu : planUnits)
             {
-                if (pu.getId().equals(id) && pu.getBMLId().equals(bmlId)) return pu;
+                if (pu.getId().equals(id) && pu.getBMLId().equals(bmlId) && !pu.isSubUnit())
+                {
+                    return pu;
+                }
             }
         }
         return null;
     }
 
-    public void interruptPlanUnit(String bmlId, String id, double globalTime)
+    private void interruptPlanUnit(String bmlId, String id, double globalTime, List<T> handledUnits)
     {
         synchronized (planUnits)
         {
-            T pu = getPlanUnit(bmlId, id);
-            while (pu != null)
+            for (T pu: getPlanUnits(bmlId, id))
             {
-                interruptPlanUnit(pu, globalTime);                
+                interruptPlanUnit(pu, globalTime);
             }
         }
+        removeFinishedPlanUnits();
+    }
+
+    public void interruptPlanUnit(String bmlId, String id, double globalTime)
+    {
+        interruptPlanUnit(bmlId, id, globalTime, new ArrayList<T>());
     }
 
     public void stopPlanUnit(String bmlId, String id, double globalTime)
@@ -189,12 +215,10 @@ public final class PlanManager<T extends TimedPlanUnit>
         List<T> planUnitsToInterrupt = new ArrayList<T>();
         synchronized (planUnits)
         {
-            T pu = getPlanUnit(bmlId, id);
-            while (pu != null)
+            for (T pu : getPlanUnits(bmlId, id))
             {
                 planUnitsToInterrupt.add(pu);
-                planUnits.remove(pu);
-                pu = getPlanUnit(bmlId, id);
+                planUnits.remove(pu);                
             }
         }
 
@@ -265,7 +289,7 @@ public final class PlanManager<T extends TimedPlanUnit>
                     finishedUnits.add(pu);
                 }
             }
-            planUnits.removeAll(finishedUnits);
+            planUnits.removeAll(finishedUnits);            
         }
 
     }
@@ -364,8 +388,8 @@ public final class PlanManager<T extends TimedPlanUnit>
     {
         synchronized (planUnits)
         {
-            T pu = getPlanUnit(bmlId, behId);
-            if (pu == null || pu.isSubUnit()) return TimePeg.VALUE_UNKNOWN;
+            T pu = getMainPlanUnit(bmlId, behId);
+            if (pu == null ) return TimePeg.VALUE_UNKNOWN;
             return pu.getEndTime();
         }
     }
@@ -402,6 +426,7 @@ public final class PlanManager<T extends TimedPlanUnit>
             }
         }
         interruptPlanUnits(interruptUnits, time);
+        removeFinishedPlanUnits();
     }
 
     public void setFloatParameterValue(String bmlId, String behId, String paramId, float value) throws ParameterException,
@@ -430,7 +455,7 @@ public final class PlanManager<T extends TimedPlanUnit>
     {
         synchronized (planUnits)
         {
-            T pu = getPlanUnit(bmlId, behId);
+            T pu = getMainPlanUnit(bmlId, behId);
             if (pu == null)
             {
                 throw new BehaviorNotFoundException(bmlId, behId);
