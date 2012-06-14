@@ -40,7 +40,7 @@ public class AudioPlanPlayerAudioUnitMockupTest
         planManager.addPlanUnit(mockPlanUnit3);
         assertEquals(3, app.getNumberOfPlanUnits());
 
-        app.interruptBehaviourBlock("bml1", 1.0);
+        app.stopBehaviourBlock("bml1", 1.0);
         assertEquals(1, app.getNumberOfPlanUnits());
     }
 }

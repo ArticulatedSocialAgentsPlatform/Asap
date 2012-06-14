@@ -21,8 +21,6 @@ package asap.realizer.planunit;
 import hmi.util.RuntimeExceptionLoggingRunnable;
 
 import java.util.ArrayList;
-import java.util.HashSet;
-import java.util.Set;
 import java.util.concurrent.ArrayBlockingQueue;
 import java.util.concurrent.BlockingQueue;
 import java.util.concurrent.ExecutionException;
@@ -34,10 +32,10 @@ import java.util.concurrent.TimeUnit;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import saiba.bml.feedback.BMLWarningFeedback;
 import asap.bml.feedback.BMLWarningListener;
 import asap.realizer.feedback.FeedbackManager;
 import asap.realizer.feedback.NullFeedbackManager;
-import saiba.bml.feedback.BMLWarningFeedback;
 
 import com.google.common.collect.ImmutableList;
 
@@ -81,16 +79,28 @@ public class MultiThreadedPlanPlayer<T extends TimedPlanUnit>  implements PlanPl
         planManager.setBMLBlockState(bmlId, state);
     }
 
+    @Override
+    public void stopBehaviourBlock(String bmlId, double time)
+    {
+        planManager.stopBehaviourBlock(bmlId, time);
+    }
+
+    @Override
     public void interruptBehaviourBlock(String bmlId, double time)
     {
         planManager.interruptBehaviourBlock(bmlId, time);
     }
-
+    
     public int getNumberOfPlanUnits()
     {
         return planManager.getNumberOfPlanUnits();
     }
 
+    public void stopPlanUnit(String bmlId, String id, double globalTime)
+    {
+        planManager.stopPlanUnit(bmlId, id, globalTime);
+    }
+    
     public void interruptPlanUnit(String bmlId, String id, double globalTime)
     {
         planManager.interruptPlanUnit(bmlId, id, globalTime);

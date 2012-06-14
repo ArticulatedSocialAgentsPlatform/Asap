@@ -72,11 +72,9 @@ public class TimedInterruptUnit extends TimedAbstractPlanUnit
         
         for(String beh:stopBehs)
         {
-            logger.debug("Immidiatly interrupting behavior {}:{}",target,beh);
+            logger.debug("Interrupting behavior {}:{}",target,beh);
             scheduler.interruptBehavior(target,beh);
         }
-        //scheduler.interruptBlock(target);    
-        
         sendFeedback("start",time);        
     }
     
@@ -85,54 +83,6 @@ public class TimedInterruptUnit extends TimedAbstractPlanUnit
     {
         stop(time);
     }
-    
-    /*
-    @Override
-    protected void playUnit(double time) throws TimedPlanUnitPlayException
-    {
-        List<InterruptTarget>interruptTargets = new ArrayList<InterruptTarget>();
-        synchronized(interruptSpecMap)
-        {
-            for(String beh:interruptSpecMap.keySet())
-            {
-                //not planned, no need to interrupt it
-                if(!scheduler.getBehaviours(target).contains(beh))
-                {
-                    logger.debug("Behavior {}:{} not planned, prematurely removed from interrupt unit",target,beh);
-                    interruptSpecMap.remove(beh);
-                    break;
-                }            
-                
-                
-                ImmutableSet<String> syncsFinished = scheduler.getSyncsPassed(target,beh);
-                //logger.debug("Syncs finished {}",syncsFinished);
-                InterruptSpec is = interruptSpecMap.get(beh);
-                if (is==null)continue;
-                if(syncsFinished.contains(is.getSyncPoint()))
-                {
-                    logger.debug("Adding interrupt for {}:{}",target,beh);
-                    interruptTargets.add(new InterruptTarget(target,beh));                    
-                }   
-            }            
-        }
-        
-        for(InterruptTarget iTarget: interruptTargets)
-        {
-            logger.debug("Interrupting {}:{}",iTarget.getBmlId(),iTarget.getBehaviorId());
-            scheduler.interruptBehavior(iTarget.getBmlId(), iTarget.getBehaviorId());
-            logger.debug("Interrupt finished");
-            InterruptSpec is = interruptSpecMap.get(iTarget.getBehaviorId());
-            if (is==null)continue;
-            for(String onStartBlock : is.getOnStartList())
-            {
-                logger.debug("Starting {}",onStartBlock);
-                scheduler.startBlock(onStartBlock);
-            }
-            interruptSpecMap.remove(iTarget.getBehaviorId());
-            logger.debug("interruptSpecMap {}",interruptSpecMap);
-        }
-    }
-    */
     
     @Override
     protected void stopUnit(double time) throws TimedPlanUnitPlayException

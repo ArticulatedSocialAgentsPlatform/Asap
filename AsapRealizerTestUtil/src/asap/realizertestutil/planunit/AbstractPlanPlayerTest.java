@@ -49,7 +49,7 @@ public abstract class AbstractPlanPlayerTest
         planManager.addPlanUnit(mockPlanUnit3);
         assertEquals(3, planManager.getNumberOfPlanUnits());
 
-        pp.interruptBehaviourBlock("bml1", 1.0);
+        pp.stopBehaviourBlock("bml1", 1.0);
         assertEquals(1, planManager.getNumberOfPlanUnits());
     }
 

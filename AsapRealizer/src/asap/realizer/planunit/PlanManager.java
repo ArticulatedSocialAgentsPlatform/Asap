@@ -1,6 +1,5 @@
 package asap.realizer.planunit;
 
-
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.HashSet;
@@ -125,6 +124,38 @@ public final class PlanManager<T extends TimedPlanUnit>
         }
     }
 
+    private void interruptPlanUnit(T pu, double time)
+    {
+        try
+        {
+            pu.interrupt(time);
+        }
+        catch (TimedPlanUnitPlayException e)
+        {
+            logger.warn("Exception gracefully interrupting behavior: ", e);
+            try
+            {
+                pu.stop(time);
+            }
+            catch (TimedPlanUnitPlayException e1)
+            {
+                logger.warn("Exception stopping behaviour: ", e);
+            }
+        }
+    }
+
+    /**
+     * Gracefully interrupts a selected collection of planunits.
+     * @throws TimedPlanUnitPlayException
+     */
+    public void interruptPlanUnits(Collection<T> puInterrupt, double time)
+    {
+        for (T pu : puInterrupt)
+        {
+            interruptPlanUnit(pu, time);
+        }
+    }
+
     /**
      * Gets the first planunit corresponding with id:bmlId (there could be more if they are
      * subPlanUnits Should always be called inside a synchronzized(planUnits) block
@@ -142,6 +173,18 @@ public final class PlanManager<T extends TimedPlanUnit>
     }
 
     public void interruptPlanUnit(String bmlId, String id, double globalTime)
+    {
+        synchronized (planUnits)
+        {
+            T pu = getPlanUnit(bmlId, id);
+            while (pu != null)
+            {
+                interruptPlanUnit(pu, globalTime);                
+            }
+        }
+    }
+
+    public void stopPlanUnit(String bmlId, String id, double globalTime)
     {
         List<T> planUnitsToInterrupt = new ArrayList<T>();
         synchronized (planUnits)
@@ -327,7 +370,7 @@ public final class PlanManager<T extends TimedPlanUnit>
         }
     }
 
-    public void interruptBehaviourBlock(String bmlId, double time)
+    public void stopBehaviourBlock(String bmlId, double time)
     {
 
         List<T> removeUnits = new ArrayList<T>();
@@ -342,6 +385,23 @@ public final class PlanManager<T extends TimedPlanUnit>
             }
         }
         removePlanUnits(removeUnits, time);
+    }
+
+    public void interruptBehaviourBlock(String bmlId, double time)
+    {
+
+        List<T> interruptUnits = new ArrayList<T>();
+        synchronized (planUnits)
+        {
+            for (T pu : planUnits)
+            {
+                if (pu.getBMLId().equals(bmlId))
+                {
+                    interruptUnits.add(pu);
+                }
+            }
+        }
+        interruptPlanUnits(interruptUnits, time);
     }
 
     public void setFloatParameterValue(String bmlId, String behId, String paramId, float value) throws ParameterException,

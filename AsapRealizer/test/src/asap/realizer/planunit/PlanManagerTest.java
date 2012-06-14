@@ -76,7 +76,7 @@ public class PlanManagerTest
     public void testInterruptPlanUnit() throws TimedPlanUnitPlayException
     {
         when(mockTimedPlanUnit1.isPlaying()).thenReturn(true);
-        planManager.interruptPlanUnit("bml1", "planunit1", 0.2);
+        planManager.stopPlanUnit("bml1", "planunit1", 0.2);
         assertThat(planManager.getBehaviours("bml1"), IsIterableContainingInAnyOrder.containsInAnyOrder("planunit2"));
         verify(mockTimedPlanUnit1, times(1)).stop(0.2);
     }
@@ -133,6 +133,15 @@ public class PlanManagerTest
     {
         when(mockTimedPlanUnit1.isPlaying()).thenReturn(true);
         planManager.interruptBehaviourBlock("bml1", 1d);
+
+        verify(mockTimedPlanUnit1, times(1)).interrupt(1d);        
+    }
+    
+    @Test
+    public void testStopBehaviourBlock() throws TimedPlanUnitPlayException
+    {
+        when(mockTimedPlanUnit1.isPlaying()).thenReturn(true);
+        planManager.stopBehaviourBlock("bml1", 1d);
 
         verify(mockTimedPlanUnit1, times(1)).stop(1d);
         assertEquals(1, planManager.getNumberOfPlanUnits());

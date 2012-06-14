@@ -1,14 +1,13 @@
 package asap.animationengine.procanimation;
 
-import saiba.bml.BMLGestureSync;
-import saiba.bml.core.Behaviour;
-
 import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
 import lombok.extern.slf4j.Slf4j;
+import saiba.bml.BMLGestureSync;
+import saiba.bml.core.Behaviour;
 import asap.animationengine.motionunit.TimedAnimationUnit;
 import asap.motionunit.TMUPlayException;
 import asap.realizer.BehaviourPlanningException;
@@ -475,8 +474,7 @@ public class ProcAnimationGestureTMU extends TimedAnimationUnit
                 else
                 {
                     double scale = totalDuration
-                            / (preStrokeHoldDuration + postStrokeHoldDuration + strokeStartDuration + 
-                                    strokeEndDuration + prepDuration + relaxDuration);
+                            / (preStrokeHoldDuration + postStrokeHoldDuration + strokeStartDuration + strokeEndDuration + prepDuration + relaxDuration);
                     prepDuration *= scale;
                     relaxDuration *= scale;
                 }
@@ -514,6 +512,30 @@ public class ProcAnimationGestureTMU extends TimedAnimationUnit
     {
         super.relaxUnit(time);
         mu.setupRelaxUnit();
+    }
+
+    private void gracefullInterrupt(double time) throws TimedPlanUnitPlayException
+    {
+        /*
+        getTimePeg("relax").setGlobalValue(time);
+        updateTiming(time);
+        */
+        stop(time);
+    }
+    
+    @Override
+    public void interrupt(double time) throws TimedPlanUnitPlayException
+    {
+        switch(getState())
+        {
+        case IN_PREP:
+        case PENDING:
+        case LURKING: stop(time);break;                 //just remove yourself
+        case IN_EXEC: gracefullInterrupt(time); break;  //gracefully interrupt yourself
+        case SUBSIDING:                                 //nothing to be done
+        case DONE: 
+            default: break;
+        }
     }
 
     @Override

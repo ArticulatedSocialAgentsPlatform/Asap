@@ -168,6 +168,15 @@ public abstract class TimedAbstractPlanUnit implements TimedPlanUnit
         }
     }
 
+    /**
+     * Standard implementation, just stops the timedplanunit
+     * @throws TimedPlanUnitPlayException 
+     */
+    public void interrupt(double time) throws TimedPlanUnitPlayException
+    {
+        stop(time);
+    }
+    
     @Override
     public final void stop(double time) throws TimedPlanUnitPlayException
     {

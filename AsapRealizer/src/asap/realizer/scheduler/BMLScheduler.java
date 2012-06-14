@@ -380,7 +380,7 @@ public final class BMLScheduler
     {
         for (Engine e : getEngines())
         {
-            e.interruptBehaviour(bmlId, behaviourId, schedulingClock.getTime());
+            e.stopBehaviour(bmlId, behaviourId, schedulingClock.getTime());
         }
         pegBoard.removeBehaviour(bmlId, behaviourId);
     }
@@ -478,6 +478,15 @@ public final class BMLScheduler
         parser.clear();
     }
 
+    public void stopBehavior(String bmlId, String behaviourId)
+    {
+        for (Engine e : getEngines())
+        {
+            e.stopBehaviour(bmlId, behaviourId, schedulingClock.getTime());
+        }
+        bmlBlocksManager.updateBlocks();
+    }
+    
     public void interruptBehavior(String bmlId, String behaviourId)
     {
         for (Engine e : getEngines())
@@ -500,7 +509,7 @@ public final class BMLScheduler
 
         for (Engine e : getEngines())
         {
-            e.interruptBehaviourBlock(bmlId, schedulingClock.getTime());
+            e.stopBehaviourBlock(bmlId, schedulingClock.getTime());
         }
 
         if (bmlBlocksManager.getBMLBlockState(bmlId) == TimedPlanUnitState.IN_EXEC

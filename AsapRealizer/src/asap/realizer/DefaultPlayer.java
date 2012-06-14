@@ -46,6 +46,18 @@ public class DefaultPlayer implements Player
         planPlayer.interruptBehaviourBlock(bmlId, time);
     }
 
+    
+    public void stopBehaviour(String bmlId, String behaviourId, double globalTime)
+    {
+        planPlayer.stopPlanUnit(bmlId, behaviourId, globalTime);
+    }
+
+    @Override
+    public void stopBehaviourBlock(String bmlId, double time)
+    {
+        planPlayer.stopBehaviourBlock(bmlId, time);
+    }
+
     @Override
     public void reset(double time)
     {

@@ -192,9 +192,9 @@ public final class SingleThreadedPlanPlayer<T extends TimedPlanUnit> implements 
      * Stops and removes a planunit.
      * Blocking.
      */    
-    public synchronized void interruptPlanUnit(String bmlId, String id, double globalTime)
+    public synchronized void stopPlanUnit(String bmlId, String id, double globalTime)
     {
-        planManager.interruptPlanUnit(bmlId, id, globalTime);        
+        planManager.stopPlanUnit(bmlId, id, globalTime);        
     }
     
     
@@ -223,13 +223,27 @@ public final class SingleThreadedPlanPlayer<T extends TimedPlanUnit> implements 
         return planManager.getBehaviours(bmlId);
     }
 
-    public synchronized void interruptBehaviourBlock(String bmlId, double time)
+    public synchronized void stopBehaviourBlock(String bmlId, double time)
     {
-        planManager.interruptBehaviourBlock(bmlId, time);
+        planManager.stopBehaviourBlock(bmlId, time);
+    }
+    
+    @Override
+    public void interruptPlanUnit(String bmlId, String id, double globalTime)
+    {
+        planManager.interruptPlanUnit(bmlId, id, globalTime);            
+    }
+
+    @Override
+    public void interruptBehaviourBlock(String bmlId, double time)
+    {
+        planManager.interruptBehaviourBlock(bmlId, time);        
     }
 
     public void shutdown()
     {
     }
+
+    
 
 }

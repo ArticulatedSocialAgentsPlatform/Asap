@@ -72,12 +72,22 @@ public interface Engine
     double getBlockSubsidingTime(String bmlId);
 
     /**
-     * Interrupts all behaviors in the block; that is: calls their stop and removes them from the plan
+     * Stops all behaviors in the block; that is: calls their stop and removes them from the plan
+     */
+    void stopBehaviourBlock(String bmlId, double time);
+
+    /**
+     * Stops a behavior. That is: calls their stop and removes them from the plan
+     */
+    void stopBehaviour(String bmlId, String behaviourId, double time);
+    
+    /**
+     * Gracefully interrupts all behaviors in the block; that is: calls their interrupt
      */
     void interruptBehaviourBlock(String bmlId, double time);
 
     /**
-     * Interrupts a behavior. That is: calls their stop and removes them from the plan
+     * Gracefully interrupts a behavior. That is: calls their interrupt
      */
     void interruptBehaviour(String bmlId, String behaviourId, double time);
 

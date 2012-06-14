@@ -235,7 +235,7 @@ public class TTSPlannerIntegrationTest
         TimedTTSUnit pu = ttsPlanner.resolveSynchs(bbPeg, beh, sacs);
         ttsPlanner.addBehaviour(bbPeg, beh, sacs, pu);
 
-        ttsEngine.interruptBehaviour(BMLID,SPEECHID,0);
+        ttsEngine.stopBehaviour(BMLID,SPEECHID,0);
 
         assertEquals(0, ttsEngine.getBehaviours(BMLID).size());
     }

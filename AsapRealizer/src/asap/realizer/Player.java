@@ -43,12 +43,22 @@ public interface Player
     void updateTiming(String bmlId);
     
     /**
-     * Interrupts all behaviors in the block; that is: calls their stop and removes them from the plan
+     * Stop all behaviors in the block; that is: calls their stop and removes them from the plan
+     */
+    void stopBehaviourBlock(String bmlId, double time);
+
+    /**
+     * Stop a behavior. That is: calls their stop and removes them from the plan
+     */
+    void stopBehaviour(String bmlId, String behaviourId, double time);
+    
+    /**
+     * Gracefully stops all behaviors in the block; that is: calls their interrupt and removes them from the plan
      */
     void interruptBehaviourBlock(String bmlId, double time);
 
     /**
-     * Interrupts a behavior. That is: calls their stop and removes them from the plan
+     * Gracefully interrupts a behavior. That is: calls their interrupt and removes them from the plan
      */
     void interruptBehaviour(String bmlId, String behaviourId, double time);
     

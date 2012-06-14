@@ -81,6 +81,12 @@ public interface TimedPlanUnit
     void stop(double time) throws TimedPlanUnitPlayException;
 
     /**
+     * Gracefully stops the PlanUnit
+     * @param time
+     */
+    void interrupt(double time) throws TimedPlanUnitPlayException;
+    
+    /**
      * Plays the unit at global time time. Is allowed to be a blocking call.
      */
     void play(double time) throws TimedPlanUnitPlayException;

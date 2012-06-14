@@ -131,7 +131,7 @@ public class BMLSchedulerTest
         }
 
         @Override
-        public void interruptBehaviour(String behaviourId, String bmlId, double globalTime)
+        public void stopBehaviour(String behaviourId, String bmlId, double globalTime)
         {
             if (behMap.get(bmlId) != null)
             {
@@ -140,7 +140,7 @@ public class BMLSchedulerTest
         }
 
         @Override
-        public void interruptBehaviourBlock(String bmlId, double globalTime)
+        public void stopBehaviourBlock(String bmlId, double globalTime)
         {
             behMap.remove(bmlId);
         }
@@ -268,6 +268,16 @@ public class BMLSchedulerTest
         public String toString()
         {
             return id;
+        }
+        @Override
+        public void interruptBehaviourBlock(String bmlId, double time)
+        {
+            
+        }
+        @Override
+        public void interruptBehaviour(String bmlId, String behaviourId, double time)
+        {
+            
         }
     }
 

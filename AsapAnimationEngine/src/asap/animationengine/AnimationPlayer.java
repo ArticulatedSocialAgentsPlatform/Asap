@@ -127,9 +127,15 @@ public class AnimationPlayer implements Player, MixedAnimationPlayer
     }
 
     @Override
+    public synchronized void stopBehaviour(String bmlId, String id, double globalTime)
+    {
+        app.stopPlanUnit(bmlId, id, globalTime);        
+    }
+    
+    @Override
     public synchronized void interruptBehaviour(String bmlId, String id, double globalTime)
     {
-        app.interruptPlanUnit(bmlId, id, globalTime);        
+        app.interruptPlanUnit(bmlId, id, globalTime);       
     }
 
     public WorldObjectManager getWoManager()
@@ -437,6 +443,12 @@ public class AnimationPlayer implements Player, MixedAnimationPlayer
         app.setBMLBlockState(bmlId, state);        
     }
 
+    @Override
+    public void stopBehaviourBlock(String bmlId, double time)
+    {
+        app.stopBehaviourBlock(bmlId, time);        
+    }
+    
     @Override
     public void interruptBehaviourBlock(String bmlId, double time)
     {

@@ -89,7 +89,7 @@ public class AnimationPlannerSpeechTest
     @Test
     public void testRemoveSpeech()
     {
-        animationEngine.interruptBehaviour("bml1", "speech1", 0);
+        animationEngine.stopBehaviour("bml1", "speech1", 0);
         assertEquals(0, animationEngine.getBehaviours("bml1").size());
         assertEquals(0, planManager.getBehaviours("bml1").size());
     }

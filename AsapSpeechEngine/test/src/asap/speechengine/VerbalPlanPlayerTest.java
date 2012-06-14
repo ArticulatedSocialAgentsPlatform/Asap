@@ -146,7 +146,7 @@ public class VerbalPlanPlayerTest
         planManager.addPlanUnit(mockPlanUnit3);
         assertEquals(3, vpp.getNumberOfPlanUnits());
 
-        vpp.interruptBehaviourBlock("bml1", 1.0);
+        vpp.stopBehaviourBlock("bml1", 1.0);
         assertEquals(1, vpp.getNumberOfPlanUnits());
         vpp.shutdown();
     }

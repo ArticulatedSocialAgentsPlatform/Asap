@@ -1,10 +1,9 @@
 package asap.realizer;
 
-import saiba.bml.core.Behaviour;
-
 import java.util.List;
 import java.util.Set;
 
+import saiba.bml.core.Behaviour;
 import asap.realizer.pegboard.BMLBlockPeg;
 import asap.realizer.pegboard.OffsetPeg;
 import asap.realizer.planunit.ParameterException;
@@ -68,6 +67,16 @@ public class DefaultEngine<T extends TimedPlanUnit> implements Engine
     public void interruptBehaviour(String bmlId, String behaviourId, double time)
     {
         player.interruptBehaviour(bmlId, behaviourId, time);
+    }
+    
+    public void stopBehaviourBlock(String bmlId, double time)
+    {
+        player.stopBehaviourBlock(bmlId, time);
+    }
+
+    public void stopBehaviour(String bmlId, String behaviourId, double time)
+    {
+        player.stopBehaviour(bmlId, behaviourId, time);
     }
 
     public double getEndTime(String bmlId, String behId)

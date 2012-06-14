@@ -177,9 +177,21 @@ public class AnimationPlanPlayer implements PlanPlayer
     }
 
     @Override
+    public void stopPlanUnit(String bmlId, String id, double globalTime)
+    {
+        defPlayer.stopPlanUnit(bmlId, id, globalTime);
+    }
+
+    @Override
+    public void stopBehaviourBlock(String bmlId, double time)
+    {
+        defPlayer.stopBehaviourBlock(bmlId, time);
+    }
+    
+    @Override
     public void interruptPlanUnit(String bmlId, String id, double globalTime)
     {
-        defPlayer.interruptPlanUnit(bmlId, id, globalTime);
+        defPlayer.interruptPlanUnit(bmlId, id, globalTime);        
     }
 
     @Override
@@ -230,4 +242,6 @@ public class AnimationPlanPlayer implements PlanPlayer
         }
         planManager.removePlanUnits(failedBehaviors, 0);
     }
+
+    
 }
