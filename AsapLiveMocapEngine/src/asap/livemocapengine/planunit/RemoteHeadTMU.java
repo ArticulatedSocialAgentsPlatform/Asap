@@ -31,14 +31,16 @@ public class RemoteHeadTMU extends LiveMocapTMU
     }
     
     @Override
-    protected void startUnit(double time)
+    protected void startUnit(double time) throws TimedPlanUnitPlayException
     {
         headEmbodiment.claimHeadResource();
+        super.startUnit(time);
     }
     
     @Override
-    protected void stopUnit(double time)
+    protected void stopUnit(double time) throws TimedPlanUnitPlayException
     {
         headEmbodiment.releaseHeadResource();
+        super.stopUnit(time);
     }
 }
