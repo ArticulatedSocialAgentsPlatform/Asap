@@ -174,7 +174,8 @@ public class GestureBindingTest
     @Test
     public void testGetHeadNodWithRepeats2() throws IOException, ParameterException
     {
-        HeadBehaviour b = createHeadBehaviour("bml1", "<head id=\"head1\" lexeme=\"NOD\" repetition=\"2\"/>");
+        HeadBehaviour b = createHeadBehaviour("bml1", "<head xmlns=\"http://www.bml-initiative.org/bml/bml-1.0\" id=\"head1\" " +
+        		"lexeme=\"NOD\" repetition=\"2\"/>");
 
         List<TimedAnimationUnit> m = gestureBinding.getMotionUnit(BMLBlockPeg.GLOBALPEG, b, mockAniPlayer, pegBoard);
         assertEquals(1, m.size());
@@ -187,7 +188,8 @@ public class GestureBindingTest
     @Test
     public void testGetHeadNodWithAmount2() throws IOException, ParameterException
     {
-        HeadBehaviour b = createHeadBehaviour("bml1", "<head id=\"head1\" lexeme=\"SHAKE\" amount=\"2\"/>");
+        HeadBehaviour b = createHeadBehaviour("bml1", "<head xmlns=\"http://www.bml-initiative.org/bml/bml-1.0\" " +
+        		"id=\"head1\" lexeme=\"SHAKE\" amount=\"2\"/>");
 
         List<TimedAnimationUnit> m = gestureBinding.getMotionUnit(BMLBlockPeg.GLOBALPEG, b, mockAniPlayer, pegBoard);
         assertEquals(1, m.size());
@@ -213,7 +215,8 @@ public class GestureBindingTest
     @Test
     public void testReadGesture() throws IOException
     {
-        GestureBehaviour beh = createGestureBehaviour("bml1", "<gesture id=\"g1\" mode=\"RIGHT_HAND\" lexeme=\"BEAT\"/>");
+        GestureBehaviour beh = createGestureBehaviour("bml1", "<gesture xmlns=\"http://www.bml-initiative.org/bml/bml-1.0\" " +
+        		"id=\"g1\" mode=\"RIGHT_HAND\" lexeme=\"BEAT\"/>");
         List<TimedAnimationUnit> m = gestureBinding.getMotionUnit(BMLBlockPeg.GLOBALPEG, beh, mockAniPlayer, pegBoard);
         assertEquals(1, m.size());
         assertEquals("bml1", m.get(0).getBMLId());
@@ -223,7 +226,8 @@ public class GestureBindingTest
     @Test
     public void testReadPointing() throws IOException
     {
-        PointingBehaviour beh = createPointingBehaviour("bml1", "<pointing id=\"point1\" mode=\"RIGHT_HAND\" target=\"bluebox\"/>");
+        PointingBehaviour beh = createPointingBehaviour("bml1", "<pointing xmlns=\"http://www.bml-initiative.org/bml/bml-1.0\" " +
+        		"id=\"point1\" mode=\"RIGHT_HAND\" target=\"bluebox\"/>");
         List<TimedAnimationUnit> m = gestureBinding.getMotionUnit(BMLBlockPeg.GLOBALPEG, beh, mockAniPlayer, pegBoard);
         assertEquals(1, m.size());
         assertEquals("bml1", m.get(0).getBMLId());
@@ -234,7 +238,8 @@ public class GestureBindingTest
     public void testReadPosture() throws IOException
     {
         String str = 
-            "<posture id=\"posture1\"><stance type=\"STANDING\"/><pose part=\"LEGS\" lexeme=\"LEGS_OPEN\"/></posture>";
+            "<posture xmlns=\"http://www.bml-initiative.org/bml/bml-1.0\" " +
+            "id=\"posture1\"><stance type=\"STANDING\"/><pose part=\"LEGS\" lexeme=\"LEGS_OPEN\"/></posture>";
         PostureBehaviour beh = createPostureBehaviour("bml1",str);
         List<TimedAnimationUnit> m = gestureBinding.getMotionUnit(BMLBlockPeg.GLOBALPEG, beh, mockAniPlayer, pegBoard);
         assertEquals(1, m.size());
@@ -246,7 +251,8 @@ public class GestureBindingTest
     public void testReadPostureShift() throws IOException
     {
         String str = 
-            "<postureShift id=\"posture1\"><stance type=\"SITTING\"/><pose part=\"LEGS\" lexeme=\"LEGS_OPEN\"/></postureShift>";
+            "<postureShift xmlns=\"http://www.bml-initiative.org/bml/bml-1.0\" " +
+            "id=\"posture1\"><stance type=\"SITTING\"/><pose part=\"LEGS\" lexeme=\"LEGS_OPEN\"/></postureShift>";
         PostureShiftBehaviour beh = createPostureShiftBehaviour("bml1",str);
         RestPose rp = gestureBinding.getRestPose(beh,mockAniPlayer);
         assertThat(rp,instanceOf(SkeletonPoseRestPose.class));

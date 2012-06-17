@@ -1,5 +1,7 @@
 package asap.murml;
 
+import hmi.xml.XMLTokenizer;
+
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -7,14 +9,11 @@ import java.util.List;
 
 import lombok.Getter;
 
-import hmi.xml.XMLStructureAdapter;
-import hmi.xml.XMLTokenizer;
-
 /**
  * Parses a MURML keyframing element
  * @author hvanwelbergen
  */
-public class Keyframing extends XMLStructureAdapter
+public class Keyframing extends MURMLElement
 {
     /**
      * Interpolation modes 

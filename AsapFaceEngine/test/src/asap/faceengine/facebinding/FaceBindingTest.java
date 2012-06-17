@@ -73,7 +73,8 @@ public class FaceBindingTest
     @Test
     public void testReadLexemeXML() throws IOException, ParameterException
     {
-        FaceLexemeBehaviour fbeh = createFaceLexemeBehaviour("bml1", "<faceLexeme amount=\"3\" id=\"face1\" lexeme=\"smile\"/>");
+        FaceLexemeBehaviour fbeh = createFaceLexemeBehaviour("bml1", "<faceLexeme xmlns=\"http://www.bml-initiative.org/bml/bml-1.0\" " +
+        		"amount=\"3\" id=\"face1\" lexeme=\"smile\"/>");
 
         BMLBlockPeg bbPeg = new BMLBlockPeg("bml1", 0.3);
         List<TimedFaceUnit> fus = faceBinding.getFaceUnit(mockFeedbackManager, bbPeg, fbeh, mockFaceController, mockFacsConverter,

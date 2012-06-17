@@ -83,7 +83,8 @@ public class FacePlannerTest
 
     public FaceLexemeBehaviour createFaceBehaviour() throws IOException
     {
-        return new FaceLexemeBehaviour(BMLID, new XMLTokenizer("<faceLexeme id=\"face1\" lexeme=\"BLINK\"/>"));
+        return new FaceLexemeBehaviour(BMLID, new XMLTokenizer("<faceLexeme xmlns=\"http://www.bml-initiative.org/bml/bml-1.0\" " +
+        		"id=\"face1\" lexeme=\"BLINK\"/>"));
     }
 
     @Test
@@ -107,7 +108,7 @@ public class FacePlannerTest
     @Test
     public void testResolveMURML() throws IOException, BehaviourPlanningException
     {
-        String bmlString = "<murml:murmlface xmlns:murml=\"http://www.techfak.uni-bielefeld.de/ags/soa/murml\" " +
+        String bmlString = "<murmlface xmlns=\"http://www.techfak.uni-bielefeld.de/ags/soa/murml\" " +
                 "id=\"a1\" start=\"nod1:end\">" +
                 "<definition><keyframing><phase>" +
                 "<frame ftime=\"0\">" +

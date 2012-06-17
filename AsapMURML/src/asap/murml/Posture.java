@@ -1,5 +1,7 @@
 package asap.murml;
 
+import hmi.xml.XMLTokenizer;
+
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
@@ -8,15 +10,12 @@ import java.util.regex.Pattern;
 
 import lombok.Getter;
 
-import hmi.xml.XMLStructureAdapter;
-import hmi.xml.XMLTokenizer;
-
 /**
  * Parses a MURML posture
  * @author hvanwelbergen
  *
  */
-public class Posture extends XMLStructureAdapter
+public class Posture extends MURMLElement
 {
     @Getter
     private List<JointValue> jointValues = new ArrayList<JointValue>();

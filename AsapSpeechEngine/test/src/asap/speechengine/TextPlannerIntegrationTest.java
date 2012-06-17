@@ -63,7 +63,8 @@ public class TextPlannerIntegrationTest
         fbManager.addWarningListener(new ListBMLWarningListener(exceptionList));
         final BMLBlockPeg bbPeg = new BMLBlockPeg("Peg1", 0.3);
 
-        SpeechBehaviour beh = new SpeechBehaviour("bml1", new XMLTokenizer("<speech id=\"speech1\"><text>Hello world</text></speech>"));
+        SpeechBehaviour beh = new SpeechBehaviour("bml1", new XMLTokenizer("<speech xmlns=\"http://www.bml-initiative.org/bml/bml-1.0\"" +
+        		"id=\"speech1\"><text>Hello world</text></speech>"));
         ArrayList<TimePegAndConstraint> sacs = new ArrayList<TimePegAndConstraint>();
         TimePeg sp = new TimePeg(bbPeg);
         sp.setGlobalValue(1);

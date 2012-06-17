@@ -1,19 +1,18 @@
 package asap.murml;
 
+import hmi.xml.XMLTokenizer;
+
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
 import lombok.Getter;
 
-import hmi.xml.XMLStructureAdapter;
-import hmi.xml.XMLTokenizer;
-
 /**
  * Used to group a bunch of frames into ONE continuous motion. Note: Each phase is timed locally, ie. its timing starts over from 0
  * @author hvanwelbergen
  */
-public class Phase extends XMLStructureAdapter
+public class Phase extends MURMLElement
 {
     @Getter
     private List<Frame> frames = new ArrayList<Frame>();

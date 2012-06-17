@@ -57,7 +57,7 @@ public class BMLBandTSchedulingHandlerTest
     private BehaviourBlock createBehaviourBlock(String id, String content)
     {
         BehaviourBlock bb = new BehaviourBlock(new BMLBBMLBehaviorAttributes(),new BMLTBMLBehaviorAttributes());
-        bb.readXML("<bml id=\""+id+"\""+ content+"/>");
+        bb.readXML("<bml xmlns=\"http://www.bml-initiative.org/bml/bml-1.0\" id=\""+id+"\""+ content+"/>");
         return bb;
     }
     

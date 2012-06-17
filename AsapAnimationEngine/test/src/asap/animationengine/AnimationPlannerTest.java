@@ -92,7 +92,7 @@ public class AnimationPlannerTest
 
     public HeadBehaviour createHeadBehaviour() throws IOException
     {
-        return new HeadBehaviour(BMLID, new XMLTokenizer("<head id=\"nod1\" lexeme=\"NOD\"/>"));
+        return new HeadBehaviour(BMLID, new XMLTokenizer("<head xmlns=\"http://www.bml-initiative.org/bml/bml-1.0\" id=\"nod1\" lexeme=\"NOD\"/>"));
     }
 
     @Test
@@ -116,7 +116,8 @@ public class AnimationPlannerTest
     @Test
     public void testAddedToPlanManager() throws IOException, BehaviourPlanningException
     {
-        HeadBehaviour beh = new HeadBehaviour(BMLID, new XMLTokenizer("<head id=\"nod1\" lexeme=\"NOD\"/>"));
+        HeadBehaviour beh = new HeadBehaviour(BMLID, new XMLTokenizer("<head xmlns=\"http://www.bml-initiative.org/bml/bml-1.0\" " +
+        		"id=\"nod1\" lexeme=\"NOD\"/>"));
         ArrayList<TimePegAndConstraint> sacs = new ArrayList<TimePegAndConstraint>();
         TimePeg sp = new TimePeg(bbPeg);
         sacs.add(new TimePegAndConstraint("start", sp, new Constraint(), 0, false));
@@ -128,7 +129,8 @@ public class AnimationPlannerTest
     @Test
     public void testUnknownStart() throws BehaviourPlanningException, IOException
     {
-        HeadBehaviour beh = new HeadBehaviour(BMLID, new XMLTokenizer("<head id=\"nod1\" lexeme=\"NOD\"/>"));
+        HeadBehaviour beh = new HeadBehaviour(BMLID, new XMLTokenizer("<head xmlns=\"http://www.bml-initiative.org/bml/bml-1.0\" " +
+        		"id=\"nod1\" lexeme=\"NOD\"/>"));
 
         ArrayList<TimePegAndConstraint> sacs = new ArrayList<TimePegAndConstraint>();
         TimePeg sp = new TimePeg(bbPeg);
@@ -144,7 +146,7 @@ public class AnimationPlannerTest
     @Test
     public void testPostureShiftBehaviour()throws BehaviourPlanningException, IOException
     {
-        String str="<postureShift id=\"shift1\"></postureShift>";
+        String str="<postureShift xmlns=\"http://www.bml-initiative.org/bml/bml-1.0\" id=\"shift1\"></postureShift>";
         PostureShiftBehaviour beh = new PostureShiftBehaviour(BMLID, new XMLTokenizer(str));
         
         ArrayList<TimePegAndConstraint> sacs = new ArrayList<TimePegAndConstraint>();

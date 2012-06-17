@@ -327,20 +327,23 @@ public class BMLSchedulerTest
 
     private String createEmptyBML(String bmlId, String extraAttributes)
     {
-        return "<bml xmlns:bmlt=\"http://hmi.ewi.utwente.nl/bmlt\" id=\"" + bmlId + "\" " + extraAttributes + "/>";
+        return "<bml xmlns=\"http://www.bml-initiative.org/bml/bml-1.0\" "+
+            "xmlns:bmlt=\"http://hmi.ewi.utwente.nl/bmlt\" id=\"" + bmlId + "\" " + extraAttributes + "/>";
     }
 
     private String createNonEmptyBML(String bmlId, String extraAttributes)
     {
 
-        return "<bml xmlns:bmlt=\"http://hmi.ewi.utwente.nl/bmlt\" id=\"" + bmlId + "\" " + extraAttributes
+        return "<bml xmlns=\"http://www.bml-initiative.org/bml/bml-1.0\"" +
+        		"xmlns:bmlt=\"http://hmi.ewi.utwente.nl/bmlt\" id=\"" + bmlId + "\" " + extraAttributes
                 + "><speech id=\"s1\"><text/></speech></bml>";
     }
 
     private String createNonEmptyBML(String bmlId)
     {
 
-        return "<bml xmlns:bmlt=\"http://hmi.ewi.utwente.nl/bmlt\" id=\"" + bmlId + "\"><speech id=\"s1\"><text/></speech></bml>";
+        return "<bml xmlns=\"http://www.bml-initiative.org/bml/bml-1.0\"" +
+        		"xmlns:bmlt=\"http://hmi.ewi.utwente.nl/bmlt\" id=\"" + bmlId + "\"><speech id=\"s1\"><text/></speech></bml>";
     }
 
     @Before
@@ -384,7 +387,7 @@ public class BMLSchedulerTest
     @Test
     public void testStart()
     {
-        parseBML("<bml id=\"bml1\"/>");
+        parseBML("<bml xmlns=\"http://www.bml-initiative.org/bml/bml-1.0\" id=\"bml1\"/>");
         scheduler.schedule();
         assertEquals(1, getBMLIdsFromStartFeedback(blockProgressFeedbackList).size());
         assertEquals("bml1", getBMLIdsFromStartFeedback(blockProgressFeedbackList).get(0));

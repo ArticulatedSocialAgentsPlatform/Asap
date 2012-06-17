@@ -19,7 +19,7 @@ public class FrameTest
     public void testRead()
     {
         Frame f = new Frame();
-        f.readXML("<frame ftime=\"0.1\"><posture>Humanoid (dB_Smile 3 70 0 0) (dB_OpenMouthWOOQ 3 0 0 0) "
+        f.readXML("<frame xmlns=\"http://www.techfak.uni-bielefeld.de/ags/soa/murml\" ftime=\"0.1\"><posture>Humanoid (dB_Smile 3 70 0 0) (dB_OpenMouthWOOQ 3 0 0 0) "
                 + "(dB_OpenMouthL 3 0 0 0) (dB_OpenMouthE 3 0 0 0)</posture></frame>");
         assertThat(
                 f.getPosture().getJointValues(),

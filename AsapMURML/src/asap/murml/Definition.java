@@ -1,18 +1,17 @@
 package asap.murml;
 
+import hmi.xml.XMLTokenizer;
+
 import java.io.IOException;
 
 import lombok.Getter;
-
-import hmi.xml.XMLStructureAdapter;
-import hmi.xml.XMLTokenizer;
 
 /**
  * MURML definition parser
  * @author hvanwelbergen
  *
  */
-public class Definition extends XMLStructureAdapter
+public class Definition extends MURMLElement
 {
     @Getter private Posture posture;
     @Getter private Keyframing keyframing; 

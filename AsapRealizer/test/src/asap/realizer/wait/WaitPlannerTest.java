@@ -47,7 +47,8 @@ public class WaitPlannerTest
     
     public WaitBehaviour createWaitBehaviour() throws IOException
     {
-        return createWaitBehaviour("<wait id=\"w1\" max-wait=\"10\"/>");
+        return createWaitBehaviour("<wait xmlns=\"http://www.bml-initiative.org/bml/bml-1.0\"" +
+        		"id=\"w1\" max-wait=\"10\"/>");
     }
     
     @Test
@@ -71,7 +72,8 @@ public class WaitPlannerTest
     @Test
     public void testResolve1() throws BehaviourPlanningException, IOException
     {
-        WaitBehaviour wb = createWaitBehaviour("<wait id=\"w1\" max-wait=\"10\"/>");
+        WaitBehaviour wb = createWaitBehaviour("<wait xmlns=\"http://www.bml-initiative.org/bml/bml-1.0\" " +
+        		"id=\"w1\" max-wait=\"10\"/>");
         ArrayList<TimePegAndConstraint> sacs = new ArrayList<TimePegAndConstraint>();
         TimePeg startPeg = new TimePeg(BMLBlockPeg.GLOBALPEG);
         sacs.add(new TimePegAndConstraint("start", startPeg, new Constraint(), 0));
@@ -89,7 +91,7 @@ public class WaitPlannerTest
     @Test
     public void testResolve2() throws BehaviourPlanningException, IOException
     {
-        WaitBehaviour wb = createWaitBehaviour("<wait id=\"w1\"/>");
+        WaitBehaviour wb = createWaitBehaviour("<wait xmlns=\"http://www.bml-initiative.org/bml/bml-1.0\" id=\"w1\"/>");
         ArrayList<TimePegAndConstraint> sacs = new ArrayList<TimePegAndConstraint>();
         TimePeg startPeg = new TimePeg(BMLBlockPeg.GLOBALPEG);
         sacs.add(new TimePegAndConstraint("start", startPeg, new Constraint(), 0));
@@ -106,7 +108,7 @@ public class WaitPlannerTest
     @Test
     public void testResolve3() throws BehaviourPlanningException, IOException
     {
-        WaitBehaviour wb = createWaitBehaviour("<wait id=\"w1\"/>");
+        WaitBehaviour wb = createWaitBehaviour("<wait xmlns=\"http://www.bml-initiative.org/bml/bml-1.0\" id=\"w1\"/>");
         ArrayList<TimePegAndConstraint> sacs = new ArrayList<TimePegAndConstraint>();
         TimePeg startPeg = new TimePeg(BMLBlockPeg.GLOBALPEG);
         startPeg.setGlobalValue(3);

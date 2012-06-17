@@ -53,7 +53,8 @@ public abstract class AbstractSpeechPlannerTest<T extends TimedAbstractSpeechUni
 
     protected SpeechBehaviour createSpeechBehaviour(String id, String bmlId, String speech) throws IOException
     {
-        return createSpeechBehaviour(String.format("<speech id=\"%s\"><text>%s</text></speech>", id, speech), bmlId);
+        return createSpeechBehaviour(String.format("<speech xmlns=\"http://www.bml-initiative.org/bml/bml-1.0\" " +
+        		"id=\"%s\"><text>%s</text></speech>", id, speech), bmlId);
     }
     
     @Test

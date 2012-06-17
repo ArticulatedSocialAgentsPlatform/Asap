@@ -72,8 +72,8 @@ public class FacePlannerTest
 
     private FaceLexemeBehaviour createFaceLexemeBehaviour() throws IOException
     {
-        //return new FaceLexemeBehaviour(BMLID, new XMLTokenizer("<faceLexeme id=\"f1\" type=\"FACS\" au=\"1\" amount=\"0\"/>"));
-        return new FaceLexemeBehaviour(BMLID, new XMLTokenizer("<faceLexeme id=\"f1\" lexeme=\"BLINK\" amount=\"0\"/>"));
+        return new FaceLexemeBehaviour(BMLID, new XMLTokenizer("<faceLexeme xmlns=\"http://www.bml-initiative.org/bml/bml-1.0\" " +
+        		"id=\"f1\" lexeme=\"BLINK\" amount=\"0\"/>"));
     }
 
     @Before

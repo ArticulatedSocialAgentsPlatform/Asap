@@ -36,6 +36,7 @@ import asap.realizer.pegboard.BMLBlockPeg;
 import asap.realizer.pegboard.PegBoard;
 import asap.realizer.planunit.ParameterException;
 
+import saiba.bml.BMLInfo;
 import saiba.bml.core.Behaviour;
 import saiba.bml.core.PostureShiftBehaviour;
 
@@ -56,13 +57,21 @@ public class GestureBinding extends XMLStructureAdapter
         fbManager = fbm;
         resources = r;
     }
-
+    
+    private boolean hasEqualNameSpace(Behaviour b, String ns)
+    {
+        if(b.getNamespace() == null && ns == null) return true;
+        if(ns==null && b.getNamespace().equals(BMLInfo.BMLNAMESPACE))return true;
+        if(ns==null)return false;
+        if(ns.equals(b.getNamespace()))return true;
+        return false;
+    }
+    
     public RestPose getRestPose(PostureShiftBehaviour b, AnimationPlayer player)
     {
         for (RestPoseSpec s : restPoseSpecs)
         {
-            if ((s.getSpecnamespace() == null && b.getNamespace() == null)
-                    || (s.getSpecnamespace() != null && s.getSpecnamespace().equals(b.getNamespace())))
+            if (hasEqualNameSpace(b,s.getSpecnamespace()))
             {
                 if (s.satisfiesConstraints(b))
                 {
@@ -99,8 +108,7 @@ public class GestureBinding extends XMLStructureAdapter
         for (MotionUnitSpec s : specs)
         {
             if (s.getType().equals(b.getXMLTag())
-                    && ((s.getSpecnamespace() == null && b.getNamespace() == null) || (s.getSpecnamespace() != null && s.getSpecnamespace()
-                            .equals(b.getNamespace()))))
+                    && hasEqualNameSpace(b,s.getSpecnamespace()))
             {
                 if (!s.satisfiesConstraints(b))
                 {

@@ -19,7 +19,7 @@ public class DefinitionTest
     public void testEmptyDefinition()
     {
         Definition d = new Definition();
-        d.readXML("<definition/>");
+        d.readXML("<definition xmlns=\"http://www.techfak.uni-bielefeld.de/ags/soa/murml\"/>");
         assertNull(d.getPosture());
         assertNull(d.getKeyframing());
     }
@@ -28,7 +28,7 @@ public class DefinitionTest
     public void testPostureDefinition()
     {
         Definition d = new Definition();
-        d.readXML("<definition><posture>Humanoid (dB_Smile 3 70 0 0) (dB_OpenMouthWOOQ 3 0 0 0) "
+        d.readXML("<definition xmlns=\"http://www.techfak.uni-bielefeld.de/ags/soa/murml\"><posture>Humanoid (dB_Smile 3 70 0 0) (dB_OpenMouthWOOQ 3 0 0 0) "
                 + "(dB_OpenMouthL 3 0 0 0) (dB_OpenMouthE 3 0 0 0)</posture></definition>");
         assertThat(
                 d.getPosture().getJointValues(),
@@ -42,7 +42,7 @@ public class DefinitionTest
     public void testKeyframingDefinition()
     {
         Definition d = new Definition();
-        d.readXML("<definition><keyframing><phase><frame ftime=\"0\"><posture>Humanoid "
+        d.readXML("<definition xmlns=\"http://www.techfak.uni-bielefeld.de/ags/soa/murml\"><keyframing><phase><frame ftime=\"0\"><posture>Humanoid "
                 + "(dB_Smile 3 70 0 0)</posture></frame></phase></keyframing></definition>");
         assertNull(d.getPosture());
         assertEquals(0, d.getKeyframing().getPhases().get(0).getFrames().get(0).getFtime(), PARAMETER_PRECISION);

@@ -18,6 +18,7 @@
  ******************************************************************************/
 package asap.faceengine.facebinding;
 
+import saiba.bml.BMLInfo;
 import saiba.bml.core.Behaviour;
 import hmi.faceanimation.FaceController;
 import hmi.faceanimation.converters.EmotionConverter;
@@ -50,6 +51,15 @@ public class FaceBinding extends XMLStructureAdapter
     private ArrayList<FaceUnitSpec> specs = new ArrayList<FaceUnitSpec>();
     private Logger logger = LoggerFactory.getLogger(FaceBinding.class.getName());
 
+    private boolean hasEqualNameSpace(Behaviour b, String ns)
+    {
+        if(b.getNamespace() == null && ns == null) return true;
+        if(ns==null && b.getNamespace().equals(BMLInfo.BMLNAMESPACE))return true;
+        if(ns==null)return false;
+        if(ns.equals(b.getNamespace()))return true;
+        return false;
+    }
+    
     /**
      * Gets a list of timed face units that satisfy the constraints of behaviour b
      */
@@ -62,8 +72,7 @@ public class FaceBinding extends XMLStructureAdapter
         {
             // System.out.println("testing "+s.getType());
             if (s.getType().equals(b.getXMLTag())
-                    && ((s.getSpecnamespace() == null && b.getNamespace() == null) || (s.getSpecnamespace() != null && s.getSpecnamespace()
-                            .equals(b.getNamespace()))))
+                    && hasEqualNameSpace(b,s.getSpecnamespace()))
             {
                 if (s.satisfiesConstraints(b))
                 {

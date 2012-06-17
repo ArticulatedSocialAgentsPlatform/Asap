@@ -28,7 +28,8 @@ public class MorphVisemeBindingTest
     @Before
     public void setup() throws IOException
     {
-        speechBehaviour = new SpeechBehaviour("bml1",new XMLTokenizer("<speech id=\"s1\"><text>Hello World</text></speech>"));        
+        speechBehaviour = new SpeechBehaviour("bml1",new XMLTokenizer("<speech xmlns=\"http://www.bml-initiative.org/bml/bml-1.0\" " +
+        		"id=\"s1\"><text>Hello World</text></speech>"));        
     }
     
     public VisemeBinding getVisemeBinding()

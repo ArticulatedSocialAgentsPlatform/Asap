@@ -22,7 +22,7 @@ public class BMLBCompositionTest
     @Test 
     public void testMerge()
     {
-        String bmlString = "<bml id=\"bml1\"/>";
+        String bmlString = "<bml xmlns=\"http://www.bml-initiative.org/bml/bml-1.0\" id=\"bml1\"/>";
         block.readXML(bmlString);
         assertEquals(BMLBComposition.MERGE, BMLBComposition.convert(block.getSchedulingMechanism()));
     }
@@ -30,7 +30,7 @@ public class BMLBCompositionTest
     @Test
     public void testChunkAfter()
     {
-        String bmlString = "<bml id=\"bml1\" composition=\"CHUNK-AFTER(bml2,bml3)\"/>";        
+        String bmlString = "<bml xmlns=\"http://www.bml-initiative.org/bml/bml-1.0\" id=\"bml1\" composition=\"CHUNK-AFTER(bml2,bml3)\"/>";        
         block.readXML(bmlString);
         assertEquals(BMLBComposition.CHUNK_AFTER, block.getSchedulingMechanism());
         assertThat(bbmlbExt.getChunkAfterList(), hasItems("bml2", "bml3"));

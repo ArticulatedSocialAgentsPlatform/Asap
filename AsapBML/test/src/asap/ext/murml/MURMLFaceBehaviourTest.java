@@ -26,7 +26,7 @@ public class MURMLFaceBehaviourTest
     @Test
     public void testReadKeyframe() throws IOException
     {
-        String bmlString = "<murml:murmlface xmlns:murml=\"http://www.techfak.uni-bielefeld.de/ags/soa/murml\" "
+        String bmlString = "<murmlface xmlns=\"http://www.techfak.uni-bielefeld.de/ags/soa/murml\" "
                 + "id=\"a1\" start=\"nod1:end\">" + "<definition><keyframing><phase><frame ftime=\"0\"><posture>Humanoid "
                 + "(dB_Smile 3 70 0 0)</posture></frame></phase></keyframing></definition>" + "</murml:murmlface>";
         MURMLFaceBehaviour beh = new MURMLFaceBehaviour("bmla", new XMLTokenizer(bmlString));
@@ -42,10 +42,10 @@ public class MURMLFaceBehaviourTest
     {
         BMLInfo.addDescriptionExtension(MURMLFaceBehaviour.xmlTag(), MURMLFaceBehaviour.class);
         BMLInfo.supportedExtensions.add(MURMLFaceBehaviour.class);
-        String murmlString = "<murml:murmlface xmlns:murml=\"http://www.techfak.uni-bielefeld.de/ags/soa/murml\" " + "id=\"a1\">"
+        String murmlString = "<murmlface xmlns=\"http://www.techfak.uni-bielefeld.de/ags/soa/murml\" " + "id=\"a1\">"
                 + "<definition><keyframing><phase><frame ftime=\"0\"><posture>Humanoid "
                 + "(dB_Smile 3 70 0 0)</posture></frame></phase></keyframing></definition>" + "</murml:murmlface>";
-        String bmlString = "<faceLexeme id=\"a1\" lexeme=\"BLINK\">" + "<description priority=\"1\" type=\"murmlface\">" + murmlString
+        String bmlString = "<faceLexeme xmlns=\"http://www.bml-initiative.org/bml/bml-1.0\" id=\"a1\" lexeme=\"BLINK\">" + "<description priority=\"1\" type=\"murmlface\">" + murmlString
                 + "</description></faceLexeme>";
         FaceLexemeBehaviour f = new FaceLexemeBehaviour("bmla", new XMLTokenizer(bmlString));
         assertThat(f.descBehaviour, instanceOf(MURMLFaceBehaviour.class));

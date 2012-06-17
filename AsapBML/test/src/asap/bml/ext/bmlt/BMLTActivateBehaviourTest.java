@@ -38,7 +38,7 @@ public class BMLTActivateBehaviourTest
     @Test
     public void testActivateInBML() throws IOException
     {
-        String bmlString = "<bml id=\"bml1\">"+
+        String bmlString = "<bml xmlns=\"http://www.bml-initiative.org/bml/bml-1.0\" id=\"bml1\">"+
                             "<bmlt:activate xmlns:bmlt=\"http://hmi.ewi.utwente.nl/bmlt\" id=\"a1\" start=\"nod1:end\" target=\"bml1\"/>"+
                            "</bml>";
         BehaviourBlock bb = new BehaviourBlock(new XMLTokenizer(bmlString));

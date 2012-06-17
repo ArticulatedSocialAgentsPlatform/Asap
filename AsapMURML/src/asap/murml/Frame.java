@@ -1,6 +1,5 @@
 package asap.murml;
 
-import hmi.xml.XMLStructureAdapter;
 import hmi.xml.XMLTokenizer;
 
 import java.io.IOException;
@@ -12,7 +11,7 @@ import lombok.Getter;
  * Parses a MURML frame
  * @author hvanwelbergen
  */
-public class Frame extends XMLStructureAdapter
+public class Frame extends MURMLElement
 {
     @Getter
     private double ftime;

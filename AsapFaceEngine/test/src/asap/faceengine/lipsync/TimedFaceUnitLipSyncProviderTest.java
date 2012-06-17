@@ -53,7 +53,8 @@ public class TimedFaceUnitLipSyncProviderTest
         VisemeToMorphMapping mapping = new VisemeToMorphMapping();
         mapping.readXML(visemeBindingXML);
         visemeBinding = new MorphVisemeBinding(mapping);
-        String str = "<speech id=\"s1\"><text>Hello world</text></speech>";
+        String str = "<speech xmlns=\"http://www.bml-initiative.org/bml/bml-1.0\" " +
+        		"id=\"s1\"><text>Hello world</text></speech>";
         speechBehavior = new SpeechBehaviour("bml1",new XMLTokenizer(str));
         
         TimePeg startPeg = new TimePeg(bbPeg);
