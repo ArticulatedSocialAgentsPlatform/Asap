@@ -228,7 +228,8 @@ public class RealizerBridgeUI extends JPanel
 
         // textbox for input
         bmlInput = new JTextArea(
-                "<bml id=\"bml1\">\n<!--posture id=\"pose1\" start=\"0\" stance=\"standing\" shape=\"open\" part=\"lower\"/-->\n"
+                "<bml xmlns=\"http://www.bml-initiative.org/bml/bml-1.0\"" +
+                " id=\"bml1\">\n"
                         + "<speech id=\"speech1\" start=\"2\">\n"
                         + "<text>Hello! This is a basic BML test for the realizer bridge!</text>\n"
                         + "</speech>\n"
@@ -306,7 +307,8 @@ public class RealizerBridgeUI extends JPanel
     /** Play the content of the BML input box; set the resulting output in the outputArea */
     public void playBMLContent()
     {
-        realizerBridge.performBML("<bml id=\"clear\" composition=\"REPLACE\"></bml>");
+        realizerBridge.performBML("<bml xmlns=\"http://www.bml-initiative.org/bml/bml-1.0\" " +
+        		"id=\"clear\" composition=\"REPLACE\"></bml>");
         realizerBridge.performBML(bmlInput.getText());
     }
 

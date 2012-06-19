@@ -122,7 +122,7 @@ public class LoggingRealizerBridgeTest
     @Test
     public void testLogBMLRequest()
     {
-        final String bml = "<bml id=\"bml1\"/>";
+        final String bml = "<bml xmlns=\"http://www.bml-initiative.org/bml/bml-1.0\" id=\"bml1\"/>";
         inputBridge.performBML(bml);
         assertEquals(bml,outputBridge.getPerformedBML());
         
