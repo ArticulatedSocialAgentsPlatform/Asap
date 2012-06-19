@@ -6,12 +6,17 @@
    <dependencies>
          
       <dependency org="Asap"     name="AsapBML"            rev="latest.${resolve.status}"  />
+      <dependency org="Asap"     name="AsapMURML"            rev="latest.${resolve.status}"  />
+      <dependency org="Asap"     name="AsapMath"            rev="latest.${resolve.status}"  />
       <dependency org="Asap"     name="AsapMotionUnit"            rev="latest.${resolve.status}"  />
       <dependency org="Asap"     name="AsapRealizer"            rev="latest.${resolve.status}"  />
       <dependency org="Asap"     name="AsapAnimationEngine"            rev="latest.${resolve.status}"  />      
       <dependency org="Asap"     name="AsapFaceEngine"            rev="latest.${resolve.status}"  />
       <dependency org="Asap"     name="AsapBinding"            rev="latest.${resolve.status}"  />
-       
+      <dependency org="Asap"   name="AsapAudioEngine"     rev="latest.${resolve.status}"   />    
+      <dependency org="Asap"   name="AsapSpeechEngine"     rev="latest.${resolve.status}"   />    
+      <dependency org="Asap"   name="AsapBinding"      rev="latest.${resolve.status}"   />    
+      <dependency org="Asap"   name="AsapEnvironment"     rev="latest.${resolve.status}"   />    
       
       <dependency org="HMI"      name="HmiAnimation"       rev="latest.${resolve.status}"  />
       <dependency org="HMI"      name="HmiTTS"             rev="latest.${resolve.status}"  />
@@ -23,30 +28,19 @@
       <dependency org="HMI"      name="HmiXml"             rev="latest.${resolve.status}"  />
       <dependency org="HMI"      name="HmiUtil"            rev="latest.${resolve.status}"  />
       <dependency org="HMI"      name="HmiTTSnative"       rev="latest.${resolve.status}"  />
-      <dependency org="Asap"   name="AsapEnvironment"     rev="latest.${resolve.status}"   />    
       <dependency org="HMI"   name="AsapUtils"     rev="latest.${resolve.status}"   />    
-      
-      
       <dependency org="HMI"   name="HmiMixedAnimationEnvironment"     rev="latest.${resolve.status}"   />    
-      
       <dependency org="HMI"   name="HmiRenderEnvironment"     rev="latest.${resolve.status}"   />    
-      
       <dependency org="HMI"   name="HmiPhysicsEnvironment"     rev="latest.${resolve.status}"   />    
-      
       <dependency org="HMI"   name="HmiFaceAnimation"     rev="latest.${resolve.status}"   />    
-      
       <dependency org="HMI"   name="HmiAudioEnvironment"     rev="latest.${resolve.status}"   />    
-      
-      <dependency org="Asap"   name="AsapAudioEngine"     rev="latest.${resolve.status}"   />    
-      
-      
-      <dependency org="Asap"   name="AsapSpeechEngine"     transitive="false" rev="latest.${resolve.status}"   />    
-      <dependency org="Asap"   name="AsapBinding"     transitive="false" rev="latest.${resolve.status}"   />    
+      <dependency org="HMI"      name="HmiTestUtil" transitive="false" rev="latest.${resolve.status}"/>
+       
       <!--
       <dependency org="Asap"   name="AsapEmitterEngine"     rev="latest.${resolve.status}"   /> 	  
 	  -->
 	  
-      <dependency org="HMI"      transitive="false" name="HmiTestUtil"        rev="latest.${resolve.status}"/>
+      
       <dependency org="odejava"  name="odejava"            rev="latest.release"  />   
       <dependency org="Sun" name="jogl" rev="latest.release"  />                                 
       
