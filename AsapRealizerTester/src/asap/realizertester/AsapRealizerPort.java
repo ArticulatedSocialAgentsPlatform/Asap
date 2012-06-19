@@ -9,6 +9,10 @@ import bml.realizertestport.BMLFeedbackListener;
 import bml.realizertestport.BMLWarningListener;
 import bml.realizertestport.RealizerTestPort;
 
+/**
+ * Maps RealizerPort feedback to RealizerTestPort feedback
+ * @author welberge
+ */
 public class AsapRealizerPort implements RealizerTestPort
 {
     private final RealizerPort realizerPort;

@@ -86,6 +86,7 @@ public abstract class AbstractASAPRealizerTest extends AbstractBML1RealizerTest 
         String bmlString1 = readTestFile("bmlt/tightmerge/speechandnod.xml");
         String bmlString2 = readTestFile("bmlt/tightmerge/volumechange.xml");
         realizerHandler.performBML(bmlString1);
+        waitForBMLSchedulingFinishedFeedback("bml1");
         realizerHandler.performBML(bmlString2);
         realizerHandler.waitForBMLEndFeedback("bml1");
         realizerHandler.waitForBMLEndFeedback("bml2");
