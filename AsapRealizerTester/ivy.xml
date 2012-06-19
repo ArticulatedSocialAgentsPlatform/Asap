@@ -42,7 +42,7 @@
 	  
       
       <dependency org="odejava"  name="odejava"            rev="latest.release"  />   
-      <dependency org="Sun" name="jogl" rev="latest.release"  />                                 
+      <dependency org="JogAmp" name="jogl" rev="latest.beta"  />  
       
       <dependency org="saiba"     name="saibabml"           rev="latest.release"    />
       <dependency org="jcip"     name="jcip-annotations"   rev="latest.release"  />   
