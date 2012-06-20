@@ -49,8 +49,7 @@
       <!--input message="Ivy password:" defaultvalue="" addproperty="pw"/-->
       <antcall target="releaselist" >
          <!--param name="passwd" value="${pw}"/-->
-         <param name="publish.resolver" value="asap.filesystem.repository"/> <!-- overrides build.properties value -->
-         <!--param name="publish.resolver" value="asap.sftp.publish"/--> <!-- overrides build.properties value -->
+         <param name="publish.resolver" value="asap.sftp.publish"/> <!-- overrides build.properties value -->
          <!--param name="publish.resolver" value="asapcore.filesystem.repository"/--> <!-- overrides build.properties value -->
       </antcall>
       <antcall target="releaseresourcelist">
