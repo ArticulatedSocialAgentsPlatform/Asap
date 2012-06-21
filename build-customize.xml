@@ -53,7 +53,7 @@
          <!--param name="publish.resolver" value="asapcore.filesystem.repository"/--> <!-- overrides build.properties value -->
       </antcall>
       <antcall target="releaseresourcelist">
-         <param name="publish.resolver" value="resource.filesystem.repository"/> <!-- overrides build.properties value -->
+         <param name="publish.resolver" value="asap.resource.sftp.publish"/> <!-- overrides build.properties value -->
       </antcall>
    </target>
 
