@@ -47,7 +47,7 @@
       <dependency org="google"   name="guava"     rev="latest.${resolve.status}"   />
       
       <dependency org="odejava"  name="odejava"            rev="latest.release"  />   
-      <dependency org="Sun" name="jogl" rev="latest.release"  />                                 
+      <dependency org="JogAmp" name="jogl" rev="latest.release"  />                                 
       <dependency org="lwjgl"    name="lwjgl"            rev="latest.release"  />   
       <dependency org="Sun"      name="jlfgr"              rev="latest.release"  />   
       <dependency org="singularsystems"   name="jep"       rev="latest.release"  />   
