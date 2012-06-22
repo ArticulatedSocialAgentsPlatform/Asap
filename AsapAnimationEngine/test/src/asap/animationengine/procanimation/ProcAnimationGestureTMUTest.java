@@ -36,6 +36,8 @@ import asap.realizer.pegboard.BMLBlockPeg;
 import asap.realizer.pegboard.PegBoard;
 import asap.realizer.pegboard.TimePeg;
 import asap.realizer.planunit.KeyPosition;
+import asap.realizer.planunit.TimedPlanUnitPlayException;
+import asap.realizer.planunit.TimedPlanUnitState;
 import asap.realizer.scheduler.BMLBlockManager;
 import asap.realizer.scheduler.TimePegAndConstraint;
 
@@ -271,5 +273,41 @@ public class ProcAnimationGestureTMUTest extends TimedMotionUnitTest
         assertEquals(4, tpu.getTimePeg("relax").getGlobalValue(), TIME_PRECISION);
         assertEquals(STROKE_DURATION, tpu.getTime("strokeEnd") - tpu.getTime("strokeStart"), TIME_PRECISION);
         assertEquals(RETRACTION_DURATION, tpu.getTime("end")-tpu.getTime("relax"), TIME_PRECISION);
+    }
+    
+    @Test
+    public void testInterrupt() throws TimedPlanUnitPlayException
+    {
+        ProcAnimationGestureTMU tpu = setupPlanUnit(fbManager, BMLBlockPeg.GLOBALPEG, "id1", "bml1");
+        TimePeg tpStroke = TimePegUtil.createAbsoluteTimePeg(4);
+        TimePeg tpStart = TimePegUtil.createAbsoluteTimePeg(0);
+        tpu.setTimePeg("start", tpStart);
+        tpu.setTimePeg("stroke", tpStroke);
+        tpu.setState(TimedPlanUnitState.LURKING);
+        pegBoard.addTimePeg("bml1", "id1", "start", tpStart);
+        pegBoard.addTimePeg("bml1", "id1", "stroke", tpStroke);
+        tpu.start(0);
+        tpu.interrupt(2);
+        assertEquals(1.99,tpu.getTime("stroke"), TIME_PRECISION);
+    }
+    
+    @Test
+    public void testInterruptUnlinkStroke() throws TimedPlanUnitPlayException
+    {
+        ProcAnimationGestureTMU tpu = setupPlanUnit(fbManager, BMLBlockPeg.GLOBALPEG, "id1", "bml1");
+        TimePeg tpStroke = TimePegUtil.createAbsoluteTimePeg(4);
+        TimePeg tpStart = TimePegUtil.createAbsoluteTimePeg(0);
+        tpu.setTimePeg("start", tpStart);
+        tpu.setTimePeg("stroke", tpStroke);
+        tpu.setState(TimedPlanUnitState.LURKING);
+        pegBoard.addTimePeg("bml1", "id1", "start", tpStart);
+        pegBoard.addTimePeg("bml1", "id1", "stroke", tpStroke);
+        pegBoard.addTimePeg("bml1", "speechX", "sync", tpStroke);
+        tpu.start(0);
+        tpu.interrupt(2);
+        assertEquals(1.99,tpu.getTime("stroke"), TIME_PRECISION);
+        assertEquals(4,tpStroke.getGlobalValue(), TIME_PRECISION);
+        assertEquals(4,pegBoard.getPegTime("bml1", "speechX", "sync"),TIME_PRECISION);
+        assertEquals(1.99,pegBoard.getPegTime("bml1", "id1", "stroke"),TIME_PRECISION);        
     }
 }

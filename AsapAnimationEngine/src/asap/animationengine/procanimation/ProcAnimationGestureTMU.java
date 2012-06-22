@@ -523,19 +523,27 @@ public class ProcAnimationGestureTMU extends TimedAnimationUnit
         {
             if (getTime(peg) > time)
             {
-                getTimePeg(peg).setGlobalValue(time-0.01);
+                TimePeg tp = getTimePeg(peg);
+                TimePeg tpNew = tp;
+                if(pegBoard.getPegKeys(tp).size()>1)
+                {
+                    tpNew = new TimePeg(tp.getBmlBlockPeg());
+                    pegBoard.addTimePeg(getBMLId(), getId(), peg, tpNew);
+                }
+                tpNew.setGlobalValue(time-0.01);
+                setTimePeg(peg, tpNew);                
             }
         }
     }
 
     private void gracefullInterrupt(double time) throws TimedPlanUnitPlayException
     {
-        relaxUnit(time);
         interrupted = true;
         skipPegs(time, "ready", "strokeStart", "stroke", "strokeEnd");
+        
+        //XXX: should relax and end pegs also be detached if other behaviors are connected to them? 
         getTimePeg("relax").setGlobalValue(time);
-        getTimePeg("end").setGlobalValue(time + mu.getInterruptionDuration());
-        // stop(time);
+        getTimePeg("end").setGlobalValue(time + mu.getInterruptionDuration());        
     }
 
     @Override
