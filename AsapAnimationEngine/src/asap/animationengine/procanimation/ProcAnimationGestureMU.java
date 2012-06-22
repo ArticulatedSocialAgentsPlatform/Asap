@@ -89,6 +89,12 @@ public class ProcAnimationGestureMU implements GestureUnit
         return pose;
     }
 
+    public double getInterruptionDuration()
+    {
+        return aniPlayer.getRestPose().getTransitionToRestDuration(aniPlayer.getVCurr(),
+                VJointUtils.transformToSidSet(gestureUnit.getControlledJoints()));
+    }
+    
     public double getRetractionDuration()
     {
         copyProc.play(copyProc.getKeyPosition(BMLGestureSync.STROKE_END.getId()).time - 0.01);
@@ -421,6 +427,10 @@ public class ProcAnimationGestureMU implements GestureUnit
         relaxUnit = aniPlayer.getRestPose().createTransitionToRest(VJointUtils.transformToSidSet(gestureUnit.getControlledJoints()));
     }
 
+    public AnimationUnit createRelaxUnit()
+    {
+        return aniPlayer.getRestPose().createTransitionToRest(VJointUtils.transformToSidSet(gestureUnit.getControlledJoints()));
+    }
     @Override
     public void setResource(Resources r)
     {

@@ -29,6 +29,7 @@ import asap.realizer.scheduler.TimePegAndConstraint;
 public class ProcAnimationGestureTMU extends TimedAnimationUnit
 {
     private final ProcAnimationGestureMU mu;
+    private volatile boolean interrupted = false;
     private TimePeg startPeg, readyPeg, strokeStartPeg, strokeEndPeg, strokePeg, relaxPeg, endPeg;
     private double prepDuration, preStrokeHoldDuration, strokeStartDuration, strokeEndDuration, postStrokeHoldDuration, relaxDuration;
 
@@ -77,6 +78,7 @@ public class ProcAnimationGestureTMU extends TimedAnimationUnit
     @Override
     public void updateTiming(double time) throws TMUPlayException
     {
+        if(interrupted)return;
         setAllDefaultPegs();
 
         try
@@ -474,7 +476,8 @@ public class ProcAnimationGestureTMU extends TimedAnimationUnit
                 else
                 {
                     double scale = totalDuration
-                            / (preStrokeHoldDuration + postStrokeHoldDuration + strokeStartDuration + strokeEndDuration + prepDuration + relaxDuration);
+                            / (preStrokeHoldDuration + postStrokeHoldDuration + 
+                                    strokeStartDuration + strokeEndDuration + prepDuration + relaxDuration);
                     prepDuration *= scale;
                     relaxDuration *= scale;
                 }
@@ -514,27 +517,44 @@ public class ProcAnimationGestureTMU extends TimedAnimationUnit
         mu.setupRelaxUnit();
     }
 
+    private void skipPegs(double time, String... pegs)
+    {
+        for (String peg : pegs)
+        {
+            if (getTime(peg) > time)
+            {
+                getTimePeg(peg).setGlobalValue(time-0.01);
+            }
+        }
+    }
+
     private void gracefullInterrupt(double time) throws TimedPlanUnitPlayException
     {
-        /*
+        relaxUnit(time);
+        interrupted = true;
+        skipPegs(time, "ready", "strokeStart", "stroke", "strokeEnd");
         getTimePeg("relax").setGlobalValue(time);
-        updateTiming(time);
-        */
-        stop(time);
+        getTimePeg("end").setGlobalValue(time + mu.getInterruptionDuration());
+        // stop(time);
     }
-    
+
     @Override
     public void interrupt(double time) throws TimedPlanUnitPlayException
     {
-        switch(getState())
+        switch (getState())
         {
         case IN_PREP:
         case PENDING:
-        case LURKING: stop(time);break;                 //just remove yourself
-        case IN_EXEC: gracefullInterrupt(time); break;  //gracefully interrupt yourself
-        case SUBSIDING:                                 //nothing to be done
-        case DONE: 
-            default: break;
+        case LURKING:
+            stop(time);
+            break; // just remove yourself
+        case IN_EXEC:
+            gracefullInterrupt(time);
+            break; // gracefully interrupt yourself
+        case SUBSIDING: // nothing to be done
+        case DONE:
+        default:
+            break;
         }
     }
 
