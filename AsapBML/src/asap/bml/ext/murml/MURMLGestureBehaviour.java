@@ -24,50 +24,17 @@ public class MURMLGestureBehaviour extends MURMLBehaviour
         readXML(tokenizer);
     }
 
-    
-    
-    
-    /*
-     * The XML Stag for XML encoding
-     */
     private static final String XMLTAG = "murmlgesture";
 
-    /**
-     * The XML Stag for XML encoding -- use this static method when you want to see if a given
-     * String equals the xml tag for this class
-     */
     public static String xmlTag()
     {
         return XMLTAG;
     }
 
-    /**
-     * The XML Stag for XML encoding -- use this method to find out the run-time xml tag of an
-     * object
-     */
     @Override
     public String getXMLTag()
     {
         return XMLTAG;
-    }
-
-    @Override
-    public float getFloatParameterValue(String arg0)
-    {
-        // TODO Throw exception?
-        return 0;
-    }
-
-    @Override
-    public String getStringParameterValue(String arg0)
-    {
-        return null;
-    }
-
-    @Override
-    public boolean specifiesParameter(String arg0)
-    {
-        return false;
     }
 
     private static final List<String> DEFAULT_SYNCS = GestureBehaviour.getDefaultSyncPoints();

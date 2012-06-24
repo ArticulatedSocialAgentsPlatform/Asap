@@ -11,21 +11,38 @@ import java.io.IOException;
 import org.junit.Test;
 
 import saiba.bml.BMLInfo;
+import saiba.bml.core.AbstractBehaviourTest;
+import saiba.bml.core.Behaviour;
 import saiba.bml.core.GestureBehaviour;
+import saiba.utils.TestUtil;
 
 /**
  * Unit test cases for the bmlt procanimation behavior
  * @author hvanwelbergen
  * 
  */
-public class BMLTProcAnimationBehaviourTest
+public class BMLTProcAnimationBehaviourTest extends AbstractBehaviourTest
 {
     private static final float PARAMETER_PRECISION = 0.0001f;
     static
     {
         BMLTInfo.init();
     }
-    
+
+    @Override
+    protected Behaviour createBehaviour(String bmlId, String extraAttributeString) throws IOException
+    {
+        String str = "<bmlt:procanimation xmlns:bmlt=\"http://hmi.ewi.utwente.nl/bmlt\" " + TestUtil.getDefNS() + 
+                "name=\"ani1\" id=\"beh1\"" + extraAttributeString + "/>";
+        return new BMLTProcAnimationBehaviour(bmlId, new XMLTokenizer(str));
+    }
+
+    @Override
+    protected Behaviour parseBehaviour(String bmlId, String bmlString) throws IOException
+    {
+        return new BMLTProcAnimationBehaviour(bmlId, new XMLTokenizer(bmlString));
+    }
+
     @Test
     public void testReadXML() throws IOException
     {
@@ -63,7 +80,8 @@ public class BMLTProcAnimationBehaviourTest
     {
         // BMLInfo.addDescriptionExtension(BMLTProcAnimationBehaviour.xmlTag(), BMLTProcAnimationBehaviour.class);
         BMLInfo.supportedExtensions.add(BMLTProcAnimationBehaviour.class);
-        String bmlString = "<gesture xmlns=\"http://www.bml-initiative.org/bml/bml-1.0\" id=\"a1\" start=\"nod1:end\" lexeme=\"BEAT\">" + "<description priority=\"1\" type=\"procanimation\">"
+        String bmlString = "<gesture xmlns=\"http://www.bml-initiative.org/bml/bml-1.0\" id=\"a1\" start=\"nod1:end\" lexeme=\"BEAT\">"
+                + "<description priority=\"1\" type=\"procanimation\">"
                 + "<bmlt:procanimation xmlns:bmlt=\"http://hmi.ewi.utwente.nl/bmlt\" id=\"a1\" start=\"nod1:end\" name=\"ani1\">"
                 + "<bmlt:parameter name=\"amplitude\" value=\"10\"/>" + "</bmlt:procanimation>" + "</description>" + "</gesture>";
         GestureBehaviour g = new GestureBehaviour("bmla", new XMLTokenizer(bmlString));
@@ -76,4 +94,5 @@ public class BMLTProcAnimationBehaviourTest
         assertEquals("nod1", beh.getSyncPoints().get(0).getRef().sourceId);
         assertEquals("end", beh.getSyncPoints().get(0).getRef().syncId);
     }
+
 }

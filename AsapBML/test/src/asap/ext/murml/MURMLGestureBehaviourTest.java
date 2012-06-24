@@ -5,6 +5,8 @@ import static org.hamcrest.Matchers.instanceOf;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNull;
 import saiba.bml.BMLInfo;
+import saiba.bml.core.AbstractBehaviourTest;
+import saiba.bml.core.Behaviour;
 import saiba.bml.core.GestureBehaviour;
 import hmi.xml.XMLTokenizer;
 
@@ -19,8 +21,23 @@ import asap.bml.ext.murml.MURMLGestureBehaviour;
  * @author hvanwelbergen
  * 
  */
-public class MURMLGestureBehaviourTest
+public class MURMLGestureBehaviourTest extends AbstractBehaviourTest
 {
+    @Override
+    protected Behaviour createBehaviour(String bmlId, String extraAttributeString) throws IOException
+    {
+        String bmlString = "<murmlgesture xmlns=\"http://www.techfak.uni-bielefeld.de/ags/soa/murml\" "+extraAttributeString
+                + "id=\"a1\" start=\"nod1:end\">" + "<definition><keyframing><phase><frame ftime=\"0\"><posture>Humanoid "
+                + "(l_shoulder 3 70 0 0)</posture></frame></phase></keyframing></definition>" + "</murml:murmlgesture>";
+        return new MURMLGestureBehaviour(bmlId, new XMLTokenizer(bmlString));
+    }
+
+    @Override
+    protected Behaviour parseBehaviour(String bmlId, String bmlString) throws IOException
+    {
+        return new MURMLGestureBehaviour(bmlId, new XMLTokenizer(bmlString));
+    }
+    
     private static final double FRAME_PRECISION = 0.0001;
 
     @Test
@@ -56,4 +73,6 @@ public class MURMLGestureBehaviourTest
         assertNull(beh.getMurmlDefinition().getPosture());
         assertEquals(0, beh.getMurmlDefinition().getKeyframing().getPhases().get(0).getFrames().get(0).getFtime(), FRAME_PRECISION);
     }
+
+    
 }

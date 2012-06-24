@@ -8,14 +8,31 @@ import java.io.IOException;
 
 import org.junit.Test;
 
+import saiba.bml.core.AbstractBehaviourTest;
+import saiba.bml.core.Behaviour;
+
 /**
  * Unit test cases for the BMLTControllerBehaviour
  * @author hvanwelbergen
  * 
  */
-public class BMLTControllerBehaviourTest
+public class BMLTControllerBehaviourTest extends AbstractBehaviourTest
 {
     private static final float PARAMETER_PRECISION = 0.0001f;
+    
+    @Override
+    protected Behaviour createBehaviour(String bmlId, String extraAttributeString) throws IOException
+    {
+        String str = "<bmlt:controller xmlns:bmlt=\"http://hmi.ewi.utwente.nl/bmlt\" name=\"controller1\" class=\"DummyController\" id=\"a1\" "+ 
+                extraAttributeString+"/>";        
+                return new BMLTControllerBehaviour(bmlId, new XMLTokenizer(str));
+    }
+
+    @Override
+    protected Behaviour parseBehaviour(String bmlId, String bmlString) throws IOException
+    {
+        return new BMLTControllerBehaviour(bmlId, new XMLTokenizer(bmlString));
+    }
     
     @Test
     public void testReadXML() throws IOException
@@ -50,5 +67,5 @@ public class BMLTControllerBehaviourTest
         assertEquals("nod1", behOut.getSyncPoints().get(0).getRef().sourceId);
         assertEquals("end", behOut.getSyncPoints().get(0).getRef().syncId);
         assertEquals(2, behOut.getFloatParameterValue("k"), PARAMETER_PRECISION);
-    }
+    }    
 }

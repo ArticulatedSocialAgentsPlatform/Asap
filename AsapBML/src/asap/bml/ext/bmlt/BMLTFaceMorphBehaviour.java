@@ -55,7 +55,7 @@ public class BMLTFaceMorphBehaviour extends BMLTBehaviour
     {
         if (name.equals("targetname")) return targetName;
         if (name.equals("intensity")) return "" + intensity;
-        return null;
+        return super.getStringParameterValue(name);
     }
     
     @Override
@@ -71,14 +71,14 @@ public class BMLTFaceMorphBehaviour extends BMLTBehaviour
     public float getFloatParameterValue(String name)
     {
         if (name.equals("intensity")) return intensity;
-        throw new IllegalArgumentException("Parameter " + name + " not found/not a float.");
+        return super.getFloatParameterValue(name);
     }
 
     @Override
     public boolean specifiesParameter(String name)
     {
         if (name.equals("targetname") || name.equals("intensity")) return true;
-        return false;
+        return super.specifiesParameter(name);
     }
 
     public BMLTFaceMorphBehaviour(String id, XMLTokenizer tokenizer) throws IOException
@@ -88,11 +88,11 @@ public class BMLTFaceMorphBehaviour extends BMLTBehaviour
     }
 
     @Override
-    public StringBuilder appendAttributeString(StringBuilder buf)
+    public StringBuilder appendAttributeString(StringBuilder buf, XMLFormatting fmt)
     {
         appendAttribute(buf, "intensity", intensity);
         appendAttribute(buf, "targetname", targetName);
-        return super.appendAttributeString(buf);
+        return super.appendAttributeString(buf, fmt);
     }
 
     @Override

@@ -156,13 +156,7 @@ public class PersistentFixtureAsapRealizerTest extends AbstractASAPRealizerTest
         realizerHandler.clearFeedbackLists();
     }
 
-    @Override
-    @Ignore
-    public void testTransition() // transition behaviors are now deprecated
-    {
-
-    }
-
+   
     @Ignore //TODO: predictedEnd is no longer available in BML1
     @Test
     public void testTemporaryInvalidTimingInAppend() throws InterruptedException, IOException

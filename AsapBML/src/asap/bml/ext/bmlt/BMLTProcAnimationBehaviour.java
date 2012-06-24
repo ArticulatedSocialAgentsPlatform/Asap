@@ -19,6 +19,7 @@
 package asap.bml.ext.bmlt;
 
 import saiba.bml.parser.SyncPoint;
+import hmi.xml.XMLFormatting;
 import hmi.xml.XMLTokenizer;
 
 import java.io.IOException;
@@ -63,10 +64,10 @@ public class BMLTProcAnimationBehaviour extends BMLTBehaviour
     }
 
     @Override
-    public StringBuilder appendAttributeString(StringBuilder buf)
+    public StringBuilder appendAttributeString(StringBuilder buf, XMLFormatting fmt)
     {
         appendAttribute(buf, "name", name);
-        return super.appendAttributeString(buf);
+        return super.appendAttributeString(buf, fmt);
     }
 
     @Override

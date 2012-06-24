@@ -49,20 +49,28 @@ public abstract class BMLTBehaviour extends Behaviour
     @Override
     public String getStringParameterValue(String name)
     {
-        return parameters.get(name).value;
+        if(parameters.get(name)!=null)
+        {
+            return parameters.get(name).value;
+        }
+        return super.getStringParameterValue(name);
     }
 
     @Override
     public boolean specifiesParameter(String name)
     {
-        return parameters.get(name) != null;
+        if(parameters.get(name) != null) return true;
+        return super.specifiesParameter(name);
     }
 
     @Override
     public float getFloatParameterValue(String name)
     {
-        // assumes all parameters grabbed from here are float parameters
-        return Float.parseFloat(parameters.get(name).value);
+        if(parameters.get(name)!=null)
+        {
+            return Float.parseFloat(parameters.get(name).value);
+        }
+        return super.getFloatParameterValue(name);
     }
 
     @Override
@@ -73,7 +81,7 @@ public abstract class BMLTBehaviour extends Behaviour
         {
             return p.value.equals(value);
         }
-        return false;
+        return super.satisfiesConstraint(name, value);
     }
 
     @Override

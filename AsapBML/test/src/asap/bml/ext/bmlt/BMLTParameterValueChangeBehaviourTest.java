@@ -8,13 +8,33 @@ import java.io.IOException;
 
 import org.junit.Test;
 
+import saiba.bml.core.AbstractBehaviourTest;
+import saiba.bml.core.Behaviour;
+import saiba.utils.TestUtil;
+
 /**
  * Unit tests for the parametervaluechange behavior
  * @author welberge
  * 
  */
-public class BMLTParameterValueChangeBehaviourTest
+public class BMLTParameterValueChangeBehaviourTest extends AbstractBehaviourTest
 {
+    @Override
+    protected Behaviour createBehaviour(String bmlId, String extraAttributeString) throws IOException
+    {
+        String str = "<bmlt:parametervaluechange xmlns:bmlt=\"http://hmi.ewi.utwente.nl/bmlt\" id=\"a1\" "+TestUtil.getDefNS()
+                +"paramId=\"volume\" target=\"bmlx1:behx\" "
+                + extraAttributeString+">"
+                + "<bmlt:trajectory type=\"linear\" targetValue=\"100\" initialValue=\"0\"/>" + "</bmlt:parametervaluechange>";        
+                return new BMLTParameterValueChangeBehaviour(bmlId, new XMLTokenizer(str));
+    }
+
+    @Override
+    protected Behaviour parseBehaviour(String bmlId, String bmlString) throws IOException
+    {
+        return new BMLTParameterValueChangeBehaviour(bmlId, new XMLTokenizer(bmlString));
+    }
+    
     @Test
     public void testReadXML() throws IOException
     {
@@ -53,5 +73,5 @@ public class BMLTParameterValueChangeBehaviourTest
         assertEquals("bml1:speech1", behOut.getStringParameterValue("target"));
         assertEquals("nod1", behOut.getSyncPoints().get(0).getRef().sourceId);
         assertEquals("end", behOut.getSyncPoints().get(0).getRef().syncId);
-    }
+    }    
 }

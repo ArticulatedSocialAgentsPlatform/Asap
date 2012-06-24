@@ -15,7 +15,6 @@ import saiba.bml.feedback.BMLPredictionFeedback;
 
 import asap.bml.ext.bmlt.BMLTAudioFileBehaviour;
 import asap.bml.ext.bmlt.BMLTParameterValueChangeBehaviour;
-import asap.bml.ext.bmlt.BMLTTransitionBehaviour;
 import asap.bml.feedback.BMLPredictionListener;
 import bml.bmlinfo.DefaultSyncPoints;
 import bml.realizertest.AbstractBML1RealizerTest;
@@ -305,23 +304,6 @@ public abstract class AbstractASAPRealizerTest extends AbstractBML1RealizerTest 
         realizerHandler.assertNoWarnings();
         realizerHandler.assertNoDuplicateFeedbacks();
         realizerHandler.assertSyncsInOrder("bml1", "audio1",BMLTAudioFileBehaviour.getDefaultSyncPoints().toArray(new String[0]));
-    }
-    
-    @Test
-    public void testTransition() throws InterruptedException, IOException
-    {
-        String bmlString1 = readTestFile("bmlt/transition.xml");
-        realizerHandler.performBML(bmlString1);
-        realizerHandler.waitForBMLEndFeedback("bml1");
-        Thread.sleep(1000);
-        
-        realizerHandler.assertNoExceptions();
-        realizerHandler.assertNoWarnings();
-        realizerHandler.assertNoDuplicateFeedbacks();
-        realizerHandler.assertSyncsInOrder("bml1", "transition1",BMLTTransitionBehaviour.getDefaultSyncPoints().toArray(new String[0]));
-        realizerHandler.assertSyncsInOrder("bml1", "nod1",DefaultSyncPoints.getDefaultSyncPoints("head"));
-        realizerHandler.assertBlockStartAndStopFeedbacks("bml1");
-        realizerHandler.assertFeedbackForBehaviors("bml1", "transition1","nod1");        
     }
     
     @Test

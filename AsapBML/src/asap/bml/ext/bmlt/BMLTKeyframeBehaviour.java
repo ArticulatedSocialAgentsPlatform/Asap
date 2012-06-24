@@ -19,6 +19,7 @@
 package asap.bml.ext.bmlt;
 
 import saiba.bml.parser.SyncPoint;
+import hmi.xml.XMLFormatting;
 import hmi.xml.XMLTokenizer;
 
 import java.io.IOException;
@@ -45,7 +46,7 @@ public class BMLTKeyframeBehaviour extends BMLTBehaviour
     public boolean satisfiesConstraint(String n, String value)
     {
         if (n.equals("name") && value.equals(name)) return true;
-        return false;
+        return super.satisfiesConstraint(n, value);
     }
 
     public BMLTKeyframeBehaviour(String bmlId,XMLTokenizer tokenizer) throws IOException
@@ -64,10 +65,10 @@ public class BMLTKeyframeBehaviour extends BMLTBehaviour
     }
 
     @Override
-    public StringBuilder appendAttributeString(StringBuilder buf)
+    public StringBuilder appendAttributeString(StringBuilder buf, XMLFormatting fmt)
     {
         appendAttribute(buf, "name", name);
-        return super.appendAttributeString(buf);
+        return super.appendAttributeString(buf, fmt);
     }
 
     @Override

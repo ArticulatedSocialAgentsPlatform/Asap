@@ -8,18 +8,35 @@ import java.io.IOException;
 
 import org.junit.Test;
 
+import saiba.bml.core.AbstractBehaviourTest;
+import saiba.bml.core.Behaviour;
 import saiba.bml.core.BehaviourBlock;
+import saiba.utils.TestUtil;
 
 /**
  * Unit tests for the activate behavior
  * @author welberge
  *
  */
-public class BMLTActivateBehaviourTest
+public class BMLTActivateBehaviourTest extends AbstractBehaviourTest
 {
     static
     {
         BMLTInfo.init();
+    }
+    
+    @Override
+    protected Behaviour createBehaviour(String bmlId, String extraAttributeString) throws IOException
+    {
+        String str = "<bmlt:activate xmlns:bmlt=\"http://hmi.ewi.utwente.nl/bmlt\" "+TestUtil.getDefNS()+"id=\"a1\" target=\"bmltarget\""+ 
+                extraAttributeString+"/>";        
+                return new BMLTActivateBehaviour(bmlId, new XMLTokenizer(str));
+    }
+
+    @Override
+    protected Behaviour parseBehaviour(String bmlId, String bmlString) throws IOException
+    {
+        return new BMLTActivateBehaviour(bmlId,new XMLTokenizer(bmlString));
     }
     
     @Test
@@ -64,4 +81,6 @@ public class BMLTActivateBehaviourTest
         assertEquals("nod1",behOut.getSyncPoints().get(0).getRef().sourceId);
         assertEquals("end",behOut.getSyncPoints().get(0).getRef().syncId);
     }
+
+    
 }
