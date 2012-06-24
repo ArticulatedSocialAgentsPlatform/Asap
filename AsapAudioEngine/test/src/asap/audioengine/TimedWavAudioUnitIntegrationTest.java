@@ -33,6 +33,8 @@ public class TimedWavAudioUnitIntegrationTest
 {
     private FeedbackManager mockFeedBackManager = mock(FeedbackManager.class);
     private SoundManager soundManager;
+    private BMLBlockPeg bbPeg = new BMLBlockPeg("peg1", 0);
+    private Resources res = new Resources("");
     
     
     @Before
@@ -56,11 +58,17 @@ public class TimedWavAudioUnitIntegrationTest
         soundManager.shutdown();
     }
     
+    @Test(expected=AudioUnitPlanningException.class)
+    public void testInvalidFile() throws AudioUnitPlanningException
+    {
+        TimedWavAudioUnit twau = new TimedWavAudioUnit(soundManager,mockFeedBackManager,bbPeg, 
+                res.getInputStream("audio/invalid.wav"), "bml1", "audio1");
+        twau.setup();
+    }
+    
     @Test
     public void test() throws TimedPlanUnitPlayException, AudioUnitPlanningException, InterruptedException
     {
-        BMLBlockPeg bbPeg = new BMLBlockPeg("peg1", 0);
-        Resources res = new Resources("");
         TimedWavAudioUnit twau = new TimedWavAudioUnit(soundManager,mockFeedBackManager,bbPeg, 
                 res.getInputStream("audio/audience.wav"), "bml1", "audio1");
         TimePeg start = new TimePeg(bbPeg);
@@ -78,8 +86,6 @@ public class TimedWavAudioUnitIntegrationTest
     @Test
     public void testMono() throws TimedPlanUnitPlayException, AudioUnitPlanningException, InterruptedException
     {
-        BMLBlockPeg bbPeg = new BMLBlockPeg("peg1", 0);
-        Resources res = new Resources("");
         TimedWavAudioUnit twau = new TimedWavAudioUnit(soundManager,mockFeedBackManager,bbPeg, 
                 res.getInputStream("audio/audience_mono.wav"), "bml1", "audio1");
         TimePeg start = new TimePeg(bbPeg);
@@ -98,8 +104,6 @@ public class TimedWavAudioUnitIntegrationTest
     @Test
     public void testSimultaneousAudio() throws TimedPlanUnitPlayException, AudioUnitPlanningException, InterruptedException
     {
-        BMLBlockPeg bbPeg = new BMLBlockPeg("peg1", 0);
-        Resources res = new Resources("");
         final int NUMCHANNELS = 20;
         TimedWavAudioUnit twau[] = new TimedWavAudioUnit[NUMCHANNELS];  
         for(int i=0;i<NUMCHANNELS;i++)
