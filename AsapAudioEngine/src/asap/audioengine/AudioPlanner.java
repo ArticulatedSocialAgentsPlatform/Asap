@@ -18,6 +18,7 @@
  ******************************************************************************/
 package asap.audioengine;
 
+import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -58,8 +59,12 @@ public class AudioPlanner extends AbstractPlanner<TimedAbstractAudioUnit>
     private TimedAbstractAudioUnit createAudioUnit(BMLBlockPeg bbPeg, Behaviour b) throws BehaviourPlanningException
     {
         BMLTAudioFileBehaviour bAudio = (BMLTAudioFileBehaviour) b;
-        TimedAbstractAudioUnit au = new TimedWavAudioUnit(soundManager, fbManager, bbPeg, audioResource.getInputStream(bAudio
-                .getStringParameterValue("fileName")), bAudio.getBmlId(), bAudio.id);
+        InputStream inputStream = audioResource.getInputStream(bAudio.getStringParameterValue("fileName"));
+        if(inputStream == null)
+        {
+            throw new BehaviourPlanningException(b,"Cannot find audio file "+bAudio.getStringParameterValue("fileName"));
+        }
+        TimedAbstractAudioUnit au = new TimedWavAudioUnit(soundManager, fbManager, bbPeg, inputStream, bAudio.getBmlId(), bAudio.id);
         try
         {
             au.setup();
