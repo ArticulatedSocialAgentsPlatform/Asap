@@ -1,4 +1,4 @@
-package asap.bmlb.parser;
+package asap.bml.ext.bmlb.parser;
 
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.instanceOf;

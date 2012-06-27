@@ -1,4 +1,4 @@
-package asap.ext.murml;
+package asap.bml.ext.murml;
 
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.instanceOf;

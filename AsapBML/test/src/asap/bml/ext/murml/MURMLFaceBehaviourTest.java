@@ -1,4 +1,4 @@
-package asap.ext.murml;
+package asap.bml.ext.murml;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNull;
