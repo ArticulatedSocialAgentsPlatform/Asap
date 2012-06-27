@@ -11,20 +11,38 @@ import org.hamcrest.Matchers;
 import org.hamcrest.collection.IsIterableContainingInAnyOrder;
 import org.junit.Test;
 
+import saiba.bml.core.AbstractBehaviourTest;
+import saiba.bml.core.Behaviour;
+import saiba.utils.TestUtil;
+
 /**
  * Unit test cases for interruptbehaviour parsing
  * @author welberge
  */
-public class BMLTInterruptBehaviourTest
+public class BMLTInterruptBehaviourTest extends AbstractBehaviourTest
 {
+    @Override
+    protected Behaviour createBehaviour(String bmlId, String extraAttributeString) throws IOException
+    {
+        String str = "<bmlt:interrupt xmlns:bmlt=\"http://hmi.ewi.utwente.nl/bmlt\" " + TestUtil.getDefNS()
+                + "id=\"interrupt0\" target=\"bmltarget\"" + extraAttributeString + "/>";
+        return new BMLTInterruptBehaviour(bmlId, new XMLTokenizer(str));
+    }
+
+    @Override
+    protected Behaviour parseBehaviour(String bmlId, String bmlString) throws IOException
+    {
+        return new BMLTInterruptBehaviour(bmlId, new XMLTokenizer(bmlString));
+    }
+
     @Test
     public void testInterrupt() throws IOException
     {
         String interruptBML = "<bmlt:interrupt xmlns:bmlt=\"http://hmi.ewi.utwente.nl/bmlt\" id=\"interrupt0\" target=\"bml0\"/>";
         BMLTInterruptBehaviour bmi = new BMLTInterruptBehaviour("bml1", new XMLTokenizer(interruptBML));
         assertEquals("bml0", bmi.getTarget());
-        assertEquals("bml1",bmi.getBmlId());
-        assertEquals("interrupt0",bmi.id);
+        assertEquals("bml1", bmi.getBmlId());
+        assertEquals("interrupt0", bmi.id);
         assertThat(bmi.getExclude(), Matchers.<String> empty());
         assertThat(bmi.getInclude(), Matchers.<String> empty());
     }
@@ -58,21 +76,22 @@ public class BMLTInterruptBehaviourTest
         assertThat(bmi.getExclude(), IsIterableContainingInAnyOrder.containsInAnyOrder("beh1", "beh2"));
         assertThat(bmi.getInclude(), IsIterableContainingInAnyOrder.containsInAnyOrder("beh3"));
     }
-    
+
     @Test
     public void testWriteXML() throws IOException
     {
         String interruptBML = "<bmlt:interrupt xmlns:bmlt=\"http://hmi.ewi.utwente.nl/bmlt\" id=\"interrupt0\" target=\"bml0\" "
                 + "exclude=\"beh1,beh2\" include=\"beh3\"/>";
         BMLTInterruptBehaviour bmIn = new BMLTInterruptBehaviour("bml1", new XMLTokenizer(interruptBML));
-        StringBuilder buf = new StringBuilder();        
+        StringBuilder buf = new StringBuilder();
         bmIn.appendXML(buf, new XMLFormatting(), "bmlt", "http://hmi.ewi.utwente.nl/bmlt");
         BMLTInterruptBehaviour behOut = new BMLTInterruptBehaviour("bml1", new XMLTokenizer(buf.toString()));
-        
+
         assertEquals("bml0", behOut.getTarget());
-        assertEquals("bml1",behOut.getBmlId());
-        assertEquals("interrupt0",behOut.id);
+        assertEquals("bml1", behOut.getBmlId());
+        assertEquals("interrupt0", behOut.id);
         assertThat(behOut.getExclude(), IsIterableContainingInAnyOrder.containsInAnyOrder("beh1", "beh2"));
         assertThat(behOut.getInclude(), IsIterableContainingInAnyOrder.containsInAnyOrder("beh3"));
     }
+
 }

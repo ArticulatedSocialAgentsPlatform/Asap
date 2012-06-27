@@ -19,6 +19,7 @@
 package asap.bml.ext.bmlt;
 
 import saiba.bml.parser.SyncPoint;
+import hmi.xml.XMLFormatting;
 import hmi.xml.XMLTokenizer;
 
 import java.io.IOException;
@@ -69,7 +70,7 @@ public class BMLTNoiseBehaviour extends BMLTBehaviour
                 || name.equals("basefreqx") || name.equals("basefreqy") || name.equals("basefreqz") || name.equals("baseamplitudex")
                 || name.equals("baseamplitudey") || name.equals("baseamplitudez") || name.equals("persistencex")
                 || name.equals("persistencey") || name.equals("persistencez")) return true;
-        return false;
+        return super.specifiesParameter(name);
     }
 
     @Override
@@ -113,9 +114,11 @@ public class BMLTNoiseBehaviour extends BMLTBehaviour
     }
 
     @Override
-    public StringBuilder appendAttributeString(StringBuilder buf)
+    public StringBuilder appendAttributeString(StringBuilder buf, XMLFormatting fmt)
     {
-        return super.appendAttributeString(buf);
+        appendAttribute(buf, "joint", joint);
+        appendAttribute(buf, "type", type);
+        return super.appendAttributeString(buf, fmt);
     }
 
     @Override

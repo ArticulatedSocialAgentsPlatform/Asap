@@ -1,5 +1,10 @@
 package asap.audioengine;
 
+/**
+ * An exception occurred when planning/setting up au
+ * @author Herwin
+ *
+ */
 public class AudioUnitPlanningException extends Exception
 {
     private static final long serialVersionUID = 1L;

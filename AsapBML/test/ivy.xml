@@ -4,6 +4,7 @@
       <dependency org="junit" name="junit"   rev="latest.release" />
       <dependency org="logback" name="logback-classic"   rev="latest.release" />
       <dependency org="logback" name="logback-core"   rev="latest.release" />
+      <dependency org="saiba" name="saibabml-test"       rev="latest.release"  />
       <dependency org="hamcrest" name="hamcrest-all"       rev="latest.release"  />
    </dependencies>
 </ivy-module>

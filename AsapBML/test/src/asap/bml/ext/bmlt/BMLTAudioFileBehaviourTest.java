@@ -7,13 +7,32 @@ import java.io.IOException;
 
 import org.junit.Test;
 
+import saiba.bml.core.AbstractBehaviourTest;
+import saiba.bml.core.Behaviour;
+import saiba.utils.TestUtil;
+
 /**
  * Unit testcases for the BMLTAudioFileBehaviour
  * @author hvanwelbergen
  *
  */
-public class BMLTAudioFileBehaviourTest
+public class BMLTAudioFileBehaviourTest extends AbstractBehaviourTest
 {
+
+    @Override
+    protected Behaviour createBehaviour(String bmlId, String extraAttributeString) throws IOException
+    {
+        String str = "<bmlt:audiofile xmlns:bmlt=\"http://hmi.ewi.utwente.nl/bmlt\" "+TestUtil.getDefNS()+"id=\"a1\" fileName=\"blah.wav\" "+ 
+                extraAttributeString+"/>";        
+                return new BMLTAudioFileBehaviour(bmlId, new XMLTokenizer(str));
+    }
+
+    @Override
+    protected Behaviour parseBehaviour(String bmlId, String bmlString) throws IOException
+    {
+        return new BMLTAudioFileBehaviour(bmlId, new XMLTokenizer(bmlString));
+    }
+    
     @Test
     public void testReadXML() throws IOException
     {

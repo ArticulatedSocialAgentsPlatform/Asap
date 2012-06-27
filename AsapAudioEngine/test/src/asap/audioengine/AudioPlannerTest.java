@@ -6,6 +6,7 @@ import hmi.util.Resources;
 import hmi.xml.XMLTokenizer;
 
 import java.io.IOException;
+import java.util.ArrayList;
 
 import org.junit.Before;
 import org.junit.Test;
@@ -15,6 +16,7 @@ import asap.realizer.BehaviourPlanningException;
 import asap.realizer.feedback.FeedbackManager;
 import asap.realizer.pegboard.BMLBlockPeg;
 import asap.realizer.planunit.PlanManager;
+import asap.realizer.scheduler.TimePegAndConstraint;
 import asap.realizertestutil.PlannerTests;
 
 /**
@@ -59,5 +61,14 @@ public class AudioPlannerTest
     public void testResolveStartOffset() throws IOException, BehaviourPlanningException
     {
         plannerTests.testResolveStartOffset(createAudioFileBehaviour());
+    }
+    
+    @Test(expected=BehaviourPlanningException.class)
+    public void testNonExistingAudio() throws IOException, BehaviourPlanningException
+    {
+        String bmlString = "<bmlt:audiofile xmlns:bmlt=\"http://hmi.ewi.utwente.nl/bmlt\" id=\"audio1\" fileName=\"audio/invalid.wav\"/>";
+        BMLTAudioFileBehaviour beh = new BMLTAudioFileBehaviour(BMLID, new XMLTokenizer(bmlString));
+        ArrayList<TimePegAndConstraint> sacs = new ArrayList<TimePegAndConstraint>();
+        audioPlanner.resolveSynchs(BMLBlockPeg.GLOBALPEG, beh, sacs);
     }
 }

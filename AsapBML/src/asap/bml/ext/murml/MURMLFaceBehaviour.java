@@ -47,24 +47,7 @@ public class MURMLFaceBehaviour extends MURMLBehaviour
         return XMLTAG;
     }
 
-    @Override
-    public float getFloatParameterValue(String arg0)
-    {
-        // TODO Throw exception?
-        return 0;
-    }
-
-    @Override
-    public String getStringParameterValue(String arg0)
-    {
-        return null;
-    }
-
-    @Override
-    public boolean specifiesParameter(String arg0)
-    {
-        return false;
-    }
+  
     
     @Override
     public void addDefaultSyncPoints()

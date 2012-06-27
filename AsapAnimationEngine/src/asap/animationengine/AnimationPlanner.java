@@ -40,7 +40,6 @@ import asap.bml.ext.bmlt.BMLTControllerBehaviour;
 import asap.bml.ext.bmlt.BMLTKeyframeBehaviour;
 import asap.bml.ext.bmlt.BMLTNoiseBehaviour;
 import asap.bml.ext.bmlt.BMLTProcAnimationBehaviour;
-import asap.bml.ext.bmlt.BMLTTransitionBehaviour;
 import asap.bml.ext.murml.MURMLGestureBehaviour;
 import asap.realizer.AbstractPlanner;
 import asap.realizer.BehaviourPlanningException;
@@ -218,8 +217,7 @@ public class AnimationPlanner extends AbstractPlanner<TimedAnimationUnit>
         list.add(PostureShiftBehaviour.class);
         list.add(PointingBehaviour.class);
         list.add(BMLTProcAnimationBehaviour.class);
-        list.add(BMLTControllerBehaviour.class);
-        list.add(BMLTTransitionBehaviour.class);
+        list.add(BMLTControllerBehaviour.class);        
         list.add(BMLTKeyframeBehaviour.class);
         list.add(BMLTNoiseBehaviour.class);
         list.add(MURMLGestureBehaviour.class);
@@ -231,8 +229,7 @@ public class AnimationPlanner extends AbstractPlanner<TimedAnimationUnit>
     {
         List<Class<? extends Behaviour>> list = new ArrayList<Class<? extends Behaviour>>();
         list.add(BMLTProcAnimationBehaviour.class);
-        list.add(BMLTControllerBehaviour.class);
-        list.add(BMLTTransitionBehaviour.class);
+        list.add(BMLTControllerBehaviour.class);        
         list.add(BMLTKeyframeBehaviour.class);
         list.add(MURMLGestureBehaviour.class);
         return list;

@@ -48,7 +48,7 @@ public class BMLTAudioFileBehaviour extends BMLTBehaviour
     public String getStringParameterValue(String name)
     {
         if (name.equals("fileName")) return fileName;
-        return null;
+        return super.getStringParameterValue(name);
     }
     
     @Override
@@ -63,14 +63,14 @@ public class BMLTAudioFileBehaviour extends BMLTBehaviour
     @Override
     public float getFloatParameterValue(String name)
     {
-        throw new IllegalArgumentException("Parameter " + name + " not found/not a float.");
+        return super.getFloatParameterValue(name);
     }
 
     @Override
     public boolean specifiesParameter(String name)
     {
         if (name.equals("fileName")) return true;
-        return false;
+        return super.specifiesParameter(name);
     }
 
     public BMLTAudioFileBehaviour(String bmlId,XMLTokenizer tokenizer) throws IOException
@@ -93,10 +93,10 @@ public class BMLTAudioFileBehaviour extends BMLTBehaviour
     }
 
     @Override
-    public StringBuilder appendAttributeString(StringBuilder buf)
+    public StringBuilder appendAttributeString(StringBuilder buf, XMLFormatting fmt)
     {
         appendAttribute(buf,"fileName",fileName);
-        return super.appendAttributeString(buf);
+        return super.appendAttributeString(buf, fmt);
     }
     
     

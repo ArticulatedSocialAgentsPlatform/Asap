@@ -20,6 +20,7 @@ package asap.bml.ext.bmlt;
 
 import saiba.bml.core.Behaviour;
 import saiba.bml.parser.SyncPoint;
+import hmi.xml.XMLFormatting;
 import hmi.xml.XMLTokenizer;
 
 import java.io.IOException;
@@ -87,7 +88,7 @@ public class BMLTInterruptBehaviour extends Behaviour
     }
 
     @Override
-    public StringBuilder appendAttributeString(StringBuilder buf)
+    public StringBuilder appendAttributeString(StringBuilder buf, XMLFormatting fmt)
     {
         appendAttribute(buf, "target", target);
         String includeString = Joiner.on(",").join(include);
@@ -101,7 +102,7 @@ public class BMLTInterruptBehaviour extends Behaviour
         {
             appendAttribute(buf, "exclude", excludeString);
         }
-        return super.appendAttributeString(buf);
+        return super.appendAttributeString(buf,fmt);
     }
 
     @Override
@@ -142,20 +143,20 @@ public class BMLTInterruptBehaviour extends Behaviour
     @Override
     public float getFloatParameterValue(String name)
     {
-        throw new IllegalArgumentException("Parameter " + name + " not found/not a float.");
+        return super.getFloatParameterValue(name);
     }
 
     @Override
     public String getStringParameterValue(String name)
     {
         if (name.equals("target")) return target;
-        return null;
+        return super.getStringParameterValue(name);
     }
 
     @Override
     public boolean specifiesParameter(String name)
     {
         if (name.equals("target")) return true;
-        return false;
+        return super.specifiesParameter(name);
     }
 }
