@@ -74,7 +74,7 @@ public class NaoFaceEmbodiment implements FACSFaceEmbodiment
     {
         for (AUConfig config : configs)
         {
-            if (config.getAu() == 1)
+            if (config != null && config.getAu() == 1)
             {
                 setFacs1(config.getSide(),config.getValue());
             }

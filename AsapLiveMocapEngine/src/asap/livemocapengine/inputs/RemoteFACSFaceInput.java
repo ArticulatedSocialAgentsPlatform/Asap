@@ -7,6 +7,7 @@ import java.net.Socket;
 import java.net.UnknownHostException;
 
 import asap.utils.AUConfig;
+import asap.utils.Side;
 
 /**
  * Reads head input from Mark's sensor system
@@ -18,6 +19,7 @@ public class RemoteFACSFaceInput implements FACSFaceInput
     private String id;
     private BufferedReader in;
     private MyThread serverThread;
+    private AUConfig[] aus = new AUConfig[84];
     //private final static String HOST = "130.89.228.90";
     //private final static int PORT = 9123;
     
@@ -79,6 +81,12 @@ public class RemoteFACSFaceInput implements FACSFaceInput
                         {
                             synchronized (this)
                             {
+                            		for( int i=0; i<42; i++ ) {
+                            			aus[i] = new AUConfig(Side.LEFT, i+1, Float.valueOf(recValues[i]));
+                            		}
+                            		for( int i=42; i<84; i++ ) {
+                            			aus[i] = new AUConfig(Side.RIGHT, i-42+1, Float.valueOf(recValues[i]));
+                            		}
                                 /*
                                 faceValues = new Float[84];
                                 for (int i = 0; i < 84; i++)
@@ -96,8 +104,7 @@ public class RemoteFACSFaceInput implements FACSFaceInput
     @Override
     public AUConfig[] getAUConfigs()
     {
-        // TODO Auto-generated method stub
-        return null;
+        return aus;
     }
 
 }
