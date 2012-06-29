@@ -14,8 +14,8 @@ import asap.animationengine.MovementTimingUtils;
 import asap.animationengine.motionunit.AnimationUnit;
 import asap.animationengine.motionunit.MUSetupException;
 import asap.animationengine.motionunit.TimedAnimationUnit;
-import asap.animationengine.transitions.T1RTransitionToPoseMU;
 import asap.animationengine.transitions.SlerpTransitionToPoseMU;
+import asap.animationengine.transitions.T1RTransitionToPoseMU;
 import asap.animationengine.transitions.TransitionMU;
 import asap.realizer.feedback.FeedbackManager;
 import asap.realizer.pegboard.BMLBlockPeg;
@@ -24,8 +24,6 @@ import asap.realizer.pegboard.PegBoard;
 import asap.realizer.pegboard.TimePeg;
 import asap.realizer.planunit.KeyPosition;
 import asap.realizer.planunit.TimedPlanUnitState;
-
-import com.google.common.collect.ImmutableList;
 
 /**
  * A simple static rest-pose implementation; the restpose is specified by a SkeletonPose
@@ -159,7 +157,7 @@ public class SkeletonPoseRestPose implements RestPose
             startJoints.add(player.getVCurr().getPartBySid(joint));
         }
 
-        AnimationUnit mu = new SlerpTransitionToPoseMU(startJoints, targetJoints, pose.getConfig());
+        AnimationUnit mu;
         if (pose.getConfigType().equals("R"))
         {
             mu = new SlerpTransitionToPoseMU(startJoints, targetJoints, pose.getConfig());

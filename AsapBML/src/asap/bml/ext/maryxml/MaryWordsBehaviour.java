@@ -1,6 +1,7 @@
 package asap.bml.ext.maryxml;
 
 import saiba.bml.core.SpeechBehaviour;
+import hmi.xml.XMLFormatting;
 import hmi.xml.XMLTokenizer;
 
 import java.io.IOException;
@@ -29,6 +30,13 @@ public class MaryWordsBehaviour extends SpeechBehaviour
         content = tokenizer.getXMLSectionContent();        
     }
 
+    @Override
+    public StringBuilder appendContent(StringBuilder buf, XMLFormatting fmt)
+    {
+        if (content != null) buf.append(content);
+        return buf;
+    }
+    
     /*
      * The XML Stag for XML encoding
      */
@@ -53,7 +61,7 @@ public class MaryWordsBehaviour extends SpeechBehaviour
         return XMLTAG;
     }
     
-    private static final String NAMESPACE = "http://mary.dfki.de/2002/MaryXML";
+    static final String NAMESPACE = "http://mary.dfki.de/2002/MaryXML";
     
     @Override
     public  String getNamespace() { return NAMESPACE; }

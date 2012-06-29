@@ -1,6 +1,7 @@
 package asap.bml.ext.ssml;
 
 import saiba.bml.core.SpeechBehaviour;
+import hmi.xml.XMLFormatting;
 import hmi.xml.XMLTokenizer;
 
 import java.io.IOException;
@@ -57,7 +58,14 @@ public class SSMLBehaviour extends SpeechBehaviour
         return XMLTAG;
     }
     
-    private static final String NAMESPACE = "http://www.w3.org/2001/10/synthesis";
+    @Override
+    public StringBuilder appendContent(StringBuilder buf, XMLFormatting fmt)
+    {
+        if (content != null) buf.append(content);
+        return buf;
+    }
+    
+    static final String NAMESPACE = "http://www.w3.org/2001/10/synthesis";
     
     @Override
     public  String getNamespace() { return NAMESPACE; }
