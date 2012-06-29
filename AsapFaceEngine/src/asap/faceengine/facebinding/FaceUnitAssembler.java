@@ -33,8 +33,6 @@ import asap.faceengine.faceunit.FACSFU;
 import asap.faceengine.faceunit.FaceUnit;
 import asap.faceengine.faceunit.MorphFU;
 import asap.faceengine.faceunit.PlutchikFU;
-import asap.faceengine.faceunit.RemoteFACSFU;
-import asap.faceengine.faceunit.RemoteMPEG4FU;
 
 class FaceUnitAssembler extends XMLStructureAdapter
 {
@@ -65,17 +63,7 @@ class FaceUnitAssembler extends XMLStructureAdapter
         {
             AUFU fu = new AUFU();
             faceUnit = fu;
-        }
-        else if (type.equals("RemoteFACS"))
-        {
-            RemoteFACSFU rfu = new RemoteFACSFU();
-            faceUnit = rfu;
-        }
-        else if (type.equals("RemoteMPEG4"))
-        {
-            RemoteMPEG4FU mfu = new RemoteMPEG4FU();
-            faceUnit = mfu;
-        }
+        }       
         else if (type.equals("FACS"))
         {
             FACSFU fu = new FACSFU();
