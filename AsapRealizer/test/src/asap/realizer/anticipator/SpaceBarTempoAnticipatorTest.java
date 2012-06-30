@@ -25,7 +25,7 @@ public class SpaceBarTempoAnticipatorTest
     private SpaceBarTempoAnticipator sbta = new SpaceBarTempoAnticipator();
     private StubSystemClock stubSystemClock = new StubSystemClock();
     private TimePeg managingPegs[];    
-    
+    private double PRECISION = 0.001;
     private static class StubSystemClock extends SystemClock
     {
         private double time = 0;
@@ -73,12 +73,12 @@ public class SpaceBarTempoAnticipatorTest
             sbta.keyReleased(mockKeyEvent);
         }
         
-        assertEquals(0,managingPegs[0].getGlobalValue(),0.0001);
-        assertEquals(1,managingPegs[1].getGlobalValue(),0.0001);
-        assertEquals(2,managingPegs[2].getGlobalValue(),0.0001);
+        assertEquals(0,managingPegs[0].getGlobalValue(),PRECISION);
+        assertEquals(1,managingPegs[1].getGlobalValue(),PRECISION);
+        assertEquals(2,managingPegs[2].getGlobalValue(),PRECISION);
         for(int i=3;i<100;i++)
         {
-            assertEquals( (i-1)*2,managingPegs[i].getGlobalValue(),0.0001);
+            assertEquals( (i-1)*2,managingPegs[i].getGlobalValue(),PRECISION);
         }
         verify(mockKeyEvent,times(10)).getKeyCode();
     }
@@ -98,12 +98,12 @@ public class SpaceBarTempoAnticipatorTest
             sbta.keyReleased(mockKeyEvent);
         }
         
-        assertEquals(0,managingPegs[0].getGlobalValue(),0.0001);
-        assertEquals(1,managingPegs[1].getGlobalValue(),0.0001);
-        assertEquals(2.1,managingPegs[2].getGlobalValue(),0.0001);
+        assertEquals(0,managingPegs[0].getGlobalValue(),PRECISION);
+        assertEquals(1,managingPegs[1].getGlobalValue(),PRECISION);
+        assertEquals(2.1,managingPegs[2].getGlobalValue(),PRECISION);
         for(int i=3;i<100;i++)
         {
-            assertEquals( (i-1)*2+0.1,managingPegs[i].getGlobalValue(),0.0001);
+            assertEquals( (i-1)*2+0.1,managingPegs[i].getGlobalValue(),PRECISION);
         }
         verify(mockKeyEvent,times(10)).getKeyCode();
     }
@@ -123,12 +123,12 @@ public class SpaceBarTempoAnticipatorTest
             sbta.keyReleased(mockKeyEvent);
         }
         
-        assertEquals(0,managingPegs[0].getGlobalValue(),0.0001);
-        assertEquals(1,managingPegs[1].getGlobalValue(),0.0001);
-        assertEquals(1.6,managingPegs[2].getGlobalValue(),0.0001);
+        assertEquals(0,managingPegs[0].getGlobalValue(),PRECISION);
+        assertEquals(1,managingPegs[1].getGlobalValue(),PRECISION);
+        assertEquals(1.6,managingPegs[2].getGlobalValue(),PRECISION);
         for(int i=3;i<100;i++)
         {
-            assertEquals( (i-2)*0.5+1.6,managingPegs[i].getGlobalValue(),0.0001);
+            assertEquals( (i-2)*0.5+1.6,managingPegs[i].getGlobalValue(),PRECISION);
         }
         verify(mockKeyEvent,times(10)).getKeyCode();
     }
