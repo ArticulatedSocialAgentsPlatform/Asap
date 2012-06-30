@@ -13,7 +13,7 @@ import asap.realizer.scheduler.TimePegAndConstraint;
  * functionality to the players.
  * 
  * @author Herwin
- * 
+ * @param <T> type of TimedPlanUnit the planner manages
  */
 public abstract class AbstractPlanner<T extends TimedPlanUnit> implements Planner<T>
 {

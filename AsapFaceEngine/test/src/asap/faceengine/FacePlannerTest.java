@@ -49,7 +49,7 @@ import asap.realizer.planunit.PlanManager;
  * 
  */
 @RunWith(PowerMockRunner.class)
-@PrepareForTest({BMLBlockManager.class})
+@PrepareForTest({ BMLBlockManager.class })
 public class FacePlannerTest
 {
     private PlannerTests<TimedFaceUnit> plannerTests;
@@ -63,28 +63,28 @@ public class FacePlannerTest
     private FaceBinding mockFaceBinding = mock(FaceBinding.class);
     private FaceUnit mockUnit = mock(FaceUnit.class);
     private static final float PLAN_PRECISION = 0.00001f;
-            
+
     @Before
     public void setup()
     {
         facePlanner = new FacePlanner(fbManager, mockFaceController, null, null, mockFaceBinding, planManager);
         plannerTests = new PlannerTests<TimedFaceUnit>(facePlanner, bbPeg);
-        
-        
+
         TimedFaceUnit tmu = new TimedFaceUnit(fbManager, bbPeg, BMLID, "nod1", mockUnit);
         KeyPositionMocker.stubKeyPositions(mockUnit, new KeyPosition("start", 0, 1), new KeyPosition("end", 1, 1));
         final List<TimedFaceUnit> tmus = new ArrayList<TimedFaceUnit>();
         tmus.add(tmu);
-        when(mockFaceBinding.getFaceUnit((FeedbackManager) any(), (BMLBlockPeg) any(), (Behaviour)any(), 
-                (FaceController)any(),(FACSConverter)any(),(EmotionConverter)any())).thenReturn(tmus);
+        when(
+                mockFaceBinding.getFaceUnit((FeedbackManager) any(), (BMLBlockPeg) any(), (Behaviour) any(), (FaceController) any(),
+                        (FACSConverter) any(), (EmotionConverter) any())).thenReturn(tmus);
         when(mockUnit.getPreferedDuration()).thenReturn(3.0);
         when(mockUnit.hasValidParameters()).thenReturn(true);
     }
 
     public FaceLexemeBehaviour createFaceBehaviour() throws IOException
     {
-        return new FaceLexemeBehaviour(BMLID, new XMLTokenizer("<faceLexeme xmlns=\"http://www.bml-initiative.org/bml/bml-1.0\" " +
-        		"id=\"face1\" lexeme=\"BLINK\"/>"));
+        return new FaceLexemeBehaviour(BMLID, new XMLTokenizer("<faceLexeme xmlns=\"http://www.bml-initiative.org/bml/bml-1.0\" "
+                + "id=\"face1\" lexeme=\"BLINK\"/>"));
     }
 
     @Test
@@ -104,31 +104,24 @@ public class FacePlannerTest
     {
         plannerTests.testResolveStartOffset(createFaceBehaviour());
     }
-    
+
     @Test
     public void testResolveMURML() throws IOException, BehaviourPlanningException
     {
-        String bmlString = "<murmlface xmlns=\"http://www.techfak.uni-bielefeld.de/ags/soa/murml\" " +
-                "id=\"a1\" start=\"nod1:end\">" +
-                "<definition><keyframing><phase>" +
-                "<frame ftime=\"0\">" +
-                "<posture>Humanoid (dB_Smile 3 70 0 0)</posture>" +
-                "</frame>" +
-                "<frame ftime=\"2\">" +
-                "<posture>Humanoid (dB_Smile 3 80 0 0)</posture>" +
-                "</frame>" +
-                "</phase></keyframing></definition>"+
-                "</murml:murmlface>";
+        String bmlString = "<murmlface xmlns=\"http://www.techfak.uni-bielefeld.de/ags/soa/murml\" " + "id=\"a1\" start=\"nod1:end\">"
+                + "<definition><keyframing><phase>" + "<frame ftime=\"0\">" + "<posture>Humanoid (dB_Smile 3 70 0 0)</posture>"
+                + "</frame>" + "<frame ftime=\"2\">" + "<posture>Humanoid (dB_Smile 3 80 0 0)</posture>" + "</frame>"
+                + "</phase></keyframing></definition>" + "</murml:murmlface>";
         MURMLFaceBehaviour b = new MURMLFaceBehaviour(BMLID, new XMLTokenizer(bmlString));
         ArrayList<TimePegAndConstraint> sacs = new ArrayList<TimePegAndConstraint>();
         TimePeg startPeg = TimePegUtil.createTimePeg(0);
         TimePeg endPeg = new TimePeg(bbPeg);
-        sacs.add(new TimePegAndConstraint("start",startPeg , new Constraint(), 0, false));
-        sacs.add(new TimePegAndConstraint("end",endPeg , new Constraint(), 0, false));
-        
+        sacs.add(new TimePegAndConstraint("start", startPeg, new Constraint(), 0, false));
+        sacs.add(new TimePegAndConstraint("end", endPeg, new Constraint(), 0, false));
+
         TimedFaceUnit tfu = facePlanner.resolveSynchs(bbPeg, b, sacs);
         assertNotNull(tfu);
-        assertThat(tfu.getFaceUnit(), instanceOf(KeyframeMorphFU.class));      
+        assertThat(tfu.getFaceUnit(), instanceOf(KeyframeMorphFU.class));
         assertEquals(0, tfu.getStartTime(), PLAN_PRECISION);
         assertEquals(2, tfu.getEndTime(), PLAN_PRECISION);
     }

@@ -48,6 +48,7 @@ import com.google.common.collect.ImmutableList;
  * shutdown.
  * 
  * @author Herwin
+ * @param <T>
  */
 public class MultiThreadedPlanPlayer<T extends TimedPlanUnit>  implements PlanPlayer
 {

@@ -21,6 +21,7 @@ import asap.realizertestutil.util.TimePegUtil;
 /**
  * Delegate for testcases on Planner implementations 
  * @author welberge
+ * @param <T>
  */
 public class PlannerTests<T extends TimedPlanUnit>
 {

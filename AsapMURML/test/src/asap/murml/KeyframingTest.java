@@ -17,13 +17,16 @@ import asap.murml.Keyframing.Mode;
 public class KeyframingTest
 {
     private static final double PARAMETER_PRECISION = 0.0001;
+
     @Test
     public void testRead()
     {
         Keyframing kf = new Keyframing();
-        kf.readXML("<keyframing xmlns=\"http://www.techfak.uni-bielefeld.de/ags/soa/murml\" mode=\"spline\" priority=\"100\" easescale=\"10\">" + "<phase>"
+        kf.readXML("<keyframing xmlns=\"http://www.techfak.uni-bielefeld.de/ags/soa/murml\" mode=\"spline\" priority=\"100\" easescale=\"10\">"
+                + "<phase>"
                 + "<frame ftime=\"0.1\"><posture>Humanoid (dB_Smile 3 70 0 0) (dB_OpenMouthWOOQ 3 0 0 0) "
-                + "(dB_OpenMouthL 3 0 0 0) (dB_OpenMouthE 3 0 0 0)</posture>" + "</frame>"
+                + "(dB_OpenMouthL 3 0 0 0) (dB_OpenMouthE 3 0 0 0)</posture>"
+                + "</frame>"
                 + "<frame ftime=\"0.2\"><posture>Humanoid (dB_Smile 3 80 0 0) (dB_OpenMouthWOOQ 3 1 0 0) "
                 + "(dB_OpenMouthL 3 0 1 0) (dB_OpenMouthE 3 0 0 1)</posture>" + "</frame>" + "</phase></keyframing>");
         assertEquals(Mode.SPLINE, kf.getMode());

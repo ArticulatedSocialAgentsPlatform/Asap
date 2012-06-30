@@ -26,7 +26,8 @@ public class PostureTest
     public void testParsePosture()
     {
         Posture p = new Posture();
-        p.readXML("<posture xmlns=\"http://www.techfak.uni-bielefeld.de/ags/soa/murml\">Humanoid (dB_Smile 3 70 0 0) (dB_OpenMouthWOOQ 3 0 0 0) (dB_OpenMouthL 3 0 0 0) (dB_OpenMouthE 3 0 0 0)</posture>");
+        p.readXML("<posture xmlns=\"http://www.techfak.uni-bielefeld.de/ags/soa/murml\">"
+                + "Humanoid (dB_Smile 3 70 0 0) (dB_OpenMouthWOOQ 3 0 0 0) (dB_OpenMouthL 3 0 0 0) (dB_OpenMouthE 3 0 0 0)</posture>");
         assertThat(
                 p.getJointValues(),
                 IsIterableContainingInAnyOrder.containsInAnyOrder(createJointValue("dB_Smile", 70, 0, 0),

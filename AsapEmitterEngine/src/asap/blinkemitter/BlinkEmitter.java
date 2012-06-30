@@ -46,11 +46,11 @@ import asap.emitterengine.*;
  */
 public class BlinkEmitter extends Emitter implements Runnable
 {
-  
-  private Thread theThread = null;
+
+    private Thread theThread = null;
     private Logger logger = LoggerFactory.getLogger(BlinkEmitter.class.getName());
     private String id = null;
-    
+
     /** The realizerbridge */
     protected RealizerPort realizerBridge = null;
 
@@ -70,9 +70,9 @@ public class BlinkEmitter extends Emitter implements Runnable
     private double averagewaitingtime = 5; // seconds
 
     private double range = 3; // avg-range < waitingtime < avg+range
-    
+
     private static BlinkEmitterInfo blinkEmitterInfo = new BlinkEmitterInfo();
-    
+
     public BlinkEmitter()
     {
     }
@@ -103,18 +103,18 @@ public class BlinkEmitter extends Emitter implements Runnable
         logger.debug("Stopping BlinkEmitter thread");
     }
 
-
     public void start()
     {
-      theThread = new Thread(this);
-      theThread.start();
+        theThread = new Thread(this);
+        theThread.start();
     }
+
     public void stopRunning()
     {
         running = false;
         try
         {
-          theThread.interrupt();
+            theThread.interrupt();
         }
         catch (Exception ex)
         {
@@ -125,17 +125,15 @@ public class BlinkEmitter extends Emitter implements Runnable
     {
         lastblink = System.currentTimeMillis();
         scheduling = "composition=\"APPEND-AFTER(blinkbml" + blinkcount + ")\"";
-        String bml = "<bml xmlns=\"http://www.bml-initiative.org/bml/bml-1.0\" " +
-        		"id=\"blinkbml" + (blinkcount + 1) + "\" " + scheduling
+        String bml = "<bml xmlns=\"http://www.bml-initiative.org/bml/bml-1.0\" " + "id=\"blinkbml" + (blinkcount + 1) + "\" " + scheduling
                 + "xmlns:bmlt=\"http://hmi.ewi.utwente.nl/bmlt\"><faceLexeme id=\"b1\"  lexeme=\"BLINK\" start=\"0\" end=\"0.15\" "
                 + "amount=\"1\" attackPeak=\"0.03\" relax=\"0.12\"/>";
-         if (blinkcount > 1)  
-         {
-           bml += "<bmlt:interrupt id=\"interruptPrevBlink\" target=\"blinkbml" + blinkcount + "\">"
-                + "</bmlt:interrupt>";
-         }
-         realizerBridge.performBML(bml+ "</bml>");
-                
+        if (blinkcount > 1)
+        {
+            bml += "<bmlt:interrupt id=\"interruptPrevBlink\" target=\"blinkbml" + blinkcount + "\">" + "</bmlt:interrupt>";
+        }
+        realizerBridge.performBML(bml + "</bml>");
+
         /*
          * if (blinkcount > 4) {
          * realizerBridge.performBML("<bml id=\"throwawayblink"+(blinkcount-3)+
@@ -179,7 +177,7 @@ public class BlinkEmitter extends Emitter implements Runnable
         parameterschanged = true;
         try
         {
-          theThread.interrupt();
+            theThread.interrupt();
         }
         catch (Exception ex)
         {
@@ -190,126 +188,133 @@ public class BlinkEmitter extends Emitter implements Runnable
     {
         range = r;
         parameterschanged = true;
-        
+
         try
         {
-          theThread.interrupt();
+            theThread.interrupt();
         }
         catch (Exception ex)
         {
         }
     }
-    
+
     @Override
     public void setRealizerPort(RealizerPort port)
     {
-      realizerBridge = port;
+        realizerBridge = port;
     }
+
     @Override
     public void setId(String id)
     {
-      this.id = id;
+        this.id = id;
     }
+
     @Override
     public String getId()
     {
-      return id;
+        return id;
     }
-    
+
     static final String BMLTNAMESPACE = "http://hmi.ewi.utwente.nl/bmlt";
-    
+
     public static String namespace()
     {
-      return BMLTNAMESPACE;
+        return BMLTNAMESPACE;
     }
-    
+
     @Override
     public String getNamespace()
     {
-      return BMLTNAMESPACE;
+        return BMLTNAMESPACE;
     }
-    
+
     static final String XMLTAG = "blinkemitter";
-    
+
     public static String xmlTag()
     {
-      return XMLTAG;
+        return XMLTAG;
     }
 
     @Override
     public String getXMLTag()
     {
-      return XMLTAG;
+        return XMLTAG;
     }
-    
+
     /** start emitter. Needs to be already connected to realizerport. */
-    //@Override
-    //public void start() ... its a thread already...
-    
-    /** 
-     * stop and clean up emitter as soon as possible. After stop was called, no new BML should be emitted, 
-     * but cleaning up emission threads may take a while. 
+    // @Override
+    // public void start() ... its a thread already...
+
+    /**
+     * stop and clean up emitter as soon as possible. After stop was called, no new BML should be emitted,
+     * but cleaning up emission threads may take a while.
      */
     @Override
     public void stop()
     {
-      stopRunning();
+        stopRunning();
     }
 
-    public  boolean specifiesFloatParameter(String name)
+    public boolean specifiesFloatParameter(String name)
     {
-      return blinkEmitterInfo.specifiesFloatParameter(name);
-    }
-    public  boolean specifiesStringParameter(String name)
-    {
-      return blinkEmitterInfo.specifiesStringParameter(name);
-    }
-    
-    public  ArrayList<String> getOptionalParameters()
-    {
-      return blinkEmitterInfo.getOptionalParameters();
+        return blinkEmitterInfo.specifiesFloatParameter(name);
     }
 
-    public  ArrayList<String> getRequiredParameters()
+    public boolean specifiesStringParameter(String name)
     {
-      return blinkEmitterInfo.getRequiredParameters();
+        return blinkEmitterInfo.specifiesStringParameter(name);
     }
-    
+
+    public ArrayList<String> getOptionalParameters()
+    {
+        return blinkEmitterInfo.getOptionalParameters();
+    }
+
+    public ArrayList<String> getRequiredParameters()
+    {
+        return blinkEmitterInfo.getRequiredParameters();
+    }
+
     @Override
     public void setParameterValue(String name, String value)
     {
-        if(StringUtil.isNumeric(value))
+        if (StringUtil.isNumeric(value))
         {
-          setFloatParameterValue(name, Float.parseFloat(value));
+            setFloatParameterValue(name, Float.parseFloat(value));
         }
         else
         {
             throw new RuntimeException("Cannot set parameter");
         }
     }
+
     @Override
     public void setFloatParameterValue(String name, float value)
     {
-      if (name.equals("range")) basicMethodSetRange((double)value);
-      if (name.equals("avgwaitingtime")) basicMethodSetAvg((double)value);
+        if (name.equals("range")) basicMethodSetRange((double) value);
+        if (name.equals("avgwaitingtime")) basicMethodSetAvg((double) value);
     }
+
     @Override
     public String getParameterValue(String name)
     {
-      if (specifiesFloatParameter(name)) return ""+getFloatParameterValue(name);
-      return null;
+        if (specifiesFloatParameter(name)) return "" + getFloatParameterValue(name);
+        return null;
     }
+
     @Override
     public float getFloatParameterValue(String name)
     {
-      if (name.equals("range")) return (float)range;
-      if (name.equals("avgwaitingtime")) return (float)averagewaitingtime;
-      return 0;
+        if (name.equals("range")) return (float) range;
+        if (name.equals("avgwaitingtime")) return (float) averagewaitingtime;
+        return 0;
     }
+
     @Override
     public boolean hasValidParameters()
     {
-      return (averagewaitingtime >= 0 && range < averagewaitingtime); 
+        return (averagewaitingtime >= 0 && range < averagewaitingtime);
     }
-        
+
 }

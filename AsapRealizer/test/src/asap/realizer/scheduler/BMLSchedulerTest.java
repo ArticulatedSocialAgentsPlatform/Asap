@@ -63,7 +63,7 @@ public class BMLSchedulerTest
     private StubEngine stubEngine;
     private PegBoard pegBoard = new PegBoard();
     private static final double PREDICTION_PRECISION = 0.0001;
-    
+
     private static class StubSchedulingClock implements SchedulingClock
     {
         private double time = 0;
@@ -85,10 +85,12 @@ public class BMLSchedulerTest
         private Map<String, Set<String>> behMap = new HashMap<String, Set<String>>();
         private Map<String, Double> blockEndTimeMap = new HashMap<String, Double>();
         private String id;
+
         public StubEngine(String id)
         {
             this.id = id;
         }
+
         public void addBlockEnd(String bmlId, double time)
         {
             blockEndTimeMap.put(bmlId, time);
@@ -261,23 +263,25 @@ public class BMLSchedulerTest
         @Override
         public void updateTiming(String bmlId)
         {
-                        
+
         }
-        
+
         @Override
         public String toString()
         {
             return id;
         }
+
         @Override
         public void interruptBehaviourBlock(String bmlId, double time)
         {
-            
+
         }
+
         @Override
         public void interruptBehaviour(String bmlId, String behaviourId, double time)
         {
-            
+
         }
     }
 
@@ -304,7 +308,7 @@ public class BMLSchedulerTest
         List<String> bmlIds = new ArrayList<String>();
         for (BMLBlockProgressFeedback fb : fbList)
         {
-            if(fb.getSyncId().equals("start"))
+            if (fb.getSyncId().equals("start"))
             {
                 bmlIds.add(fb.getBmlId());
             }
@@ -317,7 +321,7 @@ public class BMLSchedulerTest
         List<String> bmlIds = new ArrayList<String>();
         for (BMLBlockProgressFeedback fb : fbList)
         {
-            if(fb.getSyncId().equals("end"))
+            if (fb.getSyncId().equals("end"))
             {
                 bmlIds.add(fb.getBmlId());
             }
@@ -327,23 +331,22 @@ public class BMLSchedulerTest
 
     private String createEmptyBML(String bmlId, String extraAttributes)
     {
-        return "<bml xmlns=\"http://www.bml-initiative.org/bml/bml-1.0\" "+
-            "xmlns:bmlt=\"http://hmi.ewi.utwente.nl/bmlt\" id=\"" + bmlId + "\" " + extraAttributes + "/>";
+        return "<bml xmlns=\"http://www.bml-initiative.org/bml/bml-1.0\" " + "xmlns:bmlt=\"http://hmi.ewi.utwente.nl/bmlt\" id=\"" + bmlId
+                + "\" " + extraAttributes + "/>";
     }
 
     private String createNonEmptyBML(String bmlId, String extraAttributes)
     {
 
-        return "<bml xmlns=\"http://www.bml-initiative.org/bml/bml-1.0\"" +
-        		"xmlns:bmlt=\"http://hmi.ewi.utwente.nl/bmlt\" id=\"" + bmlId + "\" " + extraAttributes
-                + "><speech id=\"s1\"><text/></speech></bml>";
+        return "<bml xmlns=\"http://www.bml-initiative.org/bml/bml-1.0\"" + "xmlns:bmlt=\"http://hmi.ewi.utwente.nl/bmlt\" id=\"" + bmlId
+                + "\" " + extraAttributes + "><speech id=\"s1\"><text/></speech></bml>";
     }
 
     private String createNonEmptyBML(String bmlId)
     {
 
-        return "<bml xmlns=\"http://www.bml-initiative.org/bml/bml-1.0\"" +
-        		"xmlns:bmlt=\"http://hmi.ewi.utwente.nl/bmlt\" id=\"" + bmlId + "\"><speech id=\"s1\"><text/></speech></bml>";
+        return "<bml xmlns=\"http://www.bml-initiative.org/bml/bml-1.0\"" + "xmlns:bmlt=\"http://hmi.ewi.utwente.nl/bmlt\" id=\"" + bmlId
+                + "\"><speech id=\"s1\"><text/></speech></bml>";
     }
 
     @Before
@@ -407,8 +410,8 @@ public class BMLSchedulerTest
         assertEquals(2, getBMLIdsFromStartFeedback(blockProgressFeedbackList).size());
         assertEquals("bml2", getBMLIdsFromStartFeedback(blockProgressFeedbackList).get(1));
 
-        assertThat(listFeedbackListener.getIndex(listFeedbackListener.getBlockProgress("bml2","start")),
-                greaterThan(listFeedbackListener.getIndex(listFeedbackListener.getBlockProgress("bml1","start"))));
+        assertThat(listFeedbackListener.getIndex(listFeedbackListener.getBlockProgress("bml2", "start")),
+                greaterThan(listFeedbackListener.getIndex(listFeedbackListener.getBlockProgress("bml1", "start"))));
     }
 
     @Test
@@ -876,7 +879,7 @@ public class BMLSchedulerTest
         parseBML(createNonEmptyBML("bml2"));
         parseBML(createNonEmptyBML("bml3", "composition=\"APPEND\""));
         scheduler.schedule();
-        List<BMLBlockPredictionFeedback> blockStartPredictions = listPredictionListener.getBlockStartOnlyPredictions(); 
+        List<BMLBlockPredictionFeedback> blockStartPredictions = listPredictionListener.getBlockStartOnlyPredictions();
         assertEquals(3, blockStartPredictions.size());
         assertEquals(2d, blockStartPredictions.get(2).getGlobalStart(), PREDICTION_PRECISION);
         assertEquals(2, pegBoard.getBMLBlockPeg("bml3").getValue(), PREDICTION_PRECISION);
@@ -891,7 +894,7 @@ public class BMLSchedulerTest
         parseBML(createNonEmptyBML("bml2", "composition=\"APPEND\""));
         parseBML(createNonEmptyBML("bml3", "composition=\"APPEND\""));
         scheduler.schedule();
-        List<BMLBlockPredictionFeedback> blockStartPredictions = listPredictionListener.getBlockStartOnlyPredictions(); 
+        List<BMLBlockPredictionFeedback> blockStartPredictions = listPredictionListener.getBlockStartOnlyPredictions();
         assertEquals(3, blockStartPredictions.size());
         assertEquals(0d, blockStartPredictions.get(0).getGlobalStart(), PREDICTION_PRECISION);
         assertEquals(2d, blockStartPredictions.get(1).getGlobalStart(), PREDICTION_PRECISION);
@@ -909,9 +912,9 @@ public class BMLSchedulerTest
         parseBML(createNonEmptyBML("bml2"));
         parseBML(createNonEmptyBML("bml3", "composition=\"APPEND-AFTER(bml2)\""));
         scheduler.schedule();
-        List<BMLBlockPredictionFeedback> blockStartPredictions = listPredictionListener.getBlockStartOnlyPredictions(); 
+        List<BMLBlockPredictionFeedback> blockStartPredictions = listPredictionListener.getBlockStartOnlyPredictions();
         List<BMLBlockPredictionFeedback> blockFinishedPredictions = listPredictionListener.getBlockEndPredictions();
-        
+
         assertEquals(3, blockStartPredictions.size());
         assertEquals(1d, blockStartPredictions.get(2).getGlobalStart(), PREDICTION_PRECISION);
         assertEquals(1d, blockFinishedPredictions.get(2).getGlobalStart(), PREDICTION_PRECISION);
@@ -930,7 +933,7 @@ public class BMLSchedulerTest
         parseBML(createNonEmptyBML("bml2"));
         parseBML(createNonEmptyBML("bml3", "composition=\"APPEND\""));
         scheduler.schedule();
-        List<BMLBlockPredictionFeedback> blockStartPredictions = listPredictionListener.getBlockStartOnlyPredictions(); 
+        List<BMLBlockPredictionFeedback> blockStartPredictions = listPredictionListener.getBlockStartOnlyPredictions();
         List<BMLBlockPredictionFeedback> blockFinishedPredictions = listPredictionListener.getBlockEndPredictions();
         assertEquals(3, blockStartPredictions.size());
         assertEquals(5d, blockStartPredictions.get(2).getGlobalStart(), PREDICTION_PRECISION);
@@ -947,32 +950,32 @@ public class BMLSchedulerTest
         stubEngine.addBlockEnd("bml1", 0);
         parseBML(createEmptyBML("bml1", ""));
         scheduler.schedule();
-        List<BMLBlockPredictionFeedback> blockStartPredictions = listPredictionListener.getBlockStartOnlyPredictions(); 
+        List<BMLBlockPredictionFeedback> blockStartPredictions = listPredictionListener.getBlockStartOnlyPredictions();
         List<BMLBlockPredictionFeedback> blockFinishedPredictions = listPredictionListener.getBlockEndPredictions();
         assertEquals(3d, blockStartPredictions.get(0).getGlobalStart(), PREDICTION_PRECISION);
         assertEquals(3d, blockFinishedPredictions.get(0).getGlobalStart(), PREDICTION_PRECISION);
         assertEquals(3d, blockFinishedPredictions.get(0).getGlobalEnd(), PREDICTION_PRECISION);
     }
-    
+
     @Test
     public void testAddEngineForSameBehavior()
     {
         Engine e1 = new StubEngine("e1");
-        Engine e2 = new StubEngine("e2");        
+        Engine e2 = new StubEngine("e2");
         scheduler.addEngine(SpeechBehaviour.class, e1);
         scheduler.addEngine(SpeechBehaviour.class, e2);
-        assertEquals(e2,scheduler.getEngine(SpeechBehaviour.class));
-        assertThat(scheduler.getEngines(),IsIterableContainingInAnyOrder.containsInAnyOrder(stubEngine,e1,e2));
+        assertEquals(e2, scheduler.getEngine(SpeechBehaviour.class));
+        assertThat(scheduler.getEngines(), IsIterableContainingInAnyOrder.containsInAnyOrder(stubEngine, e1, e2));
     }
-    
+
     @Test
     public void testSameAddEngineForDifferentBehavior()
     {
         Engine e1 = new StubEngine("e1");
         scheduler.addEngine(SpeechBehaviour.class, e1);
         scheduler.addEngine(GestureBehaviour.class, e1);
-        
-        assertThat(scheduler.getEngines(),IsIterableContainingInAnyOrder.containsInAnyOrder(stubEngine,e1));
-        assertEquals(2,scheduler.getEngines().size());
+
+        assertThat(scheduler.getEngines(), IsIterableContainingInAnyOrder.containsInAnyOrder(stubEngine, e1));
+        assertEquals(2, scheduler.getEngines().size());
     }
 }

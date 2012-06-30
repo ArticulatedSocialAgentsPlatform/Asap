@@ -2,7 +2,6 @@ package asap.livemocapengine;
 
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
-
 import hmi.xml.XMLTokenizer;
 
 import java.io.IOException;
@@ -10,7 +9,6 @@ import java.io.IOException;
 import org.junit.Before;
 import org.junit.Test;
 
-import asap.livemocapengine.LiveMocapPlanner;
 import asap.livemocapengine.binding.NameTypeBinding;
 import asap.livemocapengine.bml.RemoteHeadBehaviour;
 import asap.livemocapengine.inputs.EulerInput;

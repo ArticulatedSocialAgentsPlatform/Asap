@@ -55,7 +55,10 @@ import com.google.common.collect.ImmutableList;
 
 final class TestUtil
 {
-    private TestUtil(){}
+    private TestUtil()
+    {
+    }
+
     static void assertInRangeExclusive(double x, double min, double max)
     {
         assertTrue(x + "is not in range <" + min + "," + max + ">", x > min);
@@ -76,11 +79,11 @@ public class TTSPlannerIntegrationTest
     protected TTSBinding mockTTSBinding = mock(TTSBinding.class);
 
     protected TimedTTSUnitFactory mockTTSUnitFactory = mock(TimedTTSUnitFactory.class);
-        
+
     protected BMLBlockManager mockBmlBlockManager = mock(BMLBlockManager.class);
-    
-    protected FeedbackManager fbManager = new FeedbackManagerImpl(mockBmlBlockManager,"character1");
-    
+
+    protected FeedbackManager fbManager = new FeedbackManagerImpl(mockBmlBlockManager, "character1");
+
     protected PlanManager<TimedTTSUnit> planManager = new PlanManager<TimedTTSUnit>();
 
     public static final String SPEECHID = "speech1";
@@ -104,8 +107,9 @@ public class TTSPlannerIntegrationTest
 
     protected List<BMLSyncPointProgressFeedback> feedbackList;
 
-    private final ImmutableList<Bookmark> BOOKMARKS = new ImmutableList.Builder<Bookmark>().add(
-            new Bookmark("s1", new WordDescription("world", new ArrayList<Phoneme>(), new ArrayList<Visime>()), (int) (SYNC1_OFFSET * 1000))).build();
+    private final ImmutableList<Bookmark> BOOKMARKS = new ImmutableList.Builder<Bookmark>()
+            .add(new Bookmark("s1", new WordDescription("world", new ArrayList<Phoneme>(), new ArrayList<Visime>()),
+                    (int) (SYNC1_OFFSET * 1000))).build();
     private final TTSUnitStub ttsUnit = new TTSUnitStub(fbManager, bbPeg, SPEECHTEXT, SPEECHID, BMLID, mockTTSBinding,
             SpeechBehaviour.class, SPEECH_DURATION, BOOKMARKS);
 
@@ -144,9 +148,9 @@ public class TTSPlannerIntegrationTest
     @Before
     public void setUp()
     {
-        verbalPlayer = new DefaultPlayer(new MultiThreadedPlanPlayer<TimedTTSUnit>(fbManager,planManager));
-        ttsPlanner = new TTSPlanner(fbManager,mockTTSUnitFactory, mockTTSBinding,planManager);
-        ttsEngine = new DefaultEngine<TimedTTSUnit>(ttsPlanner,verbalPlayer, planManager);
+        verbalPlayer = new DefaultPlayer(new MultiThreadedPlanPlayer<TimedTTSUnit>(fbManager, planManager));
+        ttsPlanner = new TTSPlanner(fbManager, mockTTSUnitFactory, mockTTSBinding, planManager);
+        ttsEngine = new DefaultEngine<TimedTTSUnit>(ttsPlanner, verbalPlayer, planManager);
         exceptionList = Collections.synchronizedList(new ArrayList<BMLWarningFeedback>());
 
         fbManager.addWarningListener(new ListBMLWarningListener(exceptionList));
@@ -167,8 +171,8 @@ public class TTSPlannerIntegrationTest
 
     protected SpeechBehaviour createSpeechBehaviour(String id, String bmlId, String speech) throws IOException
     {
-        return createSpeechBehaviour(String.format("<speech xmlns=\"http://www.bml-initiative.org/bml/bml-1.0\" " +
-        		"id=\"%s\"><text>%s</text></speech>", id, speech), bmlId);
+        return createSpeechBehaviour(String.format("<speech xmlns=\"http://www.bml-initiative.org/bml/bml-1.0\" "
+                + "id=\"%s\"><text>%s</text></speech>", id, speech), bmlId);
     }
 
     @Test
@@ -236,7 +240,7 @@ public class TTSPlannerIntegrationTest
         TimedTTSUnit pu = ttsPlanner.resolveSynchs(bbPeg, beh, sacs);
         ttsPlanner.addBehaviour(bbPeg, beh, sacs, pu);
 
-        ttsEngine.stopBehaviour(BMLID,SPEECHID,0);
+        ttsEngine.stopBehaviour(BMLID, SPEECHID, 0);
 
         assertEquals(0, ttsEngine.getBehaviours(BMLID).size());
     }

@@ -26,6 +26,7 @@ import com.google.common.collect.ImmutableList;
  * Manages a plan consisting of a list of TimedPlanUnits in a thread-safe manner
  * 
  * @author welberge
+ * @param <T>
  */
 @ThreadSafe
 public final class PlanManager<T extends TimedPlanUnit>

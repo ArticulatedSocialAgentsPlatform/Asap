@@ -48,7 +48,7 @@ public abstract class AbstractTTSUnitTest
     protected FeedbackManager fbManager = new FeedbackManagerImpl(mockBmlBlockManager, "character1");
     private static final Logger LOGGER = LoggerFactory.getLogger(AbstractTTSUnitTest.class.getName());
     private static final double TIMING_PRECISION = 0.001;
-    
+
     public void setup() throws SpeechUnitPlanningException
     {
         bbPeg = new BMLBlockPeg("Peg1", BMLBLOCKSTART);
@@ -72,7 +72,7 @@ public abstract class AbstractTTSUnitTest
         initTTSUnit("Hello <sync id=\"s1\"/>world");
         assertThat(ttsUnit.getBookmarks(), hasSize(1));
         assertEquals("s1", ttsUnit.getBookmarks().get(0).getName());
-        assertEquals(2.0, ttsUnit.getStartTime(),TIMING_PRECISION);
+        assertEquals(2.0, ttsUnit.getStartTime(), TIMING_PRECISION);
         assertThat(ttsUnit.getBookmarks().get(0).getOffset(), greaterThan(0));
     }
 
@@ -88,12 +88,14 @@ public abstract class AbstractTTSUnitTest
         Thread.sleep(200);
 
         assertThat(feedbackList, hasSize(1));
-        FeedbackAsserts.assertEqualSyncPointProgress(new BMLSyncPointProgressFeedback("bml1","speech1","start",2 - BMLBLOCKSTART,2),feedbackList.get(0));
-        
+        FeedbackAsserts.assertEqualSyncPointProgress(new BMLSyncPointProgressFeedback("bml1", "speech1", "start", 2 - BMLBLOCKSTART, 2),
+                feedbackList.get(0));
+
         ttsUnit.play(6);
         Thread.sleep(100);
         assertThat(feedbackList, hasSize(2));
-        FeedbackAsserts.assertEqualSyncPointProgress(new BMLSyncPointProgressFeedback("bml1","speech1","end",6 - BMLBLOCKSTART,6),feedbackList.get(1));        
+        FeedbackAsserts.assertEqualSyncPointProgress(new BMLSyncPointProgressFeedback("bml1", "speech1", "end", 6 - BMLBLOCKSTART, 6),
+                feedbackList.get(1));
     }
 
     @Test
@@ -106,13 +108,15 @@ public abstract class AbstractTTSUnitTest
         ttsUnit.play(2);
         Thread.sleep(200);
 
-        FeedbackAsserts.assertEqualSyncPointProgress(new BMLSyncPointProgressFeedback("bml1","speech1","start",2 - BMLBLOCKSTART,2),feedbackList.get(0));
+        FeedbackAsserts.assertEqualSyncPointProgress(new BMLSyncPointProgressFeedback("bml1", "speech1", "start", 2 - BMLBLOCKSTART, 2),
+                feedbackList.get(0));
         assertThat(FeedbackListUtils.getSyncs(feedbackList), hasItems("start"));
 
         ttsUnit.play(6);
         Thread.sleep(200);
         assertThat(FeedbackListUtils.getSyncs(feedbackList), IsIterableContainingInOrder.contains("start", "s1", "end"));
-        
-        FeedbackAsserts.assertEqualSyncPointProgress(new BMLSyncPointProgressFeedback("bml1","speech1","end",6 - BMLBLOCKSTART,6),feedbackList.get(2));
+
+        FeedbackAsserts.assertEqualSyncPointProgress(new BMLSyncPointProgressFeedback("bml1", "speech1", "end", 6 - BMLBLOCKSTART, 6),
+                feedbackList.get(2));
     }
 }

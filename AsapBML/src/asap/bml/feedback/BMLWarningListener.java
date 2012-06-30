@@ -18,7 +18,6 @@
  ******************************************************************************/
 package asap.bml.feedback;
 
-import asap.bml.feedback.BMLListener;
 import saiba.bml.feedback.BMLWarningFeedback;
 
 /**

@@ -1,20 +1,19 @@
 package asap.bml.ext.murml;
 
+import static org.hamcrest.MatcherAssert.assertThat;
+import static org.hamcrest.Matchers.instanceOf;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNull;
-import saiba.bml.BMLInfo;
-import saiba.bml.core.AbstractBehaviourTest;
-import saiba.bml.core.Behaviour;
-import saiba.bml.core.FaceLexemeBehaviour;
 import hmi.xml.XMLTokenizer;
 
 import java.io.IOException;
 
 import org.junit.Test;
 
-import asap.bml.ext.murml.MURMLFaceBehaviour;
-import static org.hamcrest.MatcherAssert.assertThat;
-import static org.hamcrest.Matchers.instanceOf;
+import saiba.bml.BMLInfo;
+import saiba.bml.core.AbstractBehaviourTest;
+import saiba.bml.core.Behaviour;
+import saiba.bml.core.FaceLexemeBehaviour;
 
 /**
  * Unit test cases for MURMLFaceBehaviour

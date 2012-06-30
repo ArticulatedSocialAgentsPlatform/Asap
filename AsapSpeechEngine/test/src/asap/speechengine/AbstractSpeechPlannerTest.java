@@ -23,11 +23,13 @@ import asap.realizer.pegboard.TimePeg;
 import asap.realizer.planunit.PlanManager;
 import asap.realizer.scheduler.TimePegAndConstraint;
 import asap.realizertestutil.PlannerTests;
+
 /**
- * Generic unit test cases and utility functions for different types of SpeechPlanners 
+ * Generic unit test cases and utility functions for different types of SpeechPlanners
  * 
  * Before tests in sub classes speechPlanner should be initialized.
  * @author welberge
+ * @param <T>
  */
 public abstract class AbstractSpeechPlannerTest<T extends TimedAbstractSpeechUnit>
 {
@@ -36,16 +38,15 @@ public abstract class AbstractSpeechPlannerTest<T extends TimedAbstractSpeechUni
     protected static final String BMLID = "bml1";
     protected static final String SPEECHTEXT = "Hello<sync id=\"s1\"/> world";
     protected BMLBlockPeg bbPeg = new BMLBlockPeg(BMLID, 0.3);
-    protected Planner<T> speechPlanner;    
+    protected Planner<T> speechPlanner;
     private PlannerTests<T> plannerTests;
     protected FeedbackManager mockFeedbackManager = mock(FeedbackManager.class);
-    
-    
+
     public void setup()
     {
         plannerTests = new PlannerTests<T>(speechPlanner, bbPeg);
     }
-    
+
     protected SpeechBehaviour createSpeechBehaviour(String speechBML, String bmlId) throws IOException
     {
         return new SpeechBehaviour(bmlId, new XMLTokenizer(speechBML));
@@ -53,10 +54,10 @@ public abstract class AbstractSpeechPlannerTest<T extends TimedAbstractSpeechUni
 
     protected SpeechBehaviour createSpeechBehaviour(String id, String bmlId, String speech) throws IOException
     {
-        return createSpeechBehaviour(String.format("<speech xmlns=\"http://www.bml-initiative.org/bml/bml-1.0\" " +
-        		"id=\"%s\"><text>%s</text></speech>", id, speech), bmlId);
+        return createSpeechBehaviour(String.format("<speech xmlns=\"http://www.bml-initiative.org/bml/bml-1.0\" "
+                + "id=\"%s\"><text>%s</text></speech>", id, speech), bmlId);
     }
-    
+
     @Test
     public void testUnknownStart() throws BehaviourPlanningException, IOException
     {
@@ -68,8 +69,8 @@ public abstract class AbstractSpeechPlannerTest<T extends TimedAbstractSpeechUni
     {
         plannerTests.testResolveStartOffset(createSpeechBehaviour(SPEECHID, BMLID, SPEECHTEXT));
     }
-    
-    @Test(expected=BehaviourPlanningException.class)
+
+    @Test(expected = BehaviourPlanningException.class)
     public void testResolveNonExistingSync() throws IOException, BehaviourPlanningException
     {
         plannerTests.testResolveNonExistingSync(createSpeechBehaviour(SPEECHID, BMLID, SPEECHTEXT));
@@ -98,5 +99,5 @@ public abstract class AbstractSpeechPlannerTest<T extends TimedAbstractSpeechUni
         assertThat(s1Peg.getGlobalValue(), greaterThan(startPeg.getGlobalValue()));
         assertThat(endPeg.getGlobalValue(), greaterThan(s1Peg.getGlobalValue()));
         assertEquals(2, s1Peg.getGlobalValue(), 0.0001);
-    }    
+    }
 }

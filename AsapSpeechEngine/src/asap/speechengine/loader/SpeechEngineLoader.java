@@ -69,8 +69,9 @@ import asap.speechengine.ttsbinding.TTSBinding;
 import asap.utils.Environment;
 
 /**
-
-*/
+ * Loads the a SpeechEngine
+ * @author reidsma
+ */
 public class SpeechEngineLoader implements EngineLoader
 {
     private static Logger logger = LoggerFactory.getLogger(SpeechEngineLoader.class.getName());

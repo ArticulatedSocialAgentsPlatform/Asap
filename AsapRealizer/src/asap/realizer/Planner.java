@@ -30,6 +30,7 @@ import asap.realizer.scheduler.TimePegAndConstraint;
  * Elckerlyc planner. Each planner can add BML behaviors to a plan and is able to resolve their unknown time constraints
  * 
  * @author Herwin van Welbergen
+ * @param <T>
  */
 public interface Planner<T extends TimedPlanUnit>
 {

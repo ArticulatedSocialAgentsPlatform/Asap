@@ -73,8 +73,8 @@ public class AsapEnvironment implements Environment, ClockListener
 
     /**
      * @param schedulingClock
-     * Typically, the PhysicsSchedulingClock(physicsClock). 
-     * If no physics, typically use the renderClock. If no renderClock, use a new clock
+     *            Typically, the PhysicsSchedulingClock(physicsClock).
+     *            If no physics, typically use the renderClock. If no renderClock, use a new clock
      */
     public void init(ArrayList<Environment> environments, SchedulingClock schedulingClock)
     {
@@ -95,10 +95,10 @@ public class AsapEnvironment implements Environment, ClockListener
 
     /**
      * run the engines at time tick.
-     * Somewhere else, AsapEnvironment is registered at a clock to get this call back. If a physicsEnvironment 
+     * Somewhere else, AsapEnvironment is registered at a clock to get this call back. If a physicsEnvironment
      * is in use, this is typically as a PrePhysicsCopyListener.
      * At physics time, after simulation, but just before physics is copied to the body, we run the engines here!
-     * if no physics is used, ElcklerycEnvronment should simply be registered at any clock that will drive the Engines 
+     * if no physics is used, ElcklerycEnvronment should simply be registered at any clock that will drive the Engines
      * (rendering clock, separate animation clock, ...)
      */
     public void time(double currentTime)
@@ -188,12 +188,12 @@ public class AsapEnvironment implements Environment, ClockListener
             if (shutdownPrepared) return;
             for (AsapVirtualHuman vh : virtualHumans.values())
             {
-                vh.getRealizerPort().performBML("<bml xmlns=\"http://www.bml-initiative.org/bml/bml-1.0\" " +
-                		"id=\"clear\" composition=\"REPLACE\"></bml>");
+                vh.getRealizerPort().performBML(
+                        "<bml xmlns=\"http://www.bml-initiative.org/bml/bml-1.0\" " + "id=\"clear\" composition=\"REPLACE\"></bml>");
             }
             /*
-             * For some reason the first execution of the physics thread after resetting the clock to 0 is quite late (100ms or so). 
-             * This screws up the timing of (ballistic) TTS if some speech is to start at t=0. 
+             * For some reason the first execution of the physics thread after resetting the clock to 0 is quite late (100ms or so).
+             * This screws up the timing of (ballistic) TTS if some speech is to start at t=0.
              * Therefore all players are executed once here at t=0.
              */
             for (Engine e : engines)

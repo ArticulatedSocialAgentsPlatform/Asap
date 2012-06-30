@@ -57,8 +57,8 @@ public class MultiblockTesterUI extends JFrame
 
     private Logger logger = LoggerFactory.getLogger(MultiblockTesterUI.class.getName());
 
-    protected String loadPath = 
-        "../../Shared/repository/HMI/HmiElckerlyc/resources/enterface/bml Enterface BvS/Fire_and_Multiblocktesters experiment2/";
+    protected String loadPath = "../../Shared/repository/HMI/HmiElckerlyc/resources/enterface/bml "
+            + "Enterface BvS/Fire_and_Multiblocktesters experiment2/";
 
     protected String specFileName = "file.xml";
 
@@ -172,15 +172,13 @@ public class MultiblockTesterUI extends JFrame
             while (tok.atSTag("scriptlist"))
             {
                 HashMap<String, String> attrMap = tok.getAttributes();
-                String newName = new XMLStructureAdapter().getRequiredAttribute("name", attrMap,
-                        tok);
+                String newName = new XMLStructureAdapter().getRequiredAttribute("name", attrMap, tok);
                 tok.takeSTag("scriptlist");
                 ArrayList<String> newScripts = new ArrayList<String>();
                 while (tok.atSTag("script"))
                 {
                     HashMap<String, String> attrMap2 = tok.getAttributes();
-                    String filename = new XMLStructureAdapter().getRequiredAttribute("filename",
-                            attrMap2, tok);
+                    String filename = new XMLStructureAdapter().getRequiredAttribute("filename", attrMap2, tok);
 
                     StringBuffer contents = new StringBuffer();
                     BufferedReader reader = null;
@@ -213,10 +211,8 @@ public class MultiblockTesterUI extends JFrame
         {
             logger.warn("Cannot load specs in multiblockdemo: " + specFileName);
             logger.debug("Error: ", ex);
-            JOptionPane.showMessageDialog(null,
-                    "Cannot load multiblock tester specification from file \"" + specFileName
-                            + "\". See logging output for more information.", "alert",
-                    JOptionPane.ERROR_MESSAGE);
+            JOptionPane.showMessageDialog(null, "Cannot load multiblock tester specification from file \"" + specFileName
+                    + "\". See logging output for more information.", "alert", JOptionPane.ERROR_MESSAGE);
             clearSpecs();
         }
     }
@@ -295,8 +291,8 @@ public class MultiblockTesterUI extends JFrame
         {
             clearSpecs();
             loadSpecs();
-            realizerBridge.performBML("<bml xmlns=\"http://www.bml-initiative.org/bml/bml-1.0\" " +
-            		"id=\"clear\" composition=\"REPLACE\"></bml>");
+            realizerBridge.performBML("<bml xmlns=\"http://www.bml-initiative.org/bml/bml-1.0\" "
+                    + "id=\"clear\" composition=\"REPLACE\"></bml>");
             for (int i = 0; i < fireButtons.size(); i++)
             {
                 fireButtons.get(i).setEnabled(true);

@@ -18,23 +18,22 @@
  ******************************************************************************/
 package asap.realizer;
 
-import saiba.bml.BMLInfo;
-import saiba.bml.core.BMLBehaviorAttributeExtension;
-import saiba.bml.core.Behaviour;
-import saiba.bml.core.BehaviourBlock;
-import saiba.bml.parser.BMLParser;
 import hmi.xml.XMLScanException;
 import hmi.xml.XMLTokenizer;
 
 import java.io.IOException;
 import java.io.Reader;
 import java.util.Arrays;
-import java.util.HashSet;
-import java.util.Set;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import saiba.bml.BMLInfo;
+import saiba.bml.core.BMLBehaviorAttributeExtension;
+import saiba.bml.core.Behaviour;
+import saiba.bml.core.BehaviourBlock;
+import saiba.bml.feedback.BMLWarningFeedback;
+import saiba.bml.parser.BMLParser;
 import asap.bml.feedback.BMLFeedbackListener;
 import asap.bml.feedback.BMLPredictionListener;
 import asap.bml.feedback.BMLWarningListener;
@@ -47,7 +46,6 @@ import asap.realizer.scheduler.BMLScheduler;
 import asap.realizer.scheduler.BMLTSchedulingHandler;
 import asap.realizer.scheduler.SortedSmartBodySchedulingStrategy;
 import asap.utils.SchedulingClock;
-import saiba.bml.feedback.BMLWarningFeedback;
 
 import com.google.common.collect.ImmutableSet;
 
@@ -63,12 +61,14 @@ import com.google.common.collect.ImmutableSet;
  * <ul>
  * <li>An AudioPlanner to process BMLTAudioFile elements into audio
  * <li>A ttsPlanner to process SpeechBehaviour elements into speech
- * <li>An AnimationPlanner to process Head and BMLTProcAnimation behaviors into animation (and more, later?), constructed from an AnimationPlayer (to control the body of the
+ * <li>An AnimationPlanner to process Head and BMLTProcAnimation behaviors into animation 
+ * (and more, later?), constructed from an AnimationPlayer (to control the body of the
  * VH) and a GestureBinding (to map BML behavior specifications to MotionUnits
  * <li>A facePlanner to control the face
  * <li>And in the future, possibly more planners
  * </ul>
- * <li>A BMLScheduler (e.g. SmartBodyScheduler) that combines the parser and several planners (verbal, animation) registered for several behaviors (head, BMLTProc, speech) to
+ * <li>A BMLScheduler (e.g. SmartBodyScheduler) that combines the parser and several planners 
+ * (verbal, animation) registered for several behaviors (head, BMLTProc, speech) to
  * play behavior sent from XML
  * <li>Possibly a number of Anticipators [DOCUMENT WHAT THESE DO!]
  * </ul>

@@ -15,6 +15,7 @@ import org.junit.Test;
 public class DefinitionTest
 {
     private static final double PARAMETER_PRECISION = 0.0001;
+
     @Test
     public void testEmptyDefinition()
     {
@@ -28,7 +29,8 @@ public class DefinitionTest
     public void testPostureDefinition()
     {
         Definition d = new Definition();
-        d.readXML("<definition xmlns=\"http://www.techfak.uni-bielefeld.de/ags/soa/murml\"><posture>Humanoid (dB_Smile 3 70 0 0) (dB_OpenMouthWOOQ 3 0 0 0) "
+        d.readXML("<definition xmlns=\"http://www.techfak.uni-bielefeld.de/ags/soa/murml\">"
+                + "<posture>Humanoid (dB_Smile 3 70 0 0) (dB_OpenMouthWOOQ 3 0 0 0) "
                 + "(dB_OpenMouthL 3 0 0 0) (dB_OpenMouthE 3 0 0 0)</posture></definition>");
         assertThat(
                 d.getPosture().getJointValues(),

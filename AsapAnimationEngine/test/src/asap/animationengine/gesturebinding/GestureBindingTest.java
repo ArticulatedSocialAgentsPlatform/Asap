@@ -67,73 +67,41 @@ public class GestureBindingTest
     private VJoint human;
     private GestureBinding gestureBinding;
     private static final double PARAMETER_PRECISION = 0.0001;
-    
+
     @Before
     public void setup()
     {
         human = HanimBody.getLOA1HanimBody();
         Resources r = new Resources("");
         gestureBinding = new GestureBinding(r, mockFeedbackManager);
-        String s = "<gesturebinding>" + "<MotionUnitSpec type=\"head\">" + "<constraints>"
-                + "<constraint name=\"lexeme\" value=\"NOD\"/>" 
-                + "</constraints>"
-                + "<parametermap>"  
-                + "<parameter src=\"amount\" dst=\"a\"/>" 
-                + "<parameter src=\"repetition\" dst=\"r\"/>" 
-                + "</parametermap>"
-                + "<MotionUnit type=\"ProcAnimation\" file=\"Humanoids/shared/procanimation/smartbody/nod.xml\"/>" + "</MotionUnitSpec>"
-                
-                + "<MotionUnitSpec type=\"head\">" + "<constraints>" 
-                + "<constraint name=\"lexeme\" value=\"SHAKE\"/>" 
-                + "</constraints>" 
-                + "<parametermap>"
-                + "<parameter src=\"amount\" dst=\"a\"/>" 
+        String s = "<gesturebinding>" + "<MotionUnitSpec type=\"head\">" + "<constraints>" + "<constraint name=\"lexeme\" value=\"NOD\"/>"
+                + "</constraints>" + "<parametermap>" + "<parameter src=\"amount\" dst=\"a\"/>"
                 + "<parameter src=\"repetition\" dst=\"r\"/>" + "</parametermap>"
-                + "<MotionUnit type=\"ProcAnimation\" file=\"Humanoids/shared/procanimation/smartbody/shake.xml\"/>" + "</MotionUnitSpec>"
-                + "<MotionUnitSpec type=\"keyframe\" namespace=\"http://hmi.ewi.utwente.nl/bmlt\">" + "<constraints>"
+                + "<MotionUnit type=\"ProcAnimation\" file=\"Humanoids/shared/procanimation/smartbody/nod.xml\"/>" + "</MotionUnitSpec>"
+
+                + "<MotionUnitSpec type=\"head\">" + "<constraints>" + "<constraint name=\"lexeme\" value=\"SHAKE\"/>" + "</constraints>"
+                + "<parametermap>" + "<parameter src=\"amount\" dst=\"a\"/>" + "<parameter src=\"repetition\" dst=\"r\"/>"
+                + "</parametermap>" + "<MotionUnit type=\"ProcAnimation\" file=\"Humanoids/shared/procanimation/smartbody/shake.xml\"/>"
+                + "</MotionUnitSpec>" + "<MotionUnitSpec type=\"keyframe\" namespace=\"http://hmi.ewi.utwente.nl/bmlt\">" + "<constraints>"
                 + "<constraint name=\"name\" value=\"vlakte\"/>" + "</constraints>"
-                + "<MotionUnit type=\"Keyframe\" file=\"Humanoids/shared/keyframe/clench_fists.xml\"/>" 
-                + "</MotionUnitSpec>"
-                + "<MotionUnitSpec type=\"gesture\">"
-                + "<constraints>"
-                + "<constraint name=\"lexeme\" value=\"BEAT\"/>"                        
-                + "<constraint name=\"mode\" value=\"RIGHT_HAND\"/>"    
-                + "</constraints>"
-                + "<parametermap/>"
-                + "<parameterdefaults>"
+                + "<MotionUnit type=\"Keyframe\" file=\"Humanoids/shared/keyframe/clench_fists.xml\"/>" + "</MotionUnitSpec>"
+                + "<MotionUnitSpec type=\"gesture\">" + "<constraints>" + "<constraint name=\"lexeme\" value=\"BEAT\"/>"
+                + "<constraint name=\"mode\" value=\"RIGHT_HAND\"/>" + "</constraints>" + "<parametermap/>" + "<parameterdefaults>"
                 + "<parameterdefault name=\"file\" value=\"Humanoids/shared/procanimation/greta/beat1right_norest.xml\"/>"
-                + "<parameterdefault name=\"postStrokeHoldDuration\" value=\"0.2\"/>"                       
-                + "</parameterdefaults>"
+                + "<parameterdefault name=\"postStrokeHoldDuration\" value=\"0.2\"/>" + "</parameterdefaults>"
                 + "<MotionUnit type=\"Gesture\" class=\"asap.animationengine.procanimation.ProcAnimationGestureMU\"/>"
-                + "</MotionUnitSpec>"
-                + "<MotionUnitSpec type=\"pointing\">"
-                + "<parametermap>"
-                +    "<parameter src=\"target\" dst=\"target\"/>"          
-                +    "<parameter src=\"mode\" dst=\"hand\"/>"          
-                +"</parametermap>"
-                + "<MotionUnit type=\"class\" class=\"asap.animationengine.pointing.PointingMU\"/>"
-                + "</MotionUnitSpec>"
-                + "<MotionUnitSpec type=\"posture\">"
-                + "<constraints>"
-                +    "<constraint name=\"stance\" value=\"STANDING\"/>"
-                +    "<constraint name=\"LEGS\" value=\"LEGS_OPEN\"/>"
-                + "</constraints>"
-                + "<parametermap>"
-                +    "<parameter src=\"priority\" dst=\"priority\"/>"
-                + "</parametermap>"
-                + "<parameterdefaults>"
-                +    "<parameterdefault name=\"pelvisheight\" value=\"1.7\"/>"
-                +    "<parameterdefault name=\"replacementgroup\" value=\"posture\"/>"
-                + "</parameterdefaults>"
-                + "<MotionUnit type=\"PhysicalController\" class=\"hmi.physics.controller.BalanceController\"/>"
-                + "</MotionUnitSpec>"
-                + "<RestPoseSpec>"
-                + "<constraints>"
-                +    "<constraint name=\"stance\" value=\"SITTING\"/>"
-                +    "<constraint name=\"LEGS\" value=\"LEGS_OPEN\"/>"
-                + "</constraints>"
-                + "<RestPose type=\"SkeletonPose\" file=\"Humanoids/armandia/restposes/sitting.xml\"/>"
-                + "</RestPoseSpec>"
+                + "</MotionUnitSpec>" + "<MotionUnitSpec type=\"pointing\">" + "<parametermap>"
+                + "<parameter src=\"target\" dst=\"target\"/>" + "<parameter src=\"mode\" dst=\"hand\"/>" + "</parametermap>"
+                + "<MotionUnit type=\"class\" class=\"asap.animationengine.pointing.PointingMU\"/>" + "</MotionUnitSpec>"
+                + "<MotionUnitSpec type=\"posture\">" + "<constraints>" + "<constraint name=\"stance\" value=\"STANDING\"/>"
+                + "<constraint name=\"LEGS\" value=\"LEGS_OPEN\"/>" + "</constraints>" + "<parametermap>"
+                + "<parameter src=\"priority\" dst=\"priority\"/>" + "</parametermap>" + "<parameterdefaults>"
+                + "<parameterdefault name=\"pelvisheight\" value=\"1.7\"/>"
+                + "<parameterdefault name=\"replacementgroup\" value=\"posture\"/>" + "</parameterdefaults>"
+                + "<MotionUnit type=\"PhysicalController\" class=\"hmi.physics.controller.BalanceController\"/>" + "</MotionUnitSpec>"
+                + "<RestPoseSpec>" + "<constraints>" + "<constraint name=\"stance\" value=\"SITTING\"/>"
+                + "<constraint name=\"LEGS\" value=\"LEGS_OPEN\"/>" + "</constraints>"
+                + "<RestPose type=\"SkeletonPose\" file=\"Humanoids/armandia/restposes/sitting.xml\"/>" + "</RestPoseSpec>"
                 + "</gesturebinding>";
         gestureBinding.readXML(s);
         when(mockAniPlayer.getVNext()).thenReturn(human);
@@ -141,26 +109,26 @@ public class GestureBindingTest
         when(mockAniPlayer.getPHuman()).thenReturn(mockPHuman);
     }
 
-    public PostureShiftBehaviour createPostureShiftBehaviour(String bmlId, String bml)throws IOException
+    public PostureShiftBehaviour createPostureShiftBehaviour(String bmlId, String bml) throws IOException
     {
-        return new PostureShiftBehaviour(bmlId,new XMLTokenizer(bml));
+        return new PostureShiftBehaviour(bmlId, new XMLTokenizer(bml));
     }
-    
-    public PostureBehaviour createPostureBehaviour(String bmlId, String bml)throws IOException
+
+    public PostureBehaviour createPostureBehaviour(String bmlId, String bml) throws IOException
     {
-        return new PostureBehaviour(bmlId,new XMLTokenizer(bml));
+        return new PostureBehaviour(bmlId, new XMLTokenizer(bml));
     }
-    
-    public PointingBehaviour createPointingBehaviour(String bmlId, String bml)throws IOException
+
+    public PointingBehaviour createPointingBehaviour(String bmlId, String bml) throws IOException
     {
-        return new PointingBehaviour(bmlId,new XMLTokenizer(bml));
+        return new PointingBehaviour(bmlId, new XMLTokenizer(bml));
     }
-    
+
     public GestureBehaviour createGestureBehaviour(String bmlId, String bml) throws IOException
     {
-        return new GestureBehaviour(bmlId,new XMLTokenizer(bml));
+        return new GestureBehaviour(bmlId, new XMLTokenizer(bml));
     }
-    
+
     public HeadBehaviour createHeadBehaviour(String bmlId, String bml) throws IOException
     {
         return new HeadBehaviour(bmlId, new XMLTokenizer(bml));
@@ -174,13 +142,13 @@ public class GestureBindingTest
     @Test
     public void testGetHeadNodWithRepeats2() throws IOException, ParameterException
     {
-        HeadBehaviour b = createHeadBehaviour("bml1", "<head xmlns=\"http://www.bml-initiative.org/bml/bml-1.0\" id=\"head1\" " +
-        		"lexeme=\"NOD\" repetition=\"2\"/>");
+        HeadBehaviour b = createHeadBehaviour("bml1", "<head xmlns=\"http://www.bml-initiative.org/bml/bml-1.0\" id=\"head1\" "
+                + "lexeme=\"NOD\" repetition=\"2\"/>");
 
         List<TimedAnimationUnit> m = gestureBinding.getMotionUnit(BMLBlockPeg.GLOBALPEG, b, mockAniPlayer, pegBoard);
         assertEquals(1, m.size());
         assertTrue(Float.parseFloat(m.get(0).getMotionUnit().getParameterValue("r")) == 2.0);
-        assertEquals(0.5,Float.parseFloat(m.get(0).getMotionUnit().getParameterValue("a")),PARAMETER_PRECISION);// BML default
+        assertEquals(0.5, Float.parseFloat(m.get(0).getMotionUnit().getParameterValue("a")), PARAMETER_PRECISION);// BML default
         assertEquals(m.get(0).getBMLId(), "bml1");
         assertEquals(m.get(0).getId(), "head1");
     }
@@ -188,8 +156,8 @@ public class GestureBindingTest
     @Test
     public void testGetHeadNodWithAmount2() throws IOException, ParameterException
     {
-        HeadBehaviour b = createHeadBehaviour("bml1", "<head xmlns=\"http://www.bml-initiative.org/bml/bml-1.0\" " +
-        		"id=\"head1\" lexeme=\"SHAKE\" amount=\"2\"/>");
+        HeadBehaviour b = createHeadBehaviour("bml1", "<head xmlns=\"http://www.bml-initiative.org/bml/bml-1.0\" "
+                + "id=\"head1\" lexeme=\"SHAKE\" amount=\"2\"/>");
 
         List<TimedAnimationUnit> m = gestureBinding.getMotionUnit(BMLBlockPeg.GLOBALPEG, b, mockAniPlayer, pegBoard);
         assertEquals(1, m.size());
@@ -211,50 +179,48 @@ public class GestureBindingTest
         assertEquals("bml1", m.get(0).getBMLId());
         assertEquals("v1", m.get(0).getId());
     }
-    
+
     @Test
     public void testReadGesture() throws IOException
     {
-        GestureBehaviour beh = createGestureBehaviour("bml1", "<gesture xmlns=\"http://www.bml-initiative.org/bml/bml-1.0\" " +
-        		"id=\"g1\" mode=\"RIGHT_HAND\" lexeme=\"BEAT\"/>");
+        GestureBehaviour beh = createGestureBehaviour("bml1", "<gesture xmlns=\"http://www.bml-initiative.org/bml/bml-1.0\" "
+                + "id=\"g1\" mode=\"RIGHT_HAND\" lexeme=\"BEAT\"/>");
         List<TimedAnimationUnit> m = gestureBinding.getMotionUnit(BMLBlockPeg.GLOBALPEG, beh, mockAniPlayer, pegBoard);
         assertEquals(1, m.size());
         assertEquals("bml1", m.get(0).getBMLId());
         assertEquals("g1", m.get(0).getId());
     }
-    
+
     @Test
     public void testReadPointing() throws IOException
     {
-        PointingBehaviour beh = createPointingBehaviour("bml1", "<pointing xmlns=\"http://www.bml-initiative.org/bml/bml-1.0\" " +
-        		"id=\"point1\" mode=\"RIGHT_HAND\" target=\"bluebox\"/>");
+        PointingBehaviour beh = createPointingBehaviour("bml1", "<pointing xmlns=\"http://www.bml-initiative.org/bml/bml-1.0\" "
+                + "id=\"point1\" mode=\"RIGHT_HAND\" target=\"bluebox\"/>");
         List<TimedAnimationUnit> m = gestureBinding.getMotionUnit(BMLBlockPeg.GLOBALPEG, beh, mockAniPlayer, pegBoard);
         assertEquals(1, m.size());
         assertEquals("bml1", m.get(0).getBMLId());
         assertEquals("point1", m.get(0).getId());
     }
-    
+
     @Test
     public void testReadPosture() throws IOException
     {
-        String str = 
-            "<posture xmlns=\"http://www.bml-initiative.org/bml/bml-1.0\" " +
-            "id=\"posture1\"><stance type=\"STANDING\"/><pose part=\"LEGS\" lexeme=\"LEGS_OPEN\"/></posture>";
-        PostureBehaviour beh = createPostureBehaviour("bml1",str);
+        String str = "<posture xmlns=\"http://www.bml-initiative.org/bml/bml-1.0\" "
+                + "id=\"posture1\"><stance type=\"STANDING\"/><pose part=\"LEGS\" lexeme=\"LEGS_OPEN\"/></posture>";
+        PostureBehaviour beh = createPostureBehaviour("bml1", str);
         List<TimedAnimationUnit> m = gestureBinding.getMotionUnit(BMLBlockPeg.GLOBALPEG, beh, mockAniPlayer, pegBoard);
         assertEquals(1, m.size());
         assertEquals("bml1", m.get(0).getBMLId());
         assertEquals("posture1", m.get(0).getId());
     }
-    
+
     @Test
     public void testReadPostureShift() throws IOException
     {
-        String str = 
-            "<postureShift xmlns=\"http://www.bml-initiative.org/bml/bml-1.0\" " +
-            "id=\"posture1\"><stance type=\"SITTING\"/><pose part=\"LEGS\" lexeme=\"LEGS_OPEN\"/></postureShift>";
-        PostureShiftBehaviour beh = createPostureShiftBehaviour("bml1",str);
-        RestPose rp = gestureBinding.getRestPose(beh,mockAniPlayer);
-        assertThat(rp,instanceOf(SkeletonPoseRestPose.class));
+        String str = "<postureShift xmlns=\"http://www.bml-initiative.org/bml/bml-1.0\" "
+                + "id=\"posture1\"><stance type=\"SITTING\"/><pose part=\"LEGS\" lexeme=\"LEGS_OPEN\"/></postureShift>";
+        PostureShiftBehaviour beh = createPostureShiftBehaviour("bml1", str);
+        RestPose rp = gestureBinding.getRestPose(beh, mockAniPlayer);
+        assertThat(rp, instanceOf(SkeletonPoseRestPose.class));
     }
 }

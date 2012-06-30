@@ -22,25 +22,25 @@ public class ListFeedbackListener implements BMLFeedbackListener
     public ListFeedbackListener(List<BMLSyncPointProgressFeedback> fbList)
     {
         feedBackList = fbList;
-        blockFeedbackList = new ArrayList<BMLBlockProgressFeedback>();        
+        blockFeedbackList = new ArrayList<BMLBlockProgressFeedback>();
     }
 
     public BMLBlockProgressFeedback getBlockProgress(String bmlId, String syncId)
     {
-        for(BMLBlockProgressFeedback bp:blockFeedbackList)
+        for (BMLBlockProgressFeedback bp : blockFeedbackList)
         {
-            if(bp.getBmlId().equals(bmlId)&&bp.getSyncId().equals(syncId))
+            if (bp.getBmlId().equals(bmlId) && bp.getSyncId().equals(syncId))
             {
                 return bp;
-            }            		
+            }
         }
         return null;
     }
-    
+
     public ListFeedbackListener(List<BMLSyncPointProgressFeedback> fbList, List<BMLBlockProgressFeedback> blockFeedbackList)
     {
         feedBackList = fbList;
-        this.blockFeedbackList = blockFeedbackList;        
+        this.blockFeedbackList = blockFeedbackList;
     }
 
     @Override
@@ -69,7 +69,7 @@ public class ListFeedbackListener implements BMLFeedbackListener
         List<BMLSyncPointProgressFeedback> syncs = new ArrayList<BMLSyncPointProgressFeedback>();
         for (BMLSyncPointProgressFeedback fb : feedBackList)
         {
-            
+
             if (fb.getBMLId().equals(bmlId) && fb.getBehaviourId().equals(behaviorId))
             {
                 syncs.add(fb);

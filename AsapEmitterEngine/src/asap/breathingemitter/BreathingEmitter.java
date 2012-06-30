@@ -35,11 +35,11 @@ import asap.emitterengine.*;
  */
 public class BreathingEmitter extends Emitter implements Runnable
 {
-  
-  private Thread theThread = null;
+
+    private Thread theThread = null;
     private Logger logger = LoggerFactory.getLogger(BreathingEmitter.class.getName());
     private String id = null;
-    
+
     /** The realizerbridge */
     protected RealizerPort realizerBridge = null;
 
@@ -59,9 +59,9 @@ public class BreathingEmitter extends Emitter implements Runnable
     private double averagewaitingtime = 5; // seconds
 
     private double range = 3; // avg-range < waitingtime < avg+range
-    
+
     private static BreathingEmitterInfo breathingEmitterInfo = new BreathingEmitterInfo();
-    
+
     public BreathingEmitter()
     {
     }
@@ -92,18 +92,18 @@ public class BreathingEmitter extends Emitter implements Runnable
         logger.debug("Stopping BreathEmitter thread");
     }
 
-
     public void start()
     {
-      theThread = new Thread(this);
-      theThread.start();
+        theThread = new Thread(this);
+        theThread.start();
     }
+
     public void stopRunning()
     {
         running = false;
         try
         {
-          theThread.interrupt();
+            theThread.interrupt();
         }
         catch (Exception ex)
         {
@@ -114,20 +114,18 @@ public class BreathingEmitter extends Emitter implements Runnable
     {
         lastbreath = System.currentTimeMillis();
         scheduling = "composition=\"APPEND-AFTER(breathbml" + breathcount + ")\"";
-        String bml = "<bml xmlns=\"http://www.bml-initiative.org/bml/bml-1.0\" " +
-        		"id=\"breathbml" + (breathcount + 1) + "\" " + scheduling
-                + " xmlns:bmlt=\"http://hmi.ewi.utwente.nl/bmlt\">"
-                + "<gesture id=\"b1\" lexeme=\"breathe\" start=\"0\" " +
-                "ready=\"0\" stroke=\""+(currentwaitingtime/4)+"\" relax=\""+(2*currentwaitingtime/3)+"\" end=\""+currentwaitingtime+"\" "
-                //+ "amount=\"1\"" 
+        String bml = "<bml xmlns=\"http://www.bml-initiative.org/bml/bml-1.0\" " + "id=\"breathbml" + (breathcount + 1) + "\" "
+                + scheduling + " xmlns:bmlt=\"http://hmi.ewi.utwente.nl/bmlt\">" + "<gesture id=\"b1\" lexeme=\"breathe\" start=\"0\" "
+                + "ready=\"0\" stroke=\"" + (currentwaitingtime / 4) + "\" relax=\"" + (2 * currentwaitingtime / 3) + "\" end=\""
+                + currentwaitingtime + "\" "
+                // + "amount=\"1\""
                 + " />";
-         if (breathcount > 1)  
-         {
-           bml += "<bmlt:interrupt id=\"interruptPrevBreath\" target=\"breathbml" + breathcount + "\">"
-                + "</bmlt:interrupt>";
-         }
-         realizerBridge.performBML(bml+ "</bml>");
-                
+        if (breathcount > 1)
+        {
+            bml += "<bmlt:interrupt id=\"interruptPrevBreath\" target=\"breathbml" + breathcount + "\">" + "</bmlt:interrupt>";
+        }
+        realizerBridge.performBML(bml + "</bml>");
+
         breathcount++;
         // System.out.println("Breath! " + breathcount);
 
@@ -166,7 +164,7 @@ public class BreathingEmitter extends Emitter implements Runnable
         parameterschanged = true;
         try
         {
-          theThread.interrupt();
+            theThread.interrupt();
         }
         catch (Exception ex)
         {
@@ -179,123 +177,130 @@ public class BreathingEmitter extends Emitter implements Runnable
         parameterschanged = true;
         try
         {
-          theThread.interrupt();
+            theThread.interrupt();
         }
         catch (Exception ex)
         {
         }
     }
-    
+
     @Override
     public void setRealizerPort(RealizerPort port)
     {
-      realizerBridge = port;
+        realizerBridge = port;
     }
+
     @Override
     public void setId(String id)
     {
-      this.id = id;
+        this.id = id;
     }
+
     @Override
     public String getId()
     {
-      return id;
+        return id;
     }
-    
+
     static final String BMLTNAMESPACE = "http://hmi.ewi.utwente.nl/bmlt";
-    
+
     public static String namespace()
     {
-      return BMLTNAMESPACE;
+        return BMLTNAMESPACE;
     }
-    
+
     @Override
     public String getNamespace()
     {
-      return BMLTNAMESPACE;
+        return BMLTNAMESPACE;
     }
-    
+
     static final String XMLTAG = "breathingemitter";
-    
+
     public static String xmlTag()
     {
-      return XMLTAG;
+        return XMLTAG;
     }
 
     @Override
     public String getXMLTag()
     {
-      return XMLTAG;
+        return XMLTAG;
     }
-    
+
     /** start emitter. Needs to be already connected to realizerport. */
-    //@Override
-    //public void start() ... its a thread already...
-    
-    /** 
-     * stop and clean up emitter as soon as possible. After stop was called, no new BML should be emitted, 
-     * but cleaning up emission threads may take a while. 
+    // @Override
+    // public void start() ... its a thread already...
+
+    /**
+     * stop and clean up emitter as soon as possible. After stop was called, no new BML should be emitted,
+     * but cleaning up emission threads may take a while.
      */
     @Override
     public void stop()
     {
-      stopRunning();
+        stopRunning();
     }
 
-    public  boolean specifiesFloatParameter(String name)
+    public boolean specifiesFloatParameter(String name)
     {
-      return breathingEmitterInfo.specifiesFloatParameter(name);
-    }
-    public  boolean specifiesStringParameter(String name)
-    {
-      return breathingEmitterInfo.specifiesStringParameter(name);
-    }
-    
-    public  ArrayList<String> getOptionalParameters()
-    {
-      return breathingEmitterInfo.getOptionalParameters();
+        return breathingEmitterInfo.specifiesFloatParameter(name);
     }
 
-    public  ArrayList<String> getRequiredParameters()
+    public boolean specifiesStringParameter(String name)
     {
-      return breathingEmitterInfo.getRequiredParameters();
+        return breathingEmitterInfo.specifiesStringParameter(name);
     }
-    
+
+    public ArrayList<String> getOptionalParameters()
+    {
+        return breathingEmitterInfo.getOptionalParameters();
+    }
+
+    public ArrayList<String> getRequiredParameters()
+    {
+        return breathingEmitterInfo.getRequiredParameters();
+    }
+
     @Override
     public void setParameterValue(String name, String value)
     {
-        if(StringUtil.isNumeric(value))
+        if (StringUtil.isNumeric(value))
         {
-          setFloatParameterValue(name, Float.parseFloat(value));
+            setFloatParameterValue(name, Float.parseFloat(value));
         }
         else
         {
             throw new RuntimeException("Cannot set parameter");
         }
     }
+
     @Override
     public void setFloatParameterValue(String name, float value)
     {
-      if (name.equals("range")) basicMethodSetRange((double)value);
-      if (name.equals("avgwaitingtime")) basicMethodSetAvg((double)value);
+        if (name.equals("range")) basicMethodSetRange((double) value);
+        if (name.equals("avgwaitingtime")) basicMethodSetAvg((double) value);
     }
+
     @Override
     public String getParameterValue(String name)
     {
-      if (specifiesFloatParameter(name)) return ""+getFloatParameterValue(name);
-      return null;
+        if (specifiesFloatParameter(name)) return "" + getFloatParameterValue(name);
+        return null;
     }
+
     @Override
     public float getFloatParameterValue(String name)
     {
-      if (name.equals("range")) return (float)range;
-      if (name.equals("avgwaitingtime")) return (float)averagewaitingtime;
-      return 0;
+        if (name.equals("range")) return (float) range;
+        if (name.equals("avgwaitingtime")) return (float) averagewaitingtime;
+        return 0;
     }
+
     @Override
     public boolean hasValidParameters()
     {
-      return (averagewaitingtime >= 0 && range < averagewaitingtime); 
+        return (averagewaitingtime >= 0 && range < averagewaitingtime);
     }
-        
+
 }

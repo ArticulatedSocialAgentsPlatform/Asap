@@ -36,8 +36,8 @@ public class MURMLMUBuilderTest
     @Test
     public void testSingleFrame() throws MUPlayException, MUSetupException
     {
-        String murmlString = "<definition xmlns=\"http://www.techfak.uni-bielefeld.de/ags/soa/murml\">"+
-            "<keyframing><phase><frame ftime=\"0\"><posture>Humanoid "
+        String murmlString = "<definition xmlns=\"http://www.techfak.uni-bielefeld.de/ags/soa/murml\">"
+                + "<keyframing><phase><frame ftime=\"0\"><posture>Humanoid "
                 + "(l_shoulder 3 100 0 0)</posture></frame></phase></keyframing></definition>";
         AnimationUnit au = MURMLMUBuilder.setup(murmlString);
         assertThat(au, instanceOf(MURMLKeyframeMU.class));
@@ -55,8 +55,8 @@ public class MURMLMUBuilderTest
     @Test
     public void testTwoFrames() throws MUPlayException, MUSetupException
     {
-        String murmlString = "<definition xmlns=\"http://www.techfak.uni-bielefeld.de/ags/soa/murml\">" +
-        		"<keyframing><phase><frame ftime=\"0\"><posture>Humanoid "
+        String murmlString = "<definition xmlns=\"http://www.techfak.uni-bielefeld.de/ags/soa/murml\">"
+                + "<keyframing><phase><frame ftime=\"0\"><posture>Humanoid "
                 + "(l_shoulder 3 100 0 0)</posture></frame><frame ftime=\"1\"><posture>Humanoid "
                 + "(l_shoulder 3 0 80 0)</posture></frame></phase></keyframing></definition>";
         AnimationUnit au = MURMLMUBuilder.setup(murmlString);
@@ -75,8 +75,8 @@ public class MURMLMUBuilderTest
     @Test
     public void testTwoFramesTwoTargets() throws MUPlayException, MUSetupException
     {
-        String murmlString = "<definition xmlns=\"http://www.techfak.uni-bielefeld.de/ags/soa/murml\">" +
-        		"<keyframing><phase><frame ftime=\"0\"><posture>Humanoid "
+        String murmlString = "<definition xmlns=\"http://www.techfak.uni-bielefeld.de/ags/soa/murml\">"
+                + "<keyframing><phase><frame ftime=\"0\"><posture>Humanoid "
                 + "(l_shoulder 3 100 0 0)(r_shoulder 3 0 0 100)</posture></frame><frame ftime=\"1\"><posture>Humanoid "
                 + "(l_shoulder 3 0 80 0)(r_shoulder 3 80 0 0)</posture></frame></phase></keyframing></definition>";
         AnimationUnit au = MURMLMUBuilder.setup(murmlString);
@@ -99,8 +99,8 @@ public class MURMLMUBuilderTest
     @Test
     public void testUnification() throws MUPlayException, MUSetupException
     {
-        String murmlString = "<definition xmlns=\"http://www.techfak.uni-bielefeld.de/ags/soa/murml\">" +
-        		"<keyframing><phase><frame ftime=\"0\"><posture>Humanoid "
+        String murmlString = "<definition xmlns=\"http://www.techfak.uni-bielefeld.de/ags/soa/murml\">"
+                + "<keyframing><phase><frame ftime=\"0\"><posture>Humanoid "
                 + "(l_shoulder 3 100 0 0)</posture></frame><frame ftime=\"4\"><posture>Humanoid "
                 + "(l_shoulder 3 0 80 0)</posture></frame></phase></keyframing></definition>";
         AnimationUnit au = MURMLMUBuilder.setup(murmlString);
@@ -119,9 +119,8 @@ public class MURMLMUBuilderTest
     @Test
     public void testFlexibleStartAtStart() throws MUPlayException, MUSetupException
     {
-        String murmlString = "<definition xmlns=\"http://www.techfak.uni-bielefeld.de/ags/soa/murml\">" +
-        		"<keyframing><phase>" + "<frame ftime=\"4\"><posture>Humanoid "
-                + "(l_shoulder 3 0 80 0)</posture></frame></phase></keyframing></definition>";
+        String murmlString = "<definition xmlns=\"http://www.techfak.uni-bielefeld.de/ags/soa/murml\">" + "<keyframing><phase>"
+                + "<frame ftime=\"4\"><posture>Humanoid " + "(l_shoulder 3 0 80 0)</posture></frame></phase></keyframing></definition>";
         AnimationUnit au = MURMLMUBuilder.setup(murmlString);
         au = au.copy(mockAnimationPlayer);
 
@@ -138,9 +137,8 @@ public class MURMLMUBuilderTest
     @Test
     public void testFlexibleStartAtEnd() throws MUPlayException, MUSetupException
     {
-        String murmlString = "<definition xmlns=\"http://www.techfak.uni-bielefeld.de/ags/soa/murml\">" +
-        		"<keyframing><phase>" + "<frame ftime=\"4\"><posture>Humanoid "
-                + "(l_shoulder 3 0 80 0)</posture></frame></phase></keyframing></definition>";
+        String murmlString = "<definition xmlns=\"http://www.techfak.uni-bielefeld.de/ags/soa/murml\">" + "<keyframing><phase>"
+                + "<frame ftime=\"4\"><posture>Humanoid " + "(l_shoulder 3 0 80 0)</posture></frame></phase></keyframing></definition>";
         AnimationUnit au = MURMLMUBuilder.setup(murmlString);
         au = au.copy(mockAnimationPlayer);
 
@@ -159,9 +157,8 @@ public class MURMLMUBuilderTest
     @Test
     public void testFlexibleStartHalfWay() throws MUPlayException, MUSetupException
     {
-        String murmlString = "<definition xmlns=\"http://www.techfak.uni-bielefeld.de/ags/soa/murml\">" +
-        		"<keyframing><phase>" + "<frame ftime=\"4\"><posture>Humanoid "
-                + "(l_shoulder 3 0 80 0)</posture></frame></phase></keyframing></definition>";
+        String murmlString = "<definition xmlns=\"http://www.techfak.uni-bielefeld.de/ags/soa/murml\">" + "<keyframing><phase>"
+                + "<frame ftime=\"4\"><posture>Humanoid " + "(l_shoulder 3 0 80 0)</posture></frame></phase></keyframing></definition>";
         AnimationUnit au = MURMLMUBuilder.setup(murmlString);
         au = au.copy(mockAnimationPlayer);
 

@@ -8,6 +8,11 @@ import javax.swing.JPanel;
 
 import asap.realizer.anticipator.KeyInfo;
 
+/**
+ * Visualizes the spacebar presses on a green/red jpanel
+ * @author Herwin
+ *
+ */
 public class JPanelSpaceBarVisualization extends SpacebarAnticipatorVisualization
 {
     private final JPanel panel;

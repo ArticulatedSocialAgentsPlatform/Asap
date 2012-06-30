@@ -61,7 +61,6 @@ import org.slf4j.LoggerFactory;
 
 import asap.bml.bridge.RealizerPort;
 
-
 /**
  * A graphical UI to a RealizerBridge, allowing for a few simple interactions with it such as
  * sending BML to it.
@@ -75,10 +74,9 @@ public class RealizerBridgeUI extends JPanel
 
     private URL demoScriptUrl = null;
     private String demoScriptResource = null;
-    
+
     private String loadPath = "../../Shared/repository/HMI/HmiElckerlyc/resources/";
 
-    
     /**
      * if there is a bml realizer, a set of demo scripts can be "hard coded" into the UI. If you
      * choose a script from the list, this script is loaded into the bml input box, and parsed /
@@ -105,7 +103,6 @@ public class RealizerBridgeUI extends JPanel
     /** The realizerbridge */
     protected RealizerPort realizerBridge = null;
 
-
     /**
      * Init the frame with input text are -- use default set of demo
      * scripts
@@ -119,10 +116,10 @@ public class RealizerBridgeUI extends JPanel
     public RealizerBridgeUI(RealizerPort bridge, String resource)
     {
         super();
-        
-        demoScriptResource = resource; 
+
+        demoScriptResource = resource;
         demoScriptUrl = new Resources("").getURL(resource);
-        
+
         realizerBridge = bridge;
 
         setLayout(new BoxLayout(this, BoxLayout.PAGE_AXIS));
@@ -139,7 +136,7 @@ public class RealizerBridgeUI extends JPanel
 
         demoScripts = new ArrayList<String>();
         demoScriptNames = new ArrayList<String>();
-              
+
         buttonPanel.add(playButton);
         buttonPanel.add(loadButton);
         buttonPanel.add(Box.createRigidArea(new Dimension(5, 0)));
@@ -147,93 +144,90 @@ public class RealizerBridgeUI extends JPanel
         // find the demoscripts, based on the URL
         if (demoScriptUrl != null)
         {
-          //is it a jar or not?
-          if (demoScriptUrl.getProtocol().toLowerCase(Locale.US).equals("jar"))
-          { //it is in a jar. open jar, enumerate entries and add them.
-            try
-            {
-              logger.debug("Loading demo scripts from JAR");
-              JarURLConnection connection = (JarURLConnection) demoScriptUrl.openConnection();
-              JarFile jarFile = connection.getJarFile();
-              String resourceDirName = connection.getEntryName();
-              Enumeration<JarEntry> entries = jarFile.entries();
-              while (entries.hasMoreElements())
-              {
-                JarEntry entry = entries.nextElement();
-                String name = entry.getName();
-                if (name.endsWith(".xml") && name.startsWith(resourceDirName))
+            // is it a jar or not?
+            if (demoScriptUrl.getProtocol().toLowerCase(Locale.US).equals("jar"))
+            { // it is in a jar. open jar, enumerate entries and add them.
+                try
                 {
-                  String shortName = name.substring(resourceDirName.length());
-                  while (shortName.startsWith("/"))shortName = shortName.substring(1); //strip remaining "/" from start
-                  demoScripts.add(shortName);
-                  demoScriptNames.add(shortName.replaceAll("-",": ").replaceAll("_"," ").replaceAll(".xml",""));                
+                    logger.debug("Loading demo scripts from JAR");
+                    JarURLConnection connection = (JarURLConnection) demoScriptUrl.openConnection();
+                    JarFile jarFile = connection.getJarFile();
+                    String resourceDirName = connection.getEntryName();
+                    Enumeration<JarEntry> entries = jarFile.entries();
+                    while (entries.hasMoreElements())
+                    {
+                        JarEntry entry = entries.nextElement();
+                        String name = entry.getName();
+                        if (name.endsWith(".xml") && name.startsWith(resourceDirName))
+                        {
+                            String shortName = name.substring(resourceDirName.length());
+                            while (shortName.startsWith("/"))
+                                shortName = shortName.substring(1); // strip remaining "/" from start
+                            demoScripts.add(shortName);
+                            demoScriptNames.add(shortName.replaceAll("-", ": ").replaceAll("_", " ").replaceAll(".xml", ""));
+                        }
+                    }
                 }
-              }
-            }
-            catch (Exception ex)
-            {
-              logger.debug("Error reading demo scripts from jar", ex);
-            }
-          }
-          else
-          { //a file, not from jar. try to list directory contents
-            logger.debug("Loading demo scripts from file");
-            File demoScriptDir = null;
-            try
-            {
-              demoScriptDir = new File(demoScriptUrl.toURI());
-              if (!demoScriptDir.isDirectory()) 
-              {
-                logger.debug("Demo script directory is not a directory");
-                demoScriptDir = null;
-              }
-            }
-            catch (Exception ex)
-            {
-              logger.debug("Cannot open demo script directory", ex);
-            }
-            if (demoScriptDir!=null)
-            {
-              logger.debug(demoScriptUrl+ " found ");
-              for (File f : demoScriptDir.listFiles())
-              {
-                  if (f.isFile() && f.getName().endsWith(".xml"))
-                  {
-                    demoScripts.add(f.getName());
-                    demoScriptNames.add(f.getName().replaceAll("-",": ").replaceAll("_"," ").replaceAll(".xml",""));                
-                  }
-              }
+                catch (Exception ex)
+                {
+                    logger.debug("Error reading demo scripts from jar", ex);
+                }
             }
             else
-            {
-              logger.debug(demoScriptUrl+ " not found ");
+            { // a file, not from jar. try to list directory contents
+                logger.debug("Loading demo scripts from file");
+                File demoScriptDir = null;
+                try
+                {
+                    demoScriptDir = new File(demoScriptUrl.toURI());
+                    if (!demoScriptDir.isDirectory())
+                    {
+                        logger.debug("Demo script directory is not a directory");
+                        demoScriptDir = null;
+                    }
+                }
+                catch (Exception ex)
+                {
+                    logger.debug("Cannot open demo script directory", ex);
+                }
+                if (demoScriptDir != null)
+                {
+                    logger.debug(demoScriptUrl + " found ");
+                    for (File f : demoScriptDir.listFiles())
+                    {
+                        if (f.isFile() && f.getName().endsWith(".xml"))
+                        {
+                            demoScripts.add(f.getName());
+                            demoScriptNames.add(f.getName().replaceAll("-", ": ").replaceAll("_", " ").replaceAll(".xml", ""));
+                        }
+                    }
+                }
+                else
+                {
+                    logger.debug(demoScriptUrl + " not found ");
+                }
             }
-          }
         }
-        
-        //did we obtain demoscripts? if so, load them to GUI
-        if (demoScripts.size()>0)
+
+        // did we obtain demoscripts? if so, load them to GUI
+        if (demoScripts.size() > 0)
         {
-          demoScriptList = new JComboBox(demoScriptNames.toArray(new String[demoScriptNames.size()]));          
-          demoScriptList.insertItemAt("", 0);
-          demoScriptList.setEditable(false);
-          demoScriptList.setSelectedItem("");
-          demoScriptList.addActionListener(new DemoScriptSelectionListener());
-          buttonPanel.add(new JLabel("Demo scripts:"));
-          buttonPanel.add(Box.createRigidArea(new Dimension(5, 0)));
-          buttonPanel.add(demoScriptList);
+            demoScriptList = new JComboBox(demoScriptNames.toArray(new String[demoScriptNames.size()]));
+            demoScriptList.insertItemAt("", 0);
+            demoScriptList.setEditable(false);
+            demoScriptList.setSelectedItem("");
+            demoScriptList.addActionListener(new DemoScriptSelectionListener());
+            buttonPanel.add(new JLabel("Demo scripts:"));
+            buttonPanel.add(Box.createRigidArea(new Dimension(5, 0)));
+            buttonPanel.add(demoScriptList);
         }
 
         buttonPanel.setAlignmentX(LEFT_ALIGNMENT);
 
         // textbox for input
-        bmlInput = new JTextArea(
-                "<bml xmlns=\"http://www.bml-initiative.org/bml/bml-1.0\"" +
-                " id=\"bml1\">\n"
-                        + "<speech id=\"speech1\" start=\"2\">\n"
-                        + "<text>Hello! This is a basic BML test for the realizer bridge!</text>\n"
-                        + "</speech>\n"
-                        + "</bml>");
+        bmlInput = new JTextArea("<bml xmlns=\"http://www.bml-initiative.org/bml/bml-1.0\"" + " id=\"bml1\">\n"
+                + "<speech id=\"speech1\" start=\"2\">\n" + "<text>Hello! This is a basic BML test for the realizer bridge!</text>\n"
+                + "</speech>\n" + "</bml>");
         final UndoManager undo = new UndoManager();
         Document doc = bmlInput.getDocument(); // Listen for undo and redo events
         doc.addUndoableEditListener(new UndoableEditListener()
@@ -296,7 +290,6 @@ public class RealizerBridgeUI extends JPanel
         JScrollPane bmlScroll = new JScrollPane(bmlInput);
         bmlScroll.setPreferredSize(new Dimension(500, 80));
 
-
         add(buttonPanel);
         add(Box.createRigidArea(new Dimension(0, 5)));
         add(bmlScroll);
@@ -307,8 +300,8 @@ public class RealizerBridgeUI extends JPanel
     /** Play the content of the BML input box; set the resulting output in the outputArea */
     public void playBMLContent()
     {
-        realizerBridge.performBML("<bml xmlns=\"http://www.bml-initiative.org/bml/bml-1.0\" " +
-        		"id=\"clear\" composition=\"REPLACE\"></bml>");
+        realizerBridge.performBML("<bml xmlns=\"http://www.bml-initiative.org/bml/bml-1.0\" "
+                + "id=\"clear\" composition=\"REPLACE\"></bml>");
         realizerBridge.performBML(bmlInput.getText());
     }
 
@@ -321,7 +314,7 @@ public class RealizerBridgeUI extends JPanel
             Resources r = new Resources("");
             if (demoScriptResource != null)
             {
-              r = new Resources(demoScriptResource);
+                r = new Resources(demoScriptResource);
             }
             String script = r.read(fileName);
             bmlInput.setText(script);
@@ -329,9 +322,7 @@ public class RealizerBridgeUI extends JPanel
         }
         catch (IOException ex)
         {
-            JOptionPane.showMessageDialog(null,
-                                          "Error loading demo script.", "alert",
-                                          JOptionPane.ERROR_MESSAGE);
+            JOptionPane.showMessageDialog(null, "Error loading demo script.", "alert", JOptionPane.ERROR_MESSAGE);
             ex.printStackTrace();
         }
 
@@ -389,7 +380,7 @@ public class RealizerBridgeUI extends JPanel
                 File f = chooser.getSelectedFile();
                 if (f != null)
                 {
-                    loadPath = f.getParent();                    
+                    loadPath = f.getParent();
                     FileReader r;
                     try
                     {
@@ -397,9 +388,8 @@ public class RealizerBridgeUI extends JPanel
                     }
                     catch (FileNotFoundException e1)
                     {
-                        JOptionPane.showMessageDialog(null,
-                                                      "File not found; see stack trace for more info.", "alert",
-                                                      JOptionPane.ERROR_MESSAGE);
+                        JOptionPane.showMessageDialog(null, "File not found; see stack trace for more info.", "alert",
+                                JOptionPane.ERROR_MESSAGE);
                         e1.printStackTrace();
                         return;
                     }
@@ -410,9 +400,8 @@ public class RealizerBridgeUI extends JPanel
                     }
                     catch (IOException ex)
                     {
-                        JOptionPane.showMessageDialog(null,
-                                                      "Error reading file; see stack trace for more info.", "alert",
-                                                      JOptionPane.ERROR_MESSAGE);
+                        JOptionPane.showMessageDialog(null, "Error reading file; see stack trace for more info.", "alert",
+                                JOptionPane.ERROR_MESSAGE);
                         ex.printStackTrace();
                     }
                     try
@@ -421,9 +410,8 @@ public class RealizerBridgeUI extends JPanel
                     }
                     catch (IOException e1)
                     {
-                        JOptionPane.showMessageDialog(null,
-                                                      "Error closing file; see stack trace for more info.", "alert",
-                                                      JOptionPane.ERROR_MESSAGE);
+                        JOptionPane.showMessageDialog(null, "Error closing file; see stack trace for more info.", "alert",
+                                JOptionPane.ERROR_MESSAGE);
                         e1.printStackTrace();
                     }
                 }
