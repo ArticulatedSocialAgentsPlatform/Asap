@@ -27,6 +27,7 @@ public class PlannerTests<T extends TimedPlanUnit>
 {
     private final BMLBlockPeg bbPeg;
     private final Planner<T> planner;
+    private final static double TIME_PRECISION = 0.0001;
     
     public PlannerTests(Planner<T> p, BMLBlockPeg bbPeg)
     {
@@ -41,10 +42,10 @@ public class PlannerTests<T extends TimedPlanUnit>
         sacs.add(new TimePegAndConstraint("start", sp, new Constraint(), 0, false));
 
         T pu = planner.resolveSynchs(bbPeg, beh, sacs);
-        assertEquals(bbPeg.getValue(), sp.getGlobalValue(), 0.0001);
+        assertEquals(bbPeg.getValue(), sp.getGlobalValue(), TIME_PRECISION);
 
         planner.addBehaviour(bbPeg, beh, sacs, pu);
-        assertEquals(bbPeg.getValue(), pu.getStartTime(), 0.0001);
+        assertEquals(bbPeg.getValue(), pu.getStartTime(), TIME_PRECISION);
         if(pu.getEndTime()!=TimePeg.VALUE_UNKNOWN)
         {
             assertThat(pu.getEndTime(),greaterThan(bbPeg.getValue()));
@@ -71,6 +72,6 @@ public class PlannerTests<T extends TimedPlanUnit>
         sacs.add(new TimePegAndConstraint("start",startPeg , new Constraint(), -2, true));
         
         TimedPlanUnit pu = planner.resolveSynchs(bbPeg, beh, sacs);    
-        assertEquals(2, pu.getStartTime(),0.0001);
+        assertEquals(2, pu.getStartTime(),TIME_PRECISION);
     } 
 }

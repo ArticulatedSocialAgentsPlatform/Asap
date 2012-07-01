@@ -25,7 +25,7 @@ public class SpaceBarTempoAnticipatorTest
     private SpaceBarTempoAnticipator sbta = new SpaceBarTempoAnticipator();
     private StubSystemClock stubSystemClock = new StubSystemClock();
     private TimePeg managingPegs[];    
-    private double PRECISION = 0.001;
+    private static final double PRECISION = 0.001;
     private static class StubSystemClock extends SystemClock
     {
         private double time = 0;

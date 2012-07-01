@@ -13,7 +13,7 @@ import saiba.bml.feedback.BMLSyncPointProgressFeedback;
  */
 public final class FeedbackAsserts
 {
-    private static double TIME_PRECISION = 0.01;
+    private static final double TIME_PRECISION = 0.01;
     private FeedbackAsserts()
     {
     }
