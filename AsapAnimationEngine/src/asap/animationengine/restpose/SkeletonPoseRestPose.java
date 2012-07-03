@@ -4,6 +4,7 @@ import hmi.animation.SkeletonPose;
 import hmi.animation.VJoint;
 import hmi.animation.VObjectTransformCopier;
 import hmi.math.Quat4f;
+import hmi.util.Resources;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -171,5 +172,11 @@ public class SkeletonPoseRestPose implements RestPose
             return null;
         }
         return new PostureShiftTMU(bbf, bmlBlockPeg, bmlId, id, mu.copy(player), pb, this, player);
+    }
+
+    @Override
+    public void setResource(Resources res)
+    {
+                
     }
 }

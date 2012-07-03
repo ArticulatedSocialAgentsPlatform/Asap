@@ -55,7 +55,8 @@ public class RestPoseAssembler extends XMLStructureAdapter
             try
             {
                 Class<?> c = Class.forName(className);
-                restPose = c.asSubclass(RestPose.class).newInstance();                
+                restPose = c.asSubclass(RestPose.class).newInstance();
+                restPose.setResource(resources);
             }
             catch (ClassNotFoundException e)
             {
