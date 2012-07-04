@@ -180,9 +180,9 @@ public abstract class AbstractASAPRealizerTest extends AbstractBML1RealizerTest 
         realizerHandler.assertSyncsInOrder("bml3", "speech1", DefaultSyncPoints.getDefaultSyncPoints("speech"));
         realizerHandler.assertSyncsInOrder("bml4", "nod1", DefaultSyncPoints.getDefaultSyncPoints("head"));
 
-        realizerHandler.assertAfterBlock("bml2", "bml1", 0.5);
-        realizerHandler.assertAfterBlock("bml3", "bml2", 0.5);
-        realizerHandler.assertAfterBlock("bml4", "bml2", 0.5);
+        realizerHandler.assertAfterBlock("bml1", "bml2", 0.5);
+        realizerHandler.assertAfterBlock("bml2", "bml3", 0.5);
+        realizerHandler.assertAfterBlock("bml2", "bml4", 0.5);
     }
 
     @Test
