@@ -164,7 +164,7 @@ public abstract class AbstractASAPRealizerTest extends AbstractBML1RealizerTest 
         String bmlString3 = readTestFile("bmlt/appendafter/testspeech3.xml");
         String bmlString4 = readTestFile("bmlt/appendafter/testnodappendafter.xml");
 
-        realizerHandler.performBML(bmlString1);
+        realizerHandler.performBML(bmlString1);        
         realizerHandler.performBML(bmlString2);
         realizerHandler.performBML(bmlString3);
         realizerHandler.performBML(bmlString4);
@@ -180,9 +180,9 @@ public abstract class AbstractASAPRealizerTest extends AbstractBML1RealizerTest 
         realizerHandler.assertSyncsInOrder("bml3", "speech1", DefaultSyncPoints.getDefaultSyncPoints("speech"));
         realizerHandler.assertSyncsInOrder("bml4", "nod1", DefaultSyncPoints.getDefaultSyncPoints("head"));
 
-        realizerHandler.assertBlockStartLinkedToBlockStop("bml2", "bml1");
-        realizerHandler.assertBlockStartLinkedToBlockStop("bml3", "bml2");
-        realizerHandler.assertBlockStartLinkedToBlockStop("bml4", "bml2");
+        realizerHandler.assertAfterBlock("bml2", "bml1", 0.5);
+        realizerHandler.assertAfterBlock("bml3", "bml2", 0.5);
+        realizerHandler.assertAfterBlock("bml4", "bml2", 0.5);
     }
 
     @Test
