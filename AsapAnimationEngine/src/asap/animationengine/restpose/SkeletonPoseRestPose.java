@@ -50,17 +50,14 @@ public class SkeletonPoseRestPose implements RestPose
     {
         this.player = player;
         poseTree = player.getVCurr().copyTree("rest-");
+        for (VJoint vj : poseTree.getParts())
+        {
+            vj.setRotation(Quat4f.getIdentity());
+        }
         if (pose != null)
         {
             pose.setTargets(poseTree.getParts().toArray(new VJoint[poseTree.getParts().size()]));
             pose.setToTarget();
-        }
-        else
-        {
-            for (VJoint vj : poseTree.getParts())
-            {
-                vj.setRotation(Quat4f.getIdentity());
-            }
         }
     }
 
@@ -165,7 +162,7 @@ public class SkeletonPoseRestPose implements RestPose
         }
         else if (pose.getConfigType().equals("T1R"))
         {
-            mu = new T1RTransitionToPoseMU(startJoints, targetJoints,  pose.getConfig());
+            mu = new T1RTransitionToPoseMU(startJoints, targetJoints, pose.getConfig());
         }
         else
         {
@@ -177,6 +174,6 @@ public class SkeletonPoseRestPose implements RestPose
     @Override
     public void setResource(Resources res)
     {
-                
+
     }
 }

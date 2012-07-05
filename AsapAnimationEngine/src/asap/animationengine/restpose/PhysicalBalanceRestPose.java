@@ -1,28 +1,38 @@
 package asap.animationengine.restpose;
 
+import hmi.animation.SkeletonPose;
 import hmi.animation.VJoint;
+import hmi.math.Quat4f;
 import hmi.physics.controller.BalanceController;
 import hmi.physics.controller.ControllerParameterException;
 import hmi.physics.controller.PhysicalController;
 import hmi.util.Resources;
+import hmi.xml.XMLTokenizer;
 
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
 import lombok.extern.slf4j.Slf4j;
 
 import asap.animationengine.AnimationPlayer;
+import asap.animationengine.MovementTimingUtils;
 import asap.animationengine.controller.CompoundController;
 import asap.animationengine.motionunit.AnimationUnit;
 import asap.animationengine.motionunit.MUSetupException;
 import asap.animationengine.motionunit.TimedAnimationUnit;
 import asap.animationengine.transitions.SlerpTransitionToPoseMU;
+import asap.animationengine.transitions.TransitionMU;
 import asap.realizer.feedback.FeedbackManager;
 import asap.realizer.pegboard.BMLBlockPeg;
+import asap.realizer.pegboard.OffsetPeg;
 import asap.realizer.pegboard.PegBoard;
+import asap.realizer.pegboard.TimePeg;
+import asap.realizer.planunit.KeyPosition;
 import asap.realizer.planunit.ParameterException;
+import asap.realizer.planunit.TimedPlanUnitState;
 
 import com.google.common.collect.Sets;
 
@@ -38,17 +48,24 @@ public class PhysicalBalanceRestPose implements RestPose
 
     private AnimationPlayer player;
     private Resources resource;
+    private SkeletonPose restPose;
+    private VJoint restPoseTree;
 
     @Override
     public RestPose copy(AnimationPlayer player)
     {
         PhysicalBalanceRestPose rp = new PhysicalBalanceRestPose();
+        if (restPose != null)
+        {
+            rp.restPose = restPose.untargettedCopy();
+        }
+
         rp.balanceController = balanceController.copy(player.getPHuman());
         rp.setAnimationPlayer(player);
         rp.setResource(resource);
         rp.optionalControllers = new ArrayList<PhysicalController>();
-        
-        for(PhysicalController cc:optionalControllers)
+
+        for (PhysicalController cc : optionalControllers)
         {
             rp.optionalControllers.add(cc.copy(player.getPHuman()));
         }
@@ -60,6 +77,17 @@ public class PhysicalBalanceRestPose implements RestPose
     {
         this.player = player;
         balanceController.setPhysicalHumanoid(player.getPHuman());
+        restPoseTree = player.getVCurr().copyTree("rest-");
+
+        for (VJoint vj : restPoseTree.getParts())
+        {
+            vj.setRotation(Quat4f.getIdentity());
+        }
+        if (restPose != null)
+        {
+            restPose.setTargets(restPoseTree.getParts().toArray(new VJoint[restPoseTree.getParts().size()]));
+            restPose.setToTarget();
+        }
     }
 
     @Override
@@ -69,44 +97,84 @@ public class PhysicalBalanceRestPose implements RestPose
         {
             player.addController(balanceController);
         }
-        
-        for(PhysicalController cc:optionalControllers)
+
+        for (PhysicalController cc : optionalControllers)
         {
-            if(Sets.intersection(cc.getRequiredJointIDs(),kinematicJoints).size()==0)
+            if (Sets.intersection(cc.getRequiredJointIDs(), kinematicJoints).size() == 0)
             {
                 player.addController(cc);
             }
         }
     }
 
+    private Set<String> getKinematicTransitionJoints(Set<String> transitionJoints)
+    {
+        Set<String> kinTransJoints = new HashSet<String>(transitionJoints);
+        for (PhysicalController cc : optionalControllers)
+        {
+            if (transitionJoints.containsAll(cc.getRequiredJointIDs()))
+            {
+                kinTransJoints.removeAll(cc.getRequiredJointIDs());
+                if (transitionJoints.containsAll(cc.getDesiredJointIDs()))
+                {
+                    kinTransJoints.removeAll(cc.getDesiredJointIDs());
+                }
+            }
+        }
+        return kinTransJoints;
+    }
+
     @Override
     public TimedAnimationUnit createTransitionToRest(FeedbackManager fbm, Set<String> joints, double startTime, String bmlId, String id,
             BMLBlockPeg bmlBlockPeg, PegBoard pb)
     {
-        // TODO Auto-generated method stub
-        return null;
+        return createTransitionToRest(fbm, joints, startTime, 1, bmlId, id, bmlBlockPeg, pb);
     }
 
     @Override
     public TimedAnimationUnit createTransitionToRest(FeedbackManager fbm, Set<String> joints, double startTime, double duration,
             String bmlId, String id, BMLBlockPeg bmlBlockPeg, PegBoard pb)
     {
-        // TODO Auto-generated method stub
-        return null;
+        TransitionMU mu = createTransitionToRest(joints);
+        mu.addKeyPosition(new KeyPosition("start", 0));
+        mu.addKeyPosition(new KeyPosition("end", 1));
+        TimedAnimationUnit tmu = new TimedAnimationUnit(fbm, bmlBlockPeg, bmlId, id, mu, pb);
+        TimePeg startPeg = new TimePeg(bmlBlockPeg);
+        startPeg.setGlobalValue(startTime);
+        tmu.setTimePeg("start", startPeg);
+        TimePeg endPeg = new OffsetPeg(startPeg, duration);
+        tmu.setTimePeg("end", endPeg);
+        tmu.setState(TimedPlanUnitState.LURKING);
+        return tmu;
+    }
+
+    @Override
+    public TransitionMU createTransitionToRest(Set<String> joints)
+    {
+        Set<String> kinJoints = getKinematicTransitionJoints(joints);
+        float rotations[] = new float[kinJoints.size() * 4];
+        int i = 0;
+        List<VJoint> targetJoints = new ArrayList<VJoint>();
+        List<VJoint> startJoints = new ArrayList<VJoint>();
+        for (String joint : kinJoints)
+        {
+            VJoint vj = restPoseTree.getPartBySid(joint);
+            vj.getRotation(rotations, i);
+            targetJoints.add(player.getVNext().getPartBySid(joint));
+            startJoints.add(player.getVCurr().getPartBySid(joint));
+            i += 4;
+        }
+        TransitionMU mu = new SlerpTransitionToPoseMU(targetJoints, startJoints, rotations);
+        mu.setStartPose();
+        return mu;
     }
 
     @Override
     public double getTransitionToRestDuration(VJoint vCurrent, Set<String> joints)
     {
-        // TODO Auto-generated method stub
-        return 0;
-    }
-
-    @Override
-    public AnimationUnit createTransitionToRest(Set<String> joints)
-    {
-        // TODO Auto-generated method stub
-        return null;
+        double duration = MovementTimingUtils.getFittsMaximumLimbMovementDuration(vCurrent, restPoseTree, joints);
+        if (duration > 0) return duration;
+        return 1;
     }
 
     @Override
@@ -121,7 +189,7 @@ public class PhysicalBalanceRestPose implements RestPose
         if (name.equals("xmlcontrollers"))
         {
             String fileNames[] = value.split(",");
-            for(String fileName:fileNames)
+            for (String fileName : fileNames)
             {
                 CompoundController cc = new CompoundController();
                 try
@@ -133,6 +201,17 @@ public class PhysicalBalanceRestPose implements RestPose
                     throw new ParameterException("Cannot load compound controller " + value, e);
                 }
                 optionalControllers.add(cc);
+            }
+        }
+        else if (name.equals("restpose"))
+        {
+            try
+            {
+                restPose = new SkeletonPose(new XMLTokenizer(resource.getReader(value)));
+            }
+            catch (IOException e)
+            {
+                throw new ParameterException("Cannot load SkeletonPose " + value, e);
             }
         }
         else
