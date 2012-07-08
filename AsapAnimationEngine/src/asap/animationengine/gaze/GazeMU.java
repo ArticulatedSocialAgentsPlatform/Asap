@@ -20,6 +20,8 @@ package asap.animationengine.gaze;
 
 import java.util.*;
 
+import lombok.extern.slf4j.Slf4j;
+
 import com.google.common.collect.ImmutableSet;
 
 import asap.animationengine.AnimationPlayer;
@@ -38,9 +40,9 @@ import asap.realizer.planunit.ParameterNotFoundException;
 import asap.realizer.util.timemanipulator.*;
 import asap.realizer.world.*;
 
-
 import hmi.animation.*;
 import saiba.bml.core.OffsetDirection;
+import sun.util.logging.resources.logging;
 import hmi.math.*;
 import hmi.neurophysics.*;
 import hmi.util.StringUtil;
@@ -58,19 +60,22 @@ import hmi.util.StringUtil;
  *         the human eye-head saccadic system. The Journal of Neurophysiology,
  *         77 (2), pp. 654-666.
  * 
- *         Fixed head rotation axis during gaze:<br> 
+ *         Fixed head rotation axis during gaze:<br>
  *         Tweed, D., & Vilis, T. (1992).
  *         Listing's Law for Gaze-Directing Head Movements. In A. Berthoz, W.
  *         Graf, & P. Vidal (Eds.), The Head-Neck Sensory-Motor System (pp.
  *         387-391). New York: Oxford University Press.
  */
+@Slf4j
 public class GazeMU implements AnimationUnit
 {
     protected float qGaze[];
 
     protected float qTemp[];
 
-    protected float qStart[], qStartLeftEye[], qStartRightEye[];
+    protected float qStartLeftEye[], qStartRightEye[];
+
+    private float qStart[];
 
     protected float vecTemp[];
 
@@ -97,10 +102,10 @@ public class GazeMU implements AnimationUnit
     protected double preparationDuration;
 
     protected double relaxDuration = TimePeg.VALUE_UNKNOWN;
-    
+
     // private static Logger logger =
     // LoggerFactory.getLogger(GazeMU.class.getName());
-    
+
     private KeyPositionManager keyPositionManager = new KeyPositionManagerImpl();
 
     private float[] localGaze = new float[3];
@@ -112,7 +117,7 @@ public class GazeMU implements AnimationUnit
     protected static final double RELATIVE_RELAX_TIME = 0.75;
 
     protected AnimationUnit relaxUnit;
-    
+
     public GazeMU()
     {
         qGaze = new float[4];
@@ -142,36 +147,28 @@ public class GazeMU implements AnimationUnit
         case NONE:
             break;
         case RIGHT:
-            Quat4f.setFromAxisAngle4f(q, 0, -1, 0,
-                    (float) Math.toRadians(offsetAngle));
+            Quat4f.setFromAxisAngle4f(q, 0, -1, 0, (float) Math.toRadians(offsetAngle));
             break;
         case LEFT:
-            Quat4f.setFromAxisAngle4f(q, 0, 1, 0,
-                    (float) Math.toRadians(offsetAngle));
+            Quat4f.setFromAxisAngle4f(q, 0, 1, 0, (float) Math.toRadians(offsetAngle));
             break;
         case UP:
-            Quat4f.setFromAxisAngle4f(q, -1, 0, 0,
-                    (float) Math.toRadians(offsetAngle));
+            Quat4f.setFromAxisAngle4f(q, -1, 0, 0, (float) Math.toRadians(offsetAngle));
             break;
         case DOWN:
-            Quat4f.setFromAxisAngle4f(q, 1, 0, 0,
-                    (float) Math.toRadians(offsetAngle));
+            Quat4f.setFromAxisAngle4f(q, 1, 0, 0, (float) Math.toRadians(offsetAngle));
             break;
         case UPRIGHT:
-            Quat4f.setFromAxisAngle4f(q, -1, -1, 0,
-                    (float) Math.toRadians(offsetAngle));
+            Quat4f.setFromAxisAngle4f(q, -1, -1, 0, (float) Math.toRadians(offsetAngle));
             break;
         case UPLEFT:
-            Quat4f.setFromAxisAngle4f(q, -1, 1, 0,
-                    (float) Math.toRadians(offsetAngle));
+            Quat4f.setFromAxisAngle4f(q, -1, 1, 0, (float) Math.toRadians(offsetAngle));
             break;
         case DOWNLEFT:
-            Quat4f.setFromAxisAngle4f(q, 1, 1, 0,
-                    (float) Math.toRadians(offsetAngle));
+            Quat4f.setFromAxisAngle4f(q, 1, 1, 0, (float) Math.toRadians(offsetAngle));
             break;
         case DOWNRIGHT:
-            Quat4f.setFromAxisAngle4f(q, 1, -1, 0,
-                    (float) Math.toRadians(offsetAngle));
+            Quat4f.setFromAxisAngle4f(q, 1, -1, 0, (float) Math.toRadians(offsetAngle));
             break;
         case POLAR:
             break;
@@ -198,9 +195,7 @@ public class GazeMU implements AnimationUnit
     {
         if (woManager == null)
         {
-            throw new MUPlayException(
-                    "Gaze target not found, no WorldObjectManager set up.",
-                    this);
+            throw new MUPlayException("Gaze target not found, no WorldObjectManager set up.", this);
         }
         woTarget = woManager.getWorldObject(target);
         if (woTarget == null)
@@ -212,10 +207,9 @@ public class GazeMU implements AnimationUnit
         setEndRotation(localGaze);
     }
 
-    public void setStartPose()
-            throws MUPlayException
+    public void setStartPose() throws MUPlayException
     {
-       
+
         player.getVCurr().getPart(Hanim.skullbase).getRotation(qStart);
         if (lEye != null && rEye != null)
         {
@@ -230,6 +224,7 @@ public class GazeMU implements AnimationUnit
         preparationDuration = prepDur;
         relaxDuration = relaxDur;
     }
+
     /**
      * @param gazeDir
      *            gaze direction
@@ -261,27 +256,26 @@ public class GazeMU implements AnimationUnit
 
     public double getReadyDuration()
     {
-        //TODO: determine readyDuration with Fitts' law
+        // TODO: determine readyDuration with Fitts' law
         return 1;
     }
-    
-    private void playEye(double t, float[] qDesNeck, float[] qStartEye,
-            VJoint eye) throws MUPlayException
+
+    private void playEye(double t, float[] qDesNeck, float[] qStartEye, VJoint eye) throws MUPlayException
     {
 
         float gazeDir[] = Vec3f.getVec3f();
         Vec3f.set(gazeDir, localGaze);
-        Vec3f.normalize(gazeDir);       
-                
+        Vec3f.normalize(gazeDir);
+
         float eyeRotationDes[] = Quat4f.getQuat4f(); // desired final eye
                                                      // rotation
         float qDesNeckConj[] = Quat4f.getQuat4f();
         Quat4f.conjugate(qDesNeckConj, qDesNeck);
         Quat4f.transformVec3f(qDesNeckConj, gazeDir);
         ListingsLaw.listingsEye(gazeDir, eyeRotationDes);
-        
-        float eyeRotationSpace[] = Quat4f.getQuat4f(); 
-        Quat4f.mul(eyeRotationSpace,qDesNeck, eyeRotationDes);
+
+        float eyeRotationSpace[] = Quat4f.getQuat4f();
+        Quat4f.mul(eyeRotationSpace, qDesNeck, eyeRotationDes);
         float eyeRotationDesCur[] = Quat4f.getQuat4f(); // desired eye rotation,
                                                         // given current head
                                                         // position
@@ -293,15 +287,13 @@ public class GazeMU implements AnimationUnit
 
         if (!EyeSaturation.isSaturized(eyeRotationDes))
         {
-            throw new MUPlayException(
-                    "Eye gaze at target violates eye saturation constraints.",
-                    this);
+            throw new MUPlayException("Eye gaze at target violates eye saturation constraints.", this);
         }
         EyeSaturation.sat(eyeRotationDesCur, eyeRotationDes, eyeRotationSat);
 
         float[] qCurr = Quat4f.getQuat4f();
         eye.getRotation(qCurr);
-        
+
         if (t < RELATIVE_READY_TIME)
         {
 
@@ -334,7 +326,7 @@ public class GazeMU implements AnimationUnit
             playEye(t, qGaze, qStartRightEye, rEye);
         }
     }
-    
+
     @Override
     public void play(double t) throws MUPlayException
     {
@@ -347,7 +339,8 @@ public class GazeMU implements AnimationUnit
         }
         else if (t > 0.75)
         {
-            relaxUnit.play( (t-0.75)/0.25);
+            relaxUnit.play((t - 0.75) / 0.25);
+            log.debug("play relax {}",(t - 0.75) / 0.25);
         }
         else
         {
@@ -357,10 +350,9 @@ public class GazeMU implements AnimationUnit
     }
 
     @Override
-    public TimedAnimationUnit createTMU(FeedbackManager bfm,
-            BMLBlockPeg bmlBlockPeg, String bmlId, String id, PegBoard pb)
+    public TimedAnimationUnit createTMU(FeedbackManager bfm, BMLBlockPeg bmlBlockPeg, String bmlId, String id, PegBoard pb)
     {
-        return new GazeTMU(bfm,bmlBlockPeg,bmlId, id, this, pb);
+        return new GazeTMU(bfm, bmlBlockPeg, bmlId, id, this, pb);
     }
 
     @Override
@@ -374,29 +366,28 @@ public class GazeMU implements AnimationUnit
         {
             offsetDirection = OffsetDirection.valueOf(value);
         }
-        else if(StringUtil.isNumeric(value))
+        else if (StringUtil.isNumeric(value))
         {
-            setFloatParameterValue(name,Float.parseFloat(value));
+            setFloatParameterValue(name, Float.parseFloat(value));
         }
-        else throw new InvalidParameterException(name,value);
+        else throw new InvalidParameterException(name, value);
     }
 
     @Override
     public String getParameterValue(String name) throws ParameterNotFoundException
     {
-        if (name.equals("target"))
-            return target;
-        if (name.equals("offsetdirection")) return ""+offsetDirection;
-        return ""+getFloatParameterValue(name);
+        if (name.equals("target")) return target;
+        if (name.equals("offsetdirection")) return "" + offsetDirection;
+        return "" + getFloatParameterValue(name);
     }
 
     @Override
     public float getFloatParameterValue(String name) throws ParameterNotFoundException
     {
-        if(name.equals("offsetangle"))return (float)offsetAngle;
+        if (name.equals("offsetangle")) return (float) offsetAngle;
         throw new ParameterNotFoundException(name);
     }
-    
+
     @Override
     public void setFloatParameterValue(String name, float value) throws ParameterNotFoundException
     {
@@ -455,9 +446,10 @@ public class GazeMU implements AnimationUnit
         keyPositionManager.removeKeyPosition(id);
     }
 
-    private static final Set<String>PHJOINTS = ImmutableSet.of(); 
-    private static final Set<String>KINJOINTSALL = ImmutableSet.of(Hanim.skullbase, Hanim.l_eyeball_joint, Hanim.r_eyeball_joint);    
-    private static final Set<String>KINJOINTSNECK = ImmutableSet.of(Hanim.skullbase);
+    private static final Set<String> PHJOINTS = ImmutableSet.of();
+    private static final Set<String> KINJOINTSALL = ImmutableSet.of(Hanim.skullbase, Hanim.l_eyeball_joint, Hanim.r_eyeball_joint);
+    private static final Set<String> KINJOINTSNECK = ImmutableSet.of(Hanim.skullbase);
+
     @Override
     public Set<String> getPhysicalJoints()
     {
@@ -468,23 +460,23 @@ public class GazeMU implements AnimationUnit
     {
         relaxUnit = player.getRestPose().createTransitionToRest(getKinematicJoints());
     }
-    
+
     @Override
     public Set<String> getKinematicJoints()
     {
-        if(lEye == null || rEye == null)
+        if (lEye == null || rEye == null)
         {
             return KINJOINTSNECK;
         }
         else
         {
-            return KINJOINTSALL;            
+            return KINJOINTSALL;
         }
     }
 
     @Override
     public void startUnit(double t) throws MUPlayException
     {
-                
-    }    
+
+    }
 }

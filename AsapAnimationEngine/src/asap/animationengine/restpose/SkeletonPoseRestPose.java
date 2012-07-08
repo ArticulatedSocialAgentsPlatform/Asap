@@ -10,6 +10,8 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Set;
 
+import lombok.extern.slf4j.Slf4j;
+
 import asap.animationengine.AnimationPlayer;
 import asap.animationengine.MovementTimingUtils;
 import asap.animationengine.motionunit.AnimationUnit;
@@ -30,6 +32,7 @@ import asap.realizer.planunit.TimedPlanUnitState;
  * A simple static rest-pose implementation; the restpose is specified by a SkeletonPose
  * @author hvanwelbergen
  */
+@Slf4j
 public class SkeletonPoseRestPose implements RestPose
 {
     private AnimationPlayer player;
@@ -75,7 +78,18 @@ public class SkeletonPoseRestPose implements RestPose
     @Override
     public void play(double time, Set<String> kinematicJoints, Set<String> physicalJoints)
     {
-
+        if (poseTree==null)return;
+        for(VJoint vj:poseTree.getParts())
+        {
+            if(!kinematicJoints.contains(vj.getSid())&&!physicalJoints.contains(vj.getSid()))
+            {
+                float q[] = new float[4];
+                vj.getRotation(q);
+                String search = vj.getSid();
+                if (search==null)search = vj.getName();
+                player.getVNext().getPart(search).setRotation(q);
+            }
+        }
     }
 
     @Override
