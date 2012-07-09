@@ -33,6 +33,7 @@ public class MURMLKeyframeMU extends KeyFrameMotionUnit implements AnimationUnit
     private ImmutableList<String> targets;
     private List<KeyFrame> keyFrames;
     private VJoint vNext;
+    private VJoint vCurr;
     private int nrOfDofs;
     private Interpolator interp;
     private boolean allowDynamicStart;
@@ -109,10 +110,11 @@ public class MURMLKeyframeMU extends KeyFrameMotionUnit implements AnimationUnit
         return PHJOINTS;
     }
 
-    public AnimationUnit copy(VJoint v)
+    public AnimationUnit copy(VJoint vC, VJoint vN)
     {
         MURMLKeyframeMU copy = new MURMLKeyframeMU(targets, interp, manip, keyFrames, nrOfDofs, allowDynamicStart);
-        copy.vNext = v;
+        copy.vNext = vN;
+        copy.vCurr = vC;
         copy.preferedDuration = preferedDuration;
         for (KeyPosition keypos : getKeyPositions())
         {
@@ -124,7 +126,7 @@ public class MURMLKeyframeMU extends KeyFrameMotionUnit implements AnimationUnit
     @Override
     public AnimationUnit copy(AnimationPlayer p) throws MUSetupException
     {
-        return copy(p.getVNext());
+        return copy(p.getVCurr(), p.getVNext());
     }
 
     @Override
@@ -140,7 +142,7 @@ public class MURMLKeyframeMU extends KeyFrameMotionUnit implements AnimationUnit
         int i = 0;
         for (String target : targets)
         {
-            VJoint vj = vNext.getPartBySid(target);
+            VJoint vj = vCurr.getPartBySid(target);
             vj.getRotation(q, i);
             i += 4;
         }

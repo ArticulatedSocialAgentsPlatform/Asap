@@ -181,12 +181,7 @@ public class ProcAnimationGestureMU implements GestureUnit
         copyProc = gestureUnit.copy(copyJoint);
         aniPlayer = ap;
     }
-
-    public void setVStartJoint(VJoint vj)
-    {
-        vStart = vj;
-    }
-
+    
     public void setVNext(VJoint vj)
     {
         vNext = vj;
@@ -347,6 +342,10 @@ public class ProcAnimationGestureMU implements GestureUnit
             prepUnit.play(t / readyTime);
             log.debug("prepUnit.play: {}", t / readyTime);
         }
+        else if (t <= strokeStartTime)
+        {
+            prepUnit.play(1);
+        }
         else if (t > relaxTime)
         {
             relaxUnit.play((t - relaxTime) / relaxDuration);
@@ -358,6 +357,10 @@ public class ProcAnimationGestureMU implements GestureUnit
             double fraction = (t - strokeStartTime) / (strokeEndTime - strokeStartTime);
             gestureUnit.play(gestureStart + gestureDur * fraction);
             log.debug("gestureUnit.play: {}", t);
+        }
+        else if (t <= relaxTime)
+        {
+            gestureUnit.play(1);
         }
     }
 
@@ -424,7 +427,7 @@ public class ProcAnimationGestureMU implements GestureUnit
 
     public void setupRelaxUnit()
     {
-        relaxUnit = aniPlayer.getRestPose().createTransitionToRest(VJointUtils.transformToSidSet(gestureUnit.getControlledJoints()));
+        relaxUnit = createRelaxUnit();
     }
 
     public AnimationUnit createRelaxUnit()

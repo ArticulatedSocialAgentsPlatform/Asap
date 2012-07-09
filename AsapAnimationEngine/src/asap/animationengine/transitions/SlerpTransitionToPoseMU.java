@@ -57,13 +57,13 @@ public class SlerpTransitionToPoseMU extends TransitionToPoseMU
 
         if (startJoints == null)
         {
-            startPoseJoints.addAll(player.getVNext().getParts());
+            startPoseJoints.addAll(player.getVCurr().getParts());
         }
         else
         {
             for (VJoint vj : startJoints)
             {
-                VJoint vNew = player.getVNext().getPart(vj.getSid());
+                VJoint vNew = player.getVCurr().getPart(vj.getSid());
                 startPoseJoints.add(vNew);
             }
         }

@@ -57,7 +57,6 @@ public class AnimationPlayer implements Player, MixedAnimationPlayer
     private VJoint vCurr;
     private VJoint vNext;
     private VJoint vAdditive;
-   
 
     private PhysicalHumanoid pHuman;
 
@@ -101,17 +100,36 @@ public class AnimationPlayer implements Player, MixedAnimationPlayer
     {
         for (VJoint vj : vAdditive.getParts())
         {
-            vj.setRotation(Quat4f.getIdentity());            
+            vj.setRotation(Quat4f.getIdentity());
         }
     }
-    
+
     private void setVNextToIdentity()
     {
         for (VJoint vj : vNext.getParts())
         {
-            if(vj.getSid()!=null)
+            if (vj.getSid() != null)
             {
                 vj.setRotation(Quat4f.getIdentity());
+            }
+        }
+    }
+
+    // if a joint in vnext has the identity value
+    // put the (non-identity) value of vCurrent back (needed for smooth physical simulation)
+    private void applyCurrentOnVNext()
+    {
+        float q[] = Quat4f.getQuat4f();
+        for (VJoint vj : vNext.getParts())
+        {
+            if (vj.getSid() != null)
+            {
+                vj.getRotation(q);
+                if (Quat4f.epsilonEquals(q, Quat4f.getIdentity(), 0.001f))
+                {
+                    vCurr.getPartBySid(vj.getSid()).getRotation(q);
+                    vj.setRotation(q);
+                }
             }
         }
     }
@@ -229,9 +247,9 @@ public class AnimationPlayer implements Player, MixedAnimationPlayer
     public synchronized void playStep(double prevTime)
     {
         log.debug("time {}", prevTime);
-        
-        setAdditiveToIdentity();        
-        
+
+        setAdditiveToIdentity();
+
         controllers.clear();
         prevValidOld = prevValid;
 
@@ -249,15 +267,13 @@ public class AnimationPlayer implements Player, MixedAnimationPlayer
             setVNextToIdentity();
             app.play(prevTime);
             additiveBlender.blend();
-            
+
             votcNextToCurr.copyConfig();
             votcCurrToPrev.copyConfig();
             prevValid = true;
         }
+        applyCurrentOnVNext();
 
-
-        
-        
         ArrayList<String> controlledJoints = new ArrayList<String>();
         for (PhysicalController p : controllers)
         {
@@ -432,7 +448,7 @@ public class AnimationPlayer implements Player, MixedAnimationPlayer
     {
         return vNext;
     }
-    
+
     public VJoint getvAdditive()
     {
         return vAdditive;
