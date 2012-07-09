@@ -101,7 +101,7 @@ public class AnimationPlayer implements Player, MixedAnimationPlayer
     {
         for (VJoint vj : vAdditive.getParts())
         {
-            vj.setRotation(Quat4f.getIdentity());
+            vj.setRotation(Quat4f.getIdentity());            
         }
     }
     
@@ -109,7 +109,10 @@ public class AnimationPlayer implements Player, MixedAnimationPlayer
     {
         for (VJoint vj : vNext.getParts())
         {
-            vj.setRotation(Quat4f.getIdentity());
+            if(vj.getSid()!=null)
+            {
+                vj.setRotation(Quat4f.getIdentity());
+            }
         }
     }
 

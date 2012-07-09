@@ -11,7 +11,6 @@ import java.util.List;
 import java.util.Set;
 
 import lombok.extern.slf4j.Slf4j;
-
 import asap.animationengine.AnimationPlayer;
 import asap.animationengine.MovementTimingUtils;
 import asap.animationengine.motionunit.AnimationUnit;
@@ -55,7 +54,10 @@ public class SkeletonPoseRestPose implements RestPose
         poseTree = player.getVCurr().copyTree("rest-");
         for (VJoint vj : poseTree.getParts())
         {
-            vj.setRotation(Quat4f.getIdentity());
+            if(vj.getSid()!=null)
+            {
+                vj.setRotation(Quat4f.getIdentity());
+            }            
         }
         if (pose != null)
         {
