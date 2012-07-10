@@ -25,12 +25,14 @@ public class MURMLMUBuilderTest
 {
     private AnimationPlayer mockAnimationPlayer = mock(AnimationPlayer.class);
     private VJoint vNext = HanimBody.getLOA1HanimBody();
+    private VJoint vCurr = HanimBody.getLOA1HanimBody();
     private static final float ROT_PRECISION = 0.001f;
 
     @Before
     public void setup()
     {
         when(mockAnimationPlayer.getVNext()).thenReturn(vNext);
+        when(mockAnimationPlayer.getVCurr()).thenReturn(vCurr);
     }
 
     @Test
@@ -126,7 +128,7 @@ public class MURMLMUBuilderTest
 
         float[] qRefStart = Quat4f.getQuat4f();
         Quat4f.setFromAxisAngle4f(qRefStart, 0, 0, 1, (float) Math.PI);
-        vNext.getPart("l_shoulder").setRotation(qRefStart);
+        vCurr.getPart("l_shoulder").setRotation(qRefStart);
         au.startUnit(0);
         au.play(0);
         float q[] = Quat4f.getQuat4f();
@@ -164,7 +166,7 @@ public class MURMLMUBuilderTest
 
         float[] qRefStart = Quat4f.getQuat4f();
         Quat4f.setFromAxisAngle4f(qRefStart, 0, 0, 1, (float) Math.PI);
-        vNext.getPart("l_shoulder").setRotation(qRefStart);
+        vCurr.getPart("l_shoulder").setRotation(qRefStart);
         au.startUnit(0);
         au.play(0.5);
         float[] qRefEnd = Quat4f.getQuat4f();
