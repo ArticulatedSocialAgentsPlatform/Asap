@@ -180,7 +180,10 @@ public class TimedParameterValueChangeUnit extends TimedAbstractPlanUnit
         }
         catch (BehaviorNotFoundException e)
         {
-            throw new TimedPlanUnitPlayException("Behavior " + targetBmlId + ":" + targetId + " not found.", this, e);
+            //FIXME: the targeted unit could end inbetween 
+            //fbManager.getSyncsPassed(targetBmlId, targetId).contains("end")) and here
+            //causing the behavior to fail here
+            throw new TimedPlanUnitPlayException("Behavior " + targetBmlId + ":" + targetId + " not found at t="+time+".", this, e);            
         }
         if (t >= 1)
         {
