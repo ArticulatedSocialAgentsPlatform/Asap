@@ -360,7 +360,7 @@ public class ProcAnimationGestureMU implements GestureUnit
         }
         else if (t <= relaxTime)
         {
-            gestureUnit.play(1);
+            gestureUnit.play(strokeEndTime);
         }
     }
 

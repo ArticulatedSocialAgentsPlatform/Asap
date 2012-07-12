@@ -50,7 +50,8 @@ public class PhysicalBalanceRestPose implements RestPose
     private Resources resource;
     private SkeletonPose restPose;
     private VJoint restPoseTree;
-
+    private List<PhysicalController> prevControllers = new ArrayList<PhysicalController>();
+    
     @Override
     public RestPose copy(AnimationPlayer player)
     {
@@ -98,13 +99,20 @@ public class PhysicalBalanceRestPose implements RestPose
             player.addController(balanceController);
         }
 
+        ArrayList<PhysicalController> currentControllers = new ArrayList<PhysicalController>();
         for (PhysicalController cc : optionalControllers)
         {
             if (Sets.intersection(cc.getRequiredJointIDs(), kinematicJoints).size() == 0)
             {
+                if(!prevControllers.contains(cc))
+                {
+                    cc.reset();
+                }
+                currentControllers.add(cc);
                 player.addController(cc);
             }
         }
+        prevControllers = currentControllers;
     }
 
     private Set<String> getKinematicTransitionJoints(Set<String> transitionJoints)
@@ -199,7 +207,7 @@ public class PhysicalBalanceRestPose implements RestPose
                 catch (IOException e)
                 {
                     throw new ParameterException("Cannot load compound controller " + value, e);
-                }
+                }                
                 optionalControllers.add(cc);
             }
         }
