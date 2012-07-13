@@ -18,14 +18,24 @@
  ******************************************************************************/
 package asap.animationengine.gaze;
 
-import java.util.*;
+import hmi.animation.Hanim;
+import hmi.animation.VJoint;
+import hmi.math.Quat4f;
+import hmi.math.Vec3f;
+import hmi.neurophysics.DondersLaw;
+import hmi.neurophysics.EyeSaturation;
+import hmi.neurophysics.ListingsLaw;
+import hmi.util.StringUtil;
+
+import java.util.List;
+import java.util.Set;
 
 import lombok.extern.slf4j.Slf4j;
-
-import com.google.common.collect.ImmutableSet;
-
+import saiba.bml.core.OffsetDirection;
 import asap.animationengine.AnimationPlayer;
-import asap.animationengine.motionunit.*;
+import asap.animationengine.motionunit.AnimationUnit;
+import asap.animationengine.motionunit.MUSetupException;
+import asap.animationengine.motionunit.TimedAnimationUnit;
 import asap.motionunit.MUPlayException;
 import asap.realizer.feedback.FeedbackManager;
 import asap.realizer.pegboard.BMLBlockPeg;
@@ -37,15 +47,12 @@ import asap.realizer.planunit.KeyPositionManager;
 import asap.realizer.planunit.KeyPositionManagerImpl;
 import asap.realizer.planunit.ParameterException;
 import asap.realizer.planunit.ParameterNotFoundException;
-import asap.realizer.util.timemanipulator.*;
-import asap.realizer.world.*;
+import asap.realizer.util.timemanipulator.SigmoidManipulator;
+import asap.realizer.util.timemanipulator.TimeManipulator;
+import asap.realizer.world.WorldObject;
+import asap.realizer.world.WorldObjectManager;
 
-import hmi.animation.*;
-import saiba.bml.core.OffsetDirection;
-import sun.util.logging.resources.logging;
-import hmi.math.*;
-import hmi.neurophysics.*;
-import hmi.util.StringUtil;
+import com.google.common.collect.ImmutableSet;
 
 /**
  * Timing: ready: gaze target reached relax: start to move back to previous pose
@@ -88,7 +95,11 @@ public class GazeMU implements AnimationUnit
     protected VJoint rEye;
 
     protected VJoint lEye;
+    
+    protected VJoint rEyeCurr;
 
+    protected VJoint lEyeCurr;
+    
     protected AnimationPlayer player;
 
     protected WorldObjectManager woManager;
@@ -183,6 +194,8 @@ public class GazeMU implements AnimationUnit
         gmu.neck = p.getVNext().getPart(Hanim.skullbase);
         gmu.lEye = p.getVNext().getPart(Hanim.l_eyeball_joint);
         gmu.rEye = p.getVNext().getPart(Hanim.r_eyeball_joint);
+        gmu.lEyeCurr = p.getVCurr().getPart(Hanim.l_eyeball_joint);
+        gmu.rEyeCurr = p.getVCurr().getPart(Hanim.r_eyeball_joint);
         gmu.offsetAngle = offsetAngle;
         gmu.offsetDirection = offsetDirection;
         gmu.player = p;
@@ -211,10 +224,10 @@ public class GazeMU implements AnimationUnit
     {
 
         player.getVCurr().getPart(Hanim.skullbase).getRotation(qStart);
-        if (lEye != null && rEye != null)
+        if (lEyeCurr != null && rEyeCurr != null)
         {
-            lEye.getRotation(qStartLeftEye);
-            rEye.getRotation(qStartRightEye);
+            lEyeCurr.getRotation(qStartLeftEye);
+            rEyeCurr.getRotation(qStartRightEye);
         }
         setTarget(target);
     }
@@ -260,7 +273,7 @@ public class GazeMU implements AnimationUnit
         return 1;
     }
 
-    private void playEye(double t, float[] qDesNeck, float[] qStartEye, VJoint eye) throws MUPlayException
+    private void playEye(double t, float[] qDesNeck, float[] qStartEye, VJoint eye, VJoint eyeCurr) throws MUPlayException
     {
 
         float gazeDir[] = Vec3f.getVec3f();
@@ -292,7 +305,7 @@ public class GazeMU implements AnimationUnit
         EyeSaturation.sat(eyeRotationDesCur, eyeRotationDes, eyeRotationSat);
 
         float[] qCurr = Quat4f.getQuat4f();
-        eye.getRotation(qCurr);
+        eyeCurr.getRotation(qCurr);
 
         if (t < RELATIVE_READY_TIME)
         {
@@ -322,8 +335,8 @@ public class GazeMU implements AnimationUnit
     {
         if (rEye != null && lEye != null)
         {
-            playEye(t, qGaze, qStartLeftEye, lEye);
-            playEye(t, qGaze, qStartRightEye, rEye);
+            playEye(t, qGaze, qStartLeftEye, lEye, rEyeCurr);
+            playEye(t, qGaze, qStartRightEye, rEye, rEyeCurr);
         }
     }
 
