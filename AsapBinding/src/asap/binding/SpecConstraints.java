@@ -60,7 +60,14 @@ public class SpecConstraints extends XMLStructureAdapter
     {
         for (SpecConstraint c : constraints)
         {
-            if (!b.satisfiesConstraint(c.name, c.value)) return false;
+            if (c.namespace!=null)
+            {
+                if (!b.satisfiesConstraint(c.namespace+":"+c.name, c.value)) return false;
+            }
+            else
+            {
+                if (!b.satisfiesConstraint(c.name, c.value)) return false;
+            }
         }
         return true;
     }

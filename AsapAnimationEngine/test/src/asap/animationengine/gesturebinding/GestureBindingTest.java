@@ -37,6 +37,7 @@ import org.junit.Before;
 import org.junit.Test;
 
 import saiba.bml.core.Behaviour;
+import saiba.bml.core.GazeBehaviour;
 import saiba.bml.core.GestureBehaviour;
 import saiba.bml.core.HeadBehaviour;
 import saiba.bml.core.PointingBehaviour;
@@ -46,6 +47,7 @@ import asap.animationengine.AnimationPlayer;
 import asap.animationengine.motionunit.TimedAnimationUnit;
 import asap.animationengine.restpose.RestPose;
 import asap.animationengine.restpose.SkeletonPoseRestPose;
+import asap.bml.ext.bmlt.BMLTInfo;
 import asap.bml.ext.bmlt.BMLTKeyframeBehaviour;
 import asap.realizer.feedback.FeedbackManager;
 import asap.realizer.pegboard.BMLBlockPeg;
@@ -73,42 +75,103 @@ public class GestureBindingTest
     {
         human = HanimBody.getLOA1HanimBody();
         Resources r = new Resources("");
+        BMLTInfo.init();
         gestureBinding = new GestureBinding(r, mockFeedbackManager);
-        String s = "<gesturebinding>" + "<MotionUnitSpec type=\"head\">" + "<constraints>" + "<constraint name=\"lexeme\" value=\"NOD\"/>"
-                + "</constraints>" + "<parametermap>" + "<parameter src=\"amount\" dst=\"a\"/>"
-                + "<parameter src=\"repetition\" dst=\"r\"/>" + "</parametermap>"
+        String s = "<gesturebinding>" 
+                + "<MotionUnitSpec type=\"head\">" + "<constraints>" 
+                + "<constraint name=\"lexeme\" value=\"NOD\"/>"
+                + "</constraints>" 
+                + "<parametermap>" + "<parameter src=\"amount\" dst=\"a\"/>"
+                + "<parameter src=\"repetition\" dst=\"r\"/>" 
+                + "</parametermap>"
                 + "<MotionUnit type=\"ProcAnimation\" file=\"Humanoids/shared/procanimation/smartbody/nod.xml\"/>" + "</MotionUnitSpec>"
 
-                + "<MotionUnitSpec type=\"head\">" + "<constraints>" + "<constraint name=\"lexeme\" value=\"SHAKE\"/>" + "</constraints>"
-                + "<parametermap>" + "<parameter src=\"amount\" dst=\"a\"/>" + "<parameter src=\"repetition\" dst=\"r\"/>"
-                + "</parametermap>" + "<MotionUnit type=\"ProcAnimation\" file=\"Humanoids/shared/procanimation/smartbody/shake.xml\"/>"
-                + "</MotionUnitSpec>" + "<MotionUnitSpec type=\"keyframe\" namespace=\"http://hmi.ewi.utwente.nl/bmlt\">" + "<constraints>"
-                + "<constraint name=\"name\" value=\"vlakte\"/>" + "</constraints>"
-                + "<MotionUnit type=\"Keyframe\" file=\"Humanoids/shared/keyframe/clench_fists.xml\"/>" + "</MotionUnitSpec>"
-                + "<MotionUnitSpec type=\"gesture\">" + "<constraints>" + "<constraint name=\"lexeme\" value=\"BEAT\"/>"
-                + "<constraint name=\"mode\" value=\"RIGHT_HAND\"/>" + "</constraints>" + "<parametermap/>" + "<parameterdefaults>"
+                + "<MotionUnitSpec type=\"head\">" 
+                + "<constraints>" 
+                + "<constraint name=\"lexeme\" value=\"SHAKE\"/>" 
+                + "</constraints>"
+                + "<parametermap>" 
+                + "<parameter src=\"amount\" dst=\"a\"/>" 
+                + "<parameter src=\"repetition\" dst=\"r\"/>"
+                + "</parametermap>" 
+                + "<MotionUnit type=\"ProcAnimation\" file=\"Humanoids/shared/procanimation/smartbody/shake.xml\"/>"
+                + "</MotionUnitSpec>" 
+                
+                + "<MotionUnitSpec type=\"keyframe\" namespace=\"http://hmi.ewi.utwente.nl/bmlt\">" 
+                + "<constraints>"
+                + "<constraint name=\"name\" value=\"vlakte\"/>" 
+                + "</constraints>"
+                + "<MotionUnit type=\"Keyframe\" file=\"Humanoids/shared/keyframe/clench_fists.xml\"/>" 
+                + "</MotionUnitSpec>"
+                
+                + "<MotionUnitSpec type=\"gesture\">" 
+                + "<constraints>" 
+                + "<constraint name=\"lexeme\" value=\"BEAT\"/>"
+                + "<constraint name=\"mode\" value=\"RIGHT_HAND\"/>" 
+                + "</constraints>" 
+                + "<parametermap/>" 
+                + "<parameterdefaults>"
                 + "<parameterdefault name=\"file\" value=\"Humanoids/shared/procanimation/greta/beat1right_norest.xml\"/>"
-                + "<parameterdefault name=\"postStrokeHoldDuration\" value=\"0.2\"/>" + "</parameterdefaults>"
+                + "<parameterdefault name=\"postStrokeHoldDuration\" value=\"0.2\"/>" 
+                + "</parameterdefaults>"
                 + "<MotionUnit type=\"Gesture\" class=\"asap.animationengine.procanimation.ProcAnimationGestureMU\"/>"
-                + "</MotionUnitSpec>" + "<MotionUnitSpec type=\"pointing\">" + "<parametermap>"
-                + "<parameter src=\"target\" dst=\"target\"/>" + "<parameter src=\"mode\" dst=\"hand\"/>" + "</parametermap>"
-                + "<MotionUnit type=\"class\" class=\"asap.animationengine.pointing.PointingMU\"/>" + "</MotionUnitSpec>"
-                + "<MotionUnitSpec type=\"posture\">" + "<constraints>" + "<constraint name=\"stance\" value=\"STANDING\"/>"
-                + "<constraint name=\"LEGS\" value=\"LEGS_OPEN\"/>" + "</constraints>" + "<parametermap>"
-                + "<parameter src=\"priority\" dst=\"priority\"/>" + "</parametermap>" + "<parameterdefaults>"
+                + "</MotionUnitSpec>" 
+                
+                + "<MotionUnitSpec type=\"pointing\">" 
+                + "<parametermap>"
+                + "<parameter src=\"target\" dst=\"target\"/>" 
+                + "<parameter src=\"mode\" dst=\"hand\"/>" 
+                + "</parametermap>"
+                + "<MotionUnit type=\"class\" class=\"asap.animationengine.pointing.PointingMU\"/>" 
+                + "</MotionUnitSpec>"
+                
+                + "<MotionUnitSpec type=\"posture\">" 
+                + "<constraints>" 
+                + "<constraint name=\"stance\" value=\"STANDING\"/>"
+                + "<constraint name=\"LEGS\" value=\"LEGS_OPEN\"/>" 
+                + "</constraints>" 
+                + "<parametermap>"
+                + "<parameter src=\"priority\" dst=\"priority\"/>" 
+                + "</parametermap>" 
+                + "<parameterdefaults>"
                 + "<parameterdefault name=\"pelvisheight\" value=\"1.7\"/>"
-                + "<parameterdefault name=\"replacementgroup\" value=\"posture\"/>" + "</parameterdefaults>"
-                + "<MotionUnit type=\"PhysicalController\" class=\"hmi.physics.controller.BalanceController\"/>" + "</MotionUnitSpec>"
-                + "<RestPoseSpec>" + "<constraints>" + "<constraint name=\"stance\" value=\"SITTING\"/>"
-                + "<constraint name=\"LEGS\" value=\"LEGS_OPEN\"/>" + "</constraints>"
-                + "<RestPose type=\"SkeletonPose\" file=\"Humanoids/armandia/restposes/sitting.xml\"/>" + "</RestPoseSpec>"
+                + "<parameterdefault name=\"replacementgroup\" value=\"posture\"/>" 
+                + "</parameterdefaults>"
+                + "<MotionUnit type=\"PhysicalController\" class=\"hmi.physics.controller.BalanceController\"/>" 
+                + "</MotionUnitSpec>"
+                
+                + "<RestPoseSpec>" 
+                + "<constraints>" 
+                + "<constraint name=\"stance\" value=\"SITTING\"/>"
+                + "<constraint name=\"LEGS\" value=\"LEGS_OPEN\"/>" 
+                + "</constraints>"
+                + "<RestPose type=\"SkeletonPose\" file=\"Humanoids/armandia/restposes/sitting.xml\"/>" 
+                + "</RestPoseSpec>"
+                
+                + "<MotionUnitSpec type=\"gaze\">"
+                + "<constraints>"
+                + "<constraint name=\"influence\" value=\"NECK\"/>"
+                + "<constraint namespace=\"http://hmi.ewi.utwente.nl/bmlt\" name=\"dynamic\" value=\"true\"/>"                            
+                + "</constraints>"
+                + "<parametermap>"
+                + "<parameter src=\"target\" dst=\"target\"/>"          
+                + "<parameter src=\"offsetAngle\" dst=\"offsetangle\"/>"
+                + "<parameter src=\"offsetDirection\" dst=\"offsetdirection\"/>"
+                + "</parametermap>"
+                + "<MotionUnit type=\"class\" class=\"asap.animationengine.gaze.DynamicGazeMU\"/>"
+                + "</MotionUnitSpec>"
                 + "</gesturebinding>";
         gestureBinding.readXML(s);
         when(mockAniPlayer.getVNext()).thenReturn(human);
         when(mockAniPlayer.getVCurr()).thenReturn(human);
         when(mockAniPlayer.getPHuman()).thenReturn(mockPHuman);
     }
-
+    
+    public GazeBehaviour createGazeBehaviour(String bmlId, String bml)throws IOException
+    {
+        return new GazeBehaviour(bmlId, new XMLTokenizer(bml));
+    }
+    
     public PostureShiftBehaviour createPostureShiftBehaviour(String bmlId, String bml) throws IOException
     {
         return new PostureShiftBehaviour(bmlId, new XMLTokenizer(bml));
@@ -138,7 +201,16 @@ public class GestureBindingTest
     {
         return new BMLTKeyframeBehaviour(bmlId, new XMLTokenizer(bml));
     }
-
+    
+    @Test
+    public void testGetDynamicGaze() throws IOException, ParameterException
+    {
+        GazeBehaviour b = createGazeBehaviour("bml1", "<gaze xmlns=\"http://www.bml-initiative.org/bml/bml-1.0\"" +
+                "xmlns:bmlt=\"http://hmi.ewi.utwente.nl/bmlt\" bmlt:dynamic=\"true\" id=\"gaze1\" influence=\"NECK\" target=\"greensphere\"/>");
+        List<TimedAnimationUnit> m = gestureBinding.getMotionUnit(BMLBlockPeg.GLOBALPEG, b, mockAniPlayer, pegBoard);
+        assertEquals(1, m.size());
+    }
+    
     @Test
     public void testGetHeadNodWithRepeats2() throws IOException, ParameterException
     {
