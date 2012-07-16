@@ -65,7 +65,7 @@ public class FaceEngineLoader implements EngineLoader
     private Engine engine = null;
     private Player facePlayer = null;
     private EmotionConverter econv;
-    private FACSConverter fconv;
+    private FACSConverter fconv = null;
     private PlanManager<TimedFaceUnit> planManager = null;
     private String id = "";
     // some variables cached during loading
@@ -122,6 +122,12 @@ public class FaceEngineLoader implements EngineLoader
                 throw new RuntimeException("Cannnot load FaceBinding: " + e);
             }
             tokenizer.takeEmptyElement("FaceBinding");
+        }
+        if (tokenizer.atSTag("FACSConverterData"))
+        {
+            attrMap = tokenizer.getAttributes();
+            fconv = new FACSConverter(new Resources(adapter.getOptionalAttribute("resources", attrMap, "")),adapter.getRequiredAttribute("filename", attrMap, tokenizer));
+            tokenizer.takeEmptyElement("FACSConverterData");
         }
         else if (tokenizer.atSTag("FaceUI"))
         {
