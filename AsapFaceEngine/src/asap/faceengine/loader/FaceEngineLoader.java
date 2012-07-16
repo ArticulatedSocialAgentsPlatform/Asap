@@ -235,6 +235,11 @@ public class FaceEngineLoader implements EngineLoader
         return null;
     }
 
+    public FACSConverter getFACSConverter()
+    {
+        return fconv;
+    }
+
     public PlanManager<TimedFaceUnit> getPlanManager()
     {
         return planManager;

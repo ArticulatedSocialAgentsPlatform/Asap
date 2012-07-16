@@ -1,18 +1,21 @@
 package asap.faceengine.loader;
 
-import java.io.IOException;
-import java.util.HashMap;
-
-import asap.faceengine.lipsync.TimedFaceUnitLipSynchProvider;
-import asap.faceengine.viseme.MorphVisemeBinding;
-import asap.faceengine.viseme.VisemeBinding;
-import asap.faceengine.viseme.VisemeToMorphMapping;
 import hmi.util.Resources;
 import hmi.xml.XMLStructureAdapter;
 import hmi.xml.XMLTokenizer;
+
+import java.io.IOException;
+import java.util.HashMap;
+
 import asap.environment.AsapVirtualHuman;
 import asap.environment.LipSynchProviderLoader;
 import asap.environment.Loader;
+import asap.faceengine.lipsync.TimedFaceUnitLipSynchProvider;
+import asap.faceengine.viseme.FACSVisemeBinding;
+import asap.faceengine.viseme.MorphVisemeBinding;
+import asap.faceengine.viseme.VisemeBinding;
+import asap.faceengine.viseme.VisemeToFACSMapping;
+import asap.faceengine.viseme.VisemeToMorphMapping;
 import asap.realizer.lipsync.LipSynchProvider;
 import asap.utils.Environment;
 
@@ -63,6 +66,15 @@ public class TimedFaceUnitLipSynchProviderLoader implements LipSynchProviderLoad
                         "filename", attrMap, tokenizer)));
                 visBinding = new MorphVisemeBinding(mapping);
                 tokenizer.takeEmptyElement("MorphVisemeBinding");
+            }
+            else if (tokenizer.atSTag("FACSVisemeBinding"))
+            {
+                HashMap<String, String> attrMap = tokenizer.getAttributes();
+                VisemeToFACSMapping mapping = new VisemeToFACSMapping();
+                mapping.readXML(new Resources(adapter.getOptionalAttribute("resources", attrMap, "")).getReader(adapter.getRequiredAttribute(
+                        "filename", attrMap, tokenizer)));
+                visBinding = new FACSVisemeBinding(mapping,fal.getFACSConverter());
+                tokenizer.takeEmptyElement("FACSVisemeBinding");
             }
         }
         
