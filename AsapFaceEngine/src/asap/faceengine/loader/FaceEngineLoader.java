@@ -150,7 +150,7 @@ public class FaceEngineLoader implements EngineLoader
         facePlayer = new DefaultPlayer(new SingleThreadedPlanPlayer<TimedFaceUnit>(theVirtualHuman.getElckerlycRealizer()
                 .getFeedbackManager(), planManager));
         econv = new EmotionConverter();
-        fconv = new FACSConverter();
+        if (fconv==null)fconv = new FACSConverter();
         FaceController fc = null;
         if (m4e != null)
         {
