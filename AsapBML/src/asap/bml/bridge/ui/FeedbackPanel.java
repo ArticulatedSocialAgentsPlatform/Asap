@@ -35,6 +35,9 @@ public class FeedbackPanel extends JPanel implements BMLWarningListener, BMLFeed
     private JTextArea predictionOutput = null;
     private JTabbedPane tabPane;
 
+    private static final int PREF_WIDTH = 500;
+    private static final int PREF_HEIGHT = 80;
+    
     public FeedbackPanel(RealizerPort bridge)
     {
         super();
@@ -42,17 +45,17 @@ public class FeedbackPanel extends JPanel implements BMLWarningListener, BMLFeed
         feedbackOutput = new JTextArea();
         feedbackOutput.setEditable(false);
         JScrollPane resultScroll = new JScrollPane(feedbackOutput);
-        resultScroll.setPreferredSize(new Dimension(500, 80));
+        resultScroll.setPreferredSize(new Dimension(PREF_WIDTH, PREF_HEIGHT));
 
         predictionOutput = new JTextArea();
         predictionOutput.setEditable(false);
         JScrollPane planningScroll = new JScrollPane(predictionOutput);
-        planningScroll.setPreferredSize(new Dimension(500, 80));
+        planningScroll.setPreferredSize(new Dimension(PREF_WIDTH, PREF_HEIGHT));
 
         warningOutput = new JTextArea();
         warningOutput.setEditable(false);
         JScrollPane warningScroll = new JScrollPane(warningOutput);
-        warningScroll.setPreferredSize(new Dimension(500, 80));
+        warningScroll.setPreferredSize(new Dimension(PREF_WIDTH, PREF_HEIGHT));
 
         tabPane = new JTabbedPane();
         tabPane.addTab("Warnings", warningScroll);

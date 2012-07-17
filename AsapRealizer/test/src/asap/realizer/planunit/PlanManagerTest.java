@@ -28,11 +28,12 @@ import asap.realizertestutil.util.TimePegUtil;
  */
 public class PlanManagerTest
 {
-    PlanManager<TimedPlanUnit> planManager = new PlanManager<TimedPlanUnit>();
-    TimedPlanUnit mockTimedPlanUnit1 = mock(TimedPlanUnit.class);
-    TimedPlanUnit mockTimedPlanUnit2 = mock(TimedPlanUnit.class);
-    TimedPlanUnit mockTimedPlanUnit3 = mock(TimedPlanUnit.class);
-
+    private PlanManager<TimedPlanUnit> planManager = new PlanManager<TimedPlanUnit>();
+    private TimedPlanUnit mockTimedPlanUnit1 = mock(TimedPlanUnit.class);
+    private TimedPlanUnit mockTimedPlanUnit2 = mock(TimedPlanUnit.class);
+    private TimedPlanUnit mockTimedPlanUnit3 = mock(TimedPlanUnit.class);
+    
+    private static final double TIME_PRECISION = 0.0001;
     @Before
     public void setup()
     {
@@ -84,13 +85,13 @@ public class PlanManagerTest
     @Test
     public void testGetEndTime()
     {
-        assertEquals(3.0, planManager.getEndTime("bml1", "planunit1"), 0.0001);
+        assertEquals(3.0, planManager.getEndTime("bml1", "planunit1"), TIME_PRECISION);
     }
 
     @Test
     public void testGetEndTimeUnknownBehaviour()
     {
-        assertEquals(TimePeg.VALUE_UNKNOWN, planManager.getEndTime("bml1", "unknown"), 0.0001);
+        assertEquals(TimePeg.VALUE_UNKNOWN, planManager.getEndTime("bml1", "unknown"), TIME_PRECISION);
     }
 
     @Test
@@ -283,7 +284,7 @@ public class PlanManagerTest
         when(mockTimedPlanUnit2.getAvailableSyncs()).thenReturn(Arrays.asList("start", "stroke", "end"));
         when(mockTimedPlanUnit1.getEndTime()).thenReturn(1d);
         when(mockTimedPlanUnit2.getEndTime()).thenReturn(2d);
-        assertEquals(2d, planManager.getEndTime("bml1"), 0.0001);
+        assertEquals(2d, planManager.getEndTime("bml1"), TIME_PRECISION);
     }
 
     @Test
@@ -296,7 +297,7 @@ public class PlanManagerTest
         when(mockTimedPlanUnit2.getTime("start")).thenReturn(1d);
         when(mockTimedPlanUnit2.getTime("stroke")).thenReturn(2d);
         when(mockTimedPlanUnit2.getTime("end")).thenReturn(TimePeg.VALUE_UNKNOWN);
-        assertEquals(2d, planManager.getEndTime("bml1"), 0.0001);
+        assertEquals(2d, planManager.getEndTime("bml1"),TIME_PRECISION);
     }
 
     @Test

@@ -28,6 +28,7 @@ import asap.realizer.planunit.KeyPosition;
 public class ProcAnimationGestureMUEndEffectorTest
 {
     private VJoint vNext;
+    private VJoint vAdditive;
     private VJoint vCurr;
     private AnimationPlayer mockAnimationPlayer = mock(AnimationPlayer.class);
     private static final float POSITION_PRECISION = 0.01f;
@@ -49,6 +50,8 @@ public class ProcAnimationGestureMUEndEffectorTest
         vNext.getPart(Hanim.r_elbow).setTranslation(Vec3f.getVec3f(0, -0.5f, 0));
         vNext.getPart(Hanim.r_wrist).setTranslation(Vec3f.getVec3f(0, -0.3f, 0));
 
+        vAdditive = HanimBody.getLOA1HanimBody();
+        
         when(mockAnimationPlayer.getVCurr()).thenReturn(vNext);
         when(mockAnimationPlayer.getVNext()).thenReturn(vNext);
         RestPose pose = new SkeletonPoseRestPose();
@@ -63,7 +66,7 @@ public class ProcAnimationGestureMUEndEffectorTest
         procAnimation.readXML(xmlString);
         pag = new ProcAnimationGestureMU();
         pag.setVNext(vNext);
-        pag.setGestureUnit(procAnimation.copy(vNext));
+        pag.setGestureUnit(procAnimation.copy(vNext, vAdditive));
         pag.addKeyPosition(new KeyPosition(BMLGestureSync.STROKE_START.getId(), 0.2, 1.0));
         pag.addKeyPosition(new KeyPosition(BMLGestureSync.STROKE_END.getId(), 0.8, 1.0));
         pag.addKeyPosition(new KeyPosition(BMLGestureSync.READY.getId(), 0.2, 1.0));

@@ -16,5 +16,10 @@ public class ParameterException extends Exception
     public ParameterException(String message)
     {
         super(message);
-    }    
+    }  
+    
+    public ParameterException(String message, Exception ex)
+    {
+        super(message,ex);
+    } 
 }

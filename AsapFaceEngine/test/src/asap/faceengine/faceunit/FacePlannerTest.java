@@ -50,7 +50,7 @@ import saiba.bml.feedback.BMLWarningFeedback;
  * @author hvanwelbergen
  */
 @RunWith(PowerMockRunner.class)
-@PrepareForTest({BMLBlockManager.class,TimedFaceUnit.class})
+@PrepareForTest({ BMLBlockManager.class, TimedFaceUnit.class })
 public class FacePlannerTest
 {
     private FacePlanner facePlanner;
@@ -64,7 +64,7 @@ public class FacePlannerTest
     private List<BMLWarningFeedback> beList;
     private Player facePlayer;
     private BMLBlockManager mockBmlBlockManager = mock(BMLBlockManager.class);
-    private FeedbackManager fbManager = new FeedbackManagerImpl(mockBmlBlockManager,"character1");
+    private FeedbackManager fbManager = new FeedbackManagerImpl(mockBmlBlockManager, "character1");
     private PlanManager<TimedFaceUnit> planManager = new PlanManager<TimedFaceUnit>();
     private PlannerTests<TimedFaceUnit> plannerTests;
     private static final String BMLID = "bml1";
@@ -72,8 +72,8 @@ public class FacePlannerTest
 
     private FaceLexemeBehaviour createFaceLexemeBehaviour() throws IOException
     {
-        return new FaceLexemeBehaviour(BMLID, new XMLTokenizer("<faceLexeme xmlns=\"http://www.bml-initiative.org/bml/bml-1.0\" " +
-        		"id=\"f1\" lexeme=\"BLINK\" amount=\"0\"/>"));
+        return new FaceLexemeBehaviour(BMLID, new XMLTokenizer("<faceLexeme xmlns=\"http://www.bml-initiative.org/bml/bml-1.0\" "
+                + "id=\"f1\" lexeme=\"BLINK\" amount=\"0\"/>"));
     }
 
     @Before
@@ -91,8 +91,9 @@ public class FacePlannerTest
         List<TimedFaceUnit> fmus = new ArrayList<TimedFaceUnit>();
         TimedFaceUnit tfu = new TimedFaceUnit(fbManager, bbPeg, BMLID, "f1", mockFaceUnit);
         fmus.add(tfu);
-        when(mockFaceBinding.getFaceUnit((FeedbackManager) any(), (BMLBlockPeg) any(), (FaceLexemeBehaviour) any(), eq(mockFaceController),
-                        eq(mockFACSConverter), eq(mockEmotionConverter))).thenReturn(fmus);
+        when(
+                mockFaceBinding.getFaceUnit((FeedbackManager) any(), (BMLBlockPeg) any(), (FaceLexemeBehaviour) any(),
+                        eq(mockFaceController), eq(mockFACSConverter), eq(mockEmotionConverter))).thenReturn(fmus);
         when(mockFaceUnit.getPreferedDuration()).thenReturn(3.0);
     }
 
@@ -130,7 +131,6 @@ public class FacePlannerTest
         when(mockTimedFaceUnit.getId()).thenReturn("fu1");
         when(mockTimedFaceUnit.getBMLId()).thenReturn("bml1");
         PowerMockito.doThrow(new TimedPlanUnitPlayException("failure!", mockTimedFaceUnit)).when(mockTimedFaceUnit).play(0);
-       
 
         facePlanner.addBehaviour(BMLBlockPeg.GLOBALPEG, mockFaceBehaviour, sacs, mockTimedFaceUnit);
         facePlayer.play(0);

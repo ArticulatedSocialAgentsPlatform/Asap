@@ -23,6 +23,7 @@ import hmi.animation.Skeleton;
 import hmi.animation.SkeletonPose;
 import hmi.animation.VJoint;
 import hmi.animation.VObjectTransformCopier;
+import hmi.math.Quat4f;
 import hmi.mixedanimationenvironment.MixedAnimationPlayer;
 import hmi.physics.PhysicalHumanoid;
 import hmi.physics.PhysicalJoint;
@@ -55,16 +56,19 @@ public class AnimationPlayer implements Player, MixedAnimationPlayer
     private VJoint vPrev;
     private VJoint vCurr;
     private VJoint vNext;
+    private VJoint vAdditive;
+
     private PhysicalHumanoid pHuman;
 
     private VObjectTransformCopier votcCurrToPrev;
     private VObjectTransformCopier votcNextToCurr;
+    private AdditiveRotationBlend additiveBlender;
     private boolean prevValid;
-    
+
     @GuardedBy("this")
     private List<PhysicalController> controllers = new ArrayList<PhysicalController>();
-    
-    private final AnimationPlanPlayer app;    
+
+    private final AnimationPlanPlayer app;
 
     private List<MixedSystem> mSystems;
     private MixedPlayer mPlayer;
@@ -76,21 +80,58 @@ public class AnimationPlayer implements Player, MixedAnimationPlayer
     private SkeletonPose vNextStartPose;
     private boolean prevValidOld = false;
     protected WorldObjectManager woManager;
-    
 
     public void setRestPose(RestPose rp)
     {
         app.setRestPose(rp);
     }
-    
+
     public RestPose getRestPose()
     {
         return app.getRestPose();
     }
-    
+
     public AnimationPlayer(VJoint vP, VJoint vC, VJoint vN, List<MixedSystem> m, float h, AnimationPlanPlayer planPlayer)
     {
         this(vP, vC, vN, m, h, null, planPlayer);
+    }
+
+    private void setAdditiveToIdentity()
+    {
+        for (VJoint vj : vAdditive.getParts())
+        {
+            vj.setRotation(Quat4f.getIdentity());
+        }
+    }
+
+    private void setVNextToIdentity()
+    {
+        for (VJoint vj : vNext.getParts())
+        {
+            if (vj.getSid() != null)
+            {
+                vj.setRotation(Quat4f.getIdentity());
+            }
+        }
+    }
+
+    // if a joint in vnext has the identity value
+    // put the (non-identity) value of vCurrent back (needed for smooth physical simulation)
+    private void applyCurrentOnVNext()
+    {
+        float q[] = Quat4f.getQuat4f();
+        for (VJoint vj : vNext.getParts())
+        {
+            if (vj.getSid() != null)
+            {
+                vj.getRotation(q);
+                if (Quat4f.epsilonEquals(q, Quat4f.getIdentity(), 0.001f))
+                {
+                    vCurr.getPartBySid(vj.getSid()).getRotation(q);
+                    vj.setRotation(q);
+                }
+            }
+        }
     }
 
     public AnimationPlayer(VJoint vP, VJoint vC, VJoint vN, List<MixedSystem> m, float h, WorldObjectManager wom,
@@ -99,18 +140,22 @@ public class AnimationPlayer implements Player, MixedAnimationPlayer
         vPrev = vP;
         vCurr = vC;
         vNext = vN;
+        vAdditive = vC.copyTree("vAdditive-");
+        setAdditiveToIdentity();
+
         prevSkel = new Skeleton("prevSkel", vPrev);
         curSkel = new Skeleton("curSkel", vCurr);
         nextSkel = new Skeleton("nextSkel", vNext);
 
         woManager = wom;
-        //VJoint[] emptyArray = new VJoint[0];
+        // VJoint[] emptyArray = new VJoint[0];
         vPrevStartPose = new SkeletonPose("prev", prevSkel, "TR");
-        vCurrStartPose = new SkeletonPose("cur",  curSkel, "TR");
+        vCurrStartPose = new SkeletonPose("cur", curSkel, "TR");
         vNextStartPose = new SkeletonPose("next", nextSkel, "TR");
         vPrevStartPose.setFromTarget();
         vCurrStartPose.setFromTarget();
         vNextStartPose.setFromTarget();
+        additiveBlender = new AdditiveRotationBlend(vNext, vAdditive, vNext);
 
         mSystems = m;
         pHuman = mSystems.get(0).getPHuman();
@@ -129,13 +174,13 @@ public class AnimationPlayer implements Player, MixedAnimationPlayer
     @Override
     public synchronized void stopBehaviour(String bmlId, String id, double globalTime)
     {
-        app.stopPlanUnit(bmlId, id, globalTime);        
+        app.stopPlanUnit(bmlId, id, globalTime);
     }
-    
+
     @Override
     public synchronized void interruptBehaviour(String bmlId, String id, double globalTime)
     {
-        app.interruptPlanUnit(bmlId, id, globalTime);       
+        app.interruptPlanUnit(bmlId, id, globalTime);
     }
 
     public WorldObjectManager getWoManager()
@@ -156,6 +201,7 @@ public class AnimationPlayer implements Player, MixedAnimationPlayer
         vPrevStartPose.setToTarget();
         vCurrStartPose.setToTarget();
         vNextStartPose.setToTarget();
+        setAdditiveToIdentity();
         synchronized (PhysicsSync.getSync())
         {
             for (PhysicalController p : controllers)
@@ -167,7 +213,7 @@ public class AnimationPlayer implements Player, MixedAnimationPlayer
                 ms.reset(vNext);
             }
         }
-        app.reset(time);        
+        app.reset(time);
     }
 
     /**
@@ -191,15 +237,19 @@ public class AnimationPlayer implements Player, MixedAnimationPlayer
             }
         }
     }
-    
+
     @Override
-    public void play(double time){}
-    
+    public void play(double time)
+    {
+    }
+
     @Override
     public synchronized void playStep(double prevTime)
     {
-        log.debug("time {}",prevTime);
-        
+        log.debug("time {}", prevTime);
+
+        setAdditiveToIdentity();
+
         controllers.clear();
         prevValidOld = prevValid;
 
@@ -208,15 +258,21 @@ public class AnimationPlayer implements Player, MixedAnimationPlayer
         {
             votcCurrToPrev.copyConfig();
             votcNextToCurr.copyConfig();
+            setVNextToIdentity();
             app.play(prevTime);
+            additiveBlender.blend();
         }
         else
         {
+            setVNextToIdentity();
             app.play(prevTime);
+            additiveBlender.blend();
+
             votcNextToCurr.copyConfig();
             votcCurrToPrev.copyConfig();
             prevValid = true;
         }
+        applyCurrentOnVNext();
 
         ArrayList<String> controlledJoints = new ArrayList<String>();
         for (PhysicalController p : controllers)
@@ -382,7 +438,7 @@ public class AnimationPlayer implements Player, MixedAnimationPlayer
             controllers.add(controller);
         }
     }
-    
+
     /**
      * Get the set of joints that is to be animated
      * 
@@ -391,6 +447,11 @@ public class AnimationPlayer implements Player, MixedAnimationPlayer
     public VJoint getVNext()
     {
         return vNext;
+    }
+
+    public VJoint getvAdditive()
+    {
+        return vAdditive;
     }
 
     /**
@@ -440,19 +501,19 @@ public class AnimationPlayer implements Player, MixedAnimationPlayer
     @Override
     public void setBMLBlockState(String bmlId, TimedPlanUnitState state)
     {
-        app.setBMLBlockState(bmlId, state);        
+        app.setBMLBlockState(bmlId, state);
     }
 
     @Override
     public void stopBehaviourBlock(String bmlId, double time)
     {
-        app.stopBehaviourBlock(bmlId, time);        
+        app.stopBehaviourBlock(bmlId, time);
     }
-    
+
     @Override
     public void interruptBehaviourBlock(String bmlId, double time)
     {
-        app.interruptBehaviourBlock(bmlId, time);        
+        app.interruptBehaviourBlock(bmlId, time);
     }
 
     @Override
@@ -460,11 +521,11 @@ public class AnimationPlayer implements Player, MixedAnimationPlayer
     {
 
     }
-    
+
     public void verifyTime(double time)
     {
     }
-    
+
     @Override
     public void updateTiming(String bmlId)
     {

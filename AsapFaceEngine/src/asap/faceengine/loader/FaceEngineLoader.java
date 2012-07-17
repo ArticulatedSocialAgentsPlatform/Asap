@@ -65,7 +65,7 @@ public class FaceEngineLoader implements EngineLoader
     private Engine engine = null;
     private Player facePlayer = null;
     private EmotionConverter econv;
-    private FACSConverter fconv;
+    private FACSConverter fconv = null;
     private PlanManager<TimedFaceUnit> planManager = null;
     private String id = "";
     // some variables cached during loading
@@ -123,6 +123,12 @@ public class FaceEngineLoader implements EngineLoader
             }
             tokenizer.takeEmptyElement("FaceBinding");
         }
+        if (tokenizer.atSTag("FACSConverterData"))
+        {
+            attrMap = tokenizer.getAttributes();
+            fconv = new FACSConverter(new Resources(adapter.getOptionalAttribute("resources", attrMap, "")),adapter.getRequiredAttribute("filename", attrMap, tokenizer));
+            tokenizer.takeEmptyElement("FACSConverterData");
+        }
         else if (tokenizer.atSTag("FaceUI"))
         {
             if (jce == null) throw tokenizer.getXMLScanException("Cannot add FaceUI when no JComponentEmbodiment is set");
@@ -144,7 +150,7 @@ public class FaceEngineLoader implements EngineLoader
         facePlayer = new DefaultPlayer(new SingleThreadedPlanPlayer<TimedFaceUnit>(theVirtualHuman.getElckerlycRealizer()
                 .getFeedbackManager(), planManager));
         econv = new EmotionConverter();
-        fconv = new FACSConverter();
+        if (fconv==null)fconv = new FACSConverter();
         FaceController fc = null;
         if (m4e != null)
         {
@@ -227,6 +233,11 @@ public class FaceEngineLoader implements EngineLoader
             return m4e.getFaceController();
         }
         return null;
+    }
+
+    public FACSConverter getFACSConverter()
+    {
+        return fconv;
     }
 
     public PlanManager<TimedFaceUnit> getPlanManager()

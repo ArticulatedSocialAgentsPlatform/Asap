@@ -10,7 +10,11 @@ import asap.realizer.anticipator.Anticipator;
 import asap.realizer.anticipator.KeyInfo;
 import asap.realizer.pegboard.TimePeg;
 
-
+/**
+ * Visualizes the prediction of spacebar presses on a red/green jpanel
+ * @author Herwin
+ *
+ */
 public class JPanelSpaceBarTempoAnticipatorVisualization extends SpaceBarTempoAnticipatorVisualization
 {
     private final JPanel predictPanel;

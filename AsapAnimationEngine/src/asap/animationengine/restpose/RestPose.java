@@ -1,6 +1,7 @@
 package asap.animationengine.restpose;
 
 import hmi.animation.VJoint;
+import hmi.util.Resources;
 
 import java.util.Set;
 
@@ -11,6 +12,7 @@ import asap.animationengine.motionunit.TimedAnimationUnit;
 import asap.realizer.feedback.FeedbackManager;
 import asap.realizer.pegboard.BMLBlockPeg;
 import asap.realizer.pegboard.PegBoard;
+import asap.realizer.planunit.ParameterException;
 
 /**
  * The restpose is a dynamic controller that handles all animation
@@ -24,6 +26,8 @@ public interface RestPose
     RestPose copy(AnimationPlayer player);
     
     void setAnimationPlayer(AnimationPlayer player);
+    
+    void setResource(Resources res);
     /**
      * Play the rest pose at time time, given the kinematicJoints and physicalJoint that are in use     
      */
@@ -60,7 +64,7 @@ public interface RestPose
      */
     void setRestPose();
     
-    void setParameterValue(String name, String value);
+    void setParameterValue(String name, String value) throws ParameterException;
     
     PostureShiftTMU createPostureShiftTMU(FeedbackManager bbf, BMLBlockPeg bmlBlockPeg, 
             String bmlId, String id, PegBoard pb) throws MUSetupException;

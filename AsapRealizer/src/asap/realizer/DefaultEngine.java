@@ -16,6 +16,7 @@ import asap.realizer.scheduler.TimePegAndConstraint;
  * Default implementation of the Engine Interface
  * 
  * @author Herwin van Welbergen
+ * @param <T> type of TimedPlanUnit handled by the Engine
  */
 public class DefaultEngine<T extends TimedPlanUnit> implements Engine
 {

@@ -19,6 +19,7 @@
 package asap.bml.ext.msapi;
 
 import saiba.bml.core.SpeechBehaviour;
+import hmi.xml.XMLFormatting;
 import hmi.xml.XMLTokenizer;
 
 import java.io.IOException;
@@ -62,6 +63,12 @@ public class MSApiBehaviour extends SpeechBehaviour
         return XMLTAG;
     }
 
+    @Override
+    public StringBuilder appendContent(StringBuilder buf, XMLFormatting fmt)
+    {
+        if (content != null) buf.append(content);
+        return buf;
+    }
     /**
      * The XML Stag for XML encoding -- use this method to find out the run-time
      * xml tag of an object
@@ -71,5 +78,7 @@ public class MSApiBehaviour extends SpeechBehaviour
     {
         return XMLTAG;
     }
-
+    
+    @Override
+    public  String getNamespace() { return null; }
 }

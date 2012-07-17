@@ -35,6 +35,7 @@ import static org.powermock.api.mockito.PowerMockito.*;
  */
 public abstract class AbstractTimedPlanUnitTest
 {
+    private static final double TIME_PRECISION = 0.0001;
     protected abstract TimedPlanUnit setupPlanUnit(FeedbackManager bfm, BMLBlockPeg bbPeg, String id, String bmlId, double startTime);
 
     protected List<BMLSyncPointProgressFeedback> fbList = new ArrayList<BMLSyncPointProgressFeedback>();
@@ -66,8 +67,7 @@ public abstract class AbstractTimedPlanUnitTest
     public void testSetup()
     {
         TimedPlanUnit tpu = setupPlanUnitWithListener(BMLBlockPeg.GLOBALPEG, "id1", "bml1", 0);
-        assertEquals(0, tpu.getStartTime(), 0.0001f);
-        // assertEquals(TimePeg.VALUE_UNKNOWN,tpu.getEndTime(),0.0001f);
+        assertEquals(0, tpu.getStartTime(), TIME_PRECISION);
         assertEquals(TimedPlanUnitState.IN_PREP, tpu.getState());
         assertThat(fbList, hasSize(0));
     }
@@ -202,7 +202,7 @@ public abstract class AbstractTimedPlanUnitTest
         TimePeg strokePeg = new TimePeg(BMLBlockPeg.GLOBALPEG);
         strokePeg.setGlobalValue(2);
         tpu.setTimePeg(BMLGestureSync.STROKE.getId(), strokePeg);
-        assertEquals(2f, tpu.getTime(BMLGestureSync.STROKE.getId()), 0.0001f);
+        assertEquals(2f, tpu.getTime(BMLGestureSync.STROKE.getId()), TIME_PRECISION);
     }
 
     @Test

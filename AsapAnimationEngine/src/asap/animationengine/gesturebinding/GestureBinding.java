@@ -79,7 +79,14 @@ public class GestureBinding extends XMLStructureAdapter
                     // set default parameter values
                     for (SpecParameterDefault mupc : s.getParameterDefaults())
                     {
-                        rp.setParameterValue(mupc.name, mupc.value);
+                        try
+                        {
+                            rp.setParameterValue(mupc.name, mupc.value);
+                        }
+                        catch (ParameterException e)
+                        {
+                            logger.warn("Error setting up restpose", e);                            
+                        }
                     }
                     
                     
@@ -89,7 +96,14 @@ public class GestureBinding extends XMLStructureAdapter
                         if (b.specifiesParameter(param))
                         {
                             String value = b.getStringParameterValue(param);
-                            rp.setParameterValue(s.getParameter(param), value);
+                            try
+                            {
+                                rp.setParameterValue(s.getParameter(param), value);
+                            }
+                            catch (ParameterException e)
+                            {
+                                logger.warn("Error setting up restpose", e);
+                            }
                         }
                     }
                     return rp;

@@ -7,6 +7,11 @@ import asap.realizer.pegboard.BMLBlockPeg;
 import asap.realizer.planunit.KeyPositionManager;
 import asap.realizer.planunit.KeyPositionManagerImpl;
 
+/**
+ * Testing stub for the EmitterUnit
+ * @author Herwin
+ *
+ */
 public class StubEmitterUnit implements EmitterUnit
 {
     @Delegate

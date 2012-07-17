@@ -18,16 +18,15 @@
  ******************************************************************************/
 package asap.faceengine.facebinding;
 
-import saiba.bml.core.Behaviour;
 import hmi.xml.XMLStructureAdapter;
 import hmi.xml.XMLTokenizer;
 
 import java.io.IOException;
-import java.util.ArrayList;
 import java.util.Collection;
 import java.util.HashMap;
 import java.util.Set;
 
+import saiba.bml.core.Behaviour;
 import asap.binding.SpecConstraints;
 import asap.binding.SpecParameterDefault;
 import asap.binding.SpecParameterDefaults;

@@ -20,7 +20,6 @@ package asap.bml.feedback;
 
 import saiba.bml.feedback.BMLBlockProgressFeedback;
 import saiba.bml.feedback.BMLSyncPointProgressFeedback;
-import asap.bml.feedback.BMLListener;
 
 /**
  * Captures BML feedback callbacks. 

@@ -40,7 +40,7 @@ import asap.utils.Environment;
  */
 public class PersistentFixtureAsapRealizerTest extends AbstractASAPRealizerTest
 {
-    
+
     private static AsapEnvironment staticEnvironment;
 
     private static final Logger logger = LoggerFactory.getLogger(PersistentFixtureAsapRealizerTest.class.getName());
@@ -103,9 +103,9 @@ public class PersistentFixtureAsapRealizerTest extends AbstractASAPRealizerTest
         environments.add(staticEnvironment);
 
         staticEnvironment.init(environments, ope.getPhysicsSchedulingClock()); // if no physics, just use renderclock here!
-        
+
         // this clock method drives the engines in ee. if no physics, then register ee as a listener at the render clock!
-        ope.addPrePhysicsCopyListener(staticEnvironment); 
+        ope.addPrePhysicsCopyListener(staticEnvironment);
 
         java.awt.Component canvas = hre.getAWTComponent(); // after init, get canvas and add to window
         mainUI.add(canvas);
@@ -121,7 +121,7 @@ public class PersistentFixtureAsapRealizerTest extends AbstractASAPRealizerTest
         try
         {
             // vHuman = staticEnvironment.loadVirtualHuman("blueguy", "Humanoids/blueguy",
-            //"blueguy_asaploader_mary_hudson.xml", "blueguy - test avatar");
+            // "blueguy_asaploader_mary_hudson.xml", "blueguy - test avatar");
             // vHuman = staticEnvironment.loadVirtualHuman("Humanoids/armandia", "vhloadermaryttsasaprealizertester.xml", "TestAvatar");
             vHuman = staticEnvironment.loadVirtualHuman("armandia", "Humanoids/armandia", "armandia_asaploader_mary_hudson.xml",
                     "TestAvatar");
@@ -142,42 +142,38 @@ public class PersistentFixtureAsapRealizerTest extends AbstractASAPRealizerTest
     @Before
     public void setup() throws InterruptedException
     {
-        //env = staticEnvironment;
+        // env = staticEnvironment;
         RealizerPort realizerPort = vHuman.getRealizerPort();
-        realizerPort.removeAllListeners();  
+        realizerPort.removeAllListeners();
         realizerPort.addListeners(this);
         realizerHandler.setRealizerTestPort(new AsapRealizerPort(realizerPort));
-        
+
         anticipator = new DummyAnticipator(1000000d, 2000000d);
         vHuman.getElckerlycRealizer().getScheduler().addAnticipator("dummyanticipator", anticipator);
-        realizerHandler.performBML("<bml xmlns=\"http://www.bml-initiative.org/bml/bml-1.0\" " +
-        		"id=\"replacesetup\" composition=\"REPLACE\"/>");
+        realizerHandler.performBML("<bml xmlns=\"http://www.bml-initiative.org/bml/bml-1.0\" "
+                + "id=\"replacesetup\" composition=\"REPLACE\"/>");
         realizerHandler.waitForBMLEndFeedback("replacesetup");
         realizerHandler.clearFeedbackLists();
     }
 
-   
-    @Ignore //TODO: predictedEnd is no longer available in BML1
+    @Ignore
+    // TODO: predictedEnd is no longer available in BML1
     @Test
     public void testTemporaryInvalidTimingInAppend() throws InterruptedException, IOException
     {
-        String bmlString1 = "<bml xmlns=\"http://www.bml-initiative.org/bml/bml-1.0\" " +
-        		"id=\"bml1\" xmlns:bmlt=\"http://hmi.ewi.utwente.nl/bmlt\" "
+        String bmlString1 = "<bml xmlns=\"http://www.bml-initiative.org/bml/bml-1.0\" "
+                + "id=\"bml1\" xmlns:bmlt=\"http://hmi.ewi.utwente.nl/bmlt\" "
                 + "bmlt:preplan=\"true\"><speech id=\"sp1\"><text>Hello</text></speech></bml>";
-        String bmlString2 = "<bml xmlns=\"http://www.bml-initiative.org/bml/bml-1.0\" " +
-        		"id=\"bml2\" composition=\"APPEND\">"
+        String bmlString2 = "<bml xmlns=\"http://www.bml-initiative.org/bml/bml-1.0\" " + "id=\"bml2\" composition=\"APPEND\">"
                 + "<wait id=\"w1\" start=\"0\" end=\"anticipators:dummyanticipator:dummy1\"/></bml>";
-        String bmlString3 = "<bml xmlns=\"http://www.bml-initiative.org/bml/bml-1.0\" " +
-        		"id=\"bml3\" composition=\"APPEND\">"
+        String bmlString3 = "<bml xmlns=\"http://www.bml-initiative.org/bml/bml-1.0\" " + "id=\"bml3\" composition=\"APPEND\">"
                 + "<speech id=\"sp1\"><text>Hello hello hello hello hello hello </text></speech></bml>";
-        String bmlString4 = "<bml xmlns=\"http://www.bml-initiative.org/bml/bml-1.0\" " +
-        		"id=\"bml4\" composition=\"APPEND\">"
+        String bmlString4 = "<bml xmlns=\"http://www.bml-initiative.org/bml/bml-1.0\" " + "id=\"bml4\" composition=\"APPEND\">"
                 + "<wait id=\"w1\" start=\"0\" end=\"anticipators:dummyanticipator:dummy2\"/></bml>";
-        String bmlString5 = "<bml xmlns=\"http://www.bml-initiative.org/bml/bml-1.0\" " +
-        		"id=\"bml5\" composition=\"APPEND\">"
+        String bmlString5 = "<bml xmlns=\"http://www.bml-initiative.org/bml/bml-1.0\" " + "id=\"bml5\" composition=\"APPEND\">"
                 + "<speech id=\"sp1\"><text>Hello hello hello hello hello hello </text></speech></bml>";
-        String bmlString6 = "<bml xmlns=\"http://www.bml-initiative.org/bml/bml-1.0\" " +
-        		"id=\"bml6\" xmlns:bmlt=\"http://hmi.ewi.utwente.nl/bmlt\" bmlt:onStart=\"bml1\"></bml>";
+        String bmlString6 = "<bml xmlns=\"http://www.bml-initiative.org/bml/bml-1.0\" "
+                + "id=\"bml6\" xmlns:bmlt=\"http://hmi.ewi.utwente.nl/bmlt\" bmlt:onStart=\"bml1\"></bml>";
         realizerHandler.performBML(bmlString1);
         realizerHandler.performBML(bmlString2);
         realizerHandler.performBML(bmlString3);
@@ -202,8 +198,8 @@ public class PersistentFixtureAsapRealizerTest extends AbstractASAPRealizerTest
     @After
     public void teardownEnvironment() throws InterruptedException
     {
-        realizerHandler.performBML("<bml xmlns=\"http://www.bml-initiative.org/bml/bml-1.0\" " +
-        		"id=\"cleanup\" composition=\"REPLACE\"/>");
+        realizerHandler
+                .performBML("<bml xmlns=\"http://www.bml-initiative.org/bml/bml-1.0\" " + "id=\"cleanup\" composition=\"REPLACE\"/>");
         realizerHandler.waitForBMLEndFeedback("cleanup");
     }
 

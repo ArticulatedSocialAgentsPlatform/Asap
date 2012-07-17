@@ -77,13 +77,10 @@ import com.google.common.collect.ImmutableSet;
  */
 public class ProcAnimationMU extends XMLStructureAdapter implements AnimationUnit
 {
-    // private static Logger logger =
-    // LoggerFactory.getLogger(ProcAnimationMU.class.getName());
-
     public Id id = null;
 
-    // private ArrayList<KeyPosition> keypositions = new
-    // ArrayList<KeyPosition>();
+    private Blending blending = Blending.NO;
+
     private ArrayList<EndEffector> endeffector = new ArrayList<EndEffector>();
 
     private List<KeyframeMU> keyFrameMUs = new ArrayList<KeyframeMU>();
@@ -123,6 +120,8 @@ public class ProcAnimationMU extends XMLStructureAdapter implements AnimationUni
     private KeyPositionManager keyPositionManager = new KeyPositionManagerImpl();
 
     private AtomicReference<String> replacementGroup = new AtomicReference<String>();
+
+    private VJoint vNext, vAdditive;
 
     /**
      * Constructor
@@ -282,6 +281,7 @@ public class ProcAnimationMU extends XMLStructureAdapter implements AnimationUni
         copy.setPrefDuration(prefDuration);
 
         copy.bodyPartFilter.addAll(bodyPartFilter);
+        copy.blending = blending;
         return copy;
     }
 
@@ -343,6 +343,7 @@ public class ProcAnimationMU extends XMLStructureAdapter implements AnimationUni
         setMinDuration(ani.minDuration);
         setMaxDuration(ani.maxDuration);
         setPrefDuration(ani.prefDuration);
+        blending = ani.blending;
     }
 
     /**
@@ -1227,7 +1228,7 @@ public class ProcAnimationMU extends XMLStructureAdapter implements AnimationUni
     @Override
     public ProcAnimationMU copy(AnimationPlayer p)
     {
-        return copy(p.getVNext());
+        return copy(p.getVNext(), p.getvAdditive());
     }
 
     public void setup(VJoint vNext)
@@ -1236,26 +1237,53 @@ public class ProcAnimationMU extends XMLStructureAdapter implements AnimationUni
         setup(getParameters(), body);
     }
 
+    private void setup2(VJoint vN, VJoint vAdd)
+    {
+        this.vAdditive = vAdd;
+        this.vNext = vN;
+        setup2();
+    }
+
+    private void setup2()
+    {
+
+        VJoint vj;
+        switch (blending)
+        {
+        case ADDITIVE:
+            vj = vAdditive;break;
+        default:
+            vj = vNext;
+        }
+
+        setup(vj);
+        for (Keyframes kf : keyframes.values())
+        {
+            kf.setJoint(vj.getPart(kf.getTarget()));
+        }
+        for (Rotation r : rotations.values())
+        {
+            r.setJoint(vj.getPart(r.getTarget()));
+        }
+        for (KeyframeMU kmu : keyFrameMUs)
+        {
+            kmu.setTarget(vj);
+        }
+    }
+
     /**
      * Creates a copy of this ProcAnimation and links is to VJoint v
      */
-    public ProcAnimationMU copy(VJoint v)
+    public ProcAnimationMU copy(VJoint vNext, VJoint vAdditive)
     {
         ProcAnimationMU copy = deepCopy();
-        copy.setup(v);
-        for (Keyframes kf : copy.keyframes.values())
-        {
-            kf.setJoint(v.getPart(kf.getTarget()));
-        }
-        for (Rotation r : copy.rotations.values())
-        {
-            r.setJoint(v.getPart(r.getTarget()));
-        }
-        for (KeyframeMU kmu : copy.keyFrameMUs)
-        {
-            kmu.setTarget(v);
-        }
+        copy.setup2(vNext, vAdditive);
         return copy;
+    }
+
+    public ProcAnimationMU copy(VJoint vNext)
+    {
+        return copy(vNext, vNext);
     }
 
     static class IKParameter
@@ -1399,6 +1427,11 @@ public class ProcAnimationMU extends XMLStructureAdapter implements AnimationUni
         return "ProcAnimation";
     }
 
+    private enum Blending
+    {
+        NO, ADDITIVE;
+    }
+
     @Override
     public void setParameterValue(String name, String value) throws ParameterException
     {
@@ -1408,6 +1441,11 @@ public class ProcAnimationMU extends XMLStructureAdapter implements AnimationUni
             {
                 mirror();
             }
+        }
+        else if (name.equals("blending"))
+        {
+            blending = Blending.valueOf(value);
+            setup2();
         }
         else if (name.equals("joints"))
         {
@@ -1476,6 +1514,7 @@ public class ProcAnimationMU extends XMLStructureAdapter implements AnimationUni
     @Override
     public Set<String> getKinematicJoints()
     {
+        if (blending.equals(Blending.ADDITIVE)) return ImmutableSet.of();
         return VJointUtils.transformToSidSet(bodyParts);
     }
 

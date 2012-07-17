@@ -94,28 +94,28 @@ public class ProcAnimationGestureMU implements GestureUnit
         return aniPlayer.getRestPose().getTransitionToRestDuration(aniPlayer.getVCurr(),
                 VJointUtils.transformToSidSet(gestureUnit.getControlledJoints()));
     }
-    
+
     public double getRetractionDuration()
     {
         copyProc.play(copyProc.getKeyPosition(BMLGestureSync.STROKE_END.getId()).time - 0.01);
         return aniPlayer.getRestPose().getTransitionToRestDuration(copyJoint,
                 VJointUtils.transformToSidSet(gestureUnit.getControlledJoints()));
-        
+
     }
 
     public double getPreparationDuration()
     {
         copyProc.play(copyProc.getKeyPosition(BMLGestureSync.STROKE_START.getId()).time + 0.01);
-        
-        if(log.isDebugEnabled())
+
+        if (log.isDebugEnabled())
         {
-            float vecDst[]=new float[3];
-            float vecSrc[]=new float[3];
+            float vecDst[] = new float[3];
+            float vecSrc[] = new float[3];
             copyJoint.getPart(Hanim.l_wrist).getPathTranslation(copyJoint.getPart(Hanim.l_shoulder).getParent(), vecDst);
             aniPlayer.getVCurr().getPart(Hanim.l_wrist).getPathTranslation(aniPlayer.getVCurr().getPart(Hanim.l_shoulder), vecSrc);
-            log.debug("copyJoint lwrist pos at strokeStart:{}\n current lwrist pos:{}",Vec3f.toString(vecDst),Vec3f.toString(vecSrc));
+            log.debug("copyJoint lwrist pos at strokeStart:{}\n current lwrist pos:{}", Vec3f.toString(vecDst), Vec3f.toString(vecSrc));
         }
-        
+
         double duration = MovementTimingUtils.getFittsMaximumLimbMovementDuration(aniPlayer.getVCurr(), copyJoint,
                 VJointUtils.transformToSidSet(gestureUnit.getControlledJoints()));
         if (duration > 0) return duration;
@@ -181,12 +181,7 @@ public class ProcAnimationGestureMU implements GestureUnit
         copyProc = gestureUnit.copy(copyJoint);
         aniPlayer = ap;
     }
-
-    public void setVStartJoint(VJoint vj)
-    {
-        vStart = vj;
-    }
-
+    
     public void setVNext(VJoint vj)
     {
         vNext = vj;
@@ -347,6 +342,10 @@ public class ProcAnimationGestureMU implements GestureUnit
             prepUnit.play(t / readyTime);
             log.debug("prepUnit.play: {}", t / readyTime);
         }
+        else if (t <= strokeStartTime)
+        {
+            prepUnit.play(1);
+        }
         else if (t > relaxTime)
         {
             relaxUnit.play((t - relaxTime) / relaxDuration);
@@ -358,6 +357,10 @@ public class ProcAnimationGestureMU implements GestureUnit
             double fraction = (t - strokeStartTime) / (strokeEndTime - strokeStartTime);
             gestureUnit.play(gestureStart + gestureDur * fraction);
             log.debug("gestureUnit.play: {}", t);
+        }
+        else if (t <= relaxTime)
+        {
+            gestureUnit.play(strokeEndTime);
         }
     }
 
@@ -424,13 +427,14 @@ public class ProcAnimationGestureMU implements GestureUnit
 
     public void setupRelaxUnit()
     {
-        relaxUnit = aniPlayer.getRestPose().createTransitionToRest(VJointUtils.transformToSidSet(gestureUnit.getControlledJoints()));
+        relaxUnit = createRelaxUnit();
     }
 
     public AnimationUnit createRelaxUnit()
     {
         return aniPlayer.getRestPose().createTransitionToRest(VJointUtils.transformToSidSet(gestureUnit.getControlledJoints()));
     }
+
     @Override
     public void setResource(Resources r)
     {
@@ -454,6 +458,6 @@ public class ProcAnimationGestureMU implements GestureUnit
     @Override
     public void startUnit(double t) throws MUPlayException
     {
-                
+
     }
 }

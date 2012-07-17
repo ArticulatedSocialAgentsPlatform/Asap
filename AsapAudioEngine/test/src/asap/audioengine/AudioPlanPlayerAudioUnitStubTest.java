@@ -20,7 +20,10 @@ import asap.realizer.planunit.PlanManager;
 import asap.realizer.planunit.TimedPlanUnitPlayException;
 import asap.realizer.planunit.TimedPlanUnitState;
 
-
+/**
+ * Tests for the TimedAbstractAudioUnit through a stub
+ * @author Herwin
+ */
 public class AudioPlanPlayerAudioUnitStubTest
 {
     private PlanManager<TimedAbstractAudioUnit> planManager = new PlanManager<TimedAbstractAudioUnit>();

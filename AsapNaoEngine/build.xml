@@ -1,0 +1,4 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project name="HmiNao"  default="run">
+   <import file="../../HmiBuild/build.xml" />    
+</project>

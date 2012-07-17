@@ -33,12 +33,12 @@ public abstract class TransitionToPoseMU extends TransitionMU
         if (ep != null)
         {
             endPose = Arrays.copyOf(ep, ep.length);
+            result = new float[ep.length];
         }
         else
         {
             endPose = null;
-        }
-        result = new float[ep.length];
+        }        
     }
     
     @Override

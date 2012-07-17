@@ -18,6 +18,7 @@ import asap.realizer.AsapRealizer;
 import asap.realizer.feedback.FeedbackManager;
 import asap.utils.Environment;
 import asap.utils.EulerHeadEmbodiment;
+
 /**
  * Unit test for the LiveMocapEngineLoader
  * @author welberge
@@ -31,7 +32,7 @@ public class LiveMocapEngineLoaderTest
     private FeedbackManager mockFbm = mock(FeedbackManager.class);
     private EulerInput mockEulerInput = mock(EulerInput.class);
     private EulerHeadEmbodiment mockEmbodiment = mock(EulerHeadEmbodiment.class);
-    
+
     @Before
     public void setup()
     {
@@ -42,17 +43,16 @@ public class LiveMocapEngineLoaderTest
         when(mockAsapVH.getElckerlycRealizer()).thenReturn(mockRealizer);
         when(mockRealizer.getFeedbackManager()).thenReturn(mockFbm);
     }
-    
-    @Test(timeout=1000)
+
+    @Test(timeout = 1000)
     public void test() throws IOException
     {
         LiveMocapEngineLoader loader = new LiveMocapEngineLoader();
-        String str = "<Loader id=\"livemocapengine\" loader=\"asap.livemocapengine.loader.LiveMocapEngineLoader\">" +
-                "<input name=\"arroweuler\" interface=\"asap.livemocapengine.inputs.EulerInput\"/>"+
-                "<output name=\"armandia\" interface=\"asap.utils.EulerHeadEmbodiment\"/>"+
-        		"</Loader>";
+        String str = "<Loader id=\"livemocapengine\" loader=\"asap.livemocapengine.loader.LiveMocapEngineLoader\">"
+                + "<input name=\"arroweuler\" interface=\"asap.livemocapengine.inputs.EulerInput\"/>"
+                + "<output name=\"armandia\" interface=\"asap.utils.EulerHeadEmbodiment\"/>" + "</Loader>";
         XMLTokenizer tok = new XMLTokenizer(str);
-        tok.takeSTag();        
+        tok.takeSTag();
         loader.readXML(tok, "id1", mockAsapVH, new Environment[0], mockArmandiaLoader, mockArrowEulerLoader);
         assertNotNull(loader.getEngine());
     }

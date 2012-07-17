@@ -38,12 +38,12 @@ public class DynamicGazeMU extends GazeMU
     private float targetPosCurr[] = new float[3];
     private float qCurr[] = new float[4];
     private float qEndCurr[] = new float[4];
-
+    private VJoint neckCurr;
+    
     public DynamicGazeMU()
     {
         qGaze = new float[4];
-        qTemp = new float[4];
-        qStart = new float[4];
+        qTemp = new float[4];        
 
         vecTemp = new float[3];
         ready = new KeyPosition("ready", 0.25, 1);
@@ -60,6 +60,7 @@ public class DynamicGazeMU extends GazeMU
     {
         DynamicGazeMU gmu = new DynamicGazeMU();
         gmu.neck = p.getVNext().getPart(Hanim.skullbase);
+        gmu.neckCurr = p.getVCurr().getPart(Hanim.skullbase);
         gmu.player = p;
         gmu.woManager = p.getWoManager();
         gmu.target = target;
@@ -68,27 +69,31 @@ public class DynamicGazeMU extends GazeMU
     }
 
     @Override
-    public void play(double t)throws MUPlayException
+    public void play(double t) throws MUPlayException
     {
         woTarget.getTranslation2(targetPosCurr, neck);
         Quat4f.transformVec3f(getOffsetRotation(), targetPosCurr);
-        
+
         if (t < RELATIVE_READY_TIME)
         {
             double remDuration = ((RELATIVE_READY_TIME - t) / RELATIVE_READY_TIME) * preparationDuration;
             setEndRotation(targetPosCurr, qEndCurr);
-            neck.getRotation(qCurr);            
+            neckCurr.getRotation(qCurr);
             float deltaT = (float) (player.getStepTime() / remDuration);
             Quat4f.interpolate(qGaze, qCurr, qEndCurr, deltaT);
             neck.setRotation(qGaze);
-        } else if (t > RELATIVE_RELAX_TIME)
+        }
+        else if (t > RELATIVE_RELAX_TIME)
         {
-
-            float tManip = (float) tmp.manip((t - RELATIVE_RELAX_TIME) / (1-RELATIVE_RELAX_TIME));
+            /*
+            float tManip = (float) tmp.manip((t - RELATIVE_RELAX_TIME) / (1 - RELATIVE_RELAX_TIME));
             // Quat4f.interpolate(qTemp, qGaze,Quat4f.getIdentity(), tManip);
             Quat4f.interpolate(qTemp, qGaze, qStart, tManip);
             neck.setRotation(qTemp);
-        } else
+            */
+            relaxUnit.play( (t-RELATIVE_RELAX_TIME)/(1-RELATIVE_RELAX_TIME));
+        }
+        else
         {
             setEndRotation(targetPosCurr);
             neck.setRotation(qGaze);

@@ -51,6 +51,7 @@ import static asap.realizertestutil.util.TimePegUtil.*;
 @PrepareForTest({BMLScheduler.class,BMLBlockManager.class})
 public class ParameterValueChangePlannerTest
 {
+    private static final double TIMING_PRECISION = 0.0001;
     private BMLScheduler mockScheduler = mock(BMLScheduler.class);
     private ParameterValueChangePlanner pvcp;
     private BMLBlockManager mockBmlBlockManager = mock(BMLBlockManager.class);
@@ -112,8 +113,8 @@ public class ParameterValueChangePlannerTest
         assertEquals("paramchange1", tpu.getId());
         assertEquals("bml1", tpu.getBMLId());
 
-        assertEquals(1, tpu.getStartTime(), 0.0001f);
-        assertEquals(2, tpu.getTime("stroke"), 0.0001f);
+        assertEquals(1, tpu.getStartTime(), TIMING_PRECISION);
+        assertEquals(2, tpu.getTime("stroke"), TIMING_PRECISION);
         when(mockBmlBlockManager.getSyncsPassed("bml1", "beh1")).thenReturn(new ImmutableSet.Builder<String>().build());
 
         tpu.playUnit(1.5f);

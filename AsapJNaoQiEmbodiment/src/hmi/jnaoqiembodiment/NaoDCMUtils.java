@@ -7,7 +7,7 @@ import com.aldebaran.proxy.Variant;
  * Utility class for DCM
  * @author welberge
  */
-public class NaoDCMUtils
+public final class NaoDCMUtils
 {
     private NaoDCMUtils(){}
     

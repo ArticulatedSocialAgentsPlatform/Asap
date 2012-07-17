@@ -28,42 +28,44 @@ import org.junit.Test;
 /**
  * Unit testcases for WorldObject
  * @author welberge
- *
+ * 
  */
 public class WorldObjectTest
 {
+    private static final float POSITION_PRECISION = 0.0001f;
+
     @Test
     public void testGetWorldTranslation()
     {
         VJoint vj1 = new VJoint();
         VJoint vjWorld = new VJoint();
-        vjWorld.setTranslation(0,10,0);
-        vj1.setTranslation(10,0,0);
+        vjWorld.setTranslation(0, 10, 0);
+        vj1.setTranslation(10, 0, 0);
         vjWorld.addChild(vj1);
         WorldObject wj = new WorldObject(vj1);
-        float[]trRef = {10,10,0};
+        float[] trRef = { 10, 10, 0 };
         float[] tr = new float[3];
         wj.getWorldTranslation(tr);
-        assertTrue(Vec3f.epsilonEquals(tr, trRef, 0.0001f));
+        assertTrue(Vec3f.epsilonEquals(tr, trRef, POSITION_PRECISION));
     }
-    
+
     @Test
     public void testGetTranslation()
     {
         VJoint vj1 = new VJoint();
         VJoint vj2 = new VJoint();
         VJoint vjWorld = new VJoint();
-        vj1.setTranslation(10,0,0);
-        vj2.setTranslation(-10,0,0);
+        vj1.setTranslation(10, 0, 0);
+        vj2.setTranslation(-10, 0, 0);
         float q[] = new float[4];
-        Quat4f.setFromAxisAngle4f(q, 0,0,1,(float)Math.PI * 0.5f);
+        Quat4f.setFromAxisAngle4f(q, 0, 0, 1, (float) Math.PI * 0.5f);
         vj2.setRotation(q);
         vjWorld.addChild(vj1);
         vjWorld.addChild(vj2);
         WorldObject wj = new WorldObject(vj1);
-        float[]trRef = {0,-20,0};
+        float[] trRef = { 0, -20, 0 };
         float[] tr = new float[3];
         wj.getTranslation(tr, vj2);
-        assertTrue(Vec3f.epsilonEquals(tr, trRef, 0.0001f));      
+        assertTrue(Vec3f.epsilonEquals(tr, trRef, POSITION_PRECISION));
     }
 }

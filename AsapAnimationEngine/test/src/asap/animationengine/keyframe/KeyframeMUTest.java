@@ -32,7 +32,7 @@ public class KeyframeMUTest
     private SkeletonInterpolator ski;
     private VJoint human;
     private KeyframeMU kfmu;
-    private static final float ROTATION_PRECISION = 0.0001f;
+    private static final float ROTATION_PRECISION = 0.001f;
     private static final double TIMING_PRECISION = 0.0001;
     
     @Before
@@ -88,7 +88,7 @@ public class KeyframeMUTest
         assertQuat4fRotationEquivalent(1,0,0,0, q, ROTATION_PRECISION);
         
         human.getPart(Hanim.l_shoulder).getRotation(q);
-        assertQuat4fRotationEquivalent(R_SHOULDER_ROT[0],R_SHOULDER_ROT[1],-R_SHOULDER_ROT[2],-R_SHOULDER_ROT[3],q,0.001f);
+        assertQuat4fRotationEquivalent(R_SHOULDER_ROT[0],R_SHOULDER_ROT[1],-R_SHOULDER_ROT[2],-R_SHOULDER_ROT[3],q,ROTATION_PRECISION);
     }
     
     @Test
@@ -108,7 +108,7 @@ public class KeyframeMUTest
         assertQuat4fRotationEquivalent(1,0,0,0, q, ROTATION_PRECISION);
         
         human.getPart(Hanim.l_shoulder).getRotation(q);
-        assertQuat4fRotationEquivalent(R_SHOULDER_ROT[0],R_SHOULDER_ROT[1],-R_SHOULDER_ROT[2],-R_SHOULDER_ROT[3],q,0.001f);
+        assertQuat4fRotationEquivalent(R_SHOULDER_ROT[0],R_SHOULDER_ROT[1],-R_SHOULDER_ROT[2],-R_SHOULDER_ROT[3],q,ROTATION_PRECISION);
     }
     @Test
     public void testCopy() throws MUPlayException

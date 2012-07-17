@@ -18,7 +18,8 @@ import asap.realizer.pegboard.TimePeg;
  * 
  * PlanUnits used in the PlanPlayer should have non-blocking play and start functions.
  * 
- * @author Herwin 
+ * @author Herwin
+ * @param <T> 
  */
 @ThreadSafe
 public final class SingleThreadedPlanPlayer<T extends TimedPlanUnit> implements PlanPlayer

@@ -21,6 +21,7 @@ package asap.animationengine.pointing;
 import asap.animationengine.AnimationPlayer;
 import asap.motionunit.MUPlayException;
 import hmi.animation.AnalyticalIKSolver;
+import hmi.animation.VJoint;
 import hmi.math.Quat4f;
 
 /**
@@ -31,6 +32,10 @@ public class DynamicPointingMU extends PointingMU
 {
     private float[]qCurrSh=new float[4];
     private float[]qCurrElb=new float[4];
+    
+    private VJoint vCurrShoulder;
+    private VJoint vCurrElbow;
+    
     @Override
     public DynamicPointingMU copy(AnimationPlayer p)
     {
@@ -38,8 +43,10 @@ public class DynamicPointingMU extends PointingMU
         pmu.shoulderId = shoulderId; 
         pmu.elbowId = elbowId;
         pmu.vjShoulder = p.getVNext().getPart(shoulderId);
-        pmu.vjShoulder = p.getVNext().getPart(elbowId);
+        pmu.vjElbow = p.getVNext().getPart(elbowId);
         pmu.vjWrist = p.getVNext().getPart(wristId);
+        pmu.vCurrShoulder = p.getVCurr().getPart(shoulderId);
+        pmu.vCurrElbow = p.getVCurr().getPart(elbowId);
         pmu.player = p;
         pmu.woManager = p.getWoManager();        
         pmu.target = target;
@@ -57,10 +64,10 @@ public class DynamicPointingMU extends PointingMU
         {
             double remDuration = ( (0.25-t)/0.25)*preparationDuration;
             float deltaT = (float)(player.getStepTime()/remDuration);
-            vjShoulder.getRotation(qCurrSh);
+            vCurrShoulder.getRotation(qCurrSh);
             Quat4f.interpolate(qTemp, qCurrSh, qShoulder,deltaT);
             vjShoulder.setRotation(qTemp);
-            vjElbow.getRotation(qCurrElb);
+            vCurrElbow.getRotation(qCurrElb);
             Quat4f.interpolate(qTemp, qCurrElb, qElbow,deltaT);
             vjElbow.setRotation(qTemp);
         }

@@ -4,18 +4,20 @@ import hmi.animation.SkeletonPose;
 import hmi.animation.VJoint;
 import hmi.animation.VObjectTransformCopier;
 import hmi.math.Quat4f;
+import hmi.util.Resources;
 
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Set;
 
+import lombok.extern.slf4j.Slf4j;
 import asap.animationengine.AnimationPlayer;
 import asap.animationengine.MovementTimingUtils;
 import asap.animationengine.motionunit.AnimationUnit;
 import asap.animationengine.motionunit.MUSetupException;
 import asap.animationengine.motionunit.TimedAnimationUnit;
-import asap.animationengine.transitions.T1RTransitionToPoseMU;
 import asap.animationengine.transitions.SlerpTransitionToPoseMU;
+import asap.animationengine.transitions.T1RTransitionToPoseMU;
 import asap.animationengine.transitions.TransitionMU;
 import asap.realizer.feedback.FeedbackManager;
 import asap.realizer.pegboard.BMLBlockPeg;
@@ -25,12 +27,11 @@ import asap.realizer.pegboard.TimePeg;
 import asap.realizer.planunit.KeyPosition;
 import asap.realizer.planunit.TimedPlanUnitState;
 
-import com.google.common.collect.ImmutableList;
-
 /**
  * A simple static rest-pose implementation; the restpose is specified by a SkeletonPose
  * @author hvanwelbergen
  */
+@Slf4j
 public class SkeletonPoseRestPose implements RestPose
 {
     private AnimationPlayer player;
@@ -51,17 +52,17 @@ public class SkeletonPoseRestPose implements RestPose
     {
         this.player = player;
         poseTree = player.getVCurr().copyTree("rest-");
+        for (VJoint vj : poseTree.getParts())
+        {
+            if(vj.getSid()!=null)
+            {
+                vj.setRotation(Quat4f.getIdentity());
+            }            
+        }
         if (pose != null)
         {
             pose.setTargets(poseTree.getParts().toArray(new VJoint[poseTree.getParts().size()]));
             pose.setToTarget();
-        }
-        else
-        {
-            for (VJoint vj : poseTree.getParts())
-            {
-                vj.setRotation(Quat4f.getIdentity());
-            }
         }
     }
 
@@ -79,7 +80,18 @@ public class SkeletonPoseRestPose implements RestPose
     @Override
     public void play(double time, Set<String> kinematicJoints, Set<String> physicalJoints)
     {
-
+        if (poseTree==null)return;
+        for(VJoint vj:poseTree.getParts())
+        {
+            if(!kinematicJoints.contains(vj.getSid())&&!physicalJoints.contains(vj.getSid()))
+            {
+                float q[] = new float[4];
+                vj.getRotation(q);
+                String search = vj.getSid();
+                if (search==null)search = vj.getName();
+                player.getVNext().getPart(search).setRotation(q);
+            }
+        }
     }
 
     @Override
@@ -159,19 +171,25 @@ public class SkeletonPoseRestPose implements RestPose
             startJoints.add(player.getVCurr().getPartBySid(joint));
         }
 
-        AnimationUnit mu = new SlerpTransitionToPoseMU(startJoints, targetJoints, pose.getConfig());
+        AnimationUnit mu;
         if (pose.getConfigType().equals("R"))
         {
             mu = new SlerpTransitionToPoseMU(startJoints, targetJoints, pose.getConfig());
         }
         else if (pose.getConfigType().equals("T1R"))
         {
-            mu = new T1RTransitionToPoseMU(startJoints, targetJoints,  pose.getConfig());
+            mu = new T1RTransitionToPoseMU(startJoints, targetJoints, pose.getConfig());
         }
         else
         {
             return null;
         }
         return new PostureShiftTMU(bbf, bmlBlockPeg, bmlId, id, mu.copy(player), pb, this, player);
+    }
+
+    @Override
+    public void setResource(Resources res)
+    {
+
     }
 }

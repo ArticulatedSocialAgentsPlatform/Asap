@@ -15,6 +15,7 @@ import asap.realizer.pegboard.TimePeg;
 public class KeyPositionManagerTest
 {
     private KeyPositionManager kpm;
+    private final double TIME_PRECISION = 0.0001;
     
     @Before
     public void setup()
@@ -46,29 +47,29 @@ public class KeyPositionManagerTest
         put.setTimePeg(kpStroke, tpStroke);
         put.setTimePeg(kpCustom, tpCustom);
         double t = put.getPrevPegTime("custom");
-        assertEquals(1.0,t,0.0001);
+        assertEquals(1.0,t,TIME_PRECISION);
         
         t = put.getPrevPegTime(BMLGestureSync.STROKE_END.getId());
-        assertEquals(1.0,t,0.0001);
+        assertEquals(1.0,t,TIME_PRECISION);
         
         t = put.getPrevPegTime("end");
-        assertEquals(1.2,t,0.0001);
+        assertEquals(1.2,t,TIME_PRECISION);
                 
         TimePeg tpCustom2 = new TimePeg(gPeg);
         tpCustom2.setGlobalValue(1.1);
         put.setTimePeg(kpCustom2, tpCustom2);
         t = put.getPrevPegTime("custom");
-        assertEquals(1.1,t,0.0001);
+        assertEquals(1.1,t,TIME_PRECISION);
         
         tpStroke.setGlobalValue(TimePeg.VALUE_UNKNOWN);
         TimePeg tpCustom3 = new TimePeg(gPeg);
         tpCustom3.setGlobalValue(0.9);
         put.setTimePeg(kpCustom3, tpCustom3);
         t = put.getPrevPegTime("strokeEnd");
-        assertEquals(0.9,t,0.0001);
+        assertEquals(0.9,t,TIME_PRECISION);
         
         t = put.getPrevPegTime("unknown");
-        assertEquals(TimePeg.VALUE_UNKNOWN,t,0.0001);
+        assertEquals(TimePeg.VALUE_UNKNOWN,t,TIME_PRECISION);
     }
     
     @Test
@@ -93,23 +94,23 @@ public class KeyPositionManagerTest
         put.setTimePeg(kpStroke, tpStroke);
         put.setTimePeg(kpCustom, tpCustom);
         double t = put.getNextPegTime("stroke");
-        assertEquals(1.2,t,0.0001);
+        assertEquals(1.2,t,TIME_PRECISION);
         
         t = put.getNextPegTime("strokeStart");
-        assertEquals(1.0,t,0.0001);
+        assertEquals(1.0,t,TIME_PRECISION);
         
         tpStroke.setGlobalValue(TimePeg.VALUE_UNKNOWN);
         t = put.getNextPegTime("strokeStart");
-        assertEquals(1.2,t,0.0001);
+        assertEquals(1.2,t,TIME_PRECISION);
         
         TimePeg tpCustom2 = new TimePeg(gPeg);
         tpCustom2.setGlobalValue(1.1);
         put.setTimePeg(kpCustom2, tpCustom2);
         t = put.getNextPegTime("custom2");
-        assertEquals(1.2,t,0.0001);
+        assertEquals(1.2,t,TIME_PRECISION);
         
         t = put.getNextPegTime("unknown");
-        assertEquals(TimePeg.VALUE_UNKNOWN,t,0.0001);
+        assertEquals(TimePeg.VALUE_UNKNOWN,t,TIME_PRECISION);
     }
     
     
