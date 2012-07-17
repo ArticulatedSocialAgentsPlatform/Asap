@@ -3,6 +3,7 @@
    <dependencies>
       <dependency org="Asap"  name="AsapEnvironment"      rev="latest.${resolve.status}"  />
       <dependency org="HMI"  name="AsapUtils"      rev="latest.${resolve.status}"  />
+      <dependency org="HMI"  name="HmiMath"      rev="latest.${resolve.status}"  />
       <dependency org="aldebaran"  name="jnaoqi"      rev="latest.release"  />
       <dependency org="slf4j"  name="slf4j-api"      rev="latest.release"  />
       <dependency org="google" name="guava"          rev="latest.release"  />

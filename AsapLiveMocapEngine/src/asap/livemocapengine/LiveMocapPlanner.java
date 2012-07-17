@@ -10,11 +10,14 @@ import saiba.bml.core.Behaviour;
 import asap.livemocapengine.binding.NameTypeBinding;
 import asap.livemocapengine.bml.LiveMocapBehaviour;
 import asap.livemocapengine.bml.RemoteFaceFACSBehaviour;
+import asap.livemocapengine.bml.RemoteGazeBehaviour;
 import asap.livemocapengine.bml.RemoteHeadBehaviour;
 import asap.livemocapengine.inputs.EulerInput;
 import asap.livemocapengine.inputs.FACSFaceInput;
+import asap.livemocapengine.inputs.PositionInput;
 import asap.livemocapengine.planunit.LiveMocapTMU;
 import asap.livemocapengine.planunit.RemoteFaceFACSTMU;
+import asap.livemocapengine.planunit.RemoteGazeTMU;
 import asap.livemocapengine.planunit.RemoteHeadTMU;
 import asap.realizer.AbstractPlanner;
 import asap.realizer.BehaviourPlanningException;
@@ -27,6 +30,7 @@ import asap.realizer.planunit.PlanManager;
 import asap.realizer.scheduler.TimePegAndConstraint;
 import asap.utils.EulerHeadEmbodiment;
 import asap.utils.FACSFaceEmbodiment;
+import asap.utils.GazeEmbodiment;
 
 /**
  * A planner for LiveMocapBehaviours
@@ -39,6 +43,7 @@ public class LiveMocapPlanner extends AbstractPlanner<LiveMocapTMU>
     {
         BMLInfo.addBehaviourType(RemoteHeadBehaviour.xmlTag(), RemoteHeadBehaviour.class);        
         BMLInfo.addBehaviourType(RemoteFaceFACSBehaviour.xmlTag(), RemoteFaceFACSBehaviour.class);
+        BMLInfo.addBehaviourType(RemoteGazeBehaviour.xmlTag(), RemoteGazeBehaviour.class);
     }
     
     private final NameTypeBinding inputBinding;
@@ -81,6 +86,20 @@ public class LiveMocapPlanner extends AbstractPlanner<LiveMocapTMU>
                 throw new BehaviourPlanningException(b,"No output found that matches "+b.getOutput()+","+FACSFaceEmbodiment.class);
             }
             return new RemoteFaceFACSTMU(input,output, fbm, bmlPeg, b.getBmlId(),b.id);
+        }
+        if(b instanceof RemoteGazeBehaviour)
+        {
+            PositionInput input = inputBinding.get(b.getInput(), PositionInput.class);
+            if(input == null)
+            {
+                throw new BehaviourPlanningException(b,"No input found that matches "+b.getInput()+","+PositionInput.class);
+            }
+            GazeEmbodiment output = outputBinding.get(b.getOutput(), GazeEmbodiment.class);
+            if(output == null)
+            {
+                throw new BehaviourPlanningException(b,"No output found that matches "+b.getOutput()+","+GazeEmbodiment.class);
+            }
+            return new RemoteGazeTMU(input, output, fbm, bmlPeg, b.getBmlId(), b.id);
         }
         return null;
     }
@@ -174,6 +193,7 @@ public class LiveMocapPlanner extends AbstractPlanner<LiveMocapTMU>
         return new ImmutableList.Builder<Class<? extends Behaviour>>()
             .add(RemoteHeadBehaviour.class)
             .add(RemoteFaceFACSBehaviour.class)
+            .add(RemoteGazeBehaviour.class)
             .build();
         //@formatter:on
     }
