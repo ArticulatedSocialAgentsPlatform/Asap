@@ -123,7 +123,7 @@ public class FaceEngineLoader implements EngineLoader
             }
             tokenizer.takeEmptyElement("FaceBinding");
         }
-        if (tokenizer.atSTag("FACSConverterData"))
+        else if (tokenizer.atSTag("FACSConverterData"))
         {
             attrMap = tokenizer.getAttributes();
             fconv = new FACSConverter(new Resources(adapter.getOptionalAttribute("resources", attrMap, "")),adapter.getRequiredAttribute("filename", attrMap, tokenizer));
