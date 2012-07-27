@@ -5,6 +5,7 @@ import asap.realizer.feedback.FeedbackManager;
 import asap.realizer.pegboard.BMLBlockPeg;
 import asap.realizer.planunit.TimedPlanUnitPlayException;
 import asap.utils.FACSFaceEmbodiment;
+import asap.utils.AUConfig;
 
 /**
  * Uses an FACSFaceInput to remotely control a FACSFaceEmbodiment
@@ -27,6 +28,9 @@ public class RemoteFaceFACSTMU extends LiveMocapTMU
     @Override
     protected void playUnit(double time) throws TimedPlanUnitPlayException
     {
-        faceEmbodiment.setAUs(faceInput.getAUConfigs());        
+    		AUConfig[] configs = faceInput.getAUConfigs();
+    		if( configs != null ) {
+        		faceEmbodiment.setAUs(faceInput.getAUConfigs());        
+        }
     }
 }

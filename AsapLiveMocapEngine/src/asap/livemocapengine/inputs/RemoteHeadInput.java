@@ -18,11 +18,24 @@ public class RemoteHeadInput implements EulerInput
     private float yaw;
     private BufferedReader in;
     private MyThread serverThread;
+    
+    private String hostName;
+    private int port;
 
     //("localhost", 9123)
     public void connectToServer(String hostName, int port)
     {
-        try
+    		this.hostName = hostName;
+    		this.port = port;
+        connectToServer();
+        
+        serverThread = new MyThread();
+        serverThread.start();
+    }
+    
+    public void connectToServer()
+    {
+    		try
         {
             Socket socket = new Socket(hostName, port);
             in = new BufferedReader(new InputStreamReader(socket.getInputStream()));
@@ -34,13 +47,7 @@ public class RemoteHeadInput implements EulerInput
         }
         catch (IOException e)
         {
-            System.out.println("Could not connect to localhost");
             in = null;
-        }
-        serverThread = new MyThread();
-        if (in != null)
-        {
-            serverThread.start();
         }
     }
 
@@ -75,6 +82,8 @@ public class RemoteHeadInput implements EulerInput
                             }
                         }
                     }
+                } else {
+                		connectToServer();
                 }
             }
         }

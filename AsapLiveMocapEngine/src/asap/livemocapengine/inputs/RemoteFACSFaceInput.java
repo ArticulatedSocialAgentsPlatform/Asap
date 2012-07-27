@@ -7,6 +7,7 @@ import java.net.Socket;
 import java.net.UnknownHostException;
 
 import asap.utils.AUConfig;
+import asap.utils.Side;
 
 /**
  * Reads head input from Mark's sensor system
@@ -18,8 +19,10 @@ public class RemoteFACSFaceInput implements FACSFaceInput
     private String id;
     private BufferedReader in;
     private MyThread serverThread;
-    //private final static String HOST = "130.89.228.90";
-    //private final static int PORT = 9123;
+    private AUConfig[] aus = new AUConfig[84];
+
+    private String hostName;
+    private int port;
     
     @Override
     public String getId()
@@ -29,25 +32,29 @@ public class RemoteFACSFaceInput implements FACSFaceInput
 
     public void connectToServer(String hostName, int port)
     {
-        try
+        this.hostName = hostName;
+    		this.port = port;
+        connectToServer();
+        
+        serverThread = new MyThread();
+        serverThread.start();
+    }
+    
+    public void connectToServer()
+    {
+    		try
         {
             Socket socket = new Socket(hostName, port);
             in = new BufferedReader(new InputStreamReader(socket.getInputStream()));
         }
         catch (UnknownHostException e)
         {
-            System.out.println("Unknown host " + hostName);
+            System.out.println("Unknown host");
             in = null;
         }
         catch (IOException e)
         {
-            System.out.println("Could not connect to " + hostName);
             in = null;
-        }
-        serverThread = new MyThread();
-        if (in != null)
-        {
-            serverThread.start();
         }
     }
     
@@ -78,7 +85,13 @@ public class RemoteFACSFaceInput implements FACSFaceInput
                         if (recValues.length == 84)
                         {
                             synchronized (this)
-                            {
+                            {	
+                            		for( int i=0; i<42; i++ ) {
+                            			aus[i] = new AUConfig(Side.LEFT, i, Float.valueOf(recValues[i]));
+                            		}
+                            		for( int i=42; i<84; i++ ) {
+                            			aus[i] = new AUConfig(Side.RIGHT, i-42, Float.valueOf(recValues[i]));
+                            		}
                                 /*
                                 faceValues = new Float[84];
                                 for (int i = 0; i < 84; i++)
@@ -89,15 +102,16 @@ public class RemoteFACSFaceInput implements FACSFaceInput
                             }
                         }
                     }
+                } else {
+                		connectToServer();
                 }
             }
         }
     }
     @Override
-    public AUConfig[] getAUConfigs()
+    public synchronized AUConfig[] getAUConfigs()
     {
-        // TODO Auto-generated method stub
-        return null;
+        return aus;
     }
 
 }
