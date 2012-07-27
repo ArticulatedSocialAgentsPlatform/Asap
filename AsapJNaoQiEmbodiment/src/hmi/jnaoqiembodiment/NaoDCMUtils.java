@@ -54,4 +54,9 @@ public final class NaoDCMUtils
     {
         set(joint+"/Position/Actuator/Value",value,dcmProxy);
     }
+    
+    public static void setJointRotation(String joint, float value, int timeOffset, DCMProxy dcmProxy)
+    {
+        set(joint+"/Position/Actuator/Value",value,timeOffset, dcmProxy);
+    }
 }

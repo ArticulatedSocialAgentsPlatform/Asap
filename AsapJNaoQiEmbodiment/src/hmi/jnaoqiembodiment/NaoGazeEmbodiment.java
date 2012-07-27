@@ -48,8 +48,8 @@ public class NaoGazeEmbodiment implements GazeEmbodiment
         float rpy[] = new float[3];
         Quat4f.getRollPitchYaw(q, rpy);
         System.out.println("Setting rpy: "+Vec3f.toString(rpy));
-        NaoDCMUtils.setJointRotation("HeadYaw", rpy[2], dcmProxy);
-        NaoDCMUtils.setJointRotation("HeadPitch", rpy[1], dcmProxy);
+        NaoDCMUtils.setJointRotation("HeadYaw", rpy[2], 100, dcmProxy);
+        NaoDCMUtils.setJointRotation("HeadPitch", rpy[1], 100, dcmProxy);
     }
     
     public void shutdown()
