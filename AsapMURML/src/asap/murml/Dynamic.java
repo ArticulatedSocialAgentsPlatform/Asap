@@ -4,35 +4,29 @@ import hmi.xml.XMLTokenizer;
 
 import java.io.IOException;
 
-import lombok.Getter;
-
 /**
- * MURML definition parser
+ * Parses the MURML dynamic element
  * @author hvanwelbergen
- *
  */
-public class Definition extends MURMLElement
+public class Dynamic extends MURMLElement
 {
-    @Getter private Posture posture;
-    @Getter private Keyframing keyframing; 
+    private Keyframing keyframing;
+    
     
     @Override
     public void decodeContent(XMLTokenizer tokenizer) throws IOException
     {
         String tag = tokenizer.getTagName();
-        if (tag.equals(Posture.xmlTag()))
-        {
-            posture = new Posture();
-            posture.readXML(tokenizer);
-        }
         if (tag.equals(Keyframing.xmlTag()))
         {
             keyframing = new Keyframing();
             keyframing.readXML(tokenizer);
-        }        
+        }
+        //keyframing
+        //dynamicElement
     }
     
-    private static final String XMLTAG = "definition";
+    private static final String XMLTAG = "dynamic";
 
     public static String xmlTag()
     {
