@@ -34,6 +34,8 @@ import hmi.physics.mixed.MixedSystem;
 import java.util.ArrayList;
 import java.util.List;
 
+import lombok.Getter;
+import lombok.Setter;
 import lombok.extern.slf4j.Slf4j;
 import net.jcip.annotations.GuardedBy;
 import asap.animationengine.mixed.MixedPlayer;
@@ -57,6 +59,9 @@ public class AnimationPlayer implements Player, MixedAnimationPlayer
     private VJoint vCurr;
     private VJoint vNext;
     private VJoint vAdditive;
+    
+    @Getter @Setter
+    private String gazeTarget;
 
     private PhysicalHumanoid pHuman;
 
@@ -197,6 +202,7 @@ public class AnimationPlayer implements Player, MixedAnimationPlayer
     @Override
     public synchronized void reset(double time)
     {
+        gazeTarget = null;
         prevValid = false;
         vPrevStartPose.setToTarget();
         vCurrStartPose.setToTarget();

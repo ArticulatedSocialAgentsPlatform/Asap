@@ -58,7 +58,7 @@ import com.google.common.collect.ImmutableSet;
  * Timing: ready: gaze target reached relax: start to move back to previous pose
  * (should be rest pose?)
  * 
- * @author welberge TODO: spread rotation over multiple joints, a la Boulic?
+ * @author welberge
  * 
  *         Theoretical background
  * 
