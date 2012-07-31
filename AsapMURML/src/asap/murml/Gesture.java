@@ -25,6 +25,7 @@ public class Gesture extends MURMLElement
     @Getter
     private List<Function>functions = new ArrayList<Function>();
     
+    @Getter
     private Constraints constraints;
     
     @Override

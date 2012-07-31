@@ -4,6 +4,8 @@ import hmi.xml.XMLTokenizer;
 
 import java.io.IOException;
 
+import lombok.Getter;
+
 /**
  * Parser for the MURML constraints element
  * @author hvanwelbergen
@@ -11,10 +13,18 @@ import java.io.IOException;
  */
 public class Constraints extends MURMLElement
 {
+    @Getter
+    private Dynamic dynamic;
+    
     @Override
     public void decodeContent(XMLTokenizer tokenizer) throws IOException
     {
-        //dynamic
+        String tag = tokenizer.getTagName();
+        if (tag.equals(Dynamic.xmlTag()))
+        {
+            dynamic = new Dynamic();
+            dynamic.readXML(tokenizer);
+        }
         //parallel
     }
     

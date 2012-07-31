@@ -3,6 +3,9 @@ package asap.murml;
 import hmi.xml.XMLTokenizer;
 
 import java.io.IOException;
+import java.util.HashMap;
+
+import lombok.Getter;
 
 /**
  * Parses the MURML dynamic element
@@ -10,8 +13,14 @@ import java.io.IOException;
  */
 public class Dynamic extends MURMLElement
 {
+    @Getter
     private Keyframing keyframing;
     
+    @Getter
+    private Slot slot;
+    
+    @Getter
+    private String scope;
     
     @Override
     public void decodeContent(XMLTokenizer tokenizer) throws IOException
@@ -21,9 +30,19 @@ public class Dynamic extends MURMLElement
         {
             keyframing = new Keyframing();
             keyframing.readXML(tokenizer);
-        }
-        //keyframing
+        }        
         //dynamicElement
+    }
+    
+    @Override
+    public void decodeAttributes(HashMap<String, String> attrMap, XMLTokenizer tokenizer)
+    {
+        scope = getOptionalAttribute("scope", attrMap);
+        String sl = getOptionalAttribute("slot", attrMap);
+        if(sl!=null)
+        {
+            slot = Slot.valueOf(sl);
+        }
     }
     
     private static final String XMLTAG = "dynamic";

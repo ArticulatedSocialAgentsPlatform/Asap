@@ -45,7 +45,7 @@ public class Keyframing extends MURMLElement
     {
         mode = Mode.valueOf(getOptionalAttribute("mode", attrMap,"spline").toUpperCase());
         priority = getOptionalIntAttribute("priority", attrMap, 0);
-        easescale = getOptionalIntAttribute("easescale", attrMap, 1);
+        easescale = getOptionalDoubleAttribute("easescale", attrMap, 1);
         applyMode = ApplyMode.valueOf(getOptionalAttribute("applymode", attrMap,"exclusive").toUpperCase());
         name = getOptionalAttribute("name", attrMap,"KF_Anim_");
         easeturningpoint = getOptionalDoubleAttribute("easeturningpoint", attrMap, 0.5);
