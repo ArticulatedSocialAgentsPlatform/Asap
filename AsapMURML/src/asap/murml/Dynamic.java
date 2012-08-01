@@ -17,6 +17,10 @@ public class Dynamic extends MURMLElement
     private Keyframing keyframing;
     
     @Getter
+    private DynamicElement dynamicElement;
+    
+    
+    @Getter
     private Slot slot;
     
     @Getter
@@ -30,8 +34,12 @@ public class Dynamic extends MURMLElement
         {
             keyframing = new Keyframing();
             keyframing.readXML(tokenizer);
-        }        
-        //dynamicElement
+        }    
+        else if (tag.equals(DynamicElement.xmlTag()))
+        {
+            dynamicElement = new DynamicElement();
+            dynamicElement.readXML(tokenizer);
+        }
     }
     
     @Override

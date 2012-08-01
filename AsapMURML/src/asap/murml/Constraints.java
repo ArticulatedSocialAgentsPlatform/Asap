@@ -9,13 +9,16 @@ import lombok.Getter;
 /**
  * Parser for the MURML constraints element
  * @author hvanwelbergen
- *
+ * 
  */
 public class Constraints extends MURMLElement
 {
     @Getter
     private Dynamic dynamic;
-    
+
+    @Getter
+    private Parallel parallel;
+
     @Override
     public void decodeContent(XMLTokenizer tokenizer) throws IOException
     {
@@ -25,9 +28,13 @@ public class Constraints extends MURMLElement
             dynamic = new Dynamic();
             dynamic.readXML(tokenizer);
         }
-        //parallel
+        else if (tag.equals(Parallel.xmlTag()))
+        {
+            parallel = new Parallel();
+            parallel.readXML(tokenizer);
+        }
     }
-    
+
     private static final String XMLTAG = "constraints";
 
     public static String xmlTag()
