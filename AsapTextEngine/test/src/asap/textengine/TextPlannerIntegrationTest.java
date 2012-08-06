@@ -1,4 +1,4 @@
-package asap.speechengine;
+package asap.textengine;
 
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.collection.IsCollectionWithSize.hasSize;
@@ -44,13 +44,13 @@ import asap.realizer.scheduler.TimePegAndConstraint;
  * @author welberge
  */
 @RunWith(PowerMockRunner.class)
-@PrepareForTest({ BMLBlockManager.class, TimedTextSpeechUnit.class })
+@PrepareForTest({ BMLBlockManager.class, TimedSpeechTextUnit.class })
 public class TextPlannerIntegrationTest
 {
     TextOutput mockTextOutput = mock(TextOutput.class);
     private BMLBlockManager mockBmlBlockManager = mock(BMLBlockManager.class);
     private FeedbackManager fbManager = new FeedbackManagerImpl(mockBmlBlockManager, "character1");
-    private PlanManager<TimedTextSpeechUnit> planManager = new PlanManager<TimedTextSpeechUnit>();
+    private PlanManager<TimedSpeechTextUnit> planManager = new PlanManager<TimedSpeechTextUnit>();
 
     @Test
     public void testPlayExceptionLeadsToBMLException() throws BehaviourPlanningException, InterruptedException, IOException,
@@ -58,7 +58,7 @@ public class TextPlannerIntegrationTest
     {
         // checks if TextUnit failure properly appears as BMLWarningFeedback
         List<BMLWarningFeedback> exceptionList = new ArrayList<BMLWarningFeedback>();
-        Player vp = new DefaultPlayer(new MultiThreadedPlanPlayer<TimedTextSpeechUnit>(fbManager, planManager));
+        Player vp = new DefaultPlayer(new MultiThreadedPlanPlayer<TimedSpeechTextUnit>(fbManager, planManager));
         TextPlanner textP = new TextPlanner(fbManager, mockTextOutput, planManager);
         fbManager.addWarningListener(new ListBMLWarningListener(exceptionList));
         final BMLBlockPeg bbPeg = new BMLBlockPeg("Peg1", 0.3);
@@ -71,9 +71,9 @@ public class TextPlannerIntegrationTest
 
         sacs.add(new TimePegAndConstraint("start", sp, new Constraint(), 0, false));
 
-        TimedTextSpeechUnit pu = textP.resolveSynchs(bbPeg, beh, sacs);
+        TimedSpeechTextUnit pu = textP.resolveSynchs(bbPeg, beh, sacs);
 
-        TimedTextSpeechUnit spyPu = spy(pu);
+        TimedSpeechTextUnit spyPu = spy(pu);
         doThrow(new TimedPlanUnitPlayException("Play failed!", pu)).when(spyPu).play(anyDouble());
 
         spyPu.setState(TimedPlanUnitState.LURKING);

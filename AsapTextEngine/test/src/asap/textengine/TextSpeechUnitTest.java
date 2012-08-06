@@ -1,4 +1,4 @@
-package asap.speechengine;
+package asap.textengine;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
@@ -34,7 +34,7 @@ import asap.realizertestutil.planunit.AbstractTimedPlanUnitTest;
  */
 @RunWith(PowerMockRunner.class)
 @PrepareForTest(BMLBlockManager.class)
-public class TextSpeechUnitTest extends AbstractTimedPlanUnitTest
+public class SpeechTextUnitTest extends AbstractTimedPlanUnitTest
 {
     private TextOutput mockOutput = mock(TextOutput.class);
     private BMLBlockManager mockBmlBlockManager = mock(BMLBlockManager.class);
@@ -50,7 +50,7 @@ public class TextSpeechUnitTest extends AbstractTimedPlanUnitTest
     @Override
     protected TimedPlanUnit setupPlanUnit(FeedbackManager bfm, BMLBlockPeg bbPeg, String id, String bmlId, double startTime)
     {
-        TimedTextSpeechUnit textUnit = new TimedTextSpeechUnit(bfm, bbPeg, "Hello world", bmlId, id,mockOutput);
+        TimedSpeechTextUnit textUnit = new TimedSpeechTextUnit(bfm, bbPeg, "Hello world", bmlId, id,mockOutput);
         TimePeg start = new TimePeg(bbPeg);
         start.setGlobalValue(startTime);
         textUnit.setStart(start);
@@ -60,7 +60,7 @@ public class TextSpeechUnitTest extends AbstractTimedPlanUnitTest
     @Test
     public void testSpeak() throws TimedPlanUnitPlayException
     {
-        TimedTextSpeechUnit textUnit = new TimedTextSpeechUnit(fbManager, BMLBlockPeg.GLOBALPEG, "Hello world", "bml1", "speech1",
+    	TimedSpeechTextUnit textUnit = new TimedSpeechTextUnit(fbManager, BMLBlockPeg.GLOBALPEG, "Hello world", "bml1", "speech1",
                 mockOutput);
         List<BMLSyncPointProgressFeedback> fbList = new ArrayList<BMLSyncPointProgressFeedback>();
         ListFeedbackListener fbl = new ListFeedbackListener(fbList);
@@ -85,7 +85,7 @@ public class TextSpeechUnitTest extends AbstractTimedPlanUnitTest
     @Test
     public void testSpeakWithSync() throws TimedPlanUnitPlayException
     {
-        TimedTextSpeechUnit textUnit = new TimedTextSpeechUnit(fbManager, BMLBlockPeg.GLOBALPEG, "Hello<sync id=\"s1\"/> world", "bml1",
+    	TimedSpeechTextUnit textUnit = new TimedSpeechTextUnit(fbManager, BMLBlockPeg.GLOBALPEG, "Hello<sync id=\"s1\"/> world", "bml1",
                 "speech1", mockOutput);
         List<BMLSyncPointProgressFeedback> fbList = new ArrayList<BMLSyncPointProgressFeedback>();
         ListFeedbackListener fbl = new ListFeedbackListener(fbList);

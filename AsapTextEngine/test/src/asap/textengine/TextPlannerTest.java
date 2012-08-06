@@ -1,4 +1,4 @@
-package asap.speechengine;
+package asap.textengine;
 
 import static org.mockito.Mockito.mock;
 
@@ -16,10 +16,10 @@ import asap.realizer.scheduler.BMLBlockManager;
  */
 @RunWith(PowerMockRunner.class)
 @PrepareForTest(BMLBlockManager.class)
-public class TextPlannerTest extends AbstractSpeechPlannerTest<TimedTextSpeechUnit>
+public class TextPlannerTest extends AbstractTextPlannerTest<TimedSpeechTextUnit>
 {
     private TextOutput mockTextOutput = mock(TextOutput.class);
-    private PlanManager<TimedTextSpeechUnit> planManager = new PlanManager<TimedTextSpeechUnit>();
+    private PlanManager<TimedSpeechTextUnit> planManager = new PlanManager<TimedSpeechTextUnit>();
     
     @Before
     public void setup()
