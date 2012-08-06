@@ -1,7 +1,7 @@
 package asap.animationengine.procanimation;
 
-import asap.animationengine.motionunit.AnimationUnit;
 import hmi.util.Resources;
+import asap.animationengine.motionunit.AnimationUnit;
 
 /**
  * Motion unit with a flexible start and end, bound to another motion unit 

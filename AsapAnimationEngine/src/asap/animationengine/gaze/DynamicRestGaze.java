@@ -5,6 +5,7 @@ import hmi.math.Quat4f;
 import hmi.math.Vec3f;
 import hmi.neurophysics.EyeSaturation;
 import hmi.neurophysics.ListingsLaw;
+import hmi.worldobjectenvironment.WorldObject;
 
 import java.util.Set;
 
@@ -16,7 +17,6 @@ import asap.realizer.feedback.FeedbackManager;
 import asap.realizer.pegboard.BMLBlockPeg;
 import asap.realizer.pegboard.PegBoard;
 import asap.realizer.planunit.ParameterException;
-import asap.realizer.world.WorldObject;
 
 /**
  * Dynamically keeps the gaze on target. Creates transitions that are also dynamic.

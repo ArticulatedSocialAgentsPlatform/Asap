@@ -28,6 +28,8 @@ import hmi.physics.PhysicalHumanoid;
 import hmi.physics.PhysicalSegment;
 import hmi.physics.controller.PhysicalController;
 import hmi.physics.mixed.MixedSystem;
+import hmi.util.PhysicsSync;
+import hmi.worldobjectenvironment.WorldObjectManager;
 
 import java.util.ArrayList;
 import java.util.HashSet;
@@ -40,8 +42,6 @@ import asap.animationengine.mixed.MixedSystemGenerator;
 import asap.animationengine.restpose.RestPose;
 import asap.realizer.Player;
 import asap.realizer.planunit.TimedPlanUnitState;
-import asap.realizer.world.WorldObjectManager;
-import asap.utils.PhysicsSync;
 
 /**
  * Manages the execution of a plan containing TimedMotionUnits. The AnimationPlayer is different from the DefaultPlayer in that the TimedMotionUnits

@@ -18,27 +18,31 @@
  ******************************************************************************/
 package asap.animationengine.gesturebinding;
 
-import hmi.util.*;
-import hmi.xml.*;
+import hmi.util.Resources;
+import hmi.xml.XMLScanException;
+import hmi.xml.XMLStructureAdapter;
+import hmi.xml.XMLTokenizer;
 
-import java.io.*;
-import java.util.*;
+import java.io.IOException;
+import java.util.ArrayList;
+import java.util.List;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import saiba.bml.BMLInfo;
+import saiba.bml.core.Behaviour;
+import saiba.bml.core.PostureShiftBehaviour;
 import asap.animationengine.AnimationPlayer;
-import asap.animationengine.motionunit.*;
+import asap.animationengine.motionunit.AnimationUnit;
+import asap.animationengine.motionunit.MUSetupException;
+import asap.animationengine.motionunit.TimedAnimationUnit;
 import asap.animationengine.restpose.RestPose;
 import asap.binding.SpecParameterDefault;
 import asap.realizer.feedback.FeedbackManager;
 import asap.realizer.pegboard.BMLBlockPeg;
 import asap.realizer.pegboard.PegBoard;
 import asap.realizer.planunit.ParameterException;
-
-import saiba.bml.BMLInfo;
-import saiba.bml.core.Behaviour;
-import saiba.bml.core.PostureShiftBehaviour;
 
 /**
  * The GestureBinding maps from BML to a set of motionunits

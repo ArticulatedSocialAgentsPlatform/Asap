@@ -51,7 +51,7 @@ import asap.realizer.pegboard.PegBoard;
 import asap.realizer.pegboard.TimePeg;
 import asap.realizer.planunit.ParameterException;
 import asap.realizer.planunit.TimedPlanUnitState;
-import asap.utils.SchedulingClock;
+import hmi.util.Clock;
 import saiba.bml.feedback.BMLBlockPredictionFeedback;
 import saiba.bml.feedback.BMLPredictionFeedback;
 import saiba.bml.feedback.BMLWarningFeedback;
@@ -81,7 +81,7 @@ public final class BMLScheduler
 
     private final PegBoard pegBoard;
 
-    private final SchedulingClock schedulingClock;
+    private final Clock schedulingClock;
 
     private final SchedulingHandler schedulingHandler;
 
@@ -113,10 +113,10 @@ public final class BMLScheduler
 
     public double getSchedulingTime()
     {
-        return schedulingClock.getTime();
+        return schedulingClock.getMediaSeconds();
     }
 
-    public BMLScheduler(String characterId, BMLParser s, FeedbackManager bfm, SchedulingClock c, SchedulingHandler sh, BMLBlockManager bbm,
+    public BMLScheduler(String characterId, BMLParser s, FeedbackManager bfm, Clock c, SchedulingHandler sh, BMLBlockManager bbm,
             PegBoard pb)
     {
         fbManager = bfm;
@@ -267,7 +267,7 @@ public final class BMLScheduler
     {
         for (Engine e : getEngines())
         {
-            e.reset(schedulingClock.getTime());
+            e.reset(schedulingClock.getMediaSeconds());
         }
         bmlBlocksManager.updateBlocks();
         bmlBlocksManager.clear();
@@ -354,14 +354,14 @@ public final class BMLScheduler
      */
     public void blockStopFeedback(String bmlId)
     {
-        BMLBlockProgressFeedback psf = new BMLBlockProgressFeedback(bmlId, "end", schedulingClock.getTime());
+        BMLBlockProgressFeedback psf = new BMLBlockProgressFeedback(bmlId, "end", schedulingClock.getMediaSeconds());
         fbManager.blockProgress(psf);
     }
 
     public void blockStartFeedback(String bmlId)
     {
         //BMLBlockProgress psf = new BMLPerformanceStartFeedback(bmlId, schedulingClock.getTime(), predictEndTime(bmlId));
-        BMLBlockProgressFeedback psf = new BMLBlockProgressFeedback(bmlId, "start", schedulingClock.getTime());
+        BMLBlockProgressFeedback psf = new BMLBlockProgressFeedback(bmlId, "start", schedulingClock.getMediaSeconds());
         fbManager.blockProgress(psf);
     }
 
@@ -380,7 +380,7 @@ public final class BMLScheduler
     {
         for (Engine e : getEngines())
         {
-            e.stopBehaviour(bmlId, behaviourId, schedulingClock.getTime());
+            e.stopBehaviour(bmlId, behaviourId, schedulingClock.getMediaSeconds());
         }
         pegBoard.removeBehaviour(bmlId, behaviourId);
     }
@@ -414,7 +414,7 @@ public final class BMLScheduler
     public double predictSubsidingTime(String bmlId)
     {
         List<Double> subsidingTimes = new ArrayList<Double>();
-        subsidingTimes.add(schedulingClock.getTime());
+        subsidingTimes.add(schedulingClock.getMediaSeconds());
         for (Engine e : getEngines())
         {
             subsidingTimes.add(e.getBlockSubsidingTime(bmlId));
@@ -428,7 +428,7 @@ public final class BMLScheduler
     public double predictSubsidingTime(Set<String> bmlIds)
     {
         List<Double> subsidingTimes = new ArrayList<Double>();
-        subsidingTimes.add(schedulingClock.getTime());
+        subsidingTimes.add(schedulingClock.getMediaSeconds());
         for (String bmlId : bmlIds)
         {
             subsidingTimes.add(predictSubsidingTime(bmlId));
@@ -442,7 +442,7 @@ public final class BMLScheduler
     public double predictEndTime(Set<String> bmlIds)
     {
         List<Double> endTimes = new ArrayList<Double>();
-        endTimes.add(schedulingClock.getTime());
+        endTimes.add(schedulingClock.getMediaSeconds());
         for (String bmlId : bmlIds)
         {
             endTimes.add(predictEndTime(bmlId));
@@ -457,7 +457,7 @@ public final class BMLScheduler
     public double predictEndTime(String blockId)
     {
         List<Double> endTimes = new ArrayList<Double>();
-        endTimes.add(schedulingClock.getTime());
+        endTimes.add(schedulingClock.getMediaSeconds());
         for (Engine e : getEngines())
         {
             endTimes.add(e.getBlockEndTime(blockId));
@@ -482,7 +482,7 @@ public final class BMLScheduler
     {
         for (Engine e : getEngines())
         {
-            e.stopBehaviour(bmlId, behaviourId, schedulingClock.getTime());
+            e.stopBehaviour(bmlId, behaviourId, schedulingClock.getMediaSeconds());
         }
         bmlBlocksManager.updateBlocks();
     }
@@ -491,7 +491,7 @@ public final class BMLScheduler
     {
         for (Engine e : getEngines())
         {
-            e.interruptBehaviour(bmlId, behaviourId, schedulingClock.getTime());
+            e.interruptBehaviour(bmlId, behaviourId, schedulingClock.getMediaSeconds());
         }
         bmlBlocksManager.updateBlocks();
     }
@@ -509,7 +509,7 @@ public final class BMLScheduler
 
         for (Engine e : getEngines())
         {
-            e.stopBehaviourBlock(bmlId, schedulingClock.getTime());
+            e.stopBehaviourBlock(bmlId, schedulingClock.getMediaSeconds());
         }
 
         if (bmlBlocksManager.getBMLBlockState(bmlId) == TimedPlanUnitState.IN_EXEC
@@ -546,7 +546,7 @@ public final class BMLScheduler
             return;
         }
 
-        pegBoard.setBMLBlockTime(bmlId, schedulingClock.getTime());
+        pegBoard.setBMLBlockTime(bmlId, schedulingClock.getMediaSeconds());
         logger.debug("Starting bml block {}", bmlId);
 
         bmlBlocksManager.startBlock(bmlId);

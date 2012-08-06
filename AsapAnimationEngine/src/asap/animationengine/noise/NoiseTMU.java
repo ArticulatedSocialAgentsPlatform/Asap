@@ -19,7 +19,7 @@
 package asap.animationengine.noise;
 
 import saiba.bml.feedback.BMLSyncPointProgressFeedback;
-import asap.animationengine.motionunit.*;
+import asap.animationengine.motionunit.TimedAnimationUnit;
 import asap.motionunit.MUPlayException;
 import asap.motionunit.TMUPlayException;
 import asap.realizer.feedback.FeedbackManager;
@@ -27,7 +27,6 @@ import asap.realizer.pegboard.BMLBlockPeg;
 import asap.realizer.pegboard.PegBoard;
 import asap.realizer.planunit.KeyPosition;
 import asap.realizer.planunit.TimedPlanUnitPlayException;
-import saiba.bml.feedback.*;
 
 /**
  * Timed motion unit for noise motion units.

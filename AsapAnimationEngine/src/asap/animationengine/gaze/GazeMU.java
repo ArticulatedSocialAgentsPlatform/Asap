@@ -26,6 +26,8 @@ import hmi.neurophysics.DondersLaw;
 import hmi.neurophysics.EyeSaturation;
 import hmi.neurophysics.ListingsLaw;
 import hmi.util.StringUtil;
+import hmi.worldobjectenvironment.WorldObject;
+import hmi.worldobjectenvironment.WorldObjectManager;
 
 import java.util.List;
 import java.util.Set;
@@ -49,8 +51,6 @@ import asap.realizer.planunit.ParameterException;
 import asap.realizer.planunit.ParameterNotFoundException;
 import asap.realizer.util.timemanipulator.SigmoidManipulator;
 import asap.realizer.util.timemanipulator.TimeManipulator;
-import asap.realizer.world.WorldObject;
-import asap.realizer.world.WorldObjectManager;
 
 import com.google.common.collect.ImmutableSet;
 

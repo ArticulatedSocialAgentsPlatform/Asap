@@ -6,11 +6,10 @@ import java.util.HashMap;
 import java.util.List;
 
 import lombok.Getter;
-
-import com.google.common.collect.ImmutableList;
-
 import saiba.bml.core.Behaviour;
 import saiba.bml.parser.SyncPoint;
+
+import com.google.common.collect.ImmutableList;
 
 /**
  * Superclass for all LiveMocapBehaviours

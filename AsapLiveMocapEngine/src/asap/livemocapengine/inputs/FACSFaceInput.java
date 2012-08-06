@@ -1,7 +1,7 @@
 package asap.livemocapengine.inputs;
 
-import asap.utils.AUConfig;
-import asap.utils.Sensor;
+import hmi.environmentbase.Sensor;
+import hmi.faceembodiments.AUConfig;
 
 /**
  * A sensor for ekman's action units

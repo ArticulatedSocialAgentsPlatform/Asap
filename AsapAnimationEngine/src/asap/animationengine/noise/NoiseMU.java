@@ -18,7 +18,7 @@
  ******************************************************************************/
 package asap.animationengine.noise;
 
-import asap.animationengine.motionunit.*;
+import asap.animationengine.motionunit.AnimationUnit;
 
 /**
  * Motion unit for noise to a joint.

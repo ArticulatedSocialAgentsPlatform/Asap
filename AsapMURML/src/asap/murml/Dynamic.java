@@ -16,8 +16,8 @@ public class Dynamic extends MURMLElement
     @Getter
     private Keyframing keyframing;
     
-    @Getter
-    private Slot slot;
+    //@Getter
+    //private Slot slot;
     
     @Getter
     private String scope;
@@ -41,7 +41,7 @@ public class Dynamic extends MURMLElement
         String sl = getOptionalAttribute("slot", attrMap);
         if(sl!=null)
         {
-            slot = Slot.valueOf(sl);
+            //slot = Slot.valueOf(sl);
         }
     }
     

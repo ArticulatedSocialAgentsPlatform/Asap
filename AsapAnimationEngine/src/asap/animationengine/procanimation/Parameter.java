@@ -18,9 +18,11 @@
  ******************************************************************************/
 package asap.animationengine.procanimation;
 
-import java.util.HashMap;
+import hmi.xml.XMLFormatting;
+import hmi.xml.XMLStructureAdapter;
+import hmi.xml.XMLTokenizer;
 
-import hmi.xml.*;
+import java.util.HashMap;
 
 
 /**

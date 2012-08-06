@@ -19,6 +19,8 @@
  ******************************************************************************/
 
 /**
+ * THIS DOCUMENTATION IS OUT OF DATE.
+ * 
  <p>Loading a complete Virtual Human setup, consisting of its Embodiments and its Engines.</p>
 
  <h1>Virtual Human Loader modules</h1>

@@ -11,7 +11,7 @@ import asap.bml.feedback.BMLFeedbackListener;
 import asap.bml.feedback.BMLListener;
 import asap.bml.feedback.BMLPredictionListener;
 import asap.bml.feedback.BMLWarningListener;
-import asap.utils.SchedulingClock;
+import hmi.util.Clock;
 
 
 /**
@@ -28,16 +28,16 @@ public class LogPipe implements RealizerPort, BMLFeedbackListener, BMLWarningLis
     private final Logger requestLogger;
     private final Logger feedbackLogger;
     private final RealizerPort outputBridge;
-    private final SchedulingClock clock;
+    private final Clock schedulingClock;
     private final boolean logRequests;
     private final boolean logFeedback;
     
-    public LogPipe(Logger rl, Logger fl, RealizerPort outBridge, SchedulingClock clock)
+    public LogPipe(Logger rl, Logger fl, RealizerPort outBridge, Clock clock)
     {
         this.requestLogger = rl;
         this.feedbackLogger = fl;
         this.outputBridge = outBridge;
-        this.clock = clock;
+        this.schedulingClock = clock;
         this.logRequests = rl!=null;
         this.logFeedback = fl!=null;
         outputBridge.addListeners(this);        
@@ -79,7 +79,7 @@ public class LogPipe implements RealizerPort, BMLFeedbackListener, BMLWarningLis
     {
       if (logRequests)
       {
-        requestLogger.info("<entry name=\"{}\" time=\"{}\">", requestLogger.getName(), clock.getTime());
+        requestLogger.info("<entry name=\"{}\" time=\"{}\">", requestLogger.getName(), schedulingClock.getMediaSeconds());
         requestLogger.info(bmlString);
         requestLogger.info("</entry>");
       }

@@ -1,14 +1,13 @@
 package asap.livemocapengine.inputs.loader;
 
+import hmi.environmentbase.Environment;
+import hmi.environmentbase.Loader;
+import hmi.environmentbase.SensorLoader;
 import hmi.xml.XMLTokenizer;
 
 import java.io.IOException;
 
-import asap.environment.AsapVirtualHuman;
-import asap.environment.Loader;
-import asap.environment.SensorLoader;
 import asap.livemocapengine.inputs.KeyboardInput;
-import asap.utils.Environment;
 
 /**
  * Loads the KeyboardInput
@@ -27,10 +26,9 @@ public class KeyboardInputLoader implements SensorLoader
     }
 
     @Override
-    public void readXML(XMLTokenizer tokenizer, String newId, AsapVirtualHuman avh, Environment[] environments, Loader... requiredLoaders)
-            throws IOException
+    public void readXML(XMLTokenizer tokenizer, String loaderId, String vhId, String vhName, Environment[] environments, Loader ... requiredLoaders) throws IOException
     {
-        this.id = newId;
+        this.id = loaderId;
         /*
         JFrameEmbodiment jframeEmbodiment = null;
         for(Loader l:requiredLoaders)

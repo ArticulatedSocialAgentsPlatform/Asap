@@ -10,10 +10,8 @@ import java.util.Collection;
 import java.util.HashMap;
 import java.util.Set;
 
-import saiba.bml.core.PostureShiftBehaviour;
-
 import lombok.Getter;
-
+import saiba.bml.core.PostureShiftBehaviour;
 import asap.animationengine.restpose.RestPose;
 import asap.binding.SpecConstraints;
 import asap.binding.SpecParameterDefault;

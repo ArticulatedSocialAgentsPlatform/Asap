@@ -18,18 +18,19 @@
  ******************************************************************************/
 package asap.animationengine.gaze;
 
-import java.util.Set;
-
-import com.google.common.collect.ImmutableSet;
-
-import asap.animationengine.AnimationPlayer;
-import asap.motionunit.MUPlayException;
 import hmi.animation.Hanim;
 import hmi.animation.VJoint;
 import hmi.math.Quat4f;
 import hmi.math.Vec3f;
 import hmi.neurophysics.EyeSaturation;
 import hmi.neurophysics.ListingsLaw;
+
+import java.util.Set;
+
+import asap.animationengine.AnimationPlayer;
+import asap.motionunit.MUPlayException;
+
+import com.google.common.collect.ImmutableSet;
 
 /**
  * Makes the eyes dynamically track a target.

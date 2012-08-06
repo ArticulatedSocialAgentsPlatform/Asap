@@ -1,6 +1,6 @@
 package asap.livemocapengine.inputs;
 
-import asap.utils.Sensor;
+import hmi.environmentbase.Sensor;
 
 /**
  * Input element for euler angles

@@ -18,12 +18,12 @@
  ******************************************************************************/
 package asap.animationengine.procanimation;
 
-import java.util.Vector;
-
 import hmi.animation.VJoint;
 import hmi.math.Quat4f;
 import hmi.xml.XMLStructureAdapter;
 import hmi.xml.XMLTokenizer;
+
+import java.util.Vector;
 
 import org.lsmp.djep.xjep.XJep;
 import org.nfunk.jep.Node;

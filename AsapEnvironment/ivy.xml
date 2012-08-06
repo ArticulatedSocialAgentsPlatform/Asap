@@ -5,11 +5,12 @@
    </configurations>
    <dependencies>
       <dependency org="Asap"      name="AsapRealizer"       transitive="false" rev="latest.${resolve.status}"  />
+      <dependency org="Asap"      name="AsapRealizerEmbodiments"       transitive="false" rev="latest.${resolve.status}"  />
 	  <dependency org="Asap"      name="AsapBML"       transitive="false" rev="latest.${resolve.status}"  />
       
       <dependency org="HMI"      name="HmiXml"             rev="latest.${resolve.status}"  />
       <dependency org="HMI"      name="HmiUtil"            rev="latest.${resolve.status}"  />
-      <dependency org="HMI"      name="AsapUtils"            rev="latest.${resolve.status}"  />
+      <dependency org="HMI"      name="HmiEnvironmentBase"            rev="latest.${resolve.status}"  />
       
 	  <dependency org="saiba"     name="saibabml"           rev="latest.release"    />
       <dependency org="jcip"     name="jcip-annotations"   rev="latest.release"  />   

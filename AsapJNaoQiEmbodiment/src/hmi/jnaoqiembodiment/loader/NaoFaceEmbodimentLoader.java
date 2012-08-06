@@ -1,15 +1,15 @@
 package hmi.jnaoqiembodiment.loader;
 
-import java.io.IOException;
-
+import hmi.environmentbase.EmbodimentLoader;
+import hmi.environmentbase.Environment;
+import hmi.environmentbase.Loader;
 import hmi.jnaoqiembodiment.NaoFaceEmbodiment;
 import hmi.jnaoqiembodiment.NaoQiEmbodiment;
 import hmi.xml.XMLScanException;
 import hmi.xml.XMLTokenizer;
-import asap.environment.AsapVirtualHuman;
-import asap.environment.EmbodimentLoader;
-import asap.environment.Loader;
-import asap.utils.Environment;
+
+import java.io.IOException;
+
 
 /**
  * Constructs a NaoFaceEmbodiment, requires a NaoQiEmbodimentLoader 
@@ -21,10 +21,9 @@ public class NaoFaceEmbodimentLoader implements EmbodimentLoader
     private NaoFaceEmbodiment embodiment;
     
     @Override
-    public void readXML(XMLTokenizer tokenizer, String newId, AsapVirtualHuman avh, Environment[] environments, Loader... requiredLoaders)
-            throws IOException
+    public void readXML(XMLTokenizer tokenizer, String loaderId, String vhId, String vhName, Environment[] environments, Loader ... requiredLoaders) throws IOException
     {
-        this.id = newId;
+        this.id = loaderId;
         
         NaoQiEmbodiment nqEmbodiment = null;
         for (Loader l:requiredLoaders)

@@ -1,8 +1,8 @@
 package asap.livemocapengine.bml;
 
-import java.io.IOException;
-
 import hmi.xml.XMLTokenizer;
+
+import java.io.IOException;
 
 /**
  * Directly connects recorded Face behaviour (in facs) to face output

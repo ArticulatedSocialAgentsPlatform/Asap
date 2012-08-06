@@ -1,5 +1,8 @@
 package hmi.jnaoqiembodiment.loader;
 
+import hmi.environmentbase.EmbodimentLoader;
+import hmi.environmentbase.Environment;
+import hmi.environmentbase.Loader;
 import hmi.jnaoqiembodiment.NaoQiEmbodiment;
 import hmi.xml.XMLScanException;
 import hmi.xml.XMLStructureAdapter;
@@ -9,11 +12,6 @@ import java.io.IOException;
 import java.util.HashMap;
 
 import lombok.Getter;
-
-import asap.environment.AsapVirtualHuman;
-import asap.environment.EmbodimentLoader;
-import asap.environment.Loader;
-import asap.utils.Environment;
 
 /**
  * Loads a naoqiemboidment
@@ -59,10 +57,9 @@ public class NaoQiEmbodimentLoader implements EmbodimentLoader
     }
     
     @Override
-    public void readXML(XMLTokenizer tokenizer, String newId, AsapVirtualHuman avh, Environment[] environments, Loader... requiredLoaders)
-            throws IOException
+    public void readXML(XMLTokenizer tokenizer, String loaderId, String vhId, String vhName, Environment[] environments, Loader ... requiredLoaders) throws IOException
     {
-        this.id = newId;
+        this.id = loaderId;
         NaoQiElement nq = null;
         if(tokenizer.atSTag(NaoQiElement.xmlTag()))
         {

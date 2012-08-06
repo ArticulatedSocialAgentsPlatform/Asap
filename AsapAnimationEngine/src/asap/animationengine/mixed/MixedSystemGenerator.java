@@ -1,9 +1,5 @@
 package asap.animationengine.mixed;
 
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.List;
-
 import hmi.animation.Hanim;
 import hmi.animation.VJoint;
 import hmi.math.Vec3f;
@@ -17,6 +13,10 @@ import hmi.physics.assembler.PhysicalSegmentAssembler;
 import hmi.physics.inversedynamics.IDBranch;
 import hmi.physics.inversedynamics.IDSegment;
 import hmi.physics.mixed.MixedSystem;
+
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.List;
 
 /**
  * Can generate a mixed system given a list of required and desired physical joints

@@ -1,10 +1,10 @@
 package asap.livemocapengine.planunit;
 
+import hmi.headandgazeembodiments.GazeEmbodiment;
 import asap.livemocapengine.inputs.PositionInput;
 import asap.realizer.feedback.FeedbackManager;
 import asap.realizer.pegboard.BMLBlockPeg;
 import asap.realizer.planunit.TimedPlanUnitPlayException;
-import asap.utils.GazeEmbodiment;
 
 /**
  * Gazes at a position provided by a PositionSensor

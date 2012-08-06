@@ -18,7 +18,9 @@
  ******************************************************************************/
 package asap.animationengine.procanimation;
 
-import hmi.animation.*;
+import hmi.animation.AnalyticalIKSolver;
+import hmi.animation.Hanim;
+import hmi.animation.VJoint;
 import hmi.math.Mat3f;
 import hmi.math.Quat4f;
 import hmi.math.Vec3f;

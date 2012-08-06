@@ -11,7 +11,6 @@
       <dependency org="Asap"      transitive="false" name="AsapRealizerTestUtil"        rev="latest.{$resolve.status}"  />
       <dependency org="Asap"      transitive="false" name="AsapTestUtil"        rev="latest.{$resolve.status}"  />
 	  <dependency org="HMI"      name="HmiPhysics"        transitive="false" rev="latest.{$resolve.status}"  />
-	  <dependency org="HMI"      name="HmiPhysics"        transitive="false" rev="latest.{$resolve.status}"  />
 	  <dependency org="HMI"      name="HmiMixedAnimationEnvironment"  transitive="false"      rev="latest.{$resolve.status}"  />
       <dependency org="logback" name="logback-classic"     rev="latest.release"  />
       <dependency org="logback" name="logback-core"        rev="latest.release"  />   

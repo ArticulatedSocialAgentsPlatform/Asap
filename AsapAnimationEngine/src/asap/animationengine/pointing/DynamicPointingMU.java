@@ -18,11 +18,11 @@
  ******************************************************************************/
 package asap.animationengine.pointing;
 
-import asap.animationengine.AnimationPlayer;
-import asap.motionunit.MUPlayException;
 import hmi.animation.AnalyticalIKSolver;
 import hmi.animation.VJoint;
 import hmi.math.Quat4f;
+import asap.animationengine.AnimationPlayer;
+import asap.motionunit.MUPlayException;
 
 /**
  * Motion unit that points at moving targets. 

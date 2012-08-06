@@ -1,10 +1,11 @@
 package hmi.jnaoqiembodiment;
 
+import hmi.faceembodiments.AUConfig;
+import hmi.faceembodiments.FACSFaceEmbodiment;
+import hmi.faceembodiments.Side;
+
 import com.aldebaran.proxy.ALLedsProxy;
 
-import asap.utils.AUConfig;
-import asap.utils.FACSFaceEmbodiment;
-import asap.utils.Side;
 
 /**
  * 

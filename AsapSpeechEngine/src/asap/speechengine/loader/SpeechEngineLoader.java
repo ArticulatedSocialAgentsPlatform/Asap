@@ -20,7 +20,9 @@
 package asap.speechengine.loader;
 
 import hmi.audioenvironment.AudioEnvironment;
-import saiba.bml.core.SpeechBehaviour;
+import hmi.environmentbase.EmbodimentLoader;
+import hmi.environmentbase.Environment;
+import hmi.environmentbase.Loader;
 import hmi.tts.util.XMLPhonemeToVisemeMapping;
 import hmi.util.Resources;
 import hmi.xml.XMLStructureAdapter;
@@ -43,12 +45,7 @@ import javax.swing.SwingUtilities;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import asap.environment.AsapVirtualHuman;
-import asap.environment.EmbodimentLoader;
-import asap.environment.EngineLoader;
-import asap.environment.LipSynchProviderLoader;
-import asap.environment.Loader;
-import asap.environment.impl.JComponentEmbodiment;
+import saiba.bml.core.SpeechBehaviour;
 import asap.realizer.DefaultEngine;
 import asap.realizer.DefaultPlayer;
 import asap.realizer.Engine;
@@ -58,6 +55,10 @@ import asap.realizer.lipsync.LipSynchProvider;
 import asap.realizer.planunit.MultiThreadedPlanPlayer;
 import asap.realizer.planunit.PlanManager;
 import asap.realizer.planunit.PlanPlayer;
+import asap.realizerembodiments.AsapRealizerEmbodiment;
+import asap.realizerembodiments.EngineLoader;
+import asap.realizerembodiments.JComponentEmbodiment;
+import asap.realizerembodiments.LipSynchProviderLoader;
 import asap.speechengine.DirectTTSUnitFactory;
 import asap.speechengine.TTSPlanner;
 import asap.speechengine.TimedTTSUnit;
@@ -66,7 +67,6 @@ import asap.speechengine.WavTTSUnitFactory;
 import asap.speechengine.ttsbinding.MaryTTSBinding;
 import asap.speechengine.ttsbinding.SAPITTSBinding;
 import asap.speechengine.ttsbinding.TTSBinding;
-import asap.utils.Environment;
 
 /**
  * Loads the a SpeechEngine
@@ -112,17 +112,16 @@ public class SpeechEngineLoader implements EngineLoader
     String marydir = "MARYTTS";
 
     String id = "";
-    // some variables cached during loading
-    AsapVirtualHuman theVirtualHuman = null;
-
+    
+    private AsapRealizerEmbodiment are = null;
+    
     private List<LipSynchProvider> lipSyncProviders = new ArrayList<LipSynchProvider>();
 
     @Override
-    public void readXML(XMLTokenizer tokenizer, String newId, AsapVirtualHuman avh, Environment[] environments, Loader... requiredLoaders)
-            throws IOException
+    public void readXML(XMLTokenizer tokenizer, String loaderId, String vhId, String vhName, Environment[] environments, Loader ... requiredLoaders) 
+    	throws IOException
     {
-        id = newId;
-        theVirtualHuman = avh;
+        id = loaderId;
         for (Loader e : requiredLoaders)
         {
             if (e instanceof LipSynchProviderLoader) lipSyncProviders.add(((LipSynchProviderLoader) e).getLipSyncProvider());
@@ -130,6 +129,8 @@ public class SpeechEngineLoader implements EngineLoader
             if (e instanceof EmbodimentLoader && ((EmbodimentLoader) e).getEmbodiment() 
                     instanceof JComponentEmbodiment) jce = (JComponentEmbodiment) ((EmbodimentLoader) e)
                     .getEmbodiment();
+            if (e instanceof EmbodimentLoader && ((EmbodimentLoader) e).getEmbodiment() 
+                    instanceof AsapRealizerEmbodiment) are = (AsapRealizerEmbodiment) ((EmbodimentLoader) e).getEmbodiment();
         }
         for (Environment e : environments)
         {
@@ -137,7 +138,11 @@ public class SpeechEngineLoader implements EngineLoader
         }
         if (aue == null)
         {
-            throw tokenizer.getXMLScanException("Speechengineloaxder requires audioenvironment.");
+            throw tokenizer.getXMLScanException("Speechengineloader requires audioenvironment.");
+        }
+        if (are == null)
+        {
+            throw new RuntimeException("SpeechEngineLoader requires an EmbodimentLoader containing a AsapRealizerEmbodiment");
         }
         logger.debug("Reading SpeechEngine");
         while (!tokenizer.atETag("Loader"))
@@ -233,7 +238,7 @@ public class SpeechEngineLoader implements EngineLoader
     {
 
         speechPlanManager = new PlanManager<TimedTTSUnit>();
-        speechPlanPlayer = new MultiThreadedPlanPlayer<TimedTTSUnit>(theVirtualHuman.getElckerlycRealizer().getFeedbackManager(),
+        speechPlanPlayer = new MultiThreadedPlanPlayer<TimedTTSUnit>(are.getFeedbackManager(),
                 speechPlanManager);
         speechPlayer = new DefaultPlayer(speechPlanPlayer);
         speechPlanner = null;
@@ -283,7 +288,7 @@ public class SpeechEngineLoader implements EngineLoader
         engine.setId(id);
 
         // add engine to realizer;
-        theVirtualHuman.getElckerlycRealizer().addEngine(engine);
+        are.addEngine(engine);
 
         // init ui?
         if (initUI)
@@ -318,16 +323,16 @@ public class SpeechEngineLoader implements EngineLoader
         switch (factory)
         {
         case DIRECT_TTS:
-            ttsFactory = new DirectTTSUnitFactory(theVirtualHuman.getElckerlycRealizer().getFeedbackManager());
+            ttsFactory = new DirectTTSUnitFactory(are.getFeedbackManager());
             break;
         case WAV_TTS:
-            ttsFactory = new WavTTSUnitFactory(theVirtualHuman.getElckerlycRealizer().getFeedbackManager(), aue.getSoundManager());
+            ttsFactory = new WavTTSUnitFactory(are.getFeedbackManager(), aue.getSoundManager());
             break;
         default:
             System.err.println("cannot initialize this factory, wrong type.");
             return null;
         }
-        TTSPlanner ttsPlanner = new TTSPlanner(theVirtualHuman.getElckerlycRealizer().getFeedbackManager(), ttsFactory, ttsBin,
+        TTSPlanner ttsPlanner = new TTSPlanner(are.getFeedbackManager(), ttsFactory, ttsBin,
                 speechPlanManager);
         for (LipSynchProvider lsp : lipSyncProviders)
         {

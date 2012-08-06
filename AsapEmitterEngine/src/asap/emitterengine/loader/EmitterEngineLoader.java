@@ -19,6 +19,9 @@
  ******************************************************************************/
 package asap.emitterengine.loader;
 
+import hmi.environmentbase.EmbodimentLoader;
+import hmi.environmentbase.Environment;
+import hmi.environmentbase.Loader;
 import hmi.xml.XMLStructureAdapter;
 import hmi.xml.XMLTokenizer;
 
@@ -28,9 +31,6 @@ import java.util.HashMap;
 import asap.emitterengine.EmitterInfo;
 import asap.emitterengine.EmitterPlanner;
 import asap.emitterengine.planunit.TimedEmitterUnit;
-import asap.environment.AsapVirtualHuman;
-import asap.environment.EngineLoader;
-import asap.environment.Loader;
 import asap.realizer.DefaultEngine;
 import asap.realizer.DefaultPlayer;
 import asap.realizer.Engine;
@@ -38,7 +38,10 @@ import asap.realizer.Player;
 import asap.realizer.planunit.PlanManager;
 import asap.realizer.planunit.PlanPlayer;
 import asap.realizer.planunit.SingleThreadedPlanPlayer;
-import asap.utils.Environment;
+import asap.realizerembodiments.AsapRealizerEmbodiment;
+import asap.realizerembodiments.EngineLoader;
+import asap.realizerembodiments.JComponentEmbodiment;
+import asap.realizerembodiments.LipSynchProviderLoader;
 
 /**
 
@@ -51,16 +54,24 @@ public class EmitterEngineLoader implements EngineLoader
     private PlanManager<TimedEmitterUnit> planManager = null;
     private Player player = null;
     private String id = "";
-    // some variables cached during loading
-    private AsapVirtualHuman theVirtualHuman = null;
+    
     private Class<?> emitterInfoClass = null;
 
+    private AsapRealizerEmbodiment are = null;
+    
     @Override
-    public void readXML(XMLTokenizer tokenizer, String newId, AsapVirtualHuman avh, Environment[] environments, Loader... requiredLoaders)
-            throws IOException
+    public void readXML(XMLTokenizer tokenizer, String loaderId, String vhId, String vhName, Environment[] environments, Loader ... requiredLoaders) throws IOException
     {
-        id = newId;
-        theVirtualHuman = avh;
+        id = loaderId;
+        for (Loader e : requiredLoaders)
+        {
+            if (e instanceof EmbodimentLoader && ((EmbodimentLoader) e).getEmbodiment() 
+                    instanceof AsapRealizerEmbodiment) are = (AsapRealizerEmbodiment) ((EmbodimentLoader) e).getEmbodiment();
+        }
+        if (are == null)
+        {
+            throw new RuntimeException("EmitterEngineLoader requires an EmbodimentLoader containing a AsapRealizerEmbodiment");
+        }
         while (!tokenizer.atETag("Loader"))
         {
             readSection(tokenizer);
@@ -111,16 +122,15 @@ public class EmitterEngineLoader implements EngineLoader
             throw tokenizer.getXMLScanException("Cannot create EmitterEngine because " + emitterInfoClass + " cannot be instantiated");
         }
         planManager = new PlanManager<TimedEmitterUnit>();
-        PlanPlayer planPlayer = new SingleThreadedPlanPlayer<TimedEmitterUnit>(theVirtualHuman.getElckerlycRealizer().getFeedbackManager(),
+        PlanPlayer planPlayer = new SingleThreadedPlanPlayer<TimedEmitterUnit>(are.getFeedbackManager(),
                 planManager);
         player = new DefaultPlayer(planPlayer);
-        EmitterPlanner planner = new EmitterPlanner(theVirtualHuman.getElckerlycRealizer().getFeedbackManager(), planManager, ei,
-                theVirtualHuman.getRealizerPort());
+        EmitterPlanner planner = new EmitterPlanner(are.getFeedbackManager(), planManager, ei, are.getRealizerPort());
         engine = new DefaultEngine<TimedEmitterUnit>(planner, player, planManager);
         engine.setId(id);
 
         // add engine to realizer;
-        theVirtualHuman.getElckerlycRealizer().addEngine(engine);
+        are.addEngine(engine);
 
     }
 

@@ -1,9 +1,11 @@
 package asap.livemocapengine;
 
+import hmi.faceembodiments.FACSFaceEmbodiment;
+import hmi.headandgazeembodiments.EulerHeadEmbodiment;
+import hmi.headandgazeembodiments.GazeEmbodiment;
+
 import java.util.ArrayList;
 import java.util.List;
-
-import com.google.common.collect.ImmutableList;
 
 import saiba.bml.BMLInfo;
 import saiba.bml.core.Behaviour;
@@ -28,9 +30,8 @@ import asap.realizer.pegboard.OffsetPeg;
 import asap.realizer.pegboard.TimePeg;
 import asap.realizer.planunit.PlanManager;
 import asap.realizer.scheduler.TimePegAndConstraint;
-import asap.utils.EulerHeadEmbodiment;
-import asap.utils.FACSFaceEmbodiment;
-import asap.utils.GazeEmbodiment;
+
+import com.google.common.collect.ImmutableList;
 
 /**
  * A planner for LiveMocapBehaviours
