@@ -16,7 +16,8 @@ import asap.realizer.scheduler.BMLScheduler;
 import asap.realizer.scheduler.SchedulingHandler;
 import asap.realizer.scheduler.SchedulingStrategy;
 import asap.realizer.scheduler.SmartBodySchedulingStrategy;
-import asap.utils.SchedulingClock;
+import asap.realizerembodiments.impl.BMLSchedulerAssembler;
+import hmi.util.Clock;
 
 /**
  * Unit testcases for the BMLSchedulerAssembler
@@ -28,11 +29,11 @@ public class BMLSchedulerAssemblerTest
     private BMLParser mockParser = mock(BMLParser.class);
     private FeedbackManager mockFeedbackManager = mock(FeedbackManager.class);
     private BMLBlockManager bmlBlockManager = new BMLBlockManager();
-    private SchedulingClock mockSchedulingClock = mock(SchedulingClock.class);
+    private Clock mockSchedulingClock = mock(Clock.class);
     private static SchedulingHandler stubbedSchedulingHandler;
     private PegBoard pegBoard = new PegBoard();
     
-    private static class StubSchedulingHandler implements SchedulingHandler
+    public static class StubSchedulingHandler implements SchedulingHandler
     {
         private final SchedulingStrategy schedulingStrategy;
 
