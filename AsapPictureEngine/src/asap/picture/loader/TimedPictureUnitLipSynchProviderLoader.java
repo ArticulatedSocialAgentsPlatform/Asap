@@ -20,12 +20,11 @@
  */
 package asap.picture.loader;
 
-import asap.environment.AsapVirtualHuman;
-import asap.environment.LipSynchProviderLoader;
-import asap.environment.Loader;
-import asap.utils.Environment;
 import asap.realizer.lipsync.LipSynchProvider;
+import asap.realizerembodiments.LipSynchProviderLoader;
 import asap.picture.lipsync.TimedPictureUnitLipSynchProvider;
+import hmi.environmentbase.Environment;
+import hmi.environmentbase.Loader;
 import hmi.xml.XMLStructureAdapter;
 import hmi.xml.XMLTokenizer;
 import java.io.IOException;
@@ -57,9 +56,10 @@ public class TimedPictureUnitLipSynchProviderLoader implements LipSynchProviderL
     }
 
     @Override
-    public void readXML(XMLTokenizer tokenizer, String newId, AsapVirtualHuman avh, Environment[] environments, Loader... requiredLoaders)
-            throws IOException {
-        setId(newId);
+    public void readXML(XMLTokenizer tokenizer, String loaderId, String vhId, String vhName, Environment[] environments, Loader ... requiredLoaders) 
+    	throws IOException 
+    {
+        setId(loaderId);
 
         PictureEngineLoader pel = null;
         PictureEmbodiment pe = null;

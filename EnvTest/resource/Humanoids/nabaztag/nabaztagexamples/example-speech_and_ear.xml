@@ -1,0 +1,5 @@
+<bml id="example1" xmlns:nabaztag="http://hmi.ewi.utwente.nl/nabaztag">
+<speech id="sp1"><text>This is a test of the ear<sync id="ear"/> movements of the Nabaztag<sync id="nabaztag"/> Engine.</text></speech>
+<nabaztag:moveearto id="met1" side="LEFT" direction="FORWARD" position="2" stroke="sp1:ear"/>
+<nabaztag:wiggleear id="we1" side="RIGHT" direction="FORWARD" position="5" stroke="sp1:nabaztag"/>
+</bml>

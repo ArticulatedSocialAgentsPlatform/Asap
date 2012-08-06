@@ -18,8 +18,27 @@
  ******************************************************************************/
 package asap.picture;
 
+import java.util.ArrayList;
+import java.util.List;
+
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import saiba.bml.BMLInfo;
-import saiba.bml.core.*;
+import saiba.bml.core.Behaviour;
+import saiba.bml.core.FaceLexemeBehaviour;
+import saiba.bml.core.GazeBehaviour;
+import saiba.bml.core.GestureBehaviour;
+import saiba.bml.core.PointingBehaviour;
+import saiba.bml.core.PostureBehaviour;
+import saiba.bml.core.PostureShiftBehaviour;
+import saiba.bml.core.ext.FaceFacsBehaviour;
+import asap.picture.bml.AddAnimationDirBehavior;
+import asap.picture.bml.AddAnimationXMLBehavior;
+import asap.picture.bml.AddImageBehavior;
+import asap.picture.bml.SetImageBehavior;
+import asap.picture.picturebinding.PictureBinding;
+import asap.picture.planunit.TimedPictureUnit;
 import asap.realizer.AbstractPlanner;
 import asap.realizer.BehaviourPlanningException;
 import asap.realizer.SyncAndTimePeg;
@@ -32,18 +51,6 @@ import asap.realizer.planunit.PlanManager;
 import asap.realizer.scheduler.LinearStretchResolver;
 import asap.realizer.scheduler.TimePegAndConstraint;
 import asap.realizer.scheduler.UniModalResolver;
-import asap.picture.bml.AddAnimationDirBehavior;
-import asap.picture.bml.AddAnimationXMLBehavior;
-import asap.picture.bml.AddImageBehavior;
-import asap.picture.bml.SetImageBehavior;
-import asap.picture.picturebinding.PictureBinding;
-import asap.picture.planunit.TimedPictureUnit;
-
-import java.util.ArrayList;
-import java.util.List;
-
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 public class PicturePlanner extends AbstractPlanner<TimedPictureUnit>
 {
@@ -152,6 +159,10 @@ public class PicturePlanner extends AbstractPlanner<TimedPictureUnit>
             tpu.resolvePostureKeyPositions();
         }
         else if(b instanceof FaceLexemeBehaviour)
+        {
+            tpu.resolveFaceKeyPositions();
+        }
+        else if(b instanceof FaceFacsBehaviour)
         {
             tpu.resolveFaceKeyPositions();
         }

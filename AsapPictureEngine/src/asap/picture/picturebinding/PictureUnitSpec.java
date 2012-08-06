@@ -59,7 +59,11 @@ public class PictureUnitSpec extends XMLStructureAdapter
     {
         for (PictureUnitSpecConstraint c : constraints)
         {
-            if (!b.satisfiesConstraint(c.name, c.value)) return false;
+            if (!b.satisfiesConstraint(c.name, c.value)) 
+            {
+            	b.satisfiesConstraint(c.name, c.value);
+            	return false;
+            }
         }
         return true;
     }
