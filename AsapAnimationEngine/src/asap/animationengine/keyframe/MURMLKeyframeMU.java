@@ -5,10 +5,6 @@ import hmi.animation.VJoint;
 import java.util.List;
 import java.util.Set;
 
-import com.google.common.collect.ImmutableList;
-import com.google.common.collect.ImmutableSet;
-import com.google.common.collect.Lists;
-
 import asap.animationengine.AnimationPlayer;
 import asap.animationengine.motionunit.AnimationUnit;
 import asap.animationengine.motionunit.MUSetupException;
@@ -22,6 +18,10 @@ import asap.realizer.pegboard.BMLBlockPeg;
 import asap.realizer.pegboard.PegBoard;
 import asap.realizer.planunit.KeyPosition;
 import asap.timemanipulator.TimeManipulator;
+
+import com.google.common.collect.ImmutableList;
+import com.google.common.collect.ImmutableSet;
+import com.google.common.collect.Lists;
 
 /**
  * MURML-style keyframe animation

@@ -21,6 +21,7 @@ package asap.faceengine.faceunit;
 import hmi.faceanimation.FaceController;
 import hmi.faceanimation.converters.EmotionConverter;
 import hmi.faceanimation.converters.FACSConverter;
+import hmi.util.AnimationSync;
 import hmi.util.StringUtil;
 
 import java.util.Arrays;
@@ -37,7 +38,6 @@ import asap.realizer.planunit.KeyPositionManager;
 import asap.realizer.planunit.KeyPositionManagerImpl;
 import asap.realizer.planunit.ParameterException;
 import asap.realizer.planunit.ParameterNotFoundException;
-import asap.utils.AnimationSync;
 
 /**
  * A basic facial animation unit consisting of one morph target. The key

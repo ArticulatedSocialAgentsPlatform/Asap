@@ -18,17 +18,8 @@
  ******************************************************************************/
 package asap.picture.picturebinding;
 
-import asap.picture.planunit.PUPrepareException;
-import saiba.bml.core.Behaviour;
-import asap.realizer.feedback.FeedbackManager;
-import asap.realizer.pegboard.BMLBlockPeg;
-import asap.realizer.planunit.ParameterException;
-import asap.picture.display.PictureDisplay;
-import asap.picture.planunit.PictureUnit;
-import asap.picture.planunit.TimedPictureUnit;
 import hmi.xml.XMLStructureAdapter;
 import hmi.xml.XMLTokenizer;
-import java.io.File;
 
 import java.io.IOException;
 import java.util.ArrayList;
@@ -36,6 +27,16 @@ import java.util.List;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+
+import saiba.bml.BMLInfo;
+import saiba.bml.core.Behaviour;
+import asap.picture.display.PictureDisplay;
+import asap.picture.planunit.PUPrepareException;
+import asap.picture.planunit.PictureUnit;
+import asap.picture.planunit.TimedPictureUnit;
+import asap.realizer.feedback.FeedbackManager;
+import asap.realizer.pegboard.BMLBlockPeg;
+import asap.realizer.planunit.ParameterException;
 
 public class PictureBinding extends XMLStructureAdapter
 {
@@ -54,16 +55,15 @@ public class PictureBinding extends XMLStructureAdapter
         for (PictureUnitSpec s : specs)
         {
             if (s.getType().equals(b.getXMLTag())
-                    && ((s.getSpecnamespace() == null && b.getNamespace() == null) || (s.getSpecnamespace() != null && s.getSpecnamespace()
-                            .equals(b.getNamespace()))))
+                    && hasEqualNameSpace(b,s.getSpecnamespace()) )
             {
                 if (!s.satisfiesConstraints(b))
                 {
-                    // System.out.println("Constraint mismatch: "+b.getNamespace()+","+s.getSpecnamespace()+","+b.getXMLTag()+","+s.getType());
+                     //System.out.println("Constraint mismatch: "+b.getNamespace()+","+s.getSpecnamespace()+","+b.getXMLTag()+","+s.getType());
                 }
                 else
                 {
-                    // System.out.println("Found type and constraint match");
+                    //System.out.println("Found type and constraint match");
                     PictureUnit puCopy = s.pictureUnit.copy(display);
                     TimedPictureUnit tpu = puCopy.createTPU(fbManager, bbPeg, b.getBmlId(), b.id);
                     tpus.add(tpu);
@@ -162,4 +162,13 @@ public class PictureBinding extends XMLStructureAdapter
     {
         return XMLTAG;
     }
+    private boolean hasEqualNameSpace(Behaviour b, String ns)
+    {
+        if(b.getNamespace() == null && ns == null) return true;
+        if(ns==null && b.getNamespace().equals(BMLInfo.BMLNAMESPACE))return true;
+        if(ns==null)return false;
+        if(ns.equals(b.getNamespace()))return true;
+        return false;
+    }
+ 
 }

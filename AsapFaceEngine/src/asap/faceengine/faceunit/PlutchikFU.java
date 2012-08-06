@@ -22,6 +22,7 @@ import hmi.faceanimation.FaceController;
 import hmi.faceanimation.converters.EmotionConverter;
 import hmi.faceanimation.converters.FACSConverter;
 import hmi.faceanimation.model.MPEG4Configuration;
+import hmi.util.AnimationSync;
 import hmi.util.StringUtil;
 
 import lombok.Delegate;
@@ -34,7 +35,6 @@ import asap.realizer.planunit.KeyPositionManager;
 import asap.realizer.planunit.KeyPositionManagerImpl;
 import asap.realizer.planunit.ParameterException;
 import asap.realizer.planunit.ParameterNotFoundException;
-import asap.utils.AnimationSync;
 
 /**
  * A basic facial animation unit consisting of one position on Plutchiks emotion

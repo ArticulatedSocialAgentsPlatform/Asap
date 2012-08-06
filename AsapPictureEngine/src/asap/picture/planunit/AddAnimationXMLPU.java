@@ -38,7 +38,6 @@ import org.slf4j.LoggerFactory;
 public class AddAnimationXMLPU implements PictureUnit {
 
     private final KeyPositionManager keyPositionManager = new KeyPositionManagerImpl();
-    @SuppressWarnings("unused")
     private static Logger logger = LoggerFactory.getLogger(AddAnimationXMLPU.class.getName());
     private String filePath;
     private String fileName;

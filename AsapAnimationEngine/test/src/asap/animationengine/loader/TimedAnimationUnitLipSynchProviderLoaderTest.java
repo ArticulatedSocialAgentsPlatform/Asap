@@ -1,15 +1,16 @@
 package asap.animationengine.loader;
 
-import java.io.IOException;
-
+import static org.junit.Assert.assertNotNull;
+import static org.mockito.Mockito.mock;
+import hmi.environmentbase.Environment;
+import hmi.environmentbase.Loader;
 import hmi.xml.XMLTokenizer;
+
+import java.io.IOException;
 
 import org.junit.Test;
 
-import asap.environment.AsapVirtualHuman;
-import asap.utils.Environment;
-import static org.junit.Assert.*;
-import static org.mockito.Mockito.*;
+import asap.realizerembodiments.AsapRealizerEmbodiment;
 
 /**
  * Unit test cases for TimedAnimationUnitLipSynchProviderLoader
@@ -18,8 +19,8 @@ import static org.mockito.Mockito.*;
  */
 public class TimedAnimationUnitLipSynchProviderLoaderTest
 {
-    AsapVirtualHuman mockAsapVH = mock(AsapVirtualHuman.class);
     MixedAnimationEngineLoader mockMixedAnimationEngineLoader = mock(MixedAnimationEngineLoader.class);
+    AsapRealizerEmbodiment mockAsapRealizerEmbodiment = mock(AsapRealizerEmbodiment.class);
 
     @Test
     public void test() throws IOException
@@ -29,7 +30,7 @@ public class TimedAnimationUnitLipSynchProviderLoaderTest
                 + "filename=\"ikpspeechbinding.xml\"/></Loader>";
         XMLTokenizer tok = new XMLTokenizer(str);
         tok.takeSTag();
-        loader.readXML(tok, "id1", mockAsapVH, new Environment[0], mockMixedAnimationEngineLoader);
+        loader.readXML(tok, "id1", "id1", "id1" , new Environment[0], new Loader[]{mockMixedAnimationEngineLoader, mockAsapRealizerEmbodiment});
         assertNotNull(loader.getLipSyncProvider());
     }
 }

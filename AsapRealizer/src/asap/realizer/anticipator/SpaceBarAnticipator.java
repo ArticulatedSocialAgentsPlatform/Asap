@@ -2,7 +2,7 @@ package asap.realizer.anticipator;
 
 import asap.realizer.pegboard.BMLBlockPeg;
 import asap.realizer.pegboard.TimePeg;
-import asap.utils.PhysicsSync;
+import hmi.util.PhysicsSync;
 import hmi.util.SystemClock;
 
 import java.awt.event.KeyEvent;

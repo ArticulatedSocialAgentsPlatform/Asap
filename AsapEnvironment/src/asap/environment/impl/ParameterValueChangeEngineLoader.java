@@ -19,13 +19,13 @@
  ******************************************************************************/
 package asap.environment.impl;
 
+import hmi.environmentbase.EmbodimentLoader;
+import hmi.environmentbase.Environment;
+import hmi.environmentbase.Loader;
 import hmi.xml.XMLTokenizer;
 
 import java.io.IOException;
 
-import asap.environment.AsapVirtualHuman;
-import asap.environment.EngineLoader;
-import asap.environment.Loader;
 import asap.realizer.DefaultEngine;
 import asap.realizer.DefaultPlayer;
 import asap.realizer.Engine;
@@ -35,7 +35,8 @@ import asap.realizer.parametervaluechange.TimedParameterValueChangeUnit;
 import asap.realizer.parametervaluechange.TrajectoryBinding;
 import asap.realizer.planunit.PlanManager;
 import asap.realizer.planunit.SingleThreadedPlanPlayer;
-import asap.utils.Environment;
+import asap.realizerembodiments.AsapRealizerEmbodiment;
+import asap.realizerembodiments.EngineLoader;
 
 /**
  * NO XML. Default engine.
@@ -48,24 +49,29 @@ public class ParameterValueChangeEngineLoader implements EngineLoader
     private PlanManager<TimedParameterValueChangeUnit> pvcPlanManager = null;
     private ParameterValueChangePlanner pvcPlanner = null;
     private String id = "";
-    // some variables cached during loading
-    private AsapVirtualHuman theVirtualHuman = null;
 
     @Override
-    public void readXML(XMLTokenizer tokenizer, String newId, AsapVirtualHuman avh, Environment[] environments, Loader... requiredLoaders)
-            throws IOException
+    public void readXML(XMLTokenizer tokenizer, String loaderId, String vhId, String vhName, Environment[] environments, Loader ... requiredLoaders) throws IOException
     {
-        id = newId;
-        theVirtualHuman = avh;
+        id = loaderId;
+        AsapRealizerEmbodiment are = null;
+        for (Loader e : requiredLoaders)
+        {
+            if (e instanceof EmbodimentLoader && ((EmbodimentLoader) e).getEmbodiment() 
+                    instanceof AsapRealizerEmbodiment) are = (AsapRealizerEmbodiment) ((EmbodimentLoader) e).getEmbodiment();
+        }
+        if (are == null)
+        {
+            throw new RuntimeException("SpeechEngineLoader requires an EmbodimentLoader containing a AsapRealizerEmbodiment");
+        }
         pvcPlanManager = new PlanManager<TimedParameterValueChangeUnit>();
-        pvcPlayer = new DefaultPlayer(new SingleThreadedPlanPlayer<TimedParameterValueChangeUnit>(theVirtualHuman.getElckerlycRealizer()
-                .getFeedbackManager(), pvcPlanManager));
-        pvcPlanner = new ParameterValueChangePlanner(theVirtualHuman.getElckerlycRealizer().getFeedbackManager(), new TrajectoryBinding(),
+        pvcPlayer = new DefaultPlayer(new SingleThreadedPlanPlayer<TimedParameterValueChangeUnit>(are.getFeedbackManager(), pvcPlanManager));
+        pvcPlanner = new ParameterValueChangePlanner(are.getFeedbackManager(), new TrajectoryBinding(),
                 pvcPlanManager);
-        pvcPlanner.setScheduler(theVirtualHuman.getBmlScheduler());
+        pvcPlanner.setScheduler(are.getBmlScheduler());
         engine = new DefaultEngine<TimedParameterValueChangeUnit>(pvcPlanner, pvcPlayer, pvcPlanManager);
         engine.setId(id);
-        theVirtualHuman.getElckerlycRealizer().addEngine(engine);
+        are.addEngine(engine);
 
     }
 

@@ -18,18 +18,21 @@
  ******************************************************************************/
 package asap.animationengine.gesturebinding;
 
-import java.io.*;
-import java.util.*;
+import hmi.util.Resources;
+import hmi.xml.XMLStructureAdapter;
+import hmi.xml.XMLTokenizer;
+
+import java.io.IOException;
+import java.util.Collection;
+import java.util.HashMap;
+import java.util.Set;
 
 import lombok.Getter;
 
-import saiba.bml.core.Behaviour;
-
-import hmi.util.*;
-import hmi.xml.*;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import saiba.bml.core.Behaviour;
 import asap.animationengine.motionunit.AnimationUnit;
 import asap.binding.SpecConstraints;
 import asap.binding.SpecParameterDefault;

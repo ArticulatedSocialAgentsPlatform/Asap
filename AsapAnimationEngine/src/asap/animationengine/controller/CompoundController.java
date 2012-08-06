@@ -18,11 +18,20 @@
  ******************************************************************************/
 package asap.animationengine.controller;
 
-import hmi.physics.*;
-import hmi.physics.controller.*;
-import hmi.xml.*;
-import java.util.*;
-import java.io.*;
+import hmi.physics.PhysicalHumanoid;
+import hmi.physics.controller.ControllerParameterException;
+import hmi.physics.controller.ControllerParameterNotFoundException;
+import hmi.physics.controller.PhysicalController;
+import hmi.xml.XMLStructureAdapter;
+import hmi.xml.XMLTokenizer;
+
+import java.io.IOException;
+import java.util.Arrays;
+import java.util.HashMap;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Map;
+import java.util.Set;
 
 import com.google.common.collect.ImmutableSet;
 

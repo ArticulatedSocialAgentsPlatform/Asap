@@ -1,13 +1,13 @@
 package asap.livemocapengine.inputs;
 
+import hmi.faceembodiments.AUConfig;
+import hmi.faceembodiments.Side;
 import hmi.math.Vec3f;
 
 import java.awt.KeyEventDispatcher;
 import java.awt.KeyboardFocusManager;
 import java.awt.event.KeyEvent;
 
-import asap.utils.AUConfig;
-import asap.utils.Side;
 
 /**
  * Allows control of pitch and yaw using the arrow keys

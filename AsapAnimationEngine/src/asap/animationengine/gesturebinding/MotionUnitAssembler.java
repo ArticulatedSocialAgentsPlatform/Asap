@@ -18,12 +18,13 @@
  ******************************************************************************/
 package asap.animationengine.gesturebinding;
 
-import java.util.*;
-
 import hmi.animation.SkeletonInterpolator;
-import hmi.physics.controller.*;
+import hmi.physics.controller.PhysicalController;
 import hmi.util.Resources;
-import hmi.xml.*;
+import hmi.xml.XMLStructureAdapter;
+import hmi.xml.XMLTokenizer;
+
+import java.util.HashMap;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -31,8 +32,9 @@ import org.slf4j.LoggerFactory;
 import asap.animationengine.controller.CompoundController;
 import asap.animationengine.controller.ControllerMU;
 import asap.animationengine.keyframe.KeyframeMU;
-import asap.animationengine.motionunit.*;
-import asap.animationengine.procanimation.*;
+import asap.animationengine.motionunit.AnimationUnit;
+import asap.animationengine.procanimation.GestureUnit;
+import asap.animationengine.procanimation.ProcAnimationMU;
 import asap.animationengine.transitions.TransitionMU;
 
 /**

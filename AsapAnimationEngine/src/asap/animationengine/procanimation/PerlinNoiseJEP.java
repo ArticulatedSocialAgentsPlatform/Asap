@@ -20,9 +20,10 @@ package asap.animationengine.procanimation;
 
 import hmi.math.PerlinNoise;
 
-import java.util.*;
-import org.nfunk.jep.function.*;
-import org.nfunk.jep.*;
+import java.util.Stack;
+
+import org.nfunk.jep.ParseException;
+import org.nfunk.jep.function.PostfixMathCommand;
 
 /**
  * JEP implementation of {@link project.mathutils.PerlinNoise}

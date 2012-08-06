@@ -18,16 +18,6 @@
  ******************************************************************************/
 package asap.picture.planunit;
 
-import asap.realizer.feedback.FeedbackManager;
-import asap.realizer.pegboard.BMLBlockPeg;
-import asap.realizer.planunit.InvalidParameterException;
-import asap.realizer.planunit.KeyPosition;
-import asap.realizer.planunit.KeyPositionManager;
-import asap.realizer.planunit.KeyPositionManagerImpl;
-import asap.realizer.planunit.ParameterException;
-import asap.realizer.planunit.TimedPlanUnitPlayException;
-import asap.picture.PicturePlanner;
-import asap.picture.display.PictureDisplay;
 import hmi.util.StringUtil;
 
 import java.util.List;
@@ -35,11 +25,20 @@ import java.util.List;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import asap.picture.PicturePlanner;
+import asap.picture.display.PictureDisplay;
+import asap.realizer.feedback.FeedbackManager;
+import asap.realizer.pegboard.BMLBlockPeg;
+import asap.realizer.planunit.InvalidParameterException;
+import asap.realizer.planunit.KeyPosition;
+import asap.realizer.planunit.KeyPositionManager;
+import asap.realizer.planunit.KeyPositionManagerImpl;
+import asap.realizer.planunit.ParameterException;
+
 public class AddImagePU implements PictureUnit
 {
     private final KeyPositionManager keyPositionManager = new KeyPositionManagerImpl();
 
-    @SuppressWarnings("unused")
     private static Logger logger = LoggerFactory.getLogger(PicturePlanner.class.getName());
     private String filePath = "";
     private String fileName = "";

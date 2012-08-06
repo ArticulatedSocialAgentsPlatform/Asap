@@ -18,10 +18,16 @@
  ******************************************************************************/
 package asap.animationengine.pointing;
 
+import hmi.animation.AnalyticalIKSolver;
+import hmi.animation.Hanim;
+import hmi.animation.VJoint;
+import hmi.math.Quat4f;
+import hmi.math.Vec3f;
+import hmi.worldobjectenvironment.WorldObject;
+import hmi.worldobjectenvironment.WorldObjectManager;
+
 import java.util.List;
 import java.util.Set;
-
-import com.google.common.collect.ImmutableSet;
 
 import asap.animationengine.AnimationPlayer;
 import asap.animationengine.motionunit.AnimationUnit;
@@ -34,11 +40,10 @@ import asap.realizer.planunit.KeyPosition;
 import asap.realizer.planunit.KeyPositionManager;
 import asap.realizer.planunit.KeyPositionManagerImpl;
 import asap.realizer.planunit.ParameterNotFoundException;
-import asap.realizer.util.timemanipulator.*;
-import asap.realizer.world.*;
+import asap.realizer.util.timemanipulator.SigmoidManipulator;
+import asap.realizer.util.timemanipulator.TimeManipulator;
 
-import hmi.animation.*;
-import hmi.math.*;
+import com.google.common.collect.ImmutableSet;
 
 /**
  * Timing: ready: gaze target reached relax: start to move back to rest pose

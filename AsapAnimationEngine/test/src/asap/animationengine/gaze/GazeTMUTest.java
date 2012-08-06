@@ -3,32 +3,31 @@ package asap.animationengine.gaze;
 import static org.mockito.Matchers.any;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
-
-import java.util.Set;
-
 import hmi.animation.Hanim;
 import hmi.animation.VJoint;
-import saiba.bml.BMLGestureSync;
-import asap.realizertestutil.planunit.AbstractTimedPlanUnitTest;
-import asap.realizer.planunit.KeyPosition;
-import asap.realizer.planunit.TimedPlanUnit;
-import asap.realizertestutil.util.TimePegUtil;
 import hmi.testutil.animation.HanimBody;
+import hmi.worldobjectenvironment.WorldObject;
+import hmi.worldobjectenvironment.WorldObjectManager;
+
+import java.util.Set;
 
 import org.junit.runner.RunWith;
 import org.powermock.core.classloader.annotations.PowerMockIgnore;
 import org.powermock.core.classloader.annotations.PrepareForTest;
 import org.powermock.modules.junit4.PowerMockRunner;
 
+import saiba.bml.BMLGestureSync;
 import asap.animationengine.AnimationPlayer;
 import asap.animationengine.motionunit.AnimationUnit;
 import asap.animationengine.restpose.RestPose;
 import asap.realizer.feedback.FeedbackManager;
 import asap.realizer.pegboard.BMLBlockPeg;
 import asap.realizer.pegboard.PegBoard;
+import asap.realizer.planunit.KeyPosition;
+import asap.realizer.planunit.TimedPlanUnit;
 import asap.realizer.scheduler.BMLBlockManager;
-import asap.realizer.world.WorldObject;
-import asap.realizer.world.WorldObjectManager;
+import asap.realizertestutil.planunit.AbstractTimedPlanUnitTest;
+import asap.realizertestutil.util.TimePegUtil;
 
 /**
  * Unit test cases for the GazeTMU

@@ -1,5 +1,9 @@
 package asap.animationengine.gesturebinding;
 
+import hmi.util.Resources;
+import hmi.xml.XMLStructureAdapter;
+import hmi.xml.XMLTokenizer;
+
 import java.io.IOException;
 import java.util.HashMap;
 import java.util.Map;
@@ -8,8 +12,8 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import asap.animationengine.AnimationPlayer;
-import asap.animationengine.motionunit.MUSetupException;
 import asap.animationengine.motionunit.AnimationUnit;
+import asap.animationengine.motionunit.MUSetupException;
 import asap.animationengine.motionunit.TimedAnimationUnit;
 import asap.binding.SpecParameterDefault;
 import asap.realizer.feedback.FeedbackManager;
@@ -17,10 +21,6 @@ import asap.realizer.feedback.NullFeedbackManager;
 import asap.realizer.pegboard.BMLBlockPeg;
 import asap.realizer.pegboard.PegBoard;
 import asap.realizer.planunit.ParameterException;
-
-import hmi.util.Resources;
-import hmi.xml.XMLStructureAdapter;
-import hmi.xml.XMLTokenizer;
 
 /**
  * The SpeechBinding maps from visemes to TimedMotionUnits (e.g. jaw movement).

@@ -21,13 +21,17 @@ package asap.animationengine.loader;
 
 import hmi.animation.SkeletonPose;
 import hmi.animation.VJoint;
+import hmi.animationembodiments.MixedSkeletonEmbodiment;
+import hmi.environmentbase.EmbodimentLoader;
+import hmi.environmentbase.Environment;
+import hmi.environmentbase.Loader;
 import hmi.math.Quat4f;
 import hmi.mixedanimationenvironment.MixedAnimationEnvironment;
 import hmi.mixedanimationenvironment.MixedAnimationPlayer;
 import hmi.mixedanimationenvironment.MixedAnimationPlayerManager;
-import hmi.physics.MixedSkeletonEmbodiment;
-import hmi.physics.PhysicalEmbodiment;
+import hmi.physicsembodiments.PhysicalEmbodiment;
 import hmi.util.Resources;
+import hmi.worldobjectenvironment.WorldObjectEnvironment;
 import hmi.xml.XMLStructureAdapter;
 import hmi.xml.XMLTokenizer;
 
@@ -41,16 +45,12 @@ import asap.animationengine.gesturebinding.GestureBinding;
 import asap.animationengine.motionunit.TimedAnimationUnit;
 import asap.animationengine.restpose.RestPose;
 import asap.animationengine.restpose.SkeletonPoseRestPose;
-import asap.environment.AsapEnvironment;
-import asap.environment.AsapVirtualHuman;
-import asap.environment.EmbodimentLoader;
-import asap.environment.EngineLoader;
-import asap.environment.Loader;
 import asap.realizer.DefaultEngine;
 import asap.realizer.Engine;
 import asap.realizer.planunit.DefaultTimedPlanUnitPlayer;
 import asap.realizer.planunit.PlanManager;
-import asap.utils.Environment;
+import asap.realizerembodiments.AsapRealizerEmbodiment;
+import asap.realizerembodiments.EngineLoader;
 
 /**
  * Loads the Asap AnimationEngine
@@ -62,7 +62,6 @@ public class MixedAnimationEngineLoader implements EngineLoader
     private MixedSkeletonEmbodiment mse = null;
     private PhysicalEmbodiment pe = null;
     private MixedAnimationEnvironment mae = null;
-    private AsapEnvironment ae = null;
 
     private Engine engine = null;
     private PlanManager<TimedAnimationUnit> animationPlanManager = null;
@@ -73,18 +72,19 @@ public class MixedAnimationEngineLoader implements EngineLoader
     String id = "";
     // some variables cached during loading
     GestureBinding gesturebinding = null;
-    AsapVirtualHuman theVirtualHuman = null;
 
+    private AsapRealizerEmbodiment are = null;
+    private WorldObjectEnvironment we = null;
+    
     @Override
-    public void readXML(XMLTokenizer tokenizer, String newId, AsapVirtualHuman avh, Environment[] environments, Loader... requiredLoaders)
-            throws IOException
+    public void readXML(XMLTokenizer tokenizer, String loaderId, String vhId, String vhName, Environment[] environments, Loader ... requiredLoaders) 
+    	throws IOException
     {
-        id = newId;
-        theVirtualHuman = avh;
+        id = loaderId;
         for (Environment e : environments)
         {
             if (e instanceof MixedAnimationEnvironment) mae = (MixedAnimationEnvironment) e;
-            if (e instanceof AsapEnvironment) ae = (AsapEnvironment) e;
+            if (e instanceof WorldObjectEnvironment) we = (WorldObjectEnvironment) e;
         }
         for (Loader e : requiredLoaders)
         {
@@ -96,14 +96,20 @@ public class MixedAnimationEngineLoader implements EngineLoader
             {
                 pe = (PhysicalEmbodiment) ((EmbodimentLoader) e).getEmbodiment();
             }
+            if (e instanceof EmbodimentLoader && ((EmbodimentLoader) e).getEmbodiment() 
+                    instanceof AsapRealizerEmbodiment) are = (AsapRealizerEmbodiment) ((EmbodimentLoader) e).getEmbodiment();
+        }
+        if (are == null)
+        {
+            throw new RuntimeException("MixedAnimationEngineLoader requires an EmbodimentLoader containing a AsapRealizerEmbodiment");
+        }
+        if (we == null)
+        {
+            throw new RuntimeException("MixedAnimationEngineLoader requires an WorldObjectEnvironment");
         }
         if (mae == null)
         {
             throw new RuntimeException("AnimationEngineLoader requires an Environment of type MixedAnimationEnvironment");
-        }
-        if (ae == null)
-        {
-            throw new RuntimeException("AnimationEngineLoader requires an Environment of type AsapEnvironment");
         }
         if (mse == null)
         {
@@ -135,8 +141,7 @@ public class MixedAnimationEngineLoader implements EngineLoader
         if (tokenizer.atSTag("GestureBinding"))
         {
             attrMap = tokenizer.getAttributes();
-            gesturebinding = new GestureBinding(new Resources(adapter.getOptionalAttribute("basedir", attrMap, "")), theVirtualHuman
-                    .getElckerlycRealizer().getFeedbackManager());
+            gesturebinding = new GestureBinding(new Resources(adapter.getOptionalAttribute("basedir", attrMap, "")), are.getFeedbackManager());
             try
             {
                 gesturebinding.readXML(new Resources(adapter.getOptionalAttribute("resources", attrMap, "")).getReader(adapter
@@ -217,21 +222,21 @@ public class MixedAnimationEngineLoader implements EngineLoader
             pose = new SkeletonPoseRestPose();
         }
         AnimationPlanPlayer animationPlanPlayer = new AnimationPlanPlayer(pose,
-                theVirtualHuman.getElckerlycRealizer().getFeedbackManager(), animationPlanManager, new DefaultTimedPlanUnitPlayer(),
-                theVirtualHuman.getPegBoard());
+                are.getFeedbackManager(), animationPlanManager, new DefaultTimedPlanUnitPlayer(),
+                are.getPegBoard());
 
         // public AnimationPlayer(VJoint vP, VJoint vC, VJoint vN, ArrayList<MixedSystem> m, float h, WorldObjectManager wom,
         // PlanPlayer planPlayer)
 
         animationPlayer = new AnimationPlayer(mse.getPreviousVJoint(), mse.getCurrentVJoint(), mse.getNextVJoint(), pe.getMixedSystems(),
-                MixedAnimationPlayerManager.getH(), ae.getWorldObjectManager(), animationPlanPlayer);
+                MixedAnimationPlayerManager.getH(), we.getWorldObjectManager(), animationPlanPlayer);
 
         pose.setAnimationPlayer((AnimationPlayer) animationPlayer);
         // IKBody nextBody = new IKBody(se.getNextVJoint()); not used?
 
         // make planner
-        animationPlanner = new AnimationPlanner(theVirtualHuman.getElckerlycRealizer().getFeedbackManager(),
-                (AnimationPlayer) animationPlayer, gesturebinding, animationPlanManager, theVirtualHuman.getPegBoard());
+        animationPlanner = new AnimationPlanner(are.getFeedbackManager(),
+                (AnimationPlayer) animationPlayer, gesturebinding, animationPlanManager, are.getPegBoard());
 
         engine = new DefaultEngine<TimedAnimationUnit>(animationPlanner, (AnimationPlayer) animationPlayer, animationPlanManager);
         engine.setId(id);
@@ -247,7 +252,7 @@ public class MixedAnimationEngineLoader implements EngineLoader
         pe.glueFeetToFloor();
 
         // add engine to realizer;
-        theVirtualHuman.getElckerlycRealizer().addEngine(engine);
+        are.addEngine(engine);
 
         // add player to playermanager
         mae.addAnimationPlayer(animationPlayer, mse.getNextVJoint(), mse.getAnimationVJoint());

@@ -21,15 +21,14 @@ package asap.picture.swing;
 
 import asap.picture.display.PictureDisplay;
 import asap.picture.loader.PictureEmbodiment;
+import hmi.environmentbase.Embodiment;
+import hmi.environmentbase.EmbodimentLoader;
+import hmi.environmentbase.Environment;
+import hmi.environmentbase.Loader;
 import hmi.xml.XMLTokenizer;
 
 import java.io.IOException;
 
-import asap.environment.AsapVirtualHuman;
-import asap.environment.EmbodimentLoader;
-import asap.environment.Loader;
-import asap.utils.Embodiment;
-import asap.utils.Environment;
 
 /** Take care of its own loading from XML. */
 public class JFramePictureEmbodiment implements EmbodimentLoader, Embodiment, PictureEmbodiment
@@ -50,10 +49,10 @@ public class JFramePictureEmbodiment implements EmbodimentLoader, Embodiment, Pi
     }
 
     @Override
-    public void readXML(XMLTokenizer tokenizer, String newId, AsapVirtualHuman avh, Environment[] environments, Loader... requiredLoaders)
-            throws IOException
+    public void readXML(XMLTokenizer tokenizer, String loaderId, String vhId, String vhName, Environment[] environments, Loader ... requiredLoaders) 
+    	throws IOException
     {
-        setId(newId);
+        setId(loaderId);
 
         // initialize the picturedisplay
         display = new PictureJFrame();

@@ -1,0 +1,23 @@
+<nabaztagbinding>
+	<NabaztagUnitSpec type="moveearto" namespace="http://hmi.ewi.utwente.nl/nabaztag">
+		<constraints>
+		</constraints>
+		<parametermap>
+			<parameter src="side" dst="side"/>
+			<parameter src="position" dst="position"/>
+			<parameter src="direction" dst="direction"/>
+		</parametermap>
+		<NabaztagUnit type="MoveEarToNU"/>
+	</NabaztagUnitSpec>
+	<NabaztagUnitSpec type="wiggleear" namespace="http://hmi.ewi.utwente.nl/nabaztag">
+		<constraints>
+		</constraints>
+		<parametermap>
+			<parameter src="side" dst="side"/>
+			<parameter src="position" dst="position"/>
+			<parameter src="direction" dst="direction"/>
+		</parametermap>
+		<NabaztagUnit type="WiggleEarNU"/>
+	</NabaztagUnitSpec>
+	
+</nabaztagbinding>

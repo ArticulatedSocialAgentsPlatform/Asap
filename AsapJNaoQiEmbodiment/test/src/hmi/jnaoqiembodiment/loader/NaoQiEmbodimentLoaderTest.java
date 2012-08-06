@@ -1,18 +1,14 @@
 package hmi.jnaoqiembodiment.loader;
 
-import static org.junit.Assert.*;
-import static org.mockito.Mockito.mock;
-
-import java.io.IOException;
-
+import static org.junit.Assert.assertNotNull;
+import hmi.environmentbase.Environment;
 import hmi.util.OS;
 import hmi.xml.XMLTokenizer;
 
+import java.io.IOException;
+
 import org.junit.Assume;
 import org.junit.Test;
-
-import asap.environment.AsapVirtualHuman;
-import asap.utils.Environment;
 
 /**
  * Unit test for the NaoQiEmbodimentLoader
@@ -21,7 +17,6 @@ import asap.utils.Environment;
  */
 public class NaoQiEmbodimentLoaderTest
 {
-    private AsapVirtualHuman mockAsapVH = mock(AsapVirtualHuman.class);
 
     @Test
     public void test() throws IOException
@@ -34,7 +29,7 @@ public class NaoQiEmbodimentLoaderTest
         NaoQiEmbodimentLoader loader = new NaoQiEmbodimentLoader();
         XMLTokenizer tok = new XMLTokenizer(str);
         tok.takeSTag();
-        loader.readXML(tok, "id1", mockAsapVH, new Environment[0]);
+        loader.readXML(tok, "id1", "id1", "id1", new Environment[0]);
         assertNotNull(loader.getEmbodiment());
     }
 }

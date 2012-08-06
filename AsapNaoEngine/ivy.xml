@@ -7,8 +7,8 @@
       <dependency org="HMI"   name="HmiUtil"            rev="latest.{$resolve.status}"   />
       <dependency org="HMI"   name="HmiXml"             rev="latest.{$resolve.status}"   />
       <dependency org="Asap"   name="AsapRealizer"   transitive="false"    rev="latest.{$resolve.status}"   />
-      <dependency org="HMI"   name="AsapUtils"     rev="latest.{$resolve.status}"   />
-      <dependency org="Asap"   name="AsapEnvironment"     rev="latest.{$resolve.status}"   />
+      <dependency org="HMI"   name="HmiEnvironmentBase"     rev="latest.{$resolve.status}"   />
+      <dependency org="Asap"   name="AsapRealizerEmbodiments"    rev="latest.{$resolve.status}"   />
       
       
 	  <dependency org="lombok"  name="lombok"      rev="latest.release"  />

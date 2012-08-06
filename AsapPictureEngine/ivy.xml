@@ -8,10 +8,10 @@
       <dependency org="HMI"   name="HmiXml"             transitive="false" rev="latest.${resolve.status}"   />
       <dependency org="Asap"   name="AsapBML"             transitive="false" rev="latest.${resolve.status}"   />
       <dependency org="HMI"   name="HmiTestUtil"        transitive="false" rev="latest.${resolve.status}"   />
+      <dependency org="HMI"   name="HmiTTS"        transitive="false" rev="latest.${resolve.status}"   />
       <dependency org="Asap"   name="AsapRealizer"       transitive="false" rev="latest.${resolve.status}"   />
-      <dependency org="HMI"   name="HmiTTS"             transitive="false" rev="latest.${resolve.status}"   />
-      <dependency org="Asap"   name="AsapEnvironment"     transitive="false" rev="latest.${resolve.status}"   />
-      <dependency org="HMI"   name="AsapUtils"     transitive="false" rev="latest.${resolve.status}"   />
+      <dependency org="HMI"   name="HmiEnvironmentBase"     transitive="false" rev="latest.${resolve.status}"   />
+      <dependency org="Asap"   name="AsapRealizerEmbodiments"       transitive="false" rev="latest.${resolve.status}"   />
       <dependency org="jcip"    name="jcip-annotations"      rev="latest.release"  />
       <dependency org="lombok"  name="lombok"      rev="latest.release"  />
       <dependency org="google"  name="guava"                 rev="latest.release"  />

@@ -18,11 +18,10 @@
  ******************************************************************************/
 package asap.animationengine.motionunit;
 
-import saiba.bml.core.Behaviour;
-
 import java.util.List;
 import java.util.Set;
 
+import saiba.bml.core.Behaviour;
 import asap.motionunit.TMUPlayException;
 import asap.motionunit.TimedMotionUnit;
 import asap.realizer.BehaviourPlanningException;

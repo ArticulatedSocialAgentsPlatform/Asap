@@ -18,7 +18,8 @@
  ******************************************************************************/
 package asap.animationengine.gaze;
 
-import asap.animationengine.motionunit.*;
+import saiba.bml.BMLGestureSync;
+import asap.animationengine.motionunit.TimedAnimationUnit;
 import asap.motionunit.MUPlayException;
 import asap.motionunit.TMUPlayException;
 import asap.realizer.feedback.FeedbackManager;
@@ -27,7 +28,6 @@ import asap.realizer.pegboard.OffsetPeg;
 import asap.realizer.pegboard.PegBoard;
 import asap.realizer.pegboard.TimePeg;
 import asap.realizer.planunit.TimedPlanUnitPlayException;
-import saiba.bml.BMLGestureSync;
 
 /**
  * Timed motion unit for gaze, makes sure the gaze start pose is set at start.

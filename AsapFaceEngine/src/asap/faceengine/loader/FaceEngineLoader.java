@@ -19,13 +19,16 @@
  ******************************************************************************/
 package asap.faceengine.loader;
 
+import hmi.environmentbase.EmbodimentLoader;
+import hmi.environmentbase.Environment;
+import hmi.environmentbase.Loader;
 import hmi.faceanimation.FaceController;
-import hmi.faceanimation.FaceEmbodiment;
 import hmi.faceanimation.converters.EmotionConverter;
 import hmi.faceanimation.converters.FACSConverter;
 import hmi.faceanimation.converters.ui.EmotionConverterFrame;
 import hmi.faceanimation.converters.ui.FACSConverterFrame;
 import hmi.faceanimation.converters.ui.MPEG4ControllerFrame;
+import hmi.faceembodiments.FaceEmbodiment;
 import hmi.util.Resources;
 import hmi.xml.XMLStructureAdapter;
 import hmi.xml.XMLTokenizer;
@@ -35,11 +38,6 @@ import java.util.HashMap;
 
 import javax.swing.SwingUtilities;
 
-import asap.environment.AsapVirtualHuman;
-import asap.environment.EmbodimentLoader;
-import asap.environment.EngineLoader;
-import asap.environment.Loader;
-import asap.environment.impl.JComponentEmbodiment;
 import asap.faceengine.FacePlanner;
 import asap.faceengine.facebinding.FaceBinding;
 import asap.faceengine.faceunit.TimedFaceUnit;
@@ -49,7 +47,9 @@ import asap.realizer.Engine;
 import asap.realizer.Player;
 import asap.realizer.planunit.PlanManager;
 import asap.realizer.planunit.SingleThreadedPlanPlayer;
-import asap.utils.Environment;
+import asap.realizerembodiments.AsapRealizerEmbodiment;
+import asap.realizerembodiments.EngineLoader;
+import asap.realizerembodiments.JComponentEmbodiment;
 
 /**
 
@@ -70,14 +70,14 @@ public class FaceEngineLoader implements EngineLoader
     private String id = "";
     // some variables cached during loading
     private FaceBinding facebinding = null;
-    private AsapVirtualHuman theVirtualHuman = null;
 
+    private AsapRealizerEmbodiment are = null;
+    
     @Override
-    public void readXML(XMLTokenizer tokenizer, String newId, AsapVirtualHuman avh, Environment[] environments, Loader... requiredLoaders)
-            throws IOException
+    public void readXML(XMLTokenizer tokenizer, String loaderId, String vhId, String vhName, Environment[] environments, Loader ... requiredLoaders) throws IOException
     {
-        id = newId;
-        theVirtualHuman = avh;
+        id = loaderId;
+
         for (Loader e : requiredLoaders)
         {
             if (e instanceof EmbodimentLoader && ((EmbodimentLoader) e).getEmbodiment() 
@@ -86,10 +86,16 @@ public class FaceEngineLoader implements EngineLoader
             if (e instanceof EmbodimentLoader && ((EmbodimentLoader) e).getEmbodiment() 
                     instanceof JComponentEmbodiment) jce = (JComponentEmbodiment) ((EmbodimentLoader) e)
                     .getEmbodiment();
+            if (e instanceof EmbodimentLoader && ((EmbodimentLoader) e).getEmbodiment() 
+                    instanceof AsapRealizerEmbodiment) are = (AsapRealizerEmbodiment) ((EmbodimentLoader) e).getEmbodiment();
         }
         if (m4e == null)
         {
             throw new RuntimeException("FaceEngineLoader requires an EmbodimentLoader containing a FaceEmbodiment");
+        }
+        if (are == null)
+        {
+            throw new RuntimeException("FaceEngineLoader requires an EmbodimentLoader containing a AsapRealizerEmbodiment");
         }
         while (!tokenizer.atETag("Loader"))
         {
@@ -147,8 +153,7 @@ public class FaceEngineLoader implements EngineLoader
     {
         if (facebinding == null) throw tokenizer.getXMLScanException("facebinding is null, cannot build faceplanner ");
         planManager = new PlanManager<TimedFaceUnit>();
-        facePlayer = new DefaultPlayer(new SingleThreadedPlanPlayer<TimedFaceUnit>(theVirtualHuman.getElckerlycRealizer()
-                .getFeedbackManager(), planManager));
+        facePlayer = new DefaultPlayer(new SingleThreadedPlanPlayer<TimedFaceUnit>(are.getFeedbackManager(), planManager));
         econv = new EmotionConverter();
         if (fconv==null)fconv = new FACSConverter();
         FaceController fc = null;
@@ -156,13 +161,13 @@ public class FaceEngineLoader implements EngineLoader
         {
             fc = m4e.getFaceController();
         }
-        FacePlanner facePlanner = new FacePlanner(theVirtualHuman.getElckerlycRealizer().getFeedbackManager(), fc, fconv, econv,
+        FacePlanner facePlanner = new FacePlanner(are.getFeedbackManager(), fc, fconv, econv,
                 facebinding, planManager);
         engine = new DefaultEngine<TimedFaceUnit>(facePlanner, facePlayer, planManager);
         engine.setId(id);
 
         // add engine to realizer;
-        theVirtualHuman.getElckerlycRealizer().addEngine(engine);
+        are.addEngine(engine);
 
         // init ui?
         if (initUI)

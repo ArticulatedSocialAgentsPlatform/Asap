@@ -48,7 +48,8 @@ import asap.realizer.planunit.PlanUnitFloatParameterNotFoundException;
 import asap.realizer.planunit.PlanUnitParameterNotFoundException;
 import asap.realizer.planunit.TimedPlanUnit;
 import asap.realizer.planunit.TimedPlanUnitState;
-import asap.utils.SchedulingClock;
+import hmi.util.Clock;
+import hmi.util.ClockListener;
 
 import com.google.common.collect.ImmutableSet;
 
@@ -64,7 +65,7 @@ public class BMLSchedulerTest
     private PegBoard pegBoard = new PegBoard();
     private static final double PREDICTION_PRECISION = 0.0001;
 
-    private static class StubSchedulingClock implements SchedulingClock
+    private static class StubClock implements Clock
     {
         private double time = 0;
 
@@ -74,10 +75,15 @@ public class BMLSchedulerTest
         }
 
         @Override
-        public double getTime()
+        public double getMediaSeconds()
         {
             return time;
         }
+		
+		@Override
+		public void addClockListener(ClockListener l)
+		{
+		}
     }
 
     private static class StubEngine implements Engine
@@ -298,7 +304,7 @@ public class BMLSchedulerTest
 
     private List<BMLPredictionFeedback> predictionFeedback = new ArrayList<BMLPredictionFeedback>();
 
-    private StubSchedulingClock stubSchedulingClock = new StubSchedulingClock();
+    private StubClock stubClock = new StubClock();
 
     private BMLBlockManager bbManager = new BMLBlockManager();
     private FeedbackManager fbManager = new FeedbackManagerImpl(bbManager, "character1");
@@ -367,7 +373,7 @@ public class BMLSchedulerTest
                 }
             }
         }
-        scheduler = new BMLScheduler("avatar1", parser, fbManager, stubSchedulingClock, new BMLTSchedulingHandler(
+        scheduler = new BMLScheduler("avatar1", parser, fbManager, stubClock, new BMLTSchedulingHandler(
                 new StubSchedulingStrategy()), bbManager, pegBoard);
 
         scheduler.addEngine(SpeechBehaviour.class, stubEngine);
@@ -925,7 +931,7 @@ public class BMLSchedulerTest
     @Test
     public void testStartPredictionWithAppendAndLateClock()
     {
-        stubSchedulingClock.setTime(3);
+        stubClock.setTime(3);
         stubEngine.addBlockEnd("bml1", 5);
         stubEngine.addBlockEnd("bml2", 4);
         stubEngine.addBlockEnd("bml3", 6);
@@ -946,7 +952,7 @@ public class BMLSchedulerTest
     @Test
     public void testEndPredictionEmptyBlock()
     {
-        stubSchedulingClock.setTime(3);
+        stubClock.setTime(3);
         stubEngine.addBlockEnd("bml1", 0);
         parseBML(createEmptyBML("bml1", ""));
         scheduler.schedule();

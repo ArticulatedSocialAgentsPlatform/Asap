@@ -18,12 +18,16 @@
  ******************************************************************************/
 package asap.animationengine.procanimation;
 
-import org.nfunk.jep.*;
-import org.lsmp.djep.xjep.*;
+import hmi.animation.VJoint;
+import hmi.xml.XMLFormatting;
+import hmi.xml.XMLStructureAdapter;
+import hmi.xml.XMLTokenizer;
 
-import hmi.animation.*;
-import hmi.xml.*;
-import java.util.*;
+import java.util.Vector;
+
+import org.lsmp.djep.xjep.XJep;
+import org.nfunk.jep.Node;
+import org.nfunk.jep.ParseException;
 
 /**
  * Describes the rotation of a single joint in a formula The rotation can be a

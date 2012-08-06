@@ -18,6 +18,8 @@
  ******************************************************************************/
 package asap.environment;
 
+import hmi.environmentbase.Environment;
+import hmi.util.Clock;
 import hmi.util.ClockListener;
 
 import java.io.IOException;
@@ -28,16 +30,12 @@ import java.util.List;
 
 import lombok.Getter;
 import lombok.Setter;
-
 import net.jcip.annotations.GuardedBy;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import asap.realizer.Engine;
-import asap.realizer.world.WorldObjectManager;
-import asap.utils.Environment;
-import asap.utils.SchedulingClock;
 
 /**
  * 
@@ -47,7 +45,7 @@ public class AsapEnvironment implements Environment, ClockListener
 {
     @Getter
     @Setter
-    String id = "elckerlycenvironment";
+    String id = "asapenvironment";
 
     private Logger logger = LoggerFactory.getLogger(AsapEnvironment.class.getName());
 
@@ -59,10 +57,7 @@ public class AsapEnvironment implements Environment, ClockListener
     /** all engines */
     protected ArrayList<Engine> engines = new ArrayList<Engine>();
 
-    protected SchedulingClock schedulingClock;
-
-    @Getter
-    WorldObjectManager worldObjectManager = new WorldObjectManager();
+    protected Clock schedulingClock;
 
     @GuardedBy("itself")
     protected List<Runnable> asapRunners = Collections.synchronizedList(new ArrayList<Runnable>());
@@ -76,7 +71,7 @@ public class AsapEnvironment implements Environment, ClockListener
      *            Typically, the PhysicsSchedulingClock(physicsClock).
      *            If no physics, typically use the renderClock. If no renderClock, use a new clock
      */
-    public void init(ArrayList<Environment> environments, SchedulingClock schedulingClock)
+    public void init(ArrayList<Environment> environments, Clock schedulingClock)
     {
         logger.debug("Initializing AsapEnvironment");
         synchronized (shutdownSync)
@@ -98,9 +93,10 @@ public class AsapEnvironment implements Environment, ClockListener
      * Somewhere else, AsapEnvironment is registered at a clock to get this call back. If a physicsEnvironment
      * is in use, this is typically as a PrePhysicsCopyListener.
      * At physics time, after simulation, but just before physics is copied to the body, we run the engines here!
-     * if no physics is used, ElcklerycEnvronment should simply be registered at any clock that will drive the Engines
+     * if no physics is used, AsapEnvronment should simply be registered at any clock that will drive the Engines
      * (rendering clock, separate animation clock, ...)
      */
+    @Override
     public void time(double currentTime)
     {
         synchronized (shutdownSync)
@@ -112,7 +108,8 @@ public class AsapEnvironment implements Environment, ClockListener
             }
         }
     }
-
+    
+    @Override
     public void initTime(double currentTime)
     {
         synchronized (shutdownSync)
@@ -132,7 +129,7 @@ public class AsapEnvironment implements Environment, ClockListener
             if (shutdownPrepared) return null;
             if (virtualHumans.containsKey(id)) throw new RuntimeException("Duplicate id for virtual human!");
             AsapVirtualHuman avh = new AsapVirtualHuman();
-            avh.setId(id);
+            avh.setVhId(id);
             avh.load(resources, fileName, name, environments, schedulingClock);
             // no need to add anywhere; this will be done by the loaders...
             return avh;
@@ -146,7 +143,7 @@ public class AsapEnvironment implements Environment, ClockListener
             if (shutdownPrepared) return;
             synchronized (virtualHumans)
             {
-                virtualHumans.put(avh.getId(), avh);
+                virtualHumans.put(avh.getVhId(), avh);
                 engines.addAll(avh.getEngines());
             }
         }
@@ -159,7 +156,7 @@ public class AsapEnvironment implements Environment, ClockListener
             if (shutdownPrepared) return;
             synchronized (virtualHumans)
             {
-                virtualHumans.remove(avh.getId());
+                virtualHumans.remove(avh.getVhId());
                 engines.removeAll(avh.getEngines());
             }
         }

@@ -20,9 +20,10 @@ package asap.animationengine.procanimation;
 
 import hmi.math.HermiteSpline;
 
-import java.util.*;
-import org.nfunk.jep.*;
-import org.nfunk.jep.function.*;
+import java.util.Stack;
+
+import org.nfunk.jep.ParseException;
+import org.nfunk.jep.function.PostfixMathCommand;
 
 /**
  * JEP implementation of {@link project.mathutils.HermiteSpline}

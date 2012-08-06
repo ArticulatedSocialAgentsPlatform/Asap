@@ -1,7 +1,8 @@
 package asap.animationengine.loader;
 
-import asap.animationengine.gesturebinding.SpeechBinding;
-import asap.animationengine.lipsync.TimedAnimationUnitLipSynchProvider;
+import hmi.environmentbase.EmbodimentLoader;
+import hmi.environmentbase.Environment;
+import hmi.environmentbase.Loader;
 import hmi.util.Resources;
 import hmi.xml.XMLStructureAdapter;
 import hmi.xml.XMLTokenizer;
@@ -9,11 +10,11 @@ import hmi.xml.XMLTokenizer;
 import java.io.IOException;
 import java.util.HashMap;
 
-import asap.environment.AsapVirtualHuman;
-import asap.environment.LipSynchProviderLoader;
-import asap.environment.Loader;
+import asap.animationengine.gesturebinding.SpeechBinding;
+import asap.animationengine.lipsync.TimedAnimationUnitLipSynchProvider;
 import asap.realizer.lipsync.LipSynchProvider;
-import asap.utils.Environment;
+import asap.realizerembodiments.AsapRealizerEmbodiment;
+import asap.realizerembodiments.LipSynchProviderLoader;
 
 /**
  * Loader for TimedAnimationUnitLipSynchProviderLoader
@@ -25,6 +26,8 @@ public class TimedAnimationUnitLipSynchProviderLoader implements LipSynchProvide
     private String id;
     private LipSynchProvider lipSyncProvider;
     private XMLStructureAdapter adapter = new XMLStructureAdapter();
+
+    private AsapRealizerEmbodiment are = null;
     
     public void setId(String newId)
     {
@@ -38,19 +41,23 @@ public class TimedAnimationUnitLipSynchProviderLoader implements LipSynchProvide
     }
 
     @Override
-    public void readXML(XMLTokenizer tokenizer, String newId, AsapVirtualHuman avh, Environment[] environments, Loader... requiredLoaders)
-            throws IOException
+    public void readXML(XMLTokenizer tokenizer, String loaderId, String vhId, String vhName, Environment[] environments, Loader ... requiredLoaders) throws IOException
     {
-        setId(newId);
+        setId(loaderId);
         
         MixedAnimationEngineLoader ael = null;
         for (Loader e : requiredLoaders)
         {
             if (e instanceof MixedAnimationEngineLoader) ael = (MixedAnimationEngineLoader) e;
+            if (e instanceof AsapRealizerEmbodiment) are = (AsapRealizerEmbodiment) ((EmbodimentLoader) e).getEmbodiment();
         }
         if (ael == null)
         {
-            throw tokenizer.getXMLScanException("TimedAnimationUnitLipSynchProviderLoaderTest requires mixedanimationenvironment.");
+            throw tokenizer.getXMLScanException("TimedAnimationUnitLipSynchProviderLoader requires mixedanimationenvironment.");
+        }
+        if (are == null)
+        {
+            throw new RuntimeException("TimedAnimationUnitLipSynchProviderLoader requires an EmbodimentLoader containing a AsapRealizerEmbodiment");
         }
         SpeechBinding sb = null;
 
@@ -80,7 +87,7 @@ public class TimedAnimationUnitLipSynchProviderLoader implements LipSynchProvide
             throw tokenizer.getXMLScanException("TimedAnimationUnitLipSynchProviderLoaderTest requires a speechbinding.");
         }
         // read speechbinding
-        lipSyncProvider = new TimedAnimationUnitLipSynchProvider(sb, ael.getAnimationPlayer(), ael.getPlanManager(),avh.getPegBoard());
+        lipSyncProvider = new TimedAnimationUnitLipSynchProvider(sb, ael.getAnimationPlayer(), ael.getPlanManager(),are.getPegBoard());
     }
 
     @Override

@@ -3,6 +3,7 @@ package asap.livemocapengine.planunit;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 import static org.powermock.api.mockito.PowerMockito.mock;
+import hmi.headandgazeembodiments.EulerHeadEmbodiment;
 
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -19,7 +20,6 @@ import asap.realizer.planunit.TimedPlanUnitState;
 import asap.realizer.scheduler.BMLBlockManager;
 import asap.realizertestutil.planunit.AbstractTimedPlanUnitTest;
 import asap.realizertestutil.util.TimePegUtil;
-import asap.utils.EulerHeadEmbodiment;
 
 /**
  * Unit tests for the RemoteHeadTMU

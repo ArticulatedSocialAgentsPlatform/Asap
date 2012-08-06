@@ -2,6 +2,7 @@ package asap.livemocapengine;
 
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
+import hmi.headandgazeembodiments.EulerHeadEmbodiment;
 import hmi.xml.XMLTokenizer;
 
 import java.io.IOException;
@@ -18,7 +19,6 @@ import asap.realizer.feedback.FeedbackManager;
 import asap.realizer.pegboard.BMLBlockPeg;
 import asap.realizer.planunit.PlanManager;
 import asap.realizertestutil.PlannerTests;
-import asap.utils.EulerHeadEmbodiment;
 /**
  * Unit tests for the AsapLiveMocapPlanner
  * @author welberge

@@ -3,6 +3,7 @@ package asap.livemocapengine.inputs.loader;
 import static org.junit.Assert.assertNotNull;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
+import hmi.environmentbase.Environment;
 import hmi.xml.XMLTokenizer;
 
 import java.io.IOException;
@@ -10,11 +11,9 @@ import java.io.IOException;
 import org.junit.Before;
 import org.junit.Test;
 
-import asap.environment.AsapVirtualHuman;
-import asap.environment.impl.JFrameEmbodiment;
 import asap.realizer.AsapRealizer;
 import asap.realizer.feedback.FeedbackManager;
-import asap.utils.Environment;
+import asap.realizerembodiments.JFrameEmbodiment;
 
 /**
  * Unit tests for the KeyboardEulerInputLoader
@@ -23,14 +22,12 @@ import asap.utils.Environment;
  */
 public class KeyboardEulerInputLoaderTest
 {
-    private AsapVirtualHuman mockAsapVH = mock(AsapVirtualHuman.class);
     private AsapRealizer mockRealizer = mock(AsapRealizer.class);
     private FeedbackManager mockFbm = mock(FeedbackManager.class);
     private JFrameEmbodiment mockJFrameEmbodiment = mock(JFrameEmbodiment.class);
     @Before
     public void setup()
     {
-        when(mockAsapVH.getElckerlycRealizer()).thenReturn(mockRealizer);
         when(mockRealizer.getFeedbackManager()).thenReturn(mockFbm);
     }
     
@@ -41,7 +38,7 @@ public class KeyboardEulerInputLoaderTest
         KeyboardInputLoader loader = new KeyboardInputLoader();
         XMLTokenizer tok = new XMLTokenizer(str);
         tok.takeSTag();        
-        loader.readXML(tok, "id1", mockAsapVH, new Environment[0], mockJFrameEmbodiment);
+        loader.readXML(tok, "id1", "id1", "id1", new Environment[0], mockJFrameEmbodiment);
         assertNotNull(loader.getSensor());
         //verify(mockJFrameEmbodiment).addKeyListener(loader.getSensor());
     }

@@ -18,6 +18,9 @@
  ******************************************************************************/
 package asap.animationengine;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import saiba.bml.BMLInfo;
 import saiba.bml.core.Behaviour;
 import saiba.bml.core.GazeBehaviour;
@@ -26,10 +29,6 @@ import saiba.bml.core.HeadBehaviour;
 import saiba.bml.core.PointingBehaviour;
 import saiba.bml.core.PostureBehaviour;
 import saiba.bml.core.PostureShiftBehaviour;
-
-import java.util.ArrayList;
-import java.util.List;
-
 import asap.animationengine.gesturebinding.GestureBinding;
 import asap.animationengine.gesturebinding.MURMLMUBuilder;
 import asap.animationengine.motionunit.AnimationUnit;

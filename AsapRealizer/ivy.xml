@@ -1,26 +1,19 @@
 <ivy-module version="2.0">
    <info organisation="Asap" module="AsapRealizer"/>
    <dependencies>
-      <dependency org="Asap"     name="AsapBML"      transitive="false" rev="latest.${resolve.status}"    />
-      <dependency org="saiba"     name="saibabml"           rev="latest.release"    />
-	  
-	  <dependency org="HMI"     name="HmiAnimation"      rev="latest.${resolve.status}"    />
-	  <dependency org="HMI"     name="HmiTTS"      rev="latest.${resolve.status}"    />
-      <dependency org="HMI"     name="HmiUtil"      rev="latest.${resolve.status}"    />
-      <dependency org="HMI"     name="AsapUtils"      rev="latest.${resolve.status}"    />
-      <dependency org="HMI"     name="HmiXml"      rev="latest.${resolve.status}"    />
-      <dependency org="HMI"     name="HmiMath"      rev="latest.${resolve.status}"    />      
-      <dependency org="HMI"     name="HmiXml"      rev="latest.${resolve.status}"    />      
-      <dependency org="HMI"     name="HmiUtil"      rev="latest.${resolve.status}"    />      
+      <dependency org="Asap"    name="AsapBML"   		 	rev="latest.${resolve.status}" transitive="false"   />
+      <dependency org="saiba"   name="saibabml"           		rev="latest.release"    />
+
+	  <dependency org="HMI"     name="HmiAnimation"      	rev="latest.${resolve.status}"    />
+	  <dependency org="HMI"     name="HmiTTS"      			rev="latest.${resolve.status}"    />
+      <dependency org="HMI"     name="HmiUtil"      		rev="latest.${resolve.status}"    />
+      <dependency org="HMI"     name="HmiMath"      		rev="latest.${resolve.status}"    />      
+      <dependency org="HMI"     name="HmiXml"      			rev="latest.${resolve.status}"    />      
 
 
-
-      <!-- dependency should be removed later on -->
-      <dependency org="HMI"     name="HmiPhysics"            transitive="false" rev="latest.${resolve.status}"  />
-
-      <dependency org="jcip"    name="jcip-annotations"      rev="latest.release"  />
-      <dependency org="lombok"  name="lombok"      rev="latest.release"  />
-      <dependency org="google"			name="guava" rev="latest.release"  />
-      <dependency org="slf4j"   name="slf4j-api"             rev="latest.release"  />
+      <dependency org="jcip"    name="jcip-annotations"     rev="latest.release"  />
+      <dependency org="lombok"  name="lombok"      			rev="latest.release"  />
+      <dependency org="google"  name="guava" 				rev="latest.release"  />
+      <dependency org="slf4j"   name="slf4j-api"            rev="latest.release"  />
    </dependencies>
 </ivy-module>
