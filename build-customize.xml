@@ -132,6 +132,11 @@
             breakiterator="yes"
         > 
             <classpath refid="javac-classpath"/>
+                <group title="BMLRealizerBase" packages="asap.murml*,asap.bml*,asap.math*"/>
+                <group title="AsapTesting" packages="asap.testutil*,asap.realizertestutil*,asap.realizertester*,asap.realizerintegrationtests*"/>
+                <group title="AsapRealizer" packages="asap.realizer*"/>
+                <group title="AsapEngineUtils" packages="asap.motionunit*,asap.binding*,asap.timemanipulator*"/>
+                <group title="AsapEnvironment" packages="asap.environment*,asap.realizerembodiments*"/>
                 <sourcepath>
                     <pathelement path="AsapMURML/src/"/>
                     <pathelement path="AsapBML/src/"/>
