@@ -1,15 +1,12 @@
 package asap.livemocapengine.inputs.loader;
 
 import static org.junit.Assert.assertNotNull;
-import static org.mockito.Mockito.mock;
+import hmi.environmentbase.Environment;
 import hmi.xml.XMLTokenizer;
 
 import java.io.IOException;
 
 import org.junit.Test;
-
-import asap.environment.AsapVirtualHuman;
-import asap.utils.Environment;
 
 /**
  * Unit tests for the remote head input loader
@@ -17,7 +14,6 @@ import asap.utils.Environment;
  */
 public class RemoteHeadInputLoaderTest
 {
-    private AsapVirtualHuman mockAsapVH = mock(AsapVirtualHuman.class);
 
     @Test
     public void test() throws IOException
@@ -27,7 +23,7 @@ public class RemoteHeadInputLoaderTest
         RemoteHeadInputLoader loader = new RemoteHeadInputLoader();
         XMLTokenizer tok = new XMLTokenizer(str);
         tok.takeSTag();
-        loader.readXML(tok, "id1", mockAsapVH, new Environment[0]);
+        loader.readXML(tok, "id1", "id1", "id1", new Environment[0]);
         assertNotNull(loader.getSensor());
     }
 }

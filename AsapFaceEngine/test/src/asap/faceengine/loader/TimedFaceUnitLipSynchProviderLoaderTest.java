@@ -1,15 +1,16 @@
 package asap.faceengine.loader;
 
-import static org.junit.Assert.*;
+import static org.junit.Assert.assertNotNull;
+import static org.mockito.Mockito.mock;
+import hmi.environmentbase.Environment;
+import hmi.environmentbase.Loader;
 import hmi.xml.XMLTokenizer;
 
 import java.io.IOException;
 
 import org.junit.Test;
 
-import asap.environment.AsapVirtualHuman;
-import asap.utils.Environment;
-import static org.mockito.Mockito.*;
+import asap.realizerembodiments.AsapRealizerEmbodiment;
 
 /**
  * LipSynchProviderLoader that creates a TimedFaceUnitLipSynchProviderLoader from the XML specification. 
@@ -17,8 +18,8 @@ import static org.mockito.Mockito.*;
  */
 public class TimedFaceUnitLipSynchProviderLoaderTest
 {
-    AsapVirtualHuman mockAsapVH = mock(AsapVirtualHuman.class);
     FaceEngineLoader mockMixedAnimationEngineLoader = mock(FaceEngineLoader.class);
+    AsapRealizerEmbodiment mockAsapRealizerEmbodiment = mock(AsapRealizerEmbodiment.class);
 
     @Test
     public void test() throws IOException
@@ -28,7 +29,7 @@ public class TimedFaceUnitLipSynchProviderLoaderTest
                 + "<MorphVisemeBinding resources=\"Humanoids/armandia/facebinding/\" filename=\"ikpvisemebinding.xml\"/></Loader>";
         XMLTokenizer tok = new XMLTokenizer(str);
         tok.takeSTag();
-        loader.readXML(tok, "id1", mockAsapVH, new Environment[0], mockMixedAnimationEngineLoader);
+        loader.readXML(tok, "id1", "id1", "id1", new Environment[0], new Loader[]{mockMixedAnimationEngineLoader, mockAsapRealizerEmbodiment});
         assertNotNull(loader.getLipSyncProvider());
     }
 }

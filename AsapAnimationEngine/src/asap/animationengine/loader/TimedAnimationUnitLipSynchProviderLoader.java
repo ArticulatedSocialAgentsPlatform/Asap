@@ -49,16 +49,15 @@ public class TimedAnimationUnitLipSynchProviderLoader implements LipSynchProvide
         for (Loader e : requiredLoaders)
         {
             if (e instanceof MixedAnimationEngineLoader) ael = (MixedAnimationEngineLoader) e;
-            if (e instanceof EmbodimentLoader && ((EmbodimentLoader) e).getEmbodiment() 
-                    instanceof AsapRealizerEmbodiment) are = (AsapRealizerEmbodiment) ((EmbodimentLoader) e).getEmbodiment();
+            if (e instanceof AsapRealizerEmbodiment) are = (AsapRealizerEmbodiment) ((EmbodimentLoader) e).getEmbodiment();
         }
         if (ael == null)
         {
-            throw tokenizer.getXMLScanException("TimedAnimationUnitLipSynchProviderLoaderTest requires mixedanimationenvironment.");
+            throw tokenizer.getXMLScanException("TimedAnimationUnitLipSynchProviderLoader requires mixedanimationenvironment.");
         }
         if (are == null)
         {
-            throw new RuntimeException("TimedAnimationUnitLipSynchProviderLoaderTest requires an EmbodimentLoader containing a AsapRealizerEmbodiment");
+            throw new RuntimeException("TimedAnimationUnitLipSynchProviderLoader requires an EmbodimentLoader containing a AsapRealizerEmbodiment");
         }
         SpeechBinding sb = null;
 
