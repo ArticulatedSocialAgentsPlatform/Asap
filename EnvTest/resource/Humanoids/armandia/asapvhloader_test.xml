@@ -1,9 +1,10 @@
 <AsapVirtualHuman>
 
   <Loader id="realizer" loader="asap.realizerembodiments.AsapRealizerEmbodiment">
-    <PipeLoader id="log" loader="asap.realizerembodiments.LogPipeLoader">
-        <Log requestlog="asap.bml.requests"  feedbacklog="asap.bml.feedback"/> <!--log both requests and feedback-->
-    </PipeLoader>
+	<!--log both requests and feedback-->
+    <!--PipeLoader id="log" loader="asap.realizerembodiments.LogPipeLoader">
+        <Log requestlog="asap.bml.requests"  feedbacklog="asap.bml.feedback"/> 
+    </PipeLoader-->
     <!--ServerAdapter requestport="7521" feedbackport="1257"/-->
   </Loader> 
 
