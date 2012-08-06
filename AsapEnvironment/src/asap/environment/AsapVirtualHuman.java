@@ -57,11 +57,6 @@ public class AsapVirtualHuman
 {
     private Logger logger = LoggerFactory.getLogger(AsapVirtualHuman.class.getName());
 
-    /** Use the RealizerPort to send BML to the Realizer */
-    @Getter
-    @Setter(AccessLevel.PROTECTED)
-    private RealizerPort realizerPort = null;
-
     /** "human readable name" */
     @Getter
     @Setter(AccessLevel.PROTECTED)
@@ -361,4 +356,8 @@ public class AsapVirtualHuman
 
     }
 
+    public RealizerPort getRealizerPort()
+    {
+    	return are.getRealizerPort();
+    }
 }

@@ -27,7 +27,6 @@ import asap.realizer.planunit.KeyPosition;
 import asap.realizer.planunit.KeyPositionManager;
 import asap.realizer.planunit.KeyPositionManagerImpl;
 import asap.realizer.planunit.ParameterException;
-import asap.realizer.planunit.TimedPlanUnitPlayException;
 import asap.picture.PicturePlanner;
 import asap.picture.display.PictureDisplay;
 import hmi.util.StringUtil;

@@ -18,18 +18,8 @@
  ******************************************************************************/
 package asap.picture.picturebinding;
 
-import asap.picture.planunit.PUPrepareException;
-import saiba.bml.BMLInfo;
-import saiba.bml.core.Behaviour;
-import asap.realizer.feedback.FeedbackManager;
-import asap.realizer.pegboard.BMLBlockPeg;
-import asap.realizer.planunit.ParameterException;
-import asap.picture.display.PictureDisplay;
-import asap.picture.planunit.PictureUnit;
-import asap.picture.planunit.TimedPictureUnit;
 import hmi.xml.XMLStructureAdapter;
 import hmi.xml.XMLTokenizer;
-import java.io.File;
 
 import java.io.IOException;
 import java.util.ArrayList;
@@ -37,6 +27,16 @@ import java.util.List;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+
+import saiba.bml.BMLInfo;
+import saiba.bml.core.Behaviour;
+import asap.picture.display.PictureDisplay;
+import asap.picture.planunit.PUPrepareException;
+import asap.picture.planunit.PictureUnit;
+import asap.picture.planunit.TimedPictureUnit;
+import asap.realizer.feedback.FeedbackManager;
+import asap.realizer.pegboard.BMLBlockPeg;
+import asap.realizer.planunit.ParameterException;
 
 public class PictureBinding extends XMLStructureAdapter
 {

@@ -37,7 +37,6 @@ public class BMLSchedulerAssemblerTest
     {
         private final SchedulingStrategy schedulingStrategy;
 
-        @SuppressWarnings("unused")
         public StubSchedulingHandler(SchedulingStrategy ss, PegBoard pb)
         {
             schedulingStrategy = ss;

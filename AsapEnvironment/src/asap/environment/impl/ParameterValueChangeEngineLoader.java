@@ -26,7 +26,6 @@ import hmi.xml.XMLTokenizer;
 
 import java.io.IOException;
 
-import asap.environment.AsapVirtualHuman;
 import asap.realizer.DefaultEngine;
 import asap.realizer.DefaultPlayer;
 import asap.realizer.Engine;
@@ -50,8 +49,6 @@ public class ParameterValueChangeEngineLoader implements EngineLoader
     private PlanManager<TimedParameterValueChangeUnit> pvcPlanManager = null;
     private ParameterValueChangePlanner pvcPlanner = null;
     private String id = "";
-    // some variables cached during loading
-    private AsapVirtualHuman theVirtualHuman = null;
 
     @Override
     public void readXML(XMLTokenizer tokenizer, String loaderId, String vhId, String vhName, Environment[] environments, Loader ... requiredLoaders) throws IOException

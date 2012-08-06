@@ -40,8 +40,6 @@ import asap.realizer.planunit.PlanPlayer;
 import asap.realizer.planunit.SingleThreadedPlanPlayer;
 import asap.realizerembodiments.AsapRealizerEmbodiment;
 import asap.realizerembodiments.EngineLoader;
-import asap.realizerembodiments.JComponentEmbodiment;
-import asap.realizerembodiments.LipSynchProviderLoader;
 
 /**
 

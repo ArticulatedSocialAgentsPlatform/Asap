@@ -23,8 +23,6 @@ import asap.realizer.planunit.PlanManager;
 import asap.realizer.planunit.SingleThreadedPlanPlayer;
 import asap.realizerembodiments.AsapRealizerEmbodiment;
 import asap.realizerembodiments.EngineLoader;
-import asap.realizerembodiments.JComponentEmbodiment;
-import asap.realizerembodiments.LipSynchProviderLoader;
 
 /**
  * Loader for the LiveMocapEngine, connects this engine to input and output loaders.

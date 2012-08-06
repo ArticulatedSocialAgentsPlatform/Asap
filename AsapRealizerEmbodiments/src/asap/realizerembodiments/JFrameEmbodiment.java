@@ -18,10 +18,6 @@
  * along with Elckerlyc.  If not, see http://www.gnu.org/licenses/.
  ******************************************************************************/
 package asap.realizerembodiments;
-import asap.bml.bridge.TCPIPToBMLRealizerAdapter;
-import asap.bml.bridge.ui.BridgeServerUI;
-import asap.bml.bridge.ui.FeedbackPanel;
-import asap.bml.bridge.ui.RealizerBridgeUI;
 import hmi.environmentbase.Embodiment;
 import hmi.environmentbase.EmbodimentLoader;
 import hmi.environmentbase.Environment;
@@ -30,8 +26,6 @@ import hmi.xml.XMLStructureAdapter;
 import hmi.xml.XMLTokenizer;
 
 import java.awt.Toolkit;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
 import java.awt.event.KeyListener;
 import java.awt.event.WindowEvent;
 import java.io.IOException;
@@ -49,6 +43,11 @@ import javax.swing.SwingUtilities;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import asap.bml.bridge.TCPIPToBMLRealizerAdapter;
+import asap.bml.bridge.ui.BridgeServerUI;
+import asap.bml.bridge.ui.FeedbackPanel;
+import asap.bml.bridge.ui.RealizerBridgeUI;
+
 
 /** This "embodiment" allows a VH to create Swing GUI components. */
 public class JFrameEmbodiment implements JComponentEmbodiment, EmbodimentLoader
@@ -60,6 +59,7 @@ public class JFrameEmbodiment implements JComponentEmbodiment, EmbodimentLoader
     private AsapRealizerEmbodiment are = null;
 
     /** The button to kill the virtualhuman */
+    @SuppressWarnings("unused")
     private JButton killVH;
 
     private JFrame theUI = null;
@@ -92,8 +92,6 @@ public class JFrameEmbodiment implements JComponentEmbodiment, EmbodimentLoader
     }
 
     private String loaderId = "";
-    private String vhId = "";
-    private String vhName = "";
 
     public void setId(String id)
     {
@@ -112,8 +110,6 @@ public class JFrameEmbodiment implements JComponentEmbodiment, EmbodimentLoader
     	throws IOException
     {
         setId(loaderId);
-        this.vhId = vhId;
-        this.vhName = vhName;
         final String finalName = vhName;
 
         for (Loader l : requiredLoaders)

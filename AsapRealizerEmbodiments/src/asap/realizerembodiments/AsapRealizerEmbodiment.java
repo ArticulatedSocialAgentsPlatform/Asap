@@ -19,19 +19,16 @@
  ******************************************************************************/
 package asap.realizerembodiments;
 
-import asap.bml.bridge.RealizerPort;
-import asap.bml.bridge.TCPIPToBMLRealizerAdapter;
-import saiba.bml.core.BMLBehaviorAttributeExtension;
-import saiba.bml.core.Behaviour;
-import asap.bml.ext.bmlt.BMLTBMLBehaviorAttributes;
-import saiba.bml.parser.BMLParser;
+import hmi.environmentbase.Embodiment;
+import hmi.environmentbase.EmbodimentLoader;
+import hmi.environmentbase.Environment;
+import hmi.environmentbase.Loader;
+import hmi.util.Clock;
 import hmi.xml.XMLStructureAdapter;
 import hmi.xml.XMLTokenizer;
 
 import java.io.IOException;
-import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.Map.Entry;
 
 import lombok.AccessLevel;
 import lombok.Getter;
@@ -40,6 +37,12 @@ import lombok.Setter;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import saiba.bml.core.BMLBehaviorAttributeExtension;
+import saiba.bml.core.Behaviour;
+import saiba.bml.parser.BMLParser;
+import asap.bml.bridge.RealizerPort;
+import asap.bml.bridge.TCPIPToBMLRealizerAdapter;
+import asap.bml.ext.bmlt.BMLTBMLBehaviorAttributes;
 import asap.realizer.AsapRealizer;
 import asap.realizer.Engine;
 import asap.realizer.bridge.LogPipe;
@@ -53,11 +56,6 @@ import asap.realizer.scheduler.BMLTSchedulingHandler;
 import asap.realizer.scheduler.SortedSmartBodySchedulingStrategy;
 import asap.realizerembodiments.impl.BMLParserAssembler;
 import asap.realizerembodiments.impl.BMLSchedulerAssembler;
-import hmi.environmentbase.Embodiment;
-import hmi.environmentbase.EmbodimentLoader;
-import hmi.environmentbase.Environment;
-import hmi.environmentbase.Loader;
-import hmi.util.Clock;
 
 import com.google.common.collect.ImmutableSet;
 
@@ -104,8 +102,6 @@ public class AsapRealizerEmbodiment implements EmbodimentLoader, Embodiment
     
     private String loaderId = "";
     
-    private String vhId = "";
-
 
     /** used for loading the virtual human from an XML specification file */
     private XMLStructureAdapter adapter = new XMLStructureAdapter();
@@ -151,7 +147,6 @@ public class AsapRealizerEmbodiment implements EmbodimentLoader, Embodiment
    	{
     	this.loaderId = loaderId;
     	this.name = vhName;
-    	this.vhId = vhId;
 
         for (Loader l : requiredLoaders)
         {

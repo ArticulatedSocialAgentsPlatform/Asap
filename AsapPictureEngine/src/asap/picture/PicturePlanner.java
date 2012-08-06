@@ -29,7 +29,6 @@ import saiba.bml.core.Behaviour;
 import saiba.bml.core.FaceLexemeBehaviour;
 import saiba.bml.core.GazeBehaviour;
 import saiba.bml.core.GestureBehaviour;
-import saiba.bml.core.PointingBehaviour;
 import saiba.bml.core.PostureBehaviour;
 import saiba.bml.core.PostureShiftBehaviour;
 import saiba.bml.core.ext.FaceFacsBehaviour;
