@@ -102,6 +102,8 @@ public class AsapRealizerEmbodiment implements EmbodimentLoader, Embodiment
     
     private String loaderId = "";
     
+    private String vhId = "";
+    
 
     /** used for loading the virtual human from an XML specification file */
     private XMLStructureAdapter adapter = new XMLStructureAdapter();
@@ -147,7 +149,8 @@ public class AsapRealizerEmbodiment implements EmbodimentLoader, Embodiment
    	{
     	this.loaderId = loaderId;
     	this.name = vhName;
-
+    	this.vhId = vhId;
+    	
         for (Loader l : requiredLoaders)
         {
             if ((l instanceof EmbodimentLoader) && (((EmbodimentLoader)l).getEmbodiment() instanceof SchedulingClockEmbodiment ))
@@ -249,24 +252,38 @@ public class AsapRealizerEmbodiment implements EmbodimentLoader, Embodiment
             // TODO
             logger.error("Encountered Scheduler section that was not at beginning of AsapRealizerEmbodiment section");
         }
-        else if (theTokenizer.atSTag("LogPipe"))
+        else if (theTokenizer.atSTag("PipeLoader"))
         {
             attrMap = theTokenizer.getAttributes();
-            String requestLog = adapter.getOptionalAttribute("requestlog", attrMap);
-            String feedbackLog = adapter.getOptionalAttribute("feedbacklog", attrMap);
-            Logger rl = null;
-            Logger fl = null;
-            if (requestLog != null)
+            String id = adapter.getRequiredAttribute("id", attrMap, theTokenizer);
+            String loaderClass = adapter.getRequiredAttribute("loader", attrMap, theTokenizer);
+            PipeLoader pipeloader = null;
+            try
             {
-                rl = LoggerFactory.getLogger(requestLog);
+            	pipeloader = (PipeLoader) Class.forName(loaderClass).newInstance();
             }
-            if (feedbackLog != null)
+            catch (InstantiationException e)
             {
-                fl = LoggerFactory.getLogger(feedbackLog);
+                throw theTokenizer.getXMLScanException("InstantiationException while starting PipeLoader " + loaderClass);
             }
-            realizerPort = new LogPipe(rl, fl, realizerPort, theSchedulingClock);
-            theTokenizer.takeSTag("LogPipe");
-            theTokenizer.takeETag("LogPipe");
+            catch (IllegalAccessException e)
+            {
+                throw theTokenizer.getXMLScanException("IllegalAccessException while starting PipeLoader " + loaderClass);
+            }
+            catch (ClassNotFoundException e)
+            {
+                throw theTokenizer.getXMLScanException("ClassNotFoundException while starting PipeLoader " + loaderClass);
+            }
+            catch (ClassCastException e)
+            {
+                throw theTokenizer.getXMLScanException("ClassCastException while starting PipeLoader " + loaderClass);
+            }
+
+            theTokenizer.takeSTag("PipeLoader");
+            logger.debug("Parsing PipeLoader: {}", id);
+            pipeloader.readXML(theTokenizer, id, vhId, name, realizerPort, theSchedulingClock);
+            theTokenizer.takeETag("PipeLoader");
+            realizerPort = pipeloader.getAdaptedRealizerPort();
         }
         else
         {

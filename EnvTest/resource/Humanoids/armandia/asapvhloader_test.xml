@@ -1,8 +1,9 @@
 <AsapVirtualHuman>
 
   <Loader id="realizer" loader="asap.realizerembodiments.AsapRealizerEmbodiment">
-    <!--LogPipe requestlog="hmi.elckerlyc.requests" /--> <!--only requests -->
-    <!--LogPipe requestlog="hmi.elckerlyc.requests" feedbacklog="hmi.elckerlyc.feedback"/--> <!--log both requests and feedback-->
+    <PipeLoader id="log" loader="asap.realizerembodiments.LogPipeLoader">
+        <Log requestlog="asap.bml.requests"  feedbacklog="asap.bml.feedback"/> <!--log both requests and feedback-->
+    </PipeLoader>
     <!--ServerAdapter requestport="7521" feedbackport="1257"/-->
   </Loader> 
 
