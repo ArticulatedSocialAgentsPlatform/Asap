@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<murml-spec xmlns="http://www.techfak.uni-bielefeld.de/ags/soa/murml" scope="hand">
+<murml-description xmlns="http://www.techfak.uni-bielefeld.de/ags/soa/murml" scope="hand">
    <parallel>
       <!-- right hand: "1" -->
       <static slot="HandLocation"
@@ -15,4 +15,4 @@
       <static slot="ExtFingerOrientation" value="DirU" scope="left_arm"/>
       <static slot="HandShape" value="BSffinger (ThExt)" scope="left_arm"/>
     </parallel>
-</murml-spec>
+</murml-description>

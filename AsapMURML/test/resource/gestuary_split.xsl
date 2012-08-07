@@ -11,7 +11,7 @@
 <xsl:template match="/">
   <xsl:for-each select="//gesture">
     <xsl:variable name="filename" select="concat(@id,'.xml')" />
-    <xsl:result-document href="output/{$filename}" format="xml">
+    <xsl:result-document href="gestures/{$filename}" format="xml">
         <xsl:apply-templates select="."/>
     </xsl:result-document>
   </xsl:for-each>
@@ -33,7 +33,7 @@
 </xsl:template>
 
 <xsl:template match="gesture">
-    <xsl:element name="murml-spec" namespace="http://www.techfak.uni-bielefeld.de/ags/soa/murml">
+    <xsl:element name="murml-description" namespace="http://www.techfak.uni-bielefeld.de/ags/soa/murml">
 	<xsl:apply-templates select="@scope"/>
 	<xsl:apply-templates select="constraints/@stroke"/>
 	<xsl:apply-templates select="constraints"/>

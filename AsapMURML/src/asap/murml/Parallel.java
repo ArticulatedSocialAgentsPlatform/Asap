@@ -12,13 +12,16 @@ import lombok.Getter;
 /**
  * Parser for the MURML parallel element
  * @author hvanwelbergen
- *
+ * 
  */
 public class Parallel extends MURMLElement
 {
     @Getter
     private List<Dynamic> dynamics = new ArrayList<Dynamic>();
     
+    @Getter
+    private List<Static> statics = new ArrayList<Static>();
+
     @Override
     public void decodeContent(XMLTokenizer tokenizer) throws IOException
     {
@@ -31,14 +34,19 @@ public class Parallel extends MURMLElement
                 dynamic.readXML(tokenizer);
                 dynamics.add(dynamic);
             }
-            //TODO: static
+            else if (tag.equals(Static.xmlTag()))
+            {
+                Static s = new Static();
+                s.readXML(tokenizer);
+                statics.add(s);
+            }
             else
             {
-                throw new XMLScanException("Unknown element "+tag+" in parallel");
+                throw new XMLScanException("Unknown element " + tag + " in parallel");
             }
         }
     }
-    
+
     private static final String XMLTAG = "parallel";
 
     public static String xmlTag()

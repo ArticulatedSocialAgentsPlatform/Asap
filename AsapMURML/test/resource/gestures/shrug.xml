@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<murml-spec xmlns="http://www.techfak.uni-bielefeld.de/ags/soa/murml" scope="hand">
+<murml-description xmlns="http://www.techfak.uni-bielefeld.de/ags/soa/murml" scope="hand">
    <dynamic>
 	     <keyframing mode="spline"
                   easescale="5.0"
@@ -33,4 +33,4 @@
 	        </phase>
 	     </keyframing>
      </dynamic>
-</murml-spec>
+</murml-description>

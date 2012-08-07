@@ -1,5 +1,6 @@
 package asap.murml;
 
+import hmi.xml.XMLScanException;
 import hmi.xml.XMLTokenizer;
 
 import java.io.IOException;
@@ -39,6 +40,10 @@ public class Dynamic extends MURMLElement
         {
             dynamicElement = new DynamicElement();
             dynamicElement.readXML(tokenizer);
+        }
+        else
+        {
+            throw new XMLScanException("Unkown tag "+tag+" in <dynamic>");
         }
     }
     

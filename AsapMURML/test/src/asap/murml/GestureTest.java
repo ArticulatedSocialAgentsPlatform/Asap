@@ -2,12 +2,11 @@ package asap.murml;
 
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.fail;
-
-import java.util.List;
 
 import org.hamcrest.collection.IsIterableContainingInOrder;
 import org.junit.Test;
+
+import asap.murml.testutil.MURMLTestUtil;
 
 /**
  * Unit tests for the Gesture element parser
@@ -67,15 +66,7 @@ public class GestureTest
         assertEquals("vc2", frame1.getPosture().getJointValues().get(0).getJointSid());
     }
 
-    private Dynamic getDynamic(Slot slot, List<Dynamic> dynamics)
-    {
-        for(Dynamic dyn:dynamics)
-        {
-            if(dyn.getSlot().equals(slot))return dyn;
-        }
-        fail("dynamic with slot "+slot +"not found in "+dynamics);
-        return null;
-    }
+    
     
     @Test
     public void testProceduralGesture()
@@ -119,7 +110,7 @@ public class GestureTest
         Parallel p = gesture.getConstraints().getParallel();
         assertEquals(4, p.getDynamics().size());
         
-        Dynamic handLoc = getDynamic(Slot.HandLocation, p.getDynamics());
+        Dynamic handLoc = MURMLTestUtil.getDynamic(Slot.HandLocation, p.getDynamics());
         assertEquals(Slot.HandLocation, handLoc.getSlot());
         assertEquals("right_arm", handLoc.getScope());
         DynamicElement dynElem = handLoc.getDynamicElement();
