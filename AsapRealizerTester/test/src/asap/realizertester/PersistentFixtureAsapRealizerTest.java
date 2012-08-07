@@ -2,10 +2,14 @@ package asap.realizertester;
 
 import hmi.animation.VJoint;
 import hmi.audioenvironment.AudioEnvironment;
+import hmi.environmentbase.Environment;
+import hmi.environmentbase.Loader;
 import hmi.mixedanimationenvironment.MixedAnimationEnvironment;
 import hmi.physicsenvironment.OdePhysicsEnvironment;
 import hmi.renderenvironment.HmiRenderEnvironment;
 import hmi.renderenvironment.HmiRenderEnvironment.RenderStyle;
+import hmi.worldobjectenvironment.WorldObject;
+import hmi.worldobjectenvironment.WorldObjectEnvironment;
 
 import java.awt.Toolkit;
 import java.awt.event.WindowEvent;
@@ -30,8 +34,7 @@ import asap.environment.AsapVirtualHuman;
 import asap.realizer.anticipator.Anticipator;
 import asap.realizer.pegboard.BMLBlockPeg;
 import asap.realizer.pegboard.TimePeg;
-import asap.realizer.world.WorldObject;
-import asap.utils.Environment;
+import asap.realizerembodiments.AsapRealizerEmbodiment;
 
 /**
  * Integration test cases for the AsapRealizer
@@ -83,6 +86,7 @@ public class PersistentFixtureAsapRealizerTest extends AbstractASAPRealizerTest
         logger.debug("Started setup");
         BMLTInfo.init();
         HmiRenderEnvironment hre = new HmiRenderEnvironment();
+        WorldObjectEnvironment we = new WorldObjectEnvironment();
         OdePhysicsEnvironment ope = new OdePhysicsEnvironment();
         MixedAnimationEnvironment mae = new MixedAnimationEnvironment();
         staticEnvironment = new AsapEnvironment();
@@ -92,17 +96,19 @@ public class PersistentFixtureAsapRealizerTest extends AbstractASAPRealizerTest
         mainUI.setSize(1000, 600);
 
         hre.init(); // canvas does not exist until init was called
+        we.init();
         ope.init();
         aue.init();
         mae.init(ope);
         ArrayList<Environment> environments = new ArrayList<Environment>();
         environments.add(hre);
+        environments.add(we);
         environments.add(ope);
         environments.add(mae);
         environments.add(aue);
         environments.add(staticEnvironment);
 
-        staticEnvironment.init(environments, ope.getPhysicsSchedulingClock()); // if no physics, just use renderclock here!
+        staticEnvironment.init(environments, ope.getPhysicsClock()); // if no physics, just use renderclock here!
 
         // this clock method drives the engines in ee. if no physics, then register ee as a listener at the render clock!
         ope.addPrePhysicsCopyListener(staticEnvironment);
@@ -116,7 +122,7 @@ public class PersistentFixtureAsapRealizerTest extends AbstractASAPRealizerTest
 
         // add worldobject "camera" that we can use to look at user :)
         VJoint camera = hre.getCameraTarget();
-        staticEnvironment.getWorldObjectManager().addWorldObject("camera", new WorldObject(camera));
+        we.getWorldObjectManager().addWorldObject("camera", new WorldObject(camera));
 
         try
         {
@@ -135,7 +141,7 @@ public class PersistentFixtureAsapRealizerTest extends AbstractASAPRealizerTest
                 0.2f, 1, 1 }, new float[] { 0.2f, 0.2f, 1, 0 }, new float[] { 0.2f, 0.2f, 1, 1 });
         VJoint boxJoint = hre.getObjectRootJoint("bluebox");
         boxJoint.setTranslation(-0.25f, 1.45f, 0.3f);
-        staticEnvironment.getWorldObjectManager().addWorldObject("bluebox", new WorldObject(boxJoint));
+        we.getWorldObjectManager().addWorldObject("bluebox", new WorldObject(boxJoint));
         logger.debug("Finished setup");
     }
 
@@ -149,7 +155,10 @@ public class PersistentFixtureAsapRealizerTest extends AbstractASAPRealizerTest
         realizerHandler.setRealizerTestPort(new AsapRealizerPort(realizerPort));
 
         anticipator = new DummyAnticipator(1000000d, 2000000d);
-        vHuman.getElckerlycRealizer().getScheduler().addAnticipator("dummyanticipator", anticipator);
+        for (Loader l: vHuman.getLoaders().values())
+        {
+        	if (l instanceof AsapRealizerEmbodiment)((AsapRealizerEmbodiment)l).getBmlScheduler().addAnticipator("dummyanticipator", anticipator);
+        }
         realizerHandler.performBML("<bml xmlns=\"http://www.bml-initiative.org/bml/bml-1.0\" "
                 + "id=\"replacesetup\" composition=\"REPLACE\"/>");
         realizerHandler.waitForBMLEndFeedback("replacesetup");

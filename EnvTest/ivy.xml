@@ -37,6 +37,7 @@
 
       <dependency org="Asap"   name="AsapRealizer"     rev="latest.${resolve.status}"   />    
       <dependency org="Asap"   name="AsapRealizerEmbodiments"     rev="latest.${resolve.status}"   />    
+      <dependency org="Asap"   name="AsapEnvironment"     rev="latest.${resolve.status}"   />    
 
       <dependency org="Asap"   name="AsapFaceEngine"     rev="latest.${resolve.status}"   />    
       <dependency org="Asap"   name="AsapAnimationEngine"     rev="latest.${resolve.status}"   />    

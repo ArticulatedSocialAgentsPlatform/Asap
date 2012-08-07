@@ -1,5 +1,0 @@
-<bml id="bml1" xmlns:bmlt="http://hmi.ewi.utwente.nl/bmlt">
-  <bmlt:procanimation id="ht1" name="headturn" start="0"  end="5"/>
-  
-
-</bml>

@@ -194,7 +194,7 @@ public class JFrameEmbodiment implements JComponentEmbodiment, EmbodimentLoader
         else if (tokenizer.atSTag("BmlUI"))
         {
             attrMap = tokenizer.getAttributes();
-            String demoscriptdir = adapter.getOptionalAttribute("demoscriptresources", attrMap, "bml/defaultexamples");
+            String demoscriptdir = adapter.getOptionalAttribute("demoscriptresources", attrMap, "bml1.0/defaultexamples");
             addJComponent(new RealizerBridgeUI(are.getRealizerPort(), demoscriptdir));
             tokenizer.takeSTag("BmlUI");
             tokenizer.takeETag("BmlUI");
