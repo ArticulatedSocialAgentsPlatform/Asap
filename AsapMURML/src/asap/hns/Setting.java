@@ -1,20 +1,19 @@
 package asap.hns;
 
-import java.util.HashMap;
-
-import lombok.Getter;
 import hmi.xml.XMLStructureAdapter;
 import hmi.xml.XMLTokenizer;
 
+import java.util.HashMap;
+
+import lombok.Getter;
+
 /**
- * Parses a hns symbole
+ * hns setting parser
  * @author hvanwelbergen
+ *
  */
-public class Symbol extends XMLStructureAdapter
+public class Setting extends XMLStructureAdapter
 {
-    @Getter
-    private String className;
-    
     @Getter
     private String name;
     
@@ -24,12 +23,11 @@ public class Symbol extends XMLStructureAdapter
     @Override
     public void decodeAttributes(HashMap<String, String> attrMap, XMLTokenizer tokenizer)
     {
-        className = getRequiredAttribute("class", attrMap, tokenizer);
         name = getRequiredAttribute("name", attrMap, tokenizer);
         value = getRequiredAttribute("value", attrMap, tokenizer);        
     }
     
-    static final String XMLTAG = "symbol";
+    private static final String XMLTAG = "setting";
 
     public static String xmlTag()
     {
