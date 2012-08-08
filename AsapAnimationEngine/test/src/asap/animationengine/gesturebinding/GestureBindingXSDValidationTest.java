@@ -19,8 +19,11 @@ public class GestureBindingXSDValidationTest extends XSDValidationTest
 {
     private static final Resources GB_XSD_RES = new Resources("xsd");
     private static final String GB_XSD = "gesturebinding.xsd";
-    private static final String GB_DIR = 
-        System.getProperty("shared.project.root")+"/AsapResource/AsapHumanoidControlShared/resource/Humanoids/shared/gesturebinding";
+    private static final String GB_DIRS[] = {
+        System.getProperty("shared.project.root")+"/asapresource/AsapHumanoidControlShared/resource/Humanoids/shared/gesturebinding",
+        System.getProperty("shared.project.root")+"/asapresource/AsapHumanoidControlArmandia/resource/Humanoids/armandia/gesturebinding"
+    };
+        
     
     @Before
     public void setup()
@@ -31,7 +34,7 @@ public class GestureBindingXSDValidationTest extends XSDValidationTest
     @Parameters
     public static Collection<Object[]> configs()
     {
-        return configs(GB_DIR);
+        return configs(GB_DIRS);        
     }
     
     public GestureBindingXSDValidationTest(String label, File f)
