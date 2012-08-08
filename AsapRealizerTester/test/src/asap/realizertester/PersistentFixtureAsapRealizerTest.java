@@ -129,7 +129,7 @@ public class PersistentFixtureAsapRealizerTest extends AbstractASAPRealizerTest
             // vHuman = staticEnvironment.loadVirtualHuman("blueguy", "Humanoids/blueguy",
             // "blueguy_asaploader_mary_hudson.xml", "blueguy - test avatar");
             // vHuman = staticEnvironment.loadVirtualHuman("Humanoids/armandia", "vhloadermaryttsasaprealizertester.xml", "TestAvatar");
-            vHuman = staticEnvironment.loadVirtualHuman("armandia", "Humanoids/armandia", "armandia_asaploader_mary_hudson.xml",
+            vHuman = staticEnvironment.loadVirtualHuman("armandia", "AsapRealizerTester", "armandia_asaploader_mary_hudson.xml",
                     "TestAvatar");
         }
         catch (IOException ex)

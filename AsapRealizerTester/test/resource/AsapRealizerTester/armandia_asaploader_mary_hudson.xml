@@ -1,5 +1,5 @@
 <AsapVirtualHuman>
-  <BMLRealizer>
+  <Loader id="realizer" loader="asap.realizerembodiments.AsapRealizerEmbodiment">
     <BMLParser>
       <BMLAttributeExtension class="asap.bml.ext.bmlb.BMLBBMLBehaviorAttributes"/>
       <BMLAttributeExtension class="asap.bml.ext.bmlt.BMLTBMLBehaviorAttributes"/>
@@ -7,7 +7,7 @@
     <BMLScheduler>
       <SchedulingHandler class="asap.realizer.scheduler.BMLBandTSchedulingHandler" schedulingStrategy="asap.realizer.scheduler.SortedSmartBodySchedulingStrategy"/>
     </BMLScheduler>
-  </BMLRealizer>
+  </Loader>
 
   <Loader id="graphicalembodiment" loader="hmi.renderenvironment.HmiRenderEmbodimentLoader">
     <Body postprocessing="ARMANDIA" 
