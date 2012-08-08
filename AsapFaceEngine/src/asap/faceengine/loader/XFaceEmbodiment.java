@@ -19,22 +19,21 @@
  ******************************************************************************/
 package asap.faceengine.loader;
 
+import hmi.environmentbase.CopyEmbodiment;
+import hmi.environmentbase.Embodiment;
+import hmi.environmentbase.EmbodimentLoader;
+import hmi.environmentbase.Environment;
+import hmi.environmentbase.Loader;
 import hmi.faceanimation.FaceController;
-import hmi.faceanimation.FaceEmbodiment;
 import hmi.faceanimation.util.XFaceController;
 import hmi.faceanimation.util.XfaceInterface;
+import hmi.faceembodiments.FaceEmbodiment;
 import hmi.xml.XMLStructureAdapter;
 import hmi.xml.XMLTokenizer;
 
 import java.io.IOException;
 import java.util.HashMap;
 
-import asap.environment.AsapVirtualHuman;
-import asap.environment.EmbodimentLoader;
-import asap.environment.Loader;
-import asap.utils.CopyEmbodiment;
-import asap.utils.Embodiment;
-import asap.utils.Environment;
 
 /**
  * Loader for an XFaceEmbodiment
@@ -63,10 +62,9 @@ public class XFaceEmbodiment implements FaceEmbodiment, CopyEmbodiment, Embodime
     }
 
     @Override
-    public void readXML(XMLTokenizer tokenizer, String newId, AsapVirtualHuman avh, Environment[] environments, Loader... requiredLoaders)
-            throws IOException
+    public void readXML(XMLTokenizer tokenizer, String loaderId, String vhId, String vhName, Environment[] environments, Loader ... requiredLoaders) throws IOException
     {
-        id = newId;
+        id = loaderId;
 
         while (!tokenizer.atETag("Loader"))
         {

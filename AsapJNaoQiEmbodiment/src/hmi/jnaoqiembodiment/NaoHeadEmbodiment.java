@@ -1,8 +1,9 @@
 package hmi.jnaoqiembodiment;
 
+import hmi.headandgazeembodiments.EulerHeadEmbodiment;
+
 import com.aldebaran.proxy.DCMProxy;
 
-import asap.utils.EulerHeadEmbodiment;
 
 /**
  * Steers the Nao Head using dcm 

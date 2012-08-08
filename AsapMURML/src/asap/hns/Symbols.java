@@ -1,6 +1,10 @@
 package asap.hns;
 
 import java.io.IOException;
+import java.util.HashMap;
+import java.util.Map;
+
+import lombok.Getter;
 
 import hmi.xml.XMLScanException;
 import hmi.xml.XMLStructureAdapter;
@@ -13,6 +17,9 @@ import hmi.xml.XMLTokenizer;
  */
 public class Symbols extends XMLStructureAdapter
 {
+    @Getter
+    private Map<String, Map<String, String>> symbols = new HashMap<>(); // className->(name->value)
+    
     @Override
     public void decodeContent(XMLTokenizer tokenizer) throws IOException
     {
@@ -23,7 +30,13 @@ public class Symbols extends XMLStructureAdapter
             {
                 Symbol s = new Symbol();
                 s.readXML(tokenizer);   
-                //TODO: actually do something with the symbol
+                Map<String, String> map = symbols.get(s.getClassName());
+                if(map==null)
+                {
+                    map = new HashMap<>();
+                    symbols.put(s.getClassName(),map);
+                }
+                map.put(s.getName(), s.getValue());
             }            
             else
             {

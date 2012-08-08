@@ -19,16 +19,15 @@
  ******************************************************************************/
 package asap.nao.loader;
 
+import hmi.environmentbase.Embodiment;
+import hmi.environmentbase.EmbodimentLoader;
+import hmi.environmentbase.Environment;
+import hmi.environmentbase.Loader;
 import hmi.xml.XMLTokenizer;
 
 import java.io.IOException;
 
-import asap.environment.AsapVirtualHuman;
-import asap.environment.EmbodimentLoader;
-import asap.environment.Loader;
 import asap.nao.Nao;
-import asap.utils.Embodiment;
-import asap.utils.Environment;
 
 /** Take care of its own loading from XML. */
 public class NaoEmbodiment implements EmbodimentLoader, Embodiment
@@ -51,9 +50,9 @@ public class NaoEmbodiment implements EmbodimentLoader, Embodiment
    * Creates a Nao class to get a connection with the Nao 
   */
   @Override
-  public void readXML(XMLTokenizer tokenizer, String newId, AsapVirtualHuman avh, Environment[] environments, Loader ... requiredLoaders) throws IOException
+  public void readXML(XMLTokenizer tokenizer, String loaderId, String vhId, String vhName, Environment[] environments, Loader ... requiredLoaders) throws IOException
   {
-	setId(newId);
+	setId(loaderId);
 	nao = new Nao();
     return;
   }

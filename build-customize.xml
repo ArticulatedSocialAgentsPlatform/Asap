@@ -132,15 +132,34 @@
             breakiterator="yes"
         > 
             <classpath refid="javac-classpath"/>
-                <group title="AsapBML" packages="asap.bml*"/>
-                <group title="AsapRealizer" packages="asap.realizer"/>
-                <group title="AsapAnimationEngine" packages="asap.animationengine*"/>
-                <group title="AsapRealizerTester" packages="asap.realizertester*"/>
+                <group title="BMLRealizerBase" packages="asap.murml*,asap.bml*,asap.math*"/>
+                <group title="AsapTesting" packages="asap.testutil*,asap.realizertestutil*,asap.realizertester*,asap.realizerintegrationtests*"/>
+                <group title="AsapRealizer" packages="asap.realizer*"/>
+                <group title="AsapEngineUtils" packages="asap.motionunit*,asap.binding*,asap.timemanipulator*"/>
+                <group title="AsapEnvironment" packages="asap.environment*,asap.realizerembodiments*"/>
                 <sourcepath>
+                    <pathelement path="AsapMURML/src/"/>
                     <pathelement path="AsapBML/src/"/>
+                    <pathelement path="AsapTestUtil/src/"/>
+                    <pathelement path="AsapMath/src/"/>
                     <pathelement path="AsapRealizer/src/"/>
+                    <pathelement path="AsapBinding/src/"/>
+                    <pathelement path="AsapMotionUnit/src/"/>
+                    <pathelement path="AsapRealizerEmbodiments/src/"/>
+                    <pathelement path="AsapEnvironment/src/"/>
                     <pathelement path="AsapAnimationEngine/src/"/>
+                    <pathelement path="AsapFaceEngine/src/"/>
+                    <pathelement path="AsapAudioEngine/src/"/>
+                    <pathelement path="AsapSpeechEngine/src/"/>
+                    <pathelement path="AsapTextEngine/src/"/>
+                    <pathelement path="AsapPictureEngine/src/"/>
+                    <pathelement path="AsapEmitterEngine/src/"/>
+                    <pathelement path="AsapLiveMocapEngine/src/"/>
+                    <pathelement path="AsapJNaoQiEmbodiment/src/"/>
+                    <pathelement path="AsapNaoEngine/src/"/>
+                    <pathelement path="AsapRealizerIntegrationTests/src/"/>
                     <pathelement path="AsapRealizerTester/src/"/>
+                    <pathelement path="AsapRealizerTestUtil/src/"/>
                 </sourcepath>
         </javadoc>
         <mkdir dir="${dist.dir}"/>

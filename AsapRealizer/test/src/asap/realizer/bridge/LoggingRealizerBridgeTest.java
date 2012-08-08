@@ -27,7 +27,7 @@ import asap.bml.bridge.RealizerPort;
 import asap.bml.feedback.BMLListener;
 import asap.bml.feedback.ListFeedbackListener;
 import asap.bml.util.BMLFeedbackManager;
-import asap.utils.SchedulingClock;
+import hmi.util.Clock;
 /**
  * Unit tests for the LoggingRealizerBridge
  * @author Herwin
@@ -40,7 +40,7 @@ public class LoggingRealizerBridgeTest
     private StubInputBridge inputBridge;
     private StubOutputBridge outputBridge;
     private List<BMLSyncPointProgressFeedback> fbList;
-    private SchedulingClock mockSchedulingClock = mock(SchedulingClock.class);
+    private Clock mockSchedulingClock = mock(Clock.class);
     Logger mockLogger = mock(Logger.class);
     
     

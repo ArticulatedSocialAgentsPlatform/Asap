@@ -26,10 +26,10 @@ import java.util.List;
 import java.util.Set;
 
 import lombok.Getter;
-
-import com.google.common.collect.ImmutableSet;
 import asap.animationengine.AnimationPlayer;
-import asap.animationengine.motionunit.*;
+import asap.animationengine.motionunit.AnimationUnit;
+import asap.animationengine.motionunit.PhysicalTMU;
+import asap.animationengine.motionunit.TimedAnimationUnit;
 import asap.motionunit.MUPlayException;
 import asap.realizer.feedback.FeedbackManager;
 import asap.realizer.pegboard.BMLBlockPeg;
@@ -40,6 +40,8 @@ import asap.realizer.planunit.KeyPositionManager;
 import asap.realizer.planunit.KeyPositionManagerImpl;
 import asap.realizer.planunit.ParameterException;
 import asap.realizer.planunit.ParameterNotFoundException;
+
+import com.google.common.collect.ImmutableSet;
 
 /**
  * MotionUnit for a physical controller

@@ -25,6 +25,7 @@ package asap.picture.planunit;
  *
  * @author Jordi Hendrix
  */
+@SuppressWarnings("serial")
 public class PUPrepareException extends Exception {
 
     public PUPrepareException(String message) {

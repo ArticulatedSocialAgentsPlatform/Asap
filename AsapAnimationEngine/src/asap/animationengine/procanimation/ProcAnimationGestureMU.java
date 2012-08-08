@@ -3,7 +3,6 @@ package asap.animationengine.procanimation;
 import hmi.animation.Hanim;
 import hmi.animation.VJoint;
 import hmi.animation.VJointUtils;
-import saiba.bml.BMLGestureSync;
 import hmi.math.Vec3f;
 import hmi.util.Resources;
 import hmi.util.StringUtil;
@@ -14,6 +13,7 @@ import java.util.List;
 import java.util.Set;
 
 import lombok.extern.slf4j.Slf4j;
+import saiba.bml.BMLGestureSync;
 import asap.animationengine.AnimationPlayer;
 import asap.animationengine.MovementTimingUtils;
 import asap.animationengine.motionunit.AnimationUnit;

@@ -18,12 +18,13 @@
  ******************************************************************************/
 package asap.animationengine.gaze;
 
+import hmi.animation.Hanim;
+import hmi.animation.VJoint;
+import hmi.math.Quat4f;
 import asap.animationengine.AnimationPlayer;
 import asap.motionunit.MUPlayException;
 import asap.realizer.planunit.KeyPosition;
-import asap.realizer.util.timemanipulator.*;
-import hmi.animation.*;
-import hmi.math.*;
+import asap.realizer.util.timemanipulator.SigmoidManipulator;
 
 /**
  * Very simple dynamic gaze tracker, does not use any prediction. Interpolates

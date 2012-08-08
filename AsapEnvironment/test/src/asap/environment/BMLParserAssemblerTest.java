@@ -1,15 +1,16 @@
 package asap.environment;
 
-import static org.junit.Assert.*;
+import static org.junit.Assert.assertNotNull;
+import hmi.xml.XMLTokenizer;
 
 import java.util.HashMap;
 
-import saiba.bml.core.BMLBehaviorAttributeExtension;
-import saiba.bml.core.BehaviourBlock;
-import saiba.bml.core.BMLBlockComposition;
-import hmi.xml.XMLTokenizer;
-
 import org.junit.Test;
+
+import saiba.bml.core.BMLBehaviorAttributeExtension;
+import saiba.bml.core.BMLBlockComposition;
+import saiba.bml.core.BehaviourBlock;
+import asap.realizerembodiments.impl.BMLParserAssembler;
 
 /**
  * Unit test cases for BMLParserAssembler

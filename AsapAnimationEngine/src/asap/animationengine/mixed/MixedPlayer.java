@@ -18,16 +18,21 @@
  ******************************************************************************/
 package asap.animationengine.mixed;
 
+import hmi.animation.VJoint;
+import hmi.math.NumMath;
+import hmi.math.Quat4f;
+import hmi.math.Vec3f;
+import hmi.math.Vec4f;
+import hmi.physics.PhysicalHumanoid;
+import hmi.physics.PhysicalJoint;
+import hmi.physics.inversedynamics.IDSegment;
+import hmi.physics.mixed.Branch;
+import hmi.physics.mixed.MixedSystem;
+import hmi.util.PhysicsSync;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import hmi.animation.*;
-import hmi.math.*;
-import asap.utils.*;
-import hmi.physics.*;
-import hmi.physics.inversedynamics.*;
-import hmi.physics.mixed.Branch;
-import hmi.physics.mixed.MixedSystem;
 
 /**
  * Manages the playback of motion on a mixedsystem

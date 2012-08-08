@@ -17,9 +17,14 @@ package asap.animationengine.gaze;
  * You should have received a copy of the GNU General Public License
  * along with Elckerlyc.  If not, see http://www.gnu.org/licenses/.
  ******************************************************************************/
-import java.util.Set;
+import hmi.animation.Hanim;
+import hmi.math.Quat4f;
+import hmi.math.Vec3f;
+import hmi.neurophysics.EyeSaturation;
+import hmi.neurophysics.ListingsLaw;
+import hmi.neurophysics.Saccade;
 
-import com.google.common.collect.ImmutableSet;
+import java.util.Set;
 
 import asap.animationengine.AnimationPlayer;
 import asap.animationengine.motionunit.MUSetupException;
@@ -28,12 +33,8 @@ import asap.motionunit.MUPlayException;
 import asap.realizer.feedback.FeedbackManager;
 import asap.realizer.pegboard.BMLBlockPeg;
 import asap.realizer.pegboard.PegBoard;
-import hmi.animation.Hanim;
-import hmi.math.Quat4f;
-import hmi.math.Vec3f;
-import hmi.neurophysics.EyeSaturation;
-import hmi.neurophysics.ListingsLaw;
-import hmi.neurophysics.Saccade;
+
+import com.google.common.collect.ImmutableSet;
 
 /**
  * Constant velocity saccade to target.

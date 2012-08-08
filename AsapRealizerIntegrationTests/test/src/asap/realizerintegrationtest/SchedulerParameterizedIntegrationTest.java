@@ -92,17 +92,16 @@ import asap.realizer.scheduler.BMLScheduler;
 import asap.realizer.wait.TimedWaitUnit;
 import asap.realizer.wait.WaitPlanner;
 import asap.speechengine.DirectTTSUnitFactory;
-import asap.speechengine.StdoutTextOutput;
 import asap.speechengine.TTSPlanner;
-import asap.speechengine.TextPlanner;
 import asap.speechengine.TimedTTSUnit;
 import asap.speechengine.TimedTTSUnitFactory;
-import asap.speechengine.TimedTextSpeechUnit;
 import asap.speechengine.WavTTSUnitFactory;
 import asap.speechengine.ttsbinding.MaryTTSBindingFactory;
 import asap.speechengine.ttsbinding.SAPITTSBindingFactory;
 import asap.speechengine.ttsbinding.TTSBindingFactory;
-import asap.utils.SystemSchedulingClock;
+import asap.textengine.StdoutTextOutput;
+import asap.textengine.TextPlanner;
+import asap.textengine.TimedSpeechTextUnit;
 
 import com.google.common.collect.ImmutableSet;
 
@@ -118,10 +117,10 @@ class TextEngineFactory implements SpeechEngineFactory
     @Override
     public Engine createEngine(FeedbackManager bfm, BMLBlockManager bbm)
     {
-        PlanManager<TimedTextSpeechUnit> planManager = new PlanManager<TimedTextSpeechUnit>();
-        Player player = new DefaultPlayer(new SingleThreadedPlanPlayer<TimedTextSpeechUnit>(bfm, planManager));
+        PlanManager<TimedSpeechTextUnit> planManager = new PlanManager<TimedSpeechTextUnit>();
+        Player player = new DefaultPlayer(new SingleThreadedPlanPlayer<TimedSpeechTextUnit>(bfm, planManager));
         TextPlanner planner = new TextPlanner(bfm, new StdoutTextOutput(), planManager);
-        return new DefaultEngine<TimedTextSpeechUnit>(planner, player, planManager);
+        return new DefaultEngine<TimedSpeechTextUnit>(planner, player, planManager);
     }
 
     @Override
@@ -337,7 +336,7 @@ public class SchedulerParameterizedIntegrationTest
         BMLParser parser = new BMLParser(new ImmutableSet.Builder<Class<? extends BMLBehaviorAttributeExtension>>().add(
                 BMLTBMLBehaviorAttributes.class).build());
 
-        realizer = new AsapRealizer("avatar1", parser, bfm, new SystemSchedulingClock(clock), bbm, pegBoard, animationEngine, speechEngine,
+        realizer = new AsapRealizer("avatar1", parser, bfm, clock, bbm, pegBoard, animationEngine, speechEngine,
                 auEngine, waitEngine, pvpcEngine);
 
         res = new Resources("bmltest");

@@ -1,12 +1,12 @@
 package asap.animationengine;
 
-import java.util.Set;
-
 import hmi.animation.Hanim;
 import hmi.animation.VJoint;
 import hmi.math.Quat4f;
 import hmi.math.Vec3f;
 import hmi.neurophysics.FittsLaw;
+
+import java.util.Set;
 
 /**
  * utility class to determine movement timing 

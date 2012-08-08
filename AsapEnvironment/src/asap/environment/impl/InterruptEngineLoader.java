@@ -19,13 +19,13 @@
  ******************************************************************************/
 package asap.environment.impl;
 
+import hmi.environmentbase.EmbodimentLoader;
+import hmi.environmentbase.Environment;
+import hmi.environmentbase.Loader;
 import hmi.xml.XMLTokenizer;
 
 import java.io.IOException;
 
-import asap.environment.AsapVirtualHuman;
-import asap.environment.EngineLoader;
-import asap.environment.Loader;
 import asap.realizer.DefaultEngine;
 import asap.realizer.DefaultPlayer;
 import asap.realizer.Engine;
@@ -34,7 +34,8 @@ import asap.realizer.interrupt.InterruptPlanner;
 import asap.realizer.interrupt.TimedInterruptUnit;
 import asap.realizer.planunit.PlanManager;
 import asap.realizer.planunit.SingleThreadedPlanPlayer;
-import asap.utils.Environment;
+import asap.realizerembodiments.AsapRealizerEmbodiment;
+import asap.realizerembodiments.EngineLoader;
 
 /**
  * NO XML. Default engine.
@@ -47,23 +48,28 @@ public class InterruptEngineLoader implements EngineLoader
     private PlanManager<TimedInterruptUnit> iPlanManager = null;
     private InterruptPlanner iPlanner = null;
     private String id = "";
-    // some variables cached during loading
-    private AsapVirtualHuman theVirtualHuman = null;
 
     @Override
-    public void readXML(XMLTokenizer tokenizer, String newId, AsapVirtualHuman avh, Environment[] environments, Loader... requiredLoaders)
-            throws IOException
+    public void readXML(XMLTokenizer tokenizer, String loaderId, String vhId, String vhName, Environment[] environments, Loader ... requiredLoaders) throws IOException
     {
-        id = newId;
-        theVirtualHuman = avh;
+        id = loaderId;
+        AsapRealizerEmbodiment are = null;
+        for (Loader e : requiredLoaders)
+        {
+            if (e instanceof EmbodimentLoader && ((EmbodimentLoader) e).getEmbodiment() 
+                    instanceof AsapRealizerEmbodiment) are = (AsapRealizerEmbodiment) ((EmbodimentLoader) e).getEmbodiment();
+        }
+        if (are == null)
+        {
+            throw new RuntimeException("SpeechEngineLoader requires an EmbodimentLoader containing a AsapRealizerEmbodiment");
+        }
         iPlanManager = new PlanManager<TimedInterruptUnit>();
-        iPlayer = new DefaultPlayer(new SingleThreadedPlanPlayer<TimedInterruptUnit>(theVirtualHuman.getElckerlycRealizer()
-                .getFeedbackManager(), iPlanManager));
-        iPlanner = new InterruptPlanner(theVirtualHuman.getElckerlycRealizer().getFeedbackManager(), iPlanManager);
-        iPlanner.setScheduler(theVirtualHuman.getBmlScheduler());
+        iPlayer = new DefaultPlayer(new SingleThreadedPlanPlayer<TimedInterruptUnit>(are.getFeedbackManager(), iPlanManager));
+        iPlanner = new InterruptPlanner(are.getFeedbackManager(), iPlanManager);
+        iPlanner.setScheduler(are.getBmlScheduler());
         engine = new DefaultEngine<TimedInterruptUnit>(iPlanner, iPlayer, iPlanManager);
         engine.setId(id);
-        theVirtualHuman.getElckerlycRealizer().addEngine(engine);
+        are.addEngine(engine);
 
     }
 

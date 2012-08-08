@@ -1,10 +1,10 @@
 package asap.livemocapengine.planunit;
 
+import hmi.headandgazeembodiments.EulerHeadEmbodiment;
 import asap.livemocapengine.inputs.EulerInput;
 import asap.realizer.feedback.FeedbackManager;
 import asap.realizer.pegboard.BMLBlockPeg;
 import asap.realizer.planunit.TimedPlanUnitPlayException;
-import asap.utils.EulerHeadEmbodiment;
 
 /**
  * Uses an EulerInput to remotely control a head embodiment

@@ -1,5 +1,7 @@
 package asap.faceengine.loader;
 
+import hmi.environmentbase.Environment;
+import hmi.environmentbase.Loader;
 import hmi.util.Resources;
 import hmi.xml.XMLStructureAdapter;
 import hmi.xml.XMLTokenizer;
@@ -7,9 +9,6 @@ import hmi.xml.XMLTokenizer;
 import java.io.IOException;
 import java.util.HashMap;
 
-import asap.environment.AsapVirtualHuman;
-import asap.environment.LipSynchProviderLoader;
-import asap.environment.Loader;
 import asap.faceengine.lipsync.TimedFaceUnitLipSynchProvider;
 import asap.faceengine.viseme.FACSVisemeBinding;
 import asap.faceengine.viseme.MorphVisemeBinding;
@@ -17,7 +16,7 @@ import asap.faceengine.viseme.VisemeBinding;
 import asap.faceengine.viseme.VisemeToFACSMapping;
 import asap.faceengine.viseme.VisemeToMorphMapping;
 import asap.realizer.lipsync.LipSynchProvider;
-import asap.utils.Environment;
+import asap.realizerembodiments.LipSynchProviderLoader;
 
 /**
  * Loads a TimedFaceUnitLipSynchProvider
@@ -41,10 +40,9 @@ public class TimedFaceUnitLipSynchProviderLoader implements LipSynchProviderLoad
     }
 
     @Override
-    public void readXML(XMLTokenizer tokenizer, String newId, AsapVirtualHuman avh, Environment[] environments, Loader... requiredLoaders)
-            throws IOException
+    public void readXML(XMLTokenizer tokenizer, String loaderId, String vhId, String vhName, Environment[] environments, Loader ... requiredLoaders) throws IOException
     {
-        setId(newId);
+        setId(loaderId);
 
         FaceEngineLoader fal = null;
         for (Loader e : requiredLoaders)

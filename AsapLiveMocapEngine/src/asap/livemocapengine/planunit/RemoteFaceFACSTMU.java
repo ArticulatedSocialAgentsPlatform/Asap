@@ -1,11 +1,11 @@
 package asap.livemocapengine.planunit;
 
+import hmi.faceembodiments.AUConfig;
+import hmi.faceembodiments.FACSFaceEmbodiment;
 import asap.livemocapengine.inputs.FACSFaceInput;
 import asap.realizer.feedback.FeedbackManager;
 import asap.realizer.pegboard.BMLBlockPeg;
 import asap.realizer.planunit.TimedPlanUnitPlayException;
-import asap.utils.FACSFaceEmbodiment;
-import asap.utils.AUConfig;
 
 /**
  * Uses an FACSFaceInput to remotely control a FACSFaceEmbodiment

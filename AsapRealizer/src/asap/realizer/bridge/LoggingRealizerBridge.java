@@ -13,7 +13,7 @@ import asap.bml.feedback.BMLFeedbackListener;
 import asap.bml.feedback.BMLListener;
 import asap.bml.feedback.BMLPredictionListener;
 import asap.bml.feedback.BMLWarningListener;
-import asap.utils.SchedulingClock;
+import hmi.util.Clock;
 
 /**
  * A LoggingRealizerBridge can be put between two bridges to log their communication.
@@ -27,20 +27,20 @@ public class LoggingRealizerBridge implements RealizerPort, BMLFeedbackListener,
 {
     private final Logger logger;
     private final RealizerPort outputBridge;
-    private final SchedulingClock clock;
+    private final Clock schedulingClock;
     private final boolean logRequests;
     private final boolean logFeedback;
 
-    public LoggingRealizerBridge(Logger logger, RealizerPort outBridge, SchedulingClock clock)
+    public LoggingRealizerBridge(Logger logger, RealizerPort outBridge, Clock clock)
     {
         this(logger, outBridge, clock, true, true);
     }
 
-    public LoggingRealizerBridge(Logger logger, RealizerPort outBridge, SchedulingClock clock, boolean logR, boolean logF)
+    public LoggingRealizerBridge(Logger logger, RealizerPort outBridge, Clock clock, boolean logR, boolean logF)
     {
         this.logger = logger;
         this.outputBridge = outBridge;
-        this.clock = clock;
+        this.schedulingClock = clock;
         this.logRequests = logR;
         this.logFeedback = logF;
         outputBridge.addListeners(this);
@@ -81,7 +81,7 @@ public class LoggingRealizerBridge implements RealizerPort, BMLFeedbackListener,
     {
         if (logRequests)
         {
-            logger.info("<entry name=\"{}\" time=\"{}\">", logger.getName(), clock.getTime());
+            logger.info("<entry name=\"{}\" time=\"{}\">", logger.getName(), schedulingClock.getMediaSeconds());
             logger.info(bmlString);
             logger.info("</entry>");
         }

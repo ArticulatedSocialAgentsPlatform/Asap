@@ -21,8 +21,8 @@ public class CompoundControllerXSDValidationIntegrationTest extends XSDValidatio
     private static final Resources CC_XSD_RES = new Resources("xsd");
     private static final String CC_XSD = "compoundcontroller.xsd";
     private static final String CC_DIRS[] = {
-            System.getProperty("shared.project.root") + "/HmiResource/HmiHumanoidBodyControl/resource/Humanoids/shared/controllers",
-            System.getProperty("shared.project.root") + "/HmiResource/HmiHumanoidBodyControl/resource/Humanoids/armandia/controllers" };
+            System.getProperty("shared.project.root") + "/AsapResource/AsapHumanoidControlShared/resource/Humanoids/shared/controllers",
+            System.getProperty("shared.project.root") + "/AsapResource/AsapHumanoidControlArmandia/resource/Humanoids/armandia/controllers" };
 
     @Before
     public void setup()

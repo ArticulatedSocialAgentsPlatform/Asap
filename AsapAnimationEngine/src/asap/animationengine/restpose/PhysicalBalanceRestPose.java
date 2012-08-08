@@ -16,7 +16,6 @@ import java.util.List;
 import java.util.Set;
 
 import lombok.extern.slf4j.Slf4j;
-
 import asap.animationengine.AnimationPlayer;
 import asap.animationengine.MovementTimingUtils;
 import asap.animationengine.controller.CompoundController;

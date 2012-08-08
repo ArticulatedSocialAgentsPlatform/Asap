@@ -1,5 +1,9 @@
 package asap.livemocapengine.loader;
 
+import hmi.environmentbase.EmbodimentLoader;
+import hmi.environmentbase.Environment;
+import hmi.environmentbase.Loader;
+import hmi.environmentbase.SensorLoader;
 import hmi.xml.XMLScanException;
 import hmi.xml.XMLStructureAdapter;
 import hmi.xml.XMLTokenizer;
@@ -8,11 +12,6 @@ import java.io.IOException;
 import java.util.HashMap;
 
 import lombok.Getter;
-import asap.environment.AsapVirtualHuman;
-import asap.environment.EmbodimentLoader;
-import asap.environment.EngineLoader;
-import asap.environment.Loader;
-import asap.environment.SensorLoader;
 import asap.livemocapengine.LiveMocapPlanner;
 import asap.livemocapengine.binding.NameTypeBinding;
 import asap.livemocapengine.planunit.LiveMocapTMU;
@@ -22,7 +21,8 @@ import asap.realizer.Engine;
 import asap.realizer.feedback.FeedbackManager;
 import asap.realizer.planunit.PlanManager;
 import asap.realizer.planunit.SingleThreadedPlanPlayer;
-import asap.utils.Environment;
+import asap.realizerembodiments.AsapRealizerEmbodiment;
+import asap.realizerembodiments.EngineLoader;
 
 /**
  * Loader for the LiveMocapEngine, connects this engine to input and output loaders.
@@ -43,22 +43,27 @@ public class LiveMocapEngineLoader implements EngineLoader
     }
 
     @Override
-    public void readXML(XMLTokenizer tokenizer, String newId, AsapVirtualHuman avh, Environment[] environments, Loader... requiredLoaders)
-            throws IOException
+    public void readXML(XMLTokenizer tokenizer, String loaderId, String vhId, String vhName, Environment[] environments, Loader ... requiredLoaders) throws IOException
     {
-        id = newId;
+        id = loaderId;
+        AsapRealizerEmbodiment are = null;
+        for (Loader e : requiredLoaders)
+        {
+            if (e instanceof EmbodimentLoader && ((EmbodimentLoader) e).getEmbodiment() 
+                    instanceof AsapRealizerEmbodiment) are = (AsapRealizerEmbodiment) ((EmbodimentLoader) e).getEmbodiment();
+        }
         while (!tokenizer.atETag("Loader"))
         {
             readSection(tokenizer, requiredLoaders);
         }
-        FeedbackManager fbm = avh.getElckerlycRealizer().getFeedbackManager();
+        FeedbackManager fbm = are.getFeedbackManager();
         PlanManager<LiveMocapTMU> planManager = new PlanManager<LiveMocapTMU>(); 
         LiveMocapPlanner planner = new LiveMocapPlanner(fbm,planManager,inputBinding,outputBinding);
         DefaultPlayer player = new DefaultPlayer(new SingleThreadedPlanPlayer<LiveMocapTMU>(fbm,planManager));
         engine = new DefaultEngine<LiveMocapTMU>(planner,player,planManager);
         
         // add engine to realizer;
-        avh.getElckerlycRealizer().addEngine(engine);
+        are.addEngine(engine);
     }
 
     private static class Input extends XMLStructureAdapter

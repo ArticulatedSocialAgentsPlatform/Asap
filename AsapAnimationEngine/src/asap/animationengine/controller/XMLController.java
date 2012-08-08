@@ -1,16 +1,15 @@
 package asap.animationengine.controller;
 
-import java.io.IOException;
-import java.util.HashMap;
-
-import asap.bml.ext.bmlt.BMLTParameter;
-
-
 import hmi.physics.controller.ControllerParameterException;
 import hmi.physics.controller.PhysicalController;
 import hmi.xml.XMLScanException;
 import hmi.xml.XMLStructureAdapter;
 import hmi.xml.XMLTokenizer;
+
+import java.io.IOException;
+import java.util.HashMap;
+
+import asap.bml.ext.bmlt.BMLTParameter;
 
 /**
  * Creates a controller from XML. XML writing functionality is not implemented.

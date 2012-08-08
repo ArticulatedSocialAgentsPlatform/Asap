@@ -1,13 +1,14 @@
 package asap.livemocapengine.inputs;
 
+import hmi.faceembodiments.AUConfig;
+import hmi.faceembodiments.Side;
+
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.net.Socket;
 import java.net.UnknownHostException;
 
-import asap.utils.AUConfig;
-import asap.utils.Side;
 
 /**
  * Reads head input from Mark's sensor system

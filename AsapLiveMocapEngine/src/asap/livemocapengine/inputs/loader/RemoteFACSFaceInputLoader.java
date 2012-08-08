@@ -1,16 +1,15 @@
 package asap.livemocapengine.inputs.loader;
 
+import hmi.environmentbase.Environment;
+import hmi.environmentbase.Loader;
+import hmi.environmentbase.Sensor;
+import hmi.environmentbase.SensorLoader;
 import hmi.xml.XMLScanException;
 import hmi.xml.XMLTokenizer;
 
 import java.io.IOException;
 
-import asap.environment.AsapVirtualHuman;
-import asap.environment.Loader;
-import asap.environment.SensorLoader;
 import asap.livemocapengine.inputs.RemoteFACSFaceInput;
-import asap.utils.Environment;
-import asap.utils.Sensor;
 
 /**
  * Loads a RemoteFACSFaceInput Sensor
@@ -36,10 +35,9 @@ public class RemoteFACSFaceInputLoader implements SensorLoader
     }
 
     @Override
-    public void readXML(XMLTokenizer tokenizer, String newId, AsapVirtualHuman avh, Environment[] environments, Loader... requiredLoaders)
-            throws IOException
+    public void readXML(XMLTokenizer tokenizer, String loaderId, String vhId, String vhName, Environment[] environments, Loader ... requiredLoaders) throws IOException
     {
-        this.id = newId;
+        this.id = loaderId;
         ServerInfo rh = null;
         if(tokenizer.atSTag(ServerInfo.xmlTag()))
         {

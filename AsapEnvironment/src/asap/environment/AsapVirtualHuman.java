@@ -19,12 +19,11 @@
  ******************************************************************************/
 package asap.environment;
 
-import asap.bml.bridge.RealizerPort;
-import asap.bml.bridge.TCPIPToBMLRealizerAdapter;
-import saiba.bml.core.BMLBehaviorAttributeExtension;
-import saiba.bml.core.Behaviour;
-import asap.bml.ext.bmlt.BMLTBMLBehaviorAttributes;
-import saiba.bml.parser.BMLParser;
+import hmi.environmentbase.Embodiment;
+import hmi.environmentbase.EmbodimentLoader;
+import hmi.environmentbase.Environment;
+import hmi.environmentbase.Loader;
+import hmi.util.Clock;
 import hmi.xml.XMLStructureAdapter;
 import hmi.xml.XMLTokenizer;
 
@@ -40,59 +39,23 @@ import lombok.Setter;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import saiba.bml.core.Behaviour;
+import asap.bml.bridge.RealizerPort;
 import asap.environment.impl.ActivateEngineLoader;
 import asap.environment.impl.InterruptEngineLoader;
 import asap.environment.impl.ParameterValueChangeEngineLoader;
 import asap.environment.impl.WaitEngineLoader;
-import asap.realizer.AsapRealizer;
 import asap.realizer.Engine;
-import asap.realizer.bridge.LogPipe;
-import asap.realizer.bridge.MultiThreadedElckerlycRealizerBridge;
-import asap.realizer.feedback.FeedbackManager;
-import asap.realizer.feedback.FeedbackManagerImpl;
-import asap.realizer.pegboard.PegBoard;
-import asap.realizer.scheduler.BMLBlockManager;
-import asap.realizer.scheduler.BMLScheduler;
-import asap.realizer.scheduler.BMLTSchedulingHandler;
-import asap.realizer.scheduler.SortedSmartBodySchedulingStrategy;
-import asap.utils.Environment;
-import asap.utils.SchedulingClock;
-
-import com.google.common.collect.ImmutableSet;
+import asap.realizerembodiments.AsapRealizerEmbodiment;
+import asap.realizerembodiments.EngineLoader;
+import asap.realizerembodiments.SchedulingClockEmbodiment;
 
 /**
  * Loads and unloads an AsapVirtualHuman and provides access to its elements (realizer, embodiments, engines, etc)
  */
-public class AsapVirtualHuman
+public class AsapVirtualHuman 
 {
     private Logger logger = LoggerFactory.getLogger(AsapVirtualHuman.class.getName());
-
-    /**
-     * The elckerlycRealizer is exposed to facilitate access to some advanced capabilities.
-     * Generally you should not use this variable, there is a big chance that acess to it
-     * will be removed in the future
-     */
-    @Getter
-    @Setter(AccessLevel.PROTECTED)
-    private AsapRealizer elckerlycRealizer = null;
-
-    /** Use the RealizerPort to send BML to the Realizer */
-    @Getter
-    @Setter(AccessLevel.PROTECTED)
-    private RealizerPort realizerPort = null;
-
-    /**
-     * This is the server providing access to the realizer through TCPIP.
-     * Acces this variable to start/stop the server, and to create a GUI for it.
-     */
-    @Getter
-    @Setter(AccessLevel.PROTECTED)
-    private TCPIPToBMLRealizerAdapter tcpipToBMLRealizerAdapter = null;
-
-    /** Some engines (interrupt engine, paramvalchange) need access to the scheduler and other internals */
-    @Getter
-    @Setter(AccessLevel.PROTECTED)
-    private BMLScheduler bmlScheduler = null;
 
     /** "human readable name" */
     @Getter
@@ -102,7 +65,7 @@ public class AsapVirtualHuman
     /* Unique ID for this virtual human */
     @Getter
     @Setter(AccessLevel.PROTECTED)
-    private String id = "";
+    private String vhId = "";
 
     /** All engines for this virtualhuman -- these need to be "played" on the main AsapEnvironment loop */
     @Getter
@@ -116,12 +79,14 @@ public class AsapVirtualHuman
     /** used for loading the virtual human from an XML specification file */
     private XMLTokenizer theTokenizer = null;
 
-    /** All other loaders (embodiments and engines) that have been loaded (and should be unloaded again) */
+    /** All loaders (embodiments and engines) that have been loaded (and should be unloaded again) */
     @Getter
     private HashMap<String, Loader> loaders = new HashMap<String, Loader>();
 
     /** Needed to add any loaded engines to the environment */
     private AsapEnvironment ae = null;
+
+    private AsapRealizerEmbodiment are = null;
 
     /** Needed during the loading process in order to offer all other loaders access to the full list of available environments */
     private Environment[] allEnvironments = new Environment[0];
@@ -131,23 +96,12 @@ public class AsapVirtualHuman
      * (Some engines, such as interrupt engine and
      * paramvalchange, need access to such internals)
      */
-    private SchedulingClock theSchedulingClock = null;
-
-    @Getter
-    private final PegBoard pegBoard = new PegBoard();
+    private Clock theSchedulingClock = null;
 
     /** Unload: remove the virtual human from the AsapEnvironment; stop scheduler etc; onload all other loaders */
     public void unload()
     {
         ae.removeVirtualHuman(this);
-
-        if (tcpipToBMLRealizerAdapter != null)
-        {
-            tcpipToBMLRealizerAdapter.shutdown();
-            logger.debug("Attempting to shutdown server...");
-        }
-
-        elckerlycRealizer.shutdown(); // can you do this before all engines and emitters have been shut down?
 
         for (Entry<String, Loader> loader : loaders.entrySet())
         {
@@ -155,12 +109,12 @@ public class AsapVirtualHuman
         }
     }
 
-    public void load(String resources, String filename, String name, Environment[] environments, SchedulingClock sc) throws IOException
+    public void load(String resources, String filename, String name, Environment[] environments, Clock sc) throws IOException
     {
         load(XMLTokenizer.forResource(resources, filename), name, environments, sc);
     }
 
-    public void load(XMLTokenizer tokenizer, String name, Environment[] environments, SchedulingClock sc) throws IOException
+    public void load(XMLTokenizer tokenizer, String name, Environment[] environments, Clock sc) throws IOException
     {
         for (Environment e : environments)
         {
@@ -180,12 +134,76 @@ public class AsapVirtualHuman
         {
             theTokenizer.takeSTag("AsapVirtualHuman");
 
-            // ================= REALIZER =====================
-
-            loadBMLRealizerSection();
-
-            // ================= LOADERS (embodiment&engine) =====================
             Loader loader = null;
+            
+            loader = new EmbodimentLoader()
+            {
+            	public String getId(){return "schedulingclockembodimentloader";}
+            	public Embodiment getEmbodiment()
+            	{
+            		return new SchedulingClockEmbodiment()
+            		{
+            			public String getId(){return "schedulingclockembodiment";}
+                        public Clock getSchedulingClock() {
+                    		return theSchedulingClock;
+                    	}
+            		};
+            	}
+				public void readXML(XMLTokenizer tokenizer, String loaderId, String vhId, String vhName, Environment[] environments, Loader... requiredLoaders) throws IOException {}
+				public void unload() {}
+            };
+            loaders.put("schedulingclockembodimentloader", loader);
+            Loader sel = loader;
+            // ================= REALIZER (ALWAYS FIRST) =====================
+
+        	//is at loader? type must be realizerloader!
+            if (theTokenizer.atSTag("Loader"))
+            {
+                attrMap = theTokenizer.getAttributes();
+                String id = adapter.getRequiredAttribute("id", attrMap, theTokenizer);
+                String loaderClass = adapter.getRequiredAttribute("loader", attrMap, theTokenizer);
+                String requiredLoaderIds = adapter.getOptionalAttribute("requiredloaders", attrMap, "");
+                try
+                {
+                    loader = (Loader) Class.forName(loaderClass).newInstance();
+                }
+                catch (InstantiationException e)
+                {
+                    throw theTokenizer.getXMLScanException("InstantiationException while starting Loader " + loaderClass);
+                }
+                catch (IllegalAccessException e)
+                {
+                    throw theTokenizer.getXMLScanException("IllegalAccessException while starting Loader " + loaderClass);
+                }
+                catch (ClassNotFoundException e)
+                {
+                    throw theTokenizer.getXMLScanException("ClassNotFoundException while starting Loader " + loaderClass);
+                }
+                catch (ClassCastException e)
+                {
+                    throw theTokenizer.getXMLScanException("ClassCastException while starting Loader " + loaderClass);
+                }
+
+                if (!(loader instanceof AsapRealizerEmbodiment))
+                {
+                	logger.error("AsapVirtualHuman: The first loader *must* be a AsapRealizerEmbodiment");
+                	throw new RuntimeException("AsapVirtualHuman: The first loader *must* be a AsapRealizerEmbodiment");
+                }
+                
+                if (!requiredLoaderIds.equals(""))
+                {
+                	logger.error("AsapVirtualHuman: no required loaders allowed for AsapRealizerEmbodiment");
+                	throw new RuntimeException("AsapVirtualHuman: no required loaders allowed for AsapRealizerEmbodiment");
+                }
+                are = (AsapRealizerEmbodiment)loader;
+                theTokenizer.takeSTag("Loader");
+                logger.debug("Parsing Loader: {}", id);
+                loader.readXML(theTokenizer, id, vhId, name, allEnvironments, new Loader[]{sel});
+                theTokenizer.takeETag("Loader");
+                loaders.put(id, loader);
+            }
+	
+            // ================= LOADERS (embodiment&engine) =====================
             while (theTokenizer.atSTag("Loader"))
             {
                 attrMap = theTokenizer.getAttributes();
@@ -202,7 +220,8 @@ public class AsapVirtualHuman
                         requiredLoaders.add(loaders.get(reqId));
                     }
                 }
-
+                //always add "are" -- just in case someone forgets
+                requiredLoaders.add(are);
                 try
                 {
                     loader = (Loader) Class.forName(loaderClass).newInstance();
@@ -225,7 +244,7 @@ public class AsapVirtualHuman
                 }
                 theTokenizer.takeSTag("Loader");
                 logger.debug("Parsing Loader: {}", id);
-                loader.readXML(theTokenizer, id, this, allEnvironments, requiredLoaders.toArray(new Loader[0]));
+                loader.readXML(theTokenizer, id, vhId, name, allEnvironments, requiredLoaders.toArray(new Loader[0]));
                 theTokenizer.takeETag("Loader");
                 loaders.put(id, loader);
                 if (loader instanceof EngineLoader)
@@ -247,25 +266,25 @@ public class AsapVirtualHuman
             // ================= DEFAULT ENGINES =====================
             String id = "waitengine";
             loader = new WaitEngineLoader();
-            loader.readXML(null, id, this, allEnvironments, new Loader[0]);
+            loader.readXML(null, id, vhId, name, allEnvironments, new Loader[]{are});
             loaders.put(id, loader);
             engines.add(((EngineLoader) loader).getEngine());
 
             id = "parametervaluechangeengine";
             loader = new ParameterValueChangeEngineLoader();
-            loader.readXML(null, id, this, allEnvironments, new Loader[0]);
+            loader.readXML(null, id, vhId, name, allEnvironments, new Loader[]{are});
             loaders.put(id, loader);
             engines.add(((EngineLoader) loader).getEngine());
 
             id = "activateengine";
             loader = new ActivateEngineLoader();
-            loader.readXML(null, id, this, allEnvironments, new Loader[0]);
+            loader.readXML(null, id, vhId, name, allEnvironments, new Loader[]{are});
             loaders.put(id, loader);
             engines.add(((EngineLoader) loader).getEngine());
 
             id = "interruptengine";
             loader = new InterruptEngineLoader();
-            loader.readXML(null, id, this, allEnvironments, new Loader[0]);
+            loader.readXML(null, id, vhId, name, allEnvironments, new Loader[]{are});
             loaders.put(id, loader);
             engines.add(((EngineLoader) loader).getEngine());
 
@@ -280,116 +299,7 @@ public class AsapVirtualHuman
 
     }
 
-    /** Construct a reaslizer setup from the XML specification within the <BMLRealizer> tag */
-    public void loadBMLRealizerSection() throws IOException
-    {
-        attrMap = theTokenizer.getAttributes();
 
-        theTokenizer.takeSTag("BMLRealizer");
-
-        // ====== load BML parsing and scheduling stuff
-
-        BMLParser parser = readParserSection();
-
-        // FIXME assumes that the XML element starts with the scheduler information
-        BMLBlockManager bmlBlockManager = new BMLBlockManager();
-        FeedbackManager feedbackManager = new FeedbackManagerImpl(bmlBlockManager, name);
-        bmlScheduler = readSchedulerSection(bmlBlockManager, parser, feedbackManager);
-
-        // ========= construct realizer and realizerport
-
-        elckerlycRealizer = new AsapRealizer(parser, feedbackManager, theSchedulingClock, bmlScheduler);
-
-        //we can't ensure that the port will only be called singlethreaded
-        realizerPort = new MultiThreadedElckerlycRealizerBridge(elckerlycRealizer); 
-        
-
-        // ====== subsequently, read in XML all requests for pipes, ports and adapters, and create / insert / attach them.
-
-        while (!theTokenizer.atETag("BMLRealizer"))
-        {
-            readBMLRealizerSubsection();
-        }
-
-        theTokenizer.takeETag("BMLRealizer");
-
-    }
-
-    protected BMLParser readParserSection() throws IOException
-    {
-        BMLParser parser = new BMLParser(new ImmutableSet.Builder<Class<? extends BMLBehaviorAttributeExtension>>().add(
-                BMLTBMLBehaviorAttributes.class).build());
-        if (theTokenizer.atSTag("BMLParser"))
-        {
-            BMLParserAssembler assembler = new BMLParserAssembler();
-            assembler.readXML(theTokenizer);
-            parser = assembler.getBMLParser();
-        }
-        return parser;
-    }
-
-    protected BMLScheduler readSchedulerSection(BMLBlockManager bmlBlockManager, BMLParser parser, FeedbackManager feedbackManager)
-            throws IOException
-    {
-
-        BMLScheduler scheduler;
-
-        if (theTokenizer.atSTag("BMLScheduler"))
-        {
-            BMLSchedulerAssembler assembler = new BMLSchedulerAssembler(name, parser, feedbackManager, bmlBlockManager, theSchedulingClock,
-                    pegBoard);
-            assembler.readXML(theTokenizer);
-            scheduler = assembler.getBMLScheduler();
-        }
-        else
-        {
-            scheduler = new BMLScheduler(name, parser, feedbackManager, theSchedulingClock, new BMLTSchedulingHandler(
-                    new SortedSmartBodySchedulingStrategy(pegBoard)), bmlBlockManager, pegBoard);
-        }
-        return scheduler;
-    }
-
-    protected void readBMLRealizerSubsection() throws IOException
-    {
-        if (theTokenizer.atSTag("ServerAdapter"))
-        {
-            attrMap = theTokenizer.getAttributes();
-            String requestPort = adapter.getRequiredAttribute("requestport", attrMap, theTokenizer);
-            String feedbackPort = adapter.getRequiredAttribute("feedbackport", attrMap, theTokenizer);
-            tcpipToBMLRealizerAdapter = new TCPIPToBMLRealizerAdapter(realizerPort, Integer.valueOf(requestPort),
-                    Integer.valueOf(feedbackPort));
-            theTokenizer.takeSTag("ServerAdapter");
-            theTokenizer.takeETag("ServerAdapter");
-        }
-        else if (theTokenizer.atSTag("Scheduler"))
-        {
-            // TODO
-            logger.error("Encountered Scheduler section that was not at beginning of BMLRealizer section");
-        }
-        else if (theTokenizer.atSTag("LogPipe"))
-        {
-            attrMap = theTokenizer.getAttributes();
-            String requestLog = adapter.getOptionalAttribute("requestlog", attrMap);
-            String feedbackLog = adapter.getOptionalAttribute("feedbacklog", attrMap);
-            Logger rl = null;
-            Logger fl = null;
-            if (requestLog != null)
-            {
-                rl = LoggerFactory.getLogger(requestLog);
-            }
-            if (feedbackLog != null)
-            {
-                fl = LoggerFactory.getLogger(feedbackLog);
-            }
-            realizerPort = new LogPipe(rl, fl, realizerPort, theSchedulingClock);
-            theTokenizer.takeSTag("LogPipe");
-            theTokenizer.takeETag("LogPipe");
-        }
-        else
-        {
-            throw theTokenizer.getXMLScanException("Unknown tag in BMLRealizer content");
-        }
-    }
 
     private void loadBMLRoutingSection() throws IOException
     {
@@ -425,7 +335,7 @@ public class AsapVirtualHuman
                     Class<? extends Behaviour> behaviorClass = (Class<? extends Behaviour>) Class.forName(behaviorClassName);
                     if (Behaviour.class.isAssignableFrom(behaviorClass))
                     {
-                        elckerlycRealizer.addEngine(behaviorClass, engine);
+                        are.addEngine(behaviorClass, engine);
                     }
                     else
                     {
@@ -446,4 +356,8 @@ public class AsapVirtualHuman
 
     }
 
+    public RealizerPort getRealizerPort()
+    {
+    	return are.getRealizerPort();
+    }
 }

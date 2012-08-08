@@ -18,11 +18,11 @@
  ******************************************************************************/
 package asap.animationengine;
 
-import java.util.ArrayList;
-import java.util.List;
-
 import hmi.animation.VJoint;
 import hmi.math.Quat4f;
+
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * Does an additive blend of the rotations of two joints and all their children:<br>

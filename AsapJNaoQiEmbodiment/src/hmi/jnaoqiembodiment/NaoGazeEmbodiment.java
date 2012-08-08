@@ -1,11 +1,11 @@
 package hmi.jnaoqiembodiment;
 
+import hmi.headandgazeembodiments.GazeEmbodiment;
 import hmi.math.Quat4f;
 import hmi.math.Vec3f;
 
 import com.aldebaran.proxy.DCMProxy;
 
-import asap.utils.GazeEmbodiment;
 
 public class NaoGazeEmbodiment implements GazeEmbodiment
 {

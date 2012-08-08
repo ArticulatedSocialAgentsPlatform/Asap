@@ -1,6 +1,6 @@
 package hmi.jnaoqiembodiment;
 
-import asap.utils.Embodiment;
+import hmi.environmentbase.Embodiment;
 
 import com.aldebaran.proxy.ALLedsProxy;
 import com.aldebaran.proxy.DCMProxy;

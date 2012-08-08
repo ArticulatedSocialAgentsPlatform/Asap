@@ -18,6 +18,7 @@
  ******************************************************************************/
 package asap.realizer;
 
+import hmi.util.Clock;
 import hmi.xml.XMLScanException;
 import hmi.xml.XMLTokenizer;
 
@@ -45,7 +46,6 @@ import asap.realizer.scheduler.BMLBlockManager;
 import asap.realizer.scheduler.BMLScheduler;
 import asap.realizer.scheduler.BMLTSchedulingHandler;
 import asap.realizer.scheduler.SortedSmartBodySchedulingStrategy;
-import asap.utils.SchedulingClock;
 
 import com.google.common.collect.ImmutableSet;
 
@@ -84,7 +84,7 @@ public class AsapRealizer
 {
     private final static Logger LOGGER = LoggerFactory.getLogger(AsapRealizer.class.getName());
 
-    private final SchedulingClock schedulingClock;
+    private final Clock schedulingClock;
     /**
      * to parse the BML snippets (stored in BehaviourBlocks) and collect the constraints (this parser is a scheduler.Scheduler object)
      */
@@ -102,7 +102,7 @@ public class AsapRealizer
     /**
      * Constructs a ElckerlycRealizer facade and hooks up the planners to it
      */
-    public AsapRealizer(BMLParser bmlparser, FeedbackManager fbm, SchedulingClock c, BMLScheduler bmlScheduler, Engine... engines)
+    public AsapRealizer(BMLParser bmlparser, FeedbackManager fbm, Clock c, BMLScheduler bmlScheduler, Engine... engines)
     {
         schedulingClock = c;
         fbManager = fbm;
@@ -120,7 +120,7 @@ public class AsapRealizer
     /**
      * Constructs a ElckerlycRealizer facade and hooks up the planners to it Uses a BMLScheduler with a SortedSmartBodySchedulingStrategy
      */
-    public AsapRealizer(String characterId, BMLParser p, FeedbackManager fbm, SchedulingClock c, BMLBlockManager bbm, PegBoard pb,
+    public AsapRealizer(String characterId, BMLParser p, FeedbackManager fbm, Clock c, BMLBlockManager bbm, PegBoard pb,
             Engine... engines)
     {
         this(p, fbm, c, new BMLScheduler(characterId, p, fbm, c, new BMLTSchedulingHandler(new SortedSmartBodySchedulingStrategy(pb)), bbm,
@@ -131,7 +131,7 @@ public class AsapRealizer
      * Constructs a ElckerlycRealizer facade and hooks up the planners to it Uses the default BMLParser as BMLParser and a BMLScheduler with a
      * SmartBodySchedulingStrategy.
      */
-    public AsapRealizer(String characterId, FeedbackManager fbm, SchedulingClock c, BMLBlockManager bbm, PegBoard pb, Engine... engines)
+    public AsapRealizer(String characterId, FeedbackManager fbm, Clock c, BMLBlockManager bbm, PegBoard pb, Engine... engines)
     {
         this(characterId, new BMLParser(new ImmutableSet.Builder<Class<? extends BMLBehaviorAttributeExtension>>().build()), fbm, c, bbm,
                 pb, engines);
@@ -377,7 +377,7 @@ public class AsapRealizer
         return fbManager;
     }
 
-    public SchedulingClock getSchedulingClock()
+    public Clock getSchedulingClock()
     {
         return schedulingClock;
     }

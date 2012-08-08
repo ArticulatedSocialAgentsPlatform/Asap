@@ -1,6 +1,5 @@
 package asap.animationengine.lipsync;
 
-import saiba.bml.core.Behaviour;
 import hmi.tts.Visime;
 
 import java.util.ArrayList;
@@ -8,6 +7,7 @@ import java.util.HashMap;
 import java.util.List;
 
 import lombok.extern.slf4j.Slf4j;
+import saiba.bml.core.Behaviour;
 import asap.animationengine.AnimationPlayer;
 import asap.animationengine.gesturebinding.SpeechBinding;
 import asap.animationengine.motionunit.MUSetupException;

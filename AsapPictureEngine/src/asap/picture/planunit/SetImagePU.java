@@ -18,6 +18,13 @@
  ******************************************************************************/
 package asap.picture.planunit;
 
+import java.util.List;
+
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
+import asap.picture.PicturePlanner;
+import asap.picture.display.PictureDisplay;
 import asap.realizer.feedback.FeedbackManager;
 import asap.realizer.pegboard.BMLBlockPeg;
 import asap.realizer.planunit.InvalidParameterException;
@@ -25,14 +32,6 @@ import asap.realizer.planunit.KeyPosition;
 import asap.realizer.planunit.KeyPositionManager;
 import asap.realizer.planunit.KeyPositionManagerImpl;
 import asap.realizer.planunit.ParameterException;
-import asap.realizer.planunit.TimedPlanUnitPlayException;
-import asap.picture.PicturePlanner;
-import asap.picture.display.PictureDisplay;
-
-import java.util.List;
-
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 public class SetImagePU implements PictureUnit
 {

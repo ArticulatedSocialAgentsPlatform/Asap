@@ -8,6 +8,7 @@ import com.google.common.collect.Lists;
 import hmi.faceanimation.FaceController;
 import hmi.faceanimation.converters.EmotionConverter;
 import hmi.faceanimation.converters.FACSConverter;
+import hmi.util.AnimationSync;
 import asap.motionunit.MUPlayException;
 import asap.motionunit.keyframe.Interpolator;
 import asap.motionunit.keyframe.KeyFrame;
@@ -16,7 +17,6 @@ import asap.realizer.feedback.FeedbackManager;
 import asap.realizer.pegboard.BMLBlockPeg;
 import asap.realizer.planunit.KeyPosition;
 import asap.timemanipulator.TimeManipulator;
-import asap.utils.AnimationSync;
 
 /**
  * A group of morph targets, controlled by key frames
