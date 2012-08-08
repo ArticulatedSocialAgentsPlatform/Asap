@@ -49,7 +49,7 @@ public class TimedAnimationUnitLipSynchProviderLoader implements LipSynchProvide
         for (Loader e : requiredLoaders)
         {
             if (e instanceof MixedAnimationEngineLoader) ael = (MixedAnimationEngineLoader) e;
-            if (e instanceof AsapRealizerEmbodiment) are = (AsapRealizerEmbodiment) ((EmbodimentLoader) e).getEmbodiment();
+            if (e instanceof AsapRealizerEmbodiment) are = (AsapRealizerEmbodiment) e;
         }
         if (ael == null)
         {

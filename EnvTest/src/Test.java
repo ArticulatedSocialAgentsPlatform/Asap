@@ -224,7 +224,7 @@ public class Test extends WindowAdapter
     public void requestShutdown(boolean closeWindow, boolean exitOnClose)
     {
         ae.requestShutdown();
-        // no need to pull the plug on the JFrame as the application will end now?
+
         while (!ae.isShutdown())
         {
             log.debug("wait for shutdown");
