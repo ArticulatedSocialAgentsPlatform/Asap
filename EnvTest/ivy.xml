@@ -28,6 +28,7 @@
       <dependency org="HMI"   name="HmiPhysicsEmbodiments"     rev="latest.${resolve.status}"   />    
       <dependency org="HMI"   name="HmiHeadAndGazeEmbodiments"     rev="latest.${resolve.status}"   />    
       <dependency org="HMI"   name="HmiTextEmbodiments"     rev="latest.${resolve.status}"   />    
+      <dependency org="HMI"   name="HmiDebug"     rev="latest.${resolve.status}"   />    
 
       <dependency org="HMI"   name="HmiMixedAnimationEnvironment"     rev="latest.${resolve.status}"   />    
       <dependency org="HMI"   name="HmiRenderEnvironment"     rev="latest.${resolve.status}"   />    
