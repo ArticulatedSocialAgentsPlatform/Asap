@@ -126,9 +126,9 @@ public class Test extends WindowAdapter
         {
         	//AsapVirtualHuman avh = ae.loadVirtualHuman("blueguy", "Humanoids/blueguy", "blueguy_asaploader_mary_hudson.xml", "blueguy - test avatar");
         	//AsapVirtualHuman avh = ae.loadVirtualHuman("billie", "Humanoids/billie", "asaploader_billie.xml", "billie");
-        	//AsapVirtualHuman avh2 = ae.loadVirtualHuman("armandia1", "Humanoids/armandia", "asapvhloader_test.xml", "armandia - testing new environment setup");
+        	AsapVirtualHuman avh2 = ae.loadVirtualHuman("armandia1", "Humanoids/armandia", "asapvhloader_test.xml", "armandia - testing new environment setup");
         	//AsapVirtualHuman avh = ae.loadVirtualHuman("relion", "Humanoids/relion", "relion_asaploader.xml", "Relion avatar - testing system integration");
-        	AsapVirtualHuman avh = ae.loadVirtualHuman("armandiahudson", "Humanoids/armandia", "armandia_asaploader_mary_hudson.xml", "armandia for hudson");
+        	//AsapVirtualHuman avh = ae.loadVirtualHuman("armandiahudson", "Humanoids/armandia", "armandia_asaploader_mary_hudson.xml", "armandia for hudson");
         }
         catch (IOException ex)
         {
@@ -136,7 +136,7 @@ public class Test extends WindowAdapter
         }
 
         // load the checkerboard ground plane of Herwin into the hmirenderenvironment
-        hre.loadCheckerBoardGround("groundplane", 0f, 0.5f);
+        hre.loadCheckerBoardGround("groundplane", 0.5f, 0f);
 
         // set background color of hmirenderenvironment
         hre.setBackground(0.3f, 0, 0);
