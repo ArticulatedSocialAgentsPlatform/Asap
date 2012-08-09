@@ -73,10 +73,10 @@ public class TimedPictureUnitLipSynchProviderLoader implements LipSynchProviderL
         }
 
         if (pel == null) {
-            throw tokenizer.getXMLScanException("TimedPictureUnitLipSynchProviderLoader requires pictureengine environment.");
+            throw tokenizer.getXMLScanException("TimedPictureUnitLipSynchProviderLoader requires pictureengine.");
         }
         if (pe == null) {
-            throw tokenizer.getXMLScanException("TimedPictureUnitLipSynchProviderLoader requires pictureembodiment environment.");
+            throw tokenizer.getXMLScanException("TimedPictureUnitLipSynchProviderLoader requires pictureembodiment.");
         }
 
         String xmlFileName = null;
