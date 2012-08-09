@@ -19,6 +19,8 @@ public class HnsTest
       "<symbols>"+
         "<symbol class=\"handReferences\" name=\"LocAboveHead\" value=\"60\"/>"+
         "<symbol class=\"handReferences\" name=\"LocHead\" value=\"54\"/>" +
+        
+        "<symbol class=\"offset\" name=\"ellipticDistance\" value=\"100\"/>"+
       "</symbols>"+
     "</hns>";
     // @formatter:on           
@@ -41,5 +43,6 @@ public class HnsTest
     public void testGetHandLocation()
     {
         assertTrue(hns.getHandLocation("LocAboveHead", location));
+        assertVec3fEquals(0,0,60,location,PRECISION);
     }
 }

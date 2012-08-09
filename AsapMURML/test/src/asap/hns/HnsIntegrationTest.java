@@ -15,11 +15,12 @@ import org.junit.Test;
  */
 public class HnsIntegrationTest
 {
+    private static final double PRECISION = 0.0001;
     @Test
     public void test() throws IOException
     {
         Hns hns = new Hns();
         hns.readXML(new Resources("").getReader("billie_hns.xml"));
-        assertEquals("-90.0", hns.getSymbolValue("palmOrientations", "PalmU"));
+        assertEquals(-90.0, hns.getSymbolValue("palmOrientations", "PalmU"), PRECISION);
     }
 }

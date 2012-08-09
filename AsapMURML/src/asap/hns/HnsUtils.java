@@ -43,7 +43,17 @@ public final class HnsUtils
     {
         if (!value.startsWith("Dir"))
         {
-            return parseVector(value,direction);            
+            float result[] = Vec3f.getVec3f();
+            if(parseVector(value,result))
+            {
+                Vec3f.normalize(result);
+                Vec3f.set(direction, result);
+                return true;
+            }
+            else
+            {
+                return false;
+            }
         }
         else
         {

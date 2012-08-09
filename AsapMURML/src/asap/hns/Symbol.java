@@ -19,14 +19,22 @@ public class Symbol extends XMLStructureAdapter
     private String name;
     
     @Getter
-    private String value;
+    private Double value;
     
     @Override
     public void decodeAttributes(HashMap<String, String> attrMap, XMLTokenizer tokenizer)
     {
         className = getRequiredAttribute("class", attrMap, tokenizer);
         name = getRequiredAttribute("name", attrMap, tokenizer);
-        value = getRequiredAttribute("value", attrMap, tokenizer);        
+        String str = getRequiredAttribute("value", attrMap, tokenizer);
+        if(!str.isEmpty())
+        {
+            value = Double.parseDouble(str);         
+        }
+        else
+        {
+            value = null;
+        }
     }
     
     static final String XMLTAG = "symbol";

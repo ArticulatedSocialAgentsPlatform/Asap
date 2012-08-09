@@ -18,7 +18,7 @@ import hmi.xml.XMLTokenizer;
 public class Symbols extends XMLStructureAdapter
 {
     @Getter
-    private Map<String, Map<String, String>> symbols = new HashMap<>(); // className->(name->value)
+    private Map<String, Map<String, Double>> symbols = new HashMap<>(); // className->(name->value)
     
     @Override
     public void decodeContent(XMLTokenizer tokenizer) throws IOException
@@ -30,7 +30,7 @@ public class Symbols extends XMLStructureAdapter
             {
                 Symbol s = new Symbol();
                 s.readXML(tokenizer);   
-                Map<String, String> map = symbols.get(s.getClassName());
+                Map<String, Double> map = symbols.get(s.getClassName());
                 if(map==null)
                 {
                     map = new HashMap<>();

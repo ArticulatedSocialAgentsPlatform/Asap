@@ -6,6 +6,11 @@ import hmi.xml.XMLTokenizer;
 
 import java.io.IOException;
 
+/**
+ * Parses the SymbolMatrices element
+ * @author hvanwelbergen
+ *
+ */
 public class SymbolMatrices  extends XMLStructureAdapter
 {
     @Override
@@ -16,7 +21,7 @@ public class SymbolMatrices  extends XMLStructureAdapter
             String tag = tokenizer.getTagName();
             if(tag.equals(Symbol.xmlTag()))
             {
-                Symbol s = new Symbol();
+                MatrixSymbol s = new MatrixSymbol();
                 s.readXML(tokenizer);   
                 //TODO: actually do something with the symbol
             }            

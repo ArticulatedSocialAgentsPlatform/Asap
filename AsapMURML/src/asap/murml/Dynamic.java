@@ -4,6 +4,7 @@ import hmi.xml.XMLScanException;
 import hmi.xml.XMLTokenizer;
 
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 
@@ -19,7 +20,7 @@ public class Dynamic extends MURMLElement
     private Keyframing keyframing;
 
     @Getter
-    private List<DynamicElement> dynamicElements;
+    private List<DynamicElement> dynamicElements = new ArrayList<>();
 
     @Getter
     private Slot slot;
@@ -42,6 +43,7 @@ public class Dynamic extends MURMLElement
             case DynamicElement.XMLTAG:
                 DynamicElement dynamicElement = new DynamicElement();
                 dynamicElement.readXML(tokenizer);
+                dynamicElements.add(dynamicElement);
                 break;
             default:
                 throw new XMLScanException("Unkown tag " + tag + " in <dynamic>");
