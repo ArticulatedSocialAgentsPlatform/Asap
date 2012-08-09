@@ -8,7 +8,6 @@
       <dependency org="HMI"   name="HmiXml"             rev="latest.${resolve.status}"   />
       <dependency org="HMI"   name="HmiMath"            rev="latest.${resolve.status}"   />
       <dependency org="HMI"   name="HmiAnimation"       rev="latest.${resolve.status}"   />      
-      <dependency org="HMI"   name="HmiBML"             rev="latest.${resolve.status}"   />
 	  <dependency org="HMI"   name="HmiPhysics"             rev="latest.${resolve.status}"   />
 	  <dependency org="HMI"   name="HmiNeurophysics"             rev="latest.${resolve.status}"   />
       <dependency org="HMI"   name="HmiFaceAnimation"     rev="latest.${resolve.status}"   />    
