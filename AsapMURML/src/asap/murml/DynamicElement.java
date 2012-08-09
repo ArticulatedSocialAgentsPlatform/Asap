@@ -67,7 +67,7 @@ public class DynamicElement extends MURMLElement
         }
     }
     
-    private static final String XMLTAG = "dynamicElement";
+    static final String XMLTAG = "dynamicElement";
 
     public static String xmlTag()
     {

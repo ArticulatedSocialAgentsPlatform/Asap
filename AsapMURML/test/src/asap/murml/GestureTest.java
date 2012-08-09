@@ -113,7 +113,7 @@ public class GestureTest
         Dynamic handLoc = MURMLTestUtil.getDynamic(Slot.HandLocation, p.getDynamics());
         assertEquals(Slot.HandLocation, handLoc.getSlot());
         assertEquals("right_arm", handLoc.getScope());
-        DynamicElement dynElem = handLoc.getDynamicElement();
+        DynamicElement dynElem = handLoc.getDynamicElements().get(0);
         assertThat(dynElem.getNames("start"),IsIterableContainingInOrder.contains("LocLowerChest","LocCCenter","LocNorm"));
         assertThat(dynElem.getNames("end"),IsIterableContainingInOrder.contains("LocStomach","LocCenterRight", "LocFFar"));
     }
