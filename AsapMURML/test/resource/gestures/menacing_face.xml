@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<murml-description xmlns="http://www.techfak.uni-bielefeld.de/ags/soa/murml" scope="face">
+   <dynamic>
+      <keyframing mode="spline"
+                  easescale="6.0"
+                  easeturningpoint="0.5"
+                  name="admonish_eyes"
+                  scope="face"
+                  priority="50">
+	        <phase>
+  	         <frame ftime="0.2">
+ 	             <posture> (MUSCLE_BRAUE_LINKS 0.5) (MUSCLE_BRAUE_RECHTS 0.5) (MUSCLE_AUGE_LINKS_RUND_OBEN -0.5) (MUSCLE_AUGE_RECHTS_RUND_OBEN -0.5) </posture>	
+	           </frame>	
+  	         <frame ftime="0.8">
+ 	             <posture> (MUSCLE_BRAUE_LINKS 0.5) (MUSCLE_BRAUE_RECHTS 0.5) (MUSCLE_AUGE_LINKS_RUND_OBEN -0.5) (MUSCLE_AUGE_RECHTS_RUND_OBEN -0.5) </posture>	
+	           </frame>	
+  	         <frame ftime="1.0">
+ 	             <posture> (MUSCLE_BRAUE_LINKS 0) (MUSCLE_BRAUE_RECHTS 0) (MUSCLE_AUGE_LINKS_RUND_OBEN 0) (MUSCLE_AUGE_RECHTS_RUND_OBEN 0) </posture>
+	           </frame>	
+	        </phase>
+      </keyframing>
+    </dynamic>
+</murml-description>

@@ -1,0 +1,40 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<murml-description xmlns="http://www.techfak.uni-bielefeld.de/ags/soa/murml" scope="head">
+   <dynamic slot="Neck" scope="neck">
+        <keyframing mode="spline"
+                  easescale="7.0"
+                  easeturningpoint="0.5"
+                  name="nodding"
+                  priority="25">
+          <phase>
+            <frame ftime="0.2">
+               <posture> Humanoid (vc2 3 0 5 0) (vc4 3 0 5 0) </posture>
+            </frame>
+          </phase>
+          <phase>
+            <frame ftime="0.0">
+               <posture> Humanoid (vc2 3 0 5 0) (vc4 3 0 5 0) </posture>
+            </frame>
+            <frame ftime="0.25">
+               <posture> Humanoid (vc2 3 0 0 0) (vc4 3 0 0 0) </posture>
+            </frame>
+          </phase>
+          <phase>
+            <frame ftime="0.0">
+               <posture> Humanoid (vc2 3 0 0 0) (vc4 3 0 0 0) </posture>
+            </frame>
+            <frame ftime="0.2">
+               <posture> Humanoid (vc2 3 0 5 0) (vc4 3 0 5 0) </posture>
+            </frame>
+          </phase>
+          <phase>
+            <frame ftime="0.0">
+               <posture> Humanoid (vc2 3 0 5 0) (vc4 3 0 5 0) </posture>
+            </frame>
+            <frame ftime="0.15">
+               <posture> Humanoid (vc2 3 0 0 0) (vc4 3 0 0 0) </posture>
+            </frame>
+          </phase>
+        </keyframing>
+     </dynamic>
+</murml-description>

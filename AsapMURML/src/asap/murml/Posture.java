@@ -52,11 +52,17 @@ public class Posture extends MURMLElement
         {
             String specElements[]=spec.split("\\s");
             String jointId = specElements[0];
-            int nrOfDof = Integer.parseInt(specElements[1]);
+            int nrOfDof = 1;
+            int valueOffset = 1;
+            if(specElements.length>2)
+            {
+                nrOfDof = Integer.parseInt(specElements[1]);
+                valueOffset = 2;
+            }
             float dofs[] = new float[nrOfDof];
             for(int i=0;i<nrOfDof;i++)
             {
-                dofs[i] = Float.parseFloat(specElements[i+2]);
+                dofs[i] = Float.parseFloat(specElements[i+valueOffset]);
             }
             jointValues.add(new JointValue(jointId,dofs));
         }

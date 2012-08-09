@@ -1,5 +1,6 @@
 package asap.murml;
 
+import hmi.xml.XMLScanException;
 import hmi.xml.XMLTokenizer;
 
 import java.io.IOException;
@@ -16,9 +17,12 @@ public class Dynamic extends MURMLElement
     @Getter
     private Keyframing keyframing;
     
-    //@Getter
-    //private Slot slot;
+    @Getter
+    private DynamicElement dynamicElement;    
     
+    @Getter
+    private Slot slot;
+
     @Getter
     private String scope;
     
@@ -30,8 +34,16 @@ public class Dynamic extends MURMLElement
         {
             keyframing = new Keyframing();
             keyframing.readXML(tokenizer);
-        }        
-        //dynamicElement
+        }    
+        else if (tag.equals(DynamicElement.xmlTag()))
+        {
+            dynamicElement = new DynamicElement();
+            dynamicElement.readXML(tokenizer);
+        }
+        else
+        {
+            throw new XMLScanException("Unkown tag "+tag+" in <dynamic>");
+        }
     }
     
     @Override

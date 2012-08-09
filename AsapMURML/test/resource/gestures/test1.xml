@@ -1,0 +1,37 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<murml-description xmlns="http://www.techfak.uni-bielefeld.de/ags/soa/murml">
+   <parallel start="1.0" end="2.5">
+	     <static slot="ExtFingerOrientation" value="DirU" scope="left_arm"/>
+	     <static slot="HandShape" value="BSifinger" scope="left_arm"/>
+	     <dynamic slot="HandLocation" scope="left_arm">
+	        <dynamicElement type="curve">
+	           <value type="start" name="LocShoulder LocCenterLeft LocFar"/>
+	           <value type="end" name="LocShoulder LocCenterLeft LocNorm"/>
+	           <value type="normal" name="DirU"/>
+	           <value type="shape" name="LeftC"/>
+	           <value type="extension" name="0.6"/>
+	        </dynamicElement>
+	        <dynamicElement type="curve">
+	           <value type="start" name="LocShoulder LocCenterLeft LocNorm"/>
+	           <value type="end" name="LocShoulder LocCenterLeft LocFar"/>
+	           <value type="normal" name="DirU"/>
+	           <value type="shape" name="LeftC"/>
+	           <value type="extension" name="0.6"/>
+	        </dynamicElement>
+	        <dynamicElement type="curve">
+	           <value type="start" name="LocShoulder LocCenterLeft LocFar"/>
+	           <value type="end" name="LocShoulder LocCenterLeft LocNorm"/>
+	           <value type="normal" name="DirU"/>
+	           <value type="shape" name="LeftC"/>
+	           <value type="extension" name="0.6"/>
+	        </dynamicElement>
+	        <dynamicElement type="curve">
+	           <value type="start" name="LocShoulder LocCenterLeft LocNorm"/>
+	           <value type="end" name="LocShoulder LocCenterLeft LocFar"/>
+	           <value type="normal" name="DirU"/>
+	           <value type="shape" name="LeftC"/>
+	           <value type="extension" name="0.6"/>
+	        </dynamicElement>
+	     </dynamic>
+      </parallel>
+</murml-description>

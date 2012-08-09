@@ -1,0 +1,66 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<murml-description xmlns="http://www.techfak.uni-bielefeld.de/ags/soa/murml" scope="body">
+   <dynamic>
+	     <keyframing mode="spline"
+                  easescale="7.0"
+                  easeturningpoint="0.5"
+                  name="headScratch"
+                  scope="body"
+                  priority="50">
+	<!-- Phase1: Linker Arm zum Kopf, Kopf neigen, rechter Arm Ausgleichsbewegung. -->
+	<phase>
+	<!-- *** Frame2: Linker Arm geknickt neben Koerper, Kopf nach links gekippt. *** -->
+  	<frame ftime="1.0">
+  		           <posture> Humanoid (re_eye 3 -13 -1 0) (le_eye 3 -15 0 0) (skullbase 3 -3 5 0) (vc2 3 -5 9 0) (vc4 3 0 0 0) (r_elbow 3 0 30 0) (r_shoulder 3 -13 -1 -36) (r_clavicle 3 0 0 0) (lh_l_joint3 3 -18 0 0) (lh_l_joint2 3 -36 0 0) (lh_l_joint1 3 -29 3 -12) (lh_r_joint3 3 -15 0 0) (lh_r_joint2 3 -29 0 0) (lh_r_joint1 3 -41 3 0) (lh_m_joint3 3 -22 0 0) (lh_m_joint2 3 -30 0 0) (lh_m_joint1 3 -45 0 0) (lh_p_joint3 3 -12 0 0) (lh_p_joint2 3 -23 0 0) (lh_p_joint1 3 -40 0 0) (lh_t_joint3 3 -14 0 0) (lh_t_joint2 3 -11 0 0) (lh_t_joint1 3 0 -20 0) (lh_t_joint0 3 0 45 32) (l_wrist 3 29 33 -63) (l_elbow 3 0 100 0) (l_shoulder 3 69 8 -36) (l_clavicle 3 4 0 0) </posture> 
+		          </frame>
+	           <!-- *** Frame3: Linker Arm am Kopf *** -->
+  	<frame ftime="2.0">
+  		           <posture> Humanoid (re_eye 3 -13 -1 0) (le_eye 3 -15 0 0) (skullbase 3 -4 2 0) (vc2 3 0 7 0) (vc4 3 -14 19 0) (rh_l_joint3 3 18 0 0) (r_elbow 3 0 19 0) (r_shoulder 3 -6 -4 -19) (r_clavicle 3 0 0 0) (lh_l_joint3 3 -18 0 0) (lh_l_joint2 3 -36 0 0) (lh_l_joint1 3 -29 3 -12) (lh_r_joint3 3 -15 0 0) (lh_r_joint2 3 -29 0 0) (lh_r_joint1 3 -41 3 0) (lh_m_joint3 3 -22 0 0) (lh_m_joint2 3 -30 0 0) (lh_m_joint1 3 -45 0 0) (lh_p_joint3 3 -12 0 0) (lh_p_joint2 3 -23 0 0) (lh_p_joint1 3 -40 0 0) (lh_t_joint3 3 -14 0 0) (lh_t_joint2 3 -11 0 0) (lh_t_joint1 3 0 -20 0) (lh_t_joint0 3 0 45 32) (l_wrist 3 -2 10 -63) (l_elbow 3 0 121 0) (l_shoulder 3 95 41 -75) (l_clavicle 3 4 0 0) </posture> 
+		          </frame>
+	           <!-- *** Frame0: Hand kruemmen -->
+  	<frame ftime="2.1">
+  		           <posture> Humanoid (re_eye 3 -13 -1 0) (le_eye 3 -15 0 0) (skullbase 3 -4 2 0) (vc2 3 0 7 0) (vc4 3 -14 19 0) (r_elbow 3 0 19 0) (r_shoulder 3 -6 -4 -19) (r_clavicle 3 0 0 0) (lh_l_joint3 3 -18 0 0) (lh_l_joint2 3 -36 0 0) (lh_l_joint1 3 -29 3 -12) (lh_r_joint3 3 -15 0 0) (lh_r_joint2 3 -29 0 0) (lh_r_joint1 3 -41 3 0) (lh_m_joint3 3 -22 0 0) (lh_m_joint2 3 -30 0 0) (lh_m_joint1 3 -45 0 0) (lh_p_joint3 3 -12 0 0) (lh_p_joint2 3 -23 0 0) (lh_p_joint1 3 -40 0 0) (lh_t_joint3 3 -14 0 0) (lh_t_joint2 3 -11 0 0) (lh_t_joint1 3 0 -20 0) (lh_t_joint0 3 0 45 32) (l_wrist 3 -2 10 -63) (l_elbow 3 0 121 0) (l_shoulder 3 95 41 -75) (l_clavicle 3 4 0 0) </posture> 
+		          </frame>
+	           <!-- *** Frame1: Hand strecken -->
+  	<frame ftime="2.2">
+  		           <posture> Humanoid (re_eye 3 -13 -1 0) (le_eye 3 -15 0 0) (skullbase 3 -2 2 0) (vc2 3 0 7 0) (vc4 3 -14 19 0) (r_elbow 3 0 19 0) (r_shoulder 3 -6 -4 -19) (r_clavicle 3 0 0 0) (lh_l_joint3 3 -9 0 0) (lh_l_joint2 3 -17 0 0) (lh_l_joint1 3 -25 1 -12) (lh_r_joint3 3 -11 0 0) (lh_r_joint2 3 -12 0 0) (lh_r_joint1 3 -36 4 -2) (lh_m_joint3 3 -10 0 0) (lh_m_joint2 3 -8 0 0) (lh_m_joint1 3 -35 2 0) (lh_p_joint3 3 -12 0 0) (lh_p_joint2 3 -19 0 0) (lh_p_joint1 3 -25 1 0) (lh_t_joint3 3 -14 0 0) (lh_t_joint2 3 -11 0 0) (lh_t_joint1 3 0 -20 0) (lh_t_joint0 3 0 45 32) (l_wrist 3 -2 10 -63) (l_elbow 3 0 121 0) (l_shoulder 3 95 41 -75) (l_clavicle 3 4 0 0) </posture> 
+		          </frame>
+	           <!-- *** Frame2: Hand kruemmen -->
+  	<frame ftime="2.4">
+  		           <posture> Humanoid (re_eye 3 -13 -1 0) (le_eye 3 -15 0 0) (skullbase 3 -4 4 0) (vc2 3 0 7 0) (vc4 3 -14 19 0) (r_elbow 3 0 19 0) (r_shoulder 3 -6 -4 -19) (r_clavicle 3 0 0 0) (lh_l_joint3 3 -18 0 0) (lh_l_joint2 3 -36 0 0) (lh_l_joint1 3 -29 3 -12) (lh_r_joint3 3 -15 0 0) (lh_r_joint2 3 -29 0 0) (lh_r_joint1 3 -41 3 0) (lh_m_joint3 3 -22 0 0) (lh_m_joint2 3 -30 0 0) (lh_m_joint1 3 -45 0 0) (lh_p_joint3 3 -12 0 0) (lh_p_joint2 3 -23 0 0) (lh_p_joint1 3 -40 0 0) (lh_t_joint3 3 -14 0 0) (lh_t_joint2 3 -11 0 0) (lh_t_joint1 3 0 -20 0) (lh_t_joint0 3 0 45 32) (l_wrist 3 -2 10 -63) (l_elbow 3 0 121 0) (l_shoulder 3 95 41 -75) (l_clavicle 3 4 0 0) </posture> 
+		          </frame>
+	           <!-- *** Frame3: Hand strecken -->
+  	<frame ftime="2.6">
+  		           <posture> Humanoid (re_eye 3 -13 -1 0) (le_eye 3 -15 0 0) (skullbase 3 -5 5 0) (vc2 3 0 7 0) (vc4 3 -14 19 0) (r_elbow 3 0 19 0) (r_shoulder 3 -6 -4 -19) (r_clavicle 3 0 0 0) (lh_l_joint3 3 -9 0 0) (lh_l_joint2 3 -17 0 0) (lh_l_joint1 3 -25 1 -12) (lh_r_joint3 3 -11 0 0) (lh_r_joint2 3 -12 0 0) (lh_r_joint1 3 -36 4 -2) (lh_m_joint3 3 -10 0 0) (lh_m_joint2 3 -8 0 0) (lh_m_joint1 3 -35 2 0) (lh_p_joint3 3 -12 0 0) (lh_p_joint2 3 -19 0 0) (lh_p_joint1 3 -25 1 0) (lh_t_joint3 3 -14 0 0) (lh_t_joint2 3 -11 0 0) (lh_t_joint1 3 0 -20 0) (lh_t_joint0 3 0 45 32) (l_wrist 3 -2 10 -63) (l_elbow 3 0 121 0) (l_shoulder 3 95 41 -75) (l_clavicle 3 4 0 0) </posture> 
+		          </frame>
+	           <!-- *** Frame4: Hand kruemmen -->
+  	<frame ftime="2.8">
+  		           <posture> Humanoid (re_eye 3 -13 -1 0) (le_eye 3 -15 0 0) (skullbase 3 -6 4 0) (vc2 3 0 7 0) (vc4 3 -14 19 0) (r_elbow 3 0 19 0) (r_shoulder 3 -6 -4 -19) (r_clavicle 3 0 0 0) (lh_l_joint3 3 -18 0 0) (lh_l_joint2 3 -36 0 0) (lh_l_joint1 3 -29 3 -12) (lh_r_joint3 3 -15 0 0) (lh_r_joint2 3 -29 0 0) (lh_r_joint1 3 -41 3 0) (lh_m_joint3 3 -22 0 0) (lh_m_joint2 3 -30 0 0) (lh_m_joint1 3 -45 0 0) (lh_p_joint3 3 -12 0 0) (lh_p_joint2 3 -23 0 0) (lh_p_joint1 3 -40 0 0) (lh_t_joint3 3 -14 0 0) (lh_t_joint2 3 -11 0 0) (lh_t_joint1 3 0 -20 0) (lh_t_joint0 3 0 45 32) (l_wrist 3 -2 10 -63) (l_elbow 3 0 121 0) (l_shoulder 3 95 41 -75) (l_clavicle 3 4 0 0) </posture> 
+		          </frame>
+	           <!-- *** Frame5: Hand strecken -->
+  	<frame ftime="3.0">
+  		           <posture> Humanoid (re_eye 3 -13 -1 0) (le_eye 3 -15 0 0) (skullbase 3 -5 2 0) (vc2 3 0 7 0) (vc4 3 -14 19 0) (r_elbow 3 0 19 0) (r_shoulder 3 -6 -4 -19) (r_clavicle 3 0 0 0) (lh_l_joint3 3 -9 0 0) (lh_l_joint2 3 -17 0 0) (lh_l_joint1 3 -25 1 -12) (lh_r_joint3 3 -11 0 0) (lh_r_joint2 3 -12 0 0) (lh_r_joint1 3 -36 4 -2) (lh_m_joint3 3 -10 0 0) (lh_m_joint2 3 -8 0 0) (lh_m_joint1 3 -35 2 0) (lh_p_joint3 3 -12 0 0) (lh_p_joint2 3 -19 0 0) (lh_p_joint1 3 -25 1 0) (lh_t_joint3 3 -14 0 0) (lh_t_joint2 3 -11 0 0) (lh_t_joint1 3 0 -20 0) (lh_t_joint0 3 0 45 32) (l_wrist 3 -2 10 -63) (l_elbow 3 0 121 0) (l_shoulder 3 95 41 -75) (l_clavicle 3 4 0 0) </posture> 
+		          </frame>
+	           <!-- *** Frame6: Hand kruemmen -->
+  	<frame ftime="3.2">
+  		           <posture> Humanoid (re_eye 3 -13 -1 0) (le_eye 3 -15 0 0) (skullbase 3 -4 2 0) (vc2 3 0 7 0) (vc4 3 -14 19 0) (r_elbow 3 0 19 0) (r_shoulder 3 -6 -4 -19) (r_clavicle 3 0 0 0) (lh_l_joint3 3 -18 0 0) (lh_l_joint2 3 -36 0 0) (lh_l_joint1 3 -29 3 -12) (lh_r_joint3 3 -15 0 0) (lh_r_joint2 3 -29 0 0) (lh_r_joint1 3 -41 3 0) (lh_m_joint3 3 -22 0 0) (lh_m_joint2 3 -30 0 0) (lh_m_joint1 3 -45 0 0) (lh_p_joint3 3 -12 0 0) (lh_p_joint2 3 -23 0 0) (lh_p_joint1 3 -40 0 0) (lh_t_joint3 3 -14 0 0) (lh_t_joint2 3 -11 0 0) (lh_t_joint1 3 0 -20 0) (lh_t_joint0 3 0 45 32) (l_wrist 3 -2 10 -63) (l_elbow 3 0 121 0) (l_shoulder 3 95 41 -75) (l_clavicle 3 4 0 0)</posture> 
+		          </frame>
+	        </phase>
+	        <!-- Phase2: Arme und Kopf zurueck -->
+	<phase>
+	<!-- *** Frame1: entspricht Phase1.Frame3 -->
+  	<frame ftime="0.2">
+  		           <posture> Humanoid (re_eye 3 -13 -1 0) (le_eye 3 -15 0 0) (skullbase 3 -4 2 0) (vc2 3 0 7 0) (vc4 3 -14 19 0) (r_elbow 3 0 19 0) (r_shoulder 3 -6 -4 -19) (r_clavicle 3 0 0 0) (lh_l_joint3 3 -18 0 0) (lh_l_joint2 3 -36 0 0) (lh_l_joint1 3 -29 3 -12) (lh_r_joint3 3 -15 0 0) (lh_r_joint2 3 -29 0 0) (lh_r_joint1 3 -41 3 0) (lh_m_joint3 3 -22 0 0) (lh_m_joint2 3 -30 0 0) (lh_m_joint1 3 -45 0 0) (lh_p_joint3 3 -12 0 0) (lh_p_joint2 3 -23 0 0) (lh_p_joint1 3 -40 0 0) (lh_t_joint3 3 -14 0 0) (lh_t_joint2 3 -11 0 0) (lh_t_joint1 3 0 -20 0) (lh_t_joint0 3 0 45 32) (l_wrist 3 -2 10 -63) (l_elbow 3 0 121 0) (l_shoulder 3 95 41 -75) (l_clavicle 3 4 0 0)</posture> 
+		          </frame>
+	           <!-- *** Frame2: entspricht Phase1.Frame2 -->
+  	<frame ftime="0.8">
+  		           <posture>Humanoid (re_eye 3 -13 -1 0) (le_eye 3 -15 0 0) (skullbase 3 -3 5 0) (vc2 3 -5 9 0) (vc4 3 0 0 0) (r_elbow 3 0 30 0) (r_shoulder 3 -13 -1 -36) (r_clavicle 3 0 0 0) (lh_l_joint3 3 -18 0 0) (lh_l_joint2 3 -36 0 0) (lh_l_joint1 3 -29 3 -12) (lh_r_joint3 3 -15 0 0) (lh_r_joint2 3 -29 0 0) (lh_r_joint1 3 -41 3 0) (lh_m_joint3 3 -22 0 0) (lh_m_joint2 3 -30 0 0) (lh_m_joint1 3 -45 0 0) (lh_p_joint3 3 -12 0 0) (lh_p_joint2 3 -23 0 0) (lh_p_joint1 3 -40 0 0) (lh_t_joint3 3 -14 0 0) (lh_t_joint2 3 -11 0 0) (lh_t_joint1 3 0 -20 0) (lh_t_joint0 3 0 45 32) (l_wrist 3 29 33 -63) (l_elbow 3 0 100 0) (l_shoulder 3 69 8 -36) (l_clavicle 3 4 0 0) </posture> 
+		          </frame>
+	           <!-- *** Frame3: entspricht Phase1.Frame1 -->
+  	<frame ftime="1.6">
+  		           <posture>Humanoid (re_eye 3 0 0 0) (le_eye 3 0 0 0) (skullbase 3 0 0 0) (vc2 3 0 0 0) (vc4 3 0 0 0) (r_elbow 3 0 5 0) (r_shoulder 3 -1 0 0) (r_clavicle 3 0 0 0) (lh_l_joint3 3 -18 0 0) (lh_l_joint2 3 -36 0 0) (lh_l_joint1 3 -29 12 0) (lh_r_joint3 3 -15 0 0) (lh_r_joint2 3 -29 0 0) (lh_r_joint1 3 -25 3 0) (lh_m_joint3 3 -15 0 0) (lh_m_joint2 3 -30 0 0) (lh_m_joint1 3 -29 0 0) (lh_p_joint3 3 -12 0 0) (lh_p_joint2 3 -23 0 0) (lh_p_joint1 3 -40 0 0) (lh_t_joint3 3 -14 0 0) (lh_t_joint2 3 -11 0 0) (lh_t_joint1 3 0 -20 0) (lh_t_joint0 3 0 45 32) (l_wrist 3 -4 -2 5) (l_elbow 3 0 5 0) (l_shoulder 3 1 0 0) (l_clavicle 3 0 0 0)</posture> 
+		          </frame>
+	        </phase>
+	     </keyframing>
+     </dynamic>
+</murml-description>

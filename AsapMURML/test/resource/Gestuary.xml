@@ -1,0 +1,1214 @@
+<?xml version="1.0" encoding="ISO-8859-1" ?>
+
+
+<gestures>
+
+<!--
+ ===========================================================================================
+ =====  FACIAL BEHAVIORS ===================================================================
+ ===========================================================================================
+-->
+
+<!-- MENACING-FACE == Function: Admonish -->
+<gesture id="menacing_face" scope="face">
+  <function name="signal_admonition"/>
+  <constraints>
+    <dynamic>
+      <keyframing mode="spline" easescale="6.0" easeturningpoint="0.5" name="admonish_eyes" scope="face" priority="50">
+	<phase>
+  	  <frame ftime="0.2">
+ 	    <posture> (MUSCLE_BRAUE_LINKS 0.5) (MUSCLE_BRAUE_RECHTS 0.5) (MUSCLE_AUGE_LINKS_RUND_OBEN -0.5) (MUSCLE_AUGE_RECHTS_RUND_OBEN -0.5) </posture>	
+	  </frame>	
+  	  <frame ftime="0.8">
+ 	    <posture> (MUSCLE_BRAUE_LINKS 0.5) (MUSCLE_BRAUE_RECHTS 0.5) (MUSCLE_AUGE_LINKS_RUND_OBEN -0.5) (MUSCLE_AUGE_RECHTS_RUND_OBEN -0.5) </posture>	
+	  </frame>	
+  	  <frame ftime="1.0">
+ 	    <posture> (MUSCLE_BRAUE_LINKS 0) (MUSCLE_BRAUE_RECHTS 0) (MUSCLE_AUGE_LINKS_RUND_OBEN 0) (MUSCLE_AUGE_RECHTS_RUND_OBEN 0) </posture>
+	  </frame>	
+	</phase>
+      </keyframing>
+    </dynamic>
+  </constraints>
+</gesture>
+
+<!-- RAISED-EYEBROWS == Function: Rejection, Sorry -->
+<gesture id="raise-eyebrows" scope="face">
+  <function name="signal_rejection"/>
+  <function name="signal_sorry"/>
+  <constraints>
+    <dynamic>
+      <keyframing mode="spline" easescale="6.0" easeturningpoint="0.5" name="raise-brows" scope="face" priority="50">
+	<phase>
+  	  <frame ftime="0.2">
+ 	    <posture> (MUSCLE_BRAUE_LINKS 0.7) (MUSCLE_BRAUE_RECHTS 0.7) </posture>	
+	  </frame>	
+  	  <frame ftime="0.8">
+ 	    <posture> (MUSCLE_BRAUE_LINKS 0.9) (MUSCLE_BRAUE_RECHTS 0.9) </posture>	
+	  </frame>	
+  	  <frame ftime="1.0">
+ 	    <posture> (MUSCLE_BRAUE_LINKS 0) (MUSCLE_BRAUE_RECHTS 0) </posture>
+	  </frame>	
+	</phase>
+      </keyframing>
+    </dynamic>
+  </constraints>
+</gesture>
+
+<!-- WINK == Function: Ironical -->
+<gesture id="wink" scope="face">
+  <function name="signal_ironical"/>
+  <constraints>
+    <dynamic>
+      <keyframing mode="spline" easescale="6.0" easeturningpoint="0.5" name="eyeblink" scope="face" priority="50">
+	<phase>
+  	  <frame ftime="0.1">
+ 	    <posture> (MUSCLE_BRAUE_LINKS -0.8) (MUSCLE_AUGE_LINKS_RUND_OBEN 0.6) (MUSCLE_AUGE_LINKS_RUND_UNTEN -0.6) (MUSCLE_AUGE_LINKS_LID 1) </posture>	
+	  </frame>	
+  	  <frame ftime="0.5">
+ 	    <posture> (MUSCLE_BRAUE_LINKS -0.8) (MUSCLE_AUGE_LINKS_RUND_OBEN 0.6) (MUSCLE_AUGE_LINKS_RUND_UNTEN -0.6) (MUSCLE_AUGE_LINKS_LID 1) </posture>	
+	  </frame>	
+  	  <frame ftime="0.65">
+ 	    <posture> (MUSCLE_BRAUE_LINKS 0) (MUSCLE_AUGE_LINKS_RUND_OBEN 0) (MUSCLE_AUGE_LINKS_RUND_UNTEN 0) (MUSCLE_AUGE_LINKS_LID 0) </posture>
+	  </frame>	
+	</phase>
+      </keyframing>
+    </dynamic>
+  </constraints>
+</gesture>
+
+<!-- STRAINED_FACE == Function: thinking -->
+<gesture id="strained_face" scope="face">
+  <function name="signal_thinking"/>
+  <constraints>
+    <dynamic>
+      <keyframing scope="face" priority="50">
+	<phase>
+	  <frame ftime="1.5">
+	    <posture>(MUSCLE_KIEFER_AUF 0.0) (MUSCLE_BRAUE_LINKS -0.4) (MUSCLE_BRAUE_RECHTS -0.4) (MUSCLE_MUND_LINKS_GRINSEN 0.2) (MUSCLE_MUND_LINKS_BOESE 0) (MUSCLE_MUND_RECHTS_GRINSEN 0.2) (MUSCLE_MUND_RECHTS_BOESE 0) (MUSCLE_AUGE_LINKS_RUND_UNTEN 0) (MUSCLE_AUGE_RECHTS_RUND_UNTEN 0) (MUSCLE_MUND_ZUSAMMEN 0.5) (MUSCLE_MUND_LINKS_MITTE 0) (MUSCLE_MUND_RECHTS_MITTE 0) (MUSCLE_KIEFER_AUF_MUND_ZU 0.3) (MUSCLE_KIEFER_RECHTS_LINKS -0.3) (MUSCLE_MUND_BREIT -0.3) (MUSCLE_BRAUE_RUNZELN 1.0) (MUSCLE_AUGE_LINKS_LID 0) (MUSCLE_AUGE_RECHTS_LID 0) (MUSCLE_AUGE_LINKS_RUND_OBEN 0) (MUSCLE_AUGE_RECHTS_RUND_OBEN 0) </posture>
+	    </frame>
+	    <frame ftime="4.0">
+	      <posture>	(MUSCLE_KIEFER_AUF 0.0) (MUSCLE_BRAUE_LINKS -0.4) (MUSCLE_BRAUE_RECHTS -0.4) (MUSCLE_MUND_LINKS_GRINSEN 0.2) (MUSCLE_MUND_LINKS_BOESE 0) (MUSCLE_MUND_RECHTS_GRINSEN 0.2) (MUSCLE_MUND_RECHTS_BOESE 0) (MUSCLE_AUGE_LINKS_RUND_UNTEN 0) (MUSCLE_AUGE_RECHTS_RUND_UNTEN 0) (MUSCLE_MUND_ZUSAMMEN 0.5) (MUSCLE_MUND_LINKS_MITTE 0) (MUSCLE_MUND_RECHTS_MITTE 0) (MUSCLE_KIEFER_AUF_MUND_ZU 0.3) (MUSCLE_KIEFER_RECHTS_LINKS -0.3) (MUSCLE_MUND_BREIT -0.3) (MUSCLE_BRAUE_RUNZELN 1.0) (MUSCLE_AUGE_LINKS_LID 0) (MUSCLE_AUGE_RECHTS_LID 0) (MUSCLE_AUGE_LINKS_RUND_OBEN 0) (MUSCLE_AUGE_RECHTS_RUND_OBEN 0) </posture>
+	    </frame>
+	  </phase>
+	</keyframing>
+    </dynamic>
+  </constraints>
+</gesture>
+
+<!-- EYE-ROLL == Function: -->
+<!-- gesture id="eye-roll" scop="face">
+  <constraints>
+    <dynamic>
+      <keyframing scope="body" mode="spline" easescale="5.0" easeturningpoint="0.4" priority="50">
+	<phase>
+	  <frame ftime="0.9">
+	    <posture> (re_eye 3 0 0 0) (le_eye 3 0 0 0) </posture>
+	  </frame>
+	  <frame ftime="1.6">
+	    <posture> (re_eye 3 25 0 0) (le_eye 3 25 0 0) </posture>
+	  </frame>
+	  <frame ftime="2.2">
+  	    <posture> (re_eye 3 25 25 0) (le_eye 3 25 25 0) </posture>
+	  </frame>
+	  <frame ftime="2.9">
+	    <posture> (re_eye 3 -25 0 0) (le_eye 3 -25 0 0)</posture>
+ 	  </frame>
+	  <frame ftime="3.4">
+	    <posture> (re_eye 3 -25 -25 0) (le_eye 3 -25 -25 0) </posture>
+	  </frame>
+	  <frame ftime="4.0">
+	    <posture> (re_eye 3 0 0 0) (le_eye 3 0 0 0) </posture>
+	  </frame>
+	</phase>
+      </keyframing>
+    </dynamic>
+  </constraints>
+</gesture -->
+
+
+
+
+<!-- ============================================================================================== -->
+<!-- =====  HEAD/NECK BEHAVIORS =================================================================== -->
+<!-- ============================================================================================== -->
+
+
+<!-- HEAD-SHAKE == Function: Disagree -->
+<gesture id="head-shake" scope="head">
+  <function name="signal_disagree"/>
+  <constraints>
+     <dynamic>
+        <keyframing mode="spline" easescale="11.0" easeturningpoint="0.5" name="head_shake" priority="50">
+          <phase>
+            <frame ftime="0.0"><posture> Humanoid (vc2 3 0 0 0) (vc4 3 0 0 0) </posture></frame>
+            <frame ftime="0.3"><posture> Humanoid (vc2 3 0 0 5) (vc4 3 0 0 5) </posture></frame>
+            <frame ftime="1.0"><posture> Humanoid (vc2 3 0 0 -7) (vc4 3 0 0 -7) </posture></frame>
+            <frame ftime="1.6"><posture> Humanoid (vc2 3 0 0 7) (vc4 3 0 0 7) </posture></frame>
+            <frame ftime="2.0"><posture> Humanoid (vc2 3 0 0 -5) (vc4 3 0 0 -5) </posture></frame>
+            <frame ftime="2.1"><posture> Humanoid (vc2 3 0 0 0) (vc4 3 0 0 0) </posture></frame>
+            <frame ftime="2.2"><posture> Humanoid (vc2 3 0 0 0) (vc4 3 0 0 0) </posture></frame>
+          </phase>
+        </keyframing>
+     </dynamic>
+  </constraints>
+</gesture>
+
+<!-- HEAD-NODDING == Function: Agree -->
+<gesture id="head-nod" scope="head">
+  <function name="signal_agree"/>
+  <constraints>
+     <dynamic slot="Neck" scope="neck">
+        <keyframing mode="spline" easescale="7.0" easeturningpoint="0.5" name="nodding" priority="25">
+          <phase>
+            <frame ftime="0.2"><posture> Humanoid (vc2 3 0 5 0) (vc4 3 0 5 0) </posture></frame>
+          </phase>
+          <phase>
+            <frame ftime="0.0"><posture> Humanoid (vc2 3 0 5 0) (vc4 3 0 5 0) </posture></frame>
+            <frame ftime="0.25"><posture> Humanoid (vc2 3 0 0 0) (vc4 3 0 0 0) </posture></frame>
+          </phase>
+          <phase>
+            <frame ftime="0.0"><posture> Humanoid (vc2 3 0 0 0) (vc4 3 0 0 0) </posture></frame>
+            <frame ftime="0.2"><posture> Humanoid (vc2 3 0 5 0) (vc4 3 0 5 0) </posture></frame>
+          </phase>
+          <phase>
+            <frame ftime="0.0"><posture> Humanoid (vc2 3 0 5 0) (vc4 3 0 5 0) </posture></frame>
+            <frame ftime="0.15"><posture> Humanoid (vc2 3 0 0 0) (vc4 3 0 0 0) </posture></frame>
+          </phase>
+        </keyframing>
+     </dynamic>
+  </constraints>
+</gesture>
+
+<!-- HEAD-SINGLE-NOD == Function: Agree -->
+<gesture id="head-singleNod" scope="head">
+  <function name="signal_agree"/>
+  <constraints>
+     <dynamic slot="Neck" scope="neck">
+        <keyframing mode="spline" easescale="6.0" easeturningpoint="0.5" name="nod" priority="25">
+	<phase>
+  	  <frame ftime="0.2">
+  	    <posture> Humanoid (vc2 3 0 0 0) (vc4 3 0 0 0) </posture> 
+	  </frame>
+  	  <frame ftime="0.5">
+  	    <posture> Humanoid (vc2 3 0 6 0) (vc4 3 0 4 0) </posture> 
+	  </frame>
+	</phase>
+	<phase>
+   	  <frame ftime="0.1">
+  	    <posture> Humanoid  (vc2 3 0 6 0) (vc4 3 0 4 0) </posture> 
+	  </frame>
+  	  <frame ftime="0.4">
+  	    <posture> Humanoid  (vc2 3 0 0 0) (vc4 3 0 0 0) </posture> 
+	  </frame>
+	</phase>
+	</keyframing>
+     </dynamic>
+  </constraints>
+</gesture>
+
+<!-- HEAD-TILT == Function: Sorry -->
+<gesture id="head-tilt" scope="head">
+  <function name="signal_sorry"/>
+  <constraints>
+     <dynamic slot="Neck" scope="neck">
+        <keyframing mode="spline" easescale="7.0" easeturningpoint="0.5" priority="50">
+          <phase>
+            <frame ftime="0.2"><posture> Humanoid (vc2 3 3 0 0) (vc4 3 2 0 0) </posture></frame>
+            <frame ftime="0.6"><posture> Humanoid (vc2 3 3 0 0) (vc4 3 4 0 0) </posture></frame>
+            <frame ftime="0.8"><posture> Humanoid (vc2 3 0 0 0) (vc4 3 0 0 0) </posture></frame>
+          </phase>
+        </keyframing>
+     </dynamic>
+  </constraints>
+</gesture>
+
+<!-- LOOK-UP == Function: -->
+<!-- gesture id="Look-Up" scope="head">
+  <constraints>
+    <static slot="GazeDirection" value="1000 100 1000"/>
+  </constraints>
+</gesture -->
+
+<!--  SLIGHT-TILTNOD-RIGHT == Function: Mark.SlightPeak -->
+<gesture id="tilt_nod_right" scope="head">
+  <function name="signal_mark.slightPeak"/>
+  <constraints>
+     <dynamic slot="Neck" scope="neck">
+        <keyframing mode="spline" easescale="7.0" easeturningpoint="0.5" priority="25">
+          <phase>
+            <frame ftime="0.3"><posture> Humanoid (vc2 3 1 0 0) (vc4 3 2 0 0) </posture></frame>
+            <frame ftime="0.6"><posture> Humanoid (vc2 3 0 0 0) (vc4 3 0 0 0) </posture></frame>
+          </phase>
+        </keyframing>
+     </dynamic>
+  </constraints>
+</gesture>
+
+<!--  SLIGHT-TILTNOD-LEFT == Function: Mark.SlightPeak -->
+<gesture id="tilt_nod_left" scope="head">
+  <function name="signal_mark.slightPeak"/>
+  <function name="signal_ironical"/>
+  <constraints>
+     <dynamic slot="Neck" scope="neck">
+        <keyframing mode="spline" easescale="7.0" easeturningpoint="0.5" priority="25">
+          <phase>
+            <frame ftime="0.3"><posture> Humanoid (vc2 3 0 2 -2) (vc4 3 0 2 -2) </posture></frame>
+            <frame ftime="0.6"><posture> Humanoid (vc2 3 0 0 0) (vc4 3 0 0 0) </posture></frame>
+          </phase>
+        </keyframing>
+     </dynamic>
+  </constraints>
+</gesture>
+
+<!--  SLIGHT-DOWNNOD == Function: Mark.SlightPeak -->
+<gesture id="downward_nod" scope="head">
+  <function name="signal_mark.slightPeak"/>
+  <constraints>
+     <dynamic slot="Neck" scope="neck">
+        <keyframing mode="spline" easescale="7.0" easeturningpoint="0.5" priority="25">
+          <phase>
+            <frame ftime="0.3"><posture> Humanoid (vc2 3 0 1 0) (vc4 3 0 2 0) </posture></frame>
+            <frame ftime="0.6"><posture> Humanoid (vc2 3 0 0 0) (vc4 3 0 0 0) </posture></frame>
+          </phase>
+        </keyframing>
+     </dynamic>
+  </constraints>
+</gesture>
+
+<!--  SLIGHT-UPNOD == Function: Mark.SlightPeak -->
+<gesture id="upward_nod" scope="head">
+  <function name="signal_mark.slightPeak"/>
+  <constraints>
+     <dynamic slot="Neck" scope="neck">
+        <keyframing mode="spline" easescale="7.0" easeturningpoint="0.5" priority="25">
+          <phase>
+            <frame ftime="0.3"><posture> Humanoid (vc2 3 0 -1 0) (vc4 3 0 -2 0) </posture></frame>
+            <frame ftime="0.6"><posture> Humanoid (vc2 3 0 0 0) (vc4 3 0 0 0) </posture></frame>
+          </phase>
+        </keyframing>
+     </dynamic>
+  </constraints>
+</gesture>
+
+<!--  STRONG-DOWNNOD == Function: Mark.StrongPeak -->
+<gesture id="downward_nod_strong" scope="head">
+  <function name="signal_mark.strongPeak"/>
+  <constraints>
+     <dynamic slot="Neck" scope="neck">
+        <keyframing mode="spline" easescale="7.0" easeturningpoint="0.5" priority="25">
+          <phase>
+            <frame ftime="0.3"><posture> Humanoid (vc2 3 0 3 0) (vc4 3 0 3 0) </posture></frame>
+            <frame ftime="0.6"><posture> Humanoid (vc2 3 0 0 0) (vc4 3 0 0 0) </posture></frame>
+          </phase>
+        </keyframing>
+     </dynamic>
+  </constraints>
+</gesture>
+
+<!--  STRONG-UPNOD == Function: Mark.StrongPeak -->
+<gesture id="upward_nod_strong" scope="head">
+  <function name="signal_mark.strongPeak"/>
+  <constraints>
+     <dynamic slot="Neck" scope="neck">
+        <keyframing mode="spline" easescale="7.0" easeturningpoint="0.5" priority="25">
+          <phase>
+            <frame ftime="0.3"><posture> Humanoid (vc2 3 0 -3 0) (vc4 3 0 -3 0) </posture></frame>
+            <frame ftime="0.6"><posture> Humanoid (vc2 3 0 0 0) (vc4 3 0 0 0) </posture></frame>
+          </phase>
+        </keyframing>
+     </dynamic>
+  </constraints>
+</gesture>
+
+
+
+
+
+
+<!-- ============================================================================================== -->
+<!-- =====  BODY BEHAVIORS ======================================================================== -->
+<!-- ============================================================================================== -->
+
+
+<!-- RAISE-FOREFINGER == Function: Admonish -->
+<gesture id="raise-forefinger" scope="hand">
+  <function name="signal_admonition"/>
+  <constraints>
+    <parallel>
+      <static slot="HandLocation" value="LocShoulder LocCenterRight LocNorm"/>
+      <static slot="ExtFingerOrientation" value="DirU"/>
+      <static slot="HandShape" value="BSifinger"/>
+    </parallel>
+  </constraints>
+</gesture>
+
+<!-- FEND-OFF == Function: Rejection -->
+<gesture id="fend-off" scope="hand">
+  <function name="signal_rejection"/>
+  <constraints>
+    <symmetrical dominant="right_arm" symmetry="SymMS">
+      <parallel>
+        <static slot="HandLocation" value="LocUpperChest LocCenterRight LocFar"/>
+        <static slot="PalmOrientation" value="DirA"/>
+        <static slot="ExtFingerOrientation" value="DirU"/>
+        <static slot="HandShape" value="BSflat"/>
+      </parallel>
+    </symmetrical>
+  </constraints>
+</gesture>
+
+<!-- ARMS-WIDE-OPEN == Function: Sorry -->
+<gesture id="armsWideOpen" scope="hand">
+  <function name="signal_sorry"/>
+  <constraints stroke="point">
+    <symmetrical dominant="right_arm" symmetry="SymMS">
+      <parallel>
+        <static slot="HandLocation" value="LocUpperStomach LocPeripheryRight LocFar"/>
+        <static slot="PalmOrientation" value="PalmU"/>
+      </parallel>
+    </symmetrical>
+  </constraints>
+</gesture>
+
+<!-- BEAT-RIGHT-PALM == Function: Provide-Information -->
+<gesture id="offerInformationRight" scope="hand">
+  <function name="signal_provide.information"/>
+  <constraints>
+    <parallel>
+      <dynamic slot="HandLocation">
+	  <dynamicElement type="chop">
+	    <value type="start" name="DirU"/>
+	    <value type="end" name="DirR"/>
+	  </dynamicElement>
+      </dynamic>
+      <static slot="PalmOrientation" value="PalmU"/>
+    </parallel>
+  </constraints>
+</gesture>
+
+<!-- RAISE-RIGHT-PALM == Function: Offer-Information -->
+<gesture id="offerInformationRight2" scope="hand">
+  <function name="signal_offer-information"/>
+  <constraints>
+    <parallel>
+      <dynamic slot="HandLocation">
+	<dynamicElement type="linear">
+          <value type="start" name="LocLowerChest LocCenterRRight LocNorm"/>
+	  <value type="direction" name="DirD"/>
+	  <value type="distance" name="20.0"/>
+	</dynamicElement>
+      </dynamic>
+      <static slot="PalmOrientation" value="PalmU"/>
+    </parallel>
+  </constraints>
+</gesture>
+
+<!-- RAISE-LEFT-PALM == Function: Offer-Information -->
+<gesture id="offerInformationLeft" scope="hand">
+  <function name="signal_offer-information"/>
+  <constraints>
+    <parallel>
+      <dynamic slot="HandLocation">
+	<dynamicElement type="linear">
+          <value type="start" name="LocLowerChest LocCenterLLeft LocNorm"/>
+	  <value type="direction" name="DirD"/>
+	  <value type="distance" name="20.0"/>
+	</dynamicElement>
+      </dynamic>
+      <static slot="PalmOrientation" value="PalmU"/>
+    </parallel>
+  </constraints>
+</gesture>
+
+<!-- POINT-RAISE-BOTH-HANDS == Function: Offer-Information -->
+<gesture id="markInformationBoth" scope="hand">
+  <function name="signal_offer-information"/>
+  <constraints stroke="point">
+    <symmetrical dominant="right_arm" symmetry="SymMS">
+      <parallel>
+        <dynamic slot="HandLocation">
+	  <dynamicElement type="linear">
+            <value type="start" name="LocUpperStomach LocCenterRRight LocNorm"/>
+	    <value type="direction" name="DirDRD"/>
+	    <value type="distance" name="20.0"/>
+	  </dynamicElement>
+        </dynamic>
+        <static slot="PalmOrientation" value="PalmU"/>
+      </parallel>
+    </symmetrical>
+  </constraints>
+</gesture>
+
+<!-- POINT-RAISE-LEFT-HAND == Function: Offer-Information -->
+<gesture id="markInformationLeft" scope="hand">
+  <function name="signal_offer-information"/>
+  <constraints stroke="point">
+    <parallel>
+      <static slot="HandLocation" value="LocUpperStomach LocCenterLLeft LocFar"/>
+      <static slot="PalmOrientation" value="PalmU"/>
+    </parallel>
+  </constraints>
+</gesture>
+
+<!-- POINT-RAISE-RIGHT-HAND == Function: Offer-Information -->
+<gesture id="markInformationRight" scope="hand">
+  <function name="signal_offer-information"/>
+  <constraints stroke="point">
+    <parallel>
+      <static slot="HandLocation" value="LocUpperStomach LocCenterRRight LocFar"/>
+      <static slot="PalmOrientation" value="PalmU"/>
+    </parallel>
+  </constraints>
+</gesture>
+
+<!-- SHRUG == Function: Confusion, Unconcerned -->
+<gesture id="shrug" scope="hand">
+  <function name="signal_confusion"/>
+  <function name="signal_unconcerned"/>
+  <constraints>
+     <dynamic>
+	<keyframing mode="spline" easescale="5.0" easeturningpoint="0.5" name="shrug" priority="50">
+	<!-- Phase1: Koerper hoch und runter, schultern ausgleichsbewegung -->
+	<phase>
+	<!-- *** Frame0: interim *** -->
+  	<frame ftime="0.5">
+  		<posture> Humanoid  (vc2 3 0 4 0) (vc4 3 0 4 0) (rh_l_joint3 3 18 0 0) (rh_l_joint2 3 36 0 0) (rh_l_joint1 3 29 -12 0) (rh_r_joint3 3 15 0 0) (rh_r_joint2 3 29 0 0) (rh_r_joint1 3 25 -3 0) (rh_m_joint3 3 15 0 0) (rh_m_joint2 3 30 0 0) (rh_m_joint1 3 29 0 0) (rh_p_joint3 3 12 0 0) (rh_p_joint2 3 23 0 0) (rh_p_joint1 3 40 4 0) (rh_t_joint3 3 14 0 0) (rh_t_joint2 3 11 0 0) (rh_t_joint1 3 0 -20 0) (rh_t_joint0 3 0 45 -32) (r_wrist 3 4 -2 -5) (r_elbow 3 0 52 0) (r_shoulder 3 -7 -18 22) (r_clavicle 3 0 0 0) (lh_l_joint3 3 -18 0 0) (lh_l_joint2 3 -36 0 0) (lh_l_joint1 3 -29 12 0) (lh_r_joint3 3 -15 0 0) (lh_r_joint2 3 -29 0 0) (lh_r_joint1 3 -25 3 0) (lh_m_joint3 3 -15 0 0) (lh_m_joint2 3 -30 0 0) (lh_m_joint1 3 -29 0 0) (lh_p_joint3 3 -12 0 0) (lh_p_joint2 3 -23 0 0) (lh_p_joint1 3 -40 0 0) (lh_t_joint3 3 -14 0 0) (lh_t_joint2 3 -11 0 0) (lh_t_joint1 3 0 -20 0) (lh_t_joint0 3 0 45 32) (l_wrist 3 -4 -2 5) (l_elbow 3 0 44 0) (l_shoulder 3 8 -11 -25) (l_clavicle 3 0 0 0) </posture> 
+	</frame>
+	<!-- *** Frame1: Shrug *** -->
+  	<frame ftime="1.0">
+  		<posture> Humanoid  (vc2 3 0 8 0) (vc4 3 0 8 0) (rh_l_joint3 3 0 0 0) (rh_l_joint2 3 3 0 0) (rh_l_joint1 3 0 -6 0) (rh_r_joint3 3 0 0 0) (rh_r_joint2 3 16 0 0) (rh_r_joint1 3 2 -3 0) (rh_m_joint3 3 0 0 0) (rh_m_joint2 3 0 0 0) (rh_m_joint1 3 14 -2 0) (rh_p_joint3 3 0 0 0) (rh_p_joint2 3 0 0 0) (rh_p_joint1 3 16 -2 0) (rh_t_joint3 3 14 0 0) (rh_t_joint2 3 7 0 0) (rh_t_joint1 3 0 -22 0) (rh_t_joint0 3 0 45 -32) (r_wrist 3 -20 3 80) (r_elbow 3 0 60 0) (r_shoulder 3 -1 4 -18) (r_clavicle 3 -7 0 0) (lh_l_joint3 3 0 0 0) (lh_l_joint2 3 0 0 0) (lh_l_joint1 3 -12 4 0) (lh_r_joint3 3 -1 0 0) (lh_r_joint2 3 -1 0 0) (lh_r_joint1 3 -12 3 -1) (lh_m_joint3 3 -2 0 0) (lh_m_joint2 3 0 0 0) (lh_m_joint1 3 -14 0 0) (lh_p_joint3 3 0 0 0) (lh_p_joint2 3 0 0 0) (lh_p_joint1 3 -6 0 0) (lh_t_joint3 3 0 0 0) (lh_t_joint2 3 -11 0 0) (lh_t_joint1 3 0 -20 0) (lh_t_joint0 3 0 45 32) (l_wrist 3 9 3 -64) (l_elbow 3 0 57 0) (l_shoulder 3 -4 4 -13) (l_clavicle 3 10 0 0) </posture> 
+	</frame>
+	</phase>
+	<phase>
+	<!-- *** Frame1: Shrug *** -->
+  	<frame ftime="1.0">
+  		<posture> Humanoid  (vc2 3 0 8 0) (vc4 3 0 8 0) (rh_l_joint3 3 0 0 0) (rh_l_joint2 3 3 0 0) (rh_l_joint1 3 0 -6 0) (rh_r_joint3 3 0 0 0) (rh_r_joint2 3 16 0 0) (rh_r_joint1 3 2 -3 0) (rh_m_joint3 3 0 0 0) (rh_m_joint2 3 0 0 0) (rh_m_joint1 3 14 -2 0) (rh_p_joint3 3 0 0 0) (rh_p_joint2 3 0 0 0) (rh_p_joint1 3 16 -2 0) (rh_t_joint3 3 14 0 0) (rh_t_joint2 3 7 0 0) (rh_t_joint1 3 0 -22 0) (rh_t_joint0 3 0 45 -32) (r_wrist 3 -20 3 80) (r_elbow 3 0 60 0) (r_shoulder 3 -1 4 -18) (r_clavicle 3 -7 0 0) (lh_l_joint3 3 0 0 0) (lh_l_joint2 3 0 0 0) (lh_l_joint1 3 -12 4 0) (lh_r_joint3 3 -1 0 0) (lh_r_joint2 3 -1 0 0) (lh_r_joint1 3 -12 3 -1) (lh_m_joint3 3 -2 0 0) (lh_m_joint2 3 0 0 0) (lh_m_joint1 3 -14 0 0) (lh_p_joint3 3 0 0 0) (lh_p_joint2 3 0 0 0) (lh_p_joint1 3 -6 0 0) (lh_t_joint3 3 0 0 0) (lh_t_joint2 3 -11 0 0) (lh_t_joint1 3 0 -20 0) (lh_t_joint0 3 0 45 32) (l_wrist 3 9 3 -64) (l_elbow 3 0 57 0) (l_shoulder 3 -4 4 -13) (l_clavicle 3 10 0 0) </posture> 
+	</frame>
+	<!-- *** Frame0: interim *** -->
+  	<frame ftime="1.5">
+  		<posture> Humanoid  (vc2 3 0 4 0) (vc4 3 0 4 0) (rh_l_joint3 3 18 0 0) (rh_l_joint2 3 36 0 0) (rh_l_joint1 3 29 -12 0) (rh_r_joint3 3 15 0 0) (rh_r_joint2 3 29 0 0) (rh_r_joint1 3 25 -3 0) (rh_m_joint3 3 15 0 0) (rh_m_joint2 3 30 0 0) (rh_m_joint1 3 29 0 0) (rh_p_joint3 3 12 0 0) (rh_p_joint2 3 23 0 0) (rh_p_joint1 3 40 4 0) (rh_t_joint3 3 14 0 0) (rh_t_joint2 3 11 0 0) (rh_t_joint1 3 0 -20 0) (rh_t_joint0 3 0 45 -32) (r_wrist 3 4 -2 -5) (r_elbow 3 0 52 0) (r_shoulder 3 -7 -18 22) (r_clavicle 3 0 0 0) (lh_l_joint3 3 -18 0 0) (lh_l_joint2 3 -36 0 0) (lh_l_joint1 3 -29 12 0) (lh_r_joint3 3 -15 0 0) (lh_r_joint2 3 -29 0 0) (lh_r_joint1 3 -25 3 0) (lh_m_joint3 3 -15 0 0) (lh_m_joint2 3 -30 0 0) (lh_m_joint1 3 -29 0 0) (lh_p_joint3 3 -12 0 0) (lh_p_joint2 3 -23 0 0) (lh_p_joint1 3 -40 0 0) (lh_t_joint3 3 -14 0 0) (lh_t_joint2 3 -11 0 0) (lh_t_joint1 3 0 -20 0) (lh_t_joint0 3 0 45 32) (l_wrist 3 -4 -2 5) (l_elbow 3 0 44 0) (l_shoulder 3 8 -11 -25) (l_clavicle 3 0 0 0) </posture> 
+	</frame>
+	<!-- *** Frame2: Init *** -->
+  	<frame ftime="2.0">
+  		<posture> Humanoid  (vc2 3 0 0 0) (vc4 3 0 0 0) (rh_l_joint3 3 18 0 0) (rh_l_joint2 3 36 0 0) (rh_l_joint1 3 29 -12 0) (rh_r_joint3 3 15 0 0) (rh_r_joint2 3 29 0 0) (rh_r_joint1 3 25 -3 0) (rh_m_joint3 3 15 0 0) (rh_m_joint2 3 30 0 0) (rh_m_joint1 3 29 0 0) (rh_p_joint3 3 12 0 0) (rh_p_joint2 3 23 0 0) (rh_p_joint1 3 40 4 0) (rh_t_joint3 3 14 0 0) (rh_t_joint2 3 11 0 0) (rh_t_joint1 3 0 -20 0) (rh_t_joint0 3 0 45 -32) (r_wrist 3 4 -2 -5) (r_elbow 3 0 5 0) (r_shoulder 3 -1 0 0) (r_clavicle 3 0 0 0) (lh_l_joint3 3 -18 0 0) (lh_l_joint2 3 -36 0 0) (lh_l_joint1 3 -29 12 0) (lh_r_joint3 3 -15 0 0) (lh_r_joint2 3 -29 0 0) (lh_r_joint1 3 -25 3 0) (lh_m_joint3 3 -15 0 0) (lh_m_joint2 3 -30 0 0) (lh_m_joint1 3 -29 0 0) (lh_p_joint3 3 -12 0 0) (lh_p_joint2 3 -23 0 0) (lh_p_joint1 3 -40 0 0) (lh_t_joint3 3 -14 0 0) (lh_t_joint2 3 -11 0 0) (lh_t_joint1 3 0 -20 0) (lh_t_joint0 3 0 45 32) (l_wrist 3 -4 -2 5) (l_elbow 3 0 5 0) (l_shoulder 3 1 0 0) (l_clavicle 3 0 0 0) </posture> 
+	</frame>
+	</phase>
+	</keyframing>
+     </dynamic>
+  </constraints>
+</gesture>
+
+<!-- HEAD-SCRATCH == Function: Confusion -->
+<gesture id="headScratch" scope="body">
+  <function name="signal_confusion"/>
+  <constraints scope="LArm">
+     <dynamic>
+	<keyframing mode="spline" easescale="7.0" easeturningpoint="0.5" name="headScratch" scope="body" priority="50">
+	<!-- Phase1: Linker Arm zum Kopf, Kopf neigen, rechter Arm Ausgleichsbewegung. -->
+	<phase>
+	<!-- *** Frame2: Linker Arm geknickt neben Koerper, Kopf nach links gekippt. *** -->
+  	<frame ftime="1.0">
+  		<posture> Humanoid (re_eye 3 -13 -1 0) (le_eye 3 -15 0 0) (skullbase 3 -3 5 0) (vc2 3 -5 9 0) (vc4 3 0 0 0) (r_elbow 3 0 30 0) (r_shoulder 3 -13 -1 -36) (r_clavicle 3 0 0 0) (lh_l_joint3 3 -18 0 0) (lh_l_joint2 3 -36 0 0) (lh_l_joint1 3 -29 3 -12) (lh_r_joint3 3 -15 0 0) (lh_r_joint2 3 -29 0 0) (lh_r_joint1 3 -41 3 0) (lh_m_joint3 3 -22 0 0) (lh_m_joint2 3 -30 0 0) (lh_m_joint1 3 -45 0 0) (lh_p_joint3 3 -12 0 0) (lh_p_joint2 3 -23 0 0) (lh_p_joint1 3 -40 0 0) (lh_t_joint3 3 -14 0 0) (lh_t_joint2 3 -11 0 0) (lh_t_joint1 3 0 -20 0) (lh_t_joint0 3 0 45 32) (l_wrist 3 29 33 -63) (l_elbow 3 0 100 0) (l_shoulder 3 69 8 -36) (l_clavicle 3 4 0 0) </posture> 
+		</frame>
+	<!-- *** Frame3: Linker Arm am Kopf *** -->
+  	<frame ftime="2.0">
+  		<posture> Humanoid (re_eye 3 -13 -1 0) (le_eye 3 -15 0 0) (skullbase 3 -4 2 0) (vc2 3 0 7 0) (vc4 3 -14 19 0) (rh_l_joint3 3 18 0 0) (r_elbow 3 0 19 0) (r_shoulder 3 -6 -4 -19) (r_clavicle 3 0 0 0) (lh_l_joint3 3 -18 0 0) (lh_l_joint2 3 -36 0 0) (lh_l_joint1 3 -29 3 -12) (lh_r_joint3 3 -15 0 0) (lh_r_joint2 3 -29 0 0) (lh_r_joint1 3 -41 3 0) (lh_m_joint3 3 -22 0 0) (lh_m_joint2 3 -30 0 0) (lh_m_joint1 3 -45 0 0) (lh_p_joint3 3 -12 0 0) (lh_p_joint2 3 -23 0 0) (lh_p_joint1 3 -40 0 0) (lh_t_joint3 3 -14 0 0) (lh_t_joint2 3 -11 0 0) (lh_t_joint1 3 0 -20 0) (lh_t_joint0 3 0 45 32) (l_wrist 3 -2 10 -63) (l_elbow 3 0 121 0) (l_shoulder 3 95 41 -75) (l_clavicle 3 4 0 0) </posture> 
+		</frame>
+	<!-- *** Frame0: Hand kruemmen -->
+  	<frame ftime="2.1">
+  		<posture> Humanoid (re_eye 3 -13 -1 0) (le_eye 3 -15 0 0) (skullbase 3 -4 2 0) (vc2 3 0 7 0) (vc4 3 -14 19 0) (r_elbow 3 0 19 0) (r_shoulder 3 -6 -4 -19) (r_clavicle 3 0 0 0) (lh_l_joint3 3 -18 0 0) (lh_l_joint2 3 -36 0 0) (lh_l_joint1 3 -29 3 -12) (lh_r_joint3 3 -15 0 0) (lh_r_joint2 3 -29 0 0) (lh_r_joint1 3 -41 3 0) (lh_m_joint3 3 -22 0 0) (lh_m_joint2 3 -30 0 0) (lh_m_joint1 3 -45 0 0) (lh_p_joint3 3 -12 0 0) (lh_p_joint2 3 -23 0 0) (lh_p_joint1 3 -40 0 0) (lh_t_joint3 3 -14 0 0) (lh_t_joint2 3 -11 0 0) (lh_t_joint1 3 0 -20 0) (lh_t_joint0 3 0 45 32) (l_wrist 3 -2 10 -63) (l_elbow 3 0 121 0) (l_shoulder 3 95 41 -75) (l_clavicle 3 4 0 0) </posture> 
+		</frame>
+	<!-- *** Frame1: Hand strecken -->
+  	<frame ftime="2.2">
+  		<posture> Humanoid (re_eye 3 -13 -1 0) (le_eye 3 -15 0 0) (skullbase 3 -2 2 0) (vc2 3 0 7 0) (vc4 3 -14 19 0) (r_elbow 3 0 19 0) (r_shoulder 3 -6 -4 -19) (r_clavicle 3 0 0 0) (lh_l_joint3 3 -9 0 0) (lh_l_joint2 3 -17 0 0) (lh_l_joint1 3 -25 1 -12) (lh_r_joint3 3 -11 0 0) (lh_r_joint2 3 -12 0 0) (lh_r_joint1 3 -36 4 -2) (lh_m_joint3 3 -10 0 0) (lh_m_joint2 3 -8 0 0) (lh_m_joint1 3 -35 2 0) (lh_p_joint3 3 -12 0 0) (lh_p_joint2 3 -19 0 0) (lh_p_joint1 3 -25 1 0) (lh_t_joint3 3 -14 0 0) (lh_t_joint2 3 -11 0 0) (lh_t_joint1 3 0 -20 0) (lh_t_joint0 3 0 45 32) (l_wrist 3 -2 10 -63) (l_elbow 3 0 121 0) (l_shoulder 3 95 41 -75) (l_clavicle 3 4 0 0) </posture> 
+		</frame>
+	<!-- *** Frame2: Hand kruemmen -->
+  	<frame ftime="2.4">
+  		<posture> Humanoid (re_eye 3 -13 -1 0) (le_eye 3 -15 0 0) (skullbase 3 -4 4 0) (vc2 3 0 7 0) (vc4 3 -14 19 0) (r_elbow 3 0 19 0) (r_shoulder 3 -6 -4 -19) (r_clavicle 3 0 0 0) (lh_l_joint3 3 -18 0 0) (lh_l_joint2 3 -36 0 0) (lh_l_joint1 3 -29 3 -12) (lh_r_joint3 3 -15 0 0) (lh_r_joint2 3 -29 0 0) (lh_r_joint1 3 -41 3 0) (lh_m_joint3 3 -22 0 0) (lh_m_joint2 3 -30 0 0) (lh_m_joint1 3 -45 0 0) (lh_p_joint3 3 -12 0 0) (lh_p_joint2 3 -23 0 0) (lh_p_joint1 3 -40 0 0) (lh_t_joint3 3 -14 0 0) (lh_t_joint2 3 -11 0 0) (lh_t_joint1 3 0 -20 0) (lh_t_joint0 3 0 45 32) (l_wrist 3 -2 10 -63) (l_elbow 3 0 121 0) (l_shoulder 3 95 41 -75) (l_clavicle 3 4 0 0) </posture> 
+		</frame>
+	<!-- *** Frame3: Hand strecken -->
+  	<frame ftime="2.6">
+  		<posture> Humanoid (re_eye 3 -13 -1 0) (le_eye 3 -15 0 0) (skullbase 3 -5 5 0) (vc2 3 0 7 0) (vc4 3 -14 19 0) (r_elbow 3 0 19 0) (r_shoulder 3 -6 -4 -19) (r_clavicle 3 0 0 0) (lh_l_joint3 3 -9 0 0) (lh_l_joint2 3 -17 0 0) (lh_l_joint1 3 -25 1 -12) (lh_r_joint3 3 -11 0 0) (lh_r_joint2 3 -12 0 0) (lh_r_joint1 3 -36 4 -2) (lh_m_joint3 3 -10 0 0) (lh_m_joint2 3 -8 0 0) (lh_m_joint1 3 -35 2 0) (lh_p_joint3 3 -12 0 0) (lh_p_joint2 3 -19 0 0) (lh_p_joint1 3 -25 1 0) (lh_t_joint3 3 -14 0 0) (lh_t_joint2 3 -11 0 0) (lh_t_joint1 3 0 -20 0) (lh_t_joint0 3 0 45 32) (l_wrist 3 -2 10 -63) (l_elbow 3 0 121 0) (l_shoulder 3 95 41 -75) (l_clavicle 3 4 0 0) </posture> 
+		</frame>
+	<!-- *** Frame4: Hand kruemmen -->
+  	<frame ftime="2.8">
+  		<posture> Humanoid (re_eye 3 -13 -1 0) (le_eye 3 -15 0 0) (skullbase 3 -6 4 0) (vc2 3 0 7 0) (vc4 3 -14 19 0) (r_elbow 3 0 19 0) (r_shoulder 3 -6 -4 -19) (r_clavicle 3 0 0 0) (lh_l_joint3 3 -18 0 0) (lh_l_joint2 3 -36 0 0) (lh_l_joint1 3 -29 3 -12) (lh_r_joint3 3 -15 0 0) (lh_r_joint2 3 -29 0 0) (lh_r_joint1 3 -41 3 0) (lh_m_joint3 3 -22 0 0) (lh_m_joint2 3 -30 0 0) (lh_m_joint1 3 -45 0 0) (lh_p_joint3 3 -12 0 0) (lh_p_joint2 3 -23 0 0) (lh_p_joint1 3 -40 0 0) (lh_t_joint3 3 -14 0 0) (lh_t_joint2 3 -11 0 0) (lh_t_joint1 3 0 -20 0) (lh_t_joint0 3 0 45 32) (l_wrist 3 -2 10 -63) (l_elbow 3 0 121 0) (l_shoulder 3 95 41 -75) (l_clavicle 3 4 0 0) </posture> 
+		</frame>
+	<!-- *** Frame5: Hand strecken -->
+  	<frame ftime="3.0">
+  		<posture> Humanoid (re_eye 3 -13 -1 0) (le_eye 3 -15 0 0) (skullbase 3 -5 2 0) (vc2 3 0 7 0) (vc4 3 -14 19 0) (r_elbow 3 0 19 0) (r_shoulder 3 -6 -4 -19) (r_clavicle 3 0 0 0) (lh_l_joint3 3 -9 0 0) (lh_l_joint2 3 -17 0 0) (lh_l_joint1 3 -25 1 -12) (lh_r_joint3 3 -11 0 0) (lh_r_joint2 3 -12 0 0) (lh_r_joint1 3 -36 4 -2) (lh_m_joint3 3 -10 0 0) (lh_m_joint2 3 -8 0 0) (lh_m_joint1 3 -35 2 0) (lh_p_joint3 3 -12 0 0) (lh_p_joint2 3 -19 0 0) (lh_p_joint1 3 -25 1 0) (lh_t_joint3 3 -14 0 0) (lh_t_joint2 3 -11 0 0) (lh_t_joint1 3 0 -20 0) (lh_t_joint0 3 0 45 32) (l_wrist 3 -2 10 -63) (l_elbow 3 0 121 0) (l_shoulder 3 95 41 -75) (l_clavicle 3 4 0 0) </posture> 
+		</frame>
+	<!-- *** Frame6: Hand kruemmen -->
+  	<frame ftime="3.2">
+  		<posture> Humanoid (re_eye 3 -13 -1 0) (le_eye 3 -15 0 0) (skullbase 3 -4 2 0) (vc2 3 0 7 0) (vc4 3 -14 19 0) (r_elbow 3 0 19 0) (r_shoulder 3 -6 -4 -19) (r_clavicle 3 0 0 0) (lh_l_joint3 3 -18 0 0) (lh_l_joint2 3 -36 0 0) (lh_l_joint1 3 -29 3 -12) (lh_r_joint3 3 -15 0 0) (lh_r_joint2 3 -29 0 0) (lh_r_joint1 3 -41 3 0) (lh_m_joint3 3 -22 0 0) (lh_m_joint2 3 -30 0 0) (lh_m_joint1 3 -45 0 0) (lh_p_joint3 3 -12 0 0) (lh_p_joint2 3 -23 0 0) (lh_p_joint1 3 -40 0 0) (lh_t_joint3 3 -14 0 0) (lh_t_joint2 3 -11 0 0) (lh_t_joint1 3 0 -20 0) (lh_t_joint0 3 0 45 32) (l_wrist 3 -2 10 -63) (l_elbow 3 0 121 0) (l_shoulder 3 95 41 -75) (l_clavicle 3 4 0 0)</posture> 
+		</frame>
+	</phase>
+	<!-- Phase2: Arme und Kopf zurueck -->
+	<phase>
+	<!-- *** Frame1: entspricht Phase1.Frame3 -->
+  	<frame ftime="0.2">
+  		<posture> Humanoid (re_eye 3 -13 -1 0) (le_eye 3 -15 0 0) (skullbase 3 -4 2 0) (vc2 3 0 7 0) (vc4 3 -14 19 0) (r_elbow 3 0 19 0) (r_shoulder 3 -6 -4 -19) (r_clavicle 3 0 0 0) (lh_l_joint3 3 -18 0 0) (lh_l_joint2 3 -36 0 0) (lh_l_joint1 3 -29 3 -12) (lh_r_joint3 3 -15 0 0) (lh_r_joint2 3 -29 0 0) (lh_r_joint1 3 -41 3 0) (lh_m_joint3 3 -22 0 0) (lh_m_joint2 3 -30 0 0) (lh_m_joint1 3 -45 0 0) (lh_p_joint3 3 -12 0 0) (lh_p_joint2 3 -23 0 0) (lh_p_joint1 3 -40 0 0) (lh_t_joint3 3 -14 0 0) (lh_t_joint2 3 -11 0 0) (lh_t_joint1 3 0 -20 0) (lh_t_joint0 3 0 45 32) (l_wrist 3 -2 10 -63) (l_elbow 3 0 121 0) (l_shoulder 3 95 41 -75) (l_clavicle 3 4 0 0)</posture> 
+		</frame>
+	<!-- *** Frame2: entspricht Phase1.Frame2 -->
+  	<frame ftime="0.8">
+  		<posture>Humanoid (re_eye 3 -13 -1 0) (le_eye 3 -15 0 0) (skullbase 3 -3 5 0) (vc2 3 -5 9 0) (vc4 3 0 0 0) (r_elbow 3 0 30 0) (r_shoulder 3 -13 -1 -36) (r_clavicle 3 0 0 0) (lh_l_joint3 3 -18 0 0) (lh_l_joint2 3 -36 0 0) (lh_l_joint1 3 -29 3 -12) (lh_r_joint3 3 -15 0 0) (lh_r_joint2 3 -29 0 0) (lh_r_joint1 3 -41 3 0) (lh_m_joint3 3 -22 0 0) (lh_m_joint2 3 -30 0 0) (lh_m_joint1 3 -45 0 0) (lh_p_joint3 3 -12 0 0) (lh_p_joint2 3 -23 0 0) (lh_p_joint1 3 -40 0 0) (lh_t_joint3 3 -14 0 0) (lh_t_joint2 3 -11 0 0) (lh_t_joint1 3 0 -20 0) (lh_t_joint0 3 0 45 32) (l_wrist 3 29 33 -63) (l_elbow 3 0 100 0) (l_shoulder 3 69 8 -36) (l_clavicle 3 4 0 0) </posture> 
+		</frame>
+	<!-- *** Frame3: entspricht Phase1.Frame1 -->
+  	<frame ftime="1.6">
+  		<posture>Humanoid (re_eye 3 0 0 0) (le_eye 3 0 0 0) (skullbase 3 0 0 0) (vc2 3 0 0 0) (vc4 3 0 0 0) (r_elbow 3 0 5 0) (r_shoulder 3 -1 0 0) (r_clavicle 3 0 0 0) (lh_l_joint3 3 -18 0 0) (lh_l_joint2 3 -36 0 0) (lh_l_joint1 3 -29 12 0) (lh_r_joint3 3 -15 0 0) (lh_r_joint2 3 -29 0 0) (lh_r_joint1 3 -25 3 0) (lh_m_joint3 3 -15 0 0) (lh_m_joint2 3 -30 0 0) (lh_m_joint1 3 -29 0 0) (lh_p_joint3 3 -12 0 0) (lh_p_joint2 3 -23 0 0) (lh_p_joint1 3 -40 0 0) (lh_t_joint3 3 -14 0 0) (lh_t_joint2 3 -11 0 0) (lh_t_joint1 3 0 -20 0) (lh_t_joint0 3 0 45 32) (l_wrist 3 -4 -2 5) (l_elbow 3 0 5 0) (l_shoulder 3 1 0 0) (l_clavicle 3 0 0 0)</posture> 
+		</frame>
+	</phase>
+	</keyframing>
+     </dynamic>
+  </constraints>
+</gesture>
+
+
+<!-- WAVE == Function: Greeting -->
+<gesture id="wave" scope="hand">
+  <function name="signal_greeting"/>
+  <constraints scope="RArm">
+     <dynamic>
+	<keyframing scope="body" mode="spline" easescale="5.0" easeturningpoint="0.4" name="wave" priority="50">
+	  <phase>
+	    <frame ftime="1.0">
+	      <posture>	Humanoid (r_elbow 3 0 53 0)(r_shoulder 3 -1 40 -7) (r_wrist 3 4 -3 -26)(rh_l_joint3 3 0 0 0) (rh_l_joint2 3 0 0 0) (rh_l_joint1 3 0 0 0) (rh_r_joint3 3 0 0 0) (rh_r_joint2 3 0 0 0) (rh_r_joint1 3 0 0 0) (rh_m_joint3 3 0 0 0) (rh_m_joint2 3 0 0 0) (rh_m_joint1 3 0 0 0) (rh_p_joint3 3 0 0 0) (rh_p_joint2 3 0 0 0) (rh_p_joint1 3 0 0 0) (rh_t_joint3 3 0 0 0) (rh_t_joint2 3 0 0 0) (rh_t_joint1 3 0 0 0) (rh_t_joint0 3 0 45 -33)</posture> 
+	    </frame>	
+	    <frame ftime="1.3">
+		<posture> Humanoid (r_elbow 3 0 116 0) (r_shoulder 3 -3 35 30)(r_wrist 3 5 4 -78) (rh_l_joint3 3 0 0 0) (rh_l_joint2 3 0 0 0) (rh_l_joint1 3 0 0 0) (rh_r_joint3 3 0 0 0) (rh_r_joint2 3 0 0 0) (rh_r_joint1 3 0 0 0) (rh_m_joint3 3 0 0 0) (rh_m_joint2 3 0 0 0) (rh_m_joint1 3 0 0 0) (rh_p_joint3 3 0 0 0) (rh_p_joint2 3 0 0 0) (rh_p_joint1 3 0 0 0) (rh_t_joint3 3 0 0 0) (rh_t_joint2 3 0 0 0) (rh_t_joint1 3 0 0 0) (rh_t_joint0 3 0 45 -33)</posture> 
+	     </frame>
+	     <frame ftime="1.6">
+		<posture> Humanoid (r_elbow 3 0 116 0)(r_shoulder 3 -3 35 -39) (r_wrist 3 -5 -6 -90)(rh_l_joint3 3 0 0 0) (rh_l_joint2 3 0 0 0) (rh_l_joint1 3 0 0 0) (rh_r_joint3 3 0 0 0) (rh_r_joint2 3 0 0 0) (rh_r_joint1 3 0 0 0) (rh_m_joint3 3 0 0 0) (rh_m_joint2 3 0 0 0) (rh_m_joint1 3 0 0 0) (rh_p_joint3 3 0 0 0) (rh_p_joint2 3 0 0 0) (rh_p_joint1 3 0 0 0) (rh_t_joint3 3 0 0 0) (rh_t_joint2 3 0 0 0) (rh_t_joint1 3 0 0 0) (rh_t_joint0 3 0 45 -33)</posture> 
+	      </frame>
+	      <frame ftime="2.0">
+		<posture> Humanoid (r_elbow 3 0 116 0) (r_shoulder 3 -3 35 30)(r_wrist 3 5 4 -78)(rh_l_joint3 3 0 0 0) (rh_l_joint2 3 0 0 0) (rh_l_joint1 3 0 0 0) (rh_r_joint3 3 0 0 0) (rh_r_joint2 3 0 0 0) (rh_r_joint1 3 0 0 0) (rh_m_joint3 3 0 0 0) (rh_m_joint2 3 0 0 0) (rh_m_joint1 3 0 0 0) (rh_p_joint3 3 0 0 0) (rh_p_joint2 3 0 0 0) (rh_p_joint1 3 0 0 0) (rh_t_joint3 3 0 0 0) (rh_t_joint2 3 0 0 0) (rh_t_joint1 3 0 0 0) (rh_t_joint0 3 0 45 -33)</posture> 
+	      </frame>
+	      <frame ftime="2.4">
+		<posture> Humanoid (r_elbow 3 0 116 0)(r_shoulder 3 -3 35 -39) (r_wrist 3 -5 -6 -90)(rh_l_joint3 3 0 0 0) (rh_l_joint2 3 0 0 0) (rh_l_joint1 3 0 0 0) (rh_r_joint3 3 0 0 0) (rh_r_joint2 3 0 0 0) (rh_r_joint1 3 0 0 0) (rh_m_joint3 3 0 0 0) (rh_m_joint2 3 0 0 0) (rh_m_joint1 3 0 0 0) (rh_p_joint3 3 0 0 0) (rh_p_joint2 3 0 0 0) (rh_p_joint1 3 0 0 0) (rh_t_joint3 3 0 0 0) (rh_t_joint2 3 0 0 0) (rh_t_joint1 3 0 0 0) (rh_t_joint0 3 0 45 -33)</posture> 
+	      </frame>
+	      <frame ftime="2.6">
+		<posture> Humanoid (r_elbow 3 0 116 0) (r_shoulder 3 -3 35 30)(r_wrist 3 5 4 -78)(rh_l_joint3 3 0 0 0) (rh_l_joint2 3 0 0 0) (rh_l_joint1 3 0 0 0) (rh_r_joint3 3 0 0 0) (rh_r_joint2 3 0 0 0) (rh_r_joint1 3 0 0 0) (rh_m_joint3 3 0 0 0) (rh_m_joint2 3 0 0 0) (rh_m_joint1 3 0 0 0) (rh_p_joint3 3 0 0 0) (rh_p_joint2 3 0 0 0) (rh_p_joint1 3 0 0 0) (rh_t_joint3 3 0 0 0) (rh_t_joint2 3 0 0 0) (rh_t_joint1 3 0 0 0) (rh_t_joint0 3 0 45 -33)</posture> 
+	      </frame>
+	      <frame ftime="3.0">
+		<posture> Humanoid (rh_l_joint3 3 18 0 0) (rh_l_joint2 3 36 0 0) (rh_l_joint1 3 29 -12 0) (rh_r_joint3 3 15 0 0) (rh_r_joint2 3 29 0 0) (rh_r_joint1 3 25 -3 0) (rh_m_joint3 3 15 0 0) (rh_m_joint2 3 30 0 0) (rh_m_joint1 3 29 0 0) (rh_p_joint3 3 12 0 0) (rh_p_joint2 3 23 0 0) (rh_p_joint1 3 40 4 0) (rh_t_joint3 3 14 0 0) (rh_t_joint2 3 11 0 0) (rh_t_joint1 3 0 -20 0) (rh_t_joint0 3 0 45 -32) (r_wrist 3 4 -2 -5) (r_elbow 3 0 5 0) (r_shoulder 3 -1 0 0)</posture> 
+	      </frame>
+	   </phase>
+	</keyframing>
+     </dynamic>
+  </constraints>
+</gesture>
+
+<!-- SINGLE-WAVE == Function: Greeting -->
+<gesture id="single-wave" scope="hand">
+  <function name="signal_greeting"/>
+  <constraints scope="RArm">
+     <dynamic>
+	<keyframing scope="body" mode="spline" easescale="5.0" easeturningpoint="0.4" name="singleWave" priority="50">
+	  <phase>
+	    <frame ftime="1.0">
+	      <posture>	Humanoid (r_elbow 3 0 53 0)(r_shoulder 3 -1 40 -7) (r_wrist 3 4 -3 -26)(rh_l_joint3 3 0 0 0) (rh_l_joint2 3 0 0 0) (rh_l_joint1 3 0 0 0) (rh_r_joint3 3 0 0 0) (rh_r_joint2 3 0 0 0) (rh_r_joint1 3 0 0 0) (rh_m_joint3 3 0 0 0) (rh_m_joint2 3 0 0 0) (rh_m_joint1 3 0 0 0) (rh_p_joint3 3 0 0 0) (rh_p_joint2 3 0 0 0) (rh_p_joint1 3 0 0 0) (rh_t_joint3 3 0 0 0) (rh_t_joint2 3 0 0 0) (rh_t_joint1 3 0 0 0) (rh_t_joint0 3 0 45 -33)</posture> 
+	    </frame>	
+	    <frame ftime="1.3">
+	      <posture>Humanoid (r_elbow 3 0 116 0) (r_shoulder 3 -3 35 20)(r_wrist 3 5 4 -78) (rh_l_joint3 3 0 0 0) (rh_l_joint2 3 0 0 0) (rh_l_joint1 3 0 0 0) (rh_r_joint3 3 0 0 0) (rh_r_joint2 3 0 0 0) (rh_r_joint1 3 0 0 0) (rh_m_joint3 3 0 0 0) (rh_m_joint2 3 0 0 0) (rh_m_joint1 3 0 0 0) (rh_p_joint3 3 0 0 0) (rh_p_joint2 3 0 0 0) (rh_p_joint1 3 0 0 0) (rh_t_joint3 3 0 0 0) (rh_t_joint2 3 0 0 0) (rh_t_joint1 3 0 0 0) (rh_t_joint0 3 0 45 -33)</posture> 
+	    </frame>
+            <frame ftime="1.5">
+	      <posture>Humanoid (r_elbow 3 0 116 0) (r_shoulder 3 -3 35 20)(r_wrist 3 5 4 -78) (rh_l_joint3 3 0 0 0) (rh_l_joint2 3 0 0 0) (rh_l_joint1 3 0 0 0) (rh_r_joint3 3 0 0 0) (rh_r_joint2 3 0 0 0) (rh_r_joint1 3 0 0 0) (rh_m_joint3 3 0 0 0) (rh_m_joint2 3 0 0 0) (rh_m_joint1 3 0 0 0) (rh_p_joint3 3 0 0 0) (rh_p_joint2 3 0 0 0) (rh_p_joint1 3 0 0 0) (rh_t_joint3 3 0 0 0) (rh_t_joint2 3 0 0 0) (rh_t_joint1 3 0 0 0) (rh_t_joint0 3 0 45 -33) </posture> 
+	    </frame>
+	    <frame ftime="1.7">
+	      <posture>Humanoid (r_elbow 3 0 53 0)(r_shoulder 3 -1 40 0) (r_wrist 3 4 -3 -26)(rh_l_joint3 3 0 0 0) (rh_l_joint2 3 0 0 0) (rh_l_joint1 3 0 0 0) (rh_r_joint3 3 0 0 0) (rh_r_joint2 3 0 0 0) (rh_r_joint1 3 0 0 0) (rh_m_joint3 3 0 0 0) (rh_m_joint2 3 0 0 0) (rh_m_joint1 3 0 0 0) (rh_p_joint3 3 0 0 0) (rh_p_joint2 3 0 0 0) (rh_p_joint1 3 0 0 0) (rh_t_joint3 3 0 0 0) (rh_t_joint2 3 0 0 0) (rh_t_joint1 3 0 0 0) (rh_t_joint0 3 0 45 -33)</posture> 
+	    </frame>	
+	    <frame ftime="2.0">
+	      <posture>Humanoid (rh_l_joint3 3 18 0 0) (rh_l_joint2 3 36 0 0) (rh_l_joint1 3 29 -12 0) (rh_r_joint3 3 15 0 0) (rh_r_joint2 3 29 0 0) (rh_r_joint1 3 25 -3 0) (rh_m_joint3 3 15 0 0) (rh_m_joint2 3 30 0 0) (rh_m_joint1 3 29 0 0) (rh_p_joint3 3 12 0 0) (rh_p_joint2 3 23 0 0) (rh_p_joint1 3 40 4 0) (rh_t_joint3 3 14 0 0) (rh_t_joint2 3 11 0 0) (rh_t_joint1 3 0 -20 0) (rh_t_joint0 3 0 45 -32) (r_wrist 3 4 -2 -5) (r_elbow 3 0 5 0) (r_shoulder 3 -1 0 0)</posture> 
+	    </frame>
+	  </phase>
+	</keyframing>
+     </dynamic>
+  </constraints>
+</gesture>
+
+<!-- HAND-AT-EAR == Function: Attending -->
+<gesture id="Hand-At-Ear" scope="body">
+  <function name="signal_attending"/>
+  <constraints scope="RArm">
+     <dynamic>
+	<keyframing mode="spline" easescale="6.0" easeturningpoint="0.5" name="listenting" scope="body" priority="50">
+	<!-- Phase1: Arm bis Ohr, Kopf neigen -->
+	<phase>
+	<!-- *** Frame2: Rechter Arm leicht nach oben linker Arm ausgleichsbewegung *** -->
+  	<frame ftime="0.2">
+  		<posture>Humanoid  (re_eye 3 0 0 0) (le_eye 3 0 0 0) (skullbase 3 0 0 0) (vc2 3 4 7 0) (vc4 3 0 0 0) (rh_l_joint3 3 18 0 0) (rh_l_joint2 3 36 0 0) (rh_l_joint1 3 29 -12 0) (rh_r_joint3 3 15 0 0) (rh_r_joint2 3 29 0 0) (rh_r_joint1 3 25 -3 0) (rh_m_joint3 3 15 0 0) (rh_m_joint2 3 30 0 0) (rh_m_joint1 3 29 0 0) (rh_p_joint3 3 12 0 0) (rh_p_joint2 3 23 0 0) (rh_p_joint1 3 40 4 0) (rh_t_joint3 3 14 0 0) (rh_t_joint2 3 11 0 0) (rh_t_joint1 3 0 -20 0) (rh_t_joint0 3 0 45 -32) (r_wrist 3 4 -2 -5) (r_elbow 3 0 75 0) (r_shoulder 3 -10 -30 -7) (r_clavicle 3 -4 0 0) (l_wrist 3 -4 -2 5) (l_elbow 3 0 36 0) (l_shoulder 3 17 -10 32) (l_clavicle 3 0 0 0) (vt1 3 0 0 0) (vt6 3 0 0 0) (vl1 3 0 -3 0) (vl5 3 0 0 0) </posture> 
+	</frame>
+	<!-- *** Frame2: Rechter Arm 2/3tel Strecke zum Ohr, Kopf leicht geneigt *** -->
+  	<frame ftime="0.6">
+  		<posture>Humanoid (re_eye 3 11 0 0) (le_eye 3 4 0 0) (skullbase 3 0 0 0) (vc2 3 7 4 16) (vc4 3 0 0 0) (rh_l_joint3 3 9 0 0) (rh_l_joint2 3 37 0 0) (rh_l_joint1 3 30 1 0) (rh_r_joint3 3 26 0 0) (rh_r_joint2 3 40 0 0) (rh_r_joint1 3 27 -3 0) (rh_m_joint3 3 36 0 0) (rh_m_joint2 3 44 0 0) (rh_m_joint1 3 29 -4 0) (rh_p_joint3 3 36 0 0) (rh_p_joint2 3 32 0 0) (rh_p_joint1 3 40 4 0) (rh_t_joint3 3 10 0 0) (rh_t_joint2 3 5 0 0) (rh_t_joint1 3 0 -21 0) (rh_t_joint0 3 0 45 -23) (r_wrist 3 -18 11 -20) (r_elbow 3 0 128 0) (r_shoulder 3 -13 12 -13) (r_clavicle 3 -4 0 0) (l_wrist 3 -4 -2 5) (l_elbow 3 0 36 0) (l_shoulder 3 17 -10 32) (l_clavicle 3 0 0 0) (vt1 3 0 0 0) (vt6 3 0 0 0) (vl1 3 0 -3 0) (vl5 3 0 0 0) </posture> 
+	</frame>
+	<!-- *** Frame3: Arm an Ohr! *** -->
+  	<frame ftime="0.8">
+  		<posture>Humanoid (re_eye 3 11 0 0) (le_eye 3 4 0 0) (skullbase 3 0 0 0) (vc2 3 0 7 16) (vc4 3 9 0 4) (rh_l_joint3 3 9 0 0) (rh_l_joint2 3 37 0 0) (rh_l_joint1 3 30 1 0) (rh_r_joint3 3 26 0 0) (rh_r_joint2 3 40 0 0) (rh_r_joint1 3 27 -3 0) (rh_m_joint3 3 36 0 0) (rh_m_joint2 3 44 0 0) (rh_m_joint1 3 29 -4 0) (rh_p_joint3 3 36 0 0) (rh_p_joint2 3 32 0 0) (rh_p_joint1 3 40 4 0) (rh_t_joint3 3 10 0 0) (rh_t_joint2 3 5 0 0) (rh_t_joint1 3 0 -21 0) (rh_t_joint0 3 0 45 -23) (r_wrist 3 -18 -17 -20) (r_elbow 3 0 149 0) (r_shoulder 3 -57 42 45) (r_clavicle 3 -13 0 0) (lh_l_joint3 3 -18 0 0) (l_wrist 3 -4 -2 5) (l_elbow 3 0 36 0) (l_shoulder 3 17 -10 32) (l_clavicle 3 3 0 0) (vt1 3 0 0 0) (vt6 3 0 0 0) (vl1 3 0 -3 0) (vl5 3 0 0 0) </posture> 
+		</frame>
+	</phase>
+	<!-- Phase2: Arme und Kopf zurueck -->
+	<phase>
+	<!-- *** Frame1: entspricht Phase1.Frame3 -->
+  	<frame ftime="1.0">
+  		<posture>Humanoid (re_eye 3 11 0 0) (le_eye 3 4 0 0) (skullbase 3 0 4 0) (vc2 3 0 7 16) (vc4 3 9 0 4) (rh_l_joint3 3 9 0 0) (rh_l_joint2 3 37 0 0) (rh_l_joint1 3 30 1 0) (rh_r_joint3 3 26 0 0) (rh_r_joint2 3 40 0 0) (rh_r_joint1 3 27 -3 0) (rh_m_joint3 3 36 0 0) (rh_m_joint2 3 44 0 0) (rh_m_joint1 3 29 -4 0) (rh_p_joint3 3 36 0 0) (rh_p_joint2 3 32 0 0) (rh_p_joint1 3 40 4 0) (rh_t_joint3 3 10 0 0) (rh_t_joint2 3 5 0 0) (rh_t_joint1 3 0 -21 0) (rh_t_joint0 3 0 45 -23) (r_wrist 3 -18 -17 -20) (r_elbow 3 0 149 0) (r_shoulder 3 -57 42 45) (r_clavicle 3 -13 0 0) (l_wrist 3 -4 -2 5) (l_elbow 3 0 36 0) (l_shoulder 3 17 -10 32) (l_clavicle 3 3 0 0) (vt1 3 0 0 0) (vt6 3 0 0 0) (vl1 3 0 -3 0) (vl5 3 0 0 0) </posture> 
+		</frame>
+	<!-- *** Frame6: entspricht p1f2 -->
+  	<frame ftime="1.2">
+  		<posture>Humanoid (re_eye 3 11 0 0) (le_eye 3 4 0 0) (skullbase 3 0 4 0) (vc2 3 11 4 16) (vc4 3 0 0 0) (rh_l_joint3 3 9 0 0) (rh_l_joint2 3 37 0 0) (rh_l_joint1 3 30 1 0) (rh_r_joint3 3 26 0 0) (rh_r_joint2 3 40 0 0) (rh_r_joint1 3 27 -3 0) (rh_m_joint3 3 36 0 0) (rh_m_joint2 3 44 0 0) (rh_m_joint1 3 29 -4 0) (rh_p_joint3 3 36 0 0) (rh_p_joint2 3 32 0 0) (rh_p_joint1 3 40 4 0) (rh_t_joint3 3 10 0 0) (rh_t_joint2 3 5 0 0) (rh_t_joint1 3 0 -21 0) (rh_t_joint0 3 0 45 -23) (r_wrist 3 -18 11 -20) (r_elbow 3 0 128 0) (r_shoulder 3 -13 12 -13) (r_clavicle 3 -4 0 0) (l_wrist 3 -4 -2 5) (l_elbow 3 0 36 0) (l_shoulder 3 17 -10 32) (l_clavicle 3 0 0 0) (vt1 3 0 0 0) (vt6 3 0 0 0) (vl1 3 0 -3 0) (vl5 3 0 0 0) </posture> 
+		</frame>
+	<!-- *** Frame6: = p1f1-->
+  	<frame ftime="1.5">
+  		<posture>Humanoid (re_eye 3 0 0 0) (le_eye 3 0 0 0) (skullbase 3 0 0 0) (vc2 3 4 7 0) (vc4 3 0 0 0) (rh_l_joint3 3 18 0 0) (rh_l_joint2 3 36 0 0) (rh_l_joint1 3 29 -12 0) (rh_r_joint3 3 15 0 0) (rh_r_joint2 3 29 0 0) (rh_r_joint1 3 25 -3 0) (rh_m_joint3 3 15 0 0) (rh_m_joint2 3 30 0 0) (rh_m_joint1 3 29 0 0) (rh_p_joint3 3 12 0 0) (rh_p_joint2 3 23 0 0) (rh_p_joint1 3 40 4 0) (rh_t_joint3 3 14 0 0) (rh_t_joint2 3 11 0 0) (rh_t_joint1 3 0 -20 0) (rh_t_joint0 3 0 45 -32) (r_wrist 3 4 -2 -5) (r_elbow 3 0 75 0) (r_shoulder 3 -10 -30 -7) (r_clavicle 3 -4 0 0) (l_wrist 3 -4 -2 5) (l_elbow 3 0 36 0) (l_shoulder 3 17 -10 32) (l_clavicle 3 0 0 0) (vt1 3 0 0 0) (vt6 3 0 0 0) (vl1 3 0 -3 0) (vl5 3 0 0 0) </posture> 
+		</frame>
+	<!-- *** Frame6: = p1f1-->
+  	<frame ftime="2.0">
+  		<posture>Humanoid (re_eye 3 0 0 0) (le_eye 3 0 0 0) (skullbase 3 0 0 0) (vc2 3 0 0 0) (vc4 3 0 0 0) (rh_l_joint3 3 18 0 0) (rh_l_joint2 3 36 0 0) (rh_l_joint1 3 29 -12 0) (rh_r_joint3 3 15 0 0) (rh_r_joint2 3 29 0 0) (rh_r_joint1 3 25 -3 0) (rh_m_joint3 3 15 0 0) (rh_m_joint2 3 30 0 0) (rh_m_joint1 3 29 0 0) (rh_p_joint3 3 12 0 0) (rh_p_joint2 3 23 0 0) (rh_p_joint1 3 40 4 0) (rh_t_joint3 3 14 0 0) (rh_t_joint2 3 11 0 0) (rh_t_joint1 3 0 -20 0) (rh_t_joint0 3 0 45 -32) (r_wrist 3 4 -2 -5) (r_elbow 3 0 5 0) (r_shoulder 3 -1 0 0) (r_clavicle 3 0 0 0) (l_wrist 3 -4 -2 5) (l_elbow 3 0 5 0) (l_shoulder 3 1 0 0) (l_clavicle 3 0 0 0) (vt1 3 0 0 0) (vt6 3 0 0 0) (vl1 3 0 0 0) (vl5 3 0 0 0) </posture> 
+		</frame>
+	  </phase>
+	</keyframing>
+     </dynamic>
+  </constraints>
+</gesture>
+
+<!-- COUNT-1 == Function: -->
+<gesture id="count_1" scope="hand">
+  <constraints>
+      <parallel>
+        <static slot="HandLocation" value="LocUpperChest LocCCenterRight LocFar"/>
+        <static slot="HandShape" value="BSfist (ThExt)"/>
+        <static slot="PalmOrientation" value="PalmLU"/>
+        <!-- static slot="ExtFingerOrientation" value="DirL"/ -->
+      </parallel>
+  </constraints>
+</gesture>
+
+<!-- COUNT-2 == Function: -->
+<gesture id="count_2" scope="hand">
+  <constraints>
+      <parallel>
+        <static slot="HandLocation" value="LocUpperChest LocCCenterRight LocFar"/>
+        <static slot="HandShape" value="BSfist (ThExt) (FBstr p)"/>
+        <static slot="PalmOrientation" value="PalmLU"/>
+        <!-- static slot="ExtFingerOrientation" value="DirL"/ -->
+      </parallel>
+  </constraints>
+</gesture>
+
+<!-- COUNT-3 == Function: -->
+<gesture id="count_3" scope="hand">
+  <constraints>
+      <parallel>
+        <static slot="HandLocation" value="LocUpperChest LocCCenterRight LocFar"/>
+        <static slot="HandShape" value="BSffinger (ThExt) (FBroll r) (FBroll l)"/>
+        <static slot="PalmOrientation" value="DirT"/>
+        <static slot="ExtFingerOrientation" value="DirUL"/>
+      </parallel>
+  </constraints>
+</gesture>
+
+<!-- COUNT-4 == Function: -->
+<gesture id="count_4" scope="hand">
+  <constraints>
+      <parallel>
+        <static slot="HandLocation" value="LocUpperChest LocCCenterRight LocNorm"/>
+        <static slot="HandShape" value="BSffinger (ThAcr)"/>
+        <static slot="PalmOrientation" value="DirA"/>
+        <static slot="ExtFingerOrientation" value="DirU"/>
+      </parallel>
+  </constraints>
+</gesture>
+
+<!-- COUNT-5 == Function: -->
+<gesture id="count_5" scope="hand">
+  <constraints>
+      <parallel>
+        <static slot="HandLocation" value="LocUpperChest LocCenterRRight LocNorm"/>
+        <static slot="HandShape" value="BSffinger (ThExt)"/>
+        <static slot="PalmOrientation" value="DirA"/>
+        <static slot="ExtFingerOrientation" value="DirU"/>
+      </parallel>
+  </constraints>
+</gesture>
+
+<!-- COUNT-6 == Function: -->
+<gesture id="count_6" scope="hand">
+  <constraints>
+    <parallel>
+      <!-- right hand: "1" -->
+      <static slot="HandLocation" value="LocUpperChest LocCCenterRight LocFar" scope="right_arm"/>
+      <static slot="HandShape" value="BSfist (ThExt)" scope="right_arm"/>
+      <static slot="PalmOrientation" value="PalmLU" scope="right_arm"/>
+      <!-- left hand: "5" -->
+      <static slot="HandLocation" value="LocUpperChest LocCCenterLeft LocFar" scope="left_arm"/>
+      <static slot="PalmOrientation" value="DirA" scope="left_arm"/>
+      <static slot="ExtFingerOrientation" value="DirU" scope="left_arm"/>
+      <static slot="HandShape" value="BSffinger (ThExt)" scope="left_arm"/>
+    </parallel>
+  </constraints>
+</gesture>
+
+<!-- COUNT-7 == Function: -->
+<gesture id="count_7" scope="hand">
+  <constraints>
+    <parallel>
+      <!-- right hand: "2" -->
+      <static slot="HandLocation" value="LocUpperChest LocCCenterRight LocFar" scope="right_arm"/>
+      <static slot="HandShape" value="BSfist (ThExt) (FBstr p)" scope="right_arm"/>
+      <static slot="PalmOrientation" value="PalmLU" scope="right_arm"/>
+      <!-- left hand: "5" -->
+      <static slot="HandLocation" value="LocUpperChest LocCCenterLeft LocFar" scope="left_arm"/>
+      <static slot="PalmOrientation" value="DirA" scope="left_arm"/>
+      <static slot="ExtFingerOrientation" value="DirU" scope="left_arm"/>
+      <static slot="HandShape" value="BSffinger (ThExt)" scope="left_arm"/>
+    </parallel>
+  </constraints>
+</gesture>
+
+<!-- COUNT-8 == Function: -->
+<gesture id="count_8" scope="hand">
+  <constraints>
+    <parallel>
+      <!-- right hand: "3" -->
+      <static slot="HandLocation" value="LocUpperChest LocCCenterRight LocFar" scope="right_arm"/>
+      <static slot="HandShape" value="BSffinger (ThExt) (FBroll r) (FBroll l)" scope="right_arm"/>
+      <static slot="PalmOrientation" value="DirT" scope="right_arm"/>
+      <static slot="ExtFingerOrientation" value="DirUL" scope="right_arm"/>
+      <!-- left hand: "5" -->
+      <static slot="HandLocation" value="LocUpperChest LocCCenterLeft LocFar" scope="left_arm"/>
+      <static slot="PalmOrientation" value="DirA" scope="left_arm"/>
+      <static slot="ExtFingerOrientation" value="DirU" scope="left_arm"/>
+      <static slot="HandShape" value="BSffinger (ThExt)" scope="left_arm"/>
+    </parallel>
+  </constraints>
+</gesture>
+
+<!-- COUNT-9 == Function: -->
+<gesture id="count_9" scope="hand">
+  <constraints>
+    <parallel>
+      <!-- right hand: "4" -->
+      <static slot="HandLocation" value="LocUpperChest LocCenterRight LocNorm" scope="right_arm"/>
+      <static slot="HandShape" value="BSffinger (ThAcr)" scope="right_arm"/>
+      <static slot="PalmOrientation" value="DirA" scope="right_arm"/>
+      <static slot="ExtFingerOrientation" value="DirU" scope="right_arm"/>
+      <!-- left hand: "5" -->
+      <static slot="HandLocation" value="LocUpperChest LocCenterLeft LocFar" scope="left_arm"/>
+      <static slot="PalmOrientation" value="DirA" scope="left_arm"/>
+      <static slot="ExtFingerOrientation" value="DirU" scope="left_arm"/>
+      <static slot="HandShape" value="BSffinger (ThExt)" scope="left_arm"/>
+    </parallel>
+  </constraints>
+</gesture>
+
+<!-- COUNT-10 == Function: -->
+<gesture id="count_10" scope="hand">
+  <constraints>
+    <parallel>
+      <!-- right hand: "5" -->
+      <static slot="HandLocation" value="LocUpperChest LocCenterRight LocNorm" scope="right_arm"/>
+      <static slot="HandShape" value="BSffinger (ThExt)" scope="right_arm"/>
+      <static slot="PalmOrientation" value="DirA" scope="right_arm"/>
+      <static slot="ExtFingerOrientation" value="DirU" scope="right_arm"/>
+      <!-- left hand: "5" -->
+      <static slot="HandLocation" value="LocUpperChest LocCenterLeft LocFar" scope="left_arm"/>
+      <static slot="PalmOrientation" value="DirA" scope="left_arm"/>
+      <static slot="ExtFingerOrientation" value="DirU" scope="left_arm"/>
+      <static slot="HandShape" value="BSffinger (ThExt)" scope="left_arm"/>
+    </parallel>
+  </constraints>
+</gesture>
+
+
+<!-- PNT-LOC == Function: refer_to_loc -->
+<gesture id="Pnt-Loc" scope="hand">
+  <function name="refer_to_loc"/>
+  <constraints>
+    <parallel>
+	<static slot="HandShape" value="BSifinger"/>
+	<static slot="ExtFingerOrientation" value="$refloc" mode="pointTo"/>
+	<!-- static slot="GazeDirection" value="$refloc" mode="pointTo" scope="head"/ --> 
+    </parallel>
+  </constraints>
+</gesture>
+
+
+<!-- PNT-LEFT-LOC-BEHIND == Function: refer_to_loc_leftbehind -->
+<gesture id="Pnt-Loc-Left-Bhd" scope="hand">
+  <function name="refer_to_loc_leftbehind"/>
+  <constraints>
+    <parallel>
+      <static slot="HandShape" value="BSfist (ThExt)" scope="left_arm"/>
+      <static slot="ExtFingerOrientation" value="DirU" scope="left_arm"/>
+      <static slot="PalmOrientation" value="DirRTR" scope="left_arm"/>
+      <static slot="HandLocation" value="LocNeck LocCenterLLeft LocNorm" scope="left_arm"/>
+    </parallel>
+  </constraints>
+</gesture>
+
+<!-- PNT-RIGHT-LOC-BEHIND == Function: refer_to_loc_rightbehind -->
+<gesture id="Pnt-Loc-Right-Bhd" scope="hand">
+  <function name="refer_to_loc_rightbehind"/>
+  <constraints>
+    <parallel>
+      <static slot="HandShape" value="BSfist (ThExt)" scope="right_arm"/>
+      <static slot="ExtFingerOrientation" value="DirU" scope="right_arm"/>
+      <static slot="PalmOrientation" value="DirLTL" scope="right_arm"/>
+      <static slot="HandLocation" value="LocNeck LocCenterRRight LocNorm" scope="right_arm"/>
+    </parallel>
+  </constraints>
+</gesture>
+
+<!-- PNT-REGION == Function: refer_to_region -->
+<gesture id="Pnt-Region" scope="hand">
+  <function name="refer_to_region"/>
+  <constraints>
+    <parallel>
+	<static slot="HandShape" value="BSflat"/>
+	<static slot="PalmOrientation" value="DirD"/>
+	<static slot="ExtFingerOrientation" value="$regloc" mode="pointTo"/>
+	<static slot="GazeDirection" value="$regloc" mode="pointTo" scope="head"/>
+    </parallel>
+  </constraints>
+</gesture>
+
+<!-- PNT-DIR == Function: refer_to_dir -->
+<gesture id="Pnt-Dir" scope="hand">
+  <function name="refer_to_dir"/>
+  <constraints>
+    <parallel>
+	<static slot="HandShape" value="BSifinger"/>
+	<static slot="HandLocation" value="LocUpperChest LocCenterLeft LocFar"/>
+	<static slot="ExtFingerOrientation" value="$refdir"/>
+    </parallel>
+  </constraints>
+</gesture>
+
+<!-- PNT-LOCDIR == Function: refer_to_locdir -->
+<gesture id="Pnt-LocDir" scope="hand">
+  <function name="refer_to_locdir"/>
+  <constraints>
+    <parallel>
+	<static slot="HandShape" value="BSifinger"/>
+	<static slot="ExtFingerOrientation" value="$refdir"/>
+	<static slot="ExtFingerOrientation" value="$refloc" mode="pointTo"/>
+	<static slot="GazeDirection" value="$refloc" mode="pointTo" scope="head"/>
+    </parallel>
+  </constraints>
+</gesture>
+
+
+<!-- PNT-SELF_LEFT == Function: Self-reference -->
+<gesture id="Pnt-Self-Refer-Left" scope="hand">
+  <function name="signal_self-reference"/>
+  <constraints>
+    <parallel>
+      <static slot="ExtFingerOrientation" value="DirURRU"/>
+      <static slot="PalmOrientation" value="DirT"/>
+      <static slot="HandLocation" value="LocChest LocCCenterLeft LocNear"/>
+    </parallel>
+  </constraints>
+</gesture>
+
+<!-- PNT-SELF_RIGHT == Function: Self-reference -->
+<gesture id="Pnt-Self-Refer-Right" scope="hand">
+  <function name="signal_self-reference"/>
+  <constraints>
+    <parallel>
+      <static slot="ExtFingerOrientation" value="DirTUULL"/>
+      <static slot="PalmOrientation" value="DirT"/>
+      <static slot="HandLocation" value="LocLowerChest LocCCenterRight LocNear"/>
+      <static slot="HandShape" value="BSifinger"/>
+    </parallel>
+  </constraints>
+</gesture>
+
+<!-- PNT-USER_LEFT == Function: User-reference -->
+<gesture id="Pnt-User-Refer-Left" scope="hand">
+  <function name="signal_user-reference"/>
+  <constraints>
+    <parallel>
+      <static slot="PalmOrientation" value="PalmU"/>
+      <static slot="HandLocation" value="LocChest LocCCenterLeft LocStretched"/>
+      <static slot="HandShape" value="BSflat (FBround all wo) (ThExt)"/>
+    </parallel>
+  </constraints>
+</gesture>
+
+<!-- PNT-USER_RIGHT == Function: User-reference -->
+<gesture id="Pnt-User-Refer-Right" scope="hand">
+  <function name="signal_user-reference"/>
+  <constraints>
+    <parallel>
+      <static slot="PalmOrientation" value="PalmU"/>
+      <static slot="HandLocation" value="LocChest LocCCenterRight LocStretched"/>
+      <static slot="HandShape" value="BSflat (FBround all wo) (ThExt)"/>
+    </parallel>
+  </constraints>
+</gesture>
+
+<!-- OK == Function: Confirm-Alright -->
+<gesture id="Ok" scope="hand">
+  <function name="signal_confirm-alright"/>
+  <constraints>
+    <parallel>
+	<static slot="HandShape" value="BSflat (ThCpart no) (FBround all wo) (FBround p c)"/>
+	<static slot="HandLocation" value="LocUpperChest LocCCenterLeft LocFar"/>
+	<static slot="ExtFingerOrientation" value="DirU"/>
+    </parallel>
+  </constraints>
+</gesture>
+
+<!-- SMALL-INDEX-THUMB-APERTURE- == Function: Size-Small -->
+<gesture id="signal-size-small" scope="hand">
+  <function name="signal_size-small"/>
+  <constraints>
+    <parallel>
+      <static slot="PalmOrientation" value="DirL"/>
+      <static slot="ExtFingerOrientation" value="DirU"/>
+      <static slot="HandLocation" value="LocUpperChest LocCenterRight LocNorm"/>
+      <static slot="HandShape" value="BSfist (ThCpart no) (FBround p no)"/>
+    </parallel>
+  </constraints>
+</gesture>
+
+<!-- LARGE-HANDS-SPAN- == Function: Size-Large -->
+<gesture id="signal-size-large" scope="hand">
+  <function name="signal_size-large"/>
+  <constraints>
+    <symmetrical dominant="right_arm" symmetry="SymMS">
+      <parallel>
+        <static slot="HandLocation" value="LocChest LocExtremePeripheryRight LocNorm"/>
+        <static slot="ExtFingerOrientation" value="DirA"/>
+        <static slot="PalmOrientation" value="DirL"/>
+        <!-- static slot="HandShape" value="BSflat"/ -->
+      </parallel>
+    </symmetrical>
+  </constraints>
+</gesture>
+
+<!-- HAND-TOUCH-CHIN == Function: Thinking -->
+<gesture id="touch-chin" scope="body">
+  <function name="signal_thinking"/>
+  <constraints scope="RArm">
+    <dynamic>
+      <keyframing scope="body" mode="spline" easescale="5.0" easeturningpoint="0.4" priority="50">
+	<phase>
+	  <frame ftime="1.0">
+	    <posture> (re_eye 3 0 0 0) (le_eye 3 0 0 0) (rh_l_joint3 3 18 0 0) (rh_l_joint2 3 36 0 0) (rh_l_joint1 3 29 -12 0) (rh_r_joint3 3 15 0 0) (rh_r_joint2 3 29 0 0) (rh_r_joint1 3 25 -3 0) (rh_m_joint3 3 15 0 0) (rh_m_joint2 3 30 0 0) (rh_m_joint1 3 29 0 0) (rh_p_joint3 3 12 0 0) (rh_p_joint2 3 23 0 0) (rh_p_joint1 3 40 4 0) (rh_t_joint3 3 14 0 0) (rh_t_joint2 3 11 0 0) (rh_t_joint1 3 0 -20 0) (rh_t_joint0 3 0 45 -32) (r_wrist 3 4 -2 -5) (r_elbow 3 0 5 0) (r_shoulder 3 -1 0 0) (r_clavicle 3 0 0 0)</posture>
+	  </frame>
+	  <frame ftime="2.0">
+	    <posture> (re_eye 3 15 -15 0) (le_eye 3 15 -15 0) (rh_l_joint3 3 34 0 0) (rh_l_joint2 3 100 0 0) (rh_l_joint1 3 90 18 0) (rh_r_joint3 3 55 0 0) (rh_r_joint2 3 100 0 0) (rh_r_joint1 3 90 10 0) (rh_m_joint3 3 15 0 0) (rh_m_joint2 3 100 0 0) (rh_m_joint1 3 90 0 0) (rh_p_joint3 3 29 0 0) (rh_p_joint2 3 19 0 0) (rh_p_joint1 3 50 -11 0) (rh_t_joint3 3 41 0 0) (rh_t_joint2 3 30 0 0) (rh_t_joint1 3 0 1 0) (rh_t_joint0 3 0 45 -17) (r_wrist 3 -11 -19 27) (r_elbow 3 0 132 0) (r_shoulder 3 0 59 -55) (r_clavicle 3 0 -2 0)</posture>
+	  </frame>
+	</phase>
+	<phase>
+	  <frame ftime="3.0">
+  	    <posture>(re_eye 3 15 -15 0) (le_eye 3 15 -15 0)	(rh_l_joint3 3 34 0 0) (rh_l_joint2 3 100 0 0) (rh_l_joint1 3 90 18 0) (rh_r_joint3 3 55 0 0) (rh_r_joint2 3 100 0 0) (rh_r_joint1 3 90 10 0) (rh_m_joint3 3 15 0 0) (rh_m_joint2 3 100 0 0) (rh_m_joint1 3 90 0 0) (rh_p_joint3 3 29 0 0) (rh_p_joint2 3 19 0 0) (rh_p_joint1 3 50 -11 0) (rh_t_joint3 3 41 0 0) (rh_t_joint2 3 30 0 0) (rh_t_joint1 3 0 1 0) (rh_t_joint0 3 0 45 -17) (r_wrist 3 -11 -19 27) (r_elbow 3 0 132 0) (r_shoulder 3 0 59 -55) (r_clavicle 3 0 -2 0)</posture>
+	  </frame>
+	  <frame ftime="4.0">
+	    <posture> (re_eye 3 0 0 0) (le_eye 3 0 0 0) (rh_l_joint3 3 18 0 0) (rh_l_joint2 3 36 0 0) (rh_l_joint1 3 29 -12 0) (rh_r_joint3 3 15 0 0) (rh_r_joint2 3 29 0 0) (rh_r_joint1 3 25 -3 0) (rh_m_joint3 3 15 0 0) (rh_m_joint2 3 30 0 0) (rh_m_joint1 3 29 0 0) (rh_p_joint3 3 12 0 0) (rh_p_joint2 3 23 0 0) (rh_p_joint1 3 40 4 0) (rh_t_joint3 3 14 0 0) (rh_t_joint2 3 11 0 0) (rh_t_joint1 3 0 -20 0) (rh_t_joint0 3 0 45 -32) (r_wrist 3 4 -2 -5) (r_elbow 3 0 5 0) (r_shoulder 3 -1 0 0) (r_clavicle 3 0 0 0) </posture>
+	  </frame>
+	</phase>
+      </keyframing>
+    </dynamic>
+  </constraints>
+</gesture>
+
+
+<!-- GYM == Function: Mobility -->
+<gesture id="gym" scope="body">
+  <function name="signal_mobility"/>
+    <constraints>
+     <dynamic>
+       <keyframing scope="body" mode="spline" easescale="5.0" easeturningpoint="0.4" priority="50">
+	<phase>
+	  <frame ftime="1.0">		
+	    <posture> (r_elbow 3 0 103 0) (r_shoulder 3 -82 0 0) (l_elbow 3 0 103 0) (l_shoulder 3 82 0 0) (vl5 3 0 0 0) (vt1 3 0 0 0) (vt6 3 0 0 0) </posture>
+	  </frame>
+	  <frame ftime="2.0">
+	    <posture> (r_elbow 3 0 103 0) (r_shoulder 3 -82 0 0) (l_elbow 3 0 103 0) (l_shoulder 3 82 0 0) (vl5 3 10 0 0) (vt1 3 0 0 20) (vt6 3 0 0 40)	</posture>
+	  </frame>
+ 	  <frame ftime="3.0">
+	    <posture> (r_elbow 3 0 0 0) (r_shoulder 3 -82 0 0)(l_elbow 3 0 0 0) (l_shoulder 3 82 0 0) (vl5 3 -10 0 0) (vt1 3 0 0 -20) (vt6 3 0 0 -40)</posture>
+	  </frame>
+	  <frame ftime="4.0">	
+	    <posture> (r_elbow 3 0 103 0) (r_shoulder 3 -60 0 0) (l_elbow 3 0 103 0) (l_shoulder 3 60 0 0)  (vt1 3 0 0 0) (vt6 3 0 0 0) (vl5 3 0 0 0) </posture>
+	  </frame>
+	  <frame ftime="5.0">	
+	    <posture> (r_elbow 3 0 5 0) (r_shoulder 3 -1 0 0) (l_elbow 3 0 5 0) (l_shoulder 3 1 0 0)  (vt1 3 0 0 0) (vt6 3 0 0 0) (vl5 3 0 0 0) </posture>
+	  </frame>
+	</phase>
+      </keyframing>
+    </dynamic>
+  </constraints>
+</gesture>
+
+<!-- gesture id="No-Idea" scope="body">
+  <constraints>
+   <symmetrical dominant="left_arm" symmetry="SymMS">
+      <parallel> 
+        <static slot="HandLocation" value="LocLowerChest LocPeripheryLeft LocFar" scope="left_arm"/>
+        <static slot="HandShape" value="BSifinger"/>
+        <static  slot="PalmOrientation" value="PalmU"  scope="left_arm"/> 
+      </parallel>
+    </symmetrical>
+  </constraints> 
+</gesture> -->
+
+  <!-- TestGeste1 -->
+  <gesture id="test1">
+  <constraints>
+    <!-- symmetrical dominant="left_arm" symmetry="SymMS" -->
+      <parallel start="1.0" end="2.5">
+	<static slot="ExtFingerOrientation" value="DirU" scope="left_arm"/>
+	<static slot="HandShape" value="BSifinger" scope="left_arm"/>
+	<dynamic slot="HandLocation" scope="left_arm">
+	  <dynamicElement type="curve">
+	    <value type="start"  name="LocShoulder LocCenterLeft LocFar"/>
+	    <value type="end"    name="LocShoulder LocCenterLeft LocNorm"/>
+	    <value type="normal" name="DirU"/>
+	    <value type="shape"  name="LeftC"/>
+	    <value type="extension" name="0.6"/>
+	  </dynamicElement>
+	  <dynamicElement type="curve">
+	    <value type="start"  name="LocShoulder LocCenterLeft LocNorm"/>
+	    <value type="end"    name="LocShoulder LocCenterLeft LocFar"/>
+	    <value type="normal" name="DirU"/>
+	    <value type="shape"  name="LeftC"/>
+	    <value type="extension" name="0.6"/>
+	  </dynamicElement>
+	  <dynamicElement type="curve">
+	    <value type="start"  name="LocShoulder LocCenterLeft LocFar"/>
+	    <value type="end"    name="LocShoulder LocCenterLeft LocNorm"/>
+	    <value type="normal" name="DirU"/>
+	    <value type="shape"  name="LeftC"/>
+	    <value type="extension" name="0.6"/>
+	  </dynamicElement>
+	  <dynamicElement type="curve">
+	    <value type="start"  name="LocShoulder LocCenterLeft LocNorm"/>
+	    <value type="end"    name="LocShoulder LocCenterLeft LocFar"/>
+	    <value type="normal" name="DirU"/>
+	    <value type="shape"  name="LeftC"/>
+	    <value type="extension" name="0.6"/>
+	  </dynamicElement>
+	</dynamic>
+      </parallel>
+    <!-- /symmetrical -->
+  </constraints>
+  </gesture>
+
+
+
+<!-- VOILA -->
+<gesture id="voila_right" scope="hand">
+  <function name="signal_provide.presentate"/>
+  <constraints>
+    <parallel>
+      <dynamic slot="HandLocation" scope="right_arm">
+	<dynamicElement type="linear" scope="right_arm">
+          <value type="start" name="LocLowerChest LocCenterRight LocNorm"/>
+          <value type="end" name="LocStomach LocPeripheryRight LocFFar"/>
+	</dynamicElement>
+      </dynamic>
+
+      <dynamic slot="HandShape" scope="right_arm">
+	<dynamicElement>
+          <value type="start" name="BSneutral"/>
+          <value type="end" name="BSflat"/>
+	</dynamicElement>
+      </dynamic>
+
+      <dynamic slot="ExtFingerOrientation" scope="right_arm">
+	<dynamicElement>
+          <value type="start" name="DirLA"/>
+          <value type="end" name="DirARAA"/>
+	</dynamicElement>
+      </dynamic>
+
+      <dynamic slot="PalmOrientation" scope="right_arm">
+	<dynamicElement>
+          <value type="start" name="PalmLU"/>
+          <value type="end" name="PalmU"/>
+	</dynamicElement>
+      </dynamic>
+
+    </parallel>
+  </constraints>
+</gesture>
+
+
+<gesture id="voila_left" scope="hand">
+  <function name="signal_provide.presentate"/>
+  <constraints>
+    <parallel>
+      <dynamic slot="HandLocation" scope="left_arm">
+	<dynamicElement type="linear" scope="left_arm">
+          <value type="start" name="LocLowerChest LocCCenter LocNorm"/>
+          <value type="end" name="LocStomach LocPeripheryLeft LocFFar"/>
+	</dynamicElement>
+      </dynamic>
+
+      <dynamic slot="HandShape" scope="left_arm">
+	<dynamicElement>
+          <value type="start" name="BSneutral"/>
+          <value type="end" name="BSflat"/>
+	</dynamicElement>
+      </dynamic>
+
+      <dynamic slot="ExtFingerOrientation" scope="left_arm">
+	<dynamicElement>
+          <value type="start" name="DirRA"/>
+          <value type="end" name="DirALAA"/>
+	</dynamicElement>
+      </dynamic>
+
+      <dynamic slot="PalmOrientation" scope="left_arm">
+	<dynamicElement>
+          <value type="start" name="PalmRU"/>
+          <value type="end" name="PalmU"/>
+	</dynamicElement>
+      </dynamic>
+
+    </parallel>
+  </constraints>
+</gesture>
+
+
+<gesture id="voila_center" scope="hand">
+  <function name="signal_provide.presentate"/>
+  <constraints>
+    <parallel>
+      <dynamic slot="HandLocation" scope="right_arm">
+	<dynamicElement type="linear" scope="right_arm">
+          <value type="start" name="LocLowerChest LocCCenter LocNorm"/>
+          <value type="end" name="LocStomach LocCenterRight LocFFar"/>
+	</dynamicElement>
+      </dynamic>
+
+      <dynamic slot="HandShape" scope="right_arm">
+	<dynamicElement>
+          <value type="start" name="BSneutral"/>
+          <value type="end" name="BSflat"/>
+	</dynamicElement>
+      </dynamic>
+
+      <dynamic slot="ExtFingerOrientation" scope="right_arm">
+	<dynamicElement>
+          <value type="start" name="DirLA"/>
+          <value type="end" name="DirARAA"/>
+	</dynamicElement>
+      </dynamic>
+
+      <dynamic slot="PalmOrientation" scope="right_arm">
+	<dynamicElement>
+          <value type="start" name="PalmLU"/>
+          <value type="end" name="PalmU"/>
+	</dynamicElement>
+      </dynamic>
+
+    </parallel>
+  </constraints>
+</gesture>
+
+
+</gestures>

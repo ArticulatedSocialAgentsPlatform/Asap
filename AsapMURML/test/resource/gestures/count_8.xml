@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<murml-description xmlns="http://www.techfak.uni-bielefeld.de/ags/soa/murml" scope="hand">
+   <parallel>
+      <!-- right hand: "3" -->
+      <static slot="HandLocation"
+              value="LocUpperChest LocCCenterRight LocFar"
+              scope="right_arm"/>
+      <static slot="HandShape"
+              value="BSffinger (ThExt) (FBroll r) (FBroll l)"
+              scope="right_arm"/>
+      <static slot="PalmOrientation" value="DirT" scope="right_arm"/>
+      <static slot="ExtFingerOrientation" value="DirUL" scope="right_arm"/>
+      <!-- left hand: "5" -->
+      <static slot="HandLocation"
+              value="LocUpperChest LocCCenterLeft LocFar"
+              scope="left_arm"/>
+      <static slot="PalmOrientation" value="DirA" scope="left_arm"/>
+      <static slot="ExtFingerOrientation" value="DirU" scope="left_arm"/>
+      <static slot="HandShape" value="BSffinger (ThExt)" scope="left_arm"/>
+    </parallel>
+</murml-description>
