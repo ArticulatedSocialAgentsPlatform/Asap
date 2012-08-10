@@ -7,6 +7,7 @@ import java.util.Map.Entry;
 
 import lombok.extern.slf4j.Slf4j;
 
+import hmi.util.StringUtil;
 import hmi.xml.XMLScanException;
 import hmi.xml.XMLStructureAdapter;
 import hmi.xml.XMLTokenizer;
@@ -25,6 +26,7 @@ public class Hns extends XMLStructureAdapter
     private static final String HAND_REFERENCES = "handReferences";
     private static final String HAND_LOCATORS = "handLocators";
     private static final String HAND_DISTANCES = "handDistances";
+    private static final String PALM_ORIENTATIONS = "palmOrientations";
 
     /**
      * Translate hand location symbol in figure root coords
@@ -32,8 +34,8 @@ public class Hns extends XMLStructureAdapter
      */
     public boolean getHandLocation(String value, float[] location)
     {
-        //FIXME: should be converted to the Asap coordinate system
-        
+        // FIXME: should be converted to the Asap coordinate system
+
         // vector description
         if (getSymbolValue(HAND_REFERENCES, value) == null)
         {
@@ -92,6 +94,41 @@ public class Hns extends XMLStructureAdapter
         location[0] = (float) (r * Math.cos(Math.toRadians(phi)));
         location[1] = (float) (r * Math.sin(Math.toRadians(phi)));
         return true;
+    }
+
+    /**
+     * Gets the palm orientation for value, in degrees
+     * @param value value, e.g. PalmU or a double
+     */
+    public double getPalmOrientation(String value, String scope)
+    {
+        if (getSymbolValue(PALM_ORIENTATIONS, value) == null)
+        {
+            if (StringUtil.isNumeric(value))
+            {
+                return Double.parseDouble(value);
+            }
+            else
+            {
+                throw new RuntimeException("Parsing failure for palmOrientation " + value);
+            }
+        }
+        else
+        {
+            double angle = getSymbolValue(PALM_ORIENTATIONS, value);
+            if (scope.equals("right_arm"))
+            {
+                if (angle <= 0)
+                {
+                    angle += 180.0;
+                }
+                else
+                {
+                    angle -= 180.0;
+                }
+            }
+            return angle;
+        }
     }
 
     public Double getSymbolValue(String className, String name)
