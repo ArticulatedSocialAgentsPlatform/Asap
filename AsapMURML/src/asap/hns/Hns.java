@@ -32,6 +32,8 @@ public class Hns extends XMLStructureAdapter
      */
     public boolean getHandLocation(String value, float[] location)
     {
+        //FIXME: should be converted to the Asap coordinate system
+        
         // vector description
         if (getSymbolValue(HAND_REFERENCES, value) == null)
         {
