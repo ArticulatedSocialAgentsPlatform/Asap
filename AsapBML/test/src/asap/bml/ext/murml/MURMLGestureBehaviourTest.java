@@ -3,7 +3,6 @@ package asap.bml.ext.murml;
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.instanceOf;
 import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertNull;
 import hmi.xml.XMLTokenizer;
 
 import java.io.IOException;
@@ -26,8 +25,8 @@ public class MURMLGestureBehaviourTest extends AbstractBehaviourTest
     protected Behaviour createBehaviour(String bmlId, String extraAttributeString) throws IOException
     {
         String bmlString = "<murmlgesture xmlns=\"http://www.techfak.uni-bielefeld.de/ags/soa/murml\" " + extraAttributeString
-                + "id=\"a1\" start=\"nod1:end\">" + "<definition><keyframing><phase><frame ftime=\"0\"><posture>Humanoid "
-                + "(l_shoulder 3 70 0 0)</posture></frame></phase></keyframing></definition>" + "</murml:murmlgesture>";
+                + "id=\"a1\" start=\"nod1:end\">" + "<murml-description><dynamic><keyframing><phase><frame ftime=\"0\"><posture>Humanoid "
+                + "(l_shoulder 3 70 0 0)</posture></frame></phase></keyframing></dynamic></murml-description>" + "</murml:murmlgesture>";
         return new MURMLGestureBehaviour(bmlId, new XMLTokenizer(bmlString));
     }
 
@@ -43,14 +42,13 @@ public class MURMLGestureBehaviourTest extends AbstractBehaviourTest
     public void testReadKeyframe() throws IOException
     {
         String bmlString = "<murmlgesture xmlns=\"http://www.techfak.uni-bielefeld.de/ags/soa/murml\" " + "id=\"a1\" start=\"nod1:end\">"
-                + "<definition><keyframing><phase><frame ftime=\"0\"><posture>Humanoid "
-                + "(l_shoulder 3 70 0 0)</posture></frame></phase></keyframing></definition>" + "</murml:murmlgesture>";
+                + "<murml-description><dynamic><keyframing><phase><frame ftime=\"0\"><posture>Humanoid "
+                + "(l_shoulder 3 70 0 0)</posture></frame></phase></keyframing></dynamic></murml-description>" + "</murml:murmlgesture>";
         MURMLGestureBehaviour beh = new MURMLGestureBehaviour("bmla", new XMLTokenizer(bmlString));
         assertEquals("bmla", beh.getBmlId());
         assertEquals("a1", beh.id);
 
-        assertNull(beh.getMurmlDefinition().getPosture());
-        assertEquals(0, beh.getMurmlDefinition().getKeyframing().getPhases().get(0).getFrames().get(0).getFtime(), FRAME_PRECISION);
+        assertEquals(0, beh.getMurmlDescription().getDynamic().getKeyframing().getPhases().get(0).getFrames().get(0).getFtime(), FRAME_PRECISION);
     }
 
     @Test
@@ -59,8 +57,8 @@ public class MURMLGestureBehaviourTest extends AbstractBehaviourTest
         BMLInfo.addDescriptionExtension(MURMLGestureBehaviour.xmlTag(), MURMLGestureBehaviour.class);
         BMLInfo.supportedExtensions.add(MURMLGestureBehaviour.class);
         String murmlString = "<murmlgesture xmlns=\"http://www.techfak.uni-bielefeld.de/ags/soa/murml\" " + "id=\"a1\">"
-                + "<definition><keyframing><phase><frame ftime=\"0\"><posture>Humanoid "
-                + "(dB_Smile 3 70 0 0)</posture></frame></phase></keyframing></definition>" + "</murml:murmlgesture>";
+                + "<murml-description><dynamic><keyframing><phase><frame ftime=\"0\"><posture>Humanoid "
+                + "(dB_Smile 3 70 0 0)</posture></frame></phase></keyframing></dynamic></murml-description>" + "</murml:murmlgesture>";
         String bmlString = "<gesture xmlns=\"http://www.bml-initiative.org/bml/bml-1.0\" id=\"a1\" " + "lexeme=\"BEAT\">"
                 + "<description priority=\"1\" type=\"murmlgesture\">" + murmlString + "</description></gesture>";
         GestureBehaviour f = new GestureBehaviour("bmla", new XMLTokenizer(bmlString));
@@ -69,8 +67,7 @@ public class MURMLGestureBehaviourTest extends AbstractBehaviourTest
         assertEquals("bmla", beh.getBmlId());
         assertEquals("a1", beh.id);
 
-        assertNull(beh.getMurmlDefinition().getPosture());
-        assertEquals(0, beh.getMurmlDefinition().getKeyframing().getPhases().get(0).getFrames().get(0).getFtime(), FRAME_PRECISION);
+        assertEquals(0, beh.getMurmlDescription().getDynamic().getKeyframing().getPhases().get(0).getFrames().get(0).getFtime(), FRAME_PRECISION);
     }
 
 }

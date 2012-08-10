@@ -348,8 +348,9 @@ public abstract class AbstractASAPRealizerTest extends AbstractBML1RealizerTest 
         realizerHandler.assertNoWarnings();
         realizerHandler.assertBlockStartAndStopFeedbacks("bml1");
         realizerHandler.assertSyncsInOrder("bml1", "face1", DefaultSyncPoints.getDefaultSyncPoints("face"));
-    }
-
+    }    
+    
+    
     @Test
     public void testMURMLBody() throws IOException, InterruptedException
     {

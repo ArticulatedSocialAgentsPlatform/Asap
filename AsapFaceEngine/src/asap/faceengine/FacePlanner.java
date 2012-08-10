@@ -91,7 +91,7 @@ public class FacePlanner extends AbstractPlanner<TimedFaceUnit>
         TimedFaceUnit tfu;
         if (b instanceof MURMLFaceBehaviour)
         {
-            FaceUnit fu = MURMLFUBuilder.setup(((MURMLFaceBehaviour) b).getMurmlDefinition());
+            FaceUnit fu = MURMLFUBuilder.setup(((MURMLFaceBehaviour) b).getMurmlDescription());
             FaceUnit fuCopy = fu.copy(faceController, facsConverter, emotionConverter);
             tfu = fuCopy.createTFU(fbManager, bbPeg, b.getBmlId(), b.id);
         }
