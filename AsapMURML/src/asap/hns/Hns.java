@@ -7,6 +7,7 @@ import java.util.Map.Entry;
 
 import lombok.extern.slf4j.Slf4j;
 
+import hmi.math.Vec3f;
 import hmi.util.StringUtil;
 import hmi.xml.XMLScanException;
 import hmi.xml.XMLStructureAdapter;
@@ -27,6 +28,104 @@ public class Hns extends XMLStructureAdapter
     private static final String HAND_LOCATORS = "handLocators";
     private static final String HAND_DISTANCES = "handDistances";
     private static final String PALM_ORIENTATIONS = "palmOrientations";
+    private static final String DISTANCES = "distances";
+
+    private static final float[] UP_VEC = Vec3f.getVec3f(0, 1, 0);
+    private static final float[] DOWN_VEC = Vec3f.getVec3f(0, -1, 0);
+    private static final float[] LEFT_VEC = Vec3f.getVec3f(1, 0, 0);
+    private static final float[] RIGHT_VEC = Vec3f.getVec3f(1, 0, 0);
+    private static final float[] A_VEC = Vec3f.getVec3f(0, 0, 1);
+    private static final float[] T_VEC = Vec3f.getVec3f(0, 0, -1);
+
+    enum ExtendSymbols
+    {
+        Flat, Normal, Large;
+    }
+
+    enum RoundnessSymbols
+    {
+        Sharp, Normal, Broad;
+    }
+
+    enum SkewdnessSymbols
+    {
+        Round, FunnelS, FunnelE;
+    }
+
+    /**
+     * @param value a 3-vector, split by whitespace
+     * @param vec return parameter
+     * @return false if syntax error
+     */
+    public boolean parseVector(String value, float[] vec)
+    {
+        String values[] = value.split("\\s+");
+        if (values.length != 3) return false;
+        Vec3f.set(vec, Float.parseFloat(values[0]), Float.parseFloat(values[1]), Float.parseFloat(values[2]));
+        return true;
+    }
+
+    /**
+     * Get the absolute direction of a HNS direction symbol (starting with 'Dir')
+     * @param value the HNS symbol
+     * @param direction output: the direction
+     * @return false if a syntax error occured
+     */
+    public boolean getAbsoluteDirection(String value, float[] direction)
+    {
+        if (!value.startsWith("Dir"))
+        {
+            float result[] = Vec3f.getVec3f();
+            if (parseVector(value, result))
+            {
+                Vec3f.normalize(result);
+                Vec3f.set(direction, result);
+                return true;
+            }
+            else
+            {
+                return false;
+            }
+        }
+        else
+        {
+            String dirSuffix = value.substring("Dir".length());
+            Vec3f.set(direction, 0, 0, 0);
+            for (char c : dirSuffix.toCharArray())
+            {
+                switch (c)
+                {
+                case 'A':
+                    Vec3f.add(direction, A_VEC);
+                    break;
+                case 'T':
+                    Vec3f.add(direction, T_VEC);
+                    break;
+                case 'L':
+                    Vec3f.add(direction, LEFT_VEC);
+                    break;
+                case 'R':
+                    Vec3f.add(direction, RIGHT_VEC);
+                    break;
+                case 'U':
+                    Vec3f.add(direction, UP_VEC);
+                    break;
+                case 'D':
+                    Vec3f.add(direction, DOWN_VEC);
+                    break;
+                default:
+                    return false;
+                }
+            }
+        }
+
+        if (Vec3f.length(direction) > 0)
+        {
+            Vec3f.normalize(direction);
+            return true;
+        }
+        return false;
+    }
 
     /**
      * Translate hand location symbol in figure root coords
@@ -39,7 +138,7 @@ public class Hns extends XMLStructureAdapter
         // vector description
         if (getSymbolValue(HAND_REFERENCES, value) == null)
         {
-            return HnsUtils.parseVector(value, location);
+            return parseVector(value, location);
         }
 
         // string description
@@ -94,6 +193,105 @@ public class Hns extends XMLStructureAdapter
         location[0] = (float) (r * Math.cos(Math.toRadians(phi)));
         location[1] = (float) (r * Math.sin(Math.toRadians(phi)));
         return true;
+    }
+
+    public double getDistance(String value)
+    {
+        Double distStr = getSymbolValue(DISTANCES, value);
+        if (distStr != null)
+        {
+            return distStr;
+        }
+        throw new RuntimeException("Parsing failure for getDistance of" + value);
+    }
+
+    public double getElementExtent(String value)
+    {
+        try
+        {
+            ExtendSymbols es = ExtendSymbols.valueOf(value);
+            switch (es)
+            {
+            case Flat:
+                return 0.25;
+            case Normal:
+                return 0.5;
+            case Large:
+                return 0.75;
+            }
+        }
+        catch (IllegalArgumentException ex)
+        {
+            if (StringUtil.isNumeric(value))
+            {
+                return Double.parseDouble(value);
+            }
+            else
+            {
+                throw new RuntimeException("Parsing failure for extend " + value);
+            }
+        }
+        return 0.2;
+    }
+
+    public double getElementRoundness(String value)
+    {
+        try
+        {
+            RoundnessSymbols rs = RoundnessSymbols.valueOf(value);
+            {
+                switch (rs)
+                {
+                case Sharp:
+                    return 0.9;
+                case Normal:
+                    return 0;
+                case Broad:
+                    return -0.9;
+                }
+            }
+        }
+        catch (IllegalArgumentException ex)
+        {
+            if (StringUtil.isNumeric(value))
+            {
+                return Double.parseDouble(value);
+            }
+            else
+            {
+                throw new RuntimeException("Parsing failure for roundness " + value);
+            }
+        }
+        return 0;
+    }
+
+    public double getElementSkewedness(String value)
+    {
+        try
+        {
+            SkewdnessSymbols ss = SkewdnessSymbols.valueOf(value);
+            switch (ss)
+            {
+            case Round:
+                return 0;
+            case FunnelS:
+                return -0.8;
+            case FunnelE:
+                return 0.8;
+            }
+        }
+        catch (IllegalArgumentException ex)
+        {
+            if (StringUtil.isNumeric(value))
+            {
+                return Double.parseDouble(value);
+            }
+            else
+            {
+                throw new RuntimeException("Parsing failure for skewdness " + value);
+            }
+        }
+        return 0;
     }
 
     /**
