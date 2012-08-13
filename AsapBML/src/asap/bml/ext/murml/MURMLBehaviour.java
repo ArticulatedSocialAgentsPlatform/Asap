@@ -1,12 +1,12 @@
 package asap.bml.ext.murml;
 
+import hmi.xml.XMLTokenizer;
+
 import java.io.IOException;
 
 import lombok.Getter;
-
-import asap.murml.Definition;
 import saiba.bml.core.Behaviour;
-import hmi.xml.XMLTokenizer;
+import asap.murml.MURMLDescription;
 
 /**
  * Generic class for MURML behaviours
@@ -16,7 +16,7 @@ import hmi.xml.XMLTokenizer;
 public abstract class MURMLBehaviour extends Behaviour
 {
     @Getter
-    private Definition murmlDefinition;
+    private MURMLDescription murmlDescription;
     
     public MURMLBehaviour(String bmlId)
     {
@@ -37,10 +37,10 @@ public abstract class MURMLBehaviour extends Behaviour
         if(tokenizer.atSTag())
         {
             String tag = tokenizer.getTagName();
-            if (tag.equals(Definition.xmlTag()))
+            if (tag.equals(MURMLDescription.xmlTag()))
             {
-                murmlDefinition = new Definition();
-                murmlDefinition.readXML(tokenizer);                
+                murmlDescription = new MURMLDescription();
+                murmlDescription.readXML(tokenizer);                
             }
         }
         ensureDecodeProgress(tokenizer);

@@ -1,18 +1,18 @@
 package asap.realizerintegrationtest;
 
 import static org.mockito.Mockito.mock;
-import saiba.bml.parser.BMLParser;
+import hmi.util.Clock;
 import hmi.xml.XMLTokenizer;
 
 import java.io.IOException;
 
 import org.junit.Test;
 
-import asap.environment.BMLSchedulerAssembler;
+import saiba.bml.parser.BMLParser;
 import asap.realizer.feedback.NullFeedbackManager;
 import asap.realizer.pegboard.PegBoard;
 import asap.realizer.scheduler.BMLBlockManager;
-import asap.utils.SchedulingClock;
+import asap.realizerembodiments.impl.BMLSchedulerAssembler;
 
 /**
  * Test cases to load some Asap-specific instantiations of an environment
@@ -22,7 +22,7 @@ public class EnvironmentLoadingTest
 {
     private BMLBlockManager bbm = new BMLBlockManager();
     private PegBoard pegBoard = new PegBoard();
-    private SchedulingClock mockClock = mock(SchedulingClock.class);
+    private Clock mockClock = mock(Clock.class);
 
     @Test
     public void testLoadScheduler() throws IOException

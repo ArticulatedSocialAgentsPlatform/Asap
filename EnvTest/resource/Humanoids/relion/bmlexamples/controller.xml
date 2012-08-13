@@ -1,3 +1,0 @@
-<bml id="bml1" xmlns:bmlt="http://hmi.ewi.utwente.nl/bmlt">
-<bmlt:controller id="rdc" class="RagdollController" start="0" end="15" joints="l_hip,r_hip,l_knee,r_knee,l_shoulder,r_shoulder"/>
-</bml>

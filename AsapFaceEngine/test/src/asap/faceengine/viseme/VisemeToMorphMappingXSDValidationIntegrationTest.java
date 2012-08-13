@@ -20,7 +20,7 @@ public class VisemeToMorphMappingXSDValidationIntegrationTest extends XSDValidat
     private static final Resources XSD_RES = new Resources("xsd");
     private static final String XSD = "visemebinding.xsd";
     private static final String DIRS[] = { System.getProperty("shared.project.root")
-            + "/HmiResource/HmiHumanoidFaceControl/resource/Humanoids/armandia/facebinding" };
+            + "/asapresource/AsapHumanoidControlArmandia/resource/Humanoids/armandia/facebinding" };
 
     @Before
     public void setup()

@@ -1,19 +1,12 @@
 <AsapVirtualHuman>
-
   <Loader id="realizer" loader="asap.realizerembodiments.AsapRealizerEmbodiment">
-	<!--log both requests and feedback-->
-    <!--PipeLoader id="log" loader="asap.realizerembodiments.LogPipeLoader">
-        <Log requestlog="asap.bml.requests"  feedbacklog="asap.bml.feedback"/> 
-    </PipeLoader-->
-    <!--ServerAdapter requestport="7521" feedbackport="1257"/-->
-  </Loader> 
-
-  <Loader id="guiembodiment" loader="asap.realizerembodiments.JFrameEmbodiment">
-    <BmlUI/>
-    <!--BmlUI demoscriptresources="bml/defaultexamples"/-->
-    <FeedbackUI/>
-    <ServerUI/>
-    <!-- KillButton/-->
+    <BMLParser>
+      <BMLAttributeExtension class="asap.bml.ext.bmlb.BMLBBMLBehaviorAttributes"/>
+      <BMLAttributeExtension class="asap.bml.ext.bmlt.BMLTBMLBehaviorAttributes"/>
+    </BMLParser>
+    <BMLScheduler>
+      <SchedulingHandler class="asap.realizer.scheduler.BMLBandTSchedulingHandler" schedulingStrategy="asap.realizer.scheduler.SortedSmartBodySchedulingStrategy"/>
+    </BMLScheduler>
   </Loader>
 
   <Loader id="graphicalembodiment" loader="hmi.renderenvironment.HmiRenderEmbodimentLoader">
@@ -21,11 +14,6 @@
           texturedir="Humanoids/armandia/maps" 
           resourcedir="Humanoids/armandia/bin" 
           filename="armandia_boring_neckfix_light_toplevel.bin"/> <!-- other possible attributes: shaderdir, ... -->
-          <!--
-    <Body postprocessing="ARMANDIA" 
-          texturedir="Humanoids/armandia/dae/PupilDilation/Version1/images" 
-          resourcedir="Humanoids/armandia/dae" 
-          filename="armandia_pupil.dae"/> --><!-- other possible attributes: shaderdir, ... -->
     <PermanentMorphs>
         <PermanentMorph target="Body_NG-mesh-morpher-Body_chest_L-0" amount="4.0"/>
         <PermanentMorph target="Pull_A_-mesh-morpher-_pull01_morph_NG-0" amount="1.7"/> 
@@ -84,14 +72,15 @@
     <GlueFeetToFloor/>
   </Loader>
 
-  <!-- Loader id="physicsdebug" loader="hmi.debug.PhysicsDebugVisualisationLoader" requiredloaders="physicalembodiment">
-    <Placement offset="0.5 0 -0.5"/>
-  </Loader -->
-
   <Loader id="animationengine" 
           loader="asap.animationengine.loader.MixedAnimationEngineLoader"
           requiredloaders="mixedskeletonembodiment,physicalembodiment">
+<!--
     <GestureBinding basedir="" resources="Humanoids/armandia/gesturebinding/" filename="gesturebinding.xml"/>
+   -->
+    <GestureBinding basedir="" resources="Humanoids/shared/gesturebinding/" filename="gesturebinding.xml"/>
+
+
     <StartPose resources="Humanoids/armandia/restposes/" filename="looselyhangingarms.xml"/>
     <StartPosition offset="0.2 0 0"/>
     <StartRotation rotation="0 1 0 -0.2"/>
@@ -99,62 +88,35 @@
 
   <Loader id="faceengine" 
           loader="asap.faceengine.loader.FaceEngineLoader"
-          requiredloaders="graphicalembodiment,guiembodiment">
+          requiredloaders="graphicalembodiment">
     <FaceBinding basedir="" resources="Humanoids/armandia/facebinding/" filename="facebinding.xml"/>
-    <FaceUI/>
   </Loader>
-    
-  <Loader id="facelipsync" requiredloaders="faceengine" loader="asap.faceengine.loader.TimedFaceUnitLipSynchProviderLoader">
-	<MorphVisemeBinding resources="Humanoids/armandia/facebinding/" filename="disneyvisemebinding.xml"/>
-  </Loader>
-  <Loader id="jawlipsync" requiredloaders="animationengine" loader="asap.animationengine.loader.TimedAnimationUnitLipSynchProviderLoader">
-	<SpeechBinding basedir="" resources="Humanoids/shared/speechbinding/" filename="disneyspeechbinding.xml"/> 
-  </Loader>
-
-  <Loader id="speechengine" loader="asap.speechengine.loader.SpeechEngineLoader" requiredloaders="facelipsync,jawlipsync">
-	<!--Voice voicetype="MARY" localmarydir="HmiResource/MARYTTS" factory="WAV_TTS"/-->
-	<Voice voicetype="SAPI5" voicename="Kate" factory="WAV_TTS"/> 
-  </Loader>
-
 
 <Loader id="facelipsync" requiredloaders="faceengine" loader="asap.faceengine.loader.TimedFaceUnitLipSynchProviderLoader">
-	<MorphVisemeBinding resources="Humanoids/armandia/facebinding/" filename="disneyvisemebinding.xml"/>
+	<MorphVisemeBinding resources="Humanoids/armandia/facebinding/" filename="ikpvisemebinding.xml"/>
   </Loader>
 
   <Loader id="jawlipsync" requiredloaders="animationengine" loader="asap.animationengine.loader.TimedAnimationUnitLipSynchProviderLoader">
-	<SpeechBinding basedir="" resources="Humanoids/shared/speechbinding/" filename="disneyspeechbinding.xml"/>
+	<SpeechBinding basedir="" resources="Humanoids/shared/speechbinding/" filename="ikpspeechbinding.xml"/>
   </Loader>
 
- <Loader id="speechengine" loader="asap.speechengine.loader.SpeechEngineLoader" requiredloaders="facelipsync,jawlipsync,guiembodiment">
-    <Voice voicetype="SAPI5" voicename="Kate" factory="WAV_TTS"/> 
-    <SpeechUI/>
+ <Loader id="speechengine" loader="asap.speechengine.loader.SpeechEngineLoader" requiredloaders="facelipsync,jawlipsync">
+	<!--    
+<SpeechBinding basedir="" resources="Humanoids/shared/speechbinding/" filename="ikpspeechbinding.xml"/>
+    <MorphVisemeBinding resources="Humanoids/armandia/facebinding/" filename="ikpvisemebinding.xml"/>
+-->
+    <Voice voicetype="MARY" localmarydir="HmiResource/MARYTTS" factory="WAV_TTS"/>
   </Loader>
+
 
   
   <!-- Engine for playing audio files, nice for sound effects (e.g., clapping) or for prerecorded speech fragments -->
-  <!--Loader id="audioengine" loader="asap.audioengine.loader.AudioEngineLoader"/-->
+  <Loader id="audioengine" loader="asap.audioengine.loader.AudioEngineLoader"/>
 
   <!-- Text label embodiment and text speech engine together can be used to put all text on a label (kind of "subcaptions") instead of turning them into audio. If using this, remove the other speechengine -->
-  <!--Loader id="textlabel" loader="asap.textengine.JLabelTextEmbodiment" requiredloaders="guiembodiment"/-->
-  <!--Loader id="textspeechengine" loader="asap.textengine.TextEngineLoader" requiredloaders="textlabel"/-->
-  
-  <!-- Breathingemitter that sens small breathing animations every now and then -->
-  <Loader id="breathingengine" 
-          loader="asap.emitterengine.loader.EmitterEngineLoader">
-    <EmitterInfo class="asap.breathingemitter.BreathingEmitterInfo"/>
-  </Loader>
+  <!--Loader id="textlabel" loader="hmi.textengine.JLabelTextEmbodiment" requiredloaders="guiembodiment"/-->
+  <!--Loader id="textspeechengine" loader="hmi.textengine.TextSpeechEngineLoader" requiredloaders="textlabel"/-->
 
-  <!-- Blinkemitter that sens small blink animations every now and then -->
-  <Loader id="blinkengine" 
-          loader="asap.emitterengine.loader.EmitterEngineLoader">
-    <EmitterInfo class="asap.blinkemitter.BlinkEmitterInfo"/>
-  </Loader>
-    
-
-  <!-- routing for BMLBehaviors to Engines -->
-  <!-- This overrides the routes that are registered by default for the various engines -->
-  <!-- BMLRouting>
-    <Route behaviourclass="saiba.bml.core.FaceBehaviour" engineid="animationengine"/>
-  </BMLRouting -->
+  <!-- possibly: routing for BMLBehaviors to Engines -->
   
 </AsapVirtualHuman>

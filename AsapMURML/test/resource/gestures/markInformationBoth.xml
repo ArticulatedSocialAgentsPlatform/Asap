@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<murml-spec xmlns="http://www.techfak.uni-bielefeld.de/ags/soa/murml"
-            scope="hand"
-            pointStroke="true">
+<murml-description xmlns="http://www.techfak.uni-bielefeld.de/ags/soa/murml"
+                   scope="hand"
+                   pointStroke="true">
    <symmetrical dominant="right_arm" symmetry="SymMS">
       <parallel>
         <dynamic slot="HandLocation">
@@ -14,4 +14,4 @@
         <static slot="PalmOrientation" value="PalmU"/>
       </parallel>
     </symmetrical>
-</murml-spec>
+</murml-description>

@@ -8,34 +8,49 @@
       <dependency org="powermock"			name="powermock-mockito" rev="latest.release"  />
       <dependency org="hamcrest" name="hamcrest-all"       rev="latest.release"  />
       <dependency org="odejava" name="odejava"       rev="latest.release"  />
-      <dependency org="HMI"      transitive="false" name="HmiTestUtil"        rev="latest.${resolve.status}"  />
-      <dependency org="Asap"      transitive="false" name="AsapRealizerTestUtil"        rev="latest.${resolve.status}"  />
-      <dependency org="HMI"      name="HmiGraphics" transitive="false" rev="latest.${resolve.status}"  />
-      <dependency org="HMI"      name="HmiMath" rev="latest.${resolve.status}"  />	  
-      <dependency org="HMI"      name="HmiAnimation" rev="latest.${resolve.status}"  />
-      <dependency org="Asap"      name="AsapSpeechEngine"  transitive="false" rev="latest.${resolve.status}"  />
-      <dependency org="Asap"      name="AsapTestUtil"  transitive="false" rev="latest.${resolve.status}"  />
-      <dependency org="HMI"      name="HmiFaceAnimation"  transitive="false" rev="latest.${resolve.status}"  />
-      <dependency org="HMI"      name="HmiFaceAnimation"  transitive="false" rev="latest.${resolve.status}"  />
-      <dependency org="HMI"      name="HmiFaceGraphics"  transitive="false" rev="latest.${resolve.status}"  />
-      <dependency org="Asap"      name="AsapFaceEngine"  transitive="false" rev="latest.${resolve.status}"  />
-      <dependency org="Asap"      name="AsapAnimationEngine"  transitive="false" rev="latest.${resolve.status}"  />
-      <dependency org="Asap"   name="AsapAudioEngine" transitive="false" rev="latest.${resolve.status}"   />
-      <dependency org="HMI"   name="HmiPhysics" transitive="false" rev="latest.${resolve.status}"   />
-      <dependency org="HMI"   name="HmiPhysicsEnvironment" transitive="false" rev="latest.${resolve.status}"   />
-      <dependency org="HMI"   name="HmiRenderEnvironment" transitive="false" rev="latest.${resolve.status}"   />
-      <dependency org="HMI"   name="HmiAudioEnvironment" transitive="false" rev="latest.${resolve.status}"   />
-      <dependency org="HMI"   name="HmiMixedAnimationEnvironment" transitive="false" rev="latest.${resolve.status}"   />
-      <dependency org="HMI"   name="HmiTTS" transitive="false" rev="latest.${resolve.status}"   />
-      <dependency org="HMI"   name="HmiTTSSapi5" transitive="false" rev="latest.${resolve.status}"   />
-      <dependency org="HMI"   name="HmiTTSMary" transitive="false" rev="latest.${resolve.status}"   />
-      <dependency org="HMI"   name="HmiNeurophysics" transitive="false" rev="latest.${resolve.status}"   />
-      <dependency org="Asap"   name="AsapEnvironment" transitive="false" rev="latest.${resolve.status}"   />
-      <dependency org="Asap"   name="AsapBML" transitive="false" rev="latest.${resolve.status}"   />
-      <dependency org="Asap"   name="AsapRealizer" transitive="false" rev="latest.${resolve.status}"   />
-      <dependency org="Asap"   name="AsapBinding" transitive="false" rev="latest.${resolve.status}"   />
-      <dependency org="Asap"   name="AsapMotionUnit" transitive="false" rev="latest.${resolve.status}"   />
-      <dependency org="Asap"   name="AsapBinding" transitive="false" rev="latest.${resolve.status}"   />
+      <dependency org="HMI"   name="HmiUtil"            rev="latest.${resolve.status}"   />
+      <dependency org="HMI"   name="HmiXml"             rev="latest.${resolve.status}"   />
+      <dependency org="HMI"   name="HmiMath"            rev="latest.${resolve.status}"   />
+      <dependency org="HMI"   name="HmiAnimation"       rev="latest.${resolve.status}"   />      
+      <dependency org="HMI"   name="HmiBML"             rev="latest.${resolve.status}"   />
+	  <dependency org="HMI"   name="HmiPhysics"             rev="latest.${resolve.status}"   />
+	  <dependency org="HMI"   name="HmiNeurophysics"             rev="latest.${resolve.status}"   />
+      <dependency org="HMI"   name="HmiFaceAnimation"     rev="latest.${resolve.status}"   />    
+
+      <dependency org="HMI"      name="HmiTTS"             rev="latest.${resolve.status}"  />
+      <dependency org="HMI"      name="HmiTTSMary"         rev="latest.${resolve.status}"  />
+      <dependency org="HMI"      name="HmiTTSSapi5"        rev="latest.${resolve.status}"  />
+      <dependency org="HMI"      name="HmiTTSnative"       rev="latest.${resolve.status}"  />
+
+
+      <dependency org="HMI"   name="HmiGraphics"     rev="latest.${resolve.status}"   />    
+      <dependency org="HMI"   name="HmiFaceGraphics"     rev="latest.${resolve.status}"   />    
+
+      <dependency org="HMI"   name="HmiEnvironmentBase"     rev="latest.${resolve.status}"   />    
+      <dependency org="HMI"   name="HmiAnimationEmbodiments"     rev="latest.${resolve.status}"   />    
+      <dependency org="HMI"   name="HmiFaceEmbodiments"     rev="latest.${resolve.status}"   />    
+      <dependency org="HMI"   name="HmiPhysicsEmbodiments"     rev="latest.${resolve.status}"   />    
+      <dependency org="HMI"   name="HmiHeadAndGazeEmbodiments"     rev="latest.${resolve.status}"   />    
+      <dependency org="HMI"   name="HmiTextEmbodiments"     rev="latest.${resolve.status}"   />    
+
+      <dependency org="HMI"   name="HmiMixedAnimationEnvironment"     rev="latest.${resolve.status}"   />    
+      <dependency org="HMI"   name="HmiRenderEnvironment"     rev="latest.${resolve.status}"   />    
+      <dependency org="HMI"   name="HmiPhysicsEnvironment"     rev="latest.${resolve.status}"   />    
+      <dependency org="HMI"   name="HmiWorldObjectEnvironment"     rev="latest.${resolve.status}"   />    
+      <dependency org="HMI"   name="HmiAudioEnvironment"     rev="latest.${resolve.status}"   />    
+
+      <dependency org="Asap"   name="AsapRealizer"     rev="latest.${resolve.status}"   />    
+      <dependency org="Asap"   name="AsapRealizerEmbodiments"     rev="latest.${resolve.status}"   />    
+      <dependency org="Asap"   name="AsapEnvironment"     rev="latest.${resolve.status}"   />    
+
+      <dependency org="Asap"   name="AsapFaceEngine"     rev="latest.${resolve.status}"   />    
+      <dependency org="Asap"   name="AsapAnimationEngine"     rev="latest.${resolve.status}"   />    
+      <dependency org="Asap"   name="AsapAudioEngine"     rev="latest.${resolve.status}"   />    
+      <dependency org="Asap"   name="AsapSpeechEngine"     rev="latest.${resolve.status}"   />    
+      <dependency org="Asap"   name="AsapTextEngine"     rev="latest.${resolve.status}"   />    
+      <dependency org="Asap"   name="AsapPictureEngine"     rev="latest.${resolve.status}"   />    
+      <dependency org="Asap"   name="AsapEmitterEngine"     rev="latest.${resolve.status}"   />    
+
 
       <dependency org="logback" name="logback-classic"     rev="latest.release"  />   
       <dependency org="logback" name="logback-core"        rev="latest.release"  />   

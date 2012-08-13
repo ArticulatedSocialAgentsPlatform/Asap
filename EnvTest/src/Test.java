@@ -136,7 +136,7 @@ public class Test extends WindowAdapter
         }
 
         // load the checkerboard ground plane of Herwin into the hmirenderenvironment
-        hre.loadCheckerBoardGround("groundplane", 0f, 0.5f);
+        hre.loadCheckerBoardGround("groundplane", 0.5f, 0f);
 
         // set background color of hmirenderenvironment
         hre.setBackground(0.3f, 0, 0);
@@ -224,7 +224,7 @@ public class Test extends WindowAdapter
     public void requestShutdown(boolean closeWindow, boolean exitOnClose)
     {
         ae.requestShutdown();
-        // no need to pull the plug on the JFrame as the application will end now?
+
         while (!ae.isShutdown())
         {
             log.debug("wait for shutdown");

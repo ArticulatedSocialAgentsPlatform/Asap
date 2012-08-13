@@ -29,7 +29,7 @@ public class DynamicElement extends MURMLElement
     
     public enum Type
     {
-        CURVE, LINEAR;
+        CURVE, LINEAR, CHOP;
     }
     
     @Override
@@ -67,7 +67,7 @@ public class DynamicElement extends MURMLElement
         }
     }
     
-    private static final String XMLTAG = "dynamicElement";
+    static final String XMLTAG = "dynamicElement";
 
     public static String xmlTag()
     {

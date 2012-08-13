@@ -70,7 +70,7 @@ public class Keyframing extends MURMLElement
         }
     }
         
-    private static final String XMLTAG = "keyframing";
+    static final String XMLTAG = "keyframing";
 
     public static String xmlTag()
     {

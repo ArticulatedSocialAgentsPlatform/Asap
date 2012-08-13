@@ -144,7 +144,7 @@ public class AnimationPlanner extends AbstractPlanner<TimedAnimationUnit>
         TimedAnimationUnit tmu;
         if(b instanceof MURMLGestureBehaviour)
         {
-            AnimationUnit mu = MURMLMUBuilder.setup( ((MURMLGestureBehaviour)b).getMurmlDefinition());
+            AnimationUnit mu = MURMLMUBuilder.setup( ((MURMLGestureBehaviour)b).getMurmlDescription());
             AnimationUnit muCopy;
             try
             {

@@ -109,9 +109,9 @@ public class FacePlannerTest
     public void testResolveMURML() throws IOException, BehaviourPlanningException
     {
         String bmlString = "<murmlface xmlns=\"http://www.techfak.uni-bielefeld.de/ags/soa/murml\" " + "id=\"a1\" start=\"nod1:end\">"
-                + "<definition><keyframing><phase>" + "<frame ftime=\"0\">" + "<posture>Humanoid (dB_Smile 3 70 0 0)</posture>"
+                + "<murml-description><dynamic><keyframing><phase>" + "<frame ftime=\"0\">" + "<posture>Humanoid (dB_Smile 3 70 0 0)</posture>"
                 + "</frame>" + "<frame ftime=\"2\">" + "<posture>Humanoid (dB_Smile 3 80 0 0)</posture>" + "</frame>"
-                + "</phase></keyframing></definition>" + "</murml:murmlface>";
+                + "</phase></keyframing></dynamic></murml-description>" + "</murml:murmlface>";
         MURMLFaceBehaviour b = new MURMLFaceBehaviour(BMLID, new XMLTokenizer(bmlString));
         ArrayList<TimePegAndConstraint> sacs = new ArrayList<TimePegAndConstraint>();
         TimePeg startPeg = TimePegUtil.createTimePeg(0);
