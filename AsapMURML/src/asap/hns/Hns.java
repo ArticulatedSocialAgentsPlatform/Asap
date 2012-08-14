@@ -39,17 +39,17 @@ public class Hns extends XMLStructureAdapter
 
     enum ExtendSymbols
     {
-        Flat, Normal, Large;
+        Flat, Normal, Large
     }
 
     enum RoundnessSymbols
     {
-        Sharp, Normal, Broad;
+        Sharp, Normal, Broad
     }
 
     enum SkewdnessSymbols
     {
-        Round, FunnelS, FunnelE;
+        Round, FunnelS, FunnelE
     }
 
     /**
@@ -234,6 +234,11 @@ public class Hns extends XMLStructureAdapter
         return 0.2;
     }
 
+    public ShapeSymbols getElementShape(String value)
+    {
+        return ShapeSymbols.valueOf(value);
+    }
+    
     public double getElementRoundness(String value)
     {
         try
@@ -384,7 +389,7 @@ public class Hns extends XMLStructureAdapter
             case SymbolMatrices.XMLTAG:
                 SymbolMatrices symMat = new SymbolMatrices();
                 symMat.readXML(tokenizer);
-                // TODO: actually do something with the symbolMatrices
+                // TODO: actually do something with the symbolMatrices?
                 break;
             default:
                 throw new XMLScanException("Invalid tag " + tokenizer.getTagName() + " in <hns>");

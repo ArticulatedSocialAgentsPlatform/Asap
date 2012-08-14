@@ -1,5 +1,6 @@
 package asap.animationengine.ace;
 
+import lombok.Getter;
 
 /**
  * Temporal constraint given by a point in time
@@ -14,6 +15,7 @@ public class TPConstraint implements Comparable<TPConstraint>
     {
         Rigorous(0), Medium(0.5), Soft(1.0);
 
+        @Getter
         private double value;
 
         Mode(double v)
@@ -22,9 +24,24 @@ public class TPConstraint implements Comparable<TPConstraint>
         }
     }
 
+    @Getter
     private double time;
+
     private boolean defined;
     private double mode;
+
+    public void setTime(double t)
+    {
+        time = t;
+        defined = true;
+    }
+    
+    public TPConstraint()
+    {
+        time = 0;
+        mode = Mode.Soft.getValue();
+        defined = false;
+    }
 
     public TPConstraint(double t, double m)
     {
@@ -54,9 +71,9 @@ public class TPConstraint implements Comparable<TPConstraint>
     {
         return Double.valueOf(time).compareTo(tp.time);
     }
-    
+
     public String toString()
     {
-        return ""+time;
+        return "" + time;
     }
 }
