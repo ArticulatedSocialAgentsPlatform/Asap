@@ -46,6 +46,7 @@ import asap.environment.impl.InterruptEngineLoader;
 import asap.environment.impl.ParameterValueChangeEngineLoader;
 import asap.environment.impl.WaitEngineLoader;
 import asap.realizer.Engine;
+import asap.realizer.pegboard.PegBoard;
 import asap.realizerembodiments.AsapRealizerEmbodiment;
 import asap.realizerembodiments.EngineLoader;
 import asap.realizerembodiments.SchedulingClockEmbodiment;
@@ -109,6 +110,11 @@ public class AsapVirtualHuman
         }
     }
 
+    public PegBoard getPegBoard()
+    {
+        return are.getPegBoard();
+    }
+    
     public void load(String resources, String filename, String name, Environment[] environments, Clock sc) throws IOException
     {
         load(XMLTokenizer.forResource(resources, filename), name, environments, sc);
