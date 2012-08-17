@@ -1,107 +1,203 @@
 package asap.animationengine.ace.lmp;
 
-import java.util.Set;
+import hmi.math.Vec3f;
 
-import asap.animationengine.AnimationPlayer;
+import java.util.ArrayList;
+import java.util.List;
+
+import lombok.extern.slf4j.Slf4j;
+import asap.animationengine.ace.CurvedGStroke;
 import asap.animationengine.ace.GuidingSequence;
+import asap.animationengine.ace.GuidingStroke;
+import asap.animationengine.ace.LinearGStroke;
+import asap.animationengine.ace.TPConstraint;
 import asap.animationengine.motionunit.AnimationUnit;
-import asap.animationengine.motionunit.MUSetupException;
-import asap.animationengine.motionunit.TimedAnimationUnit;
-import asap.motionunit.MUPlayException;
-import asap.realizer.feedback.FeedbackManager;
+import asap.math.splines.NUSSpline3;
+import asap.math.splines.SparseVelocityDef;
 import asap.realizer.pegboard.BMLBlockPeg;
 import asap.realizer.pegboard.PegBoard;
-import asap.realizer.planunit.ParameterNotFoundException;
 
+/**
+ * Local motor program for wrist positioning
+ * @author hvanwelbergen
+ * @author Stefan Kopp (original C++ version)
+ */
+@Slf4j
 public class LMPWristPos extends LMPPos
 {
-    
-
-    public LMPWristPos(GuidingSequence seq)
+    public LMPWristPos(BMLBlockPeg bmlBlockPeg, String bmlId, String id, AnimationUnit m, PegBoard pb)
     {
-        
-    }
-    
-    @Override
-    public void play(double t) throws MUPlayException
-    {
-        // TODO Auto-generated method stub
-
+        super(bmlBlockPeg, bmlId, id, m, pb);
     }
 
-    @Override
-    public void startUnit(double t) throws MUPlayException
-    {
-        // TODO Auto-generated method stub
+    private NUSSpline3 spline;
 
+    public float[] getPosition(double t)
+    {
+        if (spline != null)
+        {
+            return spline.getPosition(t);
+        }
+        else
+        {
+            return Vec3f.getVec3f(0, 0, 0);
+        }
     }
 
-    @Override
-    @Deprecated
-    public String getReplacementGroup()
+    public float[] getVelocity(double t)
     {
-        return null;
+        if (spline != null)
+        {
+            return spline.getFirstDerivative(t);
+        }
+        else
+        {
+            return Vec3f.getVec3f(0, 0, 0);
+        }
     }
 
-    @Override
-    public double getPreferedDuration()
+    private void avoidBodyCollisions(GuidingSequence gSeq, String _scopeStr)
     {
-        // TODO Auto-generated method stub
-        return 0;
+        // TODO: implement this
     }
 
-    @Override
-    public float getFloatParameterValue(String name) throws ParameterNotFoundException
+    public void startUnit()
     {
-        throw new ParameterNotFoundException(name);
+        if (gSeq != null && !gSeq.isEmpty())
+        {
+            // get first timing constraint and guiding stroke
+            TPConstraint startTPC = gSeq.getStartTPC();
+            GuidingStroke gstroke = gSeq.getStroke(0);
+            // TODO: implement this
+            // // determine the duration of the currently needed prep movement
+            // duration = getPosDurationFromAmplitude((x - gstroke.getEndPos()).Length());
+            //
+            // // check whether movement needs to start now or not yet
+            // activateFlag = false;
+            // if (tActivation > -1) {
+            // activateFlag = (tActivation <= t);
+            // }
+            // else
+            // // or activate just in time for target position(s)? --
+            // activateFlag = (( startTPC.mode == TPConstraint::Rigorous && startTPC.time <= t ) ||
+            // ( startTPC.mode != TPConstraint::Rigorous && (gstroke->eT.time - t) <= duration ));
+            //
+            // if (activateFlag)
+            // {
+            // gSeq->setStartPos(x);
+            // gSeq->setStartTPC(t);
+            // //gstroke->sDt = dt;
+            //
+            // // complete, start execution, and set lmp state
+            // refine();
+            // updateState(t);
+            // //cout << "LMP_WristPos::" << getName() << " defined?: " << isDefined(t) << endl;
+            // }
+            // else
+            // // skip a single-segmented, goal-directed movement if -at the time of activation!-
+            // // the target position is already reached = estimated duration is nearly zero
+            // if ( t > gSeq->getStartTPC().time && duration < 0.1 && gSeq->size() == 1 ) {
+            // //cout << getName() << "::switching to finish since no movement required!" << endl;
+            // setState( LMP_Finish );
+            // // remove overshooting (if present)
+            // removeSuccessor( lmpOVS );
+            // }
+        }
+        else
+        {
+            log.warn("LMP_WristPos::activate : trajectory empty or already active!");
+        }
     }
 
-    @Override
-    public void setFloatParameterValue(String name, float value) throws ParameterNotFoundException
+    // TODO Change to this when body collision stuff is implemented
+    // private NUSSpline3 buildSpline(GuidingSequence _gSeq, String _scopeStr)
+
+    private NUSSpline3 buildSpline(GuidingSequence _gSeq)
     {
-        throw new ParameterNotFoundException(name);
+        NUSSpline3 _spline = null;
+
+        if (_gSeq != null && !_gSeq.isEmpty())
+        {
+            // -- avoid body collisions --
+            // TODO
+            // avoidBodyCollisions(_gSeq, _scopeStr);
+
+            // cout << ":: building trajectory from:";
+            // _gSeq->writeTo(cout); cout << endl;
+
+            // -- build parametric curve for the trajectory --
+            List<Float> tv = new ArrayList<>();
+            List<float[]> pv = new ArrayList<>();
+            List<SparseVelocityDef> vv = new ArrayList<>();
+
+            // set start conds
+            pv.add(_gSeq.getStartPos());
+            tv.add((float) _gSeq.getStartTPC().getTime());
+            vv.add(new SparseVelocityDef(0, Vec3f.getVec3f(0, 0, 0))); // v
+
+            // MgcVector3 vStart = _gSeq->getStartDirOfStroke(0);
+            // vv.push_back(make_pair(0,vStart));
+
+            // complete curvilinear guiding strokes
+            // cout << "completing curvilinear strokes..." << endl;
+            double sT = _gSeq.getStartTPC().getTime();
+            for (int i = 0; i < _gSeq.size(); i++)
+            {
+                if (_gSeq.getStroke(i) instanceof CurvedGStroke)
+                {
+                    CurvedGStroke cs = (CurvedGStroke) _gSeq.getStroke(i);
+                    cs.formAt(_gSeq.getStartPosOfStroke(i), sT);
+                }
+                sT = _gSeq.getStroke(i).getEndTime();
+            }
+
+            // append guiding strokes
+            // cout << "setting up trajectory constraints..." << endl;
+            float[] p, v;
+            for (int i = 0; i < _gSeq.size(); i++)
+            {
+                sT = tv.get(tv.size() - 1);
+                if (_gSeq.getStroke(i) instanceof LinearGStroke)
+                {
+                    // cout << "appending linear stroke for t=" << sT << "-"
+                    // << _gSeq->getStroke(i)->eT << endl;
+                    pv.add(_gSeq.getStroke(i).getEndPos());
+                    tv.add((float) _gSeq.getStroke(i).getEndTime());
+                }
+                else if (_gSeq.getStroke(i) instanceof CurvedGStroke)
+                {
+                    // cout << "appending curvilinear stroke for t=" << sT << "-"
+                    // << _gSeq->getStroke(i)->eT << endl;
+                    CurvedGStroke cs = (CurvedGStroke) _gSeq.getStroke(i);
+
+                    pv.add(cs.getN1()); // cout << pv.back() << endl;
+
+                    tv.add((float) cs.getFT1());
+                    pv.add(cs.getN2()); // cout << pv.back() << endl;
+                    tv.add((float) cs.getFT2());
+
+                    // append stroke end point & velocity
+                    pv.add(cs.getEndPos()); // cout << pv.back() << endl;
+                    tv.add((float) cs.getEndTime());
+                }
+                else log.warn("Trajectory::build : unknown stroke type!");
+            }
+
+            // building inner velocities
+            int j = 0;
+            for (int i = 0; i < _gSeq.size(); i++)
+            {
+                // cout << "end velocity at break point " << j << ":";
+                if (_gSeq.getStroke(i) instanceof LinearGStroke) j += 1;
+                else if (_gSeq.getStroke(i) instanceof CurvedGStroke) j += 3;
+                vv.add(new SparseVelocityDef(j, _gSeq.getStrokeEndVelocityOf(i)));
+                // cout << _gSeq->getStrokeEndVelocityOf(i) << endl;
+            }
+
+            _spline = new NUSSpline3(4);
+            _spline.interpolate3(pv, tv, vv);
+        }
+
+        return _spline;
     }
-
-    @Override
-    public void setParameterValue(String name, String value) throws ParameterNotFoundException
-    {
-        throw new ParameterNotFoundException(name);
-    }
-
-    @Override
-    public String getParameterValue(String name) throws ParameterNotFoundException
-    {
-        throw new ParameterNotFoundException(name);
-    }
-
-    
-
-    @Override
-    public Set<String> getPhysicalJoints()
-    {
-        // TODO Auto-generated method stub
-        return null;
-    }
-
-    @Override
-    public Set<String> getKinematicJoints()
-    {
-        // TODO Auto-generated method stub
-        return null;
-    }
-
-    @Override
-    public TimedAnimationUnit createTMU(FeedbackManager bbm, BMLBlockPeg bmlBlockPeg, String bmlId, String id, PegBoard pb)
-    {
-        // TODO Auto-generated method stub
-        return null;
-    }
-
-    @Override
-    public AnimationUnit copy(AnimationPlayer p) throws MUSetupException
-    {
-        // TODO Auto-generated method stub
-        return null;
-    }
-
 }

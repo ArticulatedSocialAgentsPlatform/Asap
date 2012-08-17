@@ -19,6 +19,7 @@ public class GuidingStroke
 
     protected float[] endPos = Vec3f.getVec3f();
     private float[] endDir = Vec3f.getVec3f(); // optional
+    
     @Getter
     private double vGain; // velocity gain factor
     private double stress; // stress/accentuation
@@ -54,6 +55,11 @@ public class GuidingStroke
     public void getEndPos(float[] result)
     {
         Vec3f.set(result, endPos);
+    }
+    
+    public float[] getEndPos()
+    {
+        return Vec3f.getVec3f(endPos);
     }
 
     public double getEndTime()

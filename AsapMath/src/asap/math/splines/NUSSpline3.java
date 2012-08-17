@@ -80,12 +80,7 @@ public class NUSSpline3 extends NUBSpline3
         }
     }
 
-    @Data
-    class SparseVelocityDef
-    {
-        private int index;
-        private float[] velocity;
-    }
+    
 
     /**
      * data points x[0]...x[l]

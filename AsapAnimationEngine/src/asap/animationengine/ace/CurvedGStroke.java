@@ -1,5 +1,6 @@
 package asap.animationengine.ace;
 
+import lombok.Getter;
 import asap.hns.ShapeSymbols;
 import hmi.math.Mat4f;
 import hmi.math.Vec3f;
@@ -19,12 +20,15 @@ public class CurvedGStroke extends GuidingStroke
     private double s; // Schiefe (-1:hinten flach ... 0:rund ... +1:vorne flach
 
     private float n1[] = Vec3f.getVec3f(), n2[] = Vec3f.getVec3f(); // interior data points
-    private double fT1, fT2; // interior break points
+
+    // interior break points
+    @Getter private double fT1;
+    @Getter private double fT2;
 
     public CurvedGStroke(GStrokePhaseID phase, TPConstraint t, float[] p, float n[], ShapeSymbols a, double w, double r, double s)
     {
         this(phase, t, p, n, a, w, r, s, Vec3f.getZero(), Vec3f.getZero(), 0, 0);
-    }    
+    }
 
     public CurvedGStroke(GStrokePhaseID phase, TPConstraint t, float[] p, float n[], ShapeSymbols a, double w, double r, double s,
             float[] n1, float[] n2, double fT1, double fT2)
@@ -47,17 +51,33 @@ public class CurvedGStroke extends GuidingStroke
      */
     public void getN1(float result[])
     {
-        Vec3f.set(result,n1);
+        Vec3f.set(result, n1);
     }
-    
+
+    /**
+     * Create a new float[] containing the values of n1
+     */
+    public float[] getN1()
+    {
+        return Vec3f.getVec3f(n1);
+    }
+
     /**
      * Copy n2 to result
      */
     public void getN2(float result[])
     {
-        Vec3f.set(result,n2);
+        Vec3f.set(result, n2);
     }
-    
+
+    /**
+     * Create a new float[] containing the values of n2
+     */
+    public float[] getN2()
+    {
+        return Vec3f.getVec3f(n2);
+    }
+
     @Override
     public void transform(float m[])
     {
@@ -149,24 +169,24 @@ public class CurvedGStroke extends GuidingStroke
         // -- create interior data points => vN1, vN2
         float d[] = Vec3f.getVec3f();
         Vec3f.normalize(p);
-        Vec3f.cross(d,p,n);               
-        
-        //n1 = sP + (fA1 * p + fN1 * fB1 * d);
-        float tempP[]= Vec3f.getVec3f();
-        float tempD[]= Vec3f.getVec3f();
+        Vec3f.cross(d, p, n);
+
+        // n1 = sP + (fA1 * p + fN1 * fB1 * d);
+        float tempP[] = Vec3f.getVec3f();
+        float tempD[] = Vec3f.getVec3f();
         Vec3f.scale((float) fA1, tempP, p);
-        Vec3f.scale((float) (fN1*fB1), tempD, d);
+        Vec3f.scale((float) (fN1 * fB1), tempD, d);
         Vec3f.set(n1, sP);
         Vec3f.add(n1, tempP);
         Vec3f.add(n1, tempD);
-        
-        //n2 = sP + ((fA1 + fA2) * p + fN2 * fB2 * d);
-        Vec3f.scale((float) (fA1+fA2), tempP, p);
-        Vec3f.scale((float) (fN2*fB2), tempD, d);
+
+        // n2 = sP + ((fA1 + fA2) * p + fN2 * fB2 * d);
+        Vec3f.scale((float) (fA1 + fA2), tempP, p);
+        Vec3f.scale((float) (fN2 * fB2), tempD, d);
         Vec3f.set(n2, sP);
-        Vec3f.add(n2,tempP);
-        Vec3f.add(n2,tempD);
-        
+        Vec3f.add(n2, tempP);
+        Vec3f.add(n2, tempD);
+
         // -- set chordal parametrization => fT1,fT2
         double fDur = eT.getTime() - sT;
         fT1 = sT + 2 * fDur / 5; // (fDur/fS)*fS1;

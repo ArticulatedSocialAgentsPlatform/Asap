@@ -30,12 +30,41 @@ public class GuidingSequence
         Vec3f.setZero(sPos);
         sT.setTime(0);
     }
+    
+    public int size()
+    {
+        return strokes.size();
+    }
 
     public void setStartPos(float[] p)
     {
         Vec3f.set(sPos, p);
     }
+    
+    public TPConstraint getStartTPC()
+    {
+        return sT;
+    }
+    
+    /**
+     * Copies startPos in p
+     * @param p
+     */
+    public void getStartPos(float[]p)
+    {
+        Vec3f.set(p,sPos);
+    }
 
+    public float[] getStartPos()
+    {
+        return Vec3f.getVec3f(sPos);
+    }
+    
+    public boolean isEmpty()
+    {
+        return strokes.isEmpty();
+    }
+    
     public void addGuidingStroke(GuidingStroke gs)
     {
         strokes.add(gs);
@@ -87,6 +116,13 @@ public class GuidingSequence
         {
             strokes.get(i - 1).getEndPos(result);
         }
+    }
+    
+    public float[] getStartPosOfStroke(int i)
+    {
+        float[]result= Vec3f.getVec3f();
+        getStartPosOfStroke(result,i);
+        return result;
     }
 
     public double getStartTimeOfStroke(int i)
@@ -191,6 +227,13 @@ public class GuidingSequence
         Vec3f.sub(result, ep, sp);
     }
 
+    public float[] getStrokeEndVelocityOf(int i)
+    {
+        float[] result = Vec3f.getVec3f();
+        getStrokeEndVelocityOf(result, i);
+        return result;
+    }
+    
     public void getStrokeEndVelocityOf(float[] result, int i)
     {
         if (i < 0 || i >= strokes.size() - 1)

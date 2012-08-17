@@ -929,17 +929,17 @@ public class NUBSpline3
         return f;
     }
 
-    public float[] getFirstDerivative(float fTime)
+    public float[] getFirstDerivative(double fTime)
     {
         return getNthDerivative(fTime, 1);
     }
 
-    public float[] getSecondDerivative(float fTime)
+    public float[] getSecondDerivative(double fTime)
     {
         return getNthDerivative(fTime, 2);
     }
 
-    public float[] getThirdDerivative(float fTime)
+    public float[] getThirdDerivative(double fTime)
     {
         return getNthDerivative(fTime, 3);
     }
