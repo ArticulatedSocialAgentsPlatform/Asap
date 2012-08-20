@@ -12,7 +12,7 @@ import java.util.Set;
 import asap.animationengine.AnimationPlayer;
 import asap.animationengine.motionunit.AnimationUnit;
 import asap.animationengine.motionunit.MUSetupException;
-import asap.animationengine.motionunit.TimedAnimationUnit;
+import asap.animationengine.motionunit.TimedAnimationMotionUnit;
 import asap.realizer.feedback.FeedbackManager;
 import asap.realizer.pegboard.BMLBlockPeg;
 import asap.realizer.pegboard.PegBoard;
@@ -70,7 +70,7 @@ public class DynamicRestGaze implements RestGaze
     }
 
     @Override
-    public TimedAnimationUnit createTransitionToRest(FeedbackManager fbm, Set<String> joints, double startTime, String bmlId, String id,
+    public TimedAnimationMotionUnit createTransitionToRest(FeedbackManager fbm, Set<String> joints, double startTime, String bmlId, String id,
             BMLBlockPeg bmlBlockPeg, PegBoard pb)
     {
         // TODO Auto-generated method stub
@@ -78,7 +78,7 @@ public class DynamicRestGaze implements RestGaze
     }
 
     @Override
-    public TimedAnimationUnit createTransitionToRest(FeedbackManager fbm, Set<String> joints, double startTime, double duration,
+    public TimedAnimationMotionUnit createTransitionToRest(FeedbackManager fbm, Set<String> joints, double startTime, double duration,
             String bmlId, String id, BMLBlockPeg bmlBlockPeg, PegBoard pb)
     {
         // TODO Auto-generated method stub

@@ -43,7 +43,7 @@ public interface AnimationUnit extends MotionUnit
      * @param id         behaviour id
      * @return          the TMU
      */
-    TimedAnimationUnit createTMU(FeedbackManager bbm, BMLBlockPeg bmlBlockPeg, String bmlId,String id, PegBoard pb);
+    TimedAnimationMotionUnit createTMU(FeedbackManager bbm, BMLBlockPeg bmlBlockPeg, String bmlId,String id, PegBoard pb);
     
     /**
      * Create a copy of this motion unit and link it to the animationplayer

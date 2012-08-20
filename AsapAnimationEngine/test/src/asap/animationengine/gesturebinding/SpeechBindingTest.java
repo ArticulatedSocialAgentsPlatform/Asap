@@ -12,7 +12,7 @@ import org.junit.Test;
 
 import asap.animationengine.AnimationPlayer;
 import asap.animationengine.motionunit.MUSetupException;
-import asap.animationengine.motionunit.TimedAnimationUnit;
+import asap.animationengine.motionunit.TimedAnimationMotionUnit;
 import asap.realizer.feedback.FeedbackManager;
 import asap.realizer.pegboard.BMLBlockPeg;
 import asap.realizer.pegboard.PegBoard;
@@ -58,7 +58,7 @@ public class SpeechBindingTest
         
         when(mockAniPlayer.getVNext()).thenReturn(human);
         
-        TimedAnimationUnit tmu = speechBinding.getMotionUnit(0, BMLBlockPeg.GLOBALPEG, "bml1", "speech1", mockAniPlayer, pegBoard);
+        TimedAnimationMotionUnit tmu = speechBinding.getMotionUnit(0, BMLBlockPeg.GLOBALPEG, "bml1", "speech1", mockAniPlayer, pegBoard);
         assertEquals("bml1",tmu.getBMLId());
         assertEquals("speech1",tmu.getId());
         assertEquals(0f,Float.parseFloat(tmu.getMotionUnit().getParameterValue("a")),0.001f);

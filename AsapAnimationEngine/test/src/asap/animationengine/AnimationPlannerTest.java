@@ -6,14 +6,6 @@ import static org.mockito.Matchers.any;
 import static org.mockito.Matchers.eq;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
-import saiba.bml.core.Behaviour;
-import saiba.bml.core.HeadBehaviour;
-import saiba.bml.core.PostureShiftBehaviour;
-import saiba.bml.parser.Constraint;
-import asap.realizertestutil.PlannerTests;
-import asap.realizer.scheduler.BMLBlockManager;
-import asap.realizer.scheduler.TimePegAndConstraint;
-import asap.realizertestutil.util.KeyPositionMocker;
 import hmi.xml.XMLTokenizer;
 
 import java.io.IOException;
@@ -24,13 +16,18 @@ import org.hamcrest.collection.IsIterableContainingInOrder;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
-import org.powermock.core.classloader.annotations.PrepareForTest;
 import org.powermock.core.classloader.annotations.PowerMockIgnore;
+import org.powermock.core.classloader.annotations.PrepareForTest;
 import org.powermock.modules.junit4.PowerMockRunner;
 
+import saiba.bml.core.Behaviour;
+import saiba.bml.core.HeadBehaviour;
+import saiba.bml.core.PostureShiftBehaviour;
+import saiba.bml.parser.Constraint;
 import asap.animationengine.gesturebinding.GestureBinding;
 import asap.animationengine.motionunit.AnimationUnit;
 import asap.animationengine.motionunit.MUSetupException;
+import asap.animationengine.motionunit.TimedAnimationMotionUnit;
 import asap.animationengine.motionunit.TimedAnimationUnit;
 import asap.animationengine.restpose.PostureShiftTMU;
 import asap.animationengine.restpose.RestPose;
@@ -42,6 +39,10 @@ import asap.realizer.pegboard.PegBoard;
 import asap.realizer.pegboard.TimePeg;
 import asap.realizer.planunit.KeyPosition;
 import asap.realizer.planunit.PlanManager;
+import asap.realizer.scheduler.BMLBlockManager;
+import asap.realizer.scheduler.TimePegAndConstraint;
+import asap.realizertestutil.PlannerTests;
+import asap.realizertestutil.util.KeyPositionMocker;
 
 /**
  * Test cases for the AnimationPlanner
@@ -67,7 +68,7 @@ public class AnimationPlannerTest
     private PlannerTests<TimedAnimationUnit> plannerTests;
     private static final String BMLID = "bml1";
     private final BMLBlockPeg bbPeg = new BMLBlockPeg("Peg1", 0.3);
-    private final PlanManager<TimedAnimationUnit> planManager = new PlanManager<TimedAnimationUnit>();
+    private final PlanManager<TimedAnimationUnit> planManager = new PlanManager<>();
     private static final double TIMING_PRECISION = 0.0001;
 
     @Before
@@ -76,9 +77,9 @@ public class AnimationPlannerTest
         animationPlanner = new AnimationPlanner(fbManager, mockPlayer, mockBinding, planManager, pegBoard);
         plannerTests = new PlannerTests<TimedAnimationUnit>(animationPlanner, bbPeg);
         PostureShiftTMU tmups = new PostureShiftTMU(fbManager, bbPeg, BMLID, "shift1", mockUnit, pegBoard, mockRestPose, mockPlayer);
-        TimedAnimationUnit tmu = new TimedAnimationUnit(fbManager, bbPeg, BMLID, "nod1", mockUnit, pegBoard);
+        TimedAnimationMotionUnit tmu = new TimedAnimationMotionUnit(fbManager, bbPeg, BMLID, "nod1", mockUnit, pegBoard);
         KeyPositionMocker.stubKeyPositions(mockUnit, new KeyPosition("start", 0, 1), new KeyPosition("end", 1, 1));
-        final List<TimedAnimationUnit> tmus = new ArrayList<TimedAnimationUnit>();
+        final List<TimedAnimationMotionUnit> tmus = new ArrayList<TimedAnimationMotionUnit>();
         tmus.add(tmu);
         when(mockBinding.getRestPose((PostureShiftBehaviour) any(), eq(mockPlayer))).thenReturn(mockRestPose);
         when(mockBinding.getMotionUnit((BMLBlockPeg) any(), (Behaviour) any(), eq(mockPlayer), eq(pegBoard))).thenReturn(tmus);
@@ -120,7 +121,7 @@ public class AnimationPlannerTest
         ArrayList<TimePegAndConstraint> sacs = new ArrayList<TimePegAndConstraint>();
         TimePeg sp = new TimePeg(bbPeg);
         sacs.add(new TimePegAndConstraint("start", sp, new Constraint(), 0, false));
-        TimedAnimationUnit pu = animationPlanner.resolveSynchs(bbPeg, beh, sacs);
+        TimedAnimationMotionUnit pu = animationPlanner.resolveSynchs(bbPeg, beh, sacs);
         animationPlanner.addBehaviour(bbPeg, beh, sacs, pu);
         assertThat(planManager.getBehaviours(BMLID), IsIterableContainingInOrder.contains("nod1"));
     }
@@ -135,7 +136,7 @@ public class AnimationPlannerTest
         TimePeg sp = new TimePeg(bbPeg);
         sacs.add(new TimePegAndConstraint("start", sp, new Constraint(), 0, false));
 
-        TimedAnimationUnit pu = animationPlanner.resolveSynchs(bbPeg, beh, sacs);
+        TimedAnimationMotionUnit pu = animationPlanner.resolveSynchs(bbPeg, beh, sacs);
         assertEquals(0.3, sp.getGlobalValue(), TIMING_PRECISION);
         animationPlanner.addBehaviour(bbPeg, beh, sacs, pu);
         assertEquals(0.3, pu.getStartTime(), TIMING_PRECISION);
@@ -152,7 +153,7 @@ public class AnimationPlannerTest
         TimePeg sp = new TimePeg(bbPeg);
         sacs.add(new TimePegAndConstraint("start", sp, new Constraint(), 0, false));
 
-        TimedAnimationUnit pu = animationPlanner.resolveSynchs(bbPeg, beh, sacs);
+        TimedAnimationMotionUnit pu = animationPlanner.resolveSynchs(bbPeg, beh, sacs);
         assertEquals(0.3, sp.getGlobalValue(), TIMING_PRECISION);
         animationPlanner.addBehaviour(bbPeg, beh, sacs, pu);
         assertEquals(0.3, pu.getStartTime(), TIMING_PRECISION);

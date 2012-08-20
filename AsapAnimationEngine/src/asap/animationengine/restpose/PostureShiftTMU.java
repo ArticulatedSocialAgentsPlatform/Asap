@@ -2,7 +2,7 @@ package asap.animationengine.restpose;
 
 import asap.animationengine.AnimationPlayer;
 import asap.animationengine.motionunit.AnimationUnit;
-import asap.animationengine.motionunit.TimedAnimationUnit;
+import asap.animationengine.motionunit.TimedAnimationMotionUnit;
 import asap.realizer.feedback.FeedbackManager;
 import asap.realizer.pegboard.BMLBlockPeg;
 import asap.realizer.pegboard.PegBoard;
@@ -12,7 +12,7 @@ import asap.realizer.pegboard.PegBoard;
  * @author welberge
  * 
  */
-public class PostureShiftTMU extends TimedAnimationUnit
+public class PostureShiftTMU extends TimedAnimationMotionUnit
 {
 
     private final RestPose restPose;

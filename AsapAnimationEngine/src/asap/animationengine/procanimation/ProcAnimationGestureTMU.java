@@ -8,7 +8,7 @@ import java.util.Set;
 import lombok.extern.slf4j.Slf4j;
 import saiba.bml.BMLGestureSync;
 import saiba.bml.core.Behaviour;
-import asap.animationengine.motionunit.TimedAnimationUnit;
+import asap.animationengine.motionunit.TimedAnimationMotionUnit;
 import asap.motionunit.TMUPlayException;
 import asap.realizer.BehaviourPlanningException;
 import asap.realizer.feedback.FeedbackManager;
@@ -26,7 +26,7 @@ import asap.realizer.scheduler.TimePegAndConstraint;
  * 
  */
 @Slf4j
-public class ProcAnimationGestureTMU extends TimedAnimationUnit
+public class ProcAnimationGestureTMU extends TimedAnimationMotionUnit
 {
     private final ProcAnimationGestureMU mu;
     private volatile boolean interrupted = false;

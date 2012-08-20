@@ -46,9 +46,9 @@ public class StubMotionUnit implements AnimationUnit
     }
 
     @Override
-    public TimedAnimationUnit createTMU(FeedbackManager bfm, BMLBlockPeg bmlBlockPeg, String bmlId, String id, PegBoard pb)
+    public TimedAnimationMotionUnit createTMU(FeedbackManager bfm, BMLBlockPeg bmlBlockPeg, String bmlId, String id, PegBoard pb)
     {
-        return new TimedAnimationUnit(bfm,bmlBlockPeg,bmlId,id,this, pb);
+        return new TimedAnimationMotionUnit(bfm,bmlBlockPeg,bmlId,id,this, pb);
     }
 
     @Override

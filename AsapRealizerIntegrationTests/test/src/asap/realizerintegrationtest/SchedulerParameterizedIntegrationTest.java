@@ -305,7 +305,7 @@ public class SchedulerParameterizedIntegrationTest
         SpeechBinding speechBinding = new SpeechBinding(gres);
         speechBinding.readXML(gres.getReader("Humanoids/shared/speechbinding/disneyspeechbinding.xml"));
 
-        PlanManager<TimedAnimationUnit> animationPlanManager = new PlanManager<TimedAnimationUnit>();
+        PlanManager<TimedAnimationUnit> animationPlanManager = new PlanManager<>();
 
         RestPose pose = new SkeletonPoseRestPose();
         AnimationPlanPlayer animationPlanPlayer = new AnimationPlanPlayer(pose, bfm, animationPlanManager,

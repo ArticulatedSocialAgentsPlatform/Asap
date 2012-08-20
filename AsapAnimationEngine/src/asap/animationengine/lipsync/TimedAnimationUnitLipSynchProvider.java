@@ -11,6 +11,7 @@ import saiba.bml.core.Behaviour;
 import asap.animationengine.AnimationPlayer;
 import asap.animationengine.gesturebinding.SpeechBinding;
 import asap.animationengine.motionunit.MUSetupException;
+import asap.animationengine.motionunit.TimedAnimationMotionUnit;
 import asap.animationengine.motionunit.TimedAnimationUnit;
 import asap.realizer.lipsync.LipSynchProvider;
 import asap.realizer.pegboard.BMLBlockPeg;
@@ -45,13 +46,13 @@ public class TimedAnimationUnitLipSynchProvider implements LipSynchProvider
     @Override
     public void addLipSyncMovement(BMLBlockPeg bbPeg, Behaviour beh, TimedPlanUnit bs, List<Visime> visemes)
     {
-        ArrayList<TimedAnimationUnit> tmus = new ArrayList<TimedAnimationUnit>();
+        ArrayList<TimedAnimationMotionUnit> tmus = new ArrayList<TimedAnimationMotionUnit>();
         double totalDuration = 0d;
         double prevDuration = 0d;
-        HashMap<TimedAnimationUnit, Double> startTimes = new HashMap<TimedAnimationUnit, Double>();
-        HashMap<TimedAnimationUnit, Double> endTimes = new HashMap<TimedAnimationUnit, Double>();
+        HashMap<TimedAnimationMotionUnit, Double> startTimes = new HashMap<TimedAnimationMotionUnit, Double>();
+        HashMap<TimedAnimationMotionUnit, Double> endTimes = new HashMap<TimedAnimationMotionUnit, Double>();
 
-        TimedAnimationUnit tmu = null;
+        TimedAnimationMotionUnit tmu = null;
         try
         {
             tmu = speechBinding.getMotionUnit(0, bbPeg, beh.getBmlId(), beh.id, animationPlayer, pegBoard);
@@ -95,14 +96,14 @@ public class TimedAnimationUnitLipSynchProvider implements LipSynchProvider
             log.debug("Viseme number {}", vis.getNumber());
         }
 
-        for (TimedAnimationUnit tm : tmus)
+        for (TimedAnimationMotionUnit tm : tmus)
         {
             tm.setSubUnit(true);
             animationPlanManager.addPlanUnit(tm);
         }
 
         // and now link viseme units to the speech timepeg!
-        for (TimedAnimationUnit plannedFU : tmus)
+        for (TimedAnimationMotionUnit plannedFU : tmus)
         {
             TimePeg startPeg = new OffsetPeg(bs.getTimePeg("start"), startTimes.get(plannedFU));
 

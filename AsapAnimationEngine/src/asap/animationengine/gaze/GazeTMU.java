@@ -19,7 +19,7 @@
 package asap.animationengine.gaze;
 
 import saiba.bml.BMLGestureSync;
-import asap.animationengine.motionunit.TimedAnimationUnit;
+import asap.animationengine.motionunit.TimedAnimationMotionUnit;
 import asap.motionunit.MUPlayException;
 import asap.motionunit.TMUPlayException;
 import asap.realizer.feedback.FeedbackManager;
@@ -34,7 +34,7 @@ import asap.realizer.planunit.TimedPlanUnitPlayException;
  * @author Herwin
  *
  */
-public class GazeTMU extends TimedAnimationUnit
+public class GazeTMU extends TimedAnimationMotionUnit
 {
     private GazeMU gmu;
     

@@ -4,6 +4,7 @@ import hmi.math.Vec3f;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Set;
 
 import lombok.extern.slf4j.Slf4j;
 import asap.animationengine.ace.CurvedGStroke;
@@ -11,11 +12,13 @@ import asap.animationengine.ace.GuidingSequence;
 import asap.animationengine.ace.GuidingStroke;
 import asap.animationengine.ace.LinearGStroke;
 import asap.animationengine.ace.TPConstraint;
-import asap.animationengine.motionunit.AnimationUnit;
 import asap.math.splines.NUSSpline3;
 import asap.math.splines.SparseVelocityDef;
+import asap.motionunit.TMUPlayException;
+import asap.realizer.feedback.FeedbackManager;
 import asap.realizer.pegboard.BMLBlockPeg;
-import asap.realizer.pegboard.PegBoard;
+import asap.realizer.pegboard.TimePeg;
+import asap.realizer.planunit.TimedPlanUnitPlayException;
 
 /**
  * Local motor program for wrist positioning
@@ -25,9 +28,9 @@ import asap.realizer.pegboard.PegBoard;
 @Slf4j
 public class LMPWristPos extends LMPPos
 {
-    public LMPWristPos(BMLBlockPeg bmlBlockPeg, String bmlId, String id, AnimationUnit m, PegBoard pb)
+    public LMPWristPos(FeedbackManager bbf, BMLBlockPeg bmlBlockPeg, String bmlId, String id)
     {
-        super(bmlBlockPeg, bmlId, id, m, pb);
+        super(bbf, bmlBlockPeg, bmlId, id);
     }
 
     private NUSSpline3 spline;
@@ -60,8 +63,9 @@ public class LMPWristPos extends LMPPos
     {
         // TODO: implement this
     }
-
-    public void startUnit()
+    
+    @Override
+    public void startUnit(double time)
     {
         if (gSeq != null && !gSeq.isEmpty())
         {
@@ -199,5 +203,82 @@ public class LMPWristPos extends LMPPos
         }
 
         return _spline;
+    }
+
+    @Override
+    public double getStartTime()
+    {
+        // TODO Auto-generated method stub
+        return 0;
+    }
+
+    @Override
+    public double getEndTime()
+    {
+        // TODO Auto-generated method stub
+        return 0;
+    }
+
+    @Override
+    public double getRelaxTime()
+    {
+        // TODO Auto-generated method stub
+        return 0;
+    }
+
+    @Override
+    public TimePeg getTimePeg(String syncId)
+    {
+        // TODO Auto-generated method stub
+        return null;
+    }
+
+    @Override
+    public void setTimePeg(String syncId, TimePeg peg)
+    {
+        // TODO Auto-generated method stub
+        
+    }
+
+    @Override
+    public boolean hasValidTiming()
+    {
+        // TODO Auto-generated method stub
+        return false;
+    }
+
+    @Override
+    protected void playUnit(double time) throws TimedPlanUnitPlayException
+    {
+        // TODO Auto-generated method stub
+        
+    }
+
+    @Override
+    protected void stopUnit(double time) throws TimedPlanUnitPlayException
+    {
+        // TODO Auto-generated method stub
+        
+    }
+
+    @Override
+    public Set<String> getKinematicJoints()
+    {
+        // TODO Auto-generated method stub
+        return null;
+    }
+
+    @Override
+    public Set<String> getPhysicalJoints()
+    {
+        // TODO Auto-generated method stub
+        return null;
+    }
+
+    @Override
+    public void updateTiming(double time) throws TMUPlayException
+    {
+        // TODO Auto-generated method stub
+        
     }
 }

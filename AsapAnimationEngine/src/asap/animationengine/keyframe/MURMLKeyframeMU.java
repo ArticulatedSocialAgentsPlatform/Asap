@@ -8,7 +8,7 @@ import java.util.Set;
 import asap.animationengine.AnimationPlayer;
 import asap.animationengine.motionunit.AnimationUnit;
 import asap.animationengine.motionunit.MUSetupException;
-import asap.animationengine.motionunit.TimedAnimationUnit;
+import asap.animationengine.motionunit.TimedAnimationMotionUnit;
 import asap.motionunit.MUPlayException;
 import asap.motionunit.keyframe.Interpolator;
 import asap.motionunit.keyframe.KeyFrame;
@@ -130,9 +130,9 @@ public class MURMLKeyframeMU extends KeyFrameMotionUnit implements AnimationUnit
     }
 
     @Override
-    public TimedAnimationUnit createTMU(FeedbackManager bbm, BMLBlockPeg bmlBlockPeg, String bmlId, String id, PegBoard pb)
+    public TimedAnimationMotionUnit createTMU(FeedbackManager bbm, BMLBlockPeg bmlBlockPeg, String bmlId, String id, PegBoard pb)
     {
-        return new TimedAnimationUnit(bbm, bmlBlockPeg, bmlId, id, this, pb);
+        return new TimedAnimationMotionUnit(bbm, bmlBlockPeg, bmlId, id, this, pb);
     }
 
     @Override

@@ -25,7 +25,7 @@ import java.util.List;
 
 import asap.animationengine.AnimationPlayer;
 import asap.animationengine.motionunit.AnimationUnit;
-import asap.animationengine.motionunit.TimedAnimationUnit;
+import asap.animationengine.motionunit.TimedAnimationMotionUnit;
 import asap.realizer.feedback.FeedbackManager;
 import asap.realizer.pegboard.BMLBlockPeg;
 import asap.realizer.pegboard.PegBoard;
@@ -90,9 +90,9 @@ public abstract class TransitionMU implements AnimationUnit
     }
     
     @Override
-    public TimedAnimationUnit createTMU(FeedbackManager bfm, BMLBlockPeg bbPeg, String bmlId, String id, PegBoard pb)
+    public TimedAnimationMotionUnit createTMU(FeedbackManager bfm, BMLBlockPeg bbPeg, String bmlId, String id, PegBoard pb)
     {
-        return new TimedAnimationUnit(bfm, bbPeg, bmlId, id, this, pb);
+        return new TimedAnimationMotionUnit(bfm, bbPeg, bmlId, id, this, pb);
     }
 
     @Override

@@ -24,6 +24,7 @@ import org.powermock.modules.junit4.PowerMockRunner;
 import saiba.bml.feedback.BMLWarningFeedback;
 
 
+import asap.animationengine.motionunit.TimedAnimationMotionUnit;
 import asap.animationengine.motionunit.TimedAnimationUnit;
 import asap.animationengine.restpose.SkeletonPoseRestPose;
 import asap.bml.feedback.ListBMLWarningListener;
@@ -45,19 +46,19 @@ import asap.realizer.scheduler.BMLBlockManager;
     "com.sun.org.apache.xerces.internal.jaxp.*", "ch.qos.logback.*",
     "org.slf4j.*" })
 @RunWith(PowerMockRunner.class)
-@PrepareForTest({TimedAnimationUnit.class,BMLBlockManager.class})
+@PrepareForTest({TimedAnimationMotionUnit.class,BMLBlockManager.class})
 public class AnimationPlayerTest
 {
     private AnimationPlayer animationPlayer;
     private List<BMLWarningFeedback> beList;
 
     private PhysicalHumanoid mockPhysicalHumanoid = mock(PhysicalHumanoid.class);
-    private TimedAnimationUnit mockTimedMotionUnit = mock(TimedAnimationUnit.class);
+    private TimedAnimationMotionUnit mockTimedMotionUnit = mock(TimedAnimationMotionUnit.class);
     private BMLBlockManager mockBMLBlockManager = mock(BMLBlockManager.class);
     private FeedbackManager fbManager = new FeedbackManagerImpl(mockBMLBlockManager,"character1");
     private PegBoard pegBoard = new PegBoard();
     
-    private PlanManager<TimedAnimationUnit> planManager = new PlanManager<TimedAnimationUnit>();
+    private PlanManager<TimedAnimationUnit> planManager = new PlanManager<>();
     
     @Before
     public void setup()

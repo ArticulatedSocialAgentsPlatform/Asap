@@ -15,7 +15,7 @@ import asap.realizer.planunit.TimedPlanUnitPlayException;
  * @author Herwin
  * 
  */
-public class PhysicalTMU extends TimedAnimationUnit
+public class PhysicalTMU extends TimedAnimationMotionUnit
 {
     private static Logger logger = LoggerFactory.getLogger(PhysicalTMU.class.getName());
 
@@ -25,7 +25,7 @@ public class PhysicalTMU extends TimedAnimationUnit
     }
 
     @Override
-    protected void startUnit(double t) throws TimedPlanUnitPlayException
+    public void startUnit(double t) throws TimedPlanUnitPlayException
     {
         ControllerMU pc = (ControllerMU) getMotionUnit();
         pc.reset();

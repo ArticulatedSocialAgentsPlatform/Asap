@@ -1,6 +1,5 @@
 package asap.animationengine.loader;
 
-import hmi.environmentbase.EmbodimentLoader;
 import hmi.environmentbase.Environment;
 import hmi.environmentbase.Loader;
 import hmi.util.Resources;

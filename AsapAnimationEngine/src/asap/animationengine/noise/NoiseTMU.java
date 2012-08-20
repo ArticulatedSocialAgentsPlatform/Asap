@@ -19,7 +19,7 @@
 package asap.animationengine.noise;
 
 import saiba.bml.feedback.BMLSyncPointProgressFeedback;
-import asap.animationengine.motionunit.TimedAnimationUnit;
+import asap.animationengine.motionunit.TimedAnimationMotionUnit;
 import asap.motionunit.MUPlayException;
 import asap.motionunit.TMUPlayException;
 import asap.realizer.feedback.FeedbackManager;
@@ -36,7 +36,7 @@ import asap.realizer.planunit.TimedPlanUnitPlayException;
  * @author Dennis Reidsma
  * 
  */
-public class NoiseTMU extends TimedAnimationUnit
+public class NoiseTMU extends TimedAnimationMotionUnit
 {
     private NoiseMU nmu;
 
@@ -49,14 +49,14 @@ public class NoiseTMU extends TimedAnimationUnit
     }
 
     @Override
-    protected void startUnit(double time) throws TimedPlanUnitPlayException
+    public void startUnit(double time) throws TimedPlanUnitPlayException
     {
         // startTime = time;
         sendProgress(0d, time);
     }
 
     @Override
-    protected void playUnit(double time) throws TMUPlayException
+    public void playUnit(double time) throws TMUPlayException
     {
         try
         {

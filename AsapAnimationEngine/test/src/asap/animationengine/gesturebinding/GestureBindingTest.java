@@ -44,7 +44,7 @@ import saiba.bml.core.PointingBehaviour;
 import saiba.bml.core.PostureBehaviour;
 import saiba.bml.core.PostureShiftBehaviour;
 import asap.animationengine.AnimationPlayer;
-import asap.animationengine.motionunit.TimedAnimationUnit;
+import asap.animationengine.motionunit.TimedAnimationMotionUnit;
 import asap.animationengine.restpose.RestPose;
 import asap.animationengine.restpose.SkeletonPoseRestPose;
 import asap.bml.ext.bmlt.BMLTInfo;
@@ -207,7 +207,7 @@ public class GestureBindingTest
     {
         GazeBehaviour b = createGazeBehaviour("bml1", "<gaze xmlns=\"http://www.bml-initiative.org/bml/bml-1.0\"" +
                 "xmlns:bmlt=\"http://hmi.ewi.utwente.nl/bmlt\" bmlt:dynamic=\"true\" id=\"gaze1\" influence=\"NECK\" target=\"greensphere\"/>");
-        List<TimedAnimationUnit> m = gestureBinding.getMotionUnit(BMLBlockPeg.GLOBALPEG, b, mockAniPlayer, pegBoard);
+        List<TimedAnimationMotionUnit> m = gestureBinding.getMotionUnit(BMLBlockPeg.GLOBALPEG, b, mockAniPlayer, pegBoard);
         assertEquals(1, m.size());
     }
     
@@ -217,7 +217,7 @@ public class GestureBindingTest
         HeadBehaviour b = createHeadBehaviour("bml1", "<head xmlns=\"http://www.bml-initiative.org/bml/bml-1.0\" id=\"head1\" "
                 + "lexeme=\"NOD\" repetition=\"2\"/>");
 
-        List<TimedAnimationUnit> m = gestureBinding.getMotionUnit(BMLBlockPeg.GLOBALPEG, b, mockAniPlayer, pegBoard);
+        List<TimedAnimationMotionUnit> m = gestureBinding.getMotionUnit(BMLBlockPeg.GLOBALPEG, b, mockAniPlayer, pegBoard);
         assertEquals(1, m.size());
         assertTrue(Float.parseFloat(m.get(0).getMotionUnit().getParameterValue("r")) == 2.0);
         assertEquals(0.5, Float.parseFloat(m.get(0).getMotionUnit().getParameterValue("a")), PARAMETER_PRECISION);// BML default
@@ -231,7 +231,7 @@ public class GestureBindingTest
         HeadBehaviour b = createHeadBehaviour("bml1", "<head xmlns=\"http://www.bml-initiative.org/bml/bml-1.0\" "
                 + "id=\"head1\" lexeme=\"SHAKE\" amount=\"2\"/>");
 
-        List<TimedAnimationUnit> m = gestureBinding.getMotionUnit(BMLBlockPeg.GLOBALPEG, b, mockAniPlayer, pegBoard);
+        List<TimedAnimationMotionUnit> m = gestureBinding.getMotionUnit(BMLBlockPeg.GLOBALPEG, b, mockAniPlayer, pegBoard);
         assertEquals(1, m.size());
         assertEquals(1, Float.parseFloat(m.get(0).getMotionUnit().getParameterValue("r")), PARAMETER_PRECISION);
         assertEquals(2, Float.parseFloat(m.get(0).getMotionUnit().getParameterValue("a")), PARAMETER_PRECISION);
@@ -246,7 +246,7 @@ public class GestureBindingTest
                 + "     <parameter name=\"joints\" value=\"r_shoulder r_elbow r_wrist\"/>" + "</keyframe>";
         Behaviour b = createKeyFrameBehaviour("bml1", kfString);
 
-        List<TimedAnimationUnit> m = gestureBinding.getMotionUnit(BMLBlockPeg.GLOBALPEG, b, mockAniPlayer, pegBoard);
+        List<TimedAnimationMotionUnit> m = gestureBinding.getMotionUnit(BMLBlockPeg.GLOBALPEG, b, mockAniPlayer, pegBoard);
         assertEquals(1, m.size());
         assertEquals("bml1", m.get(0).getBMLId());
         assertEquals("v1", m.get(0).getId());
@@ -257,7 +257,7 @@ public class GestureBindingTest
     {
         GestureBehaviour beh = createGestureBehaviour("bml1", "<gesture xmlns=\"http://www.bml-initiative.org/bml/bml-1.0\" "
                 + "id=\"g1\" mode=\"RIGHT_HAND\" lexeme=\"BEAT\"/>");
-        List<TimedAnimationUnit> m = gestureBinding.getMotionUnit(BMLBlockPeg.GLOBALPEG, beh, mockAniPlayer, pegBoard);
+        List<TimedAnimationMotionUnit> m = gestureBinding.getMotionUnit(BMLBlockPeg.GLOBALPEG, beh, mockAniPlayer, pegBoard);
         assertEquals(1, m.size());
         assertEquals("bml1", m.get(0).getBMLId());
         assertEquals("g1", m.get(0).getId());
@@ -268,7 +268,7 @@ public class GestureBindingTest
     {
         PointingBehaviour beh = createPointingBehaviour("bml1", "<pointing xmlns=\"http://www.bml-initiative.org/bml/bml-1.0\" "
                 + "id=\"point1\" mode=\"RIGHT_HAND\" target=\"bluebox\"/>");
-        List<TimedAnimationUnit> m = gestureBinding.getMotionUnit(BMLBlockPeg.GLOBALPEG, beh, mockAniPlayer, pegBoard);
+        List<TimedAnimationMotionUnit> m = gestureBinding.getMotionUnit(BMLBlockPeg.GLOBALPEG, beh, mockAniPlayer, pegBoard);
         assertEquals(1, m.size());
         assertEquals("bml1", m.get(0).getBMLId());
         assertEquals("point1", m.get(0).getId());
@@ -280,7 +280,7 @@ public class GestureBindingTest
         String str = "<posture xmlns=\"http://www.bml-initiative.org/bml/bml-1.0\" "
                 + "id=\"posture1\"><stance type=\"STANDING\"/><pose part=\"LEGS\" lexeme=\"LEGS_OPEN\"/></posture>";
         PostureBehaviour beh = createPostureBehaviour("bml1", str);
-        List<TimedAnimationUnit> m = gestureBinding.getMotionUnit(BMLBlockPeg.GLOBALPEG, beh, mockAniPlayer, pegBoard);
+        List<TimedAnimationMotionUnit> m = gestureBinding.getMotionUnit(BMLBlockPeg.GLOBALPEG, beh, mockAniPlayer, pegBoard);
         assertEquals(1, m.size());
         assertEquals("bml1", m.get(0).getBMLId());
         assertEquals("posture1", m.get(0).getId());

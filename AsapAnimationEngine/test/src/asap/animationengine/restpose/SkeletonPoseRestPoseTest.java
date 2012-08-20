@@ -8,7 +8,7 @@ import hmi.math.Quat4f;
 
 import org.junit.Test;
 
-import asap.animationengine.motionunit.TimedAnimationUnit;
+import asap.animationengine.motionunit.TimedAnimationMotionUnit;
 import asap.realizer.feedback.NullFeedbackManager;
 import asap.realizer.pegboard.BMLBlockPeg;
 import asap.realizer.pegboard.PegBoard;
@@ -34,7 +34,7 @@ public class SkeletonPoseRestPoseTest extends AbstractRestPoseTest
 
         RestPose restPose = new SkeletonPoseRestPose(pose);
         restPose.setAnimationPlayer(mockAnimationPlayer);
-        TimedAnimationUnit tmu = restPose.createTransitionToRest(NullFeedbackManager.getInstance(),
+        TimedAnimationMotionUnit tmu = restPose.createTransitionToRest(NullFeedbackManager.getInstance(),
                 Sets.newHashSet("l_shoulder", "l_wrist"), 1, 2, "bml1", "transition1", BMLBlockPeg.GLOBALPEG, pegBoard);
         assertEquals(BMLBlockPeg.GLOBALPEG, tmu.getBMLBlockPeg());
         assertEquals("transition1", tmu.getId());

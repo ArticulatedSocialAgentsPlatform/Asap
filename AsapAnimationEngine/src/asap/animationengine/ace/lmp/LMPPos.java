@@ -2,21 +2,21 @@ package asap.animationengine.ace.lmp;
 
 import hmi.math.Mat4f;
 import asap.animationengine.ace.GuidingSequence;
-import asap.animationengine.motionunit.AnimationUnit;
 import asap.animationengine.motionunit.TimedAnimationUnit;
+import asap.realizer.feedback.FeedbackManager;
 import asap.realizer.pegboard.BMLBlockPeg;
-import asap.realizer.pegboard.PegBoard;
+import asap.realizer.planunit.TimedAbstractPlanUnit;
 
 /**
  * Base class of all local motor programs for positioning in Cartesian space.
  * @author hvanwelbergen
  * @author Stefan Kopp (original C++ version)
  */
-public abstract class LMPPos extends TimedAnimationUnit
+public abstract class LMPPos extends TimedAbstractPlanUnit implements TimedAnimationUnit
 {
-    public LMPPos(BMLBlockPeg bmlBlockPeg, String bmlId, String id, AnimationUnit m, PegBoard pb)
+    public LMPPos(FeedbackManager bbf, BMLBlockPeg bmlBlockPeg, String bmlId, String id)
     {
-        super(bmlBlockPeg, bmlId, id, m, pb);
+        super(bbf, bmlBlockPeg, bmlId, id, true);
         Mat4f.setIdentity(baseFrame);
     }
     protected GuidingSequence gSeq;

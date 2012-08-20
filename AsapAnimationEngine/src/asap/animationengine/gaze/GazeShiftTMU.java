@@ -2,11 +2,11 @@ package asap.animationengine.gaze;
 
 import asap.animationengine.AnimationPlayer;
 import asap.animationengine.motionunit.AnimationUnit;
-import asap.animationengine.motionunit.TimedAnimationUnit;
+import asap.animationengine.motionunit.TimedAnimationMotionUnit;
 import asap.realizer.pegboard.BMLBlockPeg;
 import asap.realizer.pegboard.PegBoard;
 
-public class GazeShiftTMU extends TimedAnimationUnit
+public class GazeShiftTMU extends TimedAnimationMotionUnit
 {
     private final RestGaze restGaze;
     private AnimationPlayer aniPlayer;

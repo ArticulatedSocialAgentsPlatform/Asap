@@ -8,6 +8,7 @@ import java.util.Set;
 import asap.animationengine.AnimationPlayer;
 import asap.animationengine.motionunit.AnimationUnit;
 import asap.animationengine.motionunit.MUSetupException;
+import asap.animationengine.motionunit.TimedAnimationMotionUnit;
 import asap.animationengine.motionunit.TimedAnimationUnit;
 import asap.realizer.feedback.FeedbackManager;
 import asap.realizer.pegboard.BMLBlockPeg;
@@ -44,7 +45,7 @@ public interface RestPose
      * Create a transition TMU that moves the joints from their current position 
      * to a position dictated by this resting pose.  
      */
-    TimedAnimationUnit createTransitionToRest(FeedbackManager fbm, Set<String>joints, double startTime, double duration, 
+    TimedAnimationMotionUnit createTransitionToRest(FeedbackManager fbm, Set<String>joints, double startTime, double duration, 
             String bmlId, String id, BMLBlockPeg bmlBlockPeg, PegBoard pb);
     
     /**

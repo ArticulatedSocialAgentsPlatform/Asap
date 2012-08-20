@@ -1,20 +1,23 @@
 package asap.animationengine.lipsync;
 
-import java.io.IOException;
-import java.util.List;
-
+import static org.hamcrest.MatcherAssert.assertThat;
+import static org.hamcrest.number.OrderingComparison.greaterThan;
+import static org.junit.Assert.assertEquals;
+import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.when;
 import hmi.animation.VJoint;
-import saiba.bml.core.SpeechBehaviour;
 import hmi.testutil.animation.HanimBody;
 import hmi.tts.Visime;
 import hmi.util.Resources;
 import hmi.xml.XMLTokenizer;
 
+import java.io.IOException;
+import java.util.List;
+
 import org.junit.Before;
 import org.junit.Test;
 
-import com.google.common.collect.ImmutableList;
-
+import saiba.bml.core.SpeechBehaviour;
 import asap.animationengine.AnimationPlayer;
 import asap.animationengine.gesturebinding.SpeechBinding;
 import asap.animationengine.motionunit.TimedAnimationUnit;
@@ -23,11 +26,8 @@ import asap.realizer.pegboard.PegBoard;
 import asap.realizer.pegboard.TimePeg;
 import asap.realizer.planunit.PlanManager;
 import asap.realizer.planunit.TimedPlanUnit;
-import static org.hamcrest.MatcherAssert.assertThat;
-import static org.hamcrest.number.OrderingComparison.greaterThan;
-import static org.junit.Assert.assertEquals;
-import static org.mockito.Mockito.mock;
-import static org.mockito.Mockito.when;
+
+import com.google.common.collect.ImmutableList;
 
 /**
  * Unit test cases for TimedAnimationUnitLipSynchProvider
@@ -37,7 +37,7 @@ import static org.mockito.Mockito.when;
 public class TimedAnimationUnitLipSynchProviderTest
 {
     private AnimationPlayer mockAnimationPlayer = mock(AnimationPlayer.class);
-    private PlanManager<TimedAnimationUnit> animationPlanManager = new PlanManager<TimedAnimationUnit>();
+    private PlanManager<TimedAnimationUnit> animationPlanManager = new PlanManager<>();
     private PegBoard pegBoard = new PegBoard();
     private TimedPlanUnit mockSpeechUnit = mock(TimedPlanUnit.class);
     private BMLBlockPeg bbPeg = BMLBlockPeg.GLOBALPEG;

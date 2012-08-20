@@ -21,7 +21,7 @@ import org.junit.Test;
 
 import asap.animationengine.AnimationPlayer;
 import asap.animationengine.motionunit.AnimationUnit;
-import asap.animationengine.motionunit.TimedAnimationUnit;
+import asap.animationengine.motionunit.TimedAnimationMotionUnit;
 import asap.animationengine.restpose.RestPose;
 import asap.motionunit.MUPlayException;
 import asap.realizer.feedback.FeedbackManager;
@@ -125,7 +125,7 @@ public class ProcAnimationGestureMUMockupProcTest
     public void testCreateTMU() throws TimedPlanUnitPlayException
     {
         pegBoard.addBMLBlockPeg(new BMLBlockPeg("bml1",0));
-        TimedAnimationUnit tmu = pag.createTMU(mockFeedbackManager, BMLBlockPeg.GLOBALPEG, "bml1", "g1",pegBoard);        
+        TimedAnimationMotionUnit tmu = pag.createTMU(mockFeedbackManager, BMLBlockPeg.GLOBALPEG, "bml1", "g1",pegBoard);        
         tmu.resolveGestureKeyPositions();
         tmu.setTimePeg(BMLGestureSync.START.getId(), createAbsoluteTimePeg(0));
         tmu.setTimePeg(BMLGestureSync.END.getId(), createAbsoluteTimePeg(2));

@@ -33,6 +33,7 @@ import asap.animationengine.gesturebinding.GestureBinding;
 import asap.animationengine.gesturebinding.MURMLMUBuilder;
 import asap.animationengine.motionunit.AnimationUnit;
 import asap.animationengine.motionunit.MUSetupException;
+import asap.animationengine.motionunit.TimedAnimationMotionUnit;
 import asap.animationengine.motionunit.TimedAnimationUnit;
 import asap.animationengine.restpose.RestPose;
 import asap.bml.ext.bmlt.BMLTControllerBehaviour;
@@ -82,7 +83,7 @@ public class AnimationPlanner extends AbstractPlanner<TimedAnimationUnit>
         gestureBinding = g;
     }
 
-    public void resolveDefaultKeyPositions(Behaviour b, TimedAnimationUnit tmu)
+    public void resolveDefaultKeyPositions(Behaviour b, TimedAnimationMotionUnit tmu)
     {
         if(b instanceof GazeBehaviour)
         {
@@ -115,33 +116,39 @@ public class AnimationPlanner extends AbstractPlanner<TimedAnimationUnit>
         {
             tmu = createTAU(bbPeg, b);
         }
-
-        // apply syncs to tmu
-        resolveDefaultKeyPositions(b,tmu);        
-        linkSynchs(tmu, sacs);
-
-        planManager.addPlanUnit(tmu);
-
-        for (KeyPosition kp : tmu.getPegs().keySet())
+        
+        //XXX ugly...
+        if(tmu instanceof TimedAnimationMotionUnit)
         {
-            TimePeg p = tmu.getPegs().get(kp);
-            satps.add(new SyncAndTimePeg(b.getBmlId(), b.id, kp.id, p));
+            TimedAnimationMotionUnit tmut = (TimedAnimationMotionUnit)tmu;
+            // apply syncs to tmu
+            resolveDefaultKeyPositions(b,(TimedAnimationMotionUnit)tmu);        
+            linkSynchs((TimedAnimationMotionUnit)tmu, sacs);
+            
+            for (KeyPosition kp : tmut.getPegs().keySet())
+            {
+                TimePeg p = tmut.getPegs().get(kp);
+                satps.add(new SyncAndTimePeg(b.getBmlId(), b.id, kp.id, p));
+            }
         }
+        
+        
+        planManager.addPlanUnit(tmu);
         return satps;
     }
 
     @Override
-    public TimedAnimationUnit resolveSynchs(BMLBlockPeg bbPeg, Behaviour b, List<TimePegAndConstraint> sac) throws BehaviourPlanningException
+    public TimedAnimationMotionUnit resolveSynchs(BMLBlockPeg bbPeg, Behaviour b, List<TimePegAndConstraint> sac) throws BehaviourPlanningException
     {
-        TimedAnimationUnit tmu = createTAU(bbPeg, b);
+        TimedAnimationMotionUnit tmu = createTAU(bbPeg, b);
         resolveDefaultKeyPositions(b, tmu);        
         tmu.resolveSynchs(bbPeg, b, sac);
         return tmu;
     }
 
-    private TimedAnimationUnit createTAU(BMLBlockPeg bbPeg, Behaviour b) throws BehaviourPlanningException
+    private TimedAnimationMotionUnit createTAU(BMLBlockPeg bbPeg, Behaviour b) throws BehaviourPlanningException
     {
-        TimedAnimationUnit tmu;
+        TimedAnimationMotionUnit tmu;
         if(b instanceof MURMLGestureBehaviour)
         {
             AnimationUnit mu = MURMLMUBuilder.setup( ((MURMLGestureBehaviour)b).getMurmlDescription());
@@ -172,7 +179,7 @@ public class AnimationPlanner extends AbstractPlanner<TimedAnimationUnit>
         }
         else
         {
-            List<TimedAnimationUnit> tmus = gestureBinding.getMotionUnit(bbPeg, b, player, pegBoard);
+            List<TimedAnimationMotionUnit> tmus = gestureBinding.getMotionUnit(bbPeg, b, player, pegBoard);
             if (tmus.isEmpty())
             {
                 throw new BehaviourPlanningException(b, "Behavior " + b.id
@@ -184,7 +191,7 @@ public class AnimationPlanner extends AbstractPlanner<TimedAnimationUnit>
     }
 
     // link synchpoints in sac to tmu
-    private void linkSynchs(TimedAnimationUnit tmu, List<TimePegAndConstraint> sacs)
+    private void linkSynchs(TimedAnimationMotionUnit tmu, List<TimePegAndConstraint> sacs)
     {
         for (TimePegAndConstraint s : sacs)
         {

@@ -31,7 +31,7 @@ import java.util.Set;
 
 import asap.animationengine.AnimationPlayer;
 import asap.animationengine.motionunit.AnimationUnit;
-import asap.animationengine.motionunit.TimedAnimationUnit;
+import asap.animationengine.motionunit.TimedAnimationMotionUnit;
 import asap.motionunit.MUPlayException;
 import asap.realizer.feedback.FeedbackManager;
 import asap.realizer.pegboard.BMLBlockPeg;
@@ -242,9 +242,9 @@ public class KeyframeMU implements AnimationUnit
     }
 
     @Override
-    public TimedAnimationUnit createTMU(FeedbackManager bbm, BMLBlockPeg bbPeg, String bmlId, String id, PegBoard pb)
+    public TimedAnimationMotionUnit createTMU(FeedbackManager bbm, BMLBlockPeg bbPeg, String bmlId, String id, PegBoard pb)
     {
-        return new TimedAnimationUnit(bbm, bbPeg, bmlId, id, this, pb);
+        return new TimedAnimationMotionUnit(bbm, bbPeg, bmlId, id, this, pb);
     }
 
     @Override

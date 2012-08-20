@@ -53,7 +53,7 @@ public class AnimationPlanPlayer implements PlanPlayer
     public AnimationPlanPlayer(RestPose defaultRestPose, FeedbackManager fbm, PlanManager<TimedAnimationUnit> planManager,
             TimedPlanUnitPlayer tpuCallback, PegBoard pegBoard)
     {
-        defPlayer = new SingleThreadedPlanPlayer<TimedAnimationUnit>(fbm, planManager, tpuCallback);
+        defPlayer = new SingleThreadedPlanPlayer<>(fbm, planManager, tpuCallback);
         fbManager = fbm;
         tpuPlayer = tpuCallback;
         this.planManager = planManager;
@@ -67,7 +67,7 @@ public class AnimationPlanPlayer implements PlanPlayer
     
     private void updateTiming(double t)
     {
-        List<TimedAnimationUnit> tuUpdateFailed = new ArrayList<TimedAnimationUnit>();        
+        List<TimedAnimationUnit> tuUpdateFailed = new ArrayList<>();        
         // check which units should be playing
         for (TimedAnimationUnit tmu : planManager.getPlanUnits())
         {
@@ -93,8 +93,8 @@ public class AnimationPlanPlayer implements PlanPlayer
     @Override
     public synchronized void play(double t)
     {
-        List<TimedAnimationUnit> tmuRemove = new ArrayList<TimedAnimationUnit>();
-        List<TimedAnimationUnit> playingPlanUnits = new ArrayList<TimedAnimationUnit>();
+        List<TimedAnimationUnit> tmuRemove = new ArrayList<>();
+        List<TimedAnimationUnit> playingPlanUnits = new ArrayList<>();
         Set<String> physicalJoints = new HashSet<String>();
         Set<String> kinematicJoints = new HashSet<String>();
 
@@ -138,7 +138,7 @@ public class AnimationPlanPlayer implements PlanPlayer
     private List<TimedAnimationUnit> playback(double t, List<TimedAnimationUnit> tmuRemove, List<TimedAnimationUnit> playingPlanUnits,
             Set<String> physicalJoints, Set<String> kinematicJoints)
     {
-        List<TimedAnimationUnit> tmuAdd = new ArrayList<TimedAnimationUnit>();
+        List<TimedAnimationUnit> tmuAdd = new ArrayList<>();
         for (TimedAnimationUnit tmu : playingPlanUnits)
         {
             if (Sets.intersection(tmu.getKinematicJoints(), kinematicJoints).isEmpty()
@@ -227,7 +227,7 @@ public class AnimationPlanPlayer implements PlanPlayer
     
     public void updateTiming(String bmlId)
     {
-        List<TimedAnimationUnit> failedBehaviors = new ArrayList<TimedAnimationUnit>();
+        List<TimedAnimationUnit> failedBehaviors = new ArrayList<>();
         for(TimedAnimationUnit tmu :planManager.getPlanUnits(bmlId))
         {
             try

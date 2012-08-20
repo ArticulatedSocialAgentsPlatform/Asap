@@ -6,7 +6,7 @@ import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
-import asap.animationengine.motionunit.TimedAnimationUnit;
+import asap.animationengine.motionunit.TimedAnimationMotionUnit;
 import asap.motionunit.MUPlayException;
 import asap.realizertestutil.planunit.AbstractTimedPlanUnitTest;
 import asap.realizertestutil.util.KeyPositionMocker;
@@ -47,7 +47,7 @@ public class TransitionTMUTest extends AbstractTimedPlanUnitTest
     @Override
     protected TimedPlanUnit setupPlanUnit(FeedbackManager bfm, BMLBlockPeg bbPeg, String id, String bmlId, double startTime)
     {
-        TimedAnimationUnit tmu = new TimedAnimationUnit(bfm, bbPeg, bmlId, id, mockTransitionMU, pegBoard);
+        TimedAnimationMotionUnit tmu = new TimedAnimationMotionUnit(bfm, bbPeg, bmlId, id, mockTransitionMU, pegBoard);
         KeyPositionMocker.stubKeyPositions(mockTransitionMU, new KeyPosition("start", 0, 1), new KeyPosition("ready", 0, 1),
                 new KeyPosition("strokeStart", 0, 1), new KeyPosition("stroke", 0.5, 1), new KeyPosition("strokeEnd", 1, 1),
                 new KeyPosition("relax", 1, 1), new KeyPosition("end", 1, 1));
@@ -59,7 +59,7 @@ public class TransitionTMUTest extends AbstractTimedPlanUnitTest
     @Test
     public void testExecStates() throws TimedPlanUnitPlayException, MUPlayException
     {
-        TimedAnimationUnit tmu = new TimedAnimationUnit(mockBmlFeedbackManager, BMLBlockPeg.GLOBALPEG, "bml1", "behaviour1",
+        TimedAnimationMotionUnit tmu = new TimedAnimationMotionUnit(mockBmlFeedbackManager, BMLBlockPeg.GLOBALPEG, "bml1", "behaviour1",
                 mockTransitionMU, pegBoard);
         TimePeg tpStart = new TimePeg(BMLBlockPeg.GLOBALPEG);
         tpStart.setGlobalValue(0);

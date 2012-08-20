@@ -14,6 +14,7 @@ import org.junit.Test;
 
 import asap.animationengine.gesturebinding.GestureBinding;
 import asap.animationengine.motionunit.AnimationUnit;
+import asap.animationengine.motionunit.TimedAnimationMotionUnit;
 import asap.animationengine.motionunit.TimedAnimationUnit;
 import asap.animationengine.restpose.SkeletonPoseRestPose;
 import asap.realizer.DefaultEngine;
@@ -39,7 +40,7 @@ public class AnimationPlannerSpeechTest
     private PegBoard pegBoard = new PegBoard();
     
     private AnimationPlanner animationPlanner;
-    PlanManager<TimedAnimationUnit> planManager = new PlanManager<TimedAnimationUnit>();
+    PlanManager<TimedAnimationUnit> planManager = new PlanManager<>();
     DefaultEngine<TimedAnimationUnit> animationEngine;
 
     @Before
@@ -55,25 +56,25 @@ public class AnimationPlannerSpeechTest
                         new DefaultTimedPlanUnitPlayer(),pegBoard));
 
         animationPlanner = new AnimationPlanner(mockBmlFeedbackManager, ap, mockBinding, planManager,pegBoard);
-        List<TimedAnimationUnit> visemeMUs = new ArrayList<TimedAnimationUnit>();
+        List<TimedAnimationMotionUnit> visemeMUs = new ArrayList<TimedAnimationMotionUnit>();
 
         animationEngine = new DefaultEngine<TimedAnimationUnit>(animationPlanner, ap, planManager);
 
-        TimedAnimationUnit tmu = new TimedAnimationUnit(mockBmlFeedbackManager, bbPeg, "bml1", "speech1", mockUnit1,pegBoard);
+        TimedAnimationMotionUnit tmu = new TimedAnimationMotionUnit(mockBmlFeedbackManager, bbPeg, "bml1", "speech1", mockUnit1,pegBoard);
         visemeMUs.add(tmu);
-        tmu = new TimedAnimationUnit(mockBmlFeedbackManager, bbPeg, "bml1", "speech1", mockUnit2,pegBoard);
+        tmu = new TimedAnimationMotionUnit(mockBmlFeedbackManager, bbPeg, "bml1", "speech1", mockUnit2,pegBoard);
         tmu.setSubUnit(true);
         visemeMUs.add(tmu);
 
-        tmu = new TimedAnimationUnit(mockBmlFeedbackManager, bbPeg, "bml1", "speech1", mockUnit3,pegBoard);
+        tmu = new TimedAnimationMotionUnit(mockBmlFeedbackManager, bbPeg, "bml1", "speech1", mockUnit3,pegBoard);
         visemeMUs.add(tmu);
         tmu.setSubUnit(true);
 
-        tmu = new TimedAnimationUnit(mockBmlFeedbackManager, bbPeg, "bml1", "speech1", mockUnit4,pegBoard);
+        tmu = new TimedAnimationMotionUnit(mockBmlFeedbackManager, bbPeg, "bml1", "speech1", mockUnit4,pegBoard);
         visemeMUs.add(tmu);
         tmu.setSubUnit(true);
 
-        for (TimedAnimationUnit vis : visemeMUs)
+        for (TimedAnimationMotionUnit vis : visemeMUs)
         {
             vis.setSubUnit(true);
             planManager.addPlanUnit(vis);
