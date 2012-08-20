@@ -121,7 +121,7 @@
 	</target>
 
    <target name="docall" description="Generate integrated Javadoc for all HMI/* projects">     
-        <javadoc source="1.6" 
+        <javadoc
             destdir="${javadoc.dir}"
             Overview="javadoc-overview.html" 
             doctitle="API Documentation for Asap packages, including the Asap Realizer"
