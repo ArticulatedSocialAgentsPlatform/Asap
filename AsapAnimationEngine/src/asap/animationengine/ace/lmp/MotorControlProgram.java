@@ -1,5 +1,7 @@
 package asap.animationengine.ace.lmp;
 
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Set;
 
 import asap.animationengine.motionunit.TimedAnimationUnit;
@@ -12,13 +14,19 @@ import asap.realizer.planunit.TimedPlanUnitPlayException;
 
 public class MotorControlProgram extends TimedAbstractPlanUnit implements TimedAnimationUnit
 {
-
+    private List<TimedAnimationUnit> lmpQueue = new ArrayList<>();
+    
     public MotorControlProgram(FeedbackManager fbm, BMLBlockPeg bmlPeg, String bmlId, String behId)
     {
         super(fbm, bmlPeg, bmlId, behId);
         // TODO Auto-generated constructor stub
     }
 
+    public void addLMP(TimedAnimationUnit tau)
+    {
+        lmpQueue.add(tau);
+    }
+    
     @Override
     public double getStartTime()
     {

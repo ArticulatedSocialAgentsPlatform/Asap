@@ -3,6 +3,7 @@ package asap.animationengine.ace;
 import hmi.math.Mat4f;
 import hmi.math.Vec3f;
 import lombok.Getter;
+import lombok.Setter;
 
 /**
  * ase class for strokes, which define a trajectory
@@ -12,18 +13,17 @@ import lombok.Getter;
  */
 public class GuidingStroke
 {
-    enum GStrokePhaseID
-    {
-        STP_UNDEF, STP_PREP, STP_STROKE, STP_RETRACT, STP_HOLD, STP_FINISH;
-    }
-
     protected float[] endPos = Vec3f.getVec3f();
     private float[] endDir = Vec3f.getVec3f(); // optional
     
     @Getter
     private double vGain; // velocity gain factor
     private double stress; // stress/accentuation
+    
+    @Getter @Setter
     private double eDt; // anticipated duration
+    
+    @Getter @Setter
     protected TPConstraint eT; // target/end time
 
     @Getter

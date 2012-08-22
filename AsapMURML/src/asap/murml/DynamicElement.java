@@ -5,12 +5,9 @@ import hmi.xml.XMLTokenizer;
 
 import java.io.IOException;
 import java.util.HashMap;
-import java.util.List;
+import java.util.Map;
 
 import lombok.Getter;
-
-import com.google.common.collect.ArrayListMultimap;
-import com.google.common.collect.ListMultimap;
 
 /**
  * dynamicElement parser
@@ -25,7 +22,7 @@ public class DynamicElement extends MURMLElement
     private Type type;
     
     //value type->names mape
-    private ListMultimap<String, String> valueMap = ArrayListMultimap.create();
+    private Map<String, String> valueMap = new HashMap<>();
     
     public enum Type
     {
@@ -43,7 +40,7 @@ public class DynamicElement extends MURMLElement
         }
     }
     
-    public List<String> getNames(String type)
+    public String getName(String type)
     {
         return valueMap.get(type);
     }
@@ -58,7 +55,7 @@ public class DynamicElement extends MURMLElement
             {
                 Value v = new Value();
                 v.readXML(tokenizer);
-                valueMap.putAll(v.getType(), v.getNames());
+                valueMap.put(v.getType(), v.getName());
             }            
             else
             {
@@ -78,5 +75,5 @@ public class DynamicElement extends MURMLElement
     public String getXMLTag()
     {
         return XMLTAG;
-    }
+    }   
 }

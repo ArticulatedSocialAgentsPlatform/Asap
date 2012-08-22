@@ -7,5 +7,5 @@ package asap.murml;
  */
 public enum Slot
 {
-    HandShape, HandLocation, HandMovement, PalmOrientation, ExtFingerOrientation, GazeDirection, Neck;
+    HandShape, HandLocation, PalmOrientation, ExtFingerOrientation, GazeDirection, Neck;
 }

@@ -1,10 +1,13 @@
 package asap.animationengine.ace.lmp;
 
+import hmi.animation.Hanim;
 import hmi.math.Vec3f;
 
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Set;
+
+import com.google.common.collect.ImmutableSet;
 
 import lombok.extern.slf4j.Slf4j;
 import asap.animationengine.ace.CurvedGStroke;
@@ -17,6 +20,7 @@ import asap.math.splines.SparseVelocityDef;
 import asap.motionunit.TMUPlayException;
 import asap.realizer.feedback.FeedbackManager;
 import asap.realizer.pegboard.BMLBlockPeg;
+import asap.realizer.pegboard.PegBoard;
 import asap.realizer.pegboard.TimePeg;
 import asap.realizer.planunit.TimedPlanUnitPlayException;
 
@@ -28,9 +32,21 @@ import asap.realizer.planunit.TimedPlanUnitPlayException;
 @Slf4j
 public class LMPWristPos extends LMPPos
 {
-    public LMPWristPos(FeedbackManager bbf, BMLBlockPeg bmlBlockPeg, String bmlId, String id)
+    private final PegBoard pegBoard;    
+    private ImmutableSet kinematicJoints;
+    
+    public LMPWristPos(String scope, FeedbackManager bbf, BMLBlockPeg bmlBlockPeg, String bmlId, String id, PegBoard pegBoard)
     {
         super(bbf, bmlBlockPeg, bmlId, id);
+        this.pegBoard = pegBoard;
+        if(scope.equals("left_arm"))
+        {
+            kinematicJoints = ImmutableSet.of(Hanim.l_shoulder, Hanim.l_elbow);
+        }
+        else if (scope.equals("right_arm"))
+        {
+            kinematicJoints = ImmutableSet.of(Hanim.r_shoulder, Hanim.r_elbow);
+        }
     }
 
     private NUSSpline3 spline;
@@ -208,43 +224,46 @@ public class LMPWristPos extends LMPPos
     @Override
     public double getStartTime()
     {
-        // TODO Auto-generated method stub
-        return 0;
+        //TODO: what if start does not exist?
+        return pegBoard.getTimePeg(getBMLId(),getId(),"start").getGlobalValue();
     }
 
     @Override
     public double getEndTime()
     {
-        // TODO Auto-generated method stub
-        return 0;
+        //TODO: what if end does not exist?
+        return pegBoard.getTimePeg(this.getBMLId(),this.getId(),"end").getGlobalValue();
     }
 
     @Override
     public double getRelaxTime()
     {
-        // TODO Auto-generated method stub
-        return 0;
+        TimePeg relaxPeg = pegBoard.getTimePeg(getBMLId(),getId(),"relax");
+        
+        if (relaxPeg!=null && relaxPeg.getGlobalValue()!=TimePeg.VALUE_UNKNOWN)
+        {
+            return pegBoard.getTimePeg(this.getBMLId(),this.getId(),"relax").getGlobalValue();
+        }
+        else return getEndTime();
     }
 
     @Override
     public TimePeg getTimePeg(String syncId)
     {
-        // TODO Auto-generated method stub
-        return null;
+        return pegBoard.getTimePeg(getBMLId(),getId(),syncId);
     }
 
     @Override
     public void setTimePeg(String syncId, TimePeg peg)
     {
-        // TODO Auto-generated method stub
-        
+        pegBoard.addTimePeg(getBMLId(), getId(), syncId, peg);        
     }
 
     @Override
     public boolean hasValidTiming()
     {
         // TODO Auto-generated method stub
-        return false;
+        return true;
     }
 
     @Override
@@ -271,8 +290,7 @@ public class LMPWristPos extends LMPPos
     @Override
     public Set<String> getPhysicalJoints()
     {
-        // TODO Auto-generated method stub
-        return null;
+        return ImmutableSet.of();
     }
 
     @Override

@@ -195,6 +195,9 @@ public class Hns extends XMLStructureAdapter
         return true;
     }
 
+    /**
+     * @return distance, or -1 on failure
+     */
     public double getDistance(String value)
     {
         Double distStr = getSymbolValue(DISTANCES, value);
@@ -202,7 +205,10 @@ public class Hns extends XMLStructureAdapter
         {
             return distStr;
         }
-        throw new RuntimeException("Parsing failure for getDistance of" + value);
+        else
+        {
+            return -1;
+        }
     }
 
     public double getElementExtent(String value)
