@@ -1,13 +1,17 @@
 package asap.animationengine.ace.lmp;
 
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
+
+import com.google.common.collect.ImmutableSet;
 
 import asap.animationengine.motionunit.TimedAnimationUnit;
 import asap.motionunit.TMUPlayException;
 import asap.realizer.feedback.FeedbackManager;
 import asap.realizer.pegboard.BMLBlockPeg;
+import asap.realizer.pegboard.PegBoard;
 import asap.realizer.pegboard.TimePeg;
 import asap.realizer.planunit.TimedAbstractPlanUnit;
 import asap.realizer.planunit.TimedPlanUnitPlayException;
@@ -15,11 +19,18 @@ import asap.realizer.planunit.TimedPlanUnitPlayException;
 public class MotorControlProgram extends TimedAbstractPlanUnit implements TimedAnimationUnit
 {
     private List<TimedAnimationUnit> lmpQueue = new ArrayList<>();
+    private TimePeg startPeg, endPeg, relaxPeg;
+    private final PegBoard globalPegBoard;
+    private final PegBoard localPegBoard;
     
-    public MotorControlProgram(FeedbackManager fbm, BMLBlockPeg bmlPeg, String bmlId, String behId)
+    public MotorControlProgram(FeedbackManager fbm, BMLBlockPeg bmlPeg, String bmlId, String behId, PegBoard pegBoard)
     {
         super(fbm, bmlPeg, bmlId, behId);
-        // TODO Auto-generated constructor stub
+        startPeg = new TimePeg(bmlPeg);
+        endPeg = new TimePeg(bmlPeg);
+        relaxPeg = new TimePeg(bmlPeg);
+        globalPegBoard = pegBoard;
+        localPegBoard = new PegBoard();
     }
 
     public void addLMP(TimedAnimationUnit tau)
@@ -30,36 +41,35 @@ public class MotorControlProgram extends TimedAbstractPlanUnit implements TimedA
     @Override
     public double getStartTime()
     {
-        // TODO Auto-generated method stub
-        return 0;
+        return startPeg.getGlobalValue();
     }
 
     @Override
     public double getEndTime()
     {
-        // TODO Auto-generated method stub
-        return 0;
+        return endPeg.getGlobalValue();
     }
 
     @Override
     public double getRelaxTime()
     {
-        // TODO Auto-generated method stub
-        return 0;
+        if(relaxPeg.getGlobalValue()!=TimePeg.VALUE_UNKNOWN)
+        {
+            return relaxPeg.getGlobalValue();
+        }
+        return getEndTime();
     }
 
     @Override
     public TimePeg getTimePeg(String syncId)
     {
-        // TODO Auto-generated method stub
-        return null;
+        return localPegBoard.getTimePeg(getBMLId(), getId(), syncId);
     }
 
     @Override
     public void setTimePeg(String syncId, TimePeg peg)
     {
         // TODO Auto-generated method stub
-        
     }
 
     @Override
@@ -72,15 +82,23 @@ public class MotorControlProgram extends TimedAbstractPlanUnit implements TimedA
     @Override
     public Set<String> getKinematicJoints()
     {
-        // TODO Auto-generated method stub
-        return null;
+        Set<String> kinJoints = new HashSet<>();
+        for(TimedAnimationUnit tmu: lmpQueue)
+        {
+            kinJoints.addAll(tmu.getKinematicJoints());
+        }
+        return ImmutableSet.copyOf(kinJoints);
     }
 
     @Override
     public Set<String> getPhysicalJoints()
     {
-        // TODO Auto-generated method stub
-        return null;
+        Set<String> phJoints = new HashSet<>();
+        for(TimedAnimationUnit tmu: lmpQueue)
+        {
+            phJoints.addAll(tmu.getPhysicalJoints());
+        }
+        return ImmutableSet.copyOf(phJoints);
     }
 
     @Override

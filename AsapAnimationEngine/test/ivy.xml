@@ -12,5 +12,6 @@
       <dependency org="Asap"      transitive="false" name="AsapTestUtil"        rev="latest.{$resolve.status}"  />
       <dependency org="logback" name="logback-classic"     rev="latest.release"  />
       <dependency org="logback" name="logback-core"        rev="latest.release"  />
+      <dependency org="fest" name="fest-reflect"        rev="latest.release"  />
    </dependencies>
 </ivy-module>

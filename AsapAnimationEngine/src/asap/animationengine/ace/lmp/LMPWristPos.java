@@ -32,14 +32,16 @@ import asap.realizer.planunit.TimedPlanUnitPlayException;
 @Slf4j
 public class LMPWristPos extends LMPPos
 {
-    private final PegBoard pegBoard;    
-    private ImmutableSet kinematicJoints;
+    private final PegBoard pegBoard;
+    private ImmutableSet<String> kinematicJoints;
+    private NUSSpline3 spline;
+
     
     public LMPWristPos(String scope, FeedbackManager bbf, BMLBlockPeg bmlBlockPeg, String bmlId, String id, PegBoard pegBoard)
     {
         super(bbf, bmlBlockPeg, bmlId, id);
         this.pegBoard = pegBoard;
-        if(scope.equals("left_arm"))
+        if (scope.equals("left_arm"))
         {
             kinematicJoints = ImmutableSet.of(Hanim.l_shoulder, Hanim.l_elbow);
         }
@@ -49,7 +51,6 @@ public class LMPWristPos extends LMPPos
         }
     }
 
-    private NUSSpline3 spline;
 
     public float[] getPosition(double t)
     {
@@ -79,7 +80,7 @@ public class LMPWristPos extends LMPPos
     {
         // TODO: implement this
     }
-    
+
     @Override
     public void startUnit(double time)
     {
@@ -88,6 +89,7 @@ public class LMPWristPos extends LMPPos
             // get first timing constraint and guiding stroke
             TPConstraint startTPC = gSeq.getStartTPC();
             GuidingStroke gstroke = gSeq.getStroke(0);
+
             // TODO: implement this
             // // determine the duration of the currently needed prep movement
             // duration = getPosDurationFromAmplitude((x - gstroke.getEndPos()).Length());
@@ -224,25 +226,35 @@ public class LMPWristPos extends LMPPos
     @Override
     public double getStartTime()
     {
-        //TODO: what if start does not exist?
-        return pegBoard.getTimePeg(getBMLId(),getId(),"start").getGlobalValue();
+        TimePeg tpStart = pegBoard.getTimePeg(this.getBMLId(), this.getId(), "start");
+        if (tpStart != null)
+        {
+            return tpStart.getGlobalValue();
+        }
+
+        return TimePeg.VALUE_UNKNOWN;
     }
 
     @Override
     public double getEndTime()
     {
-        //TODO: what if end does not exist?
-        return pegBoard.getTimePeg(this.getBMLId(),this.getId(),"end").getGlobalValue();
+        TimePeg tpEnd = pegBoard.getTimePeg(this.getBMLId(), this.getId(), "end");
+        if (tpEnd != null)
+        {
+            return tpEnd.getGlobalValue();
+        }
+
+        return TimePeg.VALUE_UNKNOWN;
     }
 
     @Override
     public double getRelaxTime()
     {
-        TimePeg relaxPeg = pegBoard.getTimePeg(getBMLId(),getId(),"relax");
-        
-        if (relaxPeg!=null && relaxPeg.getGlobalValue()!=TimePeg.VALUE_UNKNOWN)
+        TimePeg relaxPeg = pegBoard.getTimePeg(getBMLId(), getId(), "relax");
+
+        if (relaxPeg != null && relaxPeg.getGlobalValue() != TimePeg.VALUE_UNKNOWN)
         {
-            return pegBoard.getTimePeg(this.getBMLId(),this.getId(),"relax").getGlobalValue();
+            return pegBoard.getTimePeg(this.getBMLId(), this.getId(), "relax").getGlobalValue();
         }
         else return getEndTime();
     }
@@ -250,13 +262,13 @@ public class LMPWristPos extends LMPPos
     @Override
     public TimePeg getTimePeg(String syncId)
     {
-        return pegBoard.getTimePeg(getBMLId(),getId(),syncId);
+        return pegBoard.getTimePeg(getBMLId(), getId(), syncId);
     }
 
     @Override
     public void setTimePeg(String syncId, TimePeg peg)
     {
-        pegBoard.addTimePeg(getBMLId(), getId(), syncId, peg);        
+        pegBoard.addTimePeg(getBMLId(), getId(), syncId, peg);
     }
 
     @Override
@@ -270,21 +282,20 @@ public class LMPWristPos extends LMPPos
     protected void playUnit(double time) throws TimedPlanUnitPlayException
     {
         // TODO Auto-generated method stub
-        
+
     }
 
     @Override
     protected void stopUnit(double time) throws TimedPlanUnitPlayException
     {
         // TODO Auto-generated method stub
-        
+
     }
 
     @Override
     public Set<String> getKinematicJoints()
     {
-        // TODO Auto-generated method stub
-        return null;
+        return kinematicJoints;
     }
 
     @Override
@@ -297,6 +308,6 @@ public class LMPWristPos extends LMPPos
     public void updateTiming(double time) throws TMUPlayException
     {
         // TODO Auto-generated method stub
-        
+
     }
 }

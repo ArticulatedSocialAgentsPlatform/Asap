@@ -6,6 +6,7 @@ import hmi.neurophysics.FittsLaw;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map.Entry;
 
 import lombok.extern.slf4j.Slf4j;
 import asap.animationengine.ace.CurvedGStroke;
@@ -13,8 +14,10 @@ import asap.animationengine.ace.GStrokePhaseID;
 import asap.animationengine.ace.GuidingSequence;
 import asap.animationengine.ace.GuidingStroke;
 import asap.animationengine.ace.LinearGStroke;
+import asap.animationengine.ace.OrientConstraint;
 import asap.animationengine.ace.TPConstraint;
 import asap.animationengine.ace.lmp.LMPWristPos;
+import asap.animationengine.ace.lmp.LMPWristRot;
 import asap.animationengine.ace.lmp.MotorControlProgram;
 import asap.animationengine.keyframe.MURMLKeyframeMU;
 import asap.animationengine.motionunit.AnimationUnit;
@@ -160,22 +163,18 @@ public final class MURMLMUBuilder
                 // parse obligatory parameters
                 boolean valid = true;
 
-                if (hns.getHandLocation(segment.getName("end"), ePos))
+                if (!hns.getHandLocation(segment.getName("end"), ePos))
                 {
-                    // end position
+                    log.warn("ArmMotorControl::appendSubtrajectory : invalid parameter end={} for curved guiding stroke!",
+                            segment.getName("end"));
+                    return;
+                }
 
-                }
-                else
+                if (!hns.getAbsoluteDirection(segment.getName("normal"), nVec))
                 {
-                    valid = false;
-                }
-                if (hns.getAbsoluteDirection(segment.getName("normal"), nVec))
-                {
-
-                }
-                else
-                {
-                    valid = false;
+                    log.warn("ArmMotorControl::appendSubtrajectory : invalid parameter normal={} for curved guiding stroke!",
+                            segment.getName("normal"));
+                    return;
                 }
 
                 /*
@@ -187,54 +186,47 @@ public final class MURMLMUBuilder
                  */
                 shape = hns.getElementShape(segment.getName("shape"));
 
-                if (valid)
+                // parse optional parameters
+                float extent = 0.2f;
+                float roundness = 0f;
+                float skewedness = 0f;
+                if (segment.getName("extent") != null)
                 {
-                    // parse optional parameters
-                    float extent = 0.2f;
-                    float roundness = 0f;
-                    float skewedness = 0f;
-                    if (segment.getName("extent") != null)
-                    {
-                        extent = (float) hns.getElementExtent(segment.getName("extent"));
-                    }
-                    if (segment.getName("roundness") != null)
-                    {
-                        roundness = (float) hns.getElementRoundness(segment.getName("roundness"));
-                    }
-                    if (segment.getName("skewedness") != null)
-                    {
-                        roundness = (float) hns.getElementRoundness(segment.getName("skewedness"));
-                    }
-
-                    // create curved stroke
-                    CurvedGStroke cgs = new CurvedGStroke(GStrokePhaseID.STP_STROKE, new TPConstraint(eT), ePos, nVec, shape, extent,
-                            roundness, skewedness);
-                    // build geometric parameters for given start position
-                    // (necessary for estimating duration!)
-                    cgs.formAt(sPos, sT);
-                    // cgs->vGain = 0.;
-
-                    // -- stroke time smaller than affiliate duration, i.e., post-stroke hold required?
-                    cgs.setEDt(FittsLaw.getHandTrajectoryDuration(cgs.getArcLengthFrom(sPos)));
-
-                    tEst += cgs.getEDt();
-                    sSeq.add(cgs);
-                    sPos = cgs.getEndPos();
-
-                    /*
-                     * TODO: handle chops. In addition to the code below, some data from utterance_visitors_ChopResolver needs to be inserted
-                     * // if curve is a chop, force swivel to be 0
-                     * if (segment->hasAttribute("chop"))
-                     * {
-                     * swivel = 0;
-                     * }
-                     */
+                    extent = (float) hns.getElementExtent(segment.getName("extent"));
                 }
-                else
+                if (segment.getName("roundness") != null)
                 {
-                    log.warn("ArmMotorControl::appendSubtrajectory : invalid parameters for curved guiding stroke!");
-                    return;
+                    roundness = (float) hns.getElementRoundness(segment.getName("roundness"));
                 }
+                if (segment.getName("skewedness") != null)
+                {
+                    roundness = (float) hns.getElementRoundness(segment.getName("skewedness"));
+                }
+
+                // create curved stroke
+                CurvedGStroke cgs = new CurvedGStroke(GStrokePhaseID.STP_STROKE, new TPConstraint(eT), ePos, nVec, shape, extent,
+                        roundness, skewedness);
+                // build geometric parameters for given start position
+                // (necessary for estimating duration!)
+                cgs.formAt(sPos, sT);
+                // cgs->vGain = 0.;
+
+                // -- stroke time smaller than affiliate duration, i.e., post-stroke hold required?
+                cgs.setEDt(FittsLaw.getHandTrajectoryDuration(cgs.getArcLengthFrom(sPos)));
+
+                tEst += cgs.getEDt();
+                sSeq.add(cgs);
+                sPos = cgs.getEndPos();
+
+                /*
+                 * TODO: handle chops. In addition to the code below, some data from utterance_visitors_ChopResolver needs to be inserted
+                 * // if curve is a chop, force swivel to be 0
+                 * if (segment->hasAttribute("chop"))
+                 * {
+                 * swivel = 0;
+                 * }
+                 */
+
             }
 
         }
@@ -333,6 +325,149 @@ public final class MURMLMUBuilder
         }
     }
 
+    private static void formWristMovement(String scope, List<DynamicElement> elements, FeedbackManager bbm, BMLBlockPeg bmlBlockPeg,
+            String bmlId, String id, PegBoard pb, Hns hns, MotorControlProgram mcp)
+    {
+        double tp = 0;
+        float vec[] = Vec3f.getVec3f();
+        List<OrientConstraint> ocVec = new ArrayList<>();
+        double x, y, z;
+
+        // TODO: check mode and make sure its absolute?
+        // // -- collect all relevant constraints (efo or absolute po)
+        // vector<MovementConstraintBranchNode*> ocNodes;
+        // for (int i=0; i<mcMap.size(); i++)
+        // {
+        // if ( mcMap[i]->getSlot() == "ExtFingerOrientation" ||
+        // (mcMap[i]->getSlot() == "PalmOrientation" &&
+        // mcMap[i]->hasAttribute("mode") &&
+        // mcMap[i]->getAttribute("mode") == "absolute") )
+        // ocNodes.push_back(mcMap[i]);
+        // }
+
+        for (DynamicElement dynElem : elements)
+        {
+            if (dynElem.getValueNodes().size() < 2)
+            {
+                log.warn("form dynamic constraint: insufficient number of values!");
+                return;
+            }
+            // Note: We assume here that all transitions within the dynamic element
+            // are timed equally!!!
+
+            // TODO
+            // double t = dynElem.getStartTPC().time;
+            // double elemDuration = dynElem.getEndTPC().time - t;
+            double t = 0;
+            double elemDuration = 10;
+
+            double dt = elemDuration / (dynElem.getValueNodes().size() - 1.0);
+            for (Entry<String, String> vn : dynElem.getValueNodes())
+            {
+                OrientConstraint oc = new OrientConstraint();
+                oc.setPhase(GStrokePhaseID.STP_STROKE);
+                vec = Vec3f.getVec3f();
+                if (hns.getAbsoluteDirection(vn.getValue(), vec))
+                {
+                    oc.setP(vec);
+                    oc.setT(t);
+                    ocVec.add(oc);
+                }
+                t += dt;
+
+            }
+        }
+        // -- create lmp and append to motor program
+        if (!ocVec.isEmpty())
+        {
+
+            // TODO: set up retraction+holds
+            // float fRetrStartT = mp->getRetractionStartTime();
+            // if ( fRetrStartT > ocVec.back().t )
+            // {
+            // ocVec.back().phase = GuidingStroke::STP_HOLD;
+            // OrientConstraint oc;
+            // oc.d = ocVec.back().d;
+            // oc.t = fRetrStartT;
+            // ocVec.push_back(oc);
+            // }
+            // else {
+            // // make sure that the last constraint marks stroke end, i.e., retraction onset!
+            // ocVec.back().phase = GuidingStroke::STP_RETRACT;
+            // }
+
+            // build lmp
+            LMPWristRot lmp = createWristRotLMP(scope, ocVec, bbm, bmlBlockPeg, id, id, pb);
+
+            if (lmp != null)
+            {
+                // TODO(?)
+                // lmp->transform(mp->getBase2Root());
+                mcp.addLMP(lmp);
+            }
+        }
+
+    }
+
+    private static LMPWristRot createWristRotLMP(String scope, List<OrientConstraint> ocVec, FeedbackManager bbm, BMLBlockPeg bmlBlockPeg,
+            String bmlId, String id, PegBoard pb)
+    {
+        if (ocVec.isEmpty())
+        {
+            return null;
+        }
+        LMPWristRot lmp = new LMPWristRot(scope, ocVec, bbm, bmlBlockPeg, id, id, pb);
+
+        // if ( retrMode == RTRCT_NO )
+        // {
+        // ocVec.back().phase = GuidingStroke::STP_FINISH;
+        // lmp->setOrientConstraints(ocVec);
+        // }
+        // else
+        // {
+        // lmp->setOrientConstraints(ocVec);
+        //
+        // // -- prepare internal retraction from wrist movement
+        // LMP_JAngleNSN *lmpRetract = new LMP_JAngleNSN ("HGO_Retract",scope);
+        //
+        // // will eventually end in 'restAngles'
+        // deque<MgcVectorN> goalVec;
+        // goalVec.push_back(restAngles);
+        //
+        // // will arrive there at a certain time
+        // deque<MgcReal> timeVec;
+        // timeVec.push_back(ocVec.back().t + retractionTime);
+        //
+        // // goes into 'finish'
+        // deque<GuidingStroke::GStrokePhaseID> phaseVec;
+        // phaseVec.push_back(GuidingStroke::STP_FINISH);
+        //
+        // // the angles/time/phase before going into 'retract' will be set at activation time
+        // lmp->activateSuccessorAt(lmpRetract);
+        //
+        // // Note: According to Hoffmann & Hammel, we apply an
+        // // isochronous strategy for goal directed wrist movement!
+        // lmpRetract->setAngleVec(goalVec);
+        // lmpRetract->setTimeVec(timeVec);
+        // lmpRetract->setPhaseVec(phaseVec);
+        // }
+
+        return lmp;
+    }
+
+    private static void formPOMovement(String scope, List<DynamicElement> elements, FeedbackManager bbm, BMLBlockPeg bmlBlockPeg,
+            String bmlId, String id, PegBoard pb, Hns hns, MotorControlProgram mcp)
+    {
+
+    }
+
+    public static void getDynamicPalmOrientationElementsTMU(String scope, List<DynamicElement> elements, FeedbackManager bbm,
+            BMLBlockPeg bmlBlockPeg, String bmlId, String id, PegBoard pb, Hns hns, MotorControlProgram mcp)
+    {
+        formWristMovement(scope, elements, bbm, bmlBlockPeg, bmlId, id, pb, hns, mcp);
+        formPOMovement(scope, elements, bbm, bmlBlockPeg, bmlId, id, pb, hns, mcp);
+    }
+
     public static void getDynamicHandLocationElementsTMU(String scope, List<DynamicElement> elements, FeedbackManager bbm,
             BMLBlockPeg bmlBlockPeg, String bmlId, String id, PegBoard pb, Hns hns, MotorControlProgram mcp)
     {
@@ -360,11 +495,10 @@ public final class MURMLMUBuilder
             appendSubTrajectory(elements, scope, trajectory, tmu, hns, bbm, bmlBlockPeg, bmlId, id, pb, mcp);
         }
 
-        // TODO
+        // TODO: implement retraction, retraction modes
         // // --- shall we retract at all?
         // if ( retrMode == RTRCT_FULL || retrMode == RTRCT_INTERMEDIATE )
         // {
-        // //cout << ">>>> ArmMotorControl: Retraction mode = " << retrMode << endl;
         // // -- complete ongoing guiding sequence by appending a retracting stroke
         // // (estimate retraction duration by applying Fitts' law)
         // ePos = restPos;
@@ -373,9 +507,68 @@ public final class MURMLMUBuilder
         // eT.mode = TPConstraint::Soft; // end time of retraction not of great importance
         // trajectory.addGuidingStroke( new LinearGStroke (GuidingStroke::STP_RETRACT, eT,ePos) );
         // }
-        //
-        // // -- build and append retracting lmp(s)
-        // createPosLMP( trajectory, mp, lmp );
+
+        // -- build and append retracting lmp(s)
+        createPosLMP(scope, trajectory, mcp, tmu, bbm, bmlBlockPeg, id, id, pb);
+    }
+
+    private static void createPosLMP(String scope, GuidingSequence traj, MotorControlProgram mp, TimedAnimationUnit lmp,
+            FeedbackManager bbf, BMLBlockPeg bmlBlockPeg, String bmlId, String id, PegBoard pegBoard)
+    {
+        if (!traj.isEmpty() && mp != null)
+        {
+            // -- create lmp for wrist trajectory
+            // cout << "==== creating lmp from: "; traj.writeTo(cout); cout << endl;
+
+            LMPWristPos wristMove = new LMPWristPos(scope, bbf, bmlBlockPeg, bmlId, id, pegBoard);
+
+            // TODO
+            // -- set transformation for converting positions into base coordinates
+            // wristMove->setBaseFrame( mp->getBase2Root() );
+
+            // -- set guiding sequence -> will transform the seq into base coords!
+            wristMove.setGuidingSeq(traj);
+
+            // -- absolutely new movement, or should we append to previous LMP?
+            if (lmp == null)
+            {
+                mp.addLMP(wristMove);
+
+            }
+            else
+            {
+                // TODO: solve with TimePegs
+                // lmp->activateSuccessorAt( wristMove,traj.getStartTPC() );
+                lmp = wristMove;
+            }
+
+            // TODO
+            // // -- extend movement with retractory parts, e.g., overshooting
+            // if ( retrMode == RTRCT_FULL || retrMode == RTRCT_INTERMEDIATE )
+            // {
+            // // -- prepapre swivel retraction
+            // // According to Soechting et al, wrist and arm control are relatively independent. In
+            // // consequence, elbow swivel can be defined mainly on basis of the wrist position. The
+            // // retraction of the overall wrist movement hence coactivates the swivel retraction.
+            // MgcVectorN q (1);
+            // q[0] = restSwivel;
+            // deque<MgcVectorN> goalVec;
+            // deque<MgcReal> timeVec;
+            // goalVec.push_back(q);
+            // timeVec.push_back( traj.getEndTime() );
+            // LMP_Swivel *lmpSwiv = new LMP_Swivel ( "SW_Retract", scope );
+            // lmpSwiv->setSwivelVec(goalVec);
+            // lmpSwiv->setTimeVec(timeVec);
+            // lmp->activatePeerAt( lmpSwiv, traj.getEndTime()-0.2 );
+            // mp->addLMP( lmpSwiv );
+            //
+            // // -- create lmp for overshooting the retraction
+            // if ( retrMode = RTRCT_FULL )
+            // {
+            // // lpm->overshoot();
+            // }
+            // }
+        }
     }
 
     public static TimedAnimationUnit getKeyFramingTMU(Keyframing kf, FeedbackManager bbm, BMLBlockPeg bmlBlockPeg, String bmlId, String id,
@@ -450,10 +643,18 @@ public final class MURMLMUBuilder
         return null;
     }
 
+    public static TimedAnimationUnit setupTMU(String murmlStr, FeedbackManager bbm, BMLBlockPeg bmlBlockPeg, String bmlId, String id,
+            PegBoard pb, Hns hns)
+    {
+        MURMLDescription def = new MURMLDescription();
+        def.readXML(murmlStr);
+        return setupTMU(def, bbm, bmlBlockPeg, bmlId, id, pb, hns);
+    }
+
     public static TimedAnimationUnit setupTMU(MURMLDescription murmlDescription, FeedbackManager bbm, BMLBlockPeg bmlBlockPeg,
             String bmlId, String id, PegBoard pb, Hns hns)
     {
-        MotorControlProgram mcp = new MotorControlProgram(bbm, bmlBlockPeg, bmlId, id);
+        MotorControlProgram mcp = new MotorControlProgram(bbm, bmlBlockPeg, bmlId, id, pb);
         if (murmlDescription.getDynamic() != null)
         {
             Dynamic dyn = murmlDescription.getDynamic();
@@ -471,11 +672,13 @@ public final class MURMLMUBuilder
                     break;
                 case HandLocation:
                     getDynamicHandLocationElementsTMU(dyn.getScope(), dyn.getDynamicElements(), bbm, bmlBlockPeg, id, id, pb, hns, mcp);
+                    break;
                 case HandShape:
                     break;
                 case ExtFingerOrientation:
                     break;
                 case PalmOrientation:
+                    getDynamicPalmOrientationElementsTMU(dyn.getScope(), dyn.getDynamicElements(), bbm, bmlBlockPeg, id, id, pb, hns, mcp);
                     break;
                 }
             }

@@ -6,6 +6,8 @@ import hmi.xml.XMLTokenizer;
 import java.io.IOException;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.Map.Entry;
+import java.util.Set;
 
 import lombok.Getter;
 
@@ -43,6 +45,11 @@ public class DynamicElement extends MURMLElement
     public String getName(String type)
     {
         return valueMap.get(type);
+    }
+    
+    public Set<Entry<String,String>> getValueNodes()
+    {
+        return valueMap.entrySet();
     }
     
     @Override
