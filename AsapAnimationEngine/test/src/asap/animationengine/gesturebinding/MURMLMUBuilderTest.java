@@ -46,7 +46,8 @@ public class MURMLMUBuilderTest
     private VJoint vNext = HanimBody.getLOA1HanimBody();
     private VJoint vCurr = HanimBody.getLOA1HanimBody();
     private static final float ROT_PRECISION = 0.001f;
-    Hns mockHns = mock(Hns.class);
+    private AnimationPlayer mockAniPlayer = mock(AnimationPlayer.class);
+    private Hns mockHns = mock(Hns.class);
 
     @Before
     public void setup()
@@ -252,7 +253,7 @@ public class MURMLMUBuilderTest
         // @formatter:on
         PegBoard pb = new PegBoard();
         TimedAnimationUnit tau = MURMLMUBuilder.setupTMU(murmlString, new FeedbackManagerImpl(new BMLBlockManager(), ""),
-                BMLBlockPeg.GLOBALPEG, "bml1", "g1", pb, mockHns);
+                BMLBlockPeg.GLOBALPEG, "bml1", "g1", pb, mockHns,mockAniPlayer);
 
         assertThat(tau, instanceOf(MotorControlProgram.class));
         assertThat(tau.getKinematicJoints(), IsIterableContainingInAnyOrder.containsInAnyOrder(Hanim.l_shoulder, Hanim.l_elbow));
@@ -283,7 +284,7 @@ public class MURMLMUBuilderTest
         // @formatter:on
         PegBoard pb = new PegBoard();
         TimedAnimationUnit tau = MURMLMUBuilder.setupTMU(murmlString, new FeedbackManagerImpl(new BMLBlockManager(), ""),
-                BMLBlockPeg.GLOBALPEG, "bml1", "g1", pb, mockHns);        
+                BMLBlockPeg.GLOBALPEG, "bml1", "g1", pb, mockHns,mockAniPlayer);        
         
         assertThat(tau, instanceOf(MotorControlProgram.class));
         assertThat(tau.getKinematicJoints(), IsIterableContainingInAnyOrder.containsInAnyOrder(Hanim.r_wrist));
