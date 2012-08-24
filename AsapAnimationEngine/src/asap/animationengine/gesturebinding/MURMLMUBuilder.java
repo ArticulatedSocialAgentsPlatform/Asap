@@ -352,29 +352,25 @@ public final class MURMLMUBuilder
                 log.warn("form dynamic constraint: insufficient number of values!");
                 return;
             }
-            // Note: We assume here that all transitions within the dynamic element
-            // are timed equally!!!
-
-            // TODO
-            // double t = dynElem.getStartTPC().time;
-            // double elemDuration = dynElem.getEndTPC().time - t;
-            double t = 0;
-            double elemDuration = 10;
-
-            double dt = elemDuration / (dynElem.getValueNodes().size() - 1.0);
+            
+            int i=0;
             for (Entry<String, String> vn : dynElem.getValueNodes())
             {
-                OrientConstraint oc = new OrientConstraint();
+                String cid = vn.getKey();
+                
+                //force first and last ids to be stroke_start and stroke_end respectively
+                if(i==0)id="stroke_start";
+                if(i==dynElem.getValueNodes().size()-1)id="stroke_end";
+                
+                OrientConstraint oc = new OrientConstraint(cid);
                 oc.setPhase(GStrokePhaseID.STP_STROKE);
                 vec = Vec3f.getVec3f();
                 if (hns.getAbsoluteDirection(vn.getValue(), vec))
                 {
                     oc.setP(vec);
-                    oc.setT(t);
                     ocVec.add(oc);
                 }
-                t += dt;
-
+                i++;
             }
         }
         // -- create lmp and append to motor program

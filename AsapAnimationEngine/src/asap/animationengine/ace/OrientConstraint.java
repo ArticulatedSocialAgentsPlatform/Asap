@@ -13,18 +13,14 @@ public class OrientConstraint
 {
     @Getter private float [] d = Vec3f.getVec3f();  //extended finger direction:
     @Getter private float [] p = Vec3f.getVec3f();  //palm normal
-    @Getter private double tp;
-    @Getter @Setter private double t;
     @Getter @Setter private GStrokePhaseID phase;
-    @Getter private boolean def;
+    @Getter private final String id;
     
-    public OrientConstraint()
+    public OrientConstraint(String id)
     {
+        this.id = id;
         Vec3f.set(d,0,0,0);
-        Vec3f.set(p,0,0,0);        
-        t  = -1;
-        tp = -1;
-        def = false;
+        Vec3f.set(p,0,0,0);
     }
     
     public void setP(float[]pNew)
@@ -37,14 +33,12 @@ public class OrientConstraint
         Vec3f.set(d,dNew);
     }
     
-    public OrientConstraint(GStrokePhaseID ph, double ti,
+    public OrientConstraint(String id, GStrokePhaseID ph,
             float[] d_dir, float[] p_dir)
     {
+        this.id = id;
         phase = ph;
-        t = ti;
-        tp = -1;
         Vec3f.set(d,d_dir);
-        Vec3f.set(p,p_dir);
-        def = true;
+        Vec3f.set(p,p_dir);        
     }
 }

@@ -326,6 +326,10 @@ public abstract class TimedAbstractPlanUnit implements TimedPlanUnit
             return getStartTime();
         if (syncId.equals("end"))
             return getEndTime();
+        if(getTimePeg(syncId)!=null)
+        {
+            return getTimePeg(syncId).getGlobalValue();
+        }
         return TimePeg.VALUE_UNKNOWN;
     }
 
