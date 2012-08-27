@@ -1,9 +1,13 @@
 package asap.realizer.parametervaluechange;
 
+import java.util.List;
+
 import saiba.bml.BMLGestureSync;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+
+import com.google.common.collect.ImmutableList;
 
 import asap.realizer.BehaviorNotFoundException;
 import asap.realizer.SyncPointNotFoundException;
@@ -222,6 +226,12 @@ public class TimedParameterValueChangeUnit extends TimedAbstractPlanUnit
     public String getReplacementGroup()
     {
         return replacementGroup;
+    }
+    
+    @Override
+    public List<String> getAvailableSyncs()
+    {
+        return ImmutableList.of("start","end");
     }
 
 }

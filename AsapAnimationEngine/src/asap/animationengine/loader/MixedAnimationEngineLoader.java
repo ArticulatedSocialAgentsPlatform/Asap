@@ -45,6 +45,7 @@ import asap.animationengine.gesturebinding.GestureBinding;
 import asap.animationengine.motionunit.TimedAnimationUnit;
 import asap.animationengine.restpose.RestPose;
 import asap.animationengine.restpose.SkeletonPoseRestPose;
+import asap.hns.Hns;
 import asap.realizer.DefaultEngine;
 import asap.realizer.Engine;
 import asap.realizer.planunit.DefaultTimedPlanUnitPlayer;
@@ -68,6 +69,7 @@ public class MixedAnimationEngineLoader implements EngineLoader
     private MixedAnimationPlayer animationPlayer = null;
     private AnimationPlanner animationPlanner = null;
     private SkeletonPose restpose;
+    private Hns hns = new Hns();
 
     String id = "";
     // some variables cached during loading
@@ -75,10 +77,10 @@ public class MixedAnimationEngineLoader implements EngineLoader
 
     private AsapRealizerEmbodiment are = null;
     private WorldObjectEnvironment we = null;
-    
+
     @Override
-    public void readXML(XMLTokenizer tokenizer, String loaderId, String vhId, String vhName, Environment[] environments, Loader ... requiredLoaders) 
-    	throws IOException
+    public void readXML(XMLTokenizer tokenizer, String loaderId, String vhId, String vhName, Environment[] environments,
+            Loader... requiredLoaders) throws IOException
     {
         id = loaderId;
         for (Environment e : environments)
@@ -96,8 +98,8 @@ public class MixedAnimationEngineLoader implements EngineLoader
             {
                 pe = (PhysicalEmbodiment) ((EmbodimentLoader) e).getEmbodiment();
             }
-            if (e instanceof EmbodimentLoader && ((EmbodimentLoader) e).getEmbodiment() 
-                    instanceof AsapRealizerEmbodiment) are = (AsapRealizerEmbodiment) ((EmbodimentLoader) e).getEmbodiment();
+            if (e instanceof EmbodimentLoader && ((EmbodimentLoader) e).getEmbodiment() instanceof AsapRealizerEmbodiment) are = (AsapRealizerEmbodiment) ((EmbodimentLoader) e)
+                    .getEmbodiment();
         }
         if (are == null)
         {
@@ -141,7 +143,8 @@ public class MixedAnimationEngineLoader implements EngineLoader
         if (tokenizer.atSTag("GestureBinding"))
         {
             attrMap = tokenizer.getAttributes();
-            gesturebinding = new GestureBinding(new Resources(adapter.getOptionalAttribute("basedir", attrMap, "")), are.getFeedbackManager());
+            gesturebinding = new GestureBinding(new Resources(adapter.getOptionalAttribute("basedir", attrMap, "")),
+                    are.getFeedbackManager());
             try
             {
                 gesturebinding.readXML(new Resources(adapter.getOptionalAttribute("resources", attrMap, "")).getReader(adapter
@@ -172,6 +175,14 @@ public class MixedAnimationEngineLoader implements EngineLoader
             }
             tokenizer.takeSTag("StartPose");
             tokenizer.takeETag("StartPose");
+        }
+        else if (tokenizer.atSTag("Hns"))
+        {
+            attrMap = tokenizer.getAttributes();
+            Resources res = new Resources(adapter.getOptionalAttribute("resources", attrMap, ""));
+            hns.readXML(res.getReader(adapter.getRequiredAttribute("filename", attrMap,tokenizer)));
+            tokenizer.takeSTag("Hns");            
+            tokenizer.takeETag("Hns");
         }
         else if (tokenizer.atSTag("StartPosition"))
         {
@@ -221,9 +232,8 @@ public class MixedAnimationEngineLoader implements EngineLoader
         {
             pose = new SkeletonPoseRestPose();
         }
-        AnimationPlanPlayer animationPlanPlayer = new AnimationPlanPlayer(pose,
-                are.getFeedbackManager(), animationPlanManager, new DefaultTimedPlanUnitPlayer(),
-                are.getPegBoard());
+        AnimationPlanPlayer animationPlanPlayer = new AnimationPlanPlayer(pose, are.getFeedbackManager(), animationPlanManager,
+                new DefaultTimedPlanUnitPlayer(), are.getPegBoard());
 
         // public AnimationPlayer(VJoint vP, VJoint vC, VJoint vN, ArrayList<MixedSystem> m, float h, WorldObjectManager wom,
         // PlanPlayer planPlayer)
@@ -235,8 +245,8 @@ public class MixedAnimationEngineLoader implements EngineLoader
         // IKBody nextBody = new IKBody(se.getNextVJoint()); not used?
 
         // make planner
-        animationPlanner = new AnimationPlanner(are.getFeedbackManager(),
-                (AnimationPlayer) animationPlayer, gesturebinding, animationPlanManager, are.getPegBoard());
+        animationPlanner = new AnimationPlanner(are.getFeedbackManager(), (AnimationPlayer) animationPlayer, gesturebinding, hns,
+                animationPlanManager, are.getPegBoard());
 
         engine = new DefaultEngine<TimedAnimationUnit>(animationPlanner, (AnimationPlayer) animationPlayer, animationPlanManager);
         engine.setId(id);

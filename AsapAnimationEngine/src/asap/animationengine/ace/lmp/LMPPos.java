@@ -5,6 +5,7 @@ import asap.animationengine.ace.GuidingSequence;
 import asap.animationengine.motionunit.TimedAnimationUnit;
 import asap.realizer.feedback.FeedbackManager;
 import asap.realizer.pegboard.BMLBlockPeg;
+import asap.realizer.pegboard.PegBoard;
 import asap.realizer.planunit.TimedAbstractPlanUnit;
 
 /**
@@ -12,11 +13,11 @@ import asap.realizer.planunit.TimedAbstractPlanUnit;
  * @author hvanwelbergen
  * @author Stefan Kopp (original C++ version)
  */
-public abstract class LMPPos extends TimedAbstractPlanUnit implements TimedAnimationUnit
+public abstract class LMPPos extends LMP
 {
-    public LMPPos(FeedbackManager bbf, BMLBlockPeg bmlBlockPeg, String bmlId, String id)
+    public LMPPos(FeedbackManager bbf, BMLBlockPeg bmlBlockPeg, String bmlId, String id, PegBoard pb)
     {
-        super(bbf, bmlBlockPeg, bmlId, id, true);
+        super(bbf, bmlBlockPeg, bmlId, id, pb);
         Mat4f.setIdentity(baseFrame);
     }
     protected GuidingSequence gSeq;

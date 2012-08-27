@@ -13,21 +13,24 @@ import java.util.ListIterator;
 import java.util.Map;
 import java.util.Set;
 
-import saiba.bml.feedback.BMLSyncPointProgressFeedback;
-
 import lombok.Data;
 import lombok.extern.slf4j.Slf4j;
+import saiba.bml.core.Behaviour;
+import saiba.bml.feedback.BMLSyncPointProgressFeedback;
 import asap.animationengine.AnimationPlayer;
 import asap.animationengine.ace.GStrokePhaseID;
 import asap.animationengine.ace.OrientConstraint;
 import asap.motionunit.TMUPlayException;
+import asap.realizer.BehaviourPlanningException;
 import asap.realizer.feedback.FeedbackManager;
 import asap.realizer.pegboard.BMLBlockPeg;
 import asap.realizer.pegboard.PegBoard;
 import asap.realizer.pegboard.TimePeg;
 import asap.realizer.planunit.TimedPlanUnitPlayException;
+import asap.realizer.scheduler.LinearStretchResolver;
+import asap.realizer.scheduler.TimePegAndConstraint;
+import asap.realizer.scheduler.UniModalResolver;
 
-import com.google.common.collect.ImmutableList;
 import com.google.common.collect.ImmutableSet;
 
 /**
@@ -36,13 +39,13 @@ import com.google.common.collect.ImmutableSet;
  * @author Stefan Kopp (original C++ version)
  */
 @Slf4j
-public class LMPWristRot extends LMPPos
+public class LMPWristRot extends LMP
 {
     private ImmutableSet<String> kinematicJoints;
     private List<OrientConstraint> ocVec;
     private Map<OrientConstraint, TimePeg> constraintMap = new HashMap<OrientConstraint, TimePeg>();
     private List<OrientPos> orientVec = new ArrayList<>();
-    private final PegBoard pegBoard;
+    
     private final AnimationPlayer aniPlayer;
     private final String joint;
 
@@ -50,6 +53,14 @@ public class LMPWristRot extends LMPPos
     private static final double TRANSITION_TIME = 0.4;
     private static final double DEFAULT_STROKEPHASE_DURATION = 5;
 
+    private final UniModalResolver resolver = new LinearStretchResolver();
+    
+    public void resolveSynchs(BMLBlockPeg bbPeg, Behaviour b, List<TimePegAndConstraint> sac)throws BehaviourPlanningException
+    {
+        resolver.resolveSynchs(bbPeg, b, sac, this);
+    }
+    
+    
     @Data
     private class OrientPos
     {
@@ -60,7 +71,7 @@ public class LMPWristRot extends LMPPos
     public LMPWristRot(String scope, List<OrientConstraint> ocVec, FeedbackManager bbf, BMLBlockPeg bmlBlockPeg, String bmlId, String id,
             PegBoard pegBoard, AnimationPlayer aniPlayer)
     {
-        super(bbf, bmlBlockPeg, bmlId, id);
+        super(bbf, bmlBlockPeg, bmlId, id,pegBoard);
         this.aniPlayer = aniPlayer;
         if (scope.equals("left_arm"))
         {
@@ -77,8 +88,7 @@ public class LMPWristRot extends LMPPos
             joint = null;
             log.warn("Invalid scope {}" + scope);
         }
-        this.ocVec = new ArrayList<>(ocVec);
-        this.pegBoard = pegBoard;
+        this.ocVec = new ArrayList<>(ocVec);        
     }
 
     @Override

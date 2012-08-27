@@ -66,7 +66,7 @@ public class DynamicElement extends MURMLElement
             }            
             else
             {
-                throw new XMLScanException("Invalid tag "+tag+" in <gesture>");
+                throw new XMLScanException("Invalid tag "+tag+" in <dynamicElement>");
             }
         }
     }

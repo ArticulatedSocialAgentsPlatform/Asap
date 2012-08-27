@@ -2,6 +2,7 @@ package asap.realizer.interrupt;
 
 
 import java.util.HashSet;
+import java.util.List;
 import java.util.Set;
 
 import org.slf4j.Logger;
@@ -14,6 +15,7 @@ import asap.realizer.planunit.TimedAbstractPlanUnit;
 import asap.realizer.planunit.TimedPlanUnitPlayException;
 import asap.realizer.scheduler.BMLScheduler;
 
+import com.google.common.collect.ImmutableList;
 import com.google.common.collect.ImmutableSet;
 
 /**
@@ -134,4 +136,10 @@ public class TimedInterruptUnit extends TimedAbstractPlanUnit
             logger.warn("Can't set TimePeg for sync {}, only setting start is allowed",syncId);            
         }
     }    
+    
+    @Override
+    public List<String> getAvailableSyncs()
+    {
+        return ImmutableList.of("start","end");
+    }
 }

@@ -2,6 +2,9 @@ package asap.audioengine;
 
 
 import java.io.InputStream;
+import java.util.List;
+
+import com.google.common.collect.ImmutableList;
 
 import asap.realizer.feedback.FeedbackManager;
 import asap.realizer.pegboard.BMLBlockPeg;
@@ -54,6 +57,12 @@ class StubAudioUnit extends TimedAbstractAudioUnit
         return "";
     }
 
+    @Override
+    public List<String> getAvailableSyncs()
+    {
+        return ImmutableList.of("start","end");
+    }
+    
     @Override
     public void cleanup()
     {

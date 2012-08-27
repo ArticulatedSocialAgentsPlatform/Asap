@@ -1,9 +1,13 @@
 package asap.realizer.wait;
 
+import java.util.List;
+
 import saiba.bml.BMLGestureSync;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+
+import com.google.common.collect.ImmutableList;
 
 import asap.realizer.feedback.FeedbackManager;
 import asap.realizer.pegboard.BMLBlockPeg;
@@ -122,6 +126,12 @@ public class TimedWaitUnit extends TimedAbstractPlanUnit
         if (syncId.equals("start")) return startPeg;
         if (syncId.equals("end")) return endPeg;
         return null;
+    }
+    
+    @Override
+    public List<String> getAvailableSyncs()
+    {
+        return ImmutableList.of("start","end");
     }
 
     @Override

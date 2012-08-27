@@ -31,6 +31,7 @@ import asap.animationengine.motionunit.TimedAnimationMotionUnit;
 import asap.animationengine.motionunit.TimedAnimationUnit;
 import asap.animationengine.restpose.PostureShiftTMU;
 import asap.animationengine.restpose.RestPose;
+import asap.bml.ext.murml.MURMLGestureBehaviour;
 import asap.realizer.BehaviourPlanningException;
 import asap.realizer.feedback.FeedbackManager;
 import asap.realizer.feedback.FeedbackManagerImpl;
@@ -121,7 +122,7 @@ public class AnimationPlannerTest
         ArrayList<TimePegAndConstraint> sacs = new ArrayList<TimePegAndConstraint>();
         TimePeg sp = new TimePeg(bbPeg);
         sacs.add(new TimePegAndConstraint("start", sp, new Constraint(), 0, false));
-        TimedAnimationMotionUnit pu = animationPlanner.resolveSynchs(bbPeg, beh, sacs);
+        TimedAnimationUnit pu = animationPlanner.resolveSynchs(bbPeg, beh, sacs);
         animationPlanner.addBehaviour(bbPeg, beh, sacs, pu);
         assertThat(planManager.getBehaviours(BMLID), IsIterableContainingInOrder.contains("nod1"));
     }
@@ -136,7 +137,7 @@ public class AnimationPlannerTest
         TimePeg sp = new TimePeg(bbPeg);
         sacs.add(new TimePegAndConstraint("start", sp, new Constraint(), 0, false));
 
-        TimedAnimationMotionUnit pu = animationPlanner.resolveSynchs(bbPeg, beh, sacs);
+        TimedAnimationUnit pu = animationPlanner.resolveSynchs(bbPeg, beh, sacs);
         assertEquals(0.3, sp.getGlobalValue(), TIMING_PRECISION);
         animationPlanner.addBehaviour(bbPeg, beh, sacs, pu);
         assertEquals(0.3, pu.getStartTime(), TIMING_PRECISION);
@@ -153,11 +154,40 @@ public class AnimationPlannerTest
         TimePeg sp = new TimePeg(bbPeg);
         sacs.add(new TimePegAndConstraint("start", sp, new Constraint(), 0, false));
 
-        TimedAnimationMotionUnit pu = animationPlanner.resolveSynchs(bbPeg, beh, sacs);
+        TimedAnimationUnit pu = animationPlanner.resolveSynchs(bbPeg, beh, sacs);
         assertEquals(0.3, sp.getGlobalValue(), TIMING_PRECISION);
         animationPlanner.addBehaviour(bbPeg, beh, sacs, pu);
         assertEquals(0.3, pu.getStartTime(), TIMING_PRECISION);
         assertEquals(3.3, pu.getEndTime(), TIMING_PRECISION);
+    }
+    
+    @Test
+    public void testMurmlPalmOrient() throws IOException, BehaviourPlanningException
+    {
+        //@formatter:off
+        String str = 
+        "<murmlgesture id=\"gesture1\" xmlns=\"http://www.techfak.uni-bielefeld.de/ags/soa/murml\">"+
+        "<murml-description>"+
+        "<dynamic slot=\"PalmOrientation\" scope=\"right_arm\">"+
+          "<dynamicElement>"+
+            "<value type=\"start\" name=\"PalmLU\"/>"+
+            "<value type=\"end\" name=\"PalmU\"/>"+
+          "</dynamicElement>"+
+        "</dynamic>"+
+        "</murml-description>"+
+        "</murmlgesture>";
+        //@formatter:on
+        MURMLGestureBehaviour beh = new MURMLGestureBehaviour(BMLID, new XMLTokenizer(str));
+        
+        ArrayList<TimePegAndConstraint> sacs = new ArrayList<TimePegAndConstraint>();
+        TimePeg sp = new TimePeg(bbPeg);
+        sacs.add(new TimePegAndConstraint("start", sp, new Constraint(), 0, false));
+        
+        TimedAnimationUnit pu = animationPlanner.resolveSynchs(bbPeg, beh, sacs);
+        assertEquals(0.3, sp.getGlobalValue(), TIMING_PRECISION);        
+        
+        animationPlanner.addBehaviour(bbPeg, beh, sacs, pu);
+        assertEquals(0.3, pu.getStartTime(), TIMING_PRECISION);        
     }
 
     @Test

@@ -7,6 +7,8 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Set;
 
+import saiba.bml.core.Behaviour;
+
 import com.google.common.collect.ImmutableSet;
 
 import lombok.extern.slf4j.Slf4j;
@@ -18,11 +20,15 @@ import asap.animationengine.ace.TPConstraint;
 import asap.math.splines.NUSSpline3;
 import asap.math.splines.SparseVelocityDef;
 import asap.motionunit.TMUPlayException;
+import asap.realizer.BehaviourPlanningException;
 import asap.realizer.feedback.FeedbackManager;
 import asap.realizer.pegboard.BMLBlockPeg;
 import asap.realizer.pegboard.PegBoard;
 import asap.realizer.pegboard.TimePeg;
 import asap.realizer.planunit.TimedPlanUnitPlayException;
+import asap.realizer.scheduler.LinearStretchResolver;
+import asap.realizer.scheduler.TimePegAndConstraint;
+import asap.realizer.scheduler.UniModalResolver;
 
 /**
  * Local motor program for wrist positioning
@@ -36,10 +42,16 @@ public class LMPWristPos extends LMPPos
     private ImmutableSet<String> kinematicJoints;
     private NUSSpline3 spline;
 
+    private final UniModalResolver resolver = new LinearStretchResolver();
+    
+    public void resolveSynchs(BMLBlockPeg bbPeg, Behaviour b, List<TimePegAndConstraint> sac)throws BehaviourPlanningException
+    {
+        resolver.resolveSynchs(bbPeg, b, sac, this);
+    }
     
     public LMPWristPos(String scope, FeedbackManager bbf, BMLBlockPeg bmlBlockPeg, String bmlId, String id, PegBoard pegBoard)
     {
-        super(bbf, bmlBlockPeg, bmlId, id);
+        super(bbf, bmlBlockPeg, bmlId, id, pegBoard);
         this.pegBoard = pegBoard;
         if (scope.equals("left_arm"))
         {

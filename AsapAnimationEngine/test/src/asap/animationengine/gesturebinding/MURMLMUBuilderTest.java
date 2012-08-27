@@ -48,6 +48,7 @@ public class MURMLMUBuilderTest
     private static final float ROT_PRECISION = 0.001f;
     private AnimationPlayer mockAniPlayer = mock(AnimationPlayer.class);
     private Hns mockHns = mock(Hns.class);
+    private MURMLMUBuilder murmlMuBuilder = new MURMLMUBuilder(mockHns);
 
     @Before
     public void setup()
@@ -65,7 +66,7 @@ public class MURMLMUBuilderTest
         String murmlString = "<murml-description xmlns=\"http://www.techfak.uni-bielefeld.de/ags/soa/murml\">"
                 + "<dynamic><keyframing><phase><frame ftime=\"0\"><posture>Humanoid "
                 + "(l_shoulder 3 100 0 0)</posture></frame></phase></keyframing></dynamic></murml-description>";
-        AnimationUnit au = MURMLMUBuilder.setup(murmlString);
+        AnimationUnit au = murmlMuBuilder.setup(murmlString);
         assertThat(au, instanceOf(MURMLKeyframeMU.class));
         MURMLKeyframeMU mu = (MURMLKeyframeMU) au;
         au = mu.copy(mockAnimationPlayer);
@@ -85,7 +86,7 @@ public class MURMLMUBuilderTest
                 + "<dynamic><keyframing><phase><frame ftime=\"0\"><posture>Humanoid "
                 + "(l_shoulder 3 100 0 0)</posture></frame><frame ftime=\"1\"><posture>Humanoid "
                 + "(l_shoulder 3 0 80 0)</posture></frame></phase></keyframing></dynamic></murml-description>";
-        AnimationUnit au = MURMLMUBuilder.setup(murmlString);
+        AnimationUnit au = murmlMuBuilder.setup(murmlString);
         assertThat(au, instanceOf(MURMLKeyframeMU.class));
         MURMLKeyframeMU mu = (MURMLKeyframeMU) au;
         au = mu.copy(mockAnimationPlayer);
@@ -105,7 +106,7 @@ public class MURMLMUBuilderTest
                 + "<dynamic><keyframing><phase><frame ftime=\"0\"><posture>Humanoid "
                 + "(l_shoulder 3 100 0 0)(r_shoulder 3 0 0 100)</posture></frame><frame ftime=\"1\"><posture>Humanoid "
                 + "(l_shoulder 3 0 80 0)(r_shoulder 3 80 0 0)</posture></frame></phase></keyframing></dynamic></murml-description>";
-        AnimationUnit au = MURMLMUBuilder.setup(murmlString);
+        AnimationUnit au = murmlMuBuilder.setup(murmlString);
         assertThat(au, instanceOf(MURMLKeyframeMU.class));
         MURMLKeyframeMU mu = (MURMLKeyframeMU) au;
         au = mu.copy(mockAnimationPlayer);
@@ -129,7 +130,7 @@ public class MURMLMUBuilderTest
                 + "<dynamic><keyframing><phase><frame ftime=\"0\"><posture>Humanoid "
                 + "(l_shoulder 3 100 0 0)</posture></frame><frame ftime=\"4\"><posture>Humanoid "
                 + "(l_shoulder 3 0 80 0)</posture></frame></phase></keyframing></dynamic></murml-description>";
-        AnimationUnit au = MURMLMUBuilder.setup(murmlString);
+        AnimationUnit au = murmlMuBuilder.setup(murmlString);
         assertThat(au, instanceOf(MURMLKeyframeMU.class));
         MURMLKeyframeMU mu = (MURMLKeyframeMU) au;
         au = mu.copy(mockAnimationPlayer);
@@ -148,7 +149,7 @@ public class MURMLMUBuilderTest
         String murmlString = "<murml-description xmlns=\"http://www.techfak.uni-bielefeld.de/ags/soa/murml\">"
                 + "<dynamic><keyframing><phase>" + "<frame ftime=\"4\"><posture>Humanoid "
                 + "(l_shoulder 3 0 80 0)</posture></frame></phase></keyframing></dynamic></murml-description>";
-        AnimationUnit au = MURMLMUBuilder.setup(murmlString);
+        AnimationUnit au = murmlMuBuilder.setup(murmlString);
         au = au.copy(mockAnimationPlayer);
 
         float[] qRefStart = Quat4f.getQuat4f();
@@ -167,7 +168,7 @@ public class MURMLMUBuilderTest
         String murmlString = "<murml-description xmlns=\"http://www.techfak.uni-bielefeld.de/ags/soa/murml\">"
                 + "<dynamic><keyframing><phase>" + "<frame ftime=\"4\"><posture>Humanoid "
                 + "(l_shoulder 3 0 80 0)</posture></frame></phase></keyframing></dynamic></murml-description>";
-        AnimationUnit au = MURMLMUBuilder.setup(murmlString);
+        AnimationUnit au = murmlMuBuilder.setup(murmlString);
         au = au.copy(mockAnimationPlayer);
 
         float[] qRefStart = Quat4f.getQuat4f();
@@ -196,7 +197,7 @@ public class MURMLMUBuilderTest
                 "</murml-description>";
         // @formatter:on
 
-        AnimationUnit au = MURMLMUBuilder.setup(murmlString);
+        AnimationUnit au = murmlMuBuilder.setup(murmlString);
         au = au.copy(mockAnimationPlayer);
 
         float[] qRefStart = Quat4f.getQuat4f();
@@ -214,7 +215,7 @@ public class MURMLMUBuilderTest
     }
 
     @Test
-    public void setupTMUHandLocation()
+    public void setupTMUHandLocation() throws MUSetupException
     {
         //@formatter:off
         String murmlString = 
@@ -252,8 +253,8 @@ public class MURMLMUBuilderTest
                 "</murml-description>";
         // @formatter:on
         PegBoard pb = new PegBoard();
-        TimedAnimationUnit tau = MURMLMUBuilder.setupTMU(murmlString, new FeedbackManagerImpl(new BMLBlockManager(), ""),
-                BMLBlockPeg.GLOBALPEG, "bml1", "g1", pb, mockHns,mockAniPlayer);
+        TimedAnimationUnit tau = murmlMuBuilder.setupTMU(murmlString, new FeedbackManagerImpl(new BMLBlockManager(), ""),
+                BMLBlockPeg.GLOBALPEG, "bml1", "g1", pb, mockAniPlayer);
 
         assertThat(tau, instanceOf(MotorControlProgram.class));
         assertThat(tau.getKinematicJoints(), IsIterableContainingInAnyOrder.containsInAnyOrder(Hanim.l_shoulder, Hanim.l_elbow));
@@ -269,7 +270,7 @@ public class MURMLMUBuilderTest
     }
 
     @Test
-    public void setupTMUParlmOrientation()
+    public void setupTMUParlmOrientation() throws MUSetupException
     {
         //@formatter:off
         String murmlString = 
@@ -283,8 +284,8 @@ public class MURMLMUBuilderTest
                 "</murml-description>";
         // @formatter:on
         PegBoard pb = new PegBoard();
-        TimedAnimationUnit tau = MURMLMUBuilder.setupTMU(murmlString, new FeedbackManagerImpl(new BMLBlockManager(), ""),
-                BMLBlockPeg.GLOBALPEG, "bml1", "g1", pb, mockHns,mockAniPlayer);        
+        TimedAnimationUnit tau = murmlMuBuilder.setupTMU(murmlString, new FeedbackManagerImpl(new BMLBlockManager(), ""),
+                BMLBlockPeg.GLOBALPEG, "bml1", "g1", pb, mockAniPlayer);        
         
         assertThat(tau, instanceOf(MotorControlProgram.class));
         assertThat(tau.getKinematicJoints(), IsIterableContainingInAnyOrder.containsInAnyOrder(Hanim.r_wrist));

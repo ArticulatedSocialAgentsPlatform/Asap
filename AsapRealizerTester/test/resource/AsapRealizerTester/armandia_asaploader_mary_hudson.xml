@@ -82,6 +82,7 @@
 
 
     <StartPose resources="Humanoids/armandia/restposes/" filename="looselyhangingarms.xml"/>
+    <Hns resources="Humanoids/shared/hns" filename="hns.xml"/>
     <StartPosition offset="0.2 0 0"/>
     <StartRotation rotation="0 1 0 -0.2"/>
   </Loader>

@@ -1,5 +1,9 @@
 package asap.livemocapengine.planunit;
 
+import java.util.List;
+
+import com.google.common.collect.ImmutableList;
+
 import lombok.extern.slf4j.Slf4j;
 import asap.realizer.feedback.FeedbackManager;
 import asap.realizer.pegboard.BMLBlockPeg;
@@ -106,4 +110,10 @@ public abstract class LiveMocapTMU extends TimedAbstractPlanUnit
     {
         sendFeedback("end", time);
     } 
+    
+    @Override
+    public List<String> getAvailableSyncs()
+    {
+        return ImmutableList.of("start","end");
+    }
 }

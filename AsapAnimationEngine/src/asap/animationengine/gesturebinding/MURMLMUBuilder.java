@@ -22,6 +22,7 @@ import asap.animationengine.ace.lmp.LMPWristRot;
 import asap.animationengine.ace.lmp.MotorControlProgram;
 import asap.animationengine.keyframe.MURMLKeyframeMU;
 import asap.animationengine.motionunit.AnimationUnit;
+import asap.animationengine.motionunit.MUSetupException;
 import asap.animationengine.motionunit.TimedAnimationUnit;
 import asap.hns.Hns;
 import asap.hns.ShapeSymbols;
@@ -48,11 +49,13 @@ import asap.timemanipulator.EaseInEaseOutManipulator;
 @Slf4j
 public final class MURMLMUBuilder
 {
-    private MURMLMUBuilder()
+    private final Hns hns;
+    public MURMLMUBuilder(Hns hns)
     {
+        this.hns = hns;
     }
 
-    public static AnimationUnit setup(String murml)
+    public AnimationUnit setup(String murml)
     {
         MURMLDescription def = new MURMLDescription();
         def.readXML(murml);
@@ -63,7 +66,7 @@ public final class MURMLMUBuilder
      * return start position [0..2] and swivel [3] of the wrist for this movement constraint in
      * body root coordinates.
      */
-    private static boolean getStartConf(float[] result, DynamicElement elem, Hns hns)
+    private boolean getStartConf(float[] result, DynamicElement elem, Hns hns)
     {
         float startconf[] = new float[4];
         startconf[3] = 0;
@@ -83,8 +86,8 @@ public final class MURMLMUBuilder
      * 2. Segment-Dauer abhaengig von Segment-Laenge
      * => Skalierungsstrategie?!
      */
-    private static void appendSubTrajectory(List<DynamicElement> elements, String scope, GuidingSequence traj, TimedAnimationUnit tmu,
-            Hns hns, FeedbackManager bbf, BMLBlockPeg bmlBlockPeg, String bmlId, String id, PegBoard pegBoard, MotorControlProgram mp)
+    private void appendSubTrajectory(List<DynamicElement> elements, String scope, GuidingSequence traj, TimedAnimationUnit tmu,
+            FeedbackManager bbf, BMLBlockPeg bmlBlockPeg, String bmlId, String id, PegBoard pegBoard, MotorControlProgram mp)
     {
         float[] ePos = Vec3f.getVec3f();
         double tEst = 0;
@@ -326,8 +329,8 @@ public final class MURMLMUBuilder
         }
     }
 
-    private static void formWristMovement(String scope, List<DynamicElement> elements, FeedbackManager bbm, BMLBlockPeg bmlBlockPeg,
-            String bmlId, String id, PegBoard pb, Hns hns, MotorControlProgram mcp, AnimationPlayer aniPlayer)
+    private void formWristMovement(String scope, List<DynamicElement> elements, FeedbackManager bbm, BMLBlockPeg bmlBlockPeg,
+            String bmlId, String id, PegBoard pb, MotorControlProgram mcp, AnimationPlayer aniPlayer)
     {
         double tp = 0;
         float vec[] = Vec3f.getVec3f();
@@ -406,7 +409,7 @@ public final class MURMLMUBuilder
 
     }
 
-    private static LMPWristRot createWristRotLMP(String scope, List<OrientConstraint> ocVec, FeedbackManager bbm, BMLBlockPeg bmlBlockPeg,
+    private LMPWristRot createWristRotLMP(String scope, List<OrientConstraint> ocVec, FeedbackManager bbm, BMLBlockPeg bmlBlockPeg,
             String bmlId, String id, PegBoard pb, AnimationPlayer aniPlayer)
     {
         if (ocVec.isEmpty())
@@ -452,21 +455,21 @@ public final class MURMLMUBuilder
         return lmp;
     }
 
-    private static void formPOMovement(String scope, List<DynamicElement> elements, FeedbackManager bbm, BMLBlockPeg bmlBlockPeg,
-            String bmlId, String id, PegBoard pb, Hns hns, MotorControlProgram mcp, AnimationPlayer aniPlayer)
+    private void formPOMovement(String scope, List<DynamicElement> elements, FeedbackManager bbm, BMLBlockPeg bmlBlockPeg,
+            String bmlId, String id, PegBoard pb, MotorControlProgram mcp, AnimationPlayer aniPlayer)
     {
 
     }
 
-    public static void getDynamicPalmOrientationElementsTMU(String scope, List<DynamicElement> elements, FeedbackManager bbm,
-            BMLBlockPeg bmlBlockPeg, String bmlId, String id, PegBoard pb, Hns hns, MotorControlProgram mcp, AnimationPlayer aniPlayer)
+    public void getDynamicPalmOrientationElementsTMU(String scope, List<DynamicElement> elements, FeedbackManager bbm,
+            BMLBlockPeg bmlBlockPeg, String bmlId, String id, PegBoard pb, MotorControlProgram mcp, AnimationPlayer aniPlayer)
     {
-        formWristMovement(scope, elements, bbm, bmlBlockPeg, bmlId, id, pb, hns, mcp, aniPlayer);
-        formPOMovement(scope, elements, bbm, bmlBlockPeg, bmlId, id, pb, hns, mcp, aniPlayer);
+        formWristMovement(scope, elements, bbm, bmlBlockPeg, bmlId, id, pb, mcp, aniPlayer);
+        formPOMovement(scope, elements, bbm, bmlBlockPeg, bmlId, id, pb, mcp, aniPlayer);
     }
 
-    public static void getDynamicHandLocationElementsTMU(String scope, List<DynamicElement> elements, FeedbackManager bbm,
-            BMLBlockPeg bmlBlockPeg, String bmlId, String id, PegBoard pb, Hns hns, MotorControlProgram mcp)
+    public void getDynamicHandLocationElementsTMU(String scope, List<DynamicElement> elements, FeedbackManager bbm,
+            BMLBlockPeg bmlBlockPeg, String bmlId, String id, PegBoard pb, MotorControlProgram mcp)
     {
         if (elements.isEmpty())
         {
@@ -489,7 +492,7 @@ public final class MURMLMUBuilder
             // ends with the constraints start configuration
             trajectory.addGuidingStroke(new LinearGStroke(GStrokePhaseID.STP_PREP, eT, ePos));
 
-            appendSubTrajectory(elements, scope, trajectory, tmu, hns, bbm, bmlBlockPeg, bmlId, id, pb, mcp);
+            appendSubTrajectory(elements, scope, trajectory, tmu, bbm, bmlBlockPeg, bmlId, id, pb, mcp);
         }
 
         // TODO: implement retraction, retraction modes
@@ -568,14 +571,15 @@ public final class MURMLMUBuilder
         }
     }
 
-    public static TimedAnimationUnit getKeyFramingTMU(Keyframing kf, FeedbackManager bbm, BMLBlockPeg bmlBlockPeg, String bmlId, String id,
-            PegBoard pb)
+    public TimedAnimationUnit getKeyFramingTMU(Keyframing kf, FeedbackManager bbm, BMLBlockPeg bmlBlockPeg, String bmlId, String id,
+            PegBoard pb, AnimationPlayer aniPlayer) throws MUSetupException
     {
         AnimationUnit mu = getKeyFramingMU(kf);
-        return mu.createTMU(bbm, bmlBlockPeg, bmlId, id, pb);
+        AnimationUnit muCopy = mu.copy(aniPlayer);
+        return muCopy.createTMU(bbm, bmlBlockPeg, bmlId, id, pb);
     }
 
-    public static AnimationUnit getKeyFramingMU(Keyframing kf)
+    public AnimationUnit getKeyFramingMU(Keyframing kf)
     {
 
         // XXX for now just generates a MU for the first phase
@@ -627,7 +631,7 @@ public final class MURMLMUBuilder
         return null;
     }
 
-    public static AnimationUnit setup(MURMLDescription murmlDescription)
+    public AnimationUnit setup(MURMLDescription murmlDescription)
     {
         if (murmlDescription.getDynamic() != null)
         {
@@ -640,16 +644,16 @@ public final class MURMLMUBuilder
         return null;
     }
 
-    public static TimedAnimationUnit setupTMU(String murmlStr, FeedbackManager bbm, BMLBlockPeg bmlBlockPeg, String bmlId, String id,
-            PegBoard pb, Hns hns, AnimationPlayer aniPlayer)
+    public TimedAnimationUnit setupTMU(String murmlStr, FeedbackManager bbm, BMLBlockPeg bmlBlockPeg, String bmlId, String id,
+            PegBoard pb, AnimationPlayer aniPlayer)throws MUSetupException
     {
         MURMLDescription def = new MURMLDescription();
         def.readXML(murmlStr);
-        return setupTMU(def, bbm, bmlBlockPeg, bmlId, id, pb, hns, aniPlayer);
+        return setupTMU(def, bbm, bmlBlockPeg, bmlId, id, pb, aniPlayer);
     }
 
-    public static TimedAnimationUnit setupTMU(MURMLDescription murmlDescription, FeedbackManager bbm, BMLBlockPeg bmlBlockPeg,
-            String bmlId, String id, PegBoard pb, Hns hns, AnimationPlayer aniPlayer)
+    public TimedAnimationUnit setupTMU(MURMLDescription murmlDescription, FeedbackManager bbm, BMLBlockPeg bmlBlockPeg,
+            String bmlId, String id, PegBoard pb, AnimationPlayer aniPlayer)throws MUSetupException
     {
         MotorControlProgram mcp = new MotorControlProgram(bbm, bmlBlockPeg, bmlId, id, pb);
         if (murmlDescription.getDynamic() != null)
@@ -657,7 +661,7 @@ public final class MURMLMUBuilder
             Dynamic dyn = murmlDescription.getDynamic();
             if (dyn.getKeyframing() != null)
             {
-                return getKeyFramingTMU(dyn.getKeyframing(), bbm, bmlBlockPeg, id, id, pb);
+                return getKeyFramingTMU(dyn.getKeyframing(), bbm, bmlBlockPeg, bmlId, id, pb, aniPlayer);
             }
             else if (dyn.getDynamicElements().size() > 0)
             {
@@ -668,14 +672,14 @@ public final class MURMLMUBuilder
                 case Neck:
                     break;
                 case HandLocation:
-                    getDynamicHandLocationElementsTMU(dyn.getScope(), dyn.getDynamicElements(), bbm, bmlBlockPeg, id, id, pb, hns, mcp);
+                    getDynamicHandLocationElementsTMU(dyn.getScope(), dyn.getDynamicElements(), bbm, bmlBlockPeg, id, id, pb, mcp);
                     break;
                 case HandShape:
                     break;
                 case ExtFingerOrientation:
                     break;
                 case PalmOrientation:
-                    getDynamicPalmOrientationElementsTMU(dyn.getScope(), dyn.getDynamicElements(), bbm, bmlBlockPeg, id, id, pb, hns, mcp,
+                    getDynamicPalmOrientationElementsTMU(dyn.getScope(), dyn.getDynamicElements(), bbm, bmlBlockPeg, id, id, pb, mcp,
                             aniPlayer);
                     break;
                 }

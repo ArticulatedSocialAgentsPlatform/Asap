@@ -28,8 +28,7 @@ public abstract class TimedAbstractPlanUnit implements TimedPlanUnit
     private final String id;
     private final String bmlBlockId;
     private static Logger logger = LoggerFactory.getLogger(TimedAbstractPlanUnit.class.getName());
-    private final List<String> availableSyncs = new ArrayList<String>();
-
+    
     private final AtomicReference<TimedPlanUnitState> state;
     protected final FeedbackManager fbManager;
     private int priority = 0;
@@ -41,15 +40,7 @@ public abstract class TimedAbstractPlanUnit implements TimedPlanUnit
         id = behId;
         bmlBlockId = bmlId;
         state = new AtomicReference<TimedPlanUnitState>(TimedPlanUnitState.IN_PREP);
-        subUnit = sub;
-
-        availableSyncs.add(BMLGestureSync.START.getId());
-        availableSyncs.add(BMLGestureSync.READY.getId());
-        availableSyncs.add(BMLGestureSync.STROKE_START.getId());
-        availableSyncs.add(BMLGestureSync.STROKE.getId());
-        availableSyncs.add(BMLGestureSync.STROKE_END.getId());
-        availableSyncs.add(BMLGestureSync.RELAX.getId());
-        availableSyncs.add(BMLGestureSync.END.getId());
+        subUnit = sub;    
     }
     
     @Override
@@ -333,11 +324,7 @@ public abstract class TimedAbstractPlanUnit implements TimedPlanUnit
         return TimePeg.VALUE_UNKNOWN;
     }
 
-    @Override
-    public List<String> getAvailableSyncs()
-    {
-        return availableSyncs;
-    }
+   
 
     @Override
     public void setParameterValue(String paramId, String value) throws ParameterException
