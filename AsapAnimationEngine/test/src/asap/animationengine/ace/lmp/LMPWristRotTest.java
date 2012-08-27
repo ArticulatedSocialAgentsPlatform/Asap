@@ -2,6 +2,8 @@ package asap.animationengine.ace.lmp;
 
 import static org.junit.Assert.assertEquals;
 
+import hmi.testutil.animation.HanimBody;
+
 import java.util.ArrayList;
 import java.util.List;
 
@@ -24,6 +26,7 @@ import asap.realizer.scheduler.BMLBlockManager;
 import asap.realizertestutil.planunit.AbstractTimedPlanUnitTest;
 import asap.realizertestutil.util.TimePegUtil;
 import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.when;
 /**
  * Testcases for the WristRot LMP
  * @author hvanwelbergen
@@ -49,7 +52,9 @@ public class LMPWristRotTest extends AbstractTimedPlanUnitTest
         ocList.add(new OrientConstraint("stroke1"));
         ocList.add(new OrientConstraint("stroke2"));
         ocList.add(new OrientConstraint("stroke_end"));
-        return new LMPWristRot("r_wrist", ocList, bfm, bbPeg, bmlId, id, pegBoard, mockAniPlayer);        
+        when(mockAniPlayer.getVCurr()).thenReturn(HanimBody.getLOA1HanimBody());
+        when(mockAniPlayer.getVNext()).thenReturn(HanimBody.getLOA1HanimBody());
+        return new LMPWristRot("right_arm", ocList, bfm, bbPeg, bmlId, id, pegBoard, mockAniPlayer);        
     }
     
     @Override

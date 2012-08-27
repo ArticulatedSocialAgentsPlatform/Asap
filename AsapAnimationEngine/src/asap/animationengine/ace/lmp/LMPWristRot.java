@@ -9,6 +9,7 @@ import hmi.math.Vec3f;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
+import java.util.ListIterator;
 import java.util.Map;
 import java.util.Set;
 
@@ -38,7 +39,7 @@ import com.google.common.collect.ImmutableSet;
 public class LMPWristRot extends LMPPos
 {
     private ImmutableSet<String> kinematicJoints;
-    private ImmutableList<OrientConstraint> ocVec;
+    private List<OrientConstraint> ocVec;
     private Map<OrientConstraint, TimePeg> constraintMap = new HashMap<OrientConstraint, TimePeg>();
     private List<OrientPos> orientVec = new ArrayList<>();
     private final PegBoard pegBoard;
@@ -76,7 +77,7 @@ public class LMPWristRot extends LMPPos
             joint = null;
             log.warn("Invalid scope {}" + scope);
         }
-        this.ocVec = ImmutableList.copyOf(ocVec);
+        this.ocVec = new ArrayList<>(ocVec);
         this.pegBoard = pegBoard;
     }
 
@@ -295,10 +296,8 @@ public class LMPWristRot extends LMPPos
         return true;
     }
 
-    @Override
-    public void updateTiming(double time) throws TMUPlayException
+    private void resolveTimePegs(double time)
     {
-        if (!isLurking()) return;
         createMissingTimePegs();
 
         // TODO: handle cases in which constraints that are not on the 'border' of the LMP are set in a better manner.
@@ -343,7 +342,13 @@ public class LMPWristRot extends LMPPos
         {
             pegBoard.setPegTime(getBMLId(), getId(), "end", getTimePeg("stroke_end").getGlobalValue() + TRANSITION_TIME);
         }
-
+    }
+    
+    @Override
+    public void updateTiming(double time) throws TMUPlayException
+    {
+        if (!isLurking()) return;
+        resolveTimePegs(time);
     }
 
     @Override
@@ -422,11 +427,114 @@ public class LMPWristRot extends LMPPos
         return true;
     }
 
+    class OrientBound
+    {
+        int index;
+        double time;
+    }
+
+    // from LMP_Orient::getLowerBoundOrient
+    private OrientBound getLowerBoundOrient(double fTime)
+    {
+        OrientBound b = new OrientBound();
+        int index = -1;
+        b.time = orientVec.get(0).getTp().getGlobalValue();
+
+        for (OrientPos p : orientVec)
+        {
+            if (p.getTp().getGlobalValue() > fTime)
+            {
+                break;
+            }
+            b.time = p.tp.getGlobalValue();
+            index++;
+        }
+        b.index = index;
+        return b;
+    }
+
+    // from LMP_Orient::getUpperBoundOrient
+    private OrientBound getUpperBoundOrient(double fTime)
+    {
+        int index = orientVec.size();
+        OrientBound upperBound = new OrientBound();
+        upperBound.time = orientVec.get(orientVec.size() - 1).tp.getGlobalValue();
+
+        ListIterator<OrientPos> pIter = orientVec.listIterator(orientVec.size());
+        while (pIter.hasPrevious())
+        {
+            OrientPos p = pIter.previous();
+            if (p.getTp().getGlobalValue() < fTime && p.getTp().getGlobalValue() != TimePeg.VALUE_UNKNOWN)
+            {
+                break;
+            }
+            index--;
+        }
+        upperBound.index = index;
+        return upperBound;
+    }
+
+    // From LMP_Orient::getOrient
+    private float[] getOrient(double time)
+    {
+        if(orientVec.isEmpty())
+        {
+            return Quat4f.getIdentity();
+        }
+        OrientBound uBound = getUpperBoundOrient(time);
+        OrientBound lBound = getLowerBoundOrient(time);
+        int i = lBound.index;
+        int j = uBound.index;
+        double fT = (time-lBound.time)/(uBound.time-lBound.time);
+        
+        //cout << "lower bound=" << i << ", upper bound=" << j << "-> fT=" << fT << endl;
+        //fT = DivMath::Ease(fT,5,0.5);
+        float[] rkTarget = Quat4f.getQuat4f();
+        int point_numb = orientVec.size();
+        if (j > point_numb)
+      {
+        rkTarget = orientVec.get(orientVec.size()-1).q;
+        
+        return rkTarget; // fTime > iBound
+      }
+        if (i == point_numb-1)
+      {
+        rkTarget = orientVec.get(i).getQ();
+        return rkTarget; // fTime > iBound
+      }
+        
+        // determine border quaternions
+        // (rkO=i-1, rkP=i, rkQ=i+1, rkR=i+2)
+        float[] rkO,rkP,rkQ,rkR, rkA,rkA1,rkB,rkB1, rkRes;
+        rkP = orientVec.get(i).getQ();
+        
+        if (i == 0) rkO = orientVec.get(i).getQ();
+        else rkO = orientVec.get(i-1).getQ();
+        
+        if (i+1 >= point_numb) rkQ = orientVec.get(point_numb-1).getQ();
+        else rkQ = orientVec.get(i+1).getQ();
+        
+        if (i+2 >= point_numb) rkR = orientVec.get(point_numb-1).getQ();
+        else rkR = orientVec.get(i+2).getQ();
+        
+        rkTarget = rkQ;
+        
+        // interpolate between rkP and rkQ
+        //cout << "interpolate between " << rkP << " and " <<  rkQ << endl;
+        
+        // -- slerp:
+        float q[] = Quat4f.getQuat4f();
+        Quat4f.interpolate(q, rkP,rkQ, (float)fT);
+        return q;
+    }
+
     @Override
     protected void playUnit(double time) throws TimedPlanUnitPlayException
     {
-        // TODO Auto-generated method stub
-
+        float q[] = getOrient(time);
+        VJoint vjRoot = aniPlayer.getVNext().getPartBySid(Hanim.HumanoidRoot);
+        VJoint vjWrist = aniPlayer.getVNext().getPartBySid(joint);
+        vjWrist.setPathRotation(q,vjRoot);
     }
 
     // Prepares a sequence of quaternions for interpolating
@@ -471,12 +579,13 @@ public class LMPWristRot extends LMPPos
     @Override
     protected void startUnit(double time) throws TimedPlanUnitPlayException
     {
+        resolveTimePegs(time);
         float cQuat[] = Quat4f.getQuat4f();
         VJoint root = aniPlayer.getVCurr().getPartBySid(Hanim.HumanoidRoot);
-        aniPlayer.getVCurr().getPartBySid(joint).getPathRotation(root,cQuat);
-        float []c = Mat3f.getMat3f();
-        Mat3f.setFromQuatScale(c,cQuat,1);
-        refine(cQuat,c);
+        aniPlayer.getVCurr().getPartBySid(joint).getPathRotation(root, cQuat);
+        float[] c = Mat3f.getMat3f();
+        Mat3f.setFromQuatScale(c, cQuat, 1);
+        refine(cQuat, c);
 
         double bmlBlockTime = time - bmlBlockPeg.getValue();
         feedback(new BMLSyncPointProgressFeedback(getBMLId(), getId(), "start", bmlBlockTime, time));
