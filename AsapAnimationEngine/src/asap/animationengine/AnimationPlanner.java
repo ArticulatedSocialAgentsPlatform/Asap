@@ -49,7 +49,6 @@ import asap.realizer.pegboard.BMLBlockPeg;
 import asap.realizer.pegboard.OffsetPeg;
 import asap.realizer.pegboard.PegBoard;
 import asap.realizer.pegboard.TimePeg;
-import asap.realizer.planunit.KeyPosition;
 import asap.realizer.planunit.PlanManager;
 import asap.realizer.scheduler.TimePegAndConstraint;
 
@@ -143,7 +142,10 @@ public class AnimationPlanner extends AbstractPlanner<TimedAnimationUnit>
         for(String sync: tmu.getAvailableSyncs())
         {
             TimePeg tp = tmu.getTimePeg(sync);
-            satps.add(new SyncAndTimePeg(b.getBmlId(), b.id, sync, tp));
+            if(tp!=null)
+            {
+                satps.add(new SyncAndTimePeg(b.getBmlId(), b.id, sync, tp));
+            }
         } 
 
         planManager.addPlanUnit(tmu);
