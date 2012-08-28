@@ -5,11 +5,19 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
+import javax.annotation.Nullable;
+
+import lombok.extern.slf4j.Slf4j;
+
 import saiba.bml.core.Behaviour;
 import saiba.bml.core.GestureBehaviour;
+import saiba.bml.feedback.BMLSyncPointProgressFeedback;
 
+import com.google.common.base.Function;
+import com.google.common.collect.Collections2;
 import com.google.common.collect.ImmutableMap;
 import com.google.common.collect.ImmutableSet;
+import com.google.common.primitives.Doubles;
 
 import asap.animationengine.motionunit.TimedAnimationUnit;
 import asap.motionunit.TMUPlayException;
@@ -22,16 +30,19 @@ import asap.realizer.pegboard.PegKey;
 import asap.realizer.pegboard.TimePeg;
 import asap.realizer.planunit.TimedAbstractPlanUnit;
 import asap.realizer.planunit.TimedPlanUnitPlayException;
+import asap.realizer.planunit.TimedPlanUnitState;
 import asap.realizer.scheduler.LinearStretchResolver;
 import asap.realizer.scheduler.TimePegAndConstraint;
 import asap.realizer.scheduler.UniModalResolver;
 
+@Slf4j
 public class MotorControlProgram extends TimedAbstractPlanUnit implements TimedAnimationUnit
 {
     private List<TimedAnimationUnit> lmpQueue = new ArrayList<>();
     private TimePeg startPeg, endPeg;
     private final PegBoard globalPegBoard;
     private final PegBoard localPegBoard;
+    private Set<String> syncsHandled = new HashSet<String>();
 
     private final UniModalResolver resolver = new LinearStretchResolver();
 
@@ -40,13 +51,13 @@ public class MotorControlProgram extends TimedAbstractPlanUnit implements TimedA
         resolver.resolveSynchs(bbPeg, b, sac, this);
     }
 
-    public MotorControlProgram(FeedbackManager fbm, BMLBlockPeg bmlPeg, String bmlId, String behId, PegBoard pegBoard)
+    public MotorControlProgram(FeedbackManager fbm, BMLBlockPeg bmlPeg, String bmlId, String behId, PegBoard globalPegBoard, PegBoard localPegBoard)
     {
         super(fbm, bmlPeg, bmlId, behId);
         startPeg = new TimePeg(bmlPeg);
-        endPeg = new TimePeg(bmlPeg);        
-        globalPegBoard = pegBoard;
-        localPegBoard = new PegBoard();
+        endPeg = new TimePeg(bmlPeg);
+        this.globalPegBoard = globalPegBoard;
+        this.localPegBoard = localPegBoard;
     }
 
     public void addLMP(TimedAnimationUnit tau)
@@ -69,7 +80,7 @@ public class MotorControlProgram extends TimedAbstractPlanUnit implements TimedA
     @Override
     public double getRelaxTime()
     {
-        if (getTimePeg("relax")!=null && getTimePeg("relax").getGlobalValue() != TimePeg.VALUE_UNKNOWN)
+        if (getTimePeg("relax") != null && getTimePeg("relax").getGlobalValue() != TimePeg.VALUE_UNKNOWN)
         {
             return getTimePeg("relax").getGlobalValue();
         }
@@ -100,6 +111,19 @@ public class MotorControlProgram extends TimedAbstractPlanUnit implements TimedA
     }
 
     @Override
+    public void setState(TimedPlanUnitState newState)
+    {
+        if (newState.equals(TimedPlanUnitState.LURKING))
+        {
+            for (TimedAnimationUnit tmu : lmpQueue)
+            {
+                tmu.setState(newState);
+            }
+        }
+        super.setState(newState);
+    }
+
+    @Override
     public TimePeg getTimePeg(String syncId)
     {
         return localPegBoard.getTimePeg(getBMLId(), getId(), syncId);
@@ -108,16 +132,20 @@ public class MotorControlProgram extends TimedAbstractPlanUnit implements TimedA
     @Override
     public void setTimePeg(String syncId, TimePeg peg)
     {
+        /* needed??
         for (TimedAnimationUnit tmu : lmpQueue)
         {
             tmu.setTimePeg(syncId, peg);
         }
+        */
         localPegBoard.addTimePeg(getBMLId(), getId(), syncId, peg);
-        if(syncId.equals("start"))
+        
+        
+        if (syncId.equals("start"))
         {
             startPeg = peg;
         }
-        if(syncId.equals("end"))
+        if (syncId.equals("end"))
         {
             endPeg = peg;
         }
@@ -155,13 +183,110 @@ public class MotorControlProgram extends TimedAbstractPlanUnit implements TimedA
         return ImmutableSet.copyOf(phJoints);
     }
 
+    private TimePeg findTimePegInLMPs(String sync)
+    {
+        for (TimedAnimationUnit tmu : lmpQueue)
+        {
+            if(tmu.getTimePeg(sync)!=null)
+            {
+                return tmu.getTimePeg(sync);
+            }
+        }
+        return null;
+    }
+    
+    private void checkAndSetMissingTimePeg(String sync, double defaultTime)
+    {
+        if(getTimePeg(sync)==null)
+        {
+            TimePeg tp = findTimePegInLMPs(sync);
+            if(tp!=null)
+            {
+                setTimePeg(sync,tp);
+            }
+            else
+            {
+                tp = new TimePeg(getBMLBlockPeg());
+                tp.setGlobalValue(defaultTime);
+                setTimePeg(sync, tp);
+            }
+        }
+    }
+    
+    /**
+     * Fills out default BML TimePegs that are not yet in the MotorControlProgram. 
+     * Conventions:
+     * missing start => start is start of first LMP
+     * missing end => end is end of last LMP
+     * missing ready => ready = start 
+     * missing relax => relax = end 
+     * missing strokeStart => strokeStart = ready 
+     * missing strokeEnd => strokeEnd = relax 
+     * missing stroke => stroke = strokeStart
+     * 
+     */
+    private void resolveMissingSyncPoints()
+    {
+        if (getStartTime() == TimePeg.VALUE_UNKNOWN)
+        {
+            double startTime = Doubles.min(Doubles.toArray(Collections2.transform(lmpQueue, new Function<TimedAnimationUnit, Double>()
+            {
+                @Override
+                public Double apply(@Nullable TimedAnimationUnit tau)
+                {
+                    if (tau.getStartTime() != TimePeg.VALUE_UNKNOWN)
+                    {
+                        return tau.getStartTime();
+                    }
+                    return Double.MAX_VALUE;
+                }
+            })));
+            if (startTime < Double.MAX_VALUE)
+            {
+                startPeg.setGlobalValue(startTime);
+            }
+        }
+
+        if (getEndTime() == TimePeg.VALUE_UNKNOWN)
+        {
+            double endTime = Doubles.max(Doubles.toArray(Collections2.transform(lmpQueue, new Function<TimedAnimationUnit, Double>()
+            {
+                @Override
+                public Double apply(@Nullable TimedAnimationUnit tau)
+                {
+                    if (tau.getEndTime() != TimePeg.VALUE_UNKNOWN)
+                    {
+                        return tau.getEndTime();
+                    }
+                    return -Double.MAX_VALUE;
+                }
+            })));
+            if (endTime > -Double.MAX_VALUE)
+            {
+                endPeg.setGlobalValue(endTime);
+            }
+        }
+        checkAndSetMissingTimePeg("ready", getStartTime());
+        checkAndSetMissingTimePeg("relax", getEndTime());
+        checkAndSetMissingTimePeg("strokeStart", this.getTime("ready"));
+        checkAndSetMissingTimePeg("strokeEnd", this.getTime("relax"));
+        checkAndSetMissingTimePeg("stroke", this.getTime("strokeStart"));
+    }
+
     @Override
     public void updateTiming(double time) throws TMUPlayException
     {
+        if (lmpQueue.size() == 0)
+        {
+            log.warn("running a mcp with an empty lmp queue");
+            return;
+        }
+
         for (TimedAnimationUnit lmp : lmpQueue)
         {
             lmp.updateTiming(time);
         }
+        resolveMissingSyncPoints();
     }
 
     @Override
@@ -170,22 +295,44 @@ public class MotorControlProgram extends TimedAbstractPlanUnit implements TimedA
         for (TimedAnimationUnit tmu : lmpQueue)
         {
             tmu.updateTiming(time);
-            if(tmu.getStartTime()>time)
+            if (time > tmu.getStartTime())
             {
-                if(!tmu.isPlaying())
+                if (!tmu.isPlaying())
                 {
                     tmu.start(time);
                 }
                 tmu.play(time);
+            }            
+        }    
+        for(String sync: getAvailableSyncs())
+        {
+            if(!syncsHandled.contains(sync))
+            {
+                if(time > getTime(sync))
+                {
+                    feedback(sync,time);
+                }
             }
         }
+                
+    }
+
+    private void feedback(String sync, double time)
+    {
+        double bmlBlockTime = time - bmlBlockPeg.getValue();
+        syncsHandled.add(sync);
+        feedback(new BMLSyncPointProgressFeedback(getBMLId(), getId(), sync, bmlBlockTime, time));
+    }
+    @Override
+    protected void startUnit(double time)
+    {
+        feedback("start",time);        
     }
 
     @Override
     protected void stopUnit(double time) throws TimedPlanUnitPlayException
     {
-        // TODO Auto-generated method stub
-
+        feedback("end",time);
     }
 
     public void linkSync(TimePegAndConstraint s)

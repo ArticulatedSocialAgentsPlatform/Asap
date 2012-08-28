@@ -277,8 +277,8 @@ public class MURMLMUBuilderTest
                 "<murml-description xmlns=\"http://www.techfak.uni-bielefeld.de/ags/soa/murml\">" +
                         "<dynamic slot=\"PalmOrientation\" scope=\"right_arm\">"+
                         "<dynamicElement>"+
-                              "<value type=\"start\" name=\"PalmLU\"/>"+
-                              "<value type=\"end\" name=\"PalmU\"/>"+
+                              "<value type=\"start\" name=\"DirLU\"/>"+
+                              "<value type=\"end\" name=\"DirU\"/>"+
                         "</dynamicElement>"+
                         "</dynamic>"+
                 "</murml-description>";

@@ -7,6 +7,7 @@ import hmi.neurophysics.FittsLaw;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map.Entry;
+import java.util.UUID;
 
 import lombok.extern.slf4j.Slf4j;
 import asap.animationengine.AnimationPlayer;
@@ -363,8 +364,8 @@ public final class MURMLMUBuilder
                 String cid = vn.getKey();
 
                 // force first and last ids to be stroke_start and stroke_end respectively
-                if (i == 0) id = "stroke_start";
-                if (i == dynElem.getValueNodes().size() - 1) id = "stroke_end";
+                if (i == 0) cid = "strokeStart";
+                if (i == dynElem.getValueNodes().size() - 1) cid = "strokeEnd";
 
                 OrientConstraint oc = new OrientConstraint(cid);
                 oc.setPhase(GStrokePhaseID.STP_STROKE);
@@ -397,7 +398,7 @@ public final class MURMLMUBuilder
             // }
 
             // build lmp
-            LMPWristRot lmp = createWristRotLMP(scope, ocVec, bbm, bmlBlockPeg, id, id, pb, aniPlayer);
+            LMPWristRot lmp = createWristRotLMP(scope, ocVec, bbm, bmlBlockPeg, bmlId, id, pb, aniPlayer);
 
             if (lmp != null)
             {
@@ -416,7 +417,7 @@ public final class MURMLMUBuilder
         {
             return null;
         }
-        LMPWristRot lmp = new LMPWristRot(scope, ocVec, bbm, bmlBlockPeg, id, id, pb, aniPlayer);
+        LMPWristRot lmp = new LMPWristRot(scope, ocVec, bbm, bmlBlockPeg, bmlId, id+"_lmp"+UUID.randomUUID().toString().replaceAll("-", ""), pb, aniPlayer);
 
         // if ( retrMode == RTRCT_NO )
         // {
@@ -655,7 +656,9 @@ public final class MURMLMUBuilder
     public TimedAnimationUnit setupTMU(MURMLDescription murmlDescription, FeedbackManager bbm, BMLBlockPeg bmlBlockPeg,
             String bmlId, String id, PegBoard pb, AnimationPlayer aniPlayer)throws MUSetupException
     {
-        MotorControlProgram mcp = new MotorControlProgram(bbm, bmlBlockPeg, bmlId, id, pb);
+        PegBoard localPegBoard = new PegBoard();
+        MotorControlProgram mcp = new MotorControlProgram(bbm, bmlBlockPeg, bmlId, id, pb, localPegBoard);
+        
         if (murmlDescription.getDynamic() != null)
         {
             Dynamic dyn = murmlDescription.getDynamic();
@@ -672,14 +675,14 @@ public final class MURMLMUBuilder
                 case Neck:
                     break;
                 case HandLocation:
-                    getDynamicHandLocationElementsTMU(dyn.getScope(), dyn.getDynamicElements(), bbm, bmlBlockPeg, id, id, pb, mcp);
+                    getDynamicHandLocationElementsTMU(dyn.getScope(), dyn.getDynamicElements(), bbm, bmlBlockPeg, bmlId, id, localPegBoard, mcp);
                     break;
                 case HandShape:
                     break;
                 case ExtFingerOrientation:
                     break;
                 case PalmOrientation:
-                    getDynamicPalmOrientationElementsTMU(dyn.getScope(), dyn.getDynamicElements(), bbm, bmlBlockPeg, id, id, pb, mcp,
+                    getDynamicPalmOrientationElementsTMU(dyn.getScope(), dyn.getDynamicElements(), bbm, bmlBlockPeg, bmlId, id, localPegBoard, mcp,
                             aniPlayer);
                     break;
                 }

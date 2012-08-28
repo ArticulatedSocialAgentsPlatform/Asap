@@ -448,6 +448,7 @@ public class SchedulerParameterizedIntegrationTest
     {
         readXML("murml/murmlpalmorientation.xml");
         assertNoWarnings();
+        assertEquals(2, pegBoard.getRelativePegTime("bml1", "gesture1", "start"), PEGBOARD_PRECISION);
     }
 
     @Test(timeout = SCHEDULE_TIMEOUT)

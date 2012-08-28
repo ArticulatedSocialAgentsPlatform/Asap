@@ -6,12 +6,14 @@ import static org.mockito.Matchers.any;
 import static org.mockito.Matchers.eq;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
+import hmi.animation.Hanim;
 import hmi.xml.XMLTokenizer;
 
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.hamcrest.collection.IsIterableContainingInAnyOrder;
 import org.hamcrest.collection.IsIterableContainingInOrder;
 import org.junit.Before;
 import org.junit.Test;
@@ -170,8 +172,8 @@ public class AnimationPlannerTest
         "<murml-description>"+
         "<dynamic slot=\"PalmOrientation\" scope=\"right_arm\">"+
           "<dynamicElement>"+
-            "<value type=\"start\" name=\"PalmLU\"/>"+
-            "<value type=\"end\" name=\"PalmU\"/>"+
+            "<value type=\"start\" name=\"DirLU\"/>"+
+            "<value type=\"end\" name=\"DirU\"/>"+
           "</dynamicElement>"+
         "</dynamic>"+
         "</murml-description>"+
@@ -184,10 +186,11 @@ public class AnimationPlannerTest
         sacs.add(new TimePegAndConstraint("start", sp, new Constraint(), 0, false));
         
         TimedAnimationUnit pu = animationPlanner.resolveSynchs(bbPeg, beh, sacs);
+        assertThat(pu.getKinematicJoints(), IsIterableContainingInAnyOrder.containsInAnyOrder(Hanim.r_wrist));
         assertEquals(0.3, sp.getGlobalValue(), TIMING_PRECISION);        
         
         animationPlanner.addBehaviour(bbPeg, beh, sacs, pu);
-        assertEquals(0.3, pu.getStartTime(), TIMING_PRECISION);        
+        assertEquals(0.3, pu.getStartTime(), TIMING_PRECISION);
     }
 
     @Test

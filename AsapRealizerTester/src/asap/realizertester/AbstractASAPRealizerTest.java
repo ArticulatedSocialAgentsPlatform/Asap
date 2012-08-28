@@ -363,4 +363,17 @@ public abstract class AbstractASAPRealizerTest extends AbstractBML1RealizerTest 
         realizerHandler.assertBlockStartAndStopFeedbacks("bml1");
         realizerHandler.assertSyncsInOrder("bml1", "gesture1", DefaultSyncPoints.getDefaultSyncPoints("gesture"));
     }
+    
+    @Test
+    public void testMURMLPalmOrientation() throws IOException, InterruptedException
+    {
+        String bmlString = readTestFile("murml/murmlpalmorientation.xml");
+        realizerHandler.performBML(bmlString);
+
+        realizerHandler.waitForBMLEndFeedback("bml1");
+        realizerHandler.assertNoExceptions();
+        realizerHandler.assertNoWarnings();
+        realizerHandler.assertBlockStartAndStopFeedbacks("bml1");
+        realizerHandler.assertSyncsInOrder("bml1", "gesture1", DefaultSyncPoints.getDefaultSyncPoints("gesture"));
+    }
 }

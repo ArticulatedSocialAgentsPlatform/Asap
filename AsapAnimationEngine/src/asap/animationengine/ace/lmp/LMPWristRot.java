@@ -45,7 +45,7 @@ public class LMPWristRot extends LMP
     private List<OrientConstraint> ocVec;
     private Map<OrientConstraint, TimePeg> constraintMap = new HashMap<OrientConstraint, TimePeg>();
     private List<OrientPos> orientVec = new ArrayList<>();
-    
+
     private final AnimationPlayer aniPlayer;
     private final String joint;
 
@@ -54,13 +54,12 @@ public class LMPWristRot extends LMP
     private static final double DEFAULT_STROKEPHASE_DURATION = 5;
 
     private final UniModalResolver resolver = new LinearStretchResolver();
-    
-    public void resolveSynchs(BMLBlockPeg bbPeg, Behaviour b, List<TimePegAndConstraint> sac)throws BehaviourPlanningException
+
+    public void resolveSynchs(BMLBlockPeg bbPeg, Behaviour b, List<TimePegAndConstraint> sac) throws BehaviourPlanningException
     {
         resolver.resolveSynchs(bbPeg, b, sac, this);
     }
-    
-    
+
     @Data
     private class OrientPos
     {
@@ -71,7 +70,7 @@ public class LMPWristRot extends LMP
     public LMPWristRot(String scope, List<OrientConstraint> ocVec, FeedbackManager bbf, BMLBlockPeg bmlBlockPeg, String bmlId, String id,
             PegBoard pegBoard, AnimationPlayer aniPlayer)
     {
-        super(bbf, bmlBlockPeg, bmlId, id,pegBoard);
+        super(bbf, bmlBlockPeg, bmlId, id, pegBoard);
         this.aniPlayer = aniPlayer;
         if (scope.equals("left_arm"))
         {
@@ -88,7 +87,7 @@ public class LMPWristRot extends LMP
             joint = null;
             log.warn("Invalid scope {}" + scope);
         }
-        this.ocVec = new ArrayList<>(ocVec);        
+        this.ocVec = new ArrayList<>(ocVec);
     }
 
     @Override
@@ -112,7 +111,7 @@ public class LMPWristRot extends LMP
         Mat3f.getRow(m, 1, pOld);
         Mat3f.getRow(m, 2, dOld);
 
-        if (Vec3f.epsilonEquals(oc.getD(), Vec3f.getZero(), PRECISION) && Vec3f.epsilonEquals(oc.getP(), Vec3f.getZero(), PRECISION))
+        if (!Vec3f.epsilonEquals(oc.getD(), Vec3f.getZero(), PRECISION) && !Vec3f.epsilonEquals(oc.getP(), Vec3f.getZero(), PRECISION))
         // -- efo dir and palm orientation given
         {
             // get target orientation
@@ -146,7 +145,7 @@ public class LMPWristRot extends LMP
             return m1;
         }
 
-        else if (Vec3f.epsilonEquals(oc.getD(), Vec3f.getZero(), PRECISION))
+        else if (!Vec3f.epsilonEquals(oc.getD(), Vec3f.getZero(), PRECISION))
         // -- only efo given
         {
             // get transformation dOld -> d
@@ -158,12 +157,11 @@ public class LMPWristRot extends LMP
             float q[] = Quat4f.getQuat4f();
             Quat4f.setFromVectors(q, dOld, d);
             Mat3f.setFromQuatScale(m1, q, 1);
-            Mat3f.mul(m1, m, m1);
-            Mat3f.mul(m, m1);
+            Mat3f.mul(m1, m, m1);            
             return m1;
         }
 
-        else if (Vec3f.epsilonEquals(oc.getP(), Vec3f.getZero(), PRECISION))
+        else if (!Vec3f.epsilonEquals(oc.getP(), Vec3f.getZero(), PRECISION))
         // -- only palm orientation given
         {
             // get transformation pOld -> p
@@ -185,7 +183,7 @@ public class LMPWristRot extends LMP
         return Mat3f.getIdentity();
     }
 
-    private void createdPegWhenMissingOnPegBoard(String syncId)
+    private void createPegWhenMissingOnPegBoard(String syncId)
     {
         if (pegBoard.getTimePeg(getBMLId(), getId(), syncId) == null)
         {
@@ -206,8 +204,8 @@ public class LMPWristRot extends LMP
                 pegBoard.addTimePeg(getBMLId(), getId(), oc.getId(), tp);
             }
         }
-        createdPegWhenMissingOnPegBoard("start");
-        createdPegWhenMissingOnPegBoard("end");
+        createPegWhenMissingOnPegBoard("start");
+        createPegWhenMissingOnPegBoard("end");
     }
 
     private void uniformlyDistributeStrokeConstraints(double earliestStart)
@@ -313,47 +311,47 @@ public class LMPWristRot extends LMP
         // TODO: handle cases in which constraints that are not on the 'border' of the LMP are set in a better manner.
 
         // resolve start
-        if (getStartTime() == TimePeg.VALUE_UNKNOWN && getTimePeg("stroke_start").getGlobalValue() != TimePeg.VALUE_UNKNOWN)
+        if (getStartTime() == TimePeg.VALUE_UNKNOWN && getTimePeg("strokeStart").getGlobalValue() != TimePeg.VALUE_UNKNOWN)
         {
-            pegBoard.setPegTime(getBMLId(), getId(), "start", getTimePeg("stroke_start").getGlobalValue() - TRANSITION_TIME);
+            pegBoard.setPegTime(getBMLId(), getId(), "start", getTimePeg("strokeStart").getGlobalValue() - TRANSITION_TIME);
         }
-        else if (getTimePeg("stroke_start").getGlobalValue() == TimePeg.VALUE_UNKNOWN && getStartTime() != TimePeg.VALUE_UNKNOWN)
+        else if (getTimePeg("strokeStart").getGlobalValue() == TimePeg.VALUE_UNKNOWN && getStartTime() != TimePeg.VALUE_UNKNOWN)
         {
-            pegBoard.setPegTime(getBMLId(), getId(), "stroke_start", getStartTime() + TRANSITION_TIME);
+            pegBoard.setPegTime(getBMLId(), getId(), "strokeStart", getStartTime() + TRANSITION_TIME);
         }
         else if (noPegsSet())
         {
             pegBoard.getTimePeg(getBMLId(), getId(), "start").setValue(0, getBMLBlockPeg());
-            pegBoard.getTimePeg(getBMLId(), getId(), "stroke_start").setValue(TRANSITION_TIME, getBMLBlockPeg());
+            pegBoard.getTimePeg(getBMLId(), getId(), "strokeStart").setValue(TRANSITION_TIME, getBMLBlockPeg());
         }
 
         // resolve end
         if (getEndTime() == TimePeg.VALUE_UNKNOWN)
         {
-            if (getTimePeg("stroke_end").getGlobalValue() != TimePeg.VALUE_UNKNOWN)
+            if (getTimePeg("strokeEnd").getGlobalValue() != TimePeg.VALUE_UNKNOWN)
             {
-                pegBoard.setPegTime(getBMLId(), getId(), "end", getTimePeg("stroke_end").getGlobalValue() + TRANSITION_TIME);
+                pegBoard.setPegTime(getBMLId(), getId(), "end", getTimePeg("strokeEnd").getGlobalValue() + TRANSITION_TIME);
             }
         }
         else
         {
-            if (getTimePeg("stroke_end").getGlobalValue() == TimePeg.VALUE_UNKNOWN)
+            if (getTimePeg("strokeEnd").getGlobalValue() == TimePeg.VALUE_UNKNOWN)
             {
-                pegBoard.setPegTime(getBMLId(), getId(), "stroke_end", getEndTime() - TRANSITION_TIME);
+                pegBoard.setPegTime(getBMLId(), getId(), "strokeEnd", getEndTime() - TRANSITION_TIME);
             }
         }
 
         uniformlyDistributeStrokeConstraints(time);
         if (getStartTime() == TimePeg.VALUE_UNKNOWN)
         {
-            pegBoard.setPegTime(getBMLId(), getId(), "start", getTimePeg("stroke_start").getGlobalValue() - TRANSITION_TIME);
+            pegBoard.setPegTime(getBMLId(), getId(), "start", getTimePeg("strokeStart").getGlobalValue() - TRANSITION_TIME);
         }
         if (getEndTime() == TimePeg.VALUE_UNKNOWN)
         {
-            pegBoard.setPegTime(getBMLId(), getId(), "end", getTimePeg("stroke_end").getGlobalValue() + TRANSITION_TIME);
+            pegBoard.setPegTime(getBMLId(), getId(), "end", getTimePeg("strokeEnd").getGlobalValue() + TRANSITION_TIME);
         }
     }
-    
+
     @Override
     public void updateTiming(double time) throws TMUPlayException
     {
@@ -380,9 +378,9 @@ public class LMPWristRot extends LMP
         {
             return pegBoard.getPegTime(getBMLId(), getId(), "relax");
         }
-        else if (pegBoard.getPegTime(getBMLId(), getId(), "stroke_end") != TimePeg.VALUE_UNKNOWN)
+        else if (pegBoard.getPegTime(getBMLId(), getId(), "strokeEnd") != TimePeg.VALUE_UNKNOWN)
         {
-            return pegBoard.getPegTime(getBMLId(), getId(), "stroke_end");
+            return pegBoard.getPegTime(getBMLId(), getId(), "strokeEnd");
         }
         return getEndTime();
     }
@@ -478,6 +476,7 @@ public class LMPWristRot extends LMP
             {
                 break;
             }
+            upperBound.time = p.tp.getGlobalValue();
             index--;
         }
         upperBound.index = index;
@@ -487,7 +486,7 @@ public class LMPWristRot extends LMP
     // From LMP_Orient::getOrient
     private float[] getOrient(double time)
     {
-        if(orientVec.isEmpty())
+        if (orientVec.isEmpty())
         {
             return Quat4f.getIdentity();
         }
@@ -495,46 +494,46 @@ public class LMPWristRot extends LMP
         OrientBound lBound = getLowerBoundOrient(time);
         int i = lBound.index;
         int j = uBound.index;
-        double fT = (time-lBound.time)/(uBound.time-lBound.time);
+        double fT = (time - lBound.time) / (uBound.time - lBound.time);
+
+        //System.out.println("lower bound: "+ i+","+lBound.time +" upper bound: "+j+","+uBound.time +" fT="+fT);
         
-        //cout << "lower bound=" << i << ", upper bound=" << j << "-> fT=" << fT << endl;
-        //fT = DivMath::Ease(fT,5,0.5);
         float[] rkTarget = Quat4f.getQuat4f();
         int point_numb = orientVec.size();
         if (j > point_numb)
-      {
-        rkTarget = orientVec.get(orientVec.size()-1).q;
-        
-        return rkTarget; // fTime > iBound
-      }
-        if (i == point_numb-1)
-      {
-        rkTarget = orientVec.get(i).getQ();
-        return rkTarget; // fTime > iBound
-      }
-        
+        {
+            rkTarget = orientVec.get(orientVec.size() - 1).q;
+
+            return rkTarget; // fTime > iBound
+        }
+        if (i == point_numb - 1)
+        {
+            rkTarget = orientVec.get(i).getQ();
+            return rkTarget; // fTime > iBound
+        }
+
         // determine border quaternions
         // (rkO=i-1, rkP=i, rkQ=i+1, rkR=i+2)
-        float[] rkO,rkP,rkQ,rkR, rkA,rkA1,rkB,rkB1, rkRes;
+        float[] rkO, rkP, rkQ, rkR, rkA, rkA1, rkB, rkB1, rkRes;
         rkP = orientVec.get(i).getQ();
-        
+
         if (i == 0) rkO = orientVec.get(i).getQ();
-        else rkO = orientVec.get(i-1).getQ();
-        
-        if (i+1 >= point_numb) rkQ = orientVec.get(point_numb-1).getQ();
-        else rkQ = orientVec.get(i+1).getQ();
-        
-        if (i+2 >= point_numb) rkR = orientVec.get(point_numb-1).getQ();
-        else rkR = orientVec.get(i+2).getQ();
-        
+        else rkO = orientVec.get(i - 1).getQ();
+
+        if (i + 1 >= point_numb) rkQ = orientVec.get(point_numb - 1).getQ();
+        else rkQ = orientVec.get(i + 1).getQ();
+
+        if (i + 2 >= point_numb) rkR = orientVec.get(point_numb - 1).getQ();
+        else rkR = orientVec.get(i + 2).getQ();
+
         rkTarget = rkQ;
-        
+
         // interpolate between rkP and rkQ
-        //cout << "interpolate between " << rkP << " and " <<  rkQ << endl;
-        
+        // cout << "interpolate between " << rkP << " and " << rkQ << endl;
+
         // -- slerp:
         float q[] = Quat4f.getQuat4f();
-        Quat4f.interpolate(q, rkP,rkQ, (float)fT);
+        Quat4f.interpolate(q, rkP, rkQ, (float) fT);
         return q;
     }
 
@@ -544,7 +543,7 @@ public class LMPWristRot extends LMP
         float q[] = getOrient(time);
         VJoint vjRoot = aniPlayer.getVNext().getPartBySid(Hanim.HumanoidRoot);
         VJoint vjWrist = aniPlayer.getVNext().getPartBySid(joint);
-        vjWrist.setPathRotation(q,vjRoot);
+        vjWrist.setPathRotation(q, vjRoot);        
     }
 
     // Prepares a sequence of quaternions for interpolating
@@ -560,7 +559,7 @@ public class LMPWristRot extends LMP
 
         // start and first stroke quaternions already determined by 'activate()'
         orientVec.add(new OrientPos(getTimePeg("start"), cQuat));
-        orientVec.add(new OrientPos(getTimePeg("stroke_start"), startQuat));
+        orientVec.add(new OrientPos(getTimePeg("strokeStart"), startQuat));
 
         // subsequent stroke orientations
         float rot[] = Mat3f.getMat3f();
@@ -592,7 +591,8 @@ public class LMPWristRot extends LMP
         resolveTimePegs(time);
         float cQuat[] = Quat4f.getQuat4f();
         VJoint root = aniPlayer.getVCurr().getPartBySid(Hanim.HumanoidRoot);
-        aniPlayer.getVCurr().getPartBySid(joint).getPathRotation(root, cQuat);
+        aniPlayer.getVCurr().getPartBySid(joint).getPathRotation(root, cQuat);        
+        
         float[] c = Mat3f.getMat3f();
         Mat3f.setFromQuatScale(c, cQuat, 1);
         refine(cQuat, c);

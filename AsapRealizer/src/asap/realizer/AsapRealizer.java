@@ -333,8 +333,6 @@ public class AsapRealizer
         catch (Exception e)
         { // DO NOT REMOVE THIS CLAUSE!
             String exceptionText = "Exception scheduling the BML. " + e + "\n" + Arrays.toString(e.getStackTrace()) + "\n";
-            System.out.println("stack trace:"+Arrays.toString(e.getStackTrace()));
-            System.out.println("--"+exceptionText);
             scheduler.warn(new BMLWarningFeedback(block.id, "Scheduling Exception", exceptionText));
             return;
         }        
