@@ -368,7 +368,7 @@ public final class MURMLMUBuilder
     {
         float vec[] = Vec3f.getVec3f();
         List<OrientConstraint> ocVec = new ArrayList<>();
-        
+
         // TODO: check mode and make sure its absolute?
         // // -- collect all relevant constraints (efo or absolute po)
         // vector<MovementConstraintBranchNode*> ocNodes;
@@ -498,7 +498,61 @@ public final class MURMLMUBuilder
     private void formPOMovement(String scope, Static staticElem, FeedbackManager bbm, BMLBlockPeg bmlBlockPeg, String bmlId, String id,
             PegBoard pb, MotorControlProgram mcp, AnimationPlayer aniPlayer)
     {
+        List<Double> poVec = new ArrayList<>();
+        List<GStrokePhaseID> phaseVec = new ArrayList<>();
+
+        if (!hns.isPalmOrientation(staticElem.getValue()))
+        {
+            return;
+        }
+
+        double po = hns.getPalmOrientation(staticElem.getValue(), scope);
+
+        poVec.add(po);
+        phaseVec.add(GStrokePhaseID.STP_STROKE);
+        
         // TODO
+        // // --- FIX-ME?: ---
+        // // PO: retraction is NOT sync'ed with arm retraction movement!!
+        // // But maybe should be???
+        // if ( !poVec.empty() )
+        // {
+        //
+        //
+        // if ( retrMode != RTRCT_NO )
+        // {
+        // // post-stroke hold?
+        // float fRetrStartT = mp->getRetractionStartTime();
+        // if ( fRetrStartT > eT ) {
+        // eT = fRetrStartT;
+        // timeVec.push_back(eT);
+        // poVec.push_back(po);
+        // phaseVec.back() = GuidingStroke::STP_HOLD;
+        // }
+        //
+        // timeVec.push_back(eT + LMP_PoRot::getPODurationFromAmplitude(po[0]));
+        //
+        // MgcVectorN v(1);
+        // v[0] = restAngles[2];
+        // poVec.push_back(v);
+        //
+        // phaseVec.back() = GuidingStroke::STP_RETRACT;
+        // phaseVec.push_back(GuidingStroke::STP_FINISH);
+        // }
+        // else {
+        // phaseVec.back() = GuidingStroke::STP_FINISH;
+        // }
+        //
+        // // -- create lmp and append to motor program
+        // vector<Joint*> scope;
+        // scope.push_back(wristJoint);
+        // LMP_PoRot *lmp = new LMP_PoRot ("PO_Stroke", scope);
+        // lmp->setAngleVec(poVec);
+        // lmp->setTimeVec(timeVec);
+        // lmp->setPhaseVec(phaseVec);
+        //
+        // mp->addLMP(lmp);
+        // }
     }
 
     private void formPOMovement(String scope, List<DynamicElement> elements, FeedbackManager bbm, BMLBlockPeg bmlBlockPeg, String bmlId,

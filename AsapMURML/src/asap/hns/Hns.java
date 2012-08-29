@@ -305,6 +305,18 @@ public class Hns extends XMLStructureAdapter
         return 0;
     }
 
+    public boolean isPalmOrientation(String value)
+    {
+        if (getSymbolValue(PALM_ORIENTATIONS, value) == null)
+        {
+            return StringUtil.isNumeric(value);
+        }
+        else
+        {
+            return getSymbolValue(PALM_ORIENTATIONS, value) != null;
+        }
+    }
+    
     /**
      * Gets the palm orientation for value, in degrees
      * @param value value, e.g. PalmU or a double
