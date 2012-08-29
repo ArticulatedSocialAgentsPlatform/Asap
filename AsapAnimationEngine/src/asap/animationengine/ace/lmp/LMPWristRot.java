@@ -102,14 +102,18 @@ public class LMPWristRot extends LMP
         return ImmutableSet.of();
     }
 
+    private static final int PALM_COLUMN = 0;
+    private static final int EXT_FINGER_COLUMN = 1;
+    private static final int THIRD_COLUMN = 2;
+    
     // m is previous rotation
     private float[] getNextWristRot(float[] m, OrientConstraint oc)
     {
         float dOld[] = Vec3f.getVec3f();
         float pOld[] = Vec3f.getVec3f();
 
-        Mat3f.getRow(m, 1, pOld);
-        Mat3f.getRow(m, 2, dOld);
+        Mat3f.getColumn(m, PALM_COLUMN, pOld);
+        Mat3f.getColumn(m, EXT_FINGER_COLUMN, dOld);
 
         if (!Vec3f.epsilonEquals(oc.getD(), Vec3f.getZero(), PRECISION) && !Vec3f.epsilonEquals(oc.getP(), Vec3f.getZero(), PRECISION))
         // -- efo dir and palm orientation given
@@ -131,7 +135,8 @@ public class LMPWristRot extends LMP
                 log.info("-> corrected palm normal: {}", Vec3f.toString(p));
             }
 
-            if (getKinematicJoints().iterator().next().equals(Hanim.r_wrist))
+            //if (getKinematicJoints().iterator().next().equals(Hanim.r_wrist))
+            if (getKinematicJoints().iterator().next().equals(Hanim.l_wrist))
             {
                 Vec3f.scale(-1, p);
             }
@@ -139,9 +144,9 @@ public class LMPWristRot extends LMP
             Vec3f.cross(v, p, d);
             Vec3f.normalize(v);
             float m1[] = Mat3f.getMat3f();
-            Mat3f.setRow(m1, 0, v);
-            Mat3f.setRow(m1, 1, p);
-            Mat3f.setRow(m1, 2, d);
+            Mat3f.setColumn(m1, THIRD_COLUMN, v);
+            Mat3f.setColumn(m1, PALM_COLUMN, p);
+            Mat3f.setColumn(m1, EXT_FINGER_COLUMN, d);            
             return m1;
         }
 
@@ -166,7 +171,8 @@ public class LMPWristRot extends LMP
         {
             // get transformation pOld -> p
             float p[] = Vec3f.getVec3f(oc.getP());
-            if (getKinematicJoints().iterator().next().equals(Hanim.r_wrist))
+            //if (getKinematicJoints().iterator().next().equals(Hanim.r_wrist))
+            if (getKinematicJoints().iterator().next().equals(Hanim.l_wrist))
             {
                 Vec3f.scale(-1, p);
             }
@@ -578,11 +584,11 @@ public class LMPWristRot extends LMP
         // add start phase transition
         float d[] = Vec3f.getVec3f();
         float p[] = Vec3f.getVec3f();
-        Mat3f.getRow(c, 1, p);
-        Mat3f.getRow(c, 2, d);
+        Mat3f.getColumn(c, PALM_COLUMN, p);
+        Mat3f.getColumn(c, EXT_FINGER_COLUMN, d);
         OrientConstraint ocNew = new OrientConstraint("start", GStrokePhaseID.STP_PREP, d, p);
         ocVec.add(0, ocNew);
-        constraintMap.put(ocNew, this.getTimePeg("start"));
+        constraintMap.put(ocNew, getTimePeg("start"));
     }
 
     @Override

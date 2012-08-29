@@ -18,6 +18,7 @@
 		<dependency org="HMI"   transitive="false" name="HmiMixedAnimationEnvironment"     rev="latest.${resolve.status}"   />    
 	  <dependency org="HMI"   transitive="false" name="HmiPhysicsEnvironment"     rev="latest.${resolve.status}"   />    
       <dependency org="HMI"     name="HmiUtil"           rev="latest.${resolve.status}"    />
+      <dependency org="HMI"     name="HmiMath"           rev="latest.${resolve.status}"    />
       <dependency org="HMI"     name="HmiAnimation"           rev="latest.${resolve.status}"    />
       <dependency org="HMI"     name="HmiXml"            rev="latest.${resolve.status}"    />
       <dependency org="HMI"     name="HmiPhysics"            rev="latest.${resolve.status}"    />
