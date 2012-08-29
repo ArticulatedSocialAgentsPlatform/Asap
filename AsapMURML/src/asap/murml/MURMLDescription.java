@@ -11,19 +11,19 @@ import lombok.Getter;
 /**
  * Parser for the MURML BML description
  * @author hvanwelbergen
- *
+ * 
  */
 public class MURMLDescription extends MURMLElement
 {
     @Getter
     private String id;
-    
+
     @Getter
     private String scope;
-    
+
     @Getter
     private boolean pointStroke;
-    
+
     @Override
     public void decodeAttributes(HashMap<String, String> attrMap, XMLTokenizer tokenizer)
     {
@@ -31,13 +31,16 @@ public class MURMLDescription extends MURMLElement
         scope = getOptionalAttribute("scope", attrMap);
         pointStroke = getOptionalBooleanAttribute("pointStroke", attrMap, false);
     }
-    
+
     @Getter
     private Dynamic dynamic;
 
     @Getter
+    private Static staticElement;
+
+    @Getter
     private Parallel parallel;
-    
+
     @Getter
     private Symmetrical symetrical;
 
@@ -60,14 +63,19 @@ public class MURMLDescription extends MURMLElement
             symetrical = new Symmetrical();
             symetrical.readXML(tokenizer);
         }
+        else if (tag.equals(Static.xmlTag()))
+        {
+            staticElement = new Static();
+            staticElement.readXML(tokenizer);
+        }
         else
         {
-            throw new XMLScanException("Invalid tag "+tag+" in <murml-description>");
+            throw new XMLScanException("Invalid tag " + tag + " in <murml-description>");
         }
     }
-    
+
     private static final String XMLTAG = "murml-description";
-    
+
     public static String xmlTag()
     {
         return XMLTAG;

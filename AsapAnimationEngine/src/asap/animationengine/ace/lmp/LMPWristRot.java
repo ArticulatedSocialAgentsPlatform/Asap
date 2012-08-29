@@ -72,6 +72,13 @@ public class LMPWristRot extends LMP
     {
         super(bbf, bmlBlockPeg, bmlId, id, pegBoard);
         this.aniPlayer = aniPlayer;
+        
+        // TODO: implement proper scope selection when no scope is provided.
+        if (scope == null)
+        {
+            scope = "left_arm";
+        }
+        
         if (scope.equals("left_arm"))
         {
             kinematicJoints = ImmutableSet.of(Hanim.l_wrist);

@@ -33,7 +33,7 @@ public class Hns extends XMLStructureAdapter
     private static final float[] UP_VEC = Vec3f.getVec3f(0, 1, 0);
     private static final float[] DOWN_VEC = Vec3f.getVec3f(0, -1, 0);
     private static final float[] LEFT_VEC = Vec3f.getVec3f(1, 0, 0);
-    private static final float[] RIGHT_VEC = Vec3f.getVec3f(1, 0, 0);
+    private static final float[] RIGHT_VEC = Vec3f.getVec3f(-1, 0, 0);
     private static final float[] A_VEC = Vec3f.getVec3f(0, 0, 1);
     private static final float[] T_VEC = Vec3f.getVec3f(0, 0, -1);
 
