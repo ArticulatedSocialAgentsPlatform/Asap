@@ -9,8 +9,6 @@ import java.util.List;
 import java.util.Map.Entry;
 import java.util.UUID;
 
-import com.google.common.collect.ImmutableList;
-
 import lombok.extern.slf4j.Slf4j;
 import asap.animationengine.AnimationPlayer;
 import asap.animationengine.ace.CurvedGStroke;
@@ -20,6 +18,7 @@ import asap.animationengine.ace.GuidingStroke;
 import asap.animationengine.ace.LinearGStroke;
 import asap.animationengine.ace.OrientConstraint;
 import asap.animationengine.ace.TPConstraint;
+import asap.animationengine.ace.lmp.LMPPoRot;
 import asap.animationengine.ace.lmp.LMPWristPos;
 import asap.animationengine.ace.lmp.LMPWristRot;
 import asap.animationengine.ace.lmp.MotorControlProgram;
@@ -47,6 +46,8 @@ import asap.realizer.feedback.FeedbackManager;
 import asap.realizer.pegboard.BMLBlockPeg;
 import asap.realizer.pegboard.PegBoard;
 import asap.timemanipulator.EaseInEaseOutManipulator;
+
+import com.google.common.collect.ImmutableList;
 
 /**
  * Creates an animation unit from a MURML description
@@ -511,48 +512,42 @@ public final class MURMLMUBuilder
         poVec.add(po);
         phaseVec.add(GStrokePhaseID.STP_STROKE);
         
-        // TODO
         // // --- FIX-ME?: ---
         // // PO: retraction is NOT sync'ed with arm retraction movement!!
         // // But maybe should be???
-        // if ( !poVec.empty() )
-        // {
-        //
-        //
+        
+        // TODO set up retraction+holds(?)
         // if ( retrMode != RTRCT_NO )
         // {
-        // // post-stroke hold?
-        // float fRetrStartT = mp->getRetractionStartTime();
-        // if ( fRetrStartT > eT ) {
-        // eT = fRetrStartT;
-        // timeVec.push_back(eT);
-        // poVec.push_back(po);
-        // phaseVec.back() = GuidingStroke::STP_HOLD;
+        //   // post-stroke hold?
+        //   float fRetrStartT = mp->getRetractionStartTime();
+        //   if ( fRetrStartT > eT ) 
+        //   {
+        //     eT = fRetrStartT;
+        //     timeVec.push_back(eT);
+        //     poVec.push_back(po);
+        //     phaseVec.back() = GuidingStroke::STP_HOLD;
+        //   }
+        //
+        //   timeVec.push_back(eT + LMP_PoRot::getPODurationFromAmplitude(po[0]));
+        //
+        //   MgcVectorN v(1);
+        //   v[0] = restAngles[2];
+        //   poVec.push_back(v);
+        //
+        //   phaseVec.back() = GuidingStroke::STP_RETRACT;
+        //   phaseVec.push_back(GuidingStroke::STP_FINISH);
+        // }
+        // else 
+        // {
+        //   phaseVec.back() = GuidingStroke::STP_FINISH;
         // }
         //
-        // timeVec.push_back(eT + LMP_PoRot::getPODurationFromAmplitude(po[0]));
-        //
-        // MgcVectorN v(1);
-        // v[0] = restAngles[2];
-        // poVec.push_back(v);
-        //
-        // phaseVec.back() = GuidingStroke::STP_RETRACT;
-        // phaseVec.push_back(GuidingStroke::STP_FINISH);
-        // }
-        // else {
-        // phaseVec.back() = GuidingStroke::STP_FINISH;
-        // }
-        //
-        // // -- create lmp and append to motor program
-        // vector<Joint*> scope;
-        // scope.push_back(wristJoint);
-        // LMP_PoRot *lmp = new LMP_PoRot ("PO_Stroke", scope);
-        // lmp->setAngleVec(poVec);
-        // lmp->setTimeVec(timeVec);
-        // lmp->setPhaseVec(phaseVec);
-        //
-        // mp->addLMP(lmp);
-        // }
+         // -- create lmp and append to motor program
+         LMPPoRot lmp = new LMPPoRot(scope, bbm, bmlBlockPeg, bmlId, id, pb);
+         lmp.setAngleVec(poVec);
+         lmp.setPhaseVec(phaseVec);        
+         mcp.addLMP(lmp);
     }
 
     private void formPOMovement(String scope, List<DynamicElement> elements, FeedbackManager bbm, BMLBlockPeg bmlBlockPeg, String bmlId,

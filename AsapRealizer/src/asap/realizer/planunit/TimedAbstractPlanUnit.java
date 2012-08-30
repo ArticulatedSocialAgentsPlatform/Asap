@@ -245,7 +245,11 @@ public abstract class TimedAbstractPlanUnit implements TimedPlanUnit
         fbManager.feedback(fb);        
     }    
     
-
+    protected void feedback(String sync, double time)
+    {
+        feedback(new BMLSyncPointProgressFeedback(getBMLId(), getId(), sync, time - bmlBlockPeg.getValue(), time));
+    }
+    
     @Override
     public void setState(TimedPlanUnitState newState)
     {

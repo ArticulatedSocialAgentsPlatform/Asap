@@ -37,4 +37,42 @@ public abstract class LMP extends TimedAbstractPlanUnit implements TimedAnimatio
         }
         return syncs;
     }
+    
+    @Override
+    public double getStartTime()
+    {
+        return pegBoard.getPegTime(getBMLId(), getId(), "start");
+    }
+
+    @Override
+    public double getEndTime()
+    {
+        return pegBoard.getPegTime(getBMLId(), getId(), "end");
+    }
+    
+    @Override
+    public double getRelaxTime()
+    {
+        if (pegBoard.getPegTime(getBMLId(), getId(), "relax") != TimePeg.VALUE_UNKNOWN)
+        {
+            return pegBoard.getPegTime(getBMLId(), getId(), "relax");
+        }
+        else if (pegBoard.getPegTime(getBMLId(), getId(), "strokeEnd") != TimePeg.VALUE_UNKNOWN)
+        {
+            return pegBoard.getPegTime(getBMLId(), getId(), "strokeEnd");
+        }
+        return getEndTime();
+    }
+    
+    @Override
+    public TimePeg getTimePeg(String syncId)
+    {
+        return pegBoard.getTimePeg(getBMLId(), getId(), syncId);
+    }
+    
+    @Override
+    public void setTimePeg(String syncId, TimePeg peg)
+    {
+        pegBoard.addTimePeg(getBMLId(), getId(), syncId, peg);
+    }
 }

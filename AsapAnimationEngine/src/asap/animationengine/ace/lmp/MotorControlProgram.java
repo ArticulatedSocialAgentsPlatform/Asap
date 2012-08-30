@@ -317,12 +317,13 @@ public class MotorControlProgram extends TimedAbstractPlanUnit implements TimedA
                 
     }
 
-    private void feedback(String sync, double time)
+    @Override
+    protected void feedback(String sync, double time)
     {
-        double bmlBlockTime = time - bmlBlockPeg.getValue();
         syncsHandled.add(sync);
-        feedback(new BMLSyncPointProgressFeedback(getBMLId(), getId(), sync, bmlBlockTime, time));
+        super.feedback(sync,time);
     }
+    
     @Override
     protected void startUnit(double time)
     {

@@ -5,11 +5,13 @@ import hmi.animation.Hanim;
 import java.util.List;
 import java.util.Set;
 
+import lombok.Setter;
 import lombok.extern.slf4j.Slf4j;
 
 import com.google.common.collect.ImmutableSet;
 
 import saiba.bml.core.Behaviour;
+import asap.animationengine.ace.GStrokePhaseID;
 import asap.motionunit.TMUPlayException;
 import asap.realizer.BehaviourPlanningException;
 import asap.realizer.feedback.FeedbackManager;
@@ -24,7 +26,12 @@ public class LMPPoRot extends LMP
 {
     private ImmutableSet<String> kinematicJoints;
     private final String joint;
-
+    private List<Double> pointVec;
+    private double qS, qDotS; // start angles and angular velocity (for scope joints only!!!)
+    private int segments;
+    @Setter
+    private List<GStrokePhaseID> phaseVec;
+    
     public LMPPoRot(String scope, FeedbackManager fbm, BMLBlockPeg bmlPeg, String bmlId, String behId, PegBoard pegBoard)
     {
         super(fbm, bmlPeg, bmlId, behId, pegBoard);
@@ -64,6 +71,25 @@ public class LMPPoRot extends LMP
         return ImmutableSet.of();
     }
 
+    // from LMP_JointAngle::setAngleVec
+    public void setAngleVec(List<Double> vv)
+    {
+        if (!vv.isEmpty())
+        {
+            // cout << "SET ANGLE VEC:" << endl;
+            // for (int i=0; i<vv.size(); i++)
+            // cout << vv[i] << "->" << endl;
+
+            pointVec = vv;
+            qS = 0;
+            qDotS = 0;
+            segments = vv.size() - 1;
+            // if (segments >= timeVec.size())
+            // cerr << "Warning: " << segments << " segments "
+            // << "for " << timeVec.size() << " time points!" << endl;
+        }
+    }
+
     private double getPODurationFromAmplitude(double amp)
     {
         return (Math.abs(amp) / 140.0);
@@ -84,38 +110,9 @@ public class LMPPoRot extends LMP
     }
 
     @Override
-    public double getStartTime()
-    {
-        // TODO Auto-generated method stub
-        return 0;
-    }
-
-    @Override
-    public double getEndTime()
-    {
-        // TODO Auto-generated method stub
-        return 0;
-    }
-
-    @Override
-    public double getRelaxTime()
-    {
-        // TODO Auto-generated method stub
-        return 0;
-    }
-
-    @Override
-    public TimePeg getTimePeg(String syncId)
-    {
-        // TODO Auto-generated method stub
-        return null;
-    }
-
-    @Override
     public void setTimePeg(String syncId, TimePeg peg)
     {
-        // TODO Auto-generated method stub
-
+        super.setTimePeg(syncId, peg);
     }
 
     @Override
@@ -125,6 +122,12 @@ public class LMPPoRot extends LMP
         return false;
     }
 
+    @Override
+    protected void startUnit(double time)
+    {
+        feedback("start",time);
+    }
+    
     @Override
     protected void playUnit(double time) throws TimedPlanUnitPlayException
     {

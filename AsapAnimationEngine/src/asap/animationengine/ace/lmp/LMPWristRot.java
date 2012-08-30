@@ -370,39 +370,9 @@ public class LMPWristRot extends LMP
     {
         if (!isLurking()) return;
         resolveTimePegs(time);
-    }
+    }    
 
-    @Override
-    public double getStartTime()
-    {
-        return pegBoard.getPegTime(getBMLId(), getId(), "start");
-    }
-
-    @Override
-    public double getEndTime()
-    {
-        return pegBoard.getPegTime(getBMLId(), getId(), "end");
-    }
-
-    @Override
-    public double getRelaxTime()
-    {
-        if (pegBoard.getPegTime(getBMLId(), getId(), "relax") != TimePeg.VALUE_UNKNOWN)
-        {
-            return pegBoard.getPegTime(getBMLId(), getId(), "relax");
-        }
-        else if (pegBoard.getPegTime(getBMLId(), getId(), "strokeEnd") != TimePeg.VALUE_UNKNOWN)
-        {
-            return pegBoard.getPegTime(getBMLId(), getId(), "strokeEnd");
-        }
-        return getEndTime();
-    }
-
-    @Override
-    public TimePeg getTimePeg(String syncId)
-    {
-        return pegBoard.getTimePeg(getBMLId(), getId(), syncId);
-    }
+    
 
     private OrientConstraint findOrientConstraint(String syncId)
     {
@@ -423,7 +393,7 @@ public class LMPWristRot extends LMP
         {
             constraintMap.put(findOrientConstraint(syncId), peg);
         }
-        pegBoard.addTimePeg(getBMLId(), getId(), syncId, peg);
+        super.setTimePeg(syncId, peg);
     }
 
     @Override
@@ -610,8 +580,7 @@ public class LMPWristRot extends LMP
         Mat3f.setFromQuatScale(c, cQuat, 1);
         refine(cQuat, c);
 
-        double bmlBlockTime = time - bmlBlockPeg.getValue();
-        feedback(new BMLSyncPointProgressFeedback(getBMLId(), getId(), "start", bmlBlockTime, time));
+        feedback("start", time);
         super.startUnit(time);
     }
 
