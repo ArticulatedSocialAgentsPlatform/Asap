@@ -33,7 +33,7 @@ public class TCBSplineN
     private int m_iIterations, m_uiMaxLevel, m_iSegments;
     private List<Double> m_afTime = new ArrayList<>();;
     private List<Double> m_afLength = new ArrayList<>();
-    private List<Double> m_afAccumLength;
+    private List<Double> m_afAccumLength = new ArrayList<>();
     private int dim;
     private List<float[]> m_akPoint = new ArrayList<>();
 
@@ -103,7 +103,7 @@ public class TCBSplineN
         }
     }
 
-    void ComputePolyKB(int i0, int i1, int i2, int i3)
+    private void ComputePolyKB(int i0, int i1, int i2, int i3)
     {
         float[] kDiff = Vecf.getVecf(dim);
         Vecf.sub(kDiff, m_akPoint.get(i2), m_akPoint.get(i1));
@@ -142,19 +142,21 @@ public class TCBSplineN
         // build incoming tangent at P2
         // MgcVectorN kTIn = fIn1*(m_akPoint[i3] - m_akPoint[i2]) + fIn0*kDiff;
         float kTIn[] = Vecf.getVecf(dim);
+        tmp = Vecf.getVecf(dim);
         Vecf.sub(tmp, m_akPoint.get(i3), m_akPoint.get(i2));
         Vecf.scale((float) fIn1, tmp);
         Vecf.scale((float) fIn0, kTIn, kDiff);
+        Vecf.add(kTIn,tmp);
 
         m_akA.set(i1, m_akPoint.get(i1));
         m_akB.set(i1, kTOut);
         // m_akC.set(i1, 3.0*kDiff - 2.0*kTOut - kTIn);
         float res[] = Vecf.getVecf(dim);
         tmp = Vecf.getVecf(dim);
-        Vecf.sub(tmp, kTOut, kTIn);
-        Vecf.scale(2, tmp);
+        Vecf.scale(-2, tmp,kTOut);
+        Vecf.sub(tmp, kTIn);
         Vecf.scale(3, res, kDiff);
-        Vecf.sub(res, tmp);
+        Vecf.add(res, tmp);
         m_akC.set(i1, res);
 
         // m_akD.set(i1, -2.0 * kDiff + kTOut + kTIn);
@@ -165,89 +167,9 @@ public class TCBSplineN
         m_akD.set(i1, res);
     }
 
-    // Compute control polygon out of two control points
-    void ComputePoly2KB(int i0, int i1)
-    {
-        float[] kDiff = Vecf.getVecf(dim);
-        Vecf.sub(kDiff, m_akPoint.get(i1), m_akPoint.get(i0));
+    
 
-        // build multiplier
-        double fOutIn = 0.5;
-
-        // build outgoing tangent at P0
-        float kTOut[] = Vecf.getVecf(dim);
-        Vecf.scale((float) fOutIn, kTOut, kDiff);
-
-        // build incoming tangent at P1
-        float[] kTIn = Vecf.getVecf(dim);
-        Vecf.scale((float) fOutIn, kTIn, kDiff);
-
-        m_akA.set(i0, m_akPoint.get(i0));
-        m_akB.set(i0, kTOut);
-
-        // m_akC.set(i0,3.0*kDiff);
-        float[] tmp = Vecf.getVecf(dim);
-        Vecf.scale(3, tmp, kDiff);
-        m_akC.set(i0, tmp);
-
-        // m_akD[i0] = -2.0 * kDiff;
-        tmp = Vecf.getVecf(dim);
-        Vecf.scale(-2, tmp, kDiff);
-        m_akD.set(i0, tmp);
-    }
-
-    // Compute control polygon out of three control points
-    void ComputePoly3KB(int i0, int i1, int i2)
-    {
-        float[] kDiff = Vecf.getVecf(dim);
-        Vecf.sub(kDiff, m_akPoint.get(i2), m_akPoint.get(i1));
-
-        double fDt = m_afTime.get(i2) - m_afTime.get(i1);
-
-        // build multipliers at P1
-        double fOmt0 = 1.0 - m_afTension.get(i1);
-        double fOmc0 = 1.0 - m_afContinuity.get(i1);
-        double fOpc0 = 1.0 + m_afContinuity.get(i1);
-        double fOmb0 = 1.0 - m_afBias.get(i1);
-        double fOpb0 = 1.0 + m_afBias.get(i1);
-        double fAdj0 = 2.0 * fDt / (m_afTime.get(i2) - m_afTime.get(i0));
-        double fOut0 = 0.5 * fAdj0 * fOmt0 * fOpc0 * fOpb0;
-        double fOut1 = 0.5 * fAdj0 * fOmt0 * fOmc0 * fOmb0;
-
-        // build outgoing tangent at P1
-        // kTOut = fOut1 * kDiff + fOut0 * (m_akPoint[i1] - m_akPoint[i0]);
-        float kTOut[] = Vecf.getVecf(dim);
-        float tmp[] = Vecf.getVecf(dim);
-        Vecf.sub(tmp, m_akPoint.get(i1), m_akPoint.get(i0));
-        Vecf.scale((float) fOut0, tmp);
-        Vecf.scale((float) fOut1, kTOut, kDiff);
-        Vecf.add(kTOut, tmp);
-
-        // build multipliers at point P2
-        double fIn1 = 0.5;
-        // build incoming tangent at P2
-        // MgcVectorN kTIn = fIn1 * (m_akPoint[i2] - m_akPoint[i1]);
-        float[] kTIn = Vecf.getVecf(dim);
-        Vecf.sub(kTIn, m_akPoint.get(i2), m_akPoint.get(i1));
-        Vecf.scale((float) fIn1, kTIn);
-
-        m_akA.set(i1, m_akPoint.get(i1));
-        m_akB.set(i1, kTOut);
-        // m_akC.set(i1, 2.5 * kDiff - 2.0 * kTOut);
-        tmp = Vecf.getVecf(dim);
-        float[] tmp2 = Vecf.getVecf(dim);
-        Vecf.scale(2, tmp, kTOut);
-        Vecf.scale(2.5f, tmp2, kDiff);
-        Vecf.sub(tmp, tmp2, tmp);
-        m_akC.set(i1, tmp);
-        // m_akD[i1] = -1.5 * kDiff + kTOut;
-        tmp = Vecf.getVecf(dim);
-        Vecf.scale(-1.5f, tmp, kDiff);
-        Vecf.add(tmp, kTOut);
-        m_akD.set(i1, tmp);
-    }
-
-    double GetSpeedInt(int iKey, double fTime)
+    public double GetSpeedInt(int iKey, double fTime)
     {
         float kVelocity[] = Vecf.getVecf(dim);
         // kVelocity = m_akB[iKey] + fTime*(2.0*m_akC[iKey] + 3.0*fTime*m_akD[iKey]);
@@ -260,7 +182,7 @@ public class TCBSplineN
         return Vecf.length(kVelocity);
     }
 
-    double GetLengthInt(int iKey, double fT0, double fT1)
+    public double GetLengthInt(int iKey, double fT0, double fT1)
     {
         // TO DO. implement (also not implemented in ACE)
         return 0.0;
@@ -348,53 +270,7 @@ public class TCBSplineN
             buf.append(GetPosition(u));
         }
         return buf.toString();
-    }
-
-    void appendPoint(double afT, float[] akPoint, double afTension, double afContinuity, double afBias)
-    {
-        // --- enlarge data arrays if necessary
-        m_akPoint.add(akPoint);
-        m_afTension.add(afTension);
-        m_afContinuity.add(afContinuity);
-        m_afBias.add(afBias);
-
-        int iKey = m_akPoint.size() - 2;
-        int m_iSegments = m_akPoint.size() - 1;
-
-        CollectionUtils.ensureSize(m_akA, m_iSegments);
-        CollectionUtils.ensureSize(m_akB, m_iSegments);
-        CollectionUtils.ensureSize(m_akC, m_iSegments);
-        CollectionUtils.ensureSize(m_akD, m_iSegments);
-
-        // --- two points at all
-        if (m_akPoint.size() == 2)
-        {
-            ComputePoly2KB(iKey, iKey + 1);
-            // ComputePoly(0,0,1,1);
-        }
-        else if (m_akPoint.size() == 3)
-        {
-            ComputePoly3KB(iKey - 1, iKey, iKey + 1);
-            // For now, treat the first point as if it occurred twice.
-            // ComputePoly(0,0,1,2);
-        }
-        else if (m_akPoint.size() > 4)
-        {
-            for (int i = 1; i < m_iSegments - 1; i++)
-                ComputePolyKB(i - 1, i, i + 1, i + 2);
-            // For now, treat the last point as if it occurred twice.
-            ComputePolyKB(iKey - 1, iKey, iKey + 1, iKey + 1);
-        }
-        else
-        // first point defined
-        return;
-
-        // arc lengths of the polynomial segments
-        m_afLength.set(iKey, GetLengthInt(iKey, 0.0, m_afTime.get(iKey + 1) - m_afTime.get(iKey)));
-        // accumulative arc length
-        m_afAccumLength.set(0, m_afLength.get(0));
-        m_afAccumLength.set(iKey, m_afAccumLength.get(iKey - 1) + m_afLength.get(iKey));
-    }
+    }    
 
     private void allocArray(List<float[]> array, int size, int dim)
     {
