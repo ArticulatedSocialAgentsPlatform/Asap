@@ -23,8 +23,8 @@ public class NUBSpline3
 {
     protected int k; // = spline order (k=4 for cubics)
     protected int n; // n+1 = number of control points
-    protected List<Float> t = new ArrayList<>(); // knot vector
-    protected List<Float> m_afTime = new ArrayList<>(); // vector of control times
+    protected List<Double> t = new ArrayList<>(); // knot vector
+    protected List<Double> m_afTime = new ArrayList<>(); // vector of control times
     protected List<float[]> c = new ArrayList<>(); // control points
     private double knotMax;
     private double m_fTMin, m_fTMax;
@@ -32,7 +32,7 @@ public class NUBSpline3
     public NUBSpline3(int o)
     {
         reset();
-        k = 0;
+        k = o;
     }
 
     public void reset()
@@ -49,7 +49,7 @@ public class NUBSpline3
      * Note: For each b-spline of order k, k control points are
      * required!
      */
-    public void appendControlPoint(float[] v, float time)
+    public void appendControlPoint(float[] v, double time)
     {
         // no time assigned -> chordal parametrization
         if (time == -1.0)
@@ -60,7 +60,7 @@ public class NUBSpline3
                 float[] v2 = c.get(c.size() - 1);
                 float dv1 = Vec3f.distanceBetweenPoints(v2, v1);
                 float dv2 = Vec3f.distanceBetweenPoints(v, v2);
-                float dt1 = m_afTime.get(m_afTime.size() - 1) - m_afTime.get(m_afTime.size() - 2);
+                double dt1 = m_afTime.get(m_afTime.size() - 1) - m_afTime.get(m_afTime.size() - 2);
                 time = m_afTime.get(m_afTime.size() - 1) + dt1 * dv2 / dv1;
             }
             else time = m_afTime.get(m_afTime.size() - 1);
@@ -99,7 +99,7 @@ public class NUBSpline3
         if (i <= n) c.set(i, p);
     }
 
-    public void setKnotVector(List<Float> kv)
+    public void setKnotVector(List<Double> kv)
     {
         if (kv.size() != (n + k))
         {
@@ -138,7 +138,17 @@ public class NUBSpline3
                 for (int i = k; i <= n; i++)
                 {
                     // i=k..n
-                    t.set(i, m_afTime.get(i - k + 1));
+                    //BUGFIX by Herwin
+                    //t.set(i, m_afTime.get(i - k + 1));
+                    if(i-k+1<m_afTime.size())
+                    {
+                        t.set(i, m_afTime.get(i - k + 1));
+                    }
+                    else
+                    {
+                        t.set(i, m_afTime.get(m_afTime.size()-1));
+                    }
+                    
                     // cout << "Knoten " << i << "=" << m_afTime[i-k+1] << endl;
                 }
             }
@@ -198,17 +208,17 @@ public class NUBSpline3
         }
     }
 
-    protected void calcBlendingFunctionsAt(float t, Matrix N)
+    protected void calcBlendingFunctionsAt(double t, Matrix N)
     {
         calcBlendingFunctionsAt(t, N, -1);
     }
 
-    protected void calcDotBlendFunctionsAt(float t, Matrix N)
+    protected void calcDotBlendFunctionsAt(double t, Matrix N)
     {
         calcDotBlendFunctionsAt(t, N, -1);
     }
 
-    private void calcDotBlendFunctionsAt(float u, Matrix Nd, int o)
+    private void calcDotBlendFunctionsAt(double u, Matrix Nd, int o)
     {
         if (o == -1) o = k;
         double f = o - 1;
@@ -227,7 +237,7 @@ public class NUBSpline3
         }
     }
 
-    private void calcDDotBlendFunctionsAt(float fTime, Matrix Ndd)
+    private void calcDDotBlendFunctionsAt(double fTime, Matrix Ndd)
     {
         int o = k;
         double f = (o - 2) * (o - 1);
@@ -367,7 +377,7 @@ public class NUBSpline3
         return Vec3f.getZero();
     }
 
-    public void interpolate(List<float[]> data, List<Float> times)
+    public void interpolate(List<float[]> data, List<Double> times)
     {
         // reset spline and construct new knot vector
         reset();
@@ -423,7 +433,7 @@ public class NUBSpline3
         c.set(s + 1, c.get(s));
     }
 
-    public void interpolate(List<float[]> data, List<Float> time, float[] vStart, float[] vEnd)
+    public void interpolate(List<float[]> data, List<Double> time, float[] vStart, float[] vEnd)
     {
         reset();
 
@@ -434,7 +444,7 @@ public class NUBSpline3
         for (int i = 0; i < l; i++)
             m_afTime.add(time.get(i));
         // last breakpoint is deferred in preparation for calculating the end velocity of the spline
-        m_afTime.add((float) (time.get(time.size() - 1) + 1E-5));
+        m_afTime.add(time.get(time.size() - 1) + 1E-5);
         recomputeKnotVector();
 
         // compute control points satisfying the interpolation conditions
@@ -514,7 +524,7 @@ public class NUBSpline3
      * times t[0]...t[l]
      * velocities v[0]...v[l]
      */
-    void interpolate(List<float[]> data, List<Float> times, List<float[]> vel)
+    void interpolate(List<float[]> data, List<Double> times, List<float[]> vel)
     {
         // cout << "do save interpolation" << endl;
         reset();
@@ -621,7 +631,7 @@ public class NUBSpline3
     // data points x[0]...x[l]
     // times t[0]...t[l]
     // velocities v[0]...v[l]
-    public void interpolate2(List<float[]> data, List<Float> times, List<float[]> vel)
+    public void interpolate2(List<float[]> data, List<Double> times, List<float[]> vel)
     {
         // cout << "do new interpolation" << endl;
         reset();
@@ -741,7 +751,7 @@ public class NUBSpline3
      * data points x[0]...x[l], times t[0]...t[l]
      * velocities v[0]...v[l], accelerations a[0]...a[l]
      */
-    public void interpolate(List<float[]> data, List<Float> times, List<float[]> vel, List<float[]> acc)
+    public void interpolate(List<float[]> data, List<Double> times, List<float[]> vel, List<float[]> acc)
     {
         reset();
         int l = data.size() - 1; // x[0]...x[l], times[0]...times[l]
@@ -755,7 +765,7 @@ public class NUBSpline3
             // m_afTime.push_back(times[0]);
             for (int i = 0; i < l; i++)
             {
-                float t = times.get(i);
+                double t = times.get(i);
                 m_afTime.add(t);
                 // -- determine additional inner knots by applying
                 // -- average parametrization
@@ -857,7 +867,7 @@ public class NUBSpline3
         else log.warn("interpolate: too less data points provided!");
     }
 
-    private int insertKnotAt(float fTime)
+    private int insertKnotAt(double fTime)
     {
         float tmp[] = Vec3f.getVec3f();
         float tmp2[] = Vec3f.getVec3f();
@@ -865,7 +875,7 @@ public class NUBSpline3
         // vector<MgcReal>::iterator it;
         int j = 0;
 
-        for (float it : t)
+        for (double it : t)
         {
             if (it >= fTime)
             {
@@ -882,12 +892,12 @@ public class NUBSpline3
         // printKnotVector(cout);
 
         // prepare control point calculation
-        List<Float> a = new ArrayList<>();
+        List<Double> a = new ArrayList<>();
         for (int i = 0; i <= n; i++)
         {
-            if (i <= (j - k)) a.add(1.0f);
+            if (i <= (j - k)) a.add(1.0d);
             else if (i <= j) a.add((fTime - t.get(i)) / (t.get(i + k) - t.get(i)));
-            else a.add(0f);
+            else a.add(0d);
         }
 
         // recompute control points
@@ -897,9 +907,9 @@ public class NUBSpline3
         {
             // cNew.push_back((1-a[i])*c[i-1] + a[i]*c[i]);
             tmp = Vec3f.getVec3f(c.get(i - 1));
-            Vec3f.scale(1 - a.get(i), tmp);
+            Vec3f.scale((float)(1 - a.get(i)), tmp);
             tmp2 = Vec3f.getVec3f(c.get(i));
-            Vec3f.scale(a.get(i), tmp2);
+            Vec3f.scale(a.get(i).floatValue(), tmp2);
             Vec3f.add(tmp, tmp2);
             cNew.add(tmp);
         }
@@ -913,7 +923,7 @@ public class NUBSpline3
      * get curve value at certain value of the independent
      * interpolation parameter u
      */
-    public float[] getPosition(float fTime)
+    public float[] getPosition(double fTime)
     {
         float[] f = Vec3f.getVec3f(0, 0, 0);
         float[] tmp = Vec3f.getVec3f();
@@ -989,13 +999,13 @@ public class NUBSpline3
     }
 
     // from MgcCurve.inl
-    private float getSpeed(float fTime)
+    private float getSpeed(double fTime)
     {
         return Vec3f.length(getFirstDerivative(fTime));
     }
 
     // from MgcMultipleCurve3
-    private float getCurvature(float fTime)
+    private float getCurvature(double fTime)
     {
         float[] kVelocity = getFirstDerivative(fTime);
         float fSpeedSqr = Vec3f.lengthSq(kVelocity);
@@ -1026,7 +1036,7 @@ public class NUBSpline3
     {
         if (o == -1) o = k;
         StringBuffer buf = new StringBuffer();
-        for (float u = t.get(0); u <= t.get(t.size() - 1); u += 0.01)
+        for (double u = t.get(0); u <= t.get(t.size() - 1); u += 0.01)
         {
             Matrix N = new Matrix(n + k, k + 1);
             calcBlendingFunctionsAt(u, N);
@@ -1044,7 +1054,7 @@ public class NUBSpline3
     public String getBlendingFunctionsFDString()
     {
         StringBuffer buf = new StringBuffer();
-        for (float u = t.get(0); u <= t.get(t.size() - 1); u += 0.01)
+        for (double u = t.get(0); u <= t.get(t.size() - 1); u += 0.01)
         {
             Matrix N = new Matrix(n + k, k + 1);
             calcDotBlendFunctionsAt(u, N);
@@ -1063,7 +1073,7 @@ public class NUBSpline3
     {
         float[] v = Vec3f.getVec3f();
         StringBuffer buf = new StringBuffer();
-        for (float u = t.get(0); u <= t.get(t.size() - 1); u += 0.01)
+        for (double u = t.get(0); u <= t.get(t.size() - 1); u += 0.01)
         {
             v = getPosition(u);
             buf.append(Vec3f.toString(v));
@@ -1075,7 +1085,7 @@ public class NUBSpline3
     public String getSplineVelocity()
     {
         StringBuffer buf = new StringBuffer();
-        for (float u = t.get(0); u <= t.get(t.size() - 1); u += 0.005)
+        for (double u = t.get(0); u <= t.get(t.size() - 1); u += 0.005)
         {
             buf.append("u");
             buf.append(" ");
@@ -1088,7 +1098,7 @@ public class NUBSpline3
     public String getSplineAcc()
     {
         StringBuffer buf = new StringBuffer();
-        for (float u = t.get(0); u <= t.get(t.size() - 1); u += 0.01)
+        for (double u = t.get(0); u <= t.get(t.size() - 1); u += 0.01)
         {
             buf.append(u);
             buf.append(" ");
@@ -1101,7 +1111,7 @@ public class NUBSpline3
     public String getSplineCurvature()
     {
         StringBuffer buf = new StringBuffer();
-        for (float u = t.get(0); u <= t.get(t.size() - 1); u += 0.01)
+        for (double u = t.get(0); u <= t.get(t.size() - 1); u += 0.01)
         {
             buf.append(u);
             buf.append(" ");
@@ -1117,7 +1127,7 @@ public class NUBSpline3
      * velocities v[0]...v[l]
      * zero acceleration at tZeroAcc
      */
-    public void interpolate(List<float[]> data, List<Float> times, List<float[]> vel, float tZeroAcc)
+    public void interpolate(List<float[]> data, List<Double> times, List<float[]> vel, double tZeroAcc)
     {
         reset();
         int l = data.size() - 1; // x[0]...x[l], times[0]...times[l]

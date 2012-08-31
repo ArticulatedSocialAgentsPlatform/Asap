@@ -1,4 +1,4 @@
-package asap.math;
+package asap.math.splines;
 
 import static org.junit.Assert.assertEquals;
 

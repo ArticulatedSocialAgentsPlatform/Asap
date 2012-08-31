@@ -160,13 +160,13 @@ public class LMPWristPos extends LMPPos
             // _gSeq->writeTo(cout); cout << endl;
 
             // -- build parametric curve for the trajectory --
-            List<Float> tv = new ArrayList<>();
+            List<Double> tv = new ArrayList<>();
             List<float[]> pv = new ArrayList<>();
             List<SparseVelocityDef> vv = new ArrayList<>();
 
             // set start conds
             pv.add(_gSeq.getStartPos());
-            tv.add((float) _gSeq.getStartTPC().getTime());
+            tv.add( _gSeq.getStartTPC().getTime());
             vv.add(new SparseVelocityDef(0, Vec3f.getVec3f(0, 0, 0))); // v
 
             // MgcVector3 vStart = _gSeq->getStartDirOfStroke(0);
@@ -196,7 +196,7 @@ public class LMPWristPos extends LMPPos
                     // cout << "appending linear stroke for t=" << sT << "-"
                     // << _gSeq->getStroke(i)->eT << endl;
                     pv.add(_gSeq.getStroke(i).getEndPos());
-                    tv.add((float) _gSeq.getStroke(i).getEndTime());
+                    tv.add( _gSeq.getStroke(i).getEndTime());
                 }
                 else if (_gSeq.getStroke(i) instanceof CurvedGStroke)
                 {
@@ -206,13 +206,13 @@ public class LMPWristPos extends LMPPos
 
                     pv.add(cs.getN1()); // cout << pv.back() << endl;
 
-                    tv.add((float) cs.getFT1());
+                    tv.add(cs.getFT1());
                     pv.add(cs.getN2()); // cout << pv.back() << endl;
-                    tv.add((float) cs.getFT2());
+                    tv.add(cs.getFT2());
 
                     // append stroke end point & velocity
                     pv.add(cs.getEndPos()); // cout << pv.back() << endl;
-                    tv.add((float) cs.getEndTime());
+                    tv.add( cs.getEndTime());
                 }
                 else log.warn("Trajectory::build : unknown stroke type!");
             }
