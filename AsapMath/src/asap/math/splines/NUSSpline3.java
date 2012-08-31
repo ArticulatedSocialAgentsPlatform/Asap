@@ -61,7 +61,6 @@ public class NUSSpline3 extends NUBSpline3
         Matrix N = new Matrix(n + k, k + 1);
         calcBlendingFunctionsAt(u, N, o);
 
-        S = new float[n + 1];
         float si;
         for (int i = 1; i <= n; i++)
         {

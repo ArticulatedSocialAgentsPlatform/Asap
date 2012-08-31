@@ -291,10 +291,10 @@ public class NUBSpline3
                             }
                             else
                             {
-                                // cd.get(i)-cd.get(i-1))/td
+                                // cd[i]=(cd[i]-cd[i-1])/td;                                
                                 tmp = Vec3f.getVec3f(cd.get(i));
                                 Vec3f.sub(tmp, cd.get(i - 1));
-                                Vec3f.scale(-1f / (float) td, tmp);
+                                Vec3f.scale(1f / (float) td, tmp);
                                 cd.set(i, tmp);
                             }
                         }
@@ -348,11 +348,9 @@ public class NUBSpline3
             calcBlendingFunctionsAt(fTime, N, kMd);
 
             // differentiate B-Spline coefficients (control points)
-
             // vector<MgcVector3> cd (n+1);
             List<float[]> cd = new ArrayList<>();
             CollectionUtils.ensureSize(cd, n + 1);
-
             calcNthDerivativeCoeffs(d, cd, lowerBnd, upperBnd);
 
             // compute derivative vector
