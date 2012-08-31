@@ -6,6 +6,7 @@ import static org.hamcrest.MatcherAssert.assertThat;
 import static org.junit.Assert.assertEquals;
 import static org.mockito.Matchers.any;
 import static org.mockito.Matchers.anyString;
+import static org.mockito.Matchers.startsWith;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
 import hmi.animation.Hanim;
@@ -22,6 +23,7 @@ import org.junit.Test;
 
 import asap.animationengine.AnimationPlayer;
 import asap.animationengine.ace.GuidingSequence;
+import asap.animationengine.ace.lmp.LMPPoRot;
 import asap.animationengine.ace.lmp.LMPWristPos;
 import asap.animationengine.ace.lmp.MotorControlProgram;
 import asap.animationengine.keyframe.MURMLKeyframeMU;
@@ -56,7 +58,9 @@ public class MURMLMUBuilderTest
         when(mockAnimationPlayer.getVNext()).thenReturn(vNext);
         when(mockAnimationPlayer.getVCurr()).thenReturn(vCurr);
         when(mockHns.getHandLocation(anyString(), any(float[].class))).thenReturn(true);
-        when(mockHns.getAbsoluteDirection(anyString(), any(float[].class))).thenReturn(true);
+        when(mockHns.getAbsoluteDirection(startsWith("Palm"), any(float[].class))).thenReturn(false);
+        when(mockHns.getAbsoluteDirection(startsWith("Dir"), any(float[].class))).thenReturn(true);        
+        when(mockHns.isPalmOrientation(startsWith("Palm"))).thenReturn(true);
         when(mockHns.getElementShape(anyString())).thenReturn(ShapeSymbols.LeftC);
     }
 
@@ -270,7 +274,7 @@ public class MURMLMUBuilderTest
     }
 
     @Test
-    public void setupTMUParlmOrientation() throws MUSetupException
+    public void setupTMUPalmOrientation() throws MUSetupException
     {
         //@formatter:off
         String murmlString = 
@@ -296,6 +300,33 @@ public class MURMLMUBuilderTest
     }
     
     @Test
+    public void setupTMURelativeDynamicPalmOrientation() throws MUSetupException
+    {
+        //@formatter:off
+        String murmlString = 
+                "<murml-description xmlns=\"http://www.techfak.uni-bielefeld.de/ags/soa/murml\">" +
+                        "<dynamic slot=\"PalmOrientation\" scope=\"right_arm\">"+
+                        "<dynamicElement>"+
+                              "<value type=\"start\" name=\"PalmU\"/>"+
+                              "<value type=\"end\" name=\"PalmU\"/>"+
+                        "</dynamicElement>"+
+                        "</dynamic>"+
+                "</murml-description>";
+        // @formatter:on
+        PegBoard pb = new PegBoard();
+        TimedAnimationUnit tau = murmlMuBuilder.setupTMU(murmlString, new FeedbackManagerImpl(new BMLBlockManager(), ""),
+                BMLBlockPeg.GLOBALPEG, "bml1", "g1", pb, mockAniPlayer);        
+        
+        assertThat(tau, instanceOf(MotorControlProgram.class));
+        assertThat(tau.getKinematicJoints(), IsIterableContainingInAnyOrder.containsInAnyOrder(Hanim.r_wrist));
+        
+        @SuppressWarnings("unchecked")
+        List<TimedAnimationUnit> lmps = field("lmpQueue").ofType(List.class).in(tau).get();
+        assertEquals(1, lmps.size());
+        assertThat(lmps.get(0), instanceOf(LMPPoRot.class));
+    }
+    
+    @Test
     public void setupTMUStaticPalmOrientation() throws MUSetupException
     {
       //@formatter:off
@@ -314,5 +345,27 @@ public class MURMLMUBuilderTest
         @SuppressWarnings("unchecked")
         List<TimedAnimationUnit> lmps = field("lmpQueue").ofType(List.class).in(tau).get();
         assertEquals(1, lmps.size());
+    }
+    
+    @Test
+    public void setupTMURelativeStaticPalmOrientation() throws MUSetupException
+    {
+      //@formatter:off
+        String murmlString = 
+                "<murml-description xmlns=\"http://www.techfak.uni-bielefeld.de/ags/soa/murml\">" +
+                        "<static slot=\"PalmOrientation\" scope=\"right_arm\" value=\"PalmU\"/>"+
+                "</murml-description>";
+        // @formatter:on
+        PegBoard pb = new PegBoard();
+        TimedAnimationUnit tau = murmlMuBuilder.setupTMU(murmlString, new FeedbackManagerImpl(new BMLBlockManager(), ""),
+                BMLBlockPeg.GLOBALPEG, "bml1", "g1", pb, mockAniPlayer);   
+        
+        assertThat(tau, instanceOf(MotorControlProgram.class));
+        assertThat(tau.getKinematicJoints(), IsIterableContainingInAnyOrder.containsInAnyOrder(Hanim.r_wrist));
+        
+        @SuppressWarnings("unchecked")
+        List<TimedAnimationUnit> lmps = field("lmpQueue").ofType(List.class).in(tau).get();
+        assertEquals(1, lmps.size());
+        assertThat(lmps.get(0), instanceOf(LMPPoRot.class));
     }
 }

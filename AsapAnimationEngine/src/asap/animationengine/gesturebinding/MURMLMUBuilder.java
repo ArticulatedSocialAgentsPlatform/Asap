@@ -6,6 +6,7 @@ import hmi.neurophysics.FittsLaw;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Set;
 import java.util.Map.Entry;
 import java.util.UUID;
 
@@ -359,6 +360,10 @@ public final class MURMLMUBuilder
             oc2.setP(vec);
             // insertConstantConstraint(oc1,oc2);
         }
+        else
+        {
+            return;
+        }
 
         createAndAppendLMPWrist(scope, bbm, bmlBlockPeg, bmlId, id, pb, mcp, aniPlayer, ImmutableList.of(oc1, oc2));
 
@@ -511,49 +516,78 @@ public final class MURMLMUBuilder
 
         poVec.add(po);
         phaseVec.add(GStrokePhaseID.STP_STROKE);
-        
+
+        addLMPPoRot(scope, bbm, bmlBlockPeg, bmlId, id, pb, mcp, poVec, phaseVec);
+    }
+
+    private void addLMPPoRot(String scope, FeedbackManager bbm, BMLBlockPeg bmlBlockPeg, String bmlId, String id, PegBoard pb,
+            MotorControlProgram mcp, List<Double> poVec, List<GStrokePhaseID> phaseVec)
+    {
         // // --- FIX-ME?: ---
         // // PO: retraction is NOT sync'ed with arm retraction movement!!
         // // But maybe should be???
-        
+
         // TODO set up retraction+holds(?)
         // if ( retrMode != RTRCT_NO )
         // {
-        //   // post-stroke hold?
-        //   float fRetrStartT = mp->getRetractionStartTime();
-        //   if ( fRetrStartT > eT ) 
-        //   {
-        //     eT = fRetrStartT;
-        //     timeVec.push_back(eT);
-        //     poVec.push_back(po);
-        //     phaseVec.back() = GuidingStroke::STP_HOLD;
-        //   }
-        //
-        //   timeVec.push_back(eT + LMP_PoRot::getPODurationFromAmplitude(po[0]));
-        //
-        //   MgcVectorN v(1);
-        //   v[0] = restAngles[2];
-        //   poVec.push_back(v);
-        //
-        //   phaseVec.back() = GuidingStroke::STP_RETRACT;
-        //   phaseVec.push_back(GuidingStroke::STP_FINISH);
-        // }
-        // else 
+        // // post-stroke hold?
+        // float fRetrStartT = mp->getRetractionStartTime();
+        // if ( fRetrStartT > eT )
         // {
-        //   phaseVec.back() = GuidingStroke::STP_FINISH;
+        // eT = fRetrStartT;
+        // timeVec.push_back(eT);
+        // poVec.push_back(po);
+        // phaseVec.back() = GuidingStroke::STP_HOLD;
         // }
         //
-         // -- create lmp and append to motor program
-         LMPPoRot lmp = new LMPPoRot(scope, bbm, bmlBlockPeg, bmlId, id, pb);
-         lmp.setAngleVec(poVec);
-         lmp.setPhaseVec(phaseVec);        
-         mcp.addLMP(lmp);
+        // timeVec.push_back(eT + LMP_PoRot::getPODurationFromAmplitude(po[0]));
+        //
+        // MgcVectorN v(1);
+        // v[0] = restAngles[2];
+        // poVec.push_back(v);
+        //
+        // phaseVec.back() = GuidingStroke::STP_RETRACT;
+        // phaseVec.push_back(GuidingStroke::STP_FINISH);
+        // }
+        // else
+        // {
+        // phaseVec.back() = GuidingStroke::STP_FINISH;
+        // }
+        //
+        // -- create lmp and append to motor program
+        LMPPoRot lmp = new LMPPoRot(scope, bbm, bmlBlockPeg, bmlId, id, pb);
+        lmp.setAngleVec(poVec);
+        lmp.setPhaseVec(phaseVec);
+        mcp.addLMP(lmp);
     }
 
     private void formPOMovement(String scope, List<DynamicElement> elements, FeedbackManager bbm, BMLBlockPeg bmlBlockPeg, String bmlId,
             String id, PegBoard pb, MotorControlProgram mcp, AnimationPlayer aniPlayer)
     {
-        // TODO
+        List<Double> poVec = new ArrayList<>();
+        List<GStrokePhaseID> phaseVec = new ArrayList<>();
+        for (DynamicElement dynElem : elements)
+        {
+            if (dynElem.getValueNodes().size() >= 2)
+            {
+                for (Entry<String, String> vn : dynElem.getValueNodes())
+                {
+                    if (hns.isPalmOrientation(vn.getValue()))
+                    {
+                        double po = hns.getPalmOrientation(vn.getValue(), scope);
+
+                        poVec.add(po);
+                        phaseVec.add(GStrokePhaseID.STP_STROKE);
+                    }
+                }
+            }
+            else
+            {
+                log.warn("formPO: insufficient number of values in dynamic element");
+            }
+        }
+        if(poVec.size()==0)return;
+        addLMPPoRot(scope, bbm, bmlBlockPeg, bmlId, id, pb, mcp, poVec, phaseVec);
     }
 
     public void getDynamicPalmOrientationElementsTMU(String scope, List<DynamicElement> elements, FeedbackManager bbm,

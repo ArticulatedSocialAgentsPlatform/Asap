@@ -191,7 +191,8 @@ public class AnimationPlannerTest
         
         animationPlanner.addBehaviour(bbPeg, beh, sacs, pu);
         assertEquals(0.3, pu.getStartTime(), TIMING_PRECISION);
-    }
+    }   
+    
 
     @Test
     public void testInterrupt() // throws BehaviourPlanningException
