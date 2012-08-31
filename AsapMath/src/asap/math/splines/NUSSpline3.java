@@ -25,7 +25,7 @@ public class NUSSpline3 extends NUBSpline3
 
     public float[] getPosition(double fTime)
     {
-        float f[] = c.get(0);
+        float f[] = Vec3f.getVec3f(c.get(0));
         float tmp[] = Vec3f.getVec3f();
         // if (isnan(f[0]) || isnan(f[1]) || isnan(f[2]))
         // {

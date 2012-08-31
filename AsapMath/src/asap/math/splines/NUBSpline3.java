@@ -138,8 +138,9 @@ public class NUBSpline3
                 for (int i = k; i <= n; i++)
                 {
                     // i=k..n
-                    //BUGFIX by Herwin
-                    //t.set(i, m_afTime.get(i - k + 1));
+                    
+                    t.set(i, m_afTime.get(i - k + 1));
+                    /* disabled bugfix
                     if(i-k+1<m_afTime.size())
                     {
                         t.set(i, m_afTime.get(i - k + 1));
@@ -148,6 +149,7 @@ public class NUBSpline3
                     {
                         t.set(i, m_afTime.get(m_afTime.size()-1));
                     }
+                    */
                     
                     // cout << "Knoten " << i << "=" << m_afTime[i-k+1] << endl;
                 }
@@ -165,7 +167,9 @@ public class NUBSpline3
             for (int i = n + 1; i <= (n + k); i++)
             {
                 // i=n+1..n+k
-                t.set(i, m_afTime.get(n - k + 2));
+                //BUGFIX by Herwin
+                //t.set(i, m_afTime.get(n - k + 2));
+                t.set(i, m_afTime.get(m_afTime.size()-1));
             }
 
             knotMax = t.get(t.size() - 1);
@@ -400,10 +404,10 @@ public class NUBSpline3
 
         // compute control points satisfying the interpolation conditions
         List<Float> alpha = new ArrayList<>();
-        ;
+        
         CollectionUtils.ensureSize(alpha, s - 1);
         List<Float> beta = new ArrayList<>();
-        ;
+        
         CollectionUtils.ensureSize(beta, s);
         List<Float> gamma = new ArrayList<>();
         CollectionUtils.ensureSize(gamma, s - 1);
