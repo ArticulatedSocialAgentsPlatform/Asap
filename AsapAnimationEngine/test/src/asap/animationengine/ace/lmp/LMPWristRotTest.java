@@ -1,7 +1,8 @@
 package asap.animationengine.ace.lmp;
 
 import static org.junit.Assert.assertEquals;
-
+import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.when;
 import hmi.testutil.animation.HanimBody;
 
 import java.util.ArrayList;
@@ -13,7 +14,6 @@ import org.powermock.core.classloader.annotations.PowerMockIgnore;
 import org.powermock.core.classloader.annotations.PrepareForTest;
 import org.powermock.modules.junit4.PowerMockRunner;
 
-import saiba.bml.feedback.BMLSyncPointProgressFeedback;
 import asap.animationengine.AnimationPlayer;
 import asap.animationengine.ace.OrientConstraint;
 import asap.animationengine.motionunit.TimedAnimationUnit;
@@ -25,8 +25,6 @@ import asap.realizer.planunit.TimedPlanUnitState;
 import asap.realizer.scheduler.BMLBlockManager;
 import asap.realizertestutil.planunit.AbstractTimedPlanUnitTest;
 import asap.realizertestutil.util.TimePegUtil;
-import static org.mockito.Mockito.mock;
-import static org.mockito.Mockito.when;
 /**
  * Testcases for the WristRot LMP
  * @author hvanwelbergen
@@ -40,8 +38,6 @@ import static org.mockito.Mockito.when;
 public class LMPWristRotTest extends AbstractTimedPlanUnitTest
 {
     private PegBoard pegBoard = new PegBoard();
-    private List<BMLSyncPointProgressFeedback> fbList = new ArrayList<>();
-    //private ListFeedbackListener fbl=new ListFeedbackListener(fbList);;
     private double TIMING_PRECISION = 0.001;
     private AnimationPlayer mockAniPlayer = mock(AnimationPlayer.class);
     

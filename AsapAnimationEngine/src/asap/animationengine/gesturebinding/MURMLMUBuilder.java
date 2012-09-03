@@ -351,14 +351,12 @@ public final class MURMLMUBuilder
         if (staticElem.getSlot() == Slot.ExtFingerOrientation && hns.getAbsoluteDirection(staticElem.getValue(), vec))
         {
             oc1.setD(vec);
-            oc2.setD(vec);
-            // insertConstantConstraint(oc1,oc2);
+            oc2.setD(vec);            
         }
         else if (staticElem.getSlot() == Slot.PalmOrientation && hns.getAbsoluteDirection(staticElem.getValue(), vec))
         {
             oc1.setP(vec);
-            oc2.setP(vec);
-            // insertConstantConstraint(oc1,oc2);
+            oc2.setP(vec);            
         }
         else
         {

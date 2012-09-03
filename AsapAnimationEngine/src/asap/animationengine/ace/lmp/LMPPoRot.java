@@ -20,9 +20,12 @@ import asap.realizer.pegboard.BMLBlockPeg;
 import asap.realizer.pegboard.PegBoard;
 import asap.realizer.pegboard.TimePeg;
 import asap.realizer.planunit.TimedPlanUnitPlayException;
+import asap.realizer.scheduler.LinearStretchResolver;
 import asap.realizer.scheduler.TimePegAndConstraint;
+import asap.realizer.scheduler.UniModalResolver;
 
 import com.google.common.collect.ImmutableSet;
+
 //XXX some code here is very similar to that in LMPWristRot, generalize this
 /**
  * LMP for local wrist rotation
@@ -37,6 +40,7 @@ public class LMPPoRot extends LMP
     private double qS, qDotS; // start angles and angular velocity (for scope joints only!!!)
     private int segments;
     private Map<PoConstraint, TimePeg> constraintMap = new HashMap<>();
+    private final UniModalResolver resolver = new LinearStretchResolver();
 
     private static final double TRANSITION_TIME = 0.4;
     private static final double DEFAULT_STROKEPHASE_DURATION = 5;
@@ -278,10 +282,9 @@ public class LMPPoRot extends LMP
     @Override
     public void resolveSynchs(BMLBlockPeg bbPeg, Behaviour b, List<TimePegAndConstraint> sac) throws BehaviourPlanningException
     {
-        // TODO Auto-generated method stub
-
+        resolver.resolveSynchs(bbPeg, b, sac, this);
     }
-    
+
     private PoConstraint findOrientConstraint(String syncId)
     {
         for (PoConstraint oc : poVec)
@@ -293,7 +296,7 @@ public class LMPPoRot extends LMP
         }
         return null;
     }
-    
+
     @Override
     public void setTimePeg(String syncId, TimePeg peg)
     {
