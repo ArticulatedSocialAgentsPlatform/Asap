@@ -6,7 +6,6 @@ import hmi.neurophysics.FittsLaw;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Set;
 import java.util.Map.Entry;
 import java.util.UUID;
 
@@ -18,6 +17,7 @@ import asap.animationengine.ace.GuidingSequence;
 import asap.animationengine.ace.GuidingStroke;
 import asap.animationengine.ace.LinearGStroke;
 import asap.animationengine.ace.OrientConstraint;
+import asap.animationengine.ace.PoConstraint;
 import asap.animationengine.ace.TPConstraint;
 import asap.animationengine.ace.lmp.LMPPoRot;
 import asap.animationengine.ace.lmp.LMPWristPos;
@@ -504,8 +504,7 @@ public final class MURMLMUBuilder
     private void formPOMovement(String scope, Static staticElem, FeedbackManager bbm, BMLBlockPeg bmlBlockPeg, String bmlId, String id,
             PegBoard pb, MotorControlProgram mcp, AnimationPlayer aniPlayer)
     {
-        List<Double> poVec = new ArrayList<>();
-        List<GStrokePhaseID> phaseVec = new ArrayList<>();
+        List<PoConstraint> poVec = new ArrayList<>();        
 
         if (!hns.isPalmOrientation(staticElem.getValue()))
         {
@@ -514,14 +513,12 @@ public final class MURMLMUBuilder
 
         double po = hns.getPalmOrientation(staticElem.getValue(), scope);
 
-        poVec.add(po);
-        phaseVec.add(GStrokePhaseID.STP_STROKE);
-
-        addLMPPoRot(scope, bbm, bmlBlockPeg, bmlId, id, pb, mcp, poVec, phaseVec);
+        poVec.add(new PoConstraint(po, GStrokePhaseID.STP_STROKE,"strokeStart"));
+        addLMPPoRot(scope, bbm, bmlBlockPeg, bmlId, id, pb, mcp, poVec);
     }
 
     private void addLMPPoRot(String scope, FeedbackManager bbm, BMLBlockPeg bmlBlockPeg, String bmlId, String id, PegBoard pb,
-            MotorControlProgram mcp, List<Double> poVec, List<GStrokePhaseID> phaseVec)
+            MotorControlProgram mcp, List<PoConstraint>poVec)
     {
         // // --- FIX-ME?: ---
         // // PO: retraction is NOT sync'ed with arm retraction movement!!
@@ -555,29 +552,30 @@ public final class MURMLMUBuilder
         // }
         //
         // -- create lmp and append to motor program
-        LMPPoRot lmp = new LMPPoRot(scope, bbm, bmlBlockPeg, bmlId, id, pb);
-        lmp.setAngleVec(poVec);
-        lmp.setPhaseVec(phaseVec);
+        LMPPoRot lmp = new LMPPoRot(scope, poVec, bbm, bmlBlockPeg, bmlId, id, pb);
+        lmp.setPoConstraint(poVec);
         mcp.addLMP(lmp);
     }
 
     private void formPOMovement(String scope, List<DynamicElement> elements, FeedbackManager bbm, BMLBlockPeg bmlBlockPeg, String bmlId,
             String id, PegBoard pb, MotorControlProgram mcp, AnimationPlayer aniPlayer)
     {
-        List<Double> poVec = new ArrayList<>();
-        List<GStrokePhaseID> phaseVec = new ArrayList<>();
+        List<PoConstraint> poVec = new ArrayList<>();
         for (DynamicElement dynElem : elements)
         {
             if (dynElem.getValueNodes().size() >= 2)
             {
+                int i = 0;
                 for (Entry<String, String> vn : dynElem.getValueNodes())
                 {
                     if (hns.isPalmOrientation(vn.getValue()))
                     {
                         double po = hns.getPalmOrientation(vn.getValue(), scope);
-
-                        poVec.add(po);
-                        phaseVec.add(GStrokePhaseID.STP_STROKE);
+                        String cid = vn.getKey();
+                        if (i == 0) cid = "strokeStart";
+                        if (i == dynElem.getValueNodes().size() - 1) cid = "strokeEnd";
+                        poVec.add(new PoConstraint(po,GStrokePhaseID.STP_STROKE, cid));   
+                        i++;
                     }
                 }
             }
@@ -587,7 +585,7 @@ public final class MURMLMUBuilder
             }
         }
         if(poVec.size()==0)return;
-        addLMPPoRot(scope, bbm, bmlBlockPeg, bmlId, id, pb, mcp, poVec, phaseVec);
+        addLMPPoRot(scope, bbm, bmlBlockPeg, bmlId, id, pb, mcp, poVec);
     }
 
     public void getDynamicPalmOrientationElementsTMU(String scope, List<DynamicElement> elements, FeedbackManager bbm,

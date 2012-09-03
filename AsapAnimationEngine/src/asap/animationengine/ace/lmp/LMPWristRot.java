@@ -16,7 +16,6 @@ import java.util.Set;
 import lombok.Data;
 import lombok.extern.slf4j.Slf4j;
 import saiba.bml.core.Behaviour;
-import saiba.bml.feedback.BMLSyncPointProgressFeedback;
 import asap.animationengine.AnimationPlayer;
 import asap.animationengine.ace.GStrokePhaseID;
 import asap.animationengine.ace.OrientConstraint;
@@ -43,7 +42,7 @@ public class LMPWristRot extends LMP
 {
     private ImmutableSet<String> kinematicJoints;
     private List<OrientConstraint> ocVec;
-    private Map<OrientConstraint, TimePeg> constraintMap = new HashMap<OrientConstraint, TimePeg>();
+    private Map<OrientConstraint, TimePeg> constraintMap = new HashMap<>();
     private List<OrientPos> orientVec = new ArrayList<>();
 
     private final AnimationPlayer aniPlayer;
@@ -196,15 +195,7 @@ public class LMPWristRot extends LMP
         return Mat3f.getIdentity();
     }
 
-    private void createPegWhenMissingOnPegBoard(String syncId)
-    {
-        if (pegBoard.getTimePeg(getBMLId(), getId(), syncId) == null)
-        {
-            TimePeg tp = new TimePeg(getBMLBlockPeg());
-            pegBoard.addTimePeg(getBMLId(), getId(), syncId, tp);
-        }
-
-    }
+    
 
     private void createMissingTimePegs()
     {

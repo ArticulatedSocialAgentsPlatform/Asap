@@ -38,6 +38,16 @@ public abstract class LMP extends TimedAbstractPlanUnit implements TimedAnimatio
         return syncs;
     }
     
+    protected void createPegWhenMissingOnPegBoard(String syncId)
+    {
+        if (pegBoard.getTimePeg(getBMLId(), getId(), syncId) == null)
+        {
+            TimePeg tp = new TimePeg(getBMLBlockPeg());
+            pegBoard.addTimePeg(getBMLId(), getId(), syncId, tp);
+        }
+
+    }
+    
     @Override
     public double getStartTime()
     {
