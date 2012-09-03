@@ -512,11 +512,11 @@ public final class MURMLMUBuilder
         double po = hns.getPalmOrientation(staticElem.getValue(), scope);
 
         poVec.add(new PoConstraint(po, GStrokePhaseID.STP_STROKE,"strokeStart"));
-        addLMPPoRot(scope, bbm, bmlBlockPeg, bmlId, id, pb, mcp, poVec);
+        addLMPPoRot(scope, bbm, bmlBlockPeg, bmlId, id, pb, mcp, poVec, aniPlayer);
     }
 
     private void addLMPPoRot(String scope, FeedbackManager bbm, BMLBlockPeg bmlBlockPeg, String bmlId, String id, PegBoard pb,
-            MotorControlProgram mcp, List<PoConstraint>poVec)
+            MotorControlProgram mcp, List<PoConstraint>poVec, AnimationPlayer aniPlayer)
     {
         // // --- FIX-ME?: ---
         // // PO: retraction is NOT sync'ed with arm retraction movement!!
@@ -550,7 +550,7 @@ public final class MURMLMUBuilder
         // }
         //
         // -- create lmp and append to motor program
-        LMPPoRot lmp = new LMPPoRot(scope, poVec, bbm, bmlBlockPeg, bmlId, id, pb);
+        LMPPoRot lmp = new LMPPoRot(scope, poVec, bbm, bmlBlockPeg, bmlId, id, pb, aniPlayer);
         lmp.setPoConstraint(poVec);
         mcp.addLMP(lmp);
     }
@@ -583,7 +583,7 @@ public final class MURMLMUBuilder
             }
         }
         if(poVec.size()==0)return;
-        addLMPPoRot(scope, bbm, bmlBlockPeg, bmlId, id, pb, mcp, poVec);
+        addLMPPoRot(scope, bbm, bmlBlockPeg, bmlId, id, pb, mcp, poVec, aniPlayer);
     }
 
     public void getDynamicPalmOrientationElementsTMU(String scope, List<DynamicElement> elements, FeedbackManager bbm,

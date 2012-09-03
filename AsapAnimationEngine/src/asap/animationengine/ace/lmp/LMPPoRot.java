@@ -1,6 +1,9 @@
 package asap.animationengine.ace.lmp;
 
 import hmi.animation.Hanim;
+import hmi.animation.VJoint;
+import hmi.math.Quat4f;
+import hmi.math.Vecf;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -11,8 +14,11 @@ import java.util.Set;
 import lombok.Setter;
 import lombok.extern.slf4j.Slf4j;
 import saiba.bml.core.Behaviour;
+import asap.animationengine.AnimationPlayer;
+import asap.animationengine.ace.GStrokePhaseID;
 import asap.animationengine.ace.OrientConstraint;
 import asap.animationengine.ace.PoConstraint;
+import asap.math.splines.TCBSplineN;
 import asap.motionunit.TMUPlayException;
 import asap.realizer.BehaviourPlanningException;
 import asap.realizer.feedback.FeedbackManager;
@@ -35,23 +41,29 @@ import com.google.common.collect.ImmutableSet;
 @Slf4j
 public class LMPPoRot extends LMP
 {
+    private final AnimationPlayer aniPlayer;
     private ImmutableSet<String> kinematicJoints;
     private final String joint;
     private double qS, qDotS; // start angles and angular velocity (for scope joints only!!!)
     private int segments;
     private Map<PoConstraint, TimePeg> constraintMap = new HashMap<>();
     private final UniModalResolver resolver = new LinearStretchResolver();
+    private TCBSplineN traj;
 
-    private static final double TRANSITION_TIME = 0.4;
+    private List<float[]> pointVec;
+    private List<Double> timeVec;
+
+    private static final double TRANSITION_TIME = 0.4; // TODO: use getPODurationFromAmplitude instead?
     private static final double DEFAULT_STROKEPHASE_DURATION = 5;
 
     @Setter
     private List<PoConstraint> poVec;
 
     public LMPPoRot(String scope, List<PoConstraint> poVec, FeedbackManager fbm, BMLBlockPeg bmlPeg, String bmlId, String behId,
-            PegBoard pegBoard)
+            PegBoard pegBoard, AnimationPlayer aniPlayer)
     {
         super(fbm, bmlPeg, bmlId, behId, pegBoard);
+        this.aniPlayer = aniPlayer;
         this.poVec = poVec;
 
         // TODO: implement proper scope selection when no scope is provided.
@@ -329,24 +341,122 @@ public class LMPPoRot extends LMP
         return true;
     }
 
+    private List<Double> toTimeVec()
+    {
+        List<Double> v = new ArrayList<>();
+        for (PoConstraint po : poVec)
+        {
+            v.add(constraintMap.get(po).getGlobalValue());
+        }
+        return v;
+    }
+
+    private List<float[]> toPointVec()
+    {
+        List<float[]> v = new ArrayList<>();
+        for (PoConstraint po : poVec)
+        {
+            float vv[] = new float[1];
+            vv[0] = (float) po.getPo();
+            v.add(vv);
+        }
+        return v;
+    }
+
+    private void refine()
+    {
+        if (!pointVec.isEmpty())
+        {
+
+            // create trajectory (MgcNaturalSplineN::BT_CLAMPED)
+            int segments = pointVec.size() - 1;
+            float qDotE[] = Vecf.getVecf(1);
+            List<Double> t = new ArrayList<>();
+            List<Double> b = new ArrayList<>();
+            List<Double> c = new ArrayList<>();
+            for (int i = 0; i <= segments; ++i)
+            {
+                t.add(0d);
+                b.add(0d);
+                c.add(0d);
+            }
+            traj = new TCBSplineN(segments, timeVec, pointVec, t, c, b);
+        }
+    }
+
+    private void startFrom(float q, double qDot, double time)
+    {
+        timeVec.add(0, time);
+        float v[]=Vecf.getVecf(1);
+        v[0]=q;
+        pointVec.add(0, v);
+        timeVec.add(0, time);
+
+        // TODO(?)
+        // // -- FIX-ME?: this may better be dealt with in the motor control module...??
+        // if ( !phaseVec.empty() )
+        // {
+        // // if the following state is finished, then it should be retracting phase
+        // if ( phaseVec.front() == GuidingStroke::STP_FINISH )
+        // phaseVec.push_front( GuidingStroke::STP_RETRACT );
+        // else
+        // // otherwise it is preparation
+        // phaseVec.push_front( GuidingStroke::STP_PREP );
+        // }
+        // else
+        // // if no phases defined at all, let the program be finished immediately
+        // phaseVec.push_front( GuidingStroke::STP_FINISH );
+
+        qDotS = qDot;
+    }
+
     @Override
     protected void startUnit(double time)
     {
+        resolveTimePegs(time);
+        timeVec = toTimeVec();
+        pointVec = toPointVec();
+
+        // time to start now
+        startFrom(0, 0, time);
+        
+        // FIX-ME??? ---
+        // for static PO constraints, there are only three control points defined,
+        // which may give too little segments! This loop is meant to fill up the
+        // vectors with "meaningless" control points just to meet the minimum number
+        // of spline parameters.
+        while (pointVec.size() < 4)
+        {
+            pointVec.add(0, Vecf.getVecf(1));
+            timeVec.add(0, time);
+        }
+        refine();
         feedback("start", time);
+    }
+
+    private double getConfiguration(double fTime)
+    {
+        if (traj != null)
+        {
+            // updateState(fTime);
+            return traj.GetPosition(fTime)[0];
+        }
+        else log.warn("LMP_JAngleTCB::getPosition : no trajectory!");
+        return 0;
     }
 
     @Override
     protected void playUnit(double time) throws TimedPlanUnitPlayException
     {
-        // TODO Auto-generated method stub
-
+        double conf = getConfiguration(time);
+        VJoint vjWrist = aniPlayer.getvAdditive().getPartBySid(joint);
+        vjWrist.setAxisAngle(0, 0, 1, (float) Math.toRadians(conf));
     }
 
     @Override
     protected void stopUnit(double time) throws TimedPlanUnitPlayException
     {
-        // TODO Auto-generated method stub
-
+        feedback("end", time);
     }
 
 }
