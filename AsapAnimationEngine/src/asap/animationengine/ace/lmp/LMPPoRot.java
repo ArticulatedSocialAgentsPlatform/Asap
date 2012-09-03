@@ -47,7 +47,6 @@ public class LMPPoRot extends LMP
     private double qS, qDotS; // start angles and angular velocity (for scope joints only!!!)
     private int segments;
     private Map<PoConstraint, TimePeg> constraintMap = new HashMap<>();
-    private final UniModalResolver resolver = new LinearStretchResolver();
     private TCBSplineN traj;
 
     private List<float[]> pointVec;
@@ -120,6 +119,20 @@ public class LMPPoRot extends LMP
         }
     }
 
+    @Override
+    public List<String> getAvailableSyncs()
+    {
+        List<String> syncs = super.getAvailableSyncs();
+        for(PoConstraint oc:poVec)
+        {
+            if(!syncs.contains(oc.getId()))
+            {
+                syncs.add(oc.getId());
+            }
+        }
+        return syncs;
+    }
+    
     private double getPODurationFromAmplitude(double amp)
     {
         return (Math.abs(amp) / 140.0);
@@ -294,7 +307,8 @@ public class LMPPoRot extends LMP
     @Override
     public void resolveSynchs(BMLBlockPeg bbPeg, Behaviour b, List<TimePegAndConstraint> sac) throws BehaviourPlanningException
     {
-        resolver.resolveSynchs(bbPeg, b, sac, this);
+        linkSynchs(sac);
+        resolveTimePegs(bbPeg.getValue());
     }
 
     private PoConstraint findOrientConstraint(String syncId)

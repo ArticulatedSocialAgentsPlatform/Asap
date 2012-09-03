@@ -1,5 +1,6 @@
 package asap.animationengine.ace.lmp;
 
+import static org.hamcrest.MatcherAssert.assertThat;
 import static org.junit.Assert.assertEquals;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
@@ -9,6 +10,7 @@ import hmi.testutil.animation.HanimBody;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.hamcrest.collection.IsIterableContainingInAnyOrder;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.powermock.core.classloader.annotations.PowerMockIgnore;
@@ -136,6 +138,14 @@ public class LMPPoRotTest extends AbstractTimedPlanUnitTest
         
         assertEquals(3, tau.getTime("end"),TIMING_PRECISION);
         assertEquals(0, tau.getTime("start"),TIMING_PRECISION);        
+    }
+    
+    @Test
+    public void testAvailableSyncs() throws TMUPlayException
+    {
+        TimedAnimationUnit tau = setupPlanUnit(fbManager, BMLBlockPeg.GLOBALPEG, "bml1", "beh1");
+        assertThat(tau.getAvailableSyncs(),
+                IsIterableContainingInAnyOrder.containsInAnyOrder("strokeStart", "stroke1", "stroke2", "strokeEnd"));
     }
 
 }

@@ -22,6 +22,7 @@ import com.google.common.primitives.Doubles;
 import asap.animationengine.motionunit.TimedAnimationUnit;
 import asap.motionunit.TMUPlayException;
 import asap.realizer.BehaviourPlanningException;
+import asap.realizer.SyncPointNotFoundException;
 import asap.realizer.feedback.FeedbackManager;
 import asap.realizer.pegboard.BMLBlockPeg;
 import asap.realizer.pegboard.OffsetPeg;
@@ -44,11 +45,38 @@ public class MotorControlProgram extends TimedAbstractPlanUnit implements TimedA
     private final PegBoard localPegBoard;
     private Set<String> syncsHandled = new HashSet<String>();
 
-    private final UniModalResolver resolver = new LinearStretchResolver();
-
-    public void resolveSynchs(BMLBlockPeg bbPeg, Behaviour b, List<TimePegAndConstraint> sac) throws BehaviourPlanningException
+    // TODO: more or less duplicate with LinearStretchResolver, ProcAnimationGestureTMU
+    private void linkSynchs(List<TimePegAndConstraint> sacs)
     {
-        resolver.resolveSynchs(bbPeg, b, sac, this);
+        for (TimePegAndConstraint s : sacs)
+        {
+            for (String syncId : getAvailableSyncs())
+            {
+                if (s.syncId.equals(syncId))
+                {
+                    if (s.offset == 0)
+                    {
+                        setTimePeg(syncId, s.peg);
+                    }
+                    else
+                    {
+                        setTimePeg(syncId, new OffsetPeg(s.peg, -s.offset));
+                    }
+                }
+            }
+        }
+    }
+    
+
+    public void resolveSynchs(BMLBlockPeg bbPeg, Behaviour b, List<TimePegAndConstraint> sacs) throws BehaviourPlanningException
+    {
+        if (sacs.isEmpty()) return;
+        linkSynchs(sacs);
+        for (TimedAnimationUnit lmp : lmpQueue)
+        {
+            lmp.resolveSynchs(bbPeg, b, sacs);
+        }
+        resolveMissingSyncPoints();
     }
 
     public MotorControlProgram(FeedbackManager fbm, BMLBlockPeg bmlPeg, String bmlId, String behId, PegBoard globalPegBoard, PegBoard localPegBoard)
@@ -346,5 +374,5 @@ public class MotorControlProgram extends TimedAbstractPlanUnit implements TimedA
         {
             setTimePeg(s.syncId, new OffsetPeg(s.peg, -s.offset));
         }
-    }
+    }    
 }

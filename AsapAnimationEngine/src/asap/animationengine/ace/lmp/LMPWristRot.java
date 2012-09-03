@@ -23,6 +23,7 @@ import asap.motionunit.TMUPlayException;
 import asap.realizer.BehaviourPlanningException;
 import asap.realizer.feedback.FeedbackManager;
 import asap.realizer.pegboard.BMLBlockPeg;
+import asap.realizer.pegboard.OffsetPeg;
 import asap.realizer.pegboard.PegBoard;
 import asap.realizer.pegboard.TimePeg;
 import asap.realizer.planunit.TimedPlanUnitPlayException;
@@ -52,11 +53,12 @@ public class LMPWristRot extends LMP
     private static final double TRANSITION_TIME = 0.4;
     private static final double DEFAULT_STROKEPHASE_DURATION = 5;
 
-    private final UniModalResolver resolver = new LinearStretchResolver();
+    
 
     public void resolveSynchs(BMLBlockPeg bbPeg, Behaviour b, List<TimePegAndConstraint> sac) throws BehaviourPlanningException
     {
-        resolver.resolveSynchs(bbPeg, b, sac, this);
+        linkSynchs(sac);
+        resolveTimePegs(bbPeg.getValue());
     }
 
     @Data
@@ -195,7 +197,19 @@ public class LMPWristRot extends LMP
         return Mat3f.getIdentity();
     }
 
-    
+    @Override
+    public List<String> getAvailableSyncs()
+    {
+        List<String> syncs = super.getAvailableSyncs();
+        for(OrientConstraint oc:ocVec)
+        {
+            if(!syncs.contains(oc.getId()))
+            {
+                syncs.add(oc.getId());
+            }
+        }
+        return syncs;
+    }
 
     private void createMissingTimePegs()
     {
