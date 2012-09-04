@@ -80,7 +80,7 @@ public class TimePeg
     }
     
     /**
-     * Get the 'underlying' TimePeg. Used to get the linked 'real' TimePeg for OffsetPegs, mainly in schedulers.
+     * Get the 'underlying' TimePeg. Used to get the linked 'real' TimePeg for OffsetPegs, AfterPegs, mainly in schedulers.
      */
     public synchronized TimePeg getLink()
     {
@@ -117,7 +117,16 @@ public class TimePeg
      */
     public synchronized void setValue(double v, BMLBlockPeg p)
     {
-        value = v+p.getValue()-bmlBlockPeg.getValue();
+        setLocalValue(v+p.getValue()-bmlBlockPeg.getValue());
+    }
+    
+    /**
+     * Get the value of the Synchronization point, relative to p
+     */
+    public synchronized double getValue(BMLBlockPeg p)
+    {
+        if(getLocalValue()==TimePeg.VALUE_UNKNOWN)return TimePeg.VALUE_UNKNOWN;
+        return getLocalValue()+bmlBlockPeg.getValue()-p.getValue();
     }
     
     /**
@@ -128,11 +137,11 @@ public class TimePeg
     {
         if(v == TimePeg.VALUE_UNKNOWN)
         {
-            value = TimePeg.VALUE_UNKNOWN;
+            setLocalValue(TimePeg.VALUE_UNKNOWN);
         }
         else
         {
-            value = v - bmlBlockPeg.getValue();
+            setLocalValue(v - bmlBlockPeg.getValue());
         }
     }
     
