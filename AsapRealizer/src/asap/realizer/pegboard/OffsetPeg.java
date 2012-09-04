@@ -38,18 +38,6 @@ public final class OffsetPeg extends TimePeg
     private double offset = 0;
     
     
-    public OffsetPeg(double o,BMLBlockPeg bmp)
-    {
-        super(bmp);
-        offset = o;
-    }
-    
-    
-    public synchronized void setOffset(double o)
-    {
-        offset = o;        
-    }
-    
     public OffsetPeg(TimePeg l, double o)
     {
         super(l.bmlBlockPeg);
@@ -64,6 +52,11 @@ public final class OffsetPeg extends TimePeg
         link = l;
         offset = o;
         setAbsoluteTime(l.isAbsoluteTime());        
+    }
+    
+    public synchronized void setOffset(double o)
+    {
+        offset = o;        
     }
     
     public synchronized void setLink(TimePeg p)
@@ -86,19 +79,9 @@ public final class OffsetPeg extends TimePeg
     public synchronized double getLocalValue()
     {
         if(link.getLocalValue()==TimePeg.VALUE_UNKNOWN)return TimePeg.VALUE_UNKNOWN;
-        return link.getLocalValue()+offset;
+        return link.getValue(bmlBlockPeg)+offset;
     }
     
-    /**
-     * get the value of the SynchronisationPoint
-     * @return the value of the SynchronisationPoint
-     */
-    @Override
-    public synchronized double getGlobalValue()
-    {
-        if(link.getGlobalValue()==TimePeg.VALUE_UNKNOWN)return TimePeg.VALUE_UNKNOWN;
-        return link.getGlobalValue()+offset;
-    }
     
     @Override
     public synchronized void setLocalValue(double v)
@@ -109,21 +92,8 @@ public final class OffsetPeg extends TimePeg
         }
         else
         {
-            link.setLocalValue(v-offset);
+            link.setValue(v-offset, bmlBlockPeg);
         }        
-    }
-    
-    @Override
-    public synchronized void setGlobalValue(double v)
-    {
-        if(v == TimePeg.VALUE_UNKNOWN)
-        {
-            link.setGlobalValue(TimePeg.VALUE_UNKNOWN);
-        }
-        else
-        {
-            link.setGlobalValue(v-offset);
-        }
     }
     
     @Override

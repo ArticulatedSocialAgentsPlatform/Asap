@@ -332,6 +332,11 @@ public class MotorControlProgram extends TimedAbstractPlanUnit implements TimedA
                 tmu.play(time);
             }            
         }    
+        feedbackForSyncs(time);                
+    }
+    
+    private void feedbackForSyncs(double time)
+    {
         for(String sync: getAvailableSyncs())
         {
             if(!syncsHandled.contains(sync))
@@ -342,7 +347,6 @@ public class MotorControlProgram extends TimedAbstractPlanUnit implements TimedA
                 }
             }
         }
-                
     }
 
     @Override
@@ -361,7 +365,11 @@ public class MotorControlProgram extends TimedAbstractPlanUnit implements TimedA
     @Override
     protected void stopUnit(double time) throws TimedPlanUnitPlayException
     {
-        feedback("end",time);
+        feedbackForSyncs(time);
+        if(!syncsHandled.contains("end"))
+        {
+            feedback("end",time);
+        }
     }
 
     public void linkSync(TimePegAndConstraint s)

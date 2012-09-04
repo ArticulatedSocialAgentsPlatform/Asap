@@ -12,7 +12,7 @@ public abstract class AbstractTimePegTest
 {
     public abstract TimePeg createTimePeg(BMLBlockPeg peg);
     
-    private static final double TIME_PRECISION = 0.0001;
+    protected static final double TIME_PRECISION = 0.0001;
 
     @Test
     public void testGetGlobalValue()
