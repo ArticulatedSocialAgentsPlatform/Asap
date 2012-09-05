@@ -2,7 +2,6 @@ package asap.animationengine.ace.lmp;
 
 import hmi.animation.Hanim;
 import hmi.animation.VJoint;
-import hmi.math.Quat4f;
 import hmi.math.Vecf;
 
 import java.util.ArrayList;
@@ -15,8 +14,6 @@ import lombok.Setter;
 import lombok.extern.slf4j.Slf4j;
 import saiba.bml.core.Behaviour;
 import asap.animationengine.AnimationPlayer;
-import asap.animationengine.ace.GStrokePhaseID;
-import asap.animationengine.ace.OrientConstraint;
 import asap.animationengine.ace.PoConstraint;
 import asap.math.splines.TCBSplineN;
 import asap.motionunit.TMUPlayException;
@@ -26,9 +23,7 @@ import asap.realizer.pegboard.BMLBlockPeg;
 import asap.realizer.pegboard.PegBoard;
 import asap.realizer.pegboard.TimePeg;
 import asap.realizer.planunit.TimedPlanUnitPlayException;
-import asap.realizer.scheduler.LinearStretchResolver;
 import asap.realizer.scheduler.TimePegAndConstraint;
-import asap.realizer.scheduler.UniModalResolver;
 
 import com.google.common.collect.ImmutableSet;
 

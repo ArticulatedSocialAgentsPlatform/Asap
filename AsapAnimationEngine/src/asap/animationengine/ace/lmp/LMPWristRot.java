@@ -143,6 +143,8 @@ public class LMPWristRot extends LMP
             {
                 Vec3f.scale(-1, p);
             }
+            Vec3f.scale(-1,d);
+            
             float v[] = Vec3f.getVec3f();
             Vec3f.cross(v, p, d);
             Vec3f.normalize(v);
@@ -158,6 +160,7 @@ public class LMPWristRot extends LMP
         {
             // get transformation dOld -> d
             float d[] = Vec3f.getVec3f(oc.getD());
+            Vec3f.scale(-1,d);
             Vec3f.normalize(d);
             Vec3f.normalize(dOld);
 
