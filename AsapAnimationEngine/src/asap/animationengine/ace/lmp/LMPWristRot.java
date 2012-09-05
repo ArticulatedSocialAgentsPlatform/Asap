@@ -23,13 +23,10 @@ import asap.motionunit.TMUPlayException;
 import asap.realizer.BehaviourPlanningException;
 import asap.realizer.feedback.FeedbackManager;
 import asap.realizer.pegboard.BMLBlockPeg;
-import asap.realizer.pegboard.OffsetPeg;
 import asap.realizer.pegboard.PegBoard;
 import asap.realizer.pegboard.TimePeg;
 import asap.realizer.planunit.TimedPlanUnitPlayException;
-import asap.realizer.scheduler.LinearStretchResolver;
 import asap.realizer.scheduler.TimePegAndConstraint;
-import asap.realizer.scheduler.UniModalResolver;
 
 import com.google.common.collect.ImmutableSet;
 
@@ -52,8 +49,6 @@ public class LMPWristRot extends LMP
     private static final float PRECISION = 0.001f;
     private static final double TRANSITION_TIME = 0.4;
     private static final double DEFAULT_STROKEPHASE_DURATION = 5;
-
-    
 
     public void resolveSynchs(BMLBlockPeg bbPeg, Behaviour b, List<TimePegAndConstraint> sac) throws BehaviourPlanningException
     {

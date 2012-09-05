@@ -3,7 +3,10 @@ package asap.animationengine.ace.lmp;
 import java.util.ArrayList;
 import java.util.List;
 
+import saiba.bml.core.Behaviour;
+
 import asap.animationengine.motionunit.TimedAnimationUnit;
+import asap.realizer.BehaviourPlanningException;
 import asap.realizer.feedback.FeedbackManager;
 import asap.realizer.pegboard.BMLBlockPeg;
 import asap.realizer.pegboard.OffsetPeg;
@@ -24,7 +27,8 @@ public abstract class LMP extends TimedAbstractPlanUnit implements TimedAnimatio
         super(fbm, bmlPeg, bmlId, behId, true);
         this.pegBoard = pegBoard;
     }
-
+    
+    
     @Override
     public List<String> getAvailableSyncs()
     {
@@ -90,6 +94,25 @@ public abstract class LMP extends TimedAbstractPlanUnit implements TimedAnimatio
 
     // TODO: more or less duplicate with LinearStretchResolver, ProcAnimationGestureTMU
     protected void linkSynchs(List<TimePegAndConstraint> sacs)
+    {
+        for (TimePegAndConstraint s : sacs)
+        {
+            for (String syncId : getAvailableSyncs())
+            {
+
+                if (s.offset == 0)
+                {
+                    setTimePeg(syncId, s.peg);
+                }
+                else
+                {
+                    setTimePeg(syncId, new OffsetPeg(s.peg, -s.offset));
+                }
+            }
+        }
+    }
+
+    protected void linkMCPSynchs(List<TimePegAndConstraint> sacs)
     {
         for (TimePegAndConstraint s : sacs)
         {

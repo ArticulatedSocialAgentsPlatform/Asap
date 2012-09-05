@@ -317,10 +317,6 @@ public abstract class TimedAbstractPlanUnit implements TimedPlanUnit
     @Override
     public double getTime(String syncId)
     {
-        if (syncId.equals("start"))
-            return getStartTime();
-        if (syncId.equals("end"))
-            return getEndTime();
         if(getTimePeg(syncId)!=null)
         {
             return getTimePeg(syncId).getGlobalValue();
