@@ -367,7 +367,7 @@ public final class MURMLMUBuilder
         return ImmutableList.of(oc1, oc2);
     }
 
-    private List<OrientConstraint> formWristMovement(String scope, List<DynamicElement> elements, FeedbackManager bbm,
+    private List<OrientConstraint> formWristMovement(String scope, Slot slot, List<DynamicElement> elements, FeedbackManager bbm,
             BMLBlockPeg bmlBlockPeg, String bmlId, String id, PegBoard pb, MotorControlProgram mcp, AnimationPlayer aniPlayer)
     {
         float vec[] = Vec3f.getVec3f();
@@ -407,7 +407,17 @@ public final class MURMLMUBuilder
                 vec = Vec3f.getVec3f();
                 if (hns.getAbsoluteDirection(vn.getValue(), vec))
                 {
-                    oc.setP(vec);
+                    switch (slot)
+                    {
+                    case PalmOrientation:
+                        oc.setP(vec);
+                        break;
+                    case ExtFingerOrientation:
+                        oc.setD(vec);
+                        break;
+                    default:
+                        log.warn("cannot construct wrist movement from " + slot + " slot.");
+                    }
                     ocVec.add(oc);
                 }
                 i++;
@@ -584,12 +594,20 @@ public final class MURMLMUBuilder
         addLMPPoRot(scope, bbm, bmlBlockPeg, bmlId, id, pb, mcp, poVec, aniPlayer);
     }
 
-    public List<OrientConstraint> getDynamicPalmOrientationElementsTMU(String scope, List<DynamicElement> elements, FeedbackManager bbm,
-            BMLBlockPeg bmlBlockPeg, String bmlId, String id, PegBoard pb, MotorControlProgram mcp, AnimationPlayer aniPlayer)
+    public List<OrientConstraint> getDynamicPalmOrientationElementsTMU(String scope, Slot slot, List<DynamicElement> elements,
+            FeedbackManager bbm, BMLBlockPeg bmlBlockPeg, String bmlId, String id, PegBoard pb, MotorControlProgram mcp,
+            AnimationPlayer aniPlayer)
     {
-        List<OrientConstraint> ocVec = formWristMovement(scope, elements, bbm, bmlBlockPeg, bmlId, id, pb, mcp, aniPlayer);
+        List<OrientConstraint> ocVec = formWristMovement(scope, slot, elements, bbm, bmlBlockPeg, bmlId, id, pb, mcp, aniPlayer);
         formPOMovement(scope, elements, bbm, bmlBlockPeg, bmlId, id, pb, mcp, aniPlayer);
         return ocVec;
+    }
+
+    public List<OrientConstraint> getExtFingerOrientationnElementsTMU(String scope, Slot slot, List<DynamicElement> elements,
+            FeedbackManager bbm, BMLBlockPeg bmlBlockPeg, String bmlId, String id, PegBoard pb, MotorControlProgram mcp,
+            AnimationPlayer aniPlayer)
+    {
+        return formWristMovement(scope, slot, elements, bbm, bmlBlockPeg, bmlId, id, pb, mcp, aniPlayer);
     }
 
     public List<OrientConstraint> getStaticPalmOrientationTMU(String scope, Static staticElem, FeedbackManager bbm,
@@ -599,11 +617,11 @@ public final class MURMLMUBuilder
         formPOMovement(scope, staticElem, bbm, bmlBlockPeg, bmlId, id, pb, mcp, aniPlayer);
         return ocVec;
     }
-    
+
     public List<OrientConstraint> getStaticExtFingerOrientationOrientationTMU(String scope, Static staticElem, FeedbackManager bbm,
             BMLBlockPeg bmlBlockPeg, String bmlId, String id, PegBoard pb, MotorControlProgram mcp, AnimationPlayer aniPlayer)
     {
-        return formWristMovement(scope, staticElem, bbm, bmlBlockPeg, bmlId, id, pb, mcp, aniPlayer);        
+        return formWristMovement(scope, staticElem, bbm, bmlBlockPeg, bmlId, id, pb, mcp, aniPlayer);
     }
 
     public void getDynamicHandLocationElementsTMU(String scope, List<DynamicElement> elements, FeedbackManager bbm,
@@ -815,6 +833,29 @@ public final class MURMLMUBuilder
         setConstraint(ocLast, cLast);
     }
 
+    private void mergeDynamicConstraints(List<OrientConstraint> ocVec, List<OrientConstraint> dynamicConstraints)
+    {
+        List<OrientConstraint> ocNewList = new ArrayList<>();
+        for (OrientConstraint ocNew : dynamicConstraints)
+        {
+            boolean newConstraint = true;
+            for (OrientConstraint oc : ocVec)
+            {
+                if (oc.getId().equals(ocNew.getId()))
+                {
+                    setConstraint(oc,ocNew);
+                    newConstraint = false;
+                    break;
+                }
+            }
+            if(newConstraint)
+            {
+                ocNewList.add(ocNew);
+            }
+        }
+        ocVec.addAll(ocNewList);
+    }
+
     public TimedAnimationUnit setupTMU(MURMLDescription murmlDescription, FeedbackManager bbm, BMLBlockPeg bmlBlockPeg, String bmlId,
             String id, PegBoard pb, AnimationPlayer aniPlayer) throws MUSetupException
     {
@@ -861,6 +902,28 @@ public final class MURMLMUBuilder
                     ocMap.put(staticElem.getScope(), ocVec);
                 }
             }
+            for (Dynamic dynamicElem : par.getDynamics())
+            {
+                if (dynamicElem.getKeyframing() != null)
+                {
+                    // TODO
+                }
+                else
+                {
+                    List<OrientConstraint> ocVec = new ArrayList<OrientConstraint>();
+                    parseProceduralDynamic(bbm, bmlBlockPeg, bmlId, id, aniPlayer, localPegBoard, mcp, dynamicElem, ocVec);
+                    if (ocMap.containsKey(dynamicElem.getScope()))
+                    {
+                        List<OrientConstraint> ocCur = ocMap.get(dynamicElem.getScope());
+                        mergeDynamicConstraints(ocCur, ocVec);
+                    }
+                    else
+                    {
+                        ocMap.put(dynamicElem.getScope(), ocVec);
+                    }
+                }
+            }
+
             for (Entry<String, List<OrientConstraint>> entry : ocMap.entrySet())
             {
                 createAndAppendLMPWrist(entry.getKey(), bbm, bmlBlockPeg, bmlId, id, localPegBoard, mcp, aniPlayer, entry.getValue());
@@ -883,8 +946,8 @@ public final class MURMLMUBuilder
         case HandShape:
             break;
         case ExtFingerOrientation:
-            ocVec.addAll(getStaticExtFingerOrientationOrientationTMU(staticElem.getScope(), staticElem, bbm, bmlBlockPeg, bmlId, id, localPegBoard, mcp,
-                    aniPlayer));
+            ocVec.addAll(getStaticExtFingerOrientationOrientationTMU(staticElem.getScope(), staticElem, bbm, bmlBlockPeg, bmlId, id,
+                    localPegBoard, mcp, aniPlayer));
             break;
         case PalmOrientation:
             ocVec.addAll(getStaticPalmOrientationTMU(staticElem.getScope(), staticElem, bbm, bmlBlockPeg, bmlId, id, localPegBoard, mcp,
@@ -908,10 +971,12 @@ public final class MURMLMUBuilder
         case HandShape:
             break;
         case ExtFingerOrientation:
+            ocVec.addAll(getExtFingerOrientationnElementsTMU(dyn.getScope(), dyn.getSlot(), dyn.getDynamicElements(), bbm, bmlBlockPeg,
+                    bmlId, id, localPegBoard, mcp, aniPlayer));
             break;
         case PalmOrientation:
-            ocVec.addAll(getDynamicPalmOrientationElementsTMU(dyn.getScope(), dyn.getDynamicElements(), bbm, bmlBlockPeg, bmlId, id,
-                    localPegBoard, mcp, aniPlayer));
+            ocVec.addAll(getDynamicPalmOrientationElementsTMU(dyn.getScope(), dyn.getSlot(), dyn.getDynamicElements(), bbm, bmlBlockPeg,
+                    bmlId, id, localPegBoard, mcp, aniPlayer));
             break;
         }
     }
