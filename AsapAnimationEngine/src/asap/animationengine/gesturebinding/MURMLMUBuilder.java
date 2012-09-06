@@ -98,7 +98,8 @@ public final class MURMLMUBuilder
      * => Skalierungsstrategie?!
      */
     private void appendSubTrajectory(List<DynamicElement> elements, String scope, GuidingSequence traj, TimedAnimationUnit tmu,
-            FeedbackManager bbf, BMLBlockPeg bmlBlockPeg, String bmlId, String id, PegBoard pegBoard, MotorControlProgram mp)
+            FeedbackManager bbf, BMLBlockPeg bmlBlockPeg, String bmlId, String id, PegBoard pegBoard, MotorControlProgram mp,
+            AnimationPlayer aniPlayer)
     {
         float[] ePos = Vec3f.getVec3f();
         double tEst = 0;
@@ -279,12 +280,11 @@ public final class MURMLMUBuilder
                 {
                     scope = "left_arm";
                 }
-                LMPWristPos wristMove = new LMPWristPos(scope, bbf, bmlBlockPeg, bmlId, id, pegBoard);
+                LMPWristPos wristMove = new LMPWristPos(scope, bbf, bmlBlockPeg, bmlId, id, pegBoard, traj, aniPlayer);
 
                 // XXX needed?
                 // wristMove->setBaseFrame( mp->getBase2Root() );
 
-                wristMove.setGuidingSeq(traj);
                 if (tmu == null)
                 {
                     mp.addLMP(wristMove);
@@ -558,7 +558,8 @@ public final class MURMLMUBuilder
         // }
         //
         // -- create lmp and append to motor program
-        LMPPoRot lmp = new LMPPoRot(scope, poVec, bbm, bmlBlockPeg, bmlId, id, pb, aniPlayer);
+        LMPPoRot lmp = new LMPPoRot(scope, poVec, bbm, bmlBlockPeg, bmlId, id + "_lmp" + UUID.randomUUID().toString().replaceAll("-", ""),
+                pb, aniPlayer);
         lmp.setPoConstraint(poVec);
         mcp.addLMP(lmp);
     }
@@ -625,7 +626,7 @@ public final class MURMLMUBuilder
     }
 
     public void getDynamicHandLocationElementsTMU(String scope, List<DynamicElement> elements, FeedbackManager bbm,
-            BMLBlockPeg bmlBlockPeg, String bmlId, String id, PegBoard pb, MotorControlProgram mcp)
+            BMLBlockPeg bmlBlockPeg, String bmlId, String id, PegBoard pb, MotorControlProgram mcp, AnimationPlayer aniPlayer)
     {
         if (elements.isEmpty())
         {
@@ -639,16 +640,13 @@ public final class MURMLMUBuilder
         float swivel = 0;
         TimedAnimationUnit tmu = null;
 
-        // TODO:
-        // eT = mcLoc->getStartTPC();
-
         if (getStartConf(ePos, elements.get(0), hns))
         {
             // --- create linear guiding stroke for the preparatory movement which
             // ends with the constraints start configuration
             trajectory.addGuidingStroke(new LinearGStroke(GStrokePhaseID.STP_PREP, eT, ePos));
 
-            appendSubTrajectory(elements, scope, trajectory, tmu, bbm, bmlBlockPeg, bmlId, id, pb, mcp);
+            appendSubTrajectory(elements, scope, trajectory, tmu, bbm, bmlBlockPeg, bmlId, id, pb, mcp, aniPlayer);
         }
 
         // TODO: implement retraction, retraction modes
@@ -665,25 +663,22 @@ public final class MURMLMUBuilder
         // }
 
         // -- build and append retracting lmp(s)
-        createPosLMP(scope, trajectory, mcp, tmu, bbm, bmlBlockPeg, id, id, pb);
+        createPosLMP(scope, trajectory, mcp, tmu, bbm, bmlBlockPeg, bmlId, id, pb, aniPlayer);
     }
 
     private static void createPosLMP(String scope, GuidingSequence traj, MotorControlProgram mp, TimedAnimationUnit lmp,
-            FeedbackManager bbf, BMLBlockPeg bmlBlockPeg, String bmlId, String id, PegBoard pegBoard)
+            FeedbackManager bbf, BMLBlockPeg bmlBlockPeg, String bmlId, String id, PegBoard pegBoard, AnimationPlayer aniPlayer)
     {
         if (!traj.isEmpty() && mp != null)
         {
             // -- create lmp for wrist trajectory
             // cout << "==== creating lmp from: "; traj.writeTo(cout); cout << endl;
 
-            LMPWristPos wristMove = new LMPWristPos(scope, bbf, bmlBlockPeg, bmlId, id, pegBoard);
+            LMPWristPos wristMove = new LMPWristPos(scope, bbf, bmlBlockPeg, bmlId, id, pegBoard, traj, aniPlayer);
 
             // TODO
             // -- set transformation for converting positions into base coordinates
             // wristMove->setBaseFrame( mp->getBase2Root() );
-
-            // -- set guiding sequence -> will transform the seq into base coords!
-            wristMove.setGuidingSeq(traj);
 
             // -- absolutely new movement, or should we append to previous LMP?
             if (lmp == null)
@@ -843,12 +838,12 @@ public final class MURMLMUBuilder
             {
                 if (oc.getId().equals(ocNew.getId()))
                 {
-                    setConstraint(oc,ocNew);
+                    setConstraint(oc, ocNew);
                     newConstraint = false;
                     break;
                 }
             }
-            if(newConstraint)
+            if (newConstraint)
             {
                 ocNewList.add(ocNew);
             }
@@ -966,7 +961,8 @@ public final class MURMLMUBuilder
         case Neck:
             break;
         case HandLocation:
-            getDynamicHandLocationElementsTMU(dyn.getScope(), dyn.getDynamicElements(), bbm, bmlBlockPeg, bmlId, id, localPegBoard, mcp);
+            getDynamicHandLocationElementsTMU(dyn.getScope(), dyn.getDynamicElements(), bbm, bmlBlockPeg, bmlId, id, localPegBoard, mcp,
+                    aniPlayer);
             break;
         case HandShape:
             break;

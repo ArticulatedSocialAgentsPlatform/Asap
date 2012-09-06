@@ -2,11 +2,10 @@ package asap.animationengine.ace.lmp;
 
 import hmi.math.Mat4f;
 import asap.animationengine.ace.GuidingSequence;
-import asap.animationengine.motionunit.TimedAnimationUnit;
 import asap.realizer.feedback.FeedbackManager;
 import asap.realizer.pegboard.BMLBlockPeg;
 import asap.realizer.pegboard.PegBoard;
-import asap.realizer.planunit.TimedAbstractPlanUnit;
+import asap.realizer.pegboard.TimePeg;
 
 /**
  * Base class of all local motor programs for positioning in Cartesian space.
@@ -42,4 +41,6 @@ public abstract class LMPPos extends LMP
          */
         this.gSeq = gSeq;
     }
+    
+   
 }

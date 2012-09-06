@@ -232,18 +232,6 @@ public class LMPPoRot extends LMP
         }
     }
 
-    private boolean noPegsSet()
-    {
-        for (TimePeg tp : pegBoard.getTimePegs(getBMLId(), getId()))
-        {
-            if (tp.getGlobalValue() != TimePeg.VALUE_UNKNOWN)
-            {
-                return false;
-            }
-        }
-        return true;
-    }
-
     private void resolveTimePegs(double time)
     {
         createMissingTimePegs();

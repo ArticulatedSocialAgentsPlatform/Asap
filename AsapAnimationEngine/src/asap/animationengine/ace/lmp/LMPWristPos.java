@@ -1,17 +1,17 @@
 package asap.animationengine.ace.lmp;
 
 import hmi.animation.Hanim;
+import hmi.animation.VJoint;
 import hmi.math.Vec3f;
+import hmi.neurophysics.FittsLaw;
 
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Set;
 
-import saiba.bml.core.Behaviour;
-
-import com.google.common.collect.ImmutableSet;
-
 import lombok.extern.slf4j.Slf4j;
+import saiba.bml.core.Behaviour;
+import asap.animationengine.AnimationPlayer;
 import asap.animationengine.ace.CurvedGStroke;
 import asap.animationengine.ace.GuidingSequence;
 import asap.animationengine.ace.GuidingStroke;
@@ -26,9 +26,9 @@ import asap.realizer.pegboard.BMLBlockPeg;
 import asap.realizer.pegboard.PegBoard;
 import asap.realizer.pegboard.TimePeg;
 import asap.realizer.planunit.TimedPlanUnitPlayException;
-import asap.realizer.scheduler.LinearStretchResolver;
 import asap.realizer.scheduler.TimePegAndConstraint;
-import asap.realizer.scheduler.UniModalResolver;
+
+import com.google.common.collect.ImmutableSet;
 
 /**
  * Local motor program for wrist positioning
@@ -40,19 +40,22 @@ public class LMPWristPos extends LMPPos
 {
     private final PegBoard pegBoard;
     private ImmutableSet<String> kinematicJoints;
-    private NUSSpline3 spline;
 
-    private final UniModalResolver resolver = new LinearStretchResolver();
-    
-    public void resolveSynchs(BMLBlockPeg bbPeg, Behaviour b, List<TimePegAndConstraint> sac)throws BehaviourPlanningException
+    private NUSSpline3 spline;
+    private AnimationPlayer aniPlayer;
+
+    public void resolveSynchs(BMLBlockPeg bbPeg, Behaviour b, List<TimePegAndConstraint> sac) throws BehaviourPlanningException
     {
-        resolver.resolveSynchs(bbPeg, b, sac, this);
+        // TODO: implement this
     }
-    
-    public LMPWristPos(String scope, FeedbackManager bbf, BMLBlockPeg bmlBlockPeg, String bmlId, String id, PegBoard pegBoard)
+
+    public LMPWristPos(String scope, FeedbackManager bbf, BMLBlockPeg bmlBlockPeg, String bmlId, String id, PegBoard pegBoard,
+            GuidingSequence gSeq, AnimationPlayer aniPlayer)
     {
         super(bbf, bmlBlockPeg, bmlId, id, pegBoard);
+        this.gSeq = gSeq;
         this.pegBoard = pegBoard;
+        this.aniPlayer = aniPlayer;
         if (scope.equals("left_arm"))
         {
             kinematicJoints = ImmutableSet.of(Hanim.l_shoulder, Hanim.l_elbow);
@@ -62,7 +65,6 @@ public class LMPWristPos extends LMPPos
             kinematicJoints = ImmutableSet.of(Hanim.r_shoulder, Hanim.r_elbow);
         }
     }
-
 
     public float[] getPosition(double t)
     {
@@ -94,53 +96,60 @@ public class LMPWristPos extends LMPPos
     }
 
     @Override
-    public void startUnit(double time)
+    public void startUnit(double time) throws TimedPlanUnitPlayException
     {
         if (gSeq != null && !gSeq.isEmpty())
         {
-            // get first timing constraint and guiding stroke
-            TPConstraint startTPC = gSeq.getStartTPC();
-            GuidingStroke gstroke = gSeq.getStroke(0);
 
-            // TODO: implement this
-            // // determine the duration of the currently needed prep movement
-            // duration = getPosDurationFromAmplitude((x - gstroke.getEndPos()).Length());
-            //
-            // // check whether movement needs to start now or not yet
-            // activateFlag = false;
-            // if (tActivation > -1) {
-            // activateFlag = (tActivation <= t);
-            // }
-            // else
-            // // or activate just in time for target position(s)? --
-            // activateFlag = (( startTPC.mode == TPConstraint::Rigorous && startTPC.time <= t ) ||
-            // ( startTPC.mode != TPConstraint::Rigorous && (gstroke->eT.time - t) <= duration ));
-            //
-            // if (activateFlag)
-            // {
-            // gSeq->setStartPos(x);
-            // gSeq->setStartTPC(t);
-            // //gstroke->sDt = dt;
-            //
-            // // complete, start execution, and set lmp state
-            // refine();
-            // updateState(t);
-            // //cout << "LMP_WristPos::" << getName() << " defined?: " << isDefined(t) << endl;
-            // }
-            // else
-            // // skip a single-segmented, goal-directed movement if -at the time of activation!-
-            // // the target position is already reached = estimated duration is nearly zero
-            // if ( t > gSeq->getStartTPC().time && duration < 0.1 && gSeq->size() == 1 ) {
-            // //cout << getName() << "::switching to finish since no movement required!" << endl;
-            // setState( LMP_Finish );
-            // // remove overshooting (if present)
-            // removeSuccessor( lmpOVS );
-            // }
+            float[] p = Vec3f.getVec3f();
+            // TODO: p = global wrist pos
+            gSeq.setStartPos(p);
+            gSeq.setST(new TPConstraint(time));
+            refine();
+
         }
         else
         {
             log.warn("LMP_WristPos::activate : trajectory empty or already active!");
         }
+
+        feedback("start", time);
+        super.startUnit(time);
+    }
+
+    private void buildTrajectory()
+    {
+        spline = buildSpline(gSeq);
+    }
+
+    private void refine()
+    {
+        buildTrajectory();
+
+        // TODO
+        // 2. -- if overshooting required, create dedicated lmp as successor
+        // if ( lmpOVS != 0 )
+        // {
+        // // determine start time
+        // MgcReal startOVS,trajDur = spline->GetMaxTime() - spline->GetMinTime();
+        // // only movements that are longer than 0.4 sec own a significant overshooting phase of 0.3 sec!
+        // if ( trajDur > 0.4 )
+        // {
+        // GuidingSequence seq;
+        // seq.addGuidingStroke( new LinearGStroke ( GuidingStroke::STP_RETRACT,
+        // gSeq->getEndTime(),
+        // gSeq->getEndPos() ));
+        // // NOTE:
+        // // start point of overshooting lmp is determined at activation
+        // // time, i.e., we do not need to give an origin for 'seq'!
+        // lmpOVS->setGuidingSeq( seq );
+        // startOVS = spline->GetMinTime() + 0.85*trajDur; //traj->GetMaxTime() - 0.3;
+        // activateSuccessorAt( lmpOVS, startOVS );
+        // }
+        //
+        // // make sure that overshooting is created only once
+        // lmpOVS = 0;
+        // }
     }
 
     // TODO Change to this when body collision stuff is implemented
@@ -166,7 +175,7 @@ public class LMPWristPos extends LMPPos
 
             // set start conds
             pv.add(_gSeq.getStartPos());
-            tv.add( _gSeq.getStartTPC().getTime());
+            tv.add(_gSeq.getStartTPC().getTime());
             vv.add(new SparseVelocityDef(0, Vec3f.getVec3f(0, 0, 0))); // v
 
             // MgcVector3 vStart = _gSeq->getStartDirOfStroke(0);
@@ -196,7 +205,7 @@ public class LMPWristPos extends LMPPos
                     // cout << "appending linear stroke for t=" << sT << "-"
                     // << _gSeq->getStroke(i)->eT << endl;
                     pv.add(_gSeq.getStroke(i).getEndPos());
-                    tv.add( _gSeq.getStroke(i).getEndTime());
+                    tv.add(_gSeq.getStroke(i).getEndTime());
                 }
                 else if (_gSeq.getStroke(i) instanceof CurvedGStroke)
                 {
@@ -212,7 +221,7 @@ public class LMPWristPos extends LMPPos
 
                     // append stroke end point & velocity
                     pv.add(cs.getEndPos()); // cout << pv.back() << endl;
-                    tv.add( cs.getEndTime());
+                    tv.add(cs.getEndTime());
                 }
                 else log.warn("Trajectory::build : unknown stroke type!");
             }
@@ -316,10 +325,169 @@ public class LMPWristPos extends LMPPos
         return ImmutableSet.of();
     }
 
+    private void createMissingTimePegs()
+    {
+        createPegWhenMissingOnPegBoard("stroke");
+        createPegWhenMissingOnPegBoard("ready");
+        createPegWhenMissingOnPegBoard("relax");
+        createPegWhenMissingOnPegBoard("strokeStart");
+        createPegWhenMissingOnPegBoard("strokeEnd");
+        createPegWhenMissingOnPegBoard("start");
+        createPegWhenMissingOnPegBoard("end");
+    }
+
+    
+    private void setInternalStrokeTiming(double time)
+    {
+        double defaultStrokeDuration = 0;
+        GuidingStroke prevGstroke = gSeq.getStroke(0);
+
+        for (int i = 1; i < gSeq.size(); i++)
+        {
+            defaultStrokeDuration += FittsLaw.getHandTrajectoryDuration(Vec3f.distanceBetweenPoints(prevGstroke.getEndPos(), gSeq
+                    .getStroke(i).getEndPos()));
+        }
+
+        if (getTimePeg("strokeStart").getGlobalValue() == TimePeg.VALUE_UNKNOWN
+                && getTimePeg("strokeEnd").getGlobalValue() != TimePeg.VALUE_UNKNOWN)
+        {
+            pegBoard.setPegTime(getBMLId(), getId(), "strokeStart", getTimePeg("strokeEnd").getGlobalValue() - defaultStrokeDuration);
+        }
+
+        if (getTimePeg("strokeEnd").getGlobalValue() == TimePeg.VALUE_UNKNOWN
+                && getTimePeg("strokeStart").getGlobalValue() != TimePeg.VALUE_UNKNOWN)
+        {
+            pegBoard.setPegTime(getBMLId(), getId(), "strokeEnd", getTimePeg("strokeStart").getGlobalValue() + defaultStrokeDuration);
+        }        
+    }
+
+    // get preparation duration, given current hand position
+    private double getPreparationDuration()
+    {
+        String wristJoint = Hanim.l_wrist;
+        if (getKinematicJoints().contains(Hanim.r_shoulder))
+        {
+            wristJoint = Hanim.r_wrist;
+        }
+        VJoint vj = aniPlayer.getVCurr().getPartBySid(wristJoint);
+        float wristCurr[] = Vec3f.getVec3f();
+        vj.getPathTranslation(aniPlayer.getVCurr(), wristCurr);
+        GuidingStroke gstroke = gSeq.getStroke(0);
+        return FittsLaw.getHandTrajectoryDuration(Vec3f.distanceBetweenPoints(gstroke.getEndPos(), wristCurr));
+    }
+
+    private void resolveTimePegs(double time)
+    {
+        createMissingTimePegs();
+
+        // resolve start
+        if (getStartTime() == TimePeg.VALUE_UNKNOWN && getTimePeg("strokeStart").getGlobalValue() != TimePeg.VALUE_UNKNOWN)
+        {
+            pegBoard.setPegTime(getBMLId(), getId(), "start", getTimePeg("strokeStart").getGlobalValue() - getPreparationDuration());
+        }
+        else if (getTimePeg("strokeStart").getGlobalValue() == TimePeg.VALUE_UNKNOWN && getStartTime() != TimePeg.VALUE_UNKNOWN)
+        {
+            pegBoard.setPegTime(getBMLId(), getId(), "strokeStart", getStartTime() + getPreparationDuration());
+        }
+        else if (noPegsSet())
+        {
+            pegBoard.getTimePeg(getBMLId(), getId(), "start").setValue(0, getBMLBlockPeg());
+            pegBoard.getTimePeg(getBMLId(), getId(), "strokeStart").setValue(getPreparationDuration(), getBMLBlockPeg());
+        }
+
+        // resolve end
+        if (getEndTime() == TimePeg.VALUE_UNKNOWN)
+        {
+            if (getTimePeg("strokeEnd").getGlobalValue() != TimePeg.VALUE_UNKNOWN)
+            {
+                pegBoard.setPegTime(getBMLId(), getId(), "end", getTimePeg("strokeEnd").getGlobalValue() + getPreparationDuration());
+            }
+        }
+        else
+        {
+            if (getTimePeg("strokeEnd").getGlobalValue() == TimePeg.VALUE_UNKNOWN)
+            {
+                pegBoard.setPegTime(getBMLId(), getId(), "strokeEnd", getEndTime() - getPreparationDuration());
+            }
+        }
+
+        setInternalStrokeTiming(time);
+        if (getStartTime() == TimePeg.VALUE_UNKNOWN)
+        {
+            pegBoard.setPegTime(getBMLId(), getId(), "start", getTimePeg("strokeStart").getGlobalValue() - getPreparationDuration());
+        }
+        if (getEndTime() == TimePeg.VALUE_UNKNOWN)
+        {
+            pegBoard.setPegTime(getBMLId(), getId(), "end", getTimePeg("strokeEnd").getGlobalValue() + getPreparationDuration());
+        }
+        
+        
+        /*
+         * conventions:
+         * missing ready => ready = start
+         * missing relax => relax = end
+         * missing stroke => stroke = strokeStart
+         */
+        
+        if (getTimePeg("stroke").getGlobalValue() == TimePeg.VALUE_UNKNOWN)
+        {
+            pegBoard.setPegTime(getBMLId(), getId(), "stroke", getTimePeg("strokeStart").getGlobalValue());
+        }
+
+        if (getTimePeg("relax").getGlobalValue() == TimePeg.VALUE_UNKNOWN)
+        {
+            pegBoard.setPegTime(getBMLId(), getId(), "relax", getEndTime());
+        }
+
+        if (getTimePeg("ready").getGlobalValue() == TimePeg.VALUE_UNKNOWN)
+        {
+            pegBoard.setPegTime(getBMLId(), getId(), "ready", getStartTime());
+        }
+    }
+
     @Override
     public void updateTiming(double time) throws TMUPlayException
     {
-        // TODO Auto-generated method stub
+        if (!isLurking()) return;
+        resolveTimePegs(time);
 
+        // get first timing constraint and guiding stroke
+        TPConstraint startTPC = gSeq.getStartTPC();
+        GuidingStroke gstroke = gSeq.getStroke(0);
+
+        // TODO: implement this
+        // // determine the duration of the currently needed prep movement
+        // duration = getPosDurationFromAmplitude((x - gstroke.getEndPos()).Length());
+        //
+        // // check whether movement needs to start now or not yet
+        // activateFlag = false;
+        // if (tActivation > -1) {
+        // activateFlag = (tActivation <= t);
+        // }
+        // else
+        // // or activate just in time for target position(s)? --
+        // activateFlag = (( startTPC.mode == TPConstraint::Rigorous && startTPC.time <= t ) ||
+        // ( startTPC.mode != TPConstraint::Rigorous && (gstroke->eT.time - t) <= duration ));
+        //
+        // if (activateFlag)
+        // {
+        // gSeq->setStartPos(x);
+        // gSeq->setStartTPC(t);
+        // //gstroke->sDt = dt;
+        //
+        // // complete, start execution, and set lmp state
+        // refine();
+        // updateState(t);
+        // //cout << "LMP_WristPos::" << getName() << " defined?: " << isDefined(t) << endl;
+        // }
+        // else
+        // // skip a single-segmented, goal-directed movement if -at the time of activation!-
+        // // the target position is already reached = estimated duration is nearly zero
+        // if ( t > gSeq->getStartTPC().time && duration < 0.1 && gSeq->size() == 1 ) {
+        // //cout << getName() << "::switching to finish since no movement required!" << endl;
+        // setState( LMP_Finish );
+        // // remove overshooting (if present)
+        // removeSuccessor( lmpOVS );
+        // }
     }
 }

@@ -132,4 +132,16 @@ public abstract class LMP extends TimedAbstractPlanUnit implements TimedAnimatio
             }
         }
     }
+    
+    protected boolean noPegsSet()
+    {
+        for (TimePeg tp : pegBoard.getTimePegs(getBMLId(), getId()))
+        {
+            if (tp.getGlobalValue() != TimePeg.VALUE_UNKNOWN)
+            {
+                return false;
+            }
+        }
+        return true;
+    }
 }
