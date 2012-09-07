@@ -1,17 +1,21 @@
 package asap.animationengine.ace.lmp;
 
 import hmi.animation.Hanim;
+import hmi.animation.VJoint;
+import hmi.math.Vecf;
 
+import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.Set;
 
 import lombok.Setter;
 import lombok.extern.slf4j.Slf4j;
-
-import com.google.common.collect.ImmutableSet;
-
 import saiba.bml.core.Behaviour;
-import asap.animationengine.ace.GStrokePhaseID;
+import asap.animationengine.AnimationPlayer;
+import asap.animationengine.ace.PoConstraint;
+import asap.math.splines.TCBSplineN;
 import asap.motionunit.TMUPlayException;
 import asap.realizer.BehaviourPlanningException;
 import asap.realizer.feedback.FeedbackManager;
@@ -21,20 +25,40 @@ import asap.realizer.pegboard.TimePeg;
 import asap.realizer.planunit.TimedPlanUnitPlayException;
 import asap.realizer.scheduler.TimePegAndConstraint;
 
+import com.google.common.collect.ImmutableSet;
+
+//XXX some code here is very similar to that in LMPWristRot, generalize this
+/**
+ * LMP for local wrist rotation
+ * @author hvanwelbergen
+ * 
+ */
 @Slf4j
 public class LMPPoRot extends LMP
 {
+    private final AnimationPlayer aniPlayer;
     private ImmutableSet<String> kinematicJoints;
     private final String joint;
-    private List<Double> pointVec;
     private double qS, qDotS; // start angles and angular velocity (for scope joints only!!!)
     private int segments;
+    private Map<PoConstraint, TimePeg> constraintMap = new HashMap<>();
+    private TCBSplineN traj;
+
+    private List<float[]> pointVec;
+    private List<Double> timeVec;
+
+    private static final double TRANSITION_TIME = 0.4; // TODO: use getPODurationFromAmplitude instead?
+    private static final double DEFAULT_STROKEPHASE_DURATION = 5;
+
     @Setter
-    private List<GStrokePhaseID> phaseVec;
-    
-    public LMPPoRot(String scope, FeedbackManager fbm, BMLBlockPeg bmlPeg, String bmlId, String behId, PegBoard pegBoard)
+    private List<PoConstraint> poVec;
+
+    public LMPPoRot(String scope, List<PoConstraint> poVec, FeedbackManager fbm, BMLBlockPeg bmlPeg, String bmlId, String behId,
+            PegBoard pegBoard, AnimationPlayer aniPlayer)
     {
         super(fbm, bmlPeg, bmlId, behId, pegBoard);
+        this.aniPlayer = aniPlayer;
+        this.poVec = poVec;
 
         // TODO: implement proper scope selection when no scope is provided.
         if (scope == null)
@@ -72,7 +96,7 @@ public class LMPPoRot extends LMP
     }
 
     // from LMP_JointAngle::setAngleVec
-    public void setAngleVec(List<Double> vv)
+    public void setPoConstraint(List<PoConstraint> vv)
     {
         if (!vv.isEmpty())
         {
@@ -80,7 +104,7 @@ public class LMPPoRot extends LMP
             // for (int i=0; i<vv.size(); i++)
             // cout << vv[i] << "->" << endl;
 
-            pointVec = vv;
+            poVec = vv;
             qS = 0;
             qDotS = 0;
             segments = vv.size() - 1;
@@ -90,56 +114,346 @@ public class LMPPoRot extends LMP
         }
     }
 
+    @Override
+    public List<String> getAvailableSyncs()
+    {
+        List<String> syncs = super.getAvailableSyncs();
+        for(PoConstraint oc:poVec)
+        {
+            if(!syncs.contains(oc.getId()))
+            {
+                syncs.add(oc.getId());
+            }
+        }
+        return syncs;
+    }
+    
     private double getPODurationFromAmplitude(double amp)
     {
         return (Math.abs(amp) / 140.0);
     }
 
+    private void createMissingTimePegs()
+    {
+        for (PoConstraint oc : poVec)
+        {
+            if (constraintMap.get(oc) == null)
+            {
+                TimePeg tp = new TimePeg(getBMLBlockPeg());
+                constraintMap.put(oc, tp);
+                pegBoard.addTimePeg(getBMLId(), getId(), oc.getId(), tp);
+            }
+        }
+        createPegWhenMissingOnPegBoard("start");
+        createPegWhenMissingOnPegBoard("end");
+    }
+
+    private void uniformlyDistributeStrokeConstraints(double earliestStart)
+    {
+        List<PoConstraint> tpSet = new ArrayList<>();
+        for (PoConstraint oc : poVec)
+        {
+            TimePeg tp = constraintMap.get(oc);
+            if (tp != null)
+            {
+                if (tp.getGlobalValue() != TimePeg.VALUE_UNKNOWN)
+                {
+                    tpSet.add(oc);
+                }
+            }
+        }
+
+        // set inner
+        for (int i = 0; i < tpSet.size() - 1; i++)
+        {
+            PoConstraint ocLeft = tpSet.get(i);
+            PoConstraint ocRight = tpSet.get(i + 1);
+            TimePeg tpLeft = constraintMap.get(ocLeft);
+            TimePeg tpRight = constraintMap.get(ocRight);
+            double avgDur = (tpRight.getGlobalValue() - tpLeft.getGlobalValue()) / (poVec.indexOf(ocRight) - poVec.indexOf(ocLeft));
+            double time = tpLeft.getGlobalValue();
+            for (int j = poVec.indexOf(ocLeft) + 1; j < poVec.indexOf(ocRight); j++)
+            {
+                time += avgDur;
+                constraintMap.get(poVec.get(j)).setGlobalValue(time);
+            }
+        }
+
+        // find average duration to use for outer
+        int i = 0;
+        double totalDur = 0;
+        int segments = 0;
+
+        TimePeg tpPrev = null;
+        for (PoConstraint oc : poVec)
+        {
+            i++;
+            TimePeg tp = constraintMap.get(oc);
+            if (tp != null)
+            {
+                if (tp.getGlobalValue() != TimePeg.VALUE_UNKNOWN)
+                {
+                    if (tpPrev != null)
+                    {
+                        segments++;
+                        totalDur += (tp.getGlobalValue() - tpPrev.getGlobalValue()) / (double) i;
+                        i = 0;
+                    }
+                    tpPrev = tp;
+                }
+            }
+        }
+        double avgDur = DEFAULT_STROKEPHASE_DURATION / (poVec.size() - 1);
+        if (segments > 0)
+        {
+            avgDur = totalDur / segments;
+        }
+
+        // set from right to end
+        double time = constraintMap.get(tpSet.get(tpSet.size() - 1)).getGlobalValue();
+        for (int j = poVec.indexOf(tpSet.get(tpSet.size() - 1)) + 1; j < poVec.size(); j++)
+        {
+            time += avgDur;
+            constraintMap.get(poVec.get(j)).setGlobalValue(time);
+        }
+
+        // set from left to start
+        time = constraintMap.get(tpSet.get(0)).getGlobalValue();
+        int nrOfSegments = poVec.indexOf(tpSet.get(0));
+        if (time - (nrOfSegments * avgDur) < TRANSITION_TIME + earliestStart)
+        {
+            avgDur = (time - TRANSITION_TIME) / nrOfSegments;
+        }
+
+        for (int j = poVec.indexOf(tpSet.get(0)) - 1; j >= 0; j--)
+        {
+            time -= avgDur;
+            constraintMap.get(poVec.get(j)).setGlobalValue(time);
+        }
+    }
+
+    private void resolveTimePegs(double time)
+    {
+        createMissingTimePegs();
+
+        // TODO: handle cases in which constraints that are not on the 'border' of the LMP are set in a better manner.
+
+        // resolve start
+        if (getStartTime() == TimePeg.VALUE_UNKNOWN && getTimePeg("strokeStart").getGlobalValue() != TimePeg.VALUE_UNKNOWN)
+        {
+            pegBoard.setPegTime(getBMLId(), getId(), "start", getTimePeg("strokeStart").getGlobalValue() - TRANSITION_TIME);
+        }
+        else if (getTimePeg("strokeStart").getGlobalValue() == TimePeg.VALUE_UNKNOWN && getStartTime() != TimePeg.VALUE_UNKNOWN)
+        {
+            pegBoard.setPegTime(getBMLId(), getId(), "strokeStart", getStartTime() + TRANSITION_TIME);
+        }
+        else if (noPegsSet())
+        {
+            pegBoard.getTimePeg(getBMLId(), getId(), "start").setValue(0, getBMLBlockPeg());
+            pegBoard.getTimePeg(getBMLId(), getId(), "strokeStart").setValue(TRANSITION_TIME, getBMLBlockPeg());
+        }
+
+        // resolve end
+        if (getEndTime() == TimePeg.VALUE_UNKNOWN)
+        {
+            if (getTimePeg("strokeEnd").getGlobalValue() != TimePeg.VALUE_UNKNOWN)
+            {
+                pegBoard.setPegTime(getBMLId(), getId(), "end", getTimePeg("strokeEnd").getGlobalValue() + TRANSITION_TIME);
+            }
+        }
+        else
+        {
+            if (getTimePeg("strokeEnd").getGlobalValue() == TimePeg.VALUE_UNKNOWN)
+            {
+                pegBoard.setPegTime(getBMLId(), getId(), "strokeEnd", getEndTime() - TRANSITION_TIME);
+            }
+        }
+
+        uniformlyDistributeStrokeConstraints(time);
+        if (getStartTime() == TimePeg.VALUE_UNKNOWN)
+        {
+            pegBoard.setPegTime(getBMLId(), getId(), "start", getTimePeg("strokeStart").getGlobalValue() - TRANSITION_TIME);
+        }
+        if (getEndTime() == TimePeg.VALUE_UNKNOWN)
+        {
+            pegBoard.setPegTime(getBMLId(), getId(), "end", getTimePeg("strokeEnd").getGlobalValue() + TRANSITION_TIME);
+        }
+    }
+
     @Override
     public void updateTiming(double time) throws TMUPlayException
     {
-        // TODO Auto-generated method stub
-
+        if (!isLurking()) return;
+        resolveTimePegs(time);
     }
 
     @Override
     public void resolveSynchs(BMLBlockPeg bbPeg, Behaviour b, List<TimePegAndConstraint> sac) throws BehaviourPlanningException
     {
-        // TODO Auto-generated method stub
+        linkSynchs(sac);
+        resolveTimePegs(bbPeg.getValue());
+    }
 
+    private PoConstraint findOrientConstraint(String syncId)
+    {
+        for (PoConstraint oc : poVec)
+        {
+            if (oc.getId().equals(syncId))
+            {
+                return oc;
+            }
+        }
+        return null;
     }
 
     @Override
     public void setTimePeg(String syncId, TimePeg peg)
     {
+        if (findOrientConstraint(syncId) != null)
+        {
+            constraintMap.put(findOrientConstraint(syncId), peg);
+        }
         super.setTimePeg(syncId, peg);
     }
 
     @Override
     public boolean hasValidTiming()
     {
-        // TODO Auto-generated method stub
-        return false;
+        TimePeg tpPrev = null;
+        for (PoConstraint oc : poVec)
+        {
+            TimePeg tp = constraintMap.get(oc);
+            if (tp != null)
+            {
+                if (tp.getGlobalValue() != TimePeg.VALUE_UNKNOWN)
+                {
+                    if (tpPrev != null)
+                    {
+                        if (tpPrev.getGlobalValue() > tp.getGlobalValue()) return false;
+                    }
+                    tpPrev = tp;
+                }
+            }
+        }
+        return true;
+    }
+
+    private List<Double> toTimeVec()
+    {
+        List<Double> v = new ArrayList<>();
+        for (PoConstraint po : poVec)
+        {
+            v.add(constraintMap.get(po).getGlobalValue());
+        }
+        return v;
+    }
+
+    private List<float[]> toPointVec()
+    {
+        List<float[]> v = new ArrayList<>();
+        for (PoConstraint po : poVec)
+        {
+            float vv[] = new float[1];
+            vv[0] = (float) po.getPo();
+            v.add(vv);
+        }
+        return v;
+    }
+
+    private void refine()
+    {
+        if (!pointVec.isEmpty())
+        {
+
+            // create trajectory (MgcNaturalSplineN::BT_CLAMPED)
+            int segments = pointVec.size() - 1;
+            float qDotE[] = Vecf.getVecf(1);
+            List<Double> t = new ArrayList<>();
+            List<Double> b = new ArrayList<>();
+            List<Double> c = new ArrayList<>();
+            for (int i = 0; i <= segments; ++i)
+            {
+                t.add(0d);
+                b.add(0d);
+                c.add(0d);
+            }
+            traj = new TCBSplineN(segments, timeVec, pointVec, t, c, b);
+        }
+    }
+
+    private void startFrom(float q, double qDot, double time)
+    {
+        timeVec.add(0, time);
+        float v[]=Vecf.getVecf(1);
+        v[0]=q;
+        pointVec.add(0, v);
+        timeVec.add(0, time);
+
+        // TODO(?)
+        // // -- FIX-ME?: this may better be dealt with in the motor control module...??
+        // if ( !phaseVec.empty() )
+        // {
+        // // if the following state is finished, then it should be retracting phase
+        // if ( phaseVec.front() == GuidingStroke::STP_FINISH )
+        // phaseVec.push_front( GuidingStroke::STP_RETRACT );
+        // else
+        // // otherwise it is preparation
+        // phaseVec.push_front( GuidingStroke::STP_PREP );
+        // }
+        // else
+        // // if no phases defined at all, let the program be finished immediately
+        // phaseVec.push_front( GuidingStroke::STP_FINISH );
+
+        qDotS = qDot;
     }
 
     @Override
     protected void startUnit(double time)
     {
-        feedback("start",time);
+        resolveTimePegs(time);
+        timeVec = toTimeVec();
+        pointVec = toPointVec();
+
+        // time to start now
+        startFrom(0, 0, time);
+        
+        // FIX-ME??? ---
+        // for static PO constraints, there are only three control points defined,
+        // which may give too little segments! This loop is meant to fill up the
+        // vectors with "meaningless" control points just to meet the minimum number
+        // of spline parameters.
+        while (pointVec.size() < 4)
+        {
+            pointVec.add(0, Vecf.getVecf(1));
+            timeVec.add(0, time);
+        }
+        refine();
+        feedback("start", time);
     }
-    
+
+    private double getConfiguration(double fTime)
+    {
+        if (traj != null)
+        {
+            // updateState(fTime);
+            return traj.GetPosition(fTime)[0];
+        }
+        else log.warn("LMP_JAngleTCB::getPosition : no trajectory!");
+        return 0;
+    }
+
     @Override
     protected void playUnit(double time) throws TimedPlanUnitPlayException
     {
-        // TODO Auto-generated method stub
-
+        double conf = getConfiguration(time);
+        VJoint vjWrist = aniPlayer.getvAdditive().getPartBySid(joint);
+        vjWrist.setAxisAngle(0, 0, 1, (float) Math.toRadians(conf));
     }
 
     @Override
     protected void stopUnit(double time) throws TimedPlanUnitPlayException
     {
-        // TODO Auto-generated method stub
-
+        feedback("end", time);
     }
 
 }

@@ -16,7 +16,6 @@ import java.util.Set;
 import lombok.Data;
 import lombok.extern.slf4j.Slf4j;
 import saiba.bml.core.Behaviour;
-import saiba.bml.feedback.BMLSyncPointProgressFeedback;
 import asap.animationengine.AnimationPlayer;
 import asap.animationengine.ace.GStrokePhaseID;
 import asap.animationengine.ace.OrientConstraint;
@@ -27,9 +26,7 @@ import asap.realizer.pegboard.BMLBlockPeg;
 import asap.realizer.pegboard.PegBoard;
 import asap.realizer.pegboard.TimePeg;
 import asap.realizer.planunit.TimedPlanUnitPlayException;
-import asap.realizer.scheduler.LinearStretchResolver;
 import asap.realizer.scheduler.TimePegAndConstraint;
-import asap.realizer.scheduler.UniModalResolver;
 
 import com.google.common.collect.ImmutableSet;
 
@@ -43,7 +40,7 @@ public class LMPWristRot extends LMP
 {
     private ImmutableSet<String> kinematicJoints;
     private List<OrientConstraint> ocVec;
-    private Map<OrientConstraint, TimePeg> constraintMap = new HashMap<OrientConstraint, TimePeg>();
+    private Map<OrientConstraint, TimePeg> constraintMap = new HashMap<>();
     private List<OrientPos> orientVec = new ArrayList<>();
 
     private final AnimationPlayer aniPlayer;
@@ -53,11 +50,10 @@ public class LMPWristRot extends LMP
     private static final double TRANSITION_TIME = 0.4;
     private static final double DEFAULT_STROKEPHASE_DURATION = 5;
 
-    private final UniModalResolver resolver = new LinearStretchResolver();
-
     public void resolveSynchs(BMLBlockPeg bbPeg, Behaviour b, List<TimePegAndConstraint> sac) throws BehaviourPlanningException
     {
-        resolver.resolveSynchs(bbPeg, b, sac, this);
+        linkSynchs(sac);
+        resolveTimePegs(bbPeg.getValue());
     }
 
     @Data
@@ -147,6 +143,8 @@ public class LMPWristRot extends LMP
             {
                 Vec3f.scale(-1, p);
             }
+            Vec3f.scale(-1,d);
+            
             float v[] = Vec3f.getVec3f();
             Vec3f.cross(v, p, d);
             Vec3f.normalize(v);
@@ -162,6 +160,7 @@ public class LMPWristRot extends LMP
         {
             // get transformation dOld -> d
             float d[] = Vec3f.getVec3f(oc.getD());
+            Vec3f.scale(-1,d);
             Vec3f.normalize(d);
             Vec3f.normalize(dOld);
 
@@ -196,14 +195,18 @@ public class LMPWristRot extends LMP
         return Mat3f.getIdentity();
     }
 
-    private void createPegWhenMissingOnPegBoard(String syncId)
+    @Override
+    public List<String> getAvailableSyncs()
     {
-        if (pegBoard.getTimePeg(getBMLId(), getId(), syncId) == null)
+        List<String> syncs = super.getAvailableSyncs();
+        for(OrientConstraint oc:ocVec)
         {
-            TimePeg tp = new TimePeg(getBMLBlockPeg());
-            pegBoard.addTimePeg(getBMLId(), getId(), syncId, tp);
+            if(!syncs.contains(oc.getId()))
+            {
+                syncs.add(oc.getId());
+            }
         }
-
+        return syncs;
     }
 
     private void createMissingTimePegs()
@@ -303,18 +306,6 @@ public class LMPWristRot extends LMP
             time -= avgDur;
             constraintMap.get(ocVec.get(j)).setGlobalValue(time);
         }
-    }
-
-    private boolean noPegsSet()
-    {
-        for (TimePeg tp : pegBoard.getTimePegs(getBMLId(), getId()))
-        {
-            if (tp.getGlobalValue() != TimePeg.VALUE_UNKNOWN)
-            {
-                return false;
-            }
-        }
-        return true;
     }
 
     private void resolveTimePegs(double time)
