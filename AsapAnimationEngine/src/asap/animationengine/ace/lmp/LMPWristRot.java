@@ -68,13 +68,13 @@ public class LMPWristRot extends LMP
     {
         super(bbf, bmlBlockPeg, bmlId, id, pegBoard);
         this.aniPlayer = aniPlayer;
-        
+
         // TODO: implement proper scope selection when no scope is provided.
         if (scope == null)
         {
             scope = "left_arm";
         }
-        
+
         if (scope.equals("left_arm"))
         {
             kinematicJoints = ImmutableSet.of(Hanim.l_wrist);
@@ -108,7 +108,7 @@ public class LMPWristRot extends LMP
     private static final int PALM_COLUMN = 0;
     private static final int EXT_FINGER_COLUMN = 1;
     private static final int THIRD_COLUMN = 2;
-    
+
     // m is previous rotation
     private float[] getNextWristRot(float[] m, OrientConstraint oc)
     {
@@ -138,20 +138,20 @@ public class LMPWristRot extends LMP
                 log.info("-> corrected palm normal: {}", Vec3f.toString(p));
             }
 
-            //if (getKinematicJoints().iterator().next().equals(Hanim.r_wrist))
+            // if (getKinematicJoints().iterator().next().equals(Hanim.r_wrist))
             if (getKinematicJoints().iterator().next().equals(Hanim.l_wrist))
             {
                 Vec3f.scale(-1, p);
             }
-            Vec3f.scale(-1,d);
-            
+            Vec3f.scale(-1, d);
+
             float v[] = Vec3f.getVec3f();
             Vec3f.cross(v, p, d);
             Vec3f.normalize(v);
             float m1[] = Mat3f.getMat3f();
             Mat3f.setColumn(m1, THIRD_COLUMN, v);
             Mat3f.setColumn(m1, PALM_COLUMN, p);
-            Mat3f.setColumn(m1, EXT_FINGER_COLUMN, d);            
+            Mat3f.setColumn(m1, EXT_FINGER_COLUMN, d);
             return m1;
         }
 
@@ -160,7 +160,7 @@ public class LMPWristRot extends LMP
         {
             // get transformation dOld -> d
             float d[] = Vec3f.getVec3f(oc.getD());
-            Vec3f.scale(-1,d);
+            Vec3f.scale(-1, d);
             Vec3f.normalize(d);
             Vec3f.normalize(dOld);
 
@@ -168,7 +168,7 @@ public class LMPWristRot extends LMP
             float q[] = Quat4f.getQuat4f();
             Quat4f.setFromVectors(q, dOld, d);
             Mat3f.setFromQuatScale(m1, q, 1);
-            Mat3f.mul(m1, m, m1);            
+            Mat3f.mul(m1, m, m1);
             return m1;
         }
 
@@ -177,7 +177,7 @@ public class LMPWristRot extends LMP
         {
             // get transformation pOld -> p
             float p[] = Vec3f.getVec3f(oc.getP());
-            //if (getKinematicJoints().iterator().next().equals(Hanim.r_wrist))
+            // if (getKinematicJoints().iterator().next().equals(Hanim.r_wrist))
             if (getKinematicJoints().iterator().next().equals(Hanim.l_wrist))
             {
                 Vec3f.scale(-1, p);
@@ -199,9 +199,9 @@ public class LMPWristRot extends LMP
     public List<String> getAvailableSyncs()
     {
         List<String> syncs = super.getAvailableSyncs();
-        for(OrientConstraint oc:ocVec)
+        for (OrientConstraint oc : ocVec)
         {
-            if(!syncs.contains(oc.getId()))
+            if (!syncs.contains(oc.getId()))
             {
                 syncs.add(oc.getId());
             }
@@ -354,6 +354,11 @@ public class LMPWristRot extends LMP
         {
             pegBoard.setPegTime(getBMLId(), getId(), "end", getTimePeg("strokeEnd").getGlobalValue() + TRANSITION_TIME);
         }
+
+        if (!isPlaying())
+        {
+            setTpMinimumTime(time);
+        }
     }
 
     @Override
@@ -361,9 +366,7 @@ public class LMPWristRot extends LMP
     {
         if (!isLurking()) return;
         resolveTimePegs(time);
-    }    
-
-    
+    }
 
     private OrientConstraint findOrientConstraint(String syncId)
     {
@@ -470,8 +473,8 @@ public class LMPWristRot extends LMP
         int j = uBound.index;
         double fT = (time - lBound.time) / (uBound.time - lBound.time);
 
-        //System.out.println("lower bound: "+ i+","+lBound.time +" upper bound: "+j+","+uBound.time +" fT="+fT);
-        
+        // System.out.println("lower bound: "+ i+","+lBound.time +" upper bound: "+j+","+uBound.time +" fT="+fT);
+
         float[] rkTarget = Quat4f.getQuat4f();
         int point_numb = orientVec.size();
         if (j > point_numb)
@@ -517,7 +520,7 @@ public class LMPWristRot extends LMP
         float q[] = getOrient(time);
         VJoint vjRoot = aniPlayer.getVNext().getPartBySid(Hanim.HumanoidRoot);
         VJoint vjWrist = aniPlayer.getVNext().getPartBySid(joint);
-        vjWrist.setPathRotation(q, vjRoot);        
+        vjWrist.setPathRotation(q, vjRoot);
     }
 
     // Prepares a sequence of quaternions for interpolating
@@ -565,8 +568,8 @@ public class LMPWristRot extends LMP
         resolveTimePegs(time);
         float cQuat[] = Quat4f.getQuat4f();
         VJoint root = aniPlayer.getVCurr().getPartBySid(Hanim.HumanoidRoot);
-        aniPlayer.getVCurr().getPartBySid(joint).getPathRotation(root, cQuat);        
-        
+        aniPlayer.getVCurr().getPartBySid(joint).getPathRotation(root, cQuat);
+
         float[] c = Mat3f.getMat3f();
         Mat3f.setFromQuatScale(c, cQuat, 1);
         refine(cQuat, c);

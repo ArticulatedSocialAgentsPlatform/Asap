@@ -2,6 +2,7 @@ package asap.animationengine.ace.lmp;
 
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.number.OrderingComparison.greaterThan;
+import static org.hamcrest.number.OrderingComparison.greaterThanOrEqualTo;
 import static org.junit.Assert.assertEquals;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
@@ -75,5 +76,75 @@ public class LMPWristPosTest extends AbstractTimedPlanUnitTest
         assertThat(tau.getTime("end"),greaterThan(tau.getTime("strokeEnd")));
         assertEquals(tau.getTime("relax"),tau.getTime("end"), TIMING_PRECISION);
     }
+    
+    @Test
+    public void testUpdateTimingStrokeStartConstraints() throws TMUPlayException
+    {
+        TimedAnimationUnit tau = setupPlanUnit(fbManager, BMLBlockPeg.GLOBALPEG, "bml1", "beh1");
+        tau.setTimePeg("strokeStart", TimePegUtil.createTimePeg(BMLBlockPeg.GLOBALPEG, 0.5f));        
+        tau.setState(TimedPlanUnitState.LURKING);
+        tau.updateTiming(0);
+        assertThat(tau.getTime("start"),greaterThanOrEqualTo(0d));
+        assertThat(tau.getTime("strokeStart"),greaterThan(tau.getTime("start")));
+        assertThat(tau.getTime("strokeStart"),greaterThan(tau.getTime("ready")));
+        assertEquals(0.5, tau.getTime("strokeStart"), TIMING_PRECISION);
+        assertEquals(0.5, tau.getTime("stroke"), TIMING_PRECISION);
+        assertThat(tau.getTime("strokeEnd"),greaterThan(tau.getTime("strokeStart")));        
+        assertThat(tau.getTime("end"),greaterThan(tau.getTime("strokeEnd")));
+        assertEquals(tau.getTime("relax"),tau.getTime("end"), TIMING_PRECISION);
+    }
+    
 
+    @Test
+    public void testUpdateTimingStrokeStartAndEndConstraint() throws TMUPlayException
+    {
+        TimedAnimationUnit tau = setupPlanUnit(fbManager, BMLBlockPeg.GLOBALPEG, "bml1", "beh1");
+        tau.setTimePeg("strokeStart", TimePegUtil.createTimePeg(BMLBlockPeg.GLOBALPEG, 0.5f));
+        tau.setTimePeg("strokeEnd", TimePegUtil.createTimePeg(BMLBlockPeg.GLOBALPEG, 2.5f));
+        tau.setState(TimedPlanUnitState.LURKING);
+        tau.updateTiming(0);
+        assertThat(tau.getTime("start"),greaterThanOrEqualTo(0d));
+        assertThat(tau.getTime("strokeStart"),greaterThan(tau.getTime("start")));
+        assertThat(tau.getTime("strokeStart"),greaterThan(tau.getTime("ready")));        
+        assertEquals(0.5, tau.getTime("strokeStart"), TIMING_PRECISION);
+        assertEquals(0.5, tau.getTime("stroke"), TIMING_PRECISION);
+        assertEquals(2.5, tau.getTime("strokeEnd"), TIMING_PRECISION);
+        assertThat(tau.getTime("end"),greaterThan(tau.getTime("strokeEnd")));
+        assertEquals(tau.getTime("relax"),tau.getTime("end"), TIMING_PRECISION);
+    }
+    
+    @Test
+    public void testUpdateTimingEndConstraint() throws TMUPlayException
+    {
+        TimedAnimationUnit tau = setupPlanUnit(fbManager, BMLBlockPeg.GLOBALPEG, "bml1", "beh1");
+        tau.setTimePeg("end", TimePegUtil.createTimePeg(BMLBlockPeg.GLOBALPEG, 10f));
+        tau.setState(TimedPlanUnitState.LURKING);
+        tau.updateTiming(0);
+        assertEquals(10, tau.getTime("end"), TIMING_PRECISION);
+        assertEquals(tau.getTime("relax"),tau.getTime("end"), TIMING_PRECISION);
+        assertThat(tau.getTime("start"),greaterThanOrEqualTo(0d));
+        assertThat(tau.getTime("strokeStart"),greaterThan(tau.getTime("start")));
+        assertThat(tau.getTime("strokeStart"),greaterThan(tau.getTime("ready")));
+        assertEquals(tau.getTime("strokeStart"), tau.getTime("stroke"), TIMING_PRECISION);
+        assertThat(tau.getTime("strokeEnd"),greaterThan(tau.getTime("strokeStart")));
+    }
+    
+    @Test
+    public void testUpdateTimingEndConstraintFrontSkew() throws TMUPlayException
+    {
+        TimedAnimationUnit tau = setupPlanUnit(fbManager, BMLBlockPeg.GLOBALPEG, "bml1", "beh1");
+        tau.setTimePeg("end", TimePegUtil.createTimePeg(BMLBlockPeg.GLOBALPEG, 1f));
+        tau.setState(TimedPlanUnitState.LURKING);
+        tau.updateTiming(0);
+
+        assertEquals(1, tau.getTime("end"), TIMING_PRECISION);
+        assertEquals(0, tau.getTime("start"), TIMING_PRECISION);
+        assertThat(tau.getTime("strokeStart"),greaterThan(tau.getTime("start")));
+        assertThat(tau.getTime("strokeStart"),greaterThan(tau.getTime("ready")));
+        assertEquals(tau.getTime("strokeStart"), tau.getTime("stroke"), TIMING_PRECISION);
+        assertThat(tau.getTime("strokeEnd"),greaterThan(tau.getTime("strokeStart")));
+        assertThat(tau.getTime("strokeEnd"),greaterThan(tau.getTime("strokeStart")));
+        assertThat(tau.getTime("end"),greaterThan(tau.getTime("strokeEnd")));
+        assertEquals(tau.getTime("relax"),tau.getTime("end"), TIMING_PRECISION);        
+    }
 }

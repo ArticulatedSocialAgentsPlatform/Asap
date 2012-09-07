@@ -443,6 +443,11 @@ public class LMPWristPos extends LMPPos
         {
             pegBoard.setPegTime(getBMLId(), getId(), "ready", getStartTime());
         }
+        
+        if (!isPlaying())
+        {
+            setTpMinimumTime(time);
+        }
     }
 
     @Override

@@ -103,7 +103,7 @@ public class LMPWristRotTest extends AbstractTimedPlanUnitTest
         assertEquals(0.1, tau.getTime("start"), TIMING_PRECISION);
         assertEquals(0.1 + 2 + 0.8, tau.getTime("end"), TIMING_PRECISION);
         assertEquals(0.5, tau.getTime("strokeStart"), TIMING_PRECISION);
-        assertEquals(2 + 0.4 + 0.1, tau.getTime("strokeEnd"), TIMING_PRECISION);
+        assertEquals(2.5, tau.getTime("strokeEnd"), TIMING_PRECISION);
         assertEquals(0.4 + 0.1 + 2d / 3d, tau.getTime("stroke1"), TIMING_PRECISION);
         assertEquals(0.4 + 0.1 + 2d / 3d + 2d / 3d, tau.getTime("stroke2"), TIMING_PRECISION);
     }
@@ -136,6 +136,21 @@ public class LMPWristRotTest extends AbstractTimedPlanUnitTest
         assertEquals(0, tau.getTime("start"), TIMING_PRECISION);
     }
 
+    @Test
+    public void testUpdateTimingStrokeStartConstraintSkew() throws TMUPlayException
+    {
+        TimedAnimationUnit tau = setupPlanUnit(fbManager, BMLBlockPeg.GLOBALPEG, "bml1", "beh1");
+        tau.setTimePeg("strokeStart", TimePegUtil.createTimePeg(BMLBlockPeg.GLOBALPEG, 0.3f));
+        tau.setState(TimedPlanUnitState.LURKING);
+        tau.updateTiming(0);
+        assertEquals(0, tau.getTime("start"), TIMING_PRECISION);
+        assertEquals(-0.1 + 5 + 0.8, tau.getTime("end"), TIMING_PRECISION);
+        assertEquals(0.3, tau.getTime("strokeStart"), TIMING_PRECISION);
+        assertEquals(5 + 0.4 - 0.1, tau.getTime("strokeEnd"), TIMING_PRECISION);
+        assertEquals(0.4 - 0.1 + 5d / 3d, tau.getTime("stroke1"), TIMING_PRECISION);
+        assertEquals(0.4 - 0.1 + 5d / 3d + 5d / 3d, tau.getTime("stroke2"), TIMING_PRECISION);
+    }
+    
     @Test
     public void testAvailableSyncs() throws TMUPlayException
     {

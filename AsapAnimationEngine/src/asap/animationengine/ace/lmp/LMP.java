@@ -27,8 +27,7 @@ public abstract class LMP extends TimedAbstractPlanUnit implements TimedAnimatio
         super(fbm, bmlPeg, bmlId, behId, true);
         this.pegBoard = pegBoard;
     }
-    
-    
+
     @Override
     public List<String> getAvailableSyncs()
     {
@@ -132,7 +131,7 @@ public abstract class LMP extends TimedAbstractPlanUnit implements TimedAnimatio
             }
         }
     }
-    
+
     protected boolean noPegsSet()
     {
         for (TimePeg tp : pegBoard.getTimePegs(getBMLId(), getId()))
@@ -143,5 +142,20 @@ public abstract class LMP extends TimedAbstractPlanUnit implements TimedAnimatio
             }
         }
         return true;
+    }
+
+    protected void setTpMinimumTime(double time)
+    {
+
+        for (TimePeg tp : pegBoard.getTimePegs(getBMLId(), getId()))
+        {
+            if (tp.getGlobalValue() != TimePeg.VALUE_UNKNOWN)
+            {
+                if (tp.getGlobalValue() < time)
+                {
+                    tp.setGlobalValue(time);
+                }
+            }
+        }
     }
 }
