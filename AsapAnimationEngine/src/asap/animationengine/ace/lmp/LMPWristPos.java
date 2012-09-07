@@ -96,6 +96,21 @@ public class LMPWristPos extends LMPPos
     }
 
     @Override
+    public List<String> getAvailableSyncs()
+    {
+        List<String> syncs = super.getAvailableSyncs();
+        if (!syncs.contains("strokeStart"))
+        {
+            syncs.add("strokeStart");
+        }
+        if (!syncs.contains("strokeEnd"))
+        {
+            syncs.add("strokeEnd");
+        }
+        return syncs;
+    }
+
+    @Override
     public void startUnit(double time) throws TimedPlanUnitPlayException
     {
         if (gSeq != null && !gSeq.isEmpty())
@@ -336,7 +351,6 @@ public class LMPWristPos extends LMPPos
         createPegWhenMissingOnPegBoard("end");
     }
 
-    
     private void setInternalStrokeTiming(double time)
     {
         double defaultStrokeDuration = 0;
@@ -358,7 +372,7 @@ public class LMPWristPos extends LMPPos
                 && getTimePeg("strokeStart").getGlobalValue() != TimePeg.VALUE_UNKNOWN)
         {
             pegBoard.setPegTime(getBMLId(), getId(), "strokeEnd", getTimePeg("strokeStart").getGlobalValue() + defaultStrokeDuration);
-        }        
+        }
     }
 
     // get preparation duration, given current hand position
@@ -420,15 +434,14 @@ public class LMPWristPos extends LMPPos
         {
             pegBoard.setPegTime(getBMLId(), getId(), "end", getTimePeg("strokeEnd").getGlobalValue() + getPreparationDuration());
         }
-        
-        
+
         /*
          * conventions:
          * missing ready => ready = start
          * missing relax => relax = end
          * missing stroke => stroke = strokeStart
          */
-        
+
         if (getTimePeg("stroke").getGlobalValue() == TimePeg.VALUE_UNKNOWN)
         {
             pegBoard.setPegTime(getBMLId(), getId(), "stroke", getTimePeg("strokeStart").getGlobalValue());
@@ -443,7 +456,7 @@ public class LMPWristPos extends LMPPos
         {
             pegBoard.setPegTime(getBMLId(), getId(), "ready", getStartTime());
         }
-        
+
         if (!isPlaying())
         {
             setTpMinimumTime(time);

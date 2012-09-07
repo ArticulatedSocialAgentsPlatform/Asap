@@ -30,7 +30,7 @@ import asap.realizer.planunit.TimedPlanUnitState;
 import asap.realizer.scheduler.BMLBlockManager;
 import asap.realizertestutil.planunit.AbstractTimedPlanUnitTest;
 import asap.realizertestutil.util.TimePegUtil;
-
+import org.hamcrest.collection.IsIterableContainingInAnyOrder;
 /**
  * Unit tests for the LMPWristPos
  * @author hvanwelbergen
@@ -133,11 +133,11 @@ public class LMPWristPosTest extends AbstractTimedPlanUnitTest
     public void testUpdateTimingEndConstraintFrontSkew() throws TMUPlayException
     {
         TimedAnimationUnit tau = setupPlanUnit(fbManager, BMLBlockPeg.GLOBALPEG, "bml1", "beh1");
-        tau.setTimePeg("end", TimePegUtil.createTimePeg(BMLBlockPeg.GLOBALPEG, 1f));
+        tau.setTimePeg("end", TimePegUtil.createTimePeg(BMLBlockPeg.GLOBALPEG, 1.5f));
         tau.setState(TimedPlanUnitState.LURKING);
         tau.updateTiming(0);
 
-        assertEquals(1, tau.getTime("end"), TIMING_PRECISION);
+        assertEquals(1.5, tau.getTime("end"), TIMING_PRECISION);
         assertEquals(0, tau.getTime("start"), TIMING_PRECISION);
         assertThat(tau.getTime("strokeStart"),greaterThan(tau.getTime("start")));
         assertThat(tau.getTime("strokeStart"),greaterThan(tau.getTime("ready")));
@@ -146,5 +146,13 @@ public class LMPWristPosTest extends AbstractTimedPlanUnitTest
         assertThat(tau.getTime("strokeEnd"),greaterThan(tau.getTime("strokeStart")));
         assertThat(tau.getTime("end"),greaterThan(tau.getTime("strokeEnd")));
         assertEquals(tau.getTime("relax"),tau.getTime("end"), TIMING_PRECISION);        
+    }
+    
+    @Test
+    public void testAvailableSyncs() throws TMUPlayException
+    {
+        TimedAnimationUnit tau = setupPlanUnit(fbManager, BMLBlockPeg.GLOBALPEG, "bml1", "beh1");
+        assertThat(tau.getAvailableSyncs(),
+                IsIterableContainingInAnyOrder.containsInAnyOrder("strokeStart", "strokeEnd"));
     }
 }
