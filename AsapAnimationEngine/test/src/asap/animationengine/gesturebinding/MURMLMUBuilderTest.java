@@ -221,8 +221,8 @@ public class MURMLMUBuilderTest
     @Test
     public void setupTMUHandLocation() throws MUSetupException
     {
-        //@formatter:off
-        String murmlString = 
+        String murmlString =
+        //@formatter:off                
                 "<murml-description xmlns=\"http://www.techfak.uni-bielefeld.de/ags/soa/murml\">" +
                         "<dynamic slot=\"HandLocation\" scope=\"left_arm\">"+
                         "<dynamicElement type=\"curve\">"+        
@@ -350,8 +350,8 @@ public class MURMLMUBuilderTest
     @Test
     public void setupTMURelativeStaticPalmOrientation() throws MUSetupException
     {
-      //@formatter:off
-        String murmlString = 
+        String murmlString =
+//@formatter:off                
                 "<murml-description xmlns=\"http://www.techfak.uni-bielefeld.de/ags/soa/murml\">" +
                         "<static slot=\"PalmOrientation\" scope=\"right_arm\" value=\"PalmU\"/>"+
                 "</murml-description>";
