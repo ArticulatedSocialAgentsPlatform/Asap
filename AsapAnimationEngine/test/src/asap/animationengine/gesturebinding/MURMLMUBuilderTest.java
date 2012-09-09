@@ -59,7 +59,7 @@ public class MURMLMUBuilderTest
         when(mockAnimationPlayer.getVCurr()).thenReturn(vCurr);
         when(mockHns.getHandLocation(anyString(), any(float[].class))).thenReturn(true);
         when(mockHns.getAbsoluteDirection(startsWith("Palm"), any(float[].class))).thenReturn(false);
-        when(mockHns.getAbsoluteDirection(startsWith("Dir"), any(float[].class))).thenReturn(true);        
+        when(mockHns.getAbsoluteDirection(startsWith("Dir"), any(float[].class))).thenReturn(true);
         when(mockHns.isPalmOrientation(startsWith("Palm"))).thenReturn(true);
         when(mockHns.getElementShape(anyString())).thenReturn(ShapeSymbols.LeftC);
     }
@@ -222,7 +222,7 @@ public class MURMLMUBuilderTest
     public void setupTMUHandLocation() throws MUSetupException
     {
         String murmlString =
-        //@formatter:off                
+//@formatter:off                
                 "<murml-description xmlns=\"http://www.techfak.uni-bielefeld.de/ags/soa/murml\">" +
                         "<dynamic slot=\"HandLocation\" scope=\"left_arm\">"+
                         "<dynamicElement type=\"curve\">"+        
@@ -289,16 +289,16 @@ public class MURMLMUBuilderTest
         // @formatter:on
         PegBoard pb = new PegBoard();
         TimedAnimationUnit tau = murmlMuBuilder.setupTMU(murmlString, new FeedbackManagerImpl(new BMLBlockManager(), ""),
-                BMLBlockPeg.GLOBALPEG, "bml1", "g1", pb, mockAniPlayer);        
-        
+                BMLBlockPeg.GLOBALPEG, "bml1", "g1", pb, mockAniPlayer);
+
         assertThat(tau, instanceOf(MotorControlProgram.class));
         assertThat(tau.getKinematicJoints(), IsIterableContainingInAnyOrder.containsInAnyOrder(Hanim.r_wrist));
-        
+
         @SuppressWarnings("unchecked")
         List<TimedAnimationUnit> lmps = field("lmpQueue").ofType(List.class).in(tau).get();
         assertEquals(1, lmps.size());
     }
-    
+
     @Test
     public void setupTMURelativeDynamicPalmOrientation() throws MUSetupException
     {
@@ -315,21 +315,21 @@ public class MURMLMUBuilderTest
         // @formatter:on
         PegBoard pb = new PegBoard();
         TimedAnimationUnit tau = murmlMuBuilder.setupTMU(murmlString, new FeedbackManagerImpl(new BMLBlockManager(), ""),
-                BMLBlockPeg.GLOBALPEG, "bml1", "g1", pb, mockAniPlayer);        
-        
+                BMLBlockPeg.GLOBALPEG, "bml1", "g1", pb, mockAniPlayer);
+
         assertThat(tau, instanceOf(MotorControlProgram.class));
         assertThat(tau.getKinematicJoints(), IsIterableContainingInAnyOrder.containsInAnyOrder(Hanim.r_wrist));
-        
+
         @SuppressWarnings("unchecked")
         List<TimedAnimationUnit> lmps = field("lmpQueue").ofType(List.class).in(tau).get();
         assertEquals(1, lmps.size());
         assertThat(lmps.get(0), instanceOf(LMPPoRot.class));
     }
-    
+
     @Test
     public void setupTMUStaticPalmOrientation() throws MUSetupException
     {
-      //@formatter:off
+        //@formatter:off
         String murmlString = 
                 "<murml-description xmlns=\"http://www.techfak.uni-bielefeld.de/ags/soa/murml\">" +
                         "<static slot=\"PalmOrientation\" scope=\"right_arm\" value=\"DirU\"/>"+
@@ -337,16 +337,16 @@ public class MURMLMUBuilderTest
         // @formatter:on
         PegBoard pb = new PegBoard();
         TimedAnimationUnit tau = murmlMuBuilder.setupTMU(murmlString, new FeedbackManagerImpl(new BMLBlockManager(), ""),
-                BMLBlockPeg.GLOBALPEG, "bml1", "g1", pb, mockAniPlayer);   
-        
+                BMLBlockPeg.GLOBALPEG, "bml1", "g1", pb, mockAniPlayer);
+
         assertThat(tau, instanceOf(MotorControlProgram.class));
         assertThat(tau.getKinematicJoints(), IsIterableContainingInAnyOrder.containsInAnyOrder(Hanim.r_wrist));
-        
+
         @SuppressWarnings("unchecked")
         List<TimedAnimationUnit> lmps = field("lmpQueue").ofType(List.class).in(tau).get();
         assertEquals(1, lmps.size());
     }
-    
+
     @Test
     public void setupTMURelativeStaticPalmOrientation() throws MUSetupException
     {
@@ -358,22 +358,21 @@ public class MURMLMUBuilderTest
         // @formatter:on
         PegBoard pb = new PegBoard();
         TimedAnimationUnit tau = murmlMuBuilder.setupTMU(murmlString, new FeedbackManagerImpl(new BMLBlockManager(), ""),
-                BMLBlockPeg.GLOBALPEG, "bml1", "g1", pb, mockAniPlayer);   
-        
+                BMLBlockPeg.GLOBALPEG, "bml1", "g1", pb, mockAniPlayer);
+
         assertThat(tau, instanceOf(MotorControlProgram.class));
         assertThat(tau.getKinematicJoints(), IsIterableContainingInAnyOrder.containsInAnyOrder(Hanim.r_wrist));
-        
+
         @SuppressWarnings("unchecked")
         List<TimedAnimationUnit> lmps = field("lmpQueue").ofType(List.class).in(tau).get();
         assertEquals(1, lmps.size());
         assertThat(lmps.get(0), instanceOf(LMPPoRot.class));
     }
-    
-    
+
     @Test
     public void setupTMUStaticPalmAndFingerOrientation() throws MUSetupException
     {
-      //@formatter:off
+        //@formatter:off
         String murmlString = 
                 "<murml-description xmlns=\"http://www.techfak.uni-bielefeld.de/ags/soa/murml\">" +
                         "<parallel>"+
@@ -384,11 +383,41 @@ public class MURMLMUBuilderTest
         // @formatter:on
         PegBoard pb = new PegBoard();
         TimedAnimationUnit tau = murmlMuBuilder.setupTMU(murmlString, new FeedbackManagerImpl(new BMLBlockManager(), ""),
-                BMLBlockPeg.GLOBALPEG, "bml1", "g1", pb, mockAniPlayer);   
-        
+                BMLBlockPeg.GLOBALPEG, "bml1", "g1", pb, mockAniPlayer);
+
         assertThat(tau, instanceOf(MotorControlProgram.class));
         assertThat(tau.getKinematicJoints(), IsIterableContainingInAnyOrder.containsInAnyOrder(Hanim.r_wrist));
+
+        @SuppressWarnings("unchecked")
+        List<TimedAnimationUnit> lmps = field("lmpQueue").ofType(List.class).in(tau).get();
+        assertEquals(1, lmps.size());
+    }
+
+    @Test
+    public void setupTMUHandLocation2() throws MUSetupException
+    {
+        //@formatter:off
+        String murmlString =
+        "  <murml-description xmlns=\"http://www.techfak.uni-bielefeld.de/ags/soa/murml\">"+
+        "  <dynamic slot=\"HandLocation\" scope=\"right_arm\">"+
+        "    <dynamicElement type=\"curve\">"+
+        "      <value type=\"start\"  name=\"LocShoulder LocCenterLeft LocFar\"/>"+
+        "      <value type=\"end\"    name=\"LocShoulder LocCenterLeft LocNorm\"/>"+
+        "      <value type=\"normal\" name=\"DirU\"/>"+
+        "      <value type=\"shape\"  name=\"LeftC\"/>"+
+        "      <value type=\"extension\" name=\"0.6\"/>"+
+        "    </dynamicElement>"+
+        "  </dynamic>"+
+        "  </murml-description>";
+        //@formatter:on
         
+        PegBoard pb = new PegBoard();
+        TimedAnimationUnit tau = murmlMuBuilder.setupTMU(murmlString, new FeedbackManagerImpl(new BMLBlockManager(), ""),
+                BMLBlockPeg.GLOBALPEG, "bml1", "gesture1", pb, mockAniPlayer);
+
+        assertThat(tau, instanceOf(MotorControlProgram.class));
+        assertThat(tau.getKinematicJoints(), IsIterableContainingInAnyOrder.containsInAnyOrder(Hanim.r_elbow, Hanim.r_shoulder));
+
         @SuppressWarnings("unchecked")
         List<TimedAnimationUnit> lmps = field("lmpQueue").ofType(List.class).in(tau).get();
         assertEquals(1, lmps.size());

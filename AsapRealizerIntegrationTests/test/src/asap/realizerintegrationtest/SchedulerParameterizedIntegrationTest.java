@@ -458,6 +458,14 @@ public class SchedulerParameterizedIntegrationTest
         assertNoWarnings();
         assertEquals(2, pegBoard.getRelativePegTime("bml1", "gesture1", "start"), PEGBOARD_PRECISION);
     }
+    
+    @Test(timeout = SCHEDULE_TIMEOUT)
+    public void testMurmlHandLocation()
+    {
+        readXML("murml/murmlhandlocation.xml");
+        assertNoWarnings();
+        assertEquals(0, pegBoard.getRelativePegTime("bml1", "gesture1", "start"), PEGBOARD_PRECISION);
+    }
 
     @Test(timeout = SCHEDULE_TIMEOUT)
     public void bmltDummyAnticipatorTest()

@@ -46,9 +46,10 @@ public class LMPWristPos extends LMPPos
 
     public void resolveSynchs(BMLBlockPeg bbPeg, Behaviour b, List<TimePegAndConstraint> sac) throws BehaviourPlanningException
     {
-        // TODO: implement this
-    }
-
+        linkSynchs(sac);
+        resolveTimePegs(bbPeg.getValue());
+    }    
+    
     public LMPWristPos(String scope, FeedbackManager bbf, BMLBlockPeg bmlBlockPeg, String bmlId, String id, PegBoard pegBoard,
             GuidingSequence gSeq, AnimationPlayer aniPlayer)
     {

@@ -10,6 +10,7 @@ import static org.mockito.Matchers.startsWith;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
 import hmi.animation.Hanim;
+import hmi.testutil.animation.HanimBody;
 import hmi.xml.XMLTokenizer;
 
 import java.io.IOException;
@@ -96,12 +97,14 @@ public class AnimationPlannerTest
         when(mockRestPose.copy(eq(mockPlayer))).thenReturn(mockRestPose);
         when(mockRestPose.createPostureShiftTMU(eq(fbManager), (BMLBlockPeg) any(), eq(BMLID), (String) any(), eq(pegBoard))).thenReturn(
                 tmups);
-        
+
         when(mockHns.getHandLocation(anyString(), any(float[].class))).thenReturn(true);
         when(mockHns.getAbsoluteDirection(startsWith("Palm"), any(float[].class))).thenReturn(false);
-        when(mockHns.getAbsoluteDirection(startsWith("Dir"), any(float[].class))).thenReturn(true);        
+        when(mockHns.getAbsoluteDirection(startsWith("Dir"), any(float[].class))).thenReturn(true);
         when(mockHns.isPalmOrientation(startsWith("Palm"))).thenReturn(true);
         when(mockHns.getElementShape(anyString())).thenReturn(ShapeSymbols.LeftC);
+        when(mockPlayer.getVCurr()).thenReturn(HanimBody.getLOA1HanimBody());
+        when(mockPlayer.getVNext()).thenReturn(HanimBody.getLOA1HanimBody());
     }
 
     public HeadBehaviour createHeadBehaviour() throws IOException
@@ -174,7 +177,7 @@ public class AnimationPlannerTest
         assertEquals(0.3, pu.getStartTime(), TIMING_PRECISION);
         assertEquals(3.3, pu.getEndTime(), TIMING_PRECISION);
     }
-    
+
     @Test
     public void testMurmlPalmOrient() throws IOException, BehaviourPlanningException
     {
@@ -192,19 +195,19 @@ public class AnimationPlannerTest
         "</murmlgesture>";
         //@formatter:on
         MURMLGestureBehaviour beh = new MURMLGestureBehaviour(BMLID, new XMLTokenizer(str));
-        
+
         ArrayList<TimePegAndConstraint> sacs = new ArrayList<TimePegAndConstraint>();
         TimePeg sp = new TimePeg(bbPeg);
         sacs.add(new TimePegAndConstraint("start", sp, new Constraint(), 0, false));
-        
+
         TimedAnimationUnit pu = animationPlanner.resolveSynchs(bbPeg, beh, sacs);
         assertThat(pu.getKinematicJoints(), IsIterableContainingInAnyOrder.containsInAnyOrder(Hanim.r_wrist));
-        assertEquals(0.3, sp.getGlobalValue(), TIMING_PRECISION);        
-        
+        assertEquals(0.3, sp.getGlobalValue(), TIMING_PRECISION);
+
         animationPlanner.addBehaviour(bbPeg, beh, sacs, pu);
         assertEquals(0.3, pu.getStartTime(), TIMING_PRECISION);
-    }   
-    
+    }
+
     @Test
     public void testMurmlRelativePalmOrient() throws IOException, BehaviourPlanningException
     {
@@ -221,6 +224,40 @@ public class AnimationPlannerTest
         "  </murml-description>"+
         "</murmlgesture>";
         //@formatter:on
+
+        MURMLGestureBehaviour beh = new MURMLGestureBehaviour(BMLID, new XMLTokenizer(str));
+        ArrayList<TimePegAndConstraint> sacs = new ArrayList<TimePegAndConstraint>();
+        TimePeg sp = new TimePeg(bbPeg);
+        sacs.add(new TimePegAndConstraint("start", sp, new Constraint(), 0, false));
+
+        TimedAnimationUnit pu = animationPlanner.resolveSynchs(bbPeg, beh, sacs);
+        assertThat(pu.getKinematicJoints(), IsIterableContainingInAnyOrder.containsInAnyOrder(Hanim.r_wrist));
+        assertEquals(0.3, sp.getGlobalValue(), TIMING_PRECISION);
+
+        animationPlanner.addBehaviour(bbPeg, beh, sacs, pu);
+        assertEquals(0.3, pu.getStartTime(), TIMING_PRECISION);
+        assertTrue(pu.hasValidTiming());
+    }
+
+    @Test
+    public void testMurmlHandLocation() throws IOException, BehaviourPlanningException
+    {
+        //@formatter:off
+        String str =
+        "<murmlgesture id=\"gesture1\" xmlns=\"http://www.techfak.uni-bielefeld.de/ags/soa/murml\">"+
+        "  <murml-description>"+
+        "  <dynamic slot=\"HandLocation\" scope=\"right_arm\">"+
+        "    <dynamicElement type=\"curve\">"+
+        "      <value type=\"start\"  name=\"LocShoulder LocCenterLeft LocFar\"/>"+
+        "      <value type=\"end\"    name=\"LocShoulder LocCenterLeft LocNorm\"/>"+
+        "      <value type=\"normal\" name=\"DirU\"/>"+
+        "      <value type=\"shape\"  name=\"LeftC\"/>"+
+        "      <value type=\"extension\" name=\"0.6\"/>"+
+        "    </dynamicElement>"+
+        "  </dynamic>"+
+        "  </murml-description>"+
+        "</murmlgesture>";
+        //@formatter:on
         
         MURMLGestureBehaviour beh = new MURMLGestureBehaviour(BMLID, new XMLTokenizer(str));
         ArrayList<TimePegAndConstraint> sacs = new ArrayList<TimePegAndConstraint>();
@@ -228,9 +265,9 @@ public class AnimationPlannerTest
         sacs.add(new TimePegAndConstraint("start", sp, new Constraint(), 0, false));
         
         TimedAnimationUnit pu = animationPlanner.resolveSynchs(bbPeg, beh, sacs);
-        assertThat(pu.getKinematicJoints(), IsIterableContainingInAnyOrder.containsInAnyOrder(Hanim.r_wrist));
-        assertEquals(0.3, sp.getGlobalValue(), TIMING_PRECISION);        
-        
+        assertThat(pu.getKinematicJoints(), IsIterableContainingInAnyOrder.containsInAnyOrder(Hanim.r_elbow,Hanim.r_shoulder));
+        assertEquals(0.3, sp.getGlobalValue(), TIMING_PRECISION);
+
         animationPlanner.addBehaviour(bbPeg, beh, sacs, pu);
         assertEquals(0.3, pu.getStartTime(), TIMING_PRECISION);
         assertTrue(pu.hasValidTiming());
