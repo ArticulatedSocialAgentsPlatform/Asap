@@ -4,6 +4,9 @@
       
       <dependency org="HMI"     name="HmiUtil"           rev="latest.${resolve.status}"    />
       <dependency org="HMI"     name="HmiXml"            rev="latest.${resolve.status}"    />
+      <dependency org="HMI"     name="HmiAnimation"            rev="latest.${resolve.status}"    />
+      <dependency org="HMI"     name="HmiFaceAnimation"            rev="latest.${resolve.status}"    />
+      <dependency org="HMI"     name="HmiFaceEmbodiments"            rev="latest.${resolve.status}"    />
 
       <dependency org="google"  name="guava"             rev="latest.release"    />
       <dependency org="lombok"  name="lombok"            rev="latest.release"    />

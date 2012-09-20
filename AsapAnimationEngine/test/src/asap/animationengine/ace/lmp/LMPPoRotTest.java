@@ -10,7 +10,7 @@ import hmi.testutil.animation.HanimBody;
 import java.util.ArrayList;
 import java.util.List;
 
-import org.hamcrest.collection.IsIterableContainingInAnyOrder;
+import static org.hamcrest.collection.IsIterableContainingInAnyOrder.containsInAnyOrder;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.powermock.core.classloader.annotations.PowerMockIgnore;
@@ -144,8 +144,7 @@ public class LMPPoRotTest extends AbstractTimedPlanUnitTest
     public void testAvailableSyncs() throws TMUPlayException
     {
         TimedAnimationUnit tau = setupPlanUnit(fbManager, BMLBlockPeg.GLOBALPEG, "bml1", "beh1");
-        assertThat(tau.getAvailableSyncs(),
-                IsIterableContainingInAnyOrder.containsInAnyOrder("strokeStart", "stroke1", "stroke2", "strokeEnd"));
+        assertThat(tau.getAvailableSyncs(),containsInAnyOrder("strokeStart", "stroke1", "stroke2", "strokeEnd"));
     }
 
 }
