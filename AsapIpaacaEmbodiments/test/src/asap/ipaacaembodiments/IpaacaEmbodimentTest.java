@@ -53,10 +53,10 @@ public class IpaacaEmbodimentTest
         ArgumentCaptor<LocalIU> argument = ArgumentCaptor.forClass(LocalIU.class);
         verify(mockOutBuffer).add(argument.capture());
         LocalIU iu = argument.getValue();
-        assertEquals("joint1 joint3", iu.getPayload().get("joints_provided"));
+        assertEquals("joint1,joint3", iu.getPayload().get("joints_provided"));
         assertEquals("joint2", iu.getPayload().get("joints_not_provided"));
         assertEquals("", iu.getPayload().get("morphs_provided"));
-        assertEquals("morph1 morph2 morph3", iu.getPayload().get("morphs_not_provided"));
+        assertEquals("morph1,morph2,morph3", iu.getPayload().get("morphs_not_provided"));
         assertEquals("jointDataConfigReply",iu.getCategory());
     }
     
@@ -69,8 +69,8 @@ public class IpaacaEmbodimentTest
         verify(mockOutBuffer).add(argument.capture());
         LocalIU iu = argument.getValue();
         assertEquals("", iu.getPayload().get("joints_provided"));
-        assertEquals("joint1 joint2 joint3", iu.getPayload().get("joints_not_provided"));
-        assertEquals("morph1 morph3", iu.getPayload().get("morphs_provided"));
+        assertEquals("joint1,joint2,joint3", iu.getPayload().get("joints_not_provided"));
+        assertEquals("morph1,morph3", iu.getPayload().get("morphs_provided"));
         assertEquals("morph2", iu.getPayload().get("morphs_not_provided"));
         assertEquals("jointDataConfigReply",iu.getCategory());
     }
@@ -87,18 +87,18 @@ public class IpaacaEmbodimentTest
         
         LocalIU iu = argument.getAllValues().get(0);
         assertEquals("joint1", iu.getPayload().get("joints_provided"));
-        assertEquals("joint2 joint3", iu.getPayload().get("joints_not_provided"));
-        assertEquals("morph1 morph3", iu.getPayload().get("morphs_provided"));
+        assertEquals("joint2,joint3", iu.getPayload().get("joints_not_provided"));
+        assertEquals("morph1,morph3", iu.getPayload().get("morphs_provided"));
         assertEquals("morph2", iu.getPayload().get("morphs_not_provided"));
         assertEquals("jointDataConfigReply",iu.getCategory());
         
         iu = argument.getAllValues().get(1);
-        assertEquals("1.0 2.0", iu.getPayload().get("morph_data"));
+        assertEquals("100.0 200.0", iu.getPayload().get("morph_data"));
         assertEquals("1 0 0 0  0 1 0 0  0 0 1 0  0 0 0 1    1 0 0 0  0 1 0 0  0 0 1 0  0 0 0 1", iu.getPayload().get("joint_data"));
         assertEquals("jointData",iu.getCategory());
         
         iu = argument.getAllValues().get(2);
-        assertEquals("2.0 3.0", iu.getPayload().get("morph_data"));
+        assertEquals("200.0 300.0", iu.getPayload().get("morph_data"));
         assertEquals("1 0 0 0  0 1 0 0  0 0 1 0  0 0 0 1    1 0 0 0  0 1 0 0  0 0 1 0  0 0 0 1", iu.getPayload().get("joint_data"));
         assertEquals("jointData",iu.getCategory());
     }

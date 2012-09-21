@@ -5,6 +5,7 @@ import ipaaca.AbstractIU;
 import ipaaca.HandlerFunctor;
 import ipaaca.IUEventHandler;
 import ipaaca.IUEventType;
+import ipaaca.Initializer;
 import ipaaca.InputBuffer;
 import ipaaca.LocalMessageIU;
 import ipaaca.OutputBuffer;
@@ -36,7 +37,12 @@ public class IpaacaEmbodiment implements Embodiment
     private AtomicReference<List<String>> availableJoints = new AtomicReference<>();
     private List<String> usedMorphs = new ArrayList<>();
     private List<String> usedJoints = new ArrayList<>();
-
+    
+    static
+    {
+        Initializer.initializeIpaacaRsb();
+    }
+    
     public void setId(String id)
     {
         this.id = id;
@@ -73,7 +79,7 @@ public class IpaacaEmbodiment implements Embodiment
             if(morphTargets.keySet().contains(morph))
             {
                 usedTargets.add(morph);
-                values.add(""+morphTargets.get(morph));
+                values.add(""+morphTargets.get(morph)*100);
             }
         }
         setUsed(ImmutableList.of(availableJoints.get().get(0)),usedTargets);
@@ -95,14 +101,24 @@ public class IpaacaEmbodiment implements Embodiment
         return ImmutableSet.copyOf(availableMorphs.get());
     }
 
+    private String toCommaSeperatedList(List<String> strSet)
+    {
+        return toSeperatedList(strSet,",");
+    }
+    
     private String toSpaceSeperatedList(List<String> strSet)
+    {
+        return toSeperatedList(strSet," ");
+    }
+    
+    private String toSeperatedList(List<String> strSet, String seperator)
     {
         StringBuffer sBuf = new StringBuffer();
         for (String s:strSet)
         {
             if(sBuf.length()>0)
             {
-                sBuf.append(" ");
+                sBuf.append(seperator);
             }
             sBuf.append(s);
         }
@@ -113,14 +129,14 @@ public class IpaacaEmbodiment implements Embodiment
     {
         LocalMessageIU iuConfig = new LocalMessageIU();
         iuConfig.setCategory("jointDataConfigReply");
-        iuConfig.getPayload().put("joints_provided",toSpaceSeperatedList(usedJoints));
+        iuConfig.getPayload().put("joints_provided",toCommaSeperatedList(usedJoints));
         List<String> np = new ArrayList<>(availableJoints.get());
         np.removeAll(usedJoints);
-        iuConfig.getPayload().put("joints_not_provided",toSpaceSeperatedList(np));
-        iuConfig.getPayload().put("morphs_provided",toSpaceSeperatedList(usedMorphs));
+        iuConfig.getPayload().put("joints_not_provided",toCommaSeperatedList(np));
+        iuConfig.getPayload().put("morphs_provided",toCommaSeperatedList(usedMorphs));
         np = new ArrayList<>(availableMorphs.get());
         np.removeAll(usedMorphs);
-        iuConfig.getPayload().put("morphs_not_provided",toSpaceSeperatedList(np));
+        iuConfig.getPayload().put("morphs_not_provided",toCommaSeperatedList(np));
         outBuffer.add(iuConfig);
     }
     

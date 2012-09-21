@@ -1,5 +1,6 @@
 package asap.ipaacaembodiments.loader;
 
+import hmi.environmentbase.ClockDrivenCopyEnvironment;
 import hmi.environmentbase.EmbodimentLoader;
 import hmi.environmentbase.Environment;
 import hmi.environmentbase.Loader;
@@ -15,7 +16,7 @@ import asap.ipaacaembodiments.IpaacaFaceEmbodiment;
 /**
  * Loads an IpaacaFaceEmbodiment, requires an IpaacaEmbodiment
  * @author hvanwelbergen
- *
+ * 
  */
 public class IpaacaFaceEmbodimentLoader implements EmbodimentLoader
 {
@@ -33,6 +34,8 @@ public class IpaacaFaceEmbodimentLoader implements EmbodimentLoader
             Loader... requiredLoaders) throws IOException
     {
         this.id = loaderId;
+        ClockDrivenCopyEnvironment copyEnv=null;
+        
         IpaacaEmbodiment ipEmb = null;
         for (Loader l : requiredLoaders)
         {
@@ -41,12 +44,26 @@ public class IpaacaFaceEmbodimentLoader implements EmbodimentLoader
                 ipEmb = ((IpaacaEmbodimentLoader) l).getEmbodiment();
             }
         }
+        for (Environment env: environments)
+        {
+            if(env instanceof ClockDrivenCopyEnvironment)
+            {
+                copyEnv = (ClockDrivenCopyEnvironment)env;                
+            }
+        }
+        
+        if(copyEnv == null)
+        {
+            throw new XMLScanException("IpaacaFaceEmbodimentLoader requires an ClockDrivenCopyEnvironment");
+        }
+        
         if(ipEmb == null)
         {
             throw new XMLScanException("IpaacaFaceEmbodimentLoader requires an IpaacaEmbodimentLoader");
         }
         IpaacaFaceController fc = new IpaacaFaceController(ipEmb);
         embodiment = new IpaacaFaceEmbodiment(fc);
+        copyEnv.addCopyEmbodiment(embodiment);
     }
 
     @Override
