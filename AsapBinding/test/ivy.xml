@@ -1,7 +1,7 @@
 <ivy-module version="2.0">
    <info organisation="Asap" module="AsapBindingTest"/>
    <dependencies>
-      <dependency org="junit" name="junit"   rev="latest.release" />
+      <dependency org="junit" name="junit-dep"   rev="latest.release" />
       <dependency org="logback" name="logback-classic"   rev="latest.release" />
       <dependency org="logback" name="logback-core"   rev="latest.release" />
    </dependencies>
