@@ -76,6 +76,7 @@ public class MotorControlProgramTest extends AbstractTimedPlanUnitTest
     {
         MotorControlProgram mcp = setupPlanUnit(fbManager, BMLBlockPeg.GLOBALPEG, "bml1", "beh1");
         mcp.addLMP(mockTimedAnimationUnit);
+        mcp.setState(TimedPlanUnitState.LURKING);
         mcp.updateTiming(0);
         assertEquals(LMP_START_TIME, mcp.getTime("start"), TIMING_PRECISION);
         assertEquals(LMP_START_TIME, mcp.getTime("ready"), TIMING_PRECISION);
