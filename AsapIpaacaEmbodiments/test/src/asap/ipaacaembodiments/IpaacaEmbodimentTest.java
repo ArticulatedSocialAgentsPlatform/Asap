@@ -37,7 +37,7 @@ public class IpaacaEmbodimentTest
         env.initialize();        
     }
     
-    @Test(timeout=200)
+    @Test(timeout=500)
     public void testInitiatialize() throws Exception
     {
         setupEnv();
