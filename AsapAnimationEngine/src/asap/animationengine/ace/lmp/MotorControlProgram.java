@@ -9,23 +9,11 @@ import java.util.Set;
 import javax.annotation.Nullable;
 
 import lombok.extern.slf4j.Slf4j;
-
 import saiba.bml.core.Behaviour;
 import saiba.bml.core.GestureBehaviour;
-import saiba.bml.feedback.BMLSyncPointProgressFeedback;
-
-import com.google.common.base.Function;
-import com.google.common.base.Predicate;
-import com.google.common.collect.Collections2;
-import com.google.common.collect.ImmutableList;
-import com.google.common.collect.ImmutableMap;
-import com.google.common.collect.ImmutableSet;
-import com.google.common.primitives.Doubles;
-
 import asap.animationengine.motionunit.TimedAnimationUnit;
 import asap.motionunit.TMUPlayException;
 import asap.realizer.BehaviourPlanningException;
-import asap.realizer.SyncPointNotFoundException;
 import asap.realizer.feedback.FeedbackManager;
 import asap.realizer.pegboard.AfterPeg;
 import asap.realizer.pegboard.BMLBlockPeg;
@@ -37,9 +25,15 @@ import asap.realizer.pegboard.TimePeg;
 import asap.realizer.planunit.TimedAbstractPlanUnit;
 import asap.realizer.planunit.TimedPlanUnitPlayException;
 import asap.realizer.planunit.TimedPlanUnitState;
-import asap.realizer.scheduler.LinearStretchResolver;
 import asap.realizer.scheduler.TimePegAndConstraint;
-import asap.realizer.scheduler.UniModalResolver;
+
+import com.google.common.base.Function;
+import com.google.common.base.Predicate;
+import com.google.common.collect.Collections2;
+import com.google.common.collect.ImmutableList;
+import com.google.common.collect.ImmutableMap;
+import com.google.common.collect.ImmutableSet;
+import com.google.common.primitives.Doubles;
 
 @Slf4j
 public class MotorControlProgram extends TimedAbstractPlanUnit implements TimedAnimationUnit
@@ -70,6 +64,8 @@ public class MotorControlProgram extends TimedAbstractPlanUnit implements TimedA
             }
         }
     }
+    
+    
 
     @Override
     public void resolveSynchs(BMLBlockPeg bbPeg, Behaviour b, List<TimePegAndConstraint> sacs) throws BehaviourPlanningException
@@ -95,6 +91,7 @@ public class MotorControlProgram extends TimedAbstractPlanUnit implements TimedA
         }
         resolveMissingSyncPoints();
         
+        //FIXME: this never happens...
         for (TimedAnimationUnit lmp : lmpQueue)
         {
             if (lmp.getTimePeg("start") == null)
@@ -342,11 +339,14 @@ public class MotorControlProgram extends TimedAbstractPlanUnit implements TimedA
             return;
         }
 
-        for (TimedAnimationUnit lmp : lmpQueue)
+        if(isLurking())
         {
-            lmp.updateTiming(time);
+            for (TimedAnimationUnit lmp : lmpQueue)
+            {
+                lmp.updateTiming(time);
+            }        
+            resolveMissingSyncPoints();
         }
-        resolveMissingSyncPoints();
     }
 
     @Override
@@ -354,13 +354,13 @@ public class MotorControlProgram extends TimedAbstractPlanUnit implements TimedA
     {
         for (TimedAnimationUnit tmu : lmpQueue)
         {
-            tmu.updateTiming(time);
             if (time > tmu.getStartTime())
             {
                 if (!tmu.isPlaying())
                 {
                     tmu.start(time);
                 }
+                tmu.updateTiming(time);
                 tmu.play(time);
             }
         }

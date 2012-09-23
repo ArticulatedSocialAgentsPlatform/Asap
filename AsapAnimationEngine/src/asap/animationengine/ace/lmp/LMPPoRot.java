@@ -118,16 +118,16 @@ public class LMPPoRot extends LMP
     public List<String> getAvailableSyncs()
     {
         List<String> syncs = super.getAvailableSyncs();
-        for(PoConstraint oc:poVec)
+        for (PoConstraint oc : poVec)
         {
-            if(!syncs.contains(oc.getId()))
+            if (!syncs.contains(oc.getId()))
             {
                 syncs.add(oc.getId());
             }
         }
         return syncs;
     }
-    
+
     private double getPODurationFromAmplitude(double amp)
     {
         return (Math.abs(amp) / 140.0);
@@ -283,7 +283,10 @@ public class LMPPoRot extends LMP
     @Override
     public void updateTiming(double time) throws TMUPlayException
     {
-        if (!isLurking()) return;
+        if (!isLurking())
+        {
+            return;
+        }        
         resolveTimePegs(time);
     }
 
@@ -384,8 +387,8 @@ public class LMPPoRot extends LMP
     private void startFrom(float q, double qDot, double time)
     {
         timeVec.add(0, time);
-        float v[]=Vecf.getVecf(1);
-        v[0]=q;
+        float v[] = Vecf.getVecf(1);
+        v[0] = q;
         pointVec.add(0, v);
         timeVec.add(0, time);
 
@@ -408,7 +411,7 @@ public class LMPPoRot extends LMP
     }
 
     @Override
-    protected void startUnit(double time)
+    protected void startUnit(double time) throws TimedPlanUnitPlayException
     {
         resolveTimePegs(time);
         timeVec = toTimeVec();
@@ -416,7 +419,7 @@ public class LMPPoRot extends LMP
 
         // time to start now
         startFrom(0, 0, time);
-        
+
         // FIX-ME??? ---
         // for static PO constraints, there are only three control points defined,
         // which may give too little segments! This loop is meant to fill up the
