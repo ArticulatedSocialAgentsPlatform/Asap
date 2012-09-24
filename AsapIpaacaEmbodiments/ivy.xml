@@ -1,5 +1,5 @@
 <ivy-module version="2.0">
-   <info organisation="Asap" module="AsapBML"/>
+   <info organisation="Asap" module="AsapIpaacaEmbodiments"/>
    <dependencies>
       
       <dependency org="HMI"     name="HmiUtil"           rev="latest.${resolve.status}"    />
