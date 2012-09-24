@@ -1,5 +1,8 @@
 package asap.ipaacaembodiments;
 
+import hmi.animation.VJoint;
+import hmi.environmentbase.CopyEmbodiment;
+
 import java.util.ArrayList;
 import java.util.List;
 
@@ -11,12 +14,7 @@ import com.google.common.base.Function;
 import com.google.common.collect.BiMap;
 import com.google.common.collect.ImmutableList;
 import com.google.common.collect.ImmutableMap;
-import com.google.common.collect.ImmutableSet;
 import com.google.common.collect.Lists;
-
-import hmi.animation.Hanim;
-import hmi.animation.VJoint;
-import hmi.environmentbase.CopyEmbodiment;
 
 /**
  * Sends joint rotations from its animation joint to a renderer through Ipaaca. 
@@ -64,7 +62,11 @@ public class IpaacaBodyEmbodiment implements CopyEmbodiment
         for(String j:availableJoints)
         {
             VJoint vj = animationJoint.getPart(renamingMap.get(j));
-            if(vj!=null && vj.getSid().equals(Hanim.r_shoulder))
+            /*
+            List<String> hanimAll= ImmutableList.of(Hanim.HumanoidRoot, Hanim.r_shoulder,Hanim.l_shoulder, Hanim.r_hip,Hanim.l_hip);
+            if(vj!=null && hanimAll.contains(vj.getSid()))
+            */
+            if(vj!=null)
             {
                 jointList.add(vj);
             }

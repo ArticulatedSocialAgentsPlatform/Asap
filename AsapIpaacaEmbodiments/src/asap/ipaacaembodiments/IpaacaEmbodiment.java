@@ -2,6 +2,9 @@ package asap.ipaacaembodiments;
 
 import hmi.animation.VJoint;
 import hmi.environmentbase.Embodiment;
+import hmi.math.Mat4f;
+import hmi.math.Quat4f;
+import hmi.math.Vec3f;
 import ipaaca.AbstractIU;
 import ipaaca.HandlerFunctor;
 import ipaaca.IUEventHandler;
@@ -87,9 +90,17 @@ public class IpaacaEmbodiment implements Embodiment
         StringBuffer buf = new StringBuffer();
         for(VJoint vj:jointList)
         {
-            buf.append(getMatrix(vj.getGlobalMatrix()));
-            buf.append(" ");
             buf.append(getMatrix(vj.getLocalMatrix()));
+            buf.append(" ");
+            float m[]=vj.getGlobalMatrix();
+            float mRes[]=new float[16];
+            float q[]=Quat4f.getQuat4f();
+            vj.getRotation(q);
+            float mQ[]=new float[16];
+            Mat4f.setFromTR(mQ, Vec3f.getZero(), q);
+            Mat4f.invertRigid(mQ);
+            Mat4f.mul(mRes, m,mQ);
+            buf.append(getMatrix(mRes));
             buf.append(" ");
         }
         return buf.toString().trim();
