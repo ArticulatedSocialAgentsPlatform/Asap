@@ -1,6 +1,5 @@
 package asap.ipaacaembodiments.loader;
 
-import static org.hamcrest.Matchers.any;
 import static org.junit.Assert.assertNotNull;
 import static org.mockito.Matchers.any;
 import static org.mockito.Mockito.mock;
@@ -15,10 +14,10 @@ import java.io.IOException;
 
 import org.junit.Test;
 
+import asap.ipaacaembodiments.IpaacaEmbodiment;
+
 import com.google.common.collect.ImmutableList;
 import com.google.common.collect.ImmutableMap;
-
-import asap.ipaacaembodiments.IpaacaEmbodiment;
 
 /**
  * Unit tests for the IpaacaFaceEmbodimentLoader

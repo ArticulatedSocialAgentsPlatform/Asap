@@ -125,7 +125,7 @@ public class IpaacaEmbodiment implements Embodiment
         iu.getPayload().put("morph_data", toSpaceSeperatedList(values));
         if(jointList.isEmpty())
         {
-            //no jointlist: add dummy joint data to force re-render of face
+            //XXX no jointlist: add dummy joint data to force re-render of face
             iu.getPayload().put("joint_data", "1 0 0 0  0 1 0 0  0 0 1 0  0 0 0 1    1 0 0 0  0 1 0 0  0 0 1 0  0 0 0 1");
         }
         else
