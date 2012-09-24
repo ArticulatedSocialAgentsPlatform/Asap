@@ -1,5 +1,6 @@
 package asap.ipaacaembodiments;
 
+import hmi.animation.VJoint;
 import hmi.environmentbase.Embodiment;
 import ipaaca.AbstractIU;
 import ipaaca.HandlerFunctor;
@@ -70,7 +71,31 @@ public class IpaacaEmbodiment implements Embodiment
         outBuffer = new OutputBuffer("ipaacaenvironment" + id);
     }
 
-    public void setJointData(ImmutableMap<String, Float> morphTargets)
+    private String getMatrix(float []m)
+    {
+        StringBuffer buf = new StringBuffer();
+        for(float f:m)
+        {
+            buf.append(f);
+            buf.append(" ");
+        }
+        return buf.toString().trim();
+    }
+    
+    private String getJointMatrices(List<VJoint> jointList)
+    {
+        StringBuffer buf = new StringBuffer();
+        for(VJoint vj:jointList)
+        {
+            buf.append(getMatrix(vj.getGlobalMatrix()));
+            buf.append(" ");
+            buf.append(getMatrix(vj.getLocalMatrix()));
+            buf.append(" ");
+        }
+        return buf.toString().trim();
+    }
+    
+    public void setJointData(List<VJoint> jointList, ImmutableMap<String, Float> morphTargets)
     {
         List<String> usedTargets = new ArrayList<>();
         List<String> values = new ArrayList<>();
@@ -82,12 +107,20 @@ public class IpaacaEmbodiment implements Embodiment
                 values.add(""+morphTargets.get(morph)*100);
             }
         }
-        setUsed(ImmutableList.of(availableJoints.get().get(0)),usedTargets);
+        setUsed(usedJoints,usedTargets);
         
         LocalMessageIU iu = new LocalMessageIU();     
         iu.setCategory("jointData");
         iu.getPayload().put("morph_data", toSpaceSeperatedList(values));
-        iu.getPayload().put("joint_data", "1 0 0 0  0 1 0 0  0 0 1 0  0 0 0 1    1 0 0 0  0 1 0 0  0 0 1 0  0 0 0 1");
+        if(jointList.isEmpty())
+        {
+            //no jointlist: add dummy joint data to force re-render of face
+            iu.getPayload().put("joint_data", "1 0 0 0  0 1 0 0  0 0 1 0  0 0 0 1    1 0 0 0  0 1 0 0  0 0 1 0  0 0 0 1");
+        }
+        else
+        {
+            iu.getPayload().put("joint_data", getJointMatrices(jointList));
+        }
         outBuffer.add(iu);
     }
     

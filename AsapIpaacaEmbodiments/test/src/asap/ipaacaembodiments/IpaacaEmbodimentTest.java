@@ -6,6 +6,7 @@ import static org.junit.Assert.assertThat;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
+import hmi.animation.VJoint;
 import ipaaca.LocalIU;
 import ipaaca.OutputBuffer;
 
@@ -79,8 +80,8 @@ public class IpaacaEmbodimentTest
     public void testSetJointData() throws Exception
     {
         setupEnv();
-        env.setJointData(ImmutableMap.of("morph1",1f,"morph3",2f));
-        env.setJointData(ImmutableMap.of("morph1",2f,"morph3",3f));
+        env.setJointData(new ImmutableList.Builder<VJoint>().build(),ImmutableMap.of("morph1",1f,"morph3",2f));
+        env.setJointData(new ImmutableList.Builder<VJoint>().build(),ImmutableMap.of("morph1",2f,"morph3",3f));
         
         ArgumentCaptor<LocalIU> argument = ArgumentCaptor.forClass(LocalIU.class);
         verify(mockOutBuffer,times(3)).add(argument.capture());

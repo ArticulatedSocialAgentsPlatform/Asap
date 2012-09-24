@@ -2,8 +2,11 @@ package asap.ipaacaembodiments;
 
 import java.util.Collection;
 
+import com.google.common.collect.ImmutableList;
+
 import lombok.Delegate;
 
+import hmi.animation.VJoint;
 import hmi.faceanimation.MorphFaceController;
 import hmi.faceanimation.MorphTargetHandler;
 
@@ -33,7 +36,7 @@ public class IpaacaMorphFaceController implements MorphFaceController
     @Override
     public void copy()
     {
-        embodiment.setJointData(morphTargetHandler.getDesiredMorphTargets());        
+        embodiment.setJointData(new ImmutableList.Builder<VJoint>().build(), morphTargetHandler.getDesiredMorphTargets());        
     }
 
 }
