@@ -118,7 +118,6 @@ public class IpaacaEmbodiment implements Embodiment
                 values.add(""+morphTargets.get(morph)*100);
             }
         }
-        setUsed(usedJoints,usedTargets);
         
         LocalMessageIU iu = new LocalMessageIU();     
         iu.setCategory("jointData");
@@ -126,10 +125,12 @@ public class IpaacaEmbodiment implements Embodiment
         if(jointList.isEmpty())
         {
             //XXX no jointlist: add dummy joint data to force re-render of face
+            setUsed(ImmutableList.of(availableJoints.get().get(0)),usedTargets);
             iu.getPayload().put("joint_data", "1 0 0 0  0 1 0 0  0 0 1 0  0 0 0 1    1 0 0 0  0 1 0 0  0 0 1 0  0 0 0 1");
         }
         else
         {
+            setUsed(usedJoints,usedTargets);
             iu.getPayload().put("joint_data", getJointMatrices(jointList));
         }
         outBuffer.add(iu);
