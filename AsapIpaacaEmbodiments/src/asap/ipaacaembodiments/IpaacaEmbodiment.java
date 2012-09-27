@@ -2,7 +2,6 @@ package asap.ipaacaembodiments;
 
 import hmi.animation.VJoint;
 import hmi.environmentbase.Embodiment;
-import hmi.math.Mat3f;
 import hmi.math.Mat4f;
 import hmi.math.Quat4f;
 import hmi.math.Vec3f;
@@ -12,6 +11,7 @@ import ipaaca.IUEventHandler;
 import ipaaca.IUEventType;
 import ipaaca.Initializer;
 import ipaaca.InputBuffer;
+import ipaaca.LocalIU;
 import ipaaca.LocalMessageIU;
 import ipaaca.OutputBuffer;
 
@@ -19,6 +19,8 @@ import java.util.ArrayList;
 import java.util.EnumSet;
 import java.util.List;
 import java.util.concurrent.atomic.AtomicReference;
+
+import lombok.extern.slf4j.Slf4j;
 
 import com.google.common.collect.ImmutableList;
 import com.google.common.collect.ImmutableMap;
@@ -30,6 +32,7 @@ import com.google.common.collect.ImmutableSet;
  * @author hvanwelbergen
  * 
  */
+@Slf4j
 public class IpaacaEmbodiment implements Embodiment
 {
     private String id;
@@ -42,12 +45,18 @@ public class IpaacaEmbodiment implements Embodiment
     private AtomicReference<List<String>> availableJoints = new AtomicReference<>();
     private List<String> usedMorphs = new ArrayList<>();
     private List<String> usedJoints = new ArrayList<>();
-
+    private List<AvailableTargetsUpdateListener> targetUpdateListeners = new ArrayList<>();
+    
     static
     {
         Initializer.initializeIpaacaRsb();
     }
 
+    public void addTargetUpdateListeners(AvailableTargetsUpdateListener listener)
+    {
+        targetUpdateListeners.add(listener);
+    }
+    
     public void setId(String id)
     {
         this.id = id;
@@ -60,19 +69,36 @@ public class IpaacaEmbodiment implements Embodiment
 
     public void initialize()
     {
-        ImmutableSet<String> categories = new ImmutableSet.Builder<String>().add("jointDataConfigRequest").build();
+        availableJoints.set(new ArrayList<String>());
+        availableMorphs.set(new ArrayList<String>());
+        
+        ImmutableSet<String> categories = ImmutableSet.of("jointDataConfigRequest", "componentNotify");
         synchronized (ipaacaLock)
         {
             inBuffer = new InputBuffer("ipaacaenvironment" + id, categories);
+            inBuffer.registerHandler(new IUEventHandler(new JointDataConfigReqHandler(), EnumSet.of(IUEventType.ADDED), ImmutableSet
+                    .of("jointDataConfigRequest")));
+            inBuffer.registerHandler(new IUEventHandler(new ComponentNotifyHandler(), EnumSet.of(IUEventType.ADDED), ImmutableSet
+                    .of("componentNotify")));
+            outBuffer = new OutputBuffer("ipaacaenvironment" + id);
         }
-        JointDataConfigReqHandler eh = new JointDataConfigReqHandler();
-        availableJoints.set(new ArrayList<String>());
-        availableMorphs.set(new ArrayList<String>());
-        inBuffer.registerHandler(new IUEventHandler(eh, EnumSet.of(IUEventType.ADDED), categories));
-        while (availableJoints.get().isEmpty())
+        submitNotify(true);        
+    }
+
+    private void submitNotify(boolean isNew)
+    {
+        LocalIU notifyIU = new LocalIU();
+        notifyIU.setCategory("componentNotify");
+        notifyIU.getPayload().put("name", "IpaacaEmbodiment");
+        notifyIU.getPayload().put("function", "realizer");
+        notifyIU.getPayload().put("send_categories", "jointDataConfigReply, jointData, componentNotify");
+        notifyIU.getPayload().put("recv_categories", "jointDataConfigRequest, componentNotify");
+        notifyIU.getPayload().put("state", isNew?"new":"old");
+        synchronized (ipaacaLock)
         {
-        }// XXX ugly way to wait for joints to be filled...
-        outBuffer = new OutputBuffer("ipaacaenvironment" + id);
+            outBuffer.add(notifyIU);
+        }
+        log.debug("Notify submitted");
     }
 
     private String getMatrix(float[] m)
@@ -117,8 +143,9 @@ public class IpaacaEmbodiment implements Embodiment
         StringBuffer buf = new StringBuffer();
         for (VJoint vj : jointList)
         {
-
+            System.out.println("coord relocate for joint " + vj.getSid());
             buf.append(getMatrix(coordinateRelocate(vj.getLocalMatrix())));
+            //buf.append(getMatrix(vj.getLocalMatrix()));
             buf.append(" ");
 
             float m[] = new float[16];
@@ -131,13 +158,37 @@ public class IpaacaEmbodiment implements Embodiment
             Mat4f.invertRigid(mQ);
             Mat4f.mul(mRes, m, mQ);
             buf.append(getMatrix(coordinateRelocate(mRes)));
+            // buf.append(getMatrix(coordinateRelocate(vj.getGlobalMatrix())));
             buf.append(" ");
         }
         return buf.toString().trim();
     }
 
+    public void waitForAvailableJoints()
+    {
+        synchronized (availableJoints) 
+        {
+            if(!availableJoints.get().isEmpty())return;            
+            try
+            {
+                availableJoints.wait();
+            }
+            catch (InterruptedException e)
+            {
+                Thread.interrupted();
+            }
+        }
+    }
+    
     public void setJointData(List<VJoint> jointList, ImmutableMap<String, Float> morphTargets)
     {
+        if(availableJoints.get().isEmpty() && availableMorphs.get().isEmpty())
+        {
+            log.warn("setJointData ignored, no available joints yet");     
+            return;
+        }
+        
+
         List<String> usedTargets = new ArrayList<>();
         List<String> values = new ArrayList<>();
         for (String morph : availableMorphs.get())
@@ -163,7 +214,10 @@ public class IpaacaEmbodiment implements Embodiment
             setUsed(usedJoints, usedTargets);
             iu.getPayload().put("joint_data", getJointMatrices(jointList));
         }
-        outBuffer.add(iu);
+        synchronized (ipaacaLock)
+        {
+            outBuffer.add(iu);
+        }
     }
 
     public ImmutableSet<String> getAvailableJoints()
@@ -212,7 +266,10 @@ public class IpaacaEmbodiment implements Embodiment
         np = new ArrayList<>(availableMorphs.get());
         np.removeAll(usedMorphs);
         iuConfig.getPayload().put("morphs_not_provided", toCommaSeperatedList(np));
-        outBuffer.add(iuConfig);
+        synchronized (ipaacaLock)
+        {
+            outBuffer.add(iuConfig);
+        }
     }
 
     public void setUsed(List<String> usedJoints, List<String> usedMorphs)
@@ -266,6 +323,10 @@ public class IpaacaEmbodiment implements Embodiment
 
     private void setAvailableJoints(String[] joints)
     {
+        synchronized(availableJoints)
+        {
+            availableJoints.notifyAll();
+        }        
         availableJoints.set(ImmutableList.copyOf(joints));
     }
 
@@ -274,13 +335,32 @@ public class IpaacaEmbodiment implements Embodiment
         availableMorphs.set(ImmutableList.copyOf(morphs));
     }
 
+    class ComponentNotifyHandler implements HandlerFunctor
+    {
+        @Override
+        public void handle(AbstractIU iu, IUEventType type, boolean local)
+        {
+            if (iu.getPayload().get("state").equals("new"))
+            {
+                submitNotify(false);
+            }
+            log.debug("Notified IpaacaEmbodiment");
+        }
+
+    }
+
     class JointDataConfigReqHandler implements HandlerFunctor
     {
         @Override
         public void handle(AbstractIU iu, IUEventType type, boolean local)
         {
-            setAvailableJoints(iu.getPayload().get("joints").split(","));
-            setAvailableMorphs(iu.getPayload().get("morphs").split(","));
+            setAvailableJoints(iu.getPayload().get("joints").split("\\s*,\\s*"));
+            setAvailableMorphs(iu.getPayload().get("morphs").split("\\s*,\\s*"));
+            for (AvailableTargetsUpdateListener l:targetUpdateListeners)
+            {
+                l.update();
+            }
+            log.debug("Available joints received");
         }
     }
 

@@ -35,13 +35,13 @@ public class IpaacaEmbodimentTest
     private void setupEnv() throws Exception
     {
         IpaacaEmbodimentInitStub.stubInit(mockOutBuffer);
-        env.initialize();        
+        env.initialize();
     }
     
     @Test(timeout=500)
     public void testInitiatialize() throws Exception
     {
-        setupEnv();
+        setupEnv();        
         assertThat(env.getAvailableJoints(), containsInAnyOrder("joint1","joint2","joint3"));
         assertThat(env.getAvailableMorphs(), containsInAnyOrder("morph1","morph2","morph3"));
     }
@@ -52,8 +52,8 @@ public class IpaacaEmbodimentTest
         setupEnv();
         env.setUsedJoints(ImmutableList.of("joint1","joint3"));
         ArgumentCaptor<LocalIU> argument = ArgumentCaptor.forClass(LocalIU.class);
-        verify(mockOutBuffer).add(argument.capture());
-        LocalIU iu = argument.getValue();
+        verify(mockOutBuffer,times(2)).add(argument.capture());
+        LocalIU iu = argument.getAllValues().get(1);
         assertEquals("joint1,joint3", iu.getPayload().get("joints_provided"));
         assertEquals("joint2", iu.getPayload().get("joints_not_provided"));
         assertEquals("", iu.getPayload().get("morphs_provided"));
@@ -67,8 +67,8 @@ public class IpaacaEmbodimentTest
         setupEnv();
         env.setUsedMorphs(ImmutableList.of("morph1","morph3"));
         ArgumentCaptor<LocalIU> argument = ArgumentCaptor.forClass(LocalIU.class);
-        verify(mockOutBuffer).add(argument.capture());
-        LocalIU iu = argument.getValue();
+        verify(mockOutBuffer,times(2)).add(argument.capture());
+        LocalIU iu = argument.getAllValues().get(1);
         assertEquals("", iu.getPayload().get("joints_provided"));
         assertEquals("joint1,joint2,joint3", iu.getPayload().get("joints_not_provided"));
         assertEquals("morph1,morph3", iu.getPayload().get("morphs_provided"));
@@ -84,21 +84,21 @@ public class IpaacaEmbodimentTest
         env.setJointData(new ImmutableList.Builder<VJoint>().build(),ImmutableMap.of("morph1",2f,"morph3",3f));
         
         ArgumentCaptor<LocalIU> argument = ArgumentCaptor.forClass(LocalIU.class);
-        verify(mockOutBuffer,times(3)).add(argument.capture());
+        verify(mockOutBuffer,times(4)).add(argument.capture());
         
-        LocalIU iu = argument.getAllValues().get(0);
+        LocalIU iu = argument.getAllValues().get(1);
         assertEquals("joint1", iu.getPayload().get("joints_provided"));
         assertEquals("joint2,joint3", iu.getPayload().get("joints_not_provided"));
         assertEquals("morph1,morph3", iu.getPayload().get("morphs_provided"));
         assertEquals("morph2", iu.getPayload().get("morphs_not_provided"));
         assertEquals("jointDataConfigReply",iu.getCategory());
         
-        iu = argument.getAllValues().get(1);
+        iu = argument.getAllValues().get(2);
         assertEquals("100.0 200.0", iu.getPayload().get("morph_data"));
         assertEquals("1 0 0 0  0 1 0 0  0 0 1 0  0 0 0 1    1 0 0 0  0 1 0 0  0 0 1 0  0 0 0 1", iu.getPayload().get("joint_data"));
         assertEquals("jointData",iu.getCategory());
         
-        iu = argument.getAllValues().get(2);
+        iu = argument.getAllValues().get(3);
         assertEquals("200.0 300.0", iu.getPayload().get("morph_data"));
         assertEquals("1 0 0 0  0 1 0 0  0 0 1 0  0 0 0 1    1 0 0 0  0 1 0 0  0 0 1 0  0 0 0 1", iu.getPayload().get("joint_data"));
         assertEquals("jointData",iu.getCategory());
