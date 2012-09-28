@@ -1,5 +1,8 @@
 package asap.ipaacaembodiments;
 
+import static hmi.testutil.math.Quat4fTestUtil.assertQuat4fEquals;
+import static hmi.testutil.math.Quat4fTestUtil.assertQuat4fRotationEquivalent;
+import static hmi.testutil.math.Vec3fTestUtil.assertVec3fEquals;
 import static org.hamcrest.Matchers.containsInAnyOrder;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertThat;
@@ -7,6 +10,8 @@ import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
 import hmi.animation.VJoint;
+import hmi.math.Quat4f;
+import hmi.math.Vec3f;
 import ipaaca.LocalIU;
 import ipaaca.OutputBuffer;
 
@@ -31,6 +36,7 @@ public class IpaacaEmbodimentTest
     
     private IpaacaEmbodiment env = new IpaacaEmbodiment();
     private OutputBuffer mockOutBuffer = mock(OutputBuffer.class);
+    private static final float PRECISION = 0.001f;
     
     private void setupEnv() throws Exception
     {
@@ -38,12 +44,41 @@ public class IpaacaEmbodimentTest
         env.initialize();
     }
     
+    private void assertVJointHasProperties(VJoint vj, String expectedSid, float[]expectedT, float expectedQ[], VJoint expectedParent)
+    {
+        float t[] = Vec3f.getVec3f();
+        float q[] = Quat4f.getQuat4f();
+        
+        vj.getTranslation(t);
+        assertVec3fEquals(expectedT,t, PRECISION);
+        
+        vj.getRotation(q);
+        assertQuat4fRotationEquivalent(expectedQ,q, PRECISION);
+        
+        assertEquals(expectedParent, vj.getParent());
+    }
+    
     @Test(timeout=500)
     public void testInitiatialize() throws Exception
     {
         setupEnv();        
-        assertThat(env.getAvailableJoints(), containsInAnyOrder("joint1","joint2","joint3"));
-        assertThat(env.getAvailableMorphs(), containsInAnyOrder("morph1","morph2","morph3"));
+        assertThat(env.getAvailableJoints(), containsInAnyOrder(IpaacaEmbodimentInitStub.JOINTS));
+        assertThat(env.getAvailableMorphs(), containsInAnyOrder(IpaacaEmbodimentInitStub.MORPHS));
+        VJoint vj = env.getRootJoint();
+        assertEquals(IpaacaEmbodimentInitStub.JOINTS[0], vj.getSid());
+        
+        assertVJointHasProperties(vj, IpaacaEmbodimentInitStub.JOINTS[0], IpaacaEmbodimentInitStub.JOINT_TRANSLATIONS[0], 
+                IpaacaEmbodimentInitStub.JOINT_ROTATIONS[0], null);
+        
+        assertEquals(1, vj.getChildren().size());
+        VJoint vj2 = vj.getChildren().get(0);
+        assertVJointHasProperties(vj2, IpaacaEmbodimentInitStub.JOINTS[1], IpaacaEmbodimentInitStub.JOINT_TRANSLATIONS[1], 
+                IpaacaEmbodimentInitStub.JOINT_ROTATIONS[1], vj);
+        
+        assertEquals(1, vj2.getChildren().size());
+        VJoint vj3 = vj2.getChildren().get(0);
+        assertVJointHasProperties(vj3, IpaacaEmbodimentInitStub.JOINTS[2], IpaacaEmbodimentInitStub.JOINT_TRANSLATIONS[2], 
+                IpaacaEmbodimentInitStub.JOINT_ROTATIONS[2], vj2);
     }
     
     @Test

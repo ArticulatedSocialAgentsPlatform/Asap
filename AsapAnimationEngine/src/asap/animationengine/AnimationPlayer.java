@@ -154,6 +154,8 @@ public class AnimationPlayer implements Player, MixedAnimationPlayer
 
         woManager = wom;
         // VJoint[] emptyArray = new VJoint[0];
+
+        
         vPrevStartPose = new SkeletonPose("prev", prevSkel, "TR");
         vCurrStartPose = new SkeletonPose("cur", curSkel, "TR");
         vNextStartPose = new SkeletonPose("next", nextSkel, "TR");

@@ -20,6 +20,7 @@ import java.util.EnumSet;
 import java.util.List;
 import java.util.concurrent.atomic.AtomicReference;
 
+import lombok.Getter;
 import lombok.extern.slf4j.Slf4j;
 
 import com.google.common.collect.ImmutableList;
@@ -47,6 +48,9 @@ public class IpaacaEmbodiment implements Embodiment
     private List<String> usedJoints = new ArrayList<>();
     private List<AvailableTargetsUpdateListener> targetUpdateListeners = new ArrayList<>();
     
+    @Getter
+    private VJoint rootJoint;
+    
     static
     {
         Initializer.initializeIpaacaRsb();
@@ -56,7 +60,7 @@ public class IpaacaEmbodiment implements Embodiment
     {
         targetUpdateListeners.add(listener);
     }
-    
+
     public void setId(String id)
     {
         this.id = id;
@@ -71,7 +75,7 @@ public class IpaacaEmbodiment implements Embodiment
     {
         availableJoints.set(new ArrayList<String>());
         availableMorphs.set(new ArrayList<String>());
-        
+
         ImmutableSet<String> categories = ImmutableSet.of("jointDataConfigRequest", "componentNotify");
         synchronized (ipaacaLock)
         {
@@ -82,7 +86,7 @@ public class IpaacaEmbodiment implements Embodiment
                     .of("componentNotify")));
             outBuffer = new OutputBuffer("ipaacaenvironment" + id);
         }
-        submitNotify(true);        
+        submitNotify(true);
     }
 
     private void submitNotify(boolean isNew)
@@ -93,7 +97,7 @@ public class IpaacaEmbodiment implements Embodiment
         notifyIU.getPayload().put("function", "realizer");
         notifyIU.getPayload().put("send_categories", "jointDataConfigReply, jointData, componentNotify");
         notifyIU.getPayload().put("recv_categories", "jointDataConfigRequest, componentNotify");
-        notifyIU.getPayload().put("state", isNew?"new":"old");
+        notifyIU.getPayload().put("state", isNew ? "new" : "old");
         synchronized (ipaacaLock)
         {
             outBuffer.add(notifyIU);
@@ -144,8 +148,8 @@ public class IpaacaEmbodiment implements Embodiment
         for (VJoint vj : jointList)
         {
             System.out.println("coord relocate for joint " + vj.getSid());
-            buf.append(getMatrix(coordinateRelocate(vj.getLocalMatrix())));
-            //buf.append(getMatrix(vj.getLocalMatrix()));
+            // buf.append(getMatrix(coordinateRelocate(vj.getLocalMatrix())));
+            buf.append(getMatrix(vj.getLocalMatrix()));
             buf.append(" ");
 
             float m[] = new float[16];
@@ -157,8 +161,9 @@ public class IpaacaEmbodiment implements Embodiment
             Mat4f.setFromTR(mQ, Vec3f.getZero(), q);
             Mat4f.invertRigid(mQ);
             Mat4f.mul(mRes, m, mQ);
-            buf.append(getMatrix(coordinateRelocate(mRes)));
+            // buf.append(getMatrix(coordinateRelocate(mRes)));
             // buf.append(getMatrix(coordinateRelocate(vj.getGlobalMatrix())));
+            buf.append(getMatrix(vj.getGlobalMatrix()));
             buf.append(" ");
         }
         return buf.toString().trim();
@@ -166,9 +171,9 @@ public class IpaacaEmbodiment implements Embodiment
 
     public void waitForAvailableJoints()
     {
-        synchronized (availableJoints) 
+        synchronized (availableJoints)
         {
-            if(!availableJoints.get().isEmpty())return;            
+            if (!availableJoints.get().isEmpty()) return;
             try
             {
                 availableJoints.wait();
@@ -179,15 +184,14 @@ public class IpaacaEmbodiment implements Embodiment
             }
         }
     }
-    
+
     public void setJointData(List<VJoint> jointList, ImmutableMap<String, Float> morphTargets)
     {
-        if(availableJoints.get().isEmpty() && availableMorphs.get().isEmpty())
+        if (availableJoints.get().isEmpty() && availableMorphs.get().isEmpty())
         {
-            log.warn("setJointData ignored, no available joints yet");     
+            log.warn("setJointData ignored, no available joints yet");
             return;
         }
-        
 
         List<String> usedTargets = new ArrayList<>();
         List<String> values = new ArrayList<>();
@@ -323,10 +327,10 @@ public class IpaacaEmbodiment implements Embodiment
 
     private void setAvailableJoints(String[] joints)
     {
-        synchronized(availableJoints)
+        synchronized (availableJoints)
         {
             availableJoints.notifyAll();
-        }        
+        }
         availableJoints.set(ImmutableList.copyOf(joints));
     }
 
@@ -349,14 +353,82 @@ public class IpaacaEmbodiment implements Embodiment
 
     }
 
+    private List<Integer> getRootIndices(String parents[])
+    {
+        List<Integer> indices = new ArrayList<>();
+        for (int i = 0; i < parents.length; i++)
+        {
+            if (parents[i].equals("-"))
+            {
+                indices.add(i);
+            }
+        }
+        return indices;
+    }
+
+    private float[] getVec3f(String str)
+    {
+        String vStr[] = str.trim().split("\\s+");
+        return Vec3f.getVec3f(Float.parseFloat(vStr[0]), Float.parseFloat(vStr[1]), Float.parseFloat(vStr[2]));
+    }
+
+    private float[] getQuat4f(String str)
+    {
+        String vStr[] = str.trim().split("\\s+");
+        return Quat4f.getQuat4f(Float.parseFloat(vStr[0]), Float.parseFloat(vStr[1]), Float.parseFloat(vStr[2]), Float.parseFloat(vStr[3]));
+    }
+
+    private VJoint constructJoint(int index, String joints[], String parents[], String translations[], String rotations[])
+    {
+        VJoint vj = new VJoint(joints[index], joints[index]);
+        vj.setTranslation(getVec3f(translations[index]));
+        vj.setRotation(getQuat4f(rotations[index]));
+
+        for (int i = 0; i < parents.length; i++)
+        {
+            if(parents[i].equals(joints[index]))
+            {
+                VJoint vjChild = constructJoint(i, joints, parents, translations, rotations);
+                vj.addChild(vjChild);
+            }
+        }
+        return vj;
+    }
+
+    private VJoint constructSkeleton(String joints[], String parents[], String translations[], String rotations[])
+    {
+        List<Integer> indices = getRootIndices(parents);
+        if(indices.size()==1)
+        {
+            rootJoint = constructJoint(indices.get(0), joints, parents, translations, rotations);
+        }
+        else
+        {
+            //introduce artifical root joint to bind stuff together
+            VJoint rootJoint = new VJoint("","");
+            for (int i: getRootIndices(parents))
+            {
+                rootJoint.addChild(constructJoint(i, joints, parents, translations, rotations));
+            }
+        }
+        return rootJoint;
+    }
+
     class JointDataConfigReqHandler implements HandlerFunctor
     {
         @Override
         public void handle(AbstractIU iu, IUEventType type, boolean local)
         {
-            setAvailableJoints(iu.getPayload().get("joints").split("\\s*,\\s*"));
+            String[] joints = iu.getPayload().get("joints").split("\\s*,\\s*");
+            String[] parents = iu.getPayload().get("joint_parents").split("\\s*,\\s*");
+            String[] translations = iu.getPayload().get("joint_translations").split("\\s*,\\s*");
+            String[] rotations = iu.getPayload().get("joint_rotations").split("\\s*,\\s*");
+            rootJoint = constructSkeleton(joints, parents, translations, rotations);
+
+            setAvailableJoints(joints);
             setAvailableMorphs(iu.getPayload().get("morphs").split("\\s*,\\s*"));
-            for (AvailableTargetsUpdateListener l:targetUpdateListeners)
+
+            for (AvailableTargetsUpdateListener l : targetUpdateListeners)
             {
                 l.update();
             }
