@@ -4,6 +4,7 @@ import static org.junit.Assert.assertNotNull;
 import static org.mockito.Mockito.mock;
 import hmi.environmentbase.Environment;
 import hmi.xml.XMLTokenizer;
+import ipaaca.InputBuffer;
 import ipaaca.OutputBuffer;
 
 import java.io.IOException;
@@ -26,10 +27,12 @@ import asap.ipaacaembodiments.IpaacaEmbodimentInitStub;
 @PrepareForTest(IpaacaEmbodiment.class)
 public class IpaacaEmbodimentLoaderTest
 {
+    IpaacaEmbodimentInitStub initStub = new IpaacaEmbodimentInitStub();
+    
     @Before
     public void setupEnv() throws Exception
     {
-        IpaacaEmbodimentInitStub.stubInit(mock(OutputBuffer.class));
+        initStub.stubInit(mock(OutputBuffer.class),mock(InputBuffer.class));
     }
     
     @Test
