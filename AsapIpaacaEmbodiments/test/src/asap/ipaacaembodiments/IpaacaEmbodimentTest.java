@@ -1,6 +1,5 @@
 package asap.ipaacaembodiments;
 
-import static hmi.testutil.math.Quat4fTestUtil.assertQuat4fEquals;
 import static hmi.testutil.math.Quat4fTestUtil.assertQuat4fRotationEquivalent;
 import static hmi.testutil.math.Vec3fTestUtil.assertVec3fEquals;
 import static org.hamcrest.Matchers.containsInAnyOrder;
@@ -9,6 +8,7 @@ import static org.junit.Assert.assertThat;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
+import static org.mockito.Mockito.when;
 import hmi.animation.VJoint;
 import hmi.math.Quat4f;
 import hmi.math.Vec3f;
@@ -27,7 +27,6 @@ import org.powermock.modules.junit4.PowerMockRunner;
 
 import com.google.common.collect.ImmutableList;
 import com.google.common.collect.ImmutableMap;
-import static org.mockito.Mockito.when;
 /**
  * Unit tests for the IpaacaEnvironment
  * @author hvanwelbergen
