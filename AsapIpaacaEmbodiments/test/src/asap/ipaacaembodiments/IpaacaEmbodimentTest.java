@@ -12,8 +12,12 @@ import static org.mockito.Mockito.verify;
 import hmi.animation.VJoint;
 import hmi.math.Quat4f;
 import hmi.math.Vec3f;
+import ipaaca.AbstractIU;
+import ipaaca.IUEventType;
+import ipaaca.InputBuffer;
 import ipaaca.LocalIU;
 import ipaaca.OutputBuffer;
+import ipaaca.Payload;
 
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -23,7 +27,7 @@ import org.powermock.modules.junit4.PowerMockRunner;
 
 import com.google.common.collect.ImmutableList;
 import com.google.common.collect.ImmutableMap;
-
+import static org.mockito.Mockito.when;
 /**
  * Unit tests for the IpaacaEnvironment
  * @author hvanwelbergen
@@ -38,9 +42,12 @@ public class IpaacaEmbodimentTest
     private OutputBuffer mockOutBuffer = mock(OutputBuffer.class);
     private static final float PRECISION = 0.001f;
     
+    private InputBuffer mockInBuffer = mock(InputBuffer.class);         
+    private IpaacaEmbodimentInitStub initStub = new IpaacaEmbodimentInitStub();
+
     private void setupEnv() throws Exception
     {
-        IpaacaEmbodimentInitStub.stubInit(mockOutBuffer);
+        initStub.stubInit(mockOutBuffer,mockInBuffer);
         env.initialize();
     }
     
@@ -79,6 +86,50 @@ public class IpaacaEmbodimentTest
         VJoint vj3 = vj2.getChildren().get(0);
         assertVJointHasProperties(vj3, IpaacaEmbodimentInitStub.JOINTS[2], IpaacaEmbodimentInitStub.JOINT_TRANSLATIONS[2], 
                 IpaacaEmbodimentInitStub.JOINT_ROTATIONS[2], vj2);
+    }
+    
+    @Test
+    public void testNotifyAtInit() throws Exception
+    {
+        setupEnv(); 
+        ArgumentCaptor<LocalIU> argument = ArgumentCaptor.forClass(LocalIU.class);
+        verify(mockOutBuffer).add(argument.capture());
+        LocalIU iu = argument.getValue();
+        assertEquals("componentNotify", iu.getCategory());
+        assertEquals("new", iu.getPayload().get("state"));
+    }
+    
+    private void sendNotify(String state)
+    {
+        AbstractIU mockIUNotify = mock(AbstractIU.class);
+        Payload mockNotifyPayload = mock(Payload.class);
+        when(mockIUNotify.getCategory()).thenReturn("componentNotify");
+        when(mockIUNotify.getPayload()).thenReturn(mockNotifyPayload);
+        when(mockInBuffer.getIU("iuNotify")).thenReturn(mockIUNotify);
+        when(mockNotifyPayload.get("state")).thenReturn(state);
+        
+        initStub.callHandlers(mockInBuffer, "iuNotify", false, IUEventType.ADDED, "componentNotify");        
+    }
+    
+    @Test
+    public void testNotifyAtNotifyNew() throws Exception
+    {
+        setupEnv(); 
+        sendNotify("new");
+        ArgumentCaptor<LocalIU> argument = ArgumentCaptor.forClass(LocalIU.class);
+        verify(mockOutBuffer,times(2)).add(argument.capture());
+        LocalIU iu = argument.getAllValues().get(1);
+        assertEquals("componentNotify", iu.getCategory());
+        assertEquals("old", iu.getPayload().get("state"));
+    }
+    
+    @Test
+    public void testNoNotifyAtNotifyOld() throws Exception
+    {
+        setupEnv(); 
+        sendNotify("old");        
+        ArgumentCaptor<LocalIU> argument = ArgumentCaptor.forClass(LocalIU.class);
+        verify(mockOutBuffer,times(1)).add(argument.capture());        
     }
     
     @Test

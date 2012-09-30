@@ -13,6 +13,8 @@ import ipaaca.InputBuffer;
 import ipaaca.OutputBuffer;
 import ipaaca.Payload;
 
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Set;
 
 import org.mockito.invocation.InvocationOnMock;
@@ -57,13 +59,21 @@ public class IpaacaEmbodimentInitStub
         return buf.toString().substring(1);
     }
     
-    public static void stubInit(OutputBuffer outBuffer) throws Exception
+    private List<IUEventHandler> handlers = new ArrayList<>();
+    
+    public void callHandlers(InputBuffer inBuffer, String iuId, boolean x, IUEventType type, String category)
     {
-        final InputBuffer mockInBuffer = mock(InputBuffer.class);         
+        for (IUEventHandler handler : handlers)
+        {
+            handler.call(inBuffer, iuId,x,type,category);
+        }
+    }
+    public void stubInit(final OutputBuffer outBuffer, final InputBuffer inBuffer) throws Exception
+    {
         AbstractIU mockIU = mock(AbstractIU.class);
         Payload mockPayload = mock(Payload.class);
         
-        whenNew(InputBuffer.class).withArguments(anyString(), any(Set.class)).thenReturn(mockInBuffer);
+        whenNew(InputBuffer.class).withArguments(anyString(), any(Set.class)).thenReturn(inBuffer);
         whenNew(OutputBuffer.class).withArguments(anyString()).thenReturn(outBuffer);
         doAnswer(new Answer<Void>(){
 
@@ -71,10 +81,11 @@ public class IpaacaEmbodimentInitStub
             public Void answer(InvocationOnMock invocation) throws Throwable
             {
                 IUEventHandler handler = (IUEventHandler)(invocation.getArguments()[0]);
-                handler.call(mockInBuffer,"iu1", false, IUEventType.ADDED, "jointDataConfigRequest");
+                handlers.add(handler);
+                handler.call(inBuffer,"iu1", false, IUEventType.ADDED, "jointDataConfigRequest");
                 return null;
-            }}).when(mockInBuffer).registerHandler(any(IUEventHandler.class));
-        when(mockInBuffer.getIU("iu1")).thenReturn(mockIU);
+            }}).when(inBuffer).registerHandler(any(IUEventHandler.class));
+        when(inBuffer.getIU("iu1")).thenReturn(mockIU);
         when(mockIU.getPayload()).thenReturn(mockPayload);
         when(mockPayload.get("joints")).thenReturn(toCommaSeperatedString(JOINTS));
         when(mockPayload.get("morphs")).thenReturn(toCommaSeperatedString(MORPHS));
