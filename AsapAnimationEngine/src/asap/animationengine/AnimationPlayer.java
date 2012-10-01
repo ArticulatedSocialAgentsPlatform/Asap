@@ -18,6 +18,7 @@
  ******************************************************************************/
 package asap.animationengine;
 
+import hmi.animation.AdditiveRotationBlend;
 import hmi.animation.Hanim;
 import hmi.animation.Skeleton;
 import hmi.animation.SkeletonPose;

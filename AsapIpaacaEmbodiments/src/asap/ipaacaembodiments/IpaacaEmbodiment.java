@@ -20,7 +20,8 @@ import java.util.EnumSet;
 import java.util.List;
 import java.util.concurrent.atomic.AtomicReference;
 
-import lombok.Getter;
+import javax.annotation.concurrent.GuardedBy;
+
 import lombok.extern.slf4j.Slf4j;
 
 import com.google.common.collect.ImmutableList;
@@ -45,10 +46,10 @@ public class IpaacaEmbodiment implements Embodiment
     private AtomicReference<List<String>> availableMorphs = new AtomicReference<>();
     private AtomicReference<List<String>> availableJoints = new AtomicReference<>();
     private List<String> usedMorphs = new ArrayList<>();
-    private List<String> usedJoints = new ArrayList<>();
-    private List<AvailableTargetsUpdateListener> targetUpdateListeners = new ArrayList<>();
+    private List<String> usedJoints = new ArrayList<>();    
+    private Object rootJointLock = new Object();
     
-    @Getter
+    @GuardedBy("rootJointLock")
     private VJoint rootJoint;
     
     static
@@ -56,11 +57,16 @@ public class IpaacaEmbodiment implements Embodiment
         Initializer.initializeIpaacaRsb();
     }
 
-    public void addTargetUpdateListeners(AvailableTargetsUpdateListener listener)
+    public VJoint getRootJointCopy(String prefix)
     {
-        targetUpdateListeners.add(listener);
+        VJoint copy;
+        synchronized(rootJointLock)
+        {
+            copy = rootJoint.copyTree(prefix);
+        }
+        return copy;
     }
-
+    
     public void setId(String id)
     {
         this.id = id;
@@ -70,7 +76,7 @@ public class IpaacaEmbodiment implements Embodiment
     {
 
     }
-
+    
     public void initialize()
     {
         availableJoints.set(new ArrayList<String>());
@@ -142,6 +148,19 @@ public class IpaacaEmbodiment implements Embodiment
         return res;
     }
 
+    private String getJointMatrices(List<float[]> jointMatrices)
+    {
+        StringBuffer buf = new StringBuffer();
+        for(float[] m:jointMatrices)
+        {
+            buf.append(getMatrix(m));
+            buf.append(" ");
+            buf.append(getMatrix(Mat4f.getIdentity()));   //dummy global matrix
+            buf.append(" ");
+        }
+        return buf.toString().trim();
+    }
+    /*
     private String getJointMatrices(List<VJoint> jointList)
     {
         StringBuffer buf = new StringBuffer();
@@ -168,6 +187,7 @@ public class IpaacaEmbodiment implements Embodiment
         }
         return buf.toString().trim();
     }
+    */
 
     public void waitForAvailableJoints()
     {
@@ -185,7 +205,7 @@ public class IpaacaEmbodiment implements Embodiment
         }
     }
 
-    public void setJointData(List<VJoint> jointList, ImmutableMap<String, Float> morphTargets)
+    public void setJointData(List<float[]>jointLocalMatrices, ImmutableMap<String, Float> morphTargets)
     {
         if (availableJoints.get().isEmpty() && availableMorphs.get().isEmpty())
         {
@@ -207,7 +227,7 @@ public class IpaacaEmbodiment implements Embodiment
         LocalMessageIU iu = new LocalMessageIU();
         iu.setCategory("jointData");
         iu.getPayload().put("morph_data", toSpaceSeperatedList(values));
-        if (jointList.isEmpty())
+        if (jointLocalMatrices.isEmpty())
         {
             // XXX no jointlist: add dummy joint data to force re-render of face
             setUsed(ImmutableList.of(availableJoints.get().get(0)), usedTargets);
@@ -216,7 +236,7 @@ public class IpaacaEmbodiment implements Embodiment
         else
         {
             setUsed(usedJoints, usedTargets);
-            iu.getPayload().put("joint_data", getJointMatrices(jointList));
+            iu.getPayload().put("joint_data", getJointMatrices(jointLocalMatrices));
         }
         synchronized (ipaacaLock)
         {
@@ -327,11 +347,11 @@ public class IpaacaEmbodiment implements Embodiment
 
     private void setAvailableJoints(String[] joints)
     {
+        availableJoints.set(ImmutableList.copyOf(joints));
         synchronized (availableJoints)
         {
             availableJoints.notifyAll();
-        }
-        availableJoints.set(ImmutableList.copyOf(joints));
+        }        
     }
 
     private void setAvailableMorphs(String[] morphs)
@@ -423,15 +443,15 @@ public class IpaacaEmbodiment implements Embodiment
             String[] parents = iu.getPayload().get("joint_parents").split("\\s*,\\s*");
             String[] translations = iu.getPayload().get("joint_translations").split("\\s*,\\s*");
             String[] rotations = iu.getPayload().get("joint_rotations").split("\\s*,\\s*");
-            rootJoint = constructSkeleton(joints, parents, translations, rotations);
-
-            setAvailableJoints(joints);
-            setAvailableMorphs(iu.getPayload().get("morphs").split("\\s*,\\s*"));
-
-            for (AvailableTargetsUpdateListener l : targetUpdateListeners)
+            synchronized(rootJointLock)
             {
-                l.update();
+                rootJoint = constructSkeleton(joints, parents, translations, rotations);
             }
+            
+            
+            setAvailableMorphs(iu.getPayload().get("morphs").split("\\s*,\\s*"));
+            setAvailableJoints(joints);
+            
             log.debug("Available joints received");
         }
     }

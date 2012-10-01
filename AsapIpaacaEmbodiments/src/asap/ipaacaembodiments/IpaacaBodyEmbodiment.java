@@ -1,13 +1,18 @@
 package asap.ipaacaembodiments;
 
+import hmi.animation.AdditiveRotationBlend;
 import hmi.animation.VJoint;
-import hmi.environmentbase.CopyEmbodiment;
+import hmi.animation.VJointUtils;
+import hmi.animationembodiments.SkeletonEmbodiment;
+import hmi.math.Mat4f;
+import hmi.math.Quat4f;
 
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Set;
 
 import javax.annotation.Nullable;
+import javax.annotation.concurrent.GuardedBy;
 
 import lombok.extern.slf4j.Slf4j;
 
@@ -19,27 +24,41 @@ import com.google.common.collect.Lists;
 
 /**
  * Sends joint rotations from its animation joint to a renderer through Ipaaca.
- * Assumes that the animation joint is not changed during the copy(). That is: assumes that there is only one thread accessing animationJoint.
+ * Assumes that the animation joint is not changed during the copy(). That is: assumes that there is only one thread accessing animationJoint, 
+ * and that this same thread calls copy() upon this embodiment. Init constructs the animationjoint and should also be called by the same thread.
+ * 
+ * XXX alternatively: have getAnimationJoint create a copyJoint and copy the transformations from this copyJoint back to the animationJoint at each copy?
  * @author hvanwelbergen
  * 
  */
 @Slf4j
-public class IpaacaBodyEmbodiment implements CopyEmbodiment
+public class IpaacaBodyEmbodiment implements SkeletonEmbodiment
 {
     private final String id;
-    private final VJoint animationJoint;
+    private VJoint animationJoint;
     private IpaacaEmbodiment ipaacaEmbodiment;
     private List<String> availableJoints;
     private List<String> unusedJoints;
     private List<String> usedJoints;
-    private List<VJoint> jointList;// same order as availableJoints
+    
+    
     private Set<String> jointFilter;
     private BiMap<String, String> renamingMap;
+    
+    @GuardedBy("submitJointLock")
+    private VJoint submitJoint;
+    
+    @GuardedBy("submitJointLock")
+    private List<VJoint> jointList;// same order as availableJoints
+    
+    @GuardedBy("submitJointLock")
+    private AdditiveRotationBlend blend;
+    
+    private Object submitJointLock = new Object();
 
-    public IpaacaBodyEmbodiment(String id, VJoint animationJoint, IpaacaEmbodiment ipaacaEmbodiment)
+    public IpaacaBodyEmbodiment(String id, IpaacaEmbodiment ipaacaEmbodiment)
     {
         this.id = id;
-        this.animationJoint = animationJoint;
         this.ipaacaEmbodiment = ipaacaEmbodiment;
     }
 
@@ -61,7 +80,7 @@ public class IpaacaBodyEmbodiment implements CopyEmbodiment
         int i = 0;
         for (String j : availableJoints)
         {
-            VJoint vj = animationJoint.getPart(renamingMap.get(j));
+            VJoint vj = submitJoint.getPart(renamingMap.get(j));
             /*
              * List<String> hanimAll= ImmutableList.of(Hanim.HumanoidRoot, Hanim.r_shoulder,Hanim.l_shoulder, Hanim.r_hip,Hanim.l_hip);
              * if(vj!=null && hanimAll.contains(vj.getSid()))
@@ -87,30 +106,63 @@ public class IpaacaBodyEmbodiment implements CopyEmbodiment
      */
     public void init(BiMap<String, String> renamingMap, Set<String> jointFilter)
     {
+        ipaacaEmbodiment.waitForAvailableJoints();
         this.jointFilter = jointFilter;
         this.renamingMap = renamingMap;
-        updateJointLists();
-        ipaacaEmbodiment.addTargetUpdateListeners(new AvailableTargetsUpdateListener()
+        
+        synchronized (submitJointLock)
         {
+            submitJoint = ipaacaEmbodiment.getRootJointCopy("copy");
 
-            @Override
-            public void update()
+            // apply renaming
+            for (VJoint vj : submitJoint.getParts())
             {
-                updateJointLists();
+                if (renamingMap.get(vj.getSid().replace(" ", "_")) != null)
+                {
+                    vj.setSid(renamingMap.get(vj.getSid().replace(" ", "_")));
+                }
             }
-        });
+
+            VJoint hanimJoint = submitJoint.copyTree("hanim");
+            animationJoint = submitJoint.copyTree("control");
+            for (VJoint vj : animationJoint.getParts())
+            {
+                vj.setRotation(Quat4f.getIdentity());
+            }
+            VJointUtils.setHAnimPose(hanimJoint);
+            blend = new AdditiveRotationBlend(hanimJoint, animationJoint, submitJoint);
+            
+            updateJointLists();
+        }
     }
 
     @Override
     public void copy()
     {
-        animationJoint.calculateMatrices();
-        ipaacaEmbodiment.setJointData(jointList, new ImmutableMap.Builder<String, Float>().build());
+        List<float[]> jointMatrices = new ArrayList<>();
+        synchronized(submitJointLock)
+        {
+            blend.blend();
+            submitJoint.calculateMatrices();
+            for(VJoint vj:jointList)
+            {
+                float m[]=Mat4f.getMat4f();
+                Mat4f.set(m,vj.getLocalMatrix());
+                jointMatrices.add(m);
+            }
+        }
+        ipaacaEmbodiment.setJointData(jointMatrices, new ImmutableMap.Builder<String, Float>().build());
     }
 
     @Override
     public String getId()
     {
         return id;
+    }
+
+    @Override
+    public VJoint getAnimationVJoint()
+    {
+        return animationJoint;
     }
 }

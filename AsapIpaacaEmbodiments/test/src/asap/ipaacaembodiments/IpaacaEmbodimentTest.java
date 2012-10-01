@@ -70,7 +70,7 @@ public class IpaacaEmbodimentTest
         setupEnv();        
         assertThat(env.getAvailableJoints(), containsInAnyOrder(IpaacaEmbodimentInitStub.JOINTS));
         assertThat(env.getAvailableMorphs(), containsInAnyOrder(IpaacaEmbodimentInitStub.MORPHS));
-        VJoint vj = env.getRootJoint();
+        VJoint vj = env.getRootJointCopy("copy");
         assertEquals(IpaacaEmbodimentInitStub.JOINTS[0], vj.getSid());
         
         assertVJointHasProperties(vj, IpaacaEmbodimentInitStub.JOINTS[0], IpaacaEmbodimentInitStub.JOINT_TRANSLATIONS[0], 
@@ -165,8 +165,8 @@ public class IpaacaEmbodimentTest
     public void testSetJointData() throws Exception
     {
         setupEnv();
-        env.setJointData(new ImmutableList.Builder<VJoint>().build(),ImmutableMap.of("morph1",1f,"morph3",2f));
-        env.setJointData(new ImmutableList.Builder<VJoint>().build(),ImmutableMap.of("morph1",2f,"morph3",3f));
+        env.setJointData(new ImmutableList.Builder<float[]>().build(),ImmutableMap.of("morph1",1f,"morph3",2f));
+        env.setJointData(new ImmutableList.Builder<float[]>().build(),ImmutableMap.of("morph1",2f,"morph3",3f));
         
         ArgumentCaptor<LocalIU> argument = ArgumentCaptor.forClass(LocalIU.class);
         verify(mockOutBuffer,times(4)).add(argument.capture());

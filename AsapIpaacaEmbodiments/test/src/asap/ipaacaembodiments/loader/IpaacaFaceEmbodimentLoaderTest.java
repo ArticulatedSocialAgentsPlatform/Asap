@@ -6,7 +6,6 @@ import static org.mockito.Matchers.eq;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
-import hmi.animation.VJoint;
 import hmi.environmentbase.ClockDrivenCopyEnvironment;
 import hmi.environmentbase.Environment;
 import hmi.xml.XMLTokenizer;
@@ -43,6 +42,6 @@ public class IpaacaFaceEmbodimentLoaderTest
         loader.readXML(tok, "id1", "id1", "id1", ImmutableList.of(env).toArray(new Environment[0]), mockEmbodimentLoader);
         assertNotNull(loader.getEmbodiment());
         env.time(0);
-        verify(mockEmbodiment).setJointData(eq(new ImmutableList.Builder<VJoint>().build()), (ImmutableMap<String, Float>)any());
+        verify(mockEmbodiment).setJointData(eq(new ImmutableList.Builder<float[]>().build()), (ImmutableMap<String, Float>)any());
     }
 }
