@@ -28,6 +28,7 @@ import hmi.xml.XMLTokenizer;
 import java.awt.Toolkit;
 import java.awt.event.KeyListener;
 import java.awt.event.WindowEvent;
+import java.awt.event.WindowListener;
 import java.io.IOException;
 import java.lang.reflect.InvocationTargetException;
 import java.util.HashMap;
@@ -240,6 +241,11 @@ public class JFrameEmbodiment implements JComponentEmbodiment, EmbodimentLoader
     {
         theUI.addKeyListener(kl);
         //contentPanel.addKeyListener(kl);
+    }
+    
+    public void addWindowListener(WindowListener wl)
+    {
+        theUI.addWindowListener(wl);
     }
     
     public void addJComponent(JComponent jc)
