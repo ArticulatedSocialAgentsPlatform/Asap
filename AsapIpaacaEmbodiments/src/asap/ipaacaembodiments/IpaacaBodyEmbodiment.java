@@ -5,7 +5,6 @@ import hmi.animation.VJoint;
 import hmi.animation.VJointUtils;
 import hmi.animationembodiments.SkeletonEmbodiment;
 import hmi.math.Mat4f;
-import hmi.math.Quat4f;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -123,13 +122,9 @@ public class IpaacaBodyEmbodiment implements SkeletonEmbodiment
                 }
             }
 
-            VJoint hanimJoint = submitJoint.copyTree("hanim");
-            animationJoint = submitJoint.copyTree("control");
-            for (VJoint vj : animationJoint.getParts())
-            {
-                vj.setRotation(Quat4f.getIdentity());
-            }
+            VJoint hanimJoint = submitJoint.copyTree("hanim");            
             VJointUtils.setHAnimPose(hanimJoint);
+            animationJoint = VJointUtils.createNullRotationCopyTree(hanimJoint,"control");            
             blend = new AdditiveRotationBlend(hanimJoint, animationJoint, submitJoint);
             
             updateJointLists();
