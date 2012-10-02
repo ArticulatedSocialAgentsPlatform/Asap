@@ -1,5 +1,7 @@
 package asap.math;
+import static org.junit.Assert.assertEquals;
 import hmi.math.Vec3f;
+import hmi.testutil.math.Vec3fTestUtil;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -13,6 +15,7 @@ import org.junit.Test;
 public class LinearSystemTest
 {
     final int ROWS = 5;
+    private final float PRECISION = 0.001f;
     
     private List<List<Float>> getA()
     {
@@ -102,34 +105,28 @@ public class LinearSystemTest
     {
         List<List<Float>> A = getA();
         List<float[]> b = getB();
-        System.out.println(LinearSystem.solve(A,b));
+        LinearSystem.solve(A,b);
         List<List<Float>> AOrig = getA();
         List<float[]> bOrig = getB();
         
-        
-        System.out.println(A);
-        System.out.println(AOrig);
-        System.out.println(mul(AOrig,A));
-        
-        System.out.println("--------------bOrig-------------------");
-        for(float[] v:bOrig)
+        //AOrig * A = I => A=AOrig^-1
+        List<List<Float>> N = mul(AOrig,A);
+        for(int i=0;i<N.size();i++)
         {
-            System.out.println(Vec3f.toString(v));
+            for(int j=0;j<N.get(0).size();j++)
+            {
+                if(i==j)assertEquals(1f,N.get(i).get(j),PRECISION);
+                else assertEquals(0f,N.get(i).get(j),PRECISION);
+            }
         }
         
-        System.out.println("--------------b-------------------");
-        for(float[] v:b)
-        {
-            System.out.println(Vec3f.toString(v));
-        }
-        
-        
-        
-        System.out.println("--------------Axb-------------------");
+        //AOrig*b = bOrig 
         List<float[]> Axb = mulVec(AOrig,b);
+        int i=0;
         for(float[] v:Axb)
         {
-            System.out.println(Vec3f.toString(v));
+            Vec3fTestUtil.assertVec3fEquals(bOrig.get(i),v, PRECISION);
+            i++;            
         }           
     }
 }

@@ -1,8 +1,6 @@
 package asap.murml;
 
 import static org.junit.Assert.assertEquals;
-import static org.hamcrest.MatcherAssert.assertThat;
-import org.hamcrest.collection.*;
 
 import org.junit.Test;
 
@@ -21,6 +19,6 @@ public class ValueTest
         String valueScript = "<value xmlns=\"http://www.techfak.uni-bielefeld.de/ags/soa/murml\" type=\"start\" name=\"LocLowerChest LocCenterRight LocNorm\"/>";
         value.readXML(valueScript);
         assertEquals("start", value.getType());
-        assertThat(value.getNames(),IsIterableContainingInOrder.contains("LocLowerChest","LocCenterRight","LocNorm"));
+        assertEquals("LocLowerChest LocCenterRight LocNorm", value.getName());
     }
 }

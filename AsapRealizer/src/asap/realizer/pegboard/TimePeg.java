@@ -26,7 +26,8 @@ import net.jcip.annotations.ThreadSafe;
  * 
  * One can construct OffsetPegs that define a TimePegs that remains at a fixed time offset from a 'regular' TimePeg.
  * 
- * Sub classes should retain thread-safety.
+ * Sub classes should retain thread-safety and need only to implement the get/setLocalTime functions. Global and relative to other block timing is
+ * handled here by utility functions that make use of the local timing functions.
  * 
  * All Time Pegs are declared relative to the start time of a BMLBlock. 
  * @author welberge
@@ -80,7 +81,7 @@ public class TimePeg
     }
     
     /**
-     * Get the 'underlying' TimePeg. Used to get the linked 'real' TimePeg for OffsetPegs, mainly in schedulers.
+     * Get the 'underlying' TimePeg. Used to get the linked 'real' TimePeg for OffsetPegs, AfterPegs, mainly in schedulers.
      */
     public synchronized TimePeg getLink()
     {
@@ -96,12 +97,6 @@ public class TimePeg
         return value;
     }
     
-    public synchronized double getGlobalValue()
-    {
-        if(getLocalValue()==TimePeg.VALUE_UNKNOWN)return TimePeg.VALUE_UNKNOWN;
-        return bmlBlockPeg.getValue()+getLocalValue();
-    }
-    
     /**
      * Set the value of the SynchronisationPoint.
      * @param value the new value
@@ -111,28 +106,43 @@ public class TimePeg
         value = v;
     }
     
+    public final synchronized double getGlobalValue()
+    {
+        if(getLocalValue()==TimePeg.VALUE_UNKNOWN)return TimePeg.VALUE_UNKNOWN;
+        return bmlBlockPeg.getValue()+getLocalValue();
+    }
+    
     /**
      * Set the value of the SynchronisationPoint, relative to p.
      * @param value the new value
      */
-    public synchronized void setValue(double v, BMLBlockPeg p)
+    public final synchronized void setValue(double v, BMLBlockPeg p)
     {
-        value = v+p.getValue()-bmlBlockPeg.getValue();
+        setLocalValue(v+p.getValue()-bmlBlockPeg.getValue());
+    }
+    
+    /**
+     * Get the value of the Synchronization point, relative to p
+     */
+    public final synchronized double getValue(BMLBlockPeg p)
+    {
+        if(getLocalValue()==TimePeg.VALUE_UNKNOWN)return TimePeg.VALUE_UNKNOWN;
+        return getLocalValue()+bmlBlockPeg.getValue()-p.getValue();
     }
     
     /**
      * Set the value of the SynchronisationPoint.
      * @param value the new value
      */
-    public synchronized void setGlobalValue(double v)
+    public final synchronized void setGlobalValue(double v)
     {
         if(v == TimePeg.VALUE_UNKNOWN)
         {
-            value = TimePeg.VALUE_UNKNOWN;
+            setLocalValue(TimePeg.VALUE_UNKNOWN);
         }
         else
         {
-            value = v - bmlBlockPeg.getValue();
+            setLocalValue(v - bmlBlockPeg.getValue());
         }
     }
     

@@ -33,7 +33,7 @@ public class Hns extends XMLStructureAdapter
     private static final float[] UP_VEC = Vec3f.getVec3f(0, 1, 0);
     private static final float[] DOWN_VEC = Vec3f.getVec3f(0, -1, 0);
     private static final float[] LEFT_VEC = Vec3f.getVec3f(1, 0, 0);
-    private static final float[] RIGHT_VEC = Vec3f.getVec3f(1, 0, 0);
+    private static final float[] RIGHT_VEC = Vec3f.getVec3f(-1, 0, 0);
     private static final float[] A_VEC = Vec3f.getVec3f(0, 0, 1);
     private static final float[] T_VEC = Vec3f.getVec3f(0, 0, -1);
 
@@ -134,18 +134,29 @@ public class Hns extends XMLStructureAdapter
     public boolean getHandLocation(String value, float[] location)
     {
         // FIXME: should be converted to the Asap coordinate system
+        String vals[] = value.split("\\s+");
+        String reference = vals[0];
+        String locator = null;
 
         // vector description
-        if (getSymbolValue(HAND_REFERENCES, value) == null)
+        if (getSymbolValue(HAND_REFERENCES, reference) == null)
         {
             return parseVector(value, location);
         }
 
+        if (vals.length >= 2)
+        {
+            locator = vals[1];
+        }
+        else
+        {
+            return false;
+        }
+
         // string description
         boolean distanceRead = false;
-        String distance;
-        String locator = value;
-        if (getSymbolValue(HAND_LOCATORS, locator) != null)
+        String distance = null;
+        if (getSymbolValue(HAND_LOCATORS, locator) == null)
         {
             if (getSymbolValue(HAND_DISTANCES, locator) != null)
             {
@@ -158,19 +169,18 @@ public class Hns extends XMLStructureAdapter
             }
         }
 
-        if (!distanceRead)
+        if (!distanceRead && vals.length >= 2)
         {
-            distance = value;
-            if (getSymbolValue(HAND_DISTANCES, locator) == null)
+            distance = vals[2];
+            if (getSymbolValue(HAND_DISTANCES, distance) == null)
             {
                 log.warn("invalid distance symbol {}, assuming LocNorm", distance);
                 distance = "LocNorm";
-            }
-            else
-            {
-                // "HNS: invalid argument string(s) for hand loc!"
-                return false;
-            }
+            }            
+        }
+        else
+        {
+            return false;
         }
 
         double phi = 0;
@@ -178,23 +188,26 @@ public class Hns extends XMLStructureAdapter
 
         // location referent defines z-coordinate of xy-plane and
         // optionally origin of cylindrical coords within this plane
-        if (getSymbolValue(HAND_REFERENCES, value) != null)
+        if (getSymbolValue(HAND_REFERENCES, reference) != null)
         {
-            location[2] = getSymbolValue(HAND_REFERENCES, value).floatValue();
+            location[2] = getSymbolValue(HAND_REFERENCES, reference).floatValue();
         }
         if (getSymbolValue(HAND_LOCATORS, locator) != null)
         {
             phi = getSymbolValue(HAND_LOCATORS, locator);
         }
-        if (getSymbolValue(HAND_DISTANCES, locator) != null)
+        if (getSymbolValue(HAND_DISTANCES, distance) != null)
         {
-            r = getEllipticDistance(phi, getSymbolValue(HAND_DISTANCES, locator));
+            r = getEllipticDistance(phi, getSymbolValue(HAND_DISTANCES, distance));
         }
         location[0] = (float) (r * Math.cos(Math.toRadians(phi)));
         location[1] = (float) (r * Math.sin(Math.toRadians(phi)));
         return true;
     }
 
+    /**
+     * @return distance, or -1 on failure
+     */
     public double getDistance(String value)
     {
         Double distStr = getSymbolValue(DISTANCES, value);
@@ -202,7 +215,10 @@ public class Hns extends XMLStructureAdapter
         {
             return distStr;
         }
-        throw new RuntimeException("Parsing failure for getDistance of" + value);
+        else
+        {
+            return -1;
+        }
     }
 
     public double getElementExtent(String value)
@@ -238,7 +254,7 @@ public class Hns extends XMLStructureAdapter
     {
         return ShapeSymbols.valueOf(value);
     }
-    
+
     public double getElementRoundness(String value)
     {
         try
@@ -299,6 +315,18 @@ public class Hns extends XMLStructureAdapter
         return 0;
     }
 
+    public boolean isPalmOrientation(String value)
+    {
+        if (getSymbolValue(PALM_ORIENTATIONS, value) == null)
+        {
+            return StringUtil.isNumeric(value);
+        }
+        else
+        {
+            return getSymbolValue(PALM_ORIENTATIONS, value) != null;
+        }
+    }
+
     /**
      * Gets the palm orientation for value, in degrees
      * @param value value, e.g. PalmU or a double
@@ -350,10 +378,10 @@ public class Hns extends XMLStructureAdapter
         double epsilon = (Math.sqrt(a * a - r * r)) / a;
         if (epsilon < 1)
         // Berechnung des Vektors r, der neuen Distanz
-        dist = r / Math.sqrt(1 - epsilon * Math.cos(Math.toDegrees(phi - 90)) * Math.cos(Math.toDegrees(phi - 90)));
+        dist = r / Math.sqrt(1 - epsilon * Math.cos(Math.toRadians(phi - 90)) * Math.cos(Math.toRadians(phi - 90)));
         else
         // Falls >= 1 nehme kleinen Wert
-        dist = r / Math.sqrt(1 - 0.999999 * Math.cos(Math.toDegrees(phi - 90)) * Math.cos(Math.toDegrees(phi - 90)));
+        dist = r / Math.sqrt(1 - 0.999999 * Math.cos(Math.toRadians(phi - 90)) * Math.cos(Math.toRadians(phi - 90)));
         return dist;
     }
 

@@ -314,7 +314,7 @@ public class AsapRealizer
                     + "\n";
             scheduler.warn(new BMLWarningFeedback(bmlId, "Exception", exceptionText));
             return;
-        }
+        }        
         try
         {
             parser.addBehaviourBlock(block);
@@ -335,7 +335,7 @@ public class AsapRealizer
             String exceptionText = "Exception scheduling the BML. " + e + "\n" + Arrays.toString(e.getStackTrace()) + "\n";
             scheduler.warn(new BMLWarningFeedback(block.id, "Scheduling Exception", exceptionText));
             return;
-        }
+        }        
     }
 
     /**

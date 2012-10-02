@@ -8,7 +8,6 @@ import java.util.List;
 
 import lombok.Setter;
 import lombok.extern.slf4j.Slf4j;
-import asap.animationengine.ace.GuidingStroke.GStrokePhaseID;
 
 /**
  * Sequence of GuidingStrokes
@@ -88,6 +87,13 @@ public class GuidingSequence
         return strokes.get(strokes.size() - 1).getEndTime();
     }
 
+    public float[] getEndPos()
+    {
+        float[]result = Vec3f.getVec3f();
+        getEndPos(result);
+        return result;
+    }
+    
     public void getEndPos(float[] result)
     {
         if (strokes.isEmpty())

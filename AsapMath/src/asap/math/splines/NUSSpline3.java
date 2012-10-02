@@ -1,16 +1,14 @@
 package asap.math.splines;
 
+import hmi.math.Vec3f;
+import hmi.util.CollectionUtils;
+
 import java.util.ArrayList;
 import java.util.List;
 
-import asap.math.LinearSystem;
-
-import lombok.Data;
 import lombok.extern.slf4j.Slf4j;
-
-import hmi.math.Vec3f;
-import hmi.util.CollectionUtils;
 import Jama.Matrix;
+import asap.math.LinearSystem;
 
 /**
  * S-Spline with B-Spline blending functions
@@ -27,7 +25,7 @@ public class NUSSpline3 extends NUBSpline3
 
     public float[] getPosition(double fTime)
     {
-        float f[] = c.get(0);
+        float f[] = Vec3f.getVec3f(c.get(0));
         float tmp[] = Vec3f.getVec3f();
         // if (isnan(f[0]) || isnan(f[1]) || isnan(f[2]))
         // {
@@ -63,7 +61,6 @@ public class NUSSpline3 extends NUBSpline3
         Matrix N = new Matrix(n + k, k + 1);
         calcBlendingFunctionsAt(u, N, o);
 
-        S = new float[n + 1];
         float si;
         for (int i = 1; i <= n; i++)
         {
@@ -87,7 +84,7 @@ public class NUSSpline3 extends NUBSpline3
      * times t[0]...t[l]
      * sparse (!) velocities at v[0]...v[k] (k<=l)
      */
-    public void interpolate3(List<float[]> data, List<Float> times, List<SparseVelocityDef> vel)
+    public void interpolate3(List<float[]> data, List<Double> times, List<SparseVelocityDef> vel)
     {
         reset();
 
@@ -107,7 +104,7 @@ public class NUSSpline3 extends NUBSpline3
         for (int i = 1; i <= l; i++)
         {
             // add inner breakpoint
-            float fT;
+            double fT;
             // is not last breakpoint?
             if (i < l) fT = times.get(i);
             else
@@ -118,10 +115,10 @@ public class NUSSpline3 extends NUBSpline3
             m_afTime.add(fT);
 
             // is velocity defined for this breakpoint?
-            if (i < l && i == vel.get(j).getIndex())
+            if (i < l && j<vel.size() && i == vel.get(j).getIndex())
             {
                 // yes -> include twice!
-                float dt = (times.get(i + 1) - times.get(i)) * 1E-5f;
+                double dt = (times.get(i + 1) - times.get(i)) * 1E-5f;
                 m_afTime.add(times.get(i) + dt);
                 j++;
             }
@@ -159,7 +156,7 @@ public class NUSSpline3 extends NUBSpline3
             a.get(i).set(kIdx - 1, (float) N.get(kIdx - 1, k));
 
             // skip double breakpoints due to given velocity constraints
-            if (i == vel.get(j).getIndex())
+            if (j<vel.size() && i == vel.get(j).getIndex())
             {
                 ++j;
                 ++kIdx;
@@ -203,11 +200,13 @@ public class NUSSpline3 extends NUBSpline3
         // cout << "composing vector" << endl;
         // --- compose result vector
         List<float[]> b = new ArrayList<>();
-        CollectionUtils.ensureSize(b, n + 1);
+        CollectionUtils.ensureSize(b, n + 1);        
+        
         for (int i = 0; i <= l; i++)
         {
             // b[i]=data[i];
-            Vec3f.set(b.get(i), data.get(i));
+            //Vec3f.set(b.get(i), data.get(i));
+            b.set(i,Vec3f.getVec3f(data.get(i)));
         }
         for (int i = l + 1; i <= n; i++)
         {

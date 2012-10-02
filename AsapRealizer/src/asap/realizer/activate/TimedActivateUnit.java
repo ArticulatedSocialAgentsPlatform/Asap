@@ -1,8 +1,12 @@
 package asap.realizer.activate;
 
 
+import java.util.List;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+
+import com.google.common.collect.ImmutableList;
 
 import asap.realizer.feedback.FeedbackManager;
 import asap.realizer.pegboard.BMLBlockPeg;
@@ -103,5 +107,11 @@ public class TimedActivateUnit extends TimedAbstractPlanUnit
         {
             logger.warn("Can't set TimePeg for sync {}, only setting start is allowed",syncId);            
         }
+    }
+    
+    @Override
+    public List<String> getAvailableSyncs()
+    {
+        return ImmutableList.of("start","end");
     }
 }

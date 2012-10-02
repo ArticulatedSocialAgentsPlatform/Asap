@@ -1,10 +1,8 @@
 package asap.murml;
 
-import static org.hamcrest.MatcherAssert.assertThat;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
 
-import org.hamcrest.collection.IsIterableContainingInOrder;
 import org.junit.Test;
 
 import asap.murml.testutil.MURMLTestUtil;
@@ -105,8 +103,8 @@ public class MURMLDescriptionTest
         assertEquals(Slot.HandLocation, handLoc.getSlot());
         assertEquals("right_arm", handLoc.getScope());
         DynamicElement dynElem = handLoc.getDynamicElements().get(0);
-        assertThat(dynElem.getNames("start"), IsIterableContainingInOrder.contains("LocLowerChest", "LocCCenter", "LocNorm"));
-        assertThat(dynElem.getNames("end"), IsIterableContainingInOrder.contains("LocStomach", "LocCenterRight", "LocFFar"));
+        assertEquals("LocLowerChest LocCCenter LocNorm", dynElem.getName("start"));
+        assertEquals("LocStomach LocCenterRight LocFFar", dynElem.getName("end"));
     }
 
     @Test

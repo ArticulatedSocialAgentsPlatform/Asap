@@ -18,6 +18,7 @@ import org.junit.Test;
 import asap.realizer.BehaviorNotFoundException;
 import asap.realizer.SyncPointNotFoundException;
 import asap.realizer.TimePegAlreadySetException;
+import asap.realizer.pegboard.BMLBlockPeg;
 import asap.realizer.pegboard.OffsetPeg;
 import asap.realizer.pegboard.TimePeg;
 import asap.realizertestutil.util.TimePegUtil;
@@ -189,6 +190,7 @@ public class PlanManagerTest
         when(mockTimedPlanUnit1.getTime("end")).thenReturn(2d);
         when(mockTimedPlanUnit1.getTimePeg("start")).thenReturn(startPeg);
         when(mockTimedPlanUnit1.getTimePeg("end")).thenReturn(endPeg);
+        when(mockTimedPlanUnit1.getBMLBlockPeg()).thenReturn(BMLBlockPeg.GLOBALPEG);
 
         OffsetPeg peg = planManager.createOffsetPeg("bml1", "planunit1", "stroke");
         assertEquals(startPeg, peg.getLink());
@@ -209,6 +211,7 @@ public class PlanManagerTest
         when(mockTimedPlanUnit1.getTime("end")).thenReturn(2d);
         when(mockTimedPlanUnit1.getTimePeg("start")).thenReturn(startPeg);
         when(mockTimedPlanUnit1.getTimePeg("end")).thenReturn(endPeg);
+        when(mockTimedPlanUnit1.getBMLBlockPeg()).thenReturn(BMLBlockPeg.GLOBALPEG);
 
         OffsetPeg peg = planManager.createOffsetPeg("bml1", "planunit1", "stroke");
         assertEquals(endPeg, peg.getLink());
@@ -228,6 +231,7 @@ public class PlanManagerTest
         when(mockTimedPlanUnit1.getTime("end")).thenReturn(2d);
         when(mockTimedPlanUnit1.getTimePeg("start")).thenReturn(null);
         when(mockTimedPlanUnit1.getTimePeg("end")).thenReturn(endPeg);
+        when(mockTimedPlanUnit1.getBMLBlockPeg()).thenReturn(BMLBlockPeg.GLOBALPEG);
 
         OffsetPeg peg = planManager.createOffsetPeg("bml1", "planunit1", "stroke");
         assertEquals(endPeg, peg.getLink());
@@ -247,6 +251,8 @@ public class PlanManagerTest
         when(mockTimedPlanUnit1.getTime("end")).thenReturn(TimePeg.VALUE_UNKNOWN);
         when(mockTimedPlanUnit1.getTimePeg("start")).thenReturn(startPeg);
         when(mockTimedPlanUnit1.getTimePeg("end")).thenReturn(null);
+        when(mockTimedPlanUnit1.getBMLBlockPeg()).thenReturn(BMLBlockPeg.GLOBALPEG);
+       
 
         OffsetPeg peg = planManager.createOffsetPeg("bml1", "planunit1", "stroke");
         assertEquals(startPeg, peg.getLink());

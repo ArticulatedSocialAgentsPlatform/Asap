@@ -32,6 +32,7 @@ import asap.realizer.pegboard.PegBoard;
 import asap.realizer.scheduler.LinearStretchResolver;
 import asap.realizer.scheduler.TimePegAndConstraint;
 import asap.realizer.scheduler.UniModalResolver;
+
 /**
  * A TimedAnimationUnit implementation that delegates the motion execution etc to an AnimationUnit
  * 
@@ -44,16 +45,23 @@ public class TimedAnimationMotionUnit extends TimedMotionUnit implements TimedAn
 {
     private final AnimationUnit mu;
     private final UniModalResolver resolver = new LinearStretchResolver();
-    protected final PegBoard pegBoard;    
-    public Set<String> getKinematicJoints(){return mu.getKinematicJoints();}
-    public Set<String> getPhysicalJoints(){return mu.getPhysicalJoints();};
-    
-    
-    public void resolveSynchs(BMLBlockPeg bbPeg, Behaviour b, List<TimePegAndConstraint> sac)throws BehaviourPlanningException
+    protected final PegBoard pegBoard;
+
+    public Set<String> getKinematicJoints()
+    {
+        return mu.getKinematicJoints();
+    }
+
+    public Set<String> getPhysicalJoints()
+    {
+        return mu.getPhysicalJoints();
+    };
+
+    public void resolveSynchs(BMLBlockPeg bbPeg, Behaviour b, List<TimePegAndConstraint> sac) throws BehaviourPlanningException
     {
         resolver.resolveSynchs(bbPeg, b, sac, this);
     }
-
+    
     /**
      * Constructor
      * @param bmlBlockPeg
@@ -63,7 +71,7 @@ public class TimedAnimationMotionUnit extends TimedMotionUnit implements TimedAn
      */
     public TimedAnimationMotionUnit(FeedbackManager bbf, BMLBlockPeg bmlBlockPeg, String bmlId, String id, AnimationUnit m, PegBoard pb)
     {
-        super(bbf, bmlBlockPeg, bmlId, id, m );        
+        super(bbf, bmlBlockPeg, bmlId, id, m);
         mu = m;
         pegBoard = pb;
     }
@@ -73,9 +81,8 @@ public class TimedAnimationMotionUnit extends TimedMotionUnit implements TimedAn
         this(NullFeedbackManager.getInstance(), bmlBlockPeg, bmlId, id, m, pb);
     }
 
-    
     public void updateTiming(double time) throws TMUPlayException
     {
-        
-    }        
+
+    }
 }

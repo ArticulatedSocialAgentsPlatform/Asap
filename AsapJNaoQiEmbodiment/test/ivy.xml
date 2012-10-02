@@ -2,6 +2,6 @@
    <info organisation="HMI" module="HmiJnaoQiEmbodimentTest"/>
    <dependencies >
     <dependency org="mockito"   name="mockito-all"            rev="latest.release"  />
-      <dependency org="junit" name="junit"  rev="latest.release" />      
+      <dependency org="junit" name="junit-dep"  rev="latest.release" />      
    </dependencies>
 </ivy-module>

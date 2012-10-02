@@ -69,6 +69,7 @@ import asap.audioengine.TimedAbstractAudioUnit;
 import asap.bml.ext.bmlt.BMLTBMLBehaviorAttributes;
 import asap.bml.ext.bmlt.BMLTInfo;
 import asap.bml.feedback.BMLWarningListener;
+import asap.hns.Hns;
 import asap.realizer.AsapRealizer;
 import asap.realizer.DefaultEngine;
 import asap.realizer.DefaultPlayer;
@@ -312,7 +313,10 @@ public class SchedulerParameterizedIntegrationTest
                 new DefaultTimedPlanUnitPlayer(), pegBoard);
         AnimationPlayer aPlayer = new AnimationPlayer(human, human, human, m, 0.001f, animationPlanPlayer);
         pose.setAnimationPlayer(aPlayer);
-        AnimationPlanner ap = new AnimationPlanner(bfm, aPlayer, gestureBinding, animationPlanManager, pegBoard);
+        
+        Hns hns = new Hns();
+        hns.readXML(gres.getReader("Humanoids/shared/hns/hns.xml"));
+        AnimationPlanner ap = new AnimationPlanner(bfm, aPlayer, gestureBinding, hns, animationPlanManager, pegBoard);
         Engine animationEngine = new DefaultEngine<TimedAnimationUnit>(ap, aPlayer, animationPlanManager);
 
         SystemClock clock = new SystemClock();
@@ -360,6 +364,7 @@ public class SchedulerParameterizedIntegrationTest
     }
 
     
+    
     @Test(timeout = SCHEDULE_TIMEOUT)
     public void timepegTestSpeechEndTimed()
     {
@@ -377,6 +382,7 @@ public class SchedulerParameterizedIntegrationTest
     public void timepegTestNod()
     {
         readXML("testnod.xml");
+        assertNoWarnings();
         TimePeg nod1Start = pegBoard.getTimePeg("bml1", "nod1", "start");
         nod1Start.setGlobalValue(1);
         Engine aEngine = realizer.getEngine(HeadBehaviour.class);
@@ -437,6 +443,29 @@ public class SchedulerParameterizedIntegrationTest
         assertEquals(3, pegBoard.getRelativePegTime("bml1", "shift1", "end"), PEGBOARD_PRECISION);
     }
     
+    @Test(timeout = SCHEDULE_TIMEOUT)
+    public void testMurmlPalmOrientation()
+    {
+        readXML("murml/murmlpalmorientation.xml");
+        assertNoWarnings();
+        assertEquals(2, pegBoard.getRelativePegTime("bml1", "gesture1", "start"), PEGBOARD_PRECISION);
+    }
+    
+    @Test(timeout = SCHEDULE_TIMEOUT)
+    public void testMurmlRelativePalmOrientation()
+    {
+        readXML("murml/murmlrelativepalmorientation.xml");
+        assertNoWarnings();
+        assertEquals(2, pegBoard.getRelativePegTime("bml1", "gesture1", "start"), PEGBOARD_PRECISION);
+    }
+    
+    @Test(timeout = SCHEDULE_TIMEOUT)
+    public void testMurmlHandLocation()
+    {
+        readXML("murml/murmlhandlocation.xml");
+        assertNoWarnings();
+        assertEquals(0, pegBoard.getRelativePegTime("bml1", "gesture1", "start"), PEGBOARD_PRECISION);
+    }
 
     @Test(timeout = SCHEDULE_TIMEOUT)
     public void bmltDummyAnticipatorTest()

@@ -26,6 +26,8 @@ public class HnsTest
       "<symbols>"+
         "<symbol class=\"handReferences\" name=\"LocAboveHead\" value=\"60\"/>"+
         "<symbol class=\"handReferences\" name=\"LocHead\" value=\"54\"/>" +
+        "<symbol class=\"handLocators\" name=\"LocCenterLeft\" value=\"25\"/>"+
+        "<symbol class=\"handDistances\" name=\"LocFar\" value=\"25\"/>"+
         
         "<symbol class=\"offset\" name=\"ellipticDistance\" value=\"100\"/>"+
         "<symbol class=\"palmOrientations\" name=\"PalmL\" value=\"180.0\"/>"+
@@ -53,8 +55,16 @@ public class HnsTest
     @Test
     public void testGetHandLocation()
     {
-        assertTrue(hns.getHandLocation("LocAboveHead", location));
+        assertTrue(hns.getHandLocation("LocAboveHead dummy dummy", location));
         assertVec3fEquals(0,0,60,location,PRECISION);
+    }
+    
+    @Test
+    public void testGetHandLocation2()
+    {
+        assertTrue(hns.getHandLocation("LocAboveHead LocCenterLeft LocFar", location));
+        //values from C++ version
+        assertVec3fEquals(24.9453f,11.6322f,60f,location,PRECISION);
     }
     
     @Test

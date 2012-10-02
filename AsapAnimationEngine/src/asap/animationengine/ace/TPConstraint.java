@@ -11,7 +11,7 @@ import lombok.Getter;
  */
 public class TPConstraint implements Comparable<TPConstraint>
 {
-    enum Mode
+    public enum Mode
     {
         Rigorous(0), Medium(0.5), Soft(1.0);
 
@@ -42,7 +42,21 @@ public class TPConstraint implements Comparable<TPConstraint>
         mode = Mode.Soft.getValue();
         defined = false;
     }
-
+    
+    public TPConstraint(double t)
+    {
+        time = t;
+        mode = Mode.Soft.getValue();
+        defined = true;
+    }
+    
+    public TPConstraint(double t, Mode m)
+    {
+        time = t;
+        mode = m.getValue();
+        defined = true;
+    }
+    
     public TPConstraint(double t, double m)
     {
         time = t;

@@ -98,7 +98,7 @@ public class LinearStretchResolver implements UniModalResolver
                             }
                             catch (SyncPointNotFoundException e)
                             {
-                                throw new BehaviourPlanningException(b, "RelativeSyncNotFoundException", e);
+                                throw new BehaviourPlanningException(b, "RelativeSyncNotFoundException "+syncId, e);
                             }
                         }
                         if (pu.getTimePeg(syncId).getLink() == s.peg.getLink())
@@ -109,7 +109,7 @@ public class LinearStretchResolver implements UniModalResolver
                             }
                             catch (SyncPointNotFoundException e)
                             {
-                                throw new BehaviourPlanningException(b, "RelativeSyncNotFoundException", e);
+                                throw new BehaviourPlanningException(b, "RelativeSyncNotFoundException "+syncId, e);
                             }
                         }
                     }
@@ -166,7 +166,7 @@ public class LinearStretchResolver implements UniModalResolver
                     }
                     catch (SyncPointNotFoundException e)
                     {
-                        throw new BehaviourPlanningException(b, "RelativeSyncNotFoundException", e);
+                        throw new BehaviourPlanningException(b, "RelativeSyncNotFoundException "+sacNext.syncId, e);
                     }
                     double nextTime = pu.getTime(sacNext.syncId);
                     double tStart = nextTime - nextKey * avgStretch * pu.getPreferedDuration();
@@ -214,7 +214,7 @@ public class LinearStretchResolver implements UniModalResolver
                     }
                     catch (SyncPointNotFoundException e)
                     {
-                        throw new BehaviourPlanningException(b, "RelativeSyncNotFoundException", e);
+                        throw new BehaviourPlanningException(b, "RelativeSyncNotFoundException "+sacPrev.syncId, e);
                     }
                     double keyNext = 1;
                     double keyCurr;
@@ -224,7 +224,7 @@ public class LinearStretchResolver implements UniModalResolver
                     }
                     catch (SyncPointNotFoundException e)
                     {
-                        throw new BehaviourPlanningException(b, "RelativeSyncNotFoundException", e);
+                        throw new BehaviourPlanningException(b, "RelativeSyncNotFoundException "+sacEnd.syncId, e);
                     }
                     double timePrev = pu.getTime(sacPrev.syncId);
                     double timeNext = timePrev + (keyNext - keyPrev) * avgStretch * pu.getPreferedDuration();
@@ -262,7 +262,7 @@ public class LinearStretchResolver implements UniModalResolver
                     }
                     catch (SyncPointNotFoundException e)
                     {
-                        throw new BehaviourPlanningException(b, "RelativeSyncNotFoundException", e);
+                        throw new BehaviourPlanningException(b, "RelativeSyncNotFoundException "+sacPrev.syncId, e);
                     }
                     double keyNext;
                     try
@@ -271,7 +271,7 @@ public class LinearStretchResolver implements UniModalResolver
                     }
                     catch (SyncPointNotFoundException e)
                     {
-                        throw new BehaviourPlanningException(b, "RelativeSyncNotFoundException", e);
+                        throw new BehaviourPlanningException(b, "RelativeSyncNotFoundException "+sacNext.syncId, e);
                     }
                     double keyCurr;
                     try
@@ -280,7 +280,7 @@ public class LinearStretchResolver implements UniModalResolver
                     }
                     catch (SyncPointNotFoundException e)
                     {
-                        throw new BehaviourPlanningException(b, "RelativeSyncNotFoundException", e);
+                        throw new BehaviourPlanningException(b, "RelativeSyncNotFoundException "+s.syncId, e);
                     }
                     double timePrev = pu.getTime(sacPrev.syncId);
                     double timeNext = pu.getTime(sacNext.syncId);
@@ -301,7 +301,7 @@ public class LinearStretchResolver implements UniModalResolver
                 }
                 catch (SyncPointNotFoundException e)
                 {
-                    throw new BehaviourPlanningException(b, "RelativeSyncNotFoundException", e);
+                    throw new BehaviourPlanningException(b, "RelativeSyncNotFoundException "+sacEnd.syncId, e);
                 }
                 double keyEnd;
                 try
@@ -310,7 +310,7 @@ public class LinearStretchResolver implements UniModalResolver
                 }
                 catch (SyncPointNotFoundException e)
                 {
-                    throw new BehaviourPlanningException(b, "RelativeSyncNotFoundException", e);
+                    throw new BehaviourPlanningException(b, "RelativeSyncNotFoundException end", e);
                 }
                 OffsetPeg op = new OffsetPeg(pu.getTimePeg(sacEnd.syncId), (keyEnd - keyPrev) * avgStretch * pu.getPreferedDuration());
                 pu.setTimePeg("end", op);

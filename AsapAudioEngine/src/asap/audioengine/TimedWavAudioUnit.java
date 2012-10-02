@@ -5,9 +5,12 @@ package asap.audioengine;
 import hmi.audioenvironment.*;
 
 import java.io.InputStream;
+import java.util.List;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+
+import com.google.common.collect.ImmutableList;
 
 import asap.realizer.feedback.FeedbackManager;
 import asap.realizer.pegboard.BMLBlockPeg;
@@ -164,5 +167,11 @@ public class TimedWavAudioUnit extends TimedAbstractAudioUnit
         {
             throw wrapIntoPlanUnitParameterNotFoundException(e);
         }
+    }
+
+    @Override
+    public List<String> getAvailableSyncs()
+    {
+        return ImmutableList.of("start","end");
     }
 }
