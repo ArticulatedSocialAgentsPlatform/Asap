@@ -344,11 +344,11 @@ public class IpaacaEmbodiment implements Embodiment
         @Override
         public void handle(AbstractIU iu, IUEventType type, boolean local)
         {
+            log.info("IpaacaEmbodiment Notified");
             if (iu.getPayload().get("state").equals("new"))
             {
                 submitNotify(false);
-            }
-            log.debug("Notified IpaacaEmbodiment");
+            }            
         }
 
     }
@@ -419,6 +419,8 @@ public class IpaacaEmbodiment implements Embodiment
         @Override
         public void handle(AbstractIU iu, IUEventType type, boolean local)
         {
+            log.info("IpaacaEmbodiment jointDataConfigRequest, morphs: {}",iu.getPayload().get("morphs"));
+            
             String[] joints = iu.getPayload().get("joints").split("\\s*,\\s*");
             String[] parents = iu.getPayload().get("joint_parents").split("\\s*,\\s*");
             String[] translations = iu.getPayload().get("joint_translations").split("\\s*,\\s*");
