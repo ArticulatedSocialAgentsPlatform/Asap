@@ -104,7 +104,6 @@ public class NaoEngineLoader implements EngineLoader
       }
       catch (Exception e)
       {
-          e.printStackTrace();
           throw new RuntimeException("Cannnot load NaoBinding: " + e);
       }      
       tokenizer.takeEmptyElement("NaoBinding");
