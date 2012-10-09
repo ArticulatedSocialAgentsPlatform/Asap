@@ -1,6 +1,5 @@
 package asap.ipaacaembodiments;
 
-import hmi.faceanimation.FaceController;
 import hmi.faceembodiments.FaceEmbodiment;
 
 /**
@@ -36,7 +35,7 @@ public class IpaacaFaceEmbodiment implements FaceEmbodiment
     }   
 
     @Override
-    public FaceController getFaceController()
+    public IpaacaFaceController getFaceController()
     {
         return fc;
     }

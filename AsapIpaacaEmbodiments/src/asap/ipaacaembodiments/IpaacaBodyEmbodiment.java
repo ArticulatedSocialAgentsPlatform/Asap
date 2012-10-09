@@ -26,6 +26,8 @@ import com.google.common.collect.Lists;
  * Assumes that the animation joint is not changed during the copy(). That is: assumes that there is only one thread accessing animationJoint, 
  * and that this same thread calls copy() upon this embodiment. Init constructs the animationjoint and should also be called by the same thread.
  * 
+ * Also assumes no other animation (e.g. on the face) is used. Use the IpaacaFaceAndBodyEmbodiment if the face is also to be animated.
+ * 
  * XXX alternatively: have getAnimationJoint create a copyJoint and copy the transformations from this copyJoint back to the animationJoint at each copy?
  * @author hvanwelbergen
  * 
@@ -131,8 +133,7 @@ public class IpaacaBodyEmbodiment implements SkeletonEmbodiment
         }
     }
 
-    @Override
-    public void copy()
+    protected List<float[]> getJointMatrices()
     {
         List<float[]> jointMatrices = new ArrayList<>();
         synchronized(submitJointLock)
@@ -146,7 +147,13 @@ public class IpaacaBodyEmbodiment implements SkeletonEmbodiment
                 jointMatrices.add(m);
             }
         }
-        ipaacaEmbodiment.setJointData(jointMatrices, new ImmutableMap.Builder<String, Float>().build());
+        return jointMatrices;
+    }
+    
+    @Override
+    public void copy()
+    {
+        ipaacaEmbodiment.setJointData(getJointMatrices(), new ImmutableMap.Builder<String, Float>().build());
     }
 
     @Override
