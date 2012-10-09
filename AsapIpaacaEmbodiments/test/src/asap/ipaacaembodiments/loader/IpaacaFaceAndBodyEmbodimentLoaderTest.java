@@ -14,17 +14,17 @@ import java.io.IOException;
 
 import org.junit.Test;
 
-import asap.ipaacaembodiments.IpaacaEmbodiment;
-
 import com.google.common.collect.ImmutableList;
 import com.google.common.collect.ImmutableMap;
 
+import asap.ipaacaembodiments.IpaacaEmbodiment;
+
 /**
- * Unit tests for the IpaacaFaceEmbodimentLoader
+ * Loads an IpaacaFaceAndBodyEmbodiment
  * @author hvanwelbergen
  *
  */
-public class IpaacaFaceEmbodimentLoaderTest
+public class IpaacaFaceAndBodyEmbodimentLoaderTest
 {
     private IpaacaEmbodimentLoader mockEmbodimentLoader = mock(IpaacaEmbodimentLoader.class);
     private IpaacaEmbodiment mockEmbodiment = mock(IpaacaEmbodiment.class);
@@ -34,14 +34,16 @@ public class IpaacaFaceEmbodimentLoaderTest
     public void test() throws IOException
     {
         when(mockEmbodimentLoader.getEmbodiment()).thenReturn(mockEmbodiment);
-        String str = "<Loader id=\"ipaacafaceembodiment\" loader=\"asap.ipaacaembodiments.loader.IpaacaFaceEmbodimentLoader\"/>";
+        String str = "<Loader id=\"ipaacabodyandfaceembodiment\" loader=\"asap.ipaacaembodiments.loader.IpaacaFaceAndBodyEmbodimentLoader\">"+
+        "<renaming renamingFile=\"billierenaming.txt\"/>"+
+        "</Loader>";
         ClockDrivenCopyEnvironment env = new ClockDrivenCopyEnvironment(20);
-        IpaacaFaceEmbodimentLoader loader = new IpaacaFaceEmbodimentLoader();
+        IpaacaFaceAndBodyEmbodimentLoader loader = new IpaacaFaceAndBodyEmbodimentLoader();
         XMLTokenizer tok = new XMLTokenizer(str);
         tok.takeSTag();
         loader.readXML(tok, "id1", "id1", "id1", ImmutableList.of(env).toArray(new Environment[0]), mockEmbodimentLoader);
         assertNotNull(loader.getEmbodiment());
         env.time(0);
-        verify(mockEmbodiment).setJointData(eq(new ImmutableList.Builder<float[]>().build()), any(ImmutableMap.class));
+        verify(mockEmbodiment).setJointData(any(ImmutableList.class), any(ImmutableMap.class));
     }
 }

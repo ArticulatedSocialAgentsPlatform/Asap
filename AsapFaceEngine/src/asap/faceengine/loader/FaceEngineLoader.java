@@ -117,16 +117,10 @@ public class FaceEngineLoader implements EngineLoader
         {
             attrMap = tokenizer.getAttributes();
             facebinding = new FaceBinding();
-            try
-            {
-                facebinding.readXML(new Resources(adapter.getOptionalAttribute("resources", attrMap, "")).getReader(adapter
-                        .getRequiredAttribute("filename", attrMap, tokenizer)));
-            }
-            catch (Exception e)
-            {
-                e.printStackTrace();
-                throw new RuntimeException("Cannnot load FaceBinding: " + e);
-            }
+            
+            String resourcePath = adapter.getOptionalAttribute("resources", attrMap, "");
+            String fileName = adapter.getRequiredAttribute("filename", attrMap, tokenizer);
+            facebinding.readXML(new Resources(resourcePath).getReader(fileName));
             tokenizer.takeEmptyElement("FaceBinding");
         }
         else if (tokenizer.atSTag("FACSConverterData"))
