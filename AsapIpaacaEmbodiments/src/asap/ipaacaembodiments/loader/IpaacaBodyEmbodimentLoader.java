@@ -6,6 +6,7 @@ import hmi.environmentbase.Embodiment;
 import hmi.environmentbase.EmbodimentLoader;
 import hmi.environmentbase.Environment;
 import hmi.environmentbase.Loader;
+import hmi.util.ArrayUtils;
 import hmi.xml.XMLScanException;
 import hmi.xml.XMLStructureAdapter;
 import hmi.xml.XMLTokenizer;
@@ -14,7 +15,6 @@ import java.io.IOException;
 import java.util.HashMap;
 
 import asap.ipaacaembodiments.IpaacaBodyEmbodiment;
-import asap.ipaacaembodiments.IpaacaEmbodiment;
 
 import com.google.common.collect.BiMap;
 
@@ -41,39 +41,24 @@ public class IpaacaBodyEmbodimentLoader implements EmbodimentLoader
             Loader... requiredLoaders) throws IOException
     {
         id = loaderId;
-        ClockDrivenCopyEnvironment copyEnv = null;
-
-        IpaacaEmbodiment ipEmb = null;        
-        for (Loader l : requiredLoaders)
-        {
-            if (l instanceof IpaacaEmbodimentLoader)
-            {
-                ipEmb = ((IpaacaEmbodimentLoader) l).getEmbodiment();
-            }
-        }
-        for (Environment env : environments)
-        {
-            if (env instanceof ClockDrivenCopyEnvironment)
-            {
-                copyEnv = (ClockDrivenCopyEnvironment) env;
-            }
-        }
-
+        
+        ClockDrivenCopyEnvironment copyEnv = ArrayUtils.getFirstClassOfType(environments, ClockDrivenCopyEnvironment.class);
+        IpaacaEmbodimentLoader ldr = ArrayUtils.getFirstClassOfType(requiredLoaders, IpaacaEmbodimentLoader.class);
         if (copyEnv == null)
         {
             throw new XMLScanException("IpaacaBodyEmbodimentLoader requires an ClockDrivenCopyEnvironment");
         }
-
+        
+        if (ldr == null)
+        {
+            throw new XMLScanException("IpaacaBodyEmbodimentLoader requires an IpaacaEmbodimentLoader");
+        }
+        
         while (!tokenizer.atETag("Loader"))
         {
             readSection(tokenizer);
         }
-
-        if (ipEmb == null)
-        {
-            throw new XMLScanException("IpaacaBodyEmbodimentLoader requires an IpaacaEmbodimentLoader");
-        }
-        embodiment = new IpaacaBodyEmbodiment(id, ipEmb);
+        embodiment = new IpaacaBodyEmbodiment(id, ldr.getEmbodiment());
         
         if (renamingFile == null)
         {

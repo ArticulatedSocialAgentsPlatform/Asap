@@ -4,12 +4,12 @@ import hmi.environmentbase.ClockDrivenCopyEnvironment;
 import hmi.environmentbase.EmbodimentLoader;
 import hmi.environmentbase.Environment;
 import hmi.environmentbase.Loader;
+import hmi.util.ArrayUtils;
 import hmi.xml.XMLScanException;
 import hmi.xml.XMLTokenizer;
 
 import java.io.IOException;
 
-import asap.ipaacaembodiments.IpaacaEmbodiment;
 import asap.ipaacaembodiments.IpaacaFaceController;
 import asap.ipaacaembodiments.IpaacaFaceEmbodiment;
 
@@ -34,34 +34,20 @@ public class IpaacaFaceEmbodimentLoader implements EmbodimentLoader
             Loader... requiredLoaders) throws IOException
     {
         this.id = loaderId;
-        ClockDrivenCopyEnvironment copyEnv=null;
         
-        IpaacaEmbodiment ipEmb = null;
-        for (Loader l : requiredLoaders)
-        {
-            if (l instanceof IpaacaEmbodimentLoader)
-            {
-                ipEmb = ((IpaacaEmbodimentLoader) l).getEmbodiment();
-            }
-        }
-        for (Environment env: environments)
-        {
-            if(env instanceof ClockDrivenCopyEnvironment)
-            {
-                copyEnv = (ClockDrivenCopyEnvironment)env;                
-            }
-        }
+        ClockDrivenCopyEnvironment copyEnv = ArrayUtils.getFirstClassOfType(environments, ClockDrivenCopyEnvironment.class);
+        IpaacaEmbodimentLoader ldr = ArrayUtils.getFirstClassOfType(requiredLoaders, IpaacaEmbodimentLoader.class); 
         
         if(copyEnv == null)
         {
             throw new XMLScanException("IpaacaFaceEmbodimentLoader requires an ClockDrivenCopyEnvironment");
         }
         
-        if(ipEmb == null)
+        if(ldr == null)
         {
             throw new XMLScanException("IpaacaFaceEmbodimentLoader requires an IpaacaEmbodimentLoader");
         }
-        IpaacaFaceController fc = new IpaacaFaceController(ipEmb);
+        IpaacaFaceController fc = new IpaacaFaceController(ldr.getEmbodiment());
         embodiment = new IpaacaFaceEmbodiment(fc);
         copyEnv.addCopyEmbodiment(embodiment);
     }

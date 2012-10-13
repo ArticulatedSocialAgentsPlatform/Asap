@@ -1,19 +1,26 @@
 package asap.ipaacaembodiments.loader;
 
-import java.io.IOException;
-import java.util.HashMap;
-
-import asap.ipaacaembodiments.IpaacaEmbodiment;
-import asap.ipaacaembodiments.IpaacaFaceAndBodyEmbodiment;
-
+import hmi.animation.RenamingMap;
 import hmi.environmentbase.ClockDrivenCopyEnvironment;
 import hmi.environmentbase.Embodiment;
 import hmi.environmentbase.EmbodimentLoader;
 import hmi.environmentbase.Environment;
 import hmi.environmentbase.Loader;
+import hmi.util.ArrayUtils;
 import hmi.xml.XMLScanException;
 import hmi.xml.XMLStructureAdapter;
 import hmi.xml.XMLTokenizer;
+
+import java.io.IOException;
+import java.util.HashMap;
+
+import asap.ipaacaembodiments.IpaacaBodyEmbodiment;
+import asap.ipaacaembodiments.IpaacaEmbodiment;
+import asap.ipaacaembodiments.IpaacaFaceAndBodyEmbodiment;
+import asap.ipaacaembodiments.IpaacaFaceController;
+import asap.ipaacaembodiments.IpaacaFaceEmbodiment;
+
+import com.google.common.collect.BiMap;
 
 /**
  * Loader for the IpaacaFaceAndBodyEmbodiment
@@ -38,40 +45,32 @@ public class IpaacaFaceAndBodyEmbodimentLoader implements EmbodimentLoader
     {
         id = loaderId;
         
-        ClockDrivenCopyEnvironment copyEnv = null;
-
-        IpaacaEmbodiment ipEmb = null;
-        for (Loader l : requiredLoaders)
-        {
-            if (l instanceof IpaacaEmbodimentLoader)
-            {
-                ipEmb = ((IpaacaEmbodimentLoader) l).getEmbodiment();
-            }
-        }
-        for (Environment env : environments)
-        {
-            if (env instanceof ClockDrivenCopyEnvironment)
-            {
-                copyEnv = (ClockDrivenCopyEnvironment) env;
-            }
-        }
-
+        ClockDrivenCopyEnvironment copyEnv = ArrayUtils.getFirstClassOfType(environments, ClockDrivenCopyEnvironment.class);
+        IpaacaEmbodimentLoader ldr = ArrayUtils.getFirstClassOfType(requiredLoaders, IpaacaEmbodimentLoader.class); 
+        
         if (copyEnv == null)
         {
             throw new XMLScanException("IpaacaFaceAndBodyEmbodimentLoader requires an ClockDrivenCopyEnvironment");
         }
-
-        while (!tokenizer.atETag("Loader"))
-        {
-            readSection(tokenizer);
-        }
-
-        if (ipEmb == null)
+        
+        if (ldr == null)
         {
             throw new XMLScanException("IpaacaFaceAndBodyEmbodimentLoader requires an IpaacaEmbodimentLoader");
         }
+        while (!tokenizer.atETag("Loader"))
+        {
+            readSection(tokenizer);
+        }     
         
-        
+        IpaacaEmbodiment ipEmb = ldr.getEmbodiment();
+        BiMap<String, String> renamingMap = RenamingMap.renamingMapFromFileOnClasspath(renamingFile);
+        IpaacaFaceController fc = new IpaacaFaceController(ldr.getEmbodiment());
+        IpaacaFaceEmbodiment faceEmbodiment = new IpaacaFaceEmbodiment(fc);        
+        IpaacaBodyEmbodiment bodyEmbodiment = new IpaacaBodyEmbodiment(id, ipEmb);
+        bodyEmbodiment.init(renamingMap, renamingMap.values());
+        embodiment = new IpaacaFaceAndBodyEmbodiment(id, ipEmb, faceEmbodiment,bodyEmbodiment);
+           
+        copyEnv.addCopyEmbodiment(embodiment);
     }
 
     protected void readSection(XMLTokenizer tokenizer) throws IOException
