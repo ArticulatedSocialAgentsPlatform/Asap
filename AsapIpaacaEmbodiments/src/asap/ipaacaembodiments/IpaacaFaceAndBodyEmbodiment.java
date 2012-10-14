@@ -29,7 +29,7 @@ public class IpaacaFaceAndBodyEmbodiment implements SkeletonEmbodiment, FaceEmbo
     @Override
     public void copy()
     {
-        ipaacaEmbodiment.setJointData(bodyEmbodiment.getJointMatrices(), faceEmbodiment.getFaceController().getDesiredMorphTargets());
+        ipaacaEmbodiment.setJointData(bodyEmbodiment.getJointMatrices(), faceEmbodiment.getDesiredMorphTargets());
     }
 
     @Override

@@ -37,7 +37,7 @@ public class IpaacaMorphFaceController implements MorphFaceController
     @Override
     public void copy()
     {
-        embodiment.setJointData(new ImmutableList.Builder<float[]>().build(), morphTargetHandler.getDesiredMorphTargets());        
+        embodiment.setJointData(new ImmutableList.Builder<float[]>().build(), getDesiredMorphTargets());        
     }
 
 }

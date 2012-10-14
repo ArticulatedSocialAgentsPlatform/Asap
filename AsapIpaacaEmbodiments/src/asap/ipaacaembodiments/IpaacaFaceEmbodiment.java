@@ -1,5 +1,7 @@
 package asap.ipaacaembodiments;
 
+import com.google.common.collect.ImmutableMap;
+
 import hmi.faceembodiments.FaceEmbodiment;
 
 /**
@@ -34,6 +36,11 @@ public class IpaacaFaceEmbodiment implements FaceEmbodiment
         return id;
     }   
 
+    public ImmutableMap<String, Float> getDesiredMorphTargets()
+    {
+        return fc.getDesiredMorphTargets();
+    }
+    
     @Override
     public IpaacaFaceController getFaceController()
     {
