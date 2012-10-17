@@ -21,6 +21,7 @@ import asap.ipaacaembodiments.IpaacaFaceController;
 import asap.ipaacaembodiments.IpaacaFaceEmbodiment;
 
 import com.google.common.collect.BiMap;
+import com.google.common.collect.ImmutableList;
 
 /**
  * Loader for the IpaacaFaceAndBodyEmbodiment
@@ -67,7 +68,7 @@ public class IpaacaFaceAndBodyEmbodimentLoader implements EmbodimentLoader
         IpaacaFaceController fc = new IpaacaFaceController(ldr.getEmbodiment());
         IpaacaFaceEmbodiment faceEmbodiment = new IpaacaFaceEmbodiment(fc);        
         IpaacaBodyEmbodiment bodyEmbodiment = new IpaacaBodyEmbodiment(id, ipEmb);
-        bodyEmbodiment.init(renamingMap, renamingMap.values());
+        bodyEmbodiment.init(renamingMap, ImmutableList.copyOf(renamingMap.values()));
         embodiment = new IpaacaFaceAndBodyEmbodiment(id, ipEmb, faceEmbodiment,bodyEmbodiment);
            
         copyEnv.addCopyEmbodiment(embodiment);

@@ -17,6 +17,7 @@ import java.util.HashMap;
 import asap.ipaacaembodiments.IpaacaBodyEmbodiment;
 
 import com.google.common.collect.BiMap;
+import com.google.common.collect.ImmutableList;
 
 /**
  * Loads an IpaacaBodyEmbodiment, requires an IpaacaEmbodiment
@@ -65,7 +66,7 @@ public class IpaacaBodyEmbodimentLoader implements EmbodimentLoader
             throw new XMLScanException("IpaacaBodyEmbodimentLoader requires inner renaming element");
         }
         BiMap<String, String> renamingMap = RenamingMap.renamingMapFromFileOnClasspath(renamingFile);
-        embodiment.init(renamingMap, renamingMap.values());
+        embodiment.init(renamingMap, ImmutableList.copyOf(renamingMap.values()));
         copyEnv.addCopyEmbodiment(embodiment);
 
     }

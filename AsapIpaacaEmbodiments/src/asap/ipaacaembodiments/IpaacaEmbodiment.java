@@ -122,32 +122,6 @@ public class IpaacaEmbodiment implements Embodiment
         return buf.toString().trim();
     }
 
-    private float[] coordinateRelocate(float m[])
-    {
-        // x <= z
-        // y <= x
-        // z <= y
-        float res[] = Mat4f.getMat4f();
-        Mat4f.setIdentity(res);
-        float t[] = Vec3f.getVec3f();
-        Mat4f.getTranslation(t, m);
-        float x = t[0], y = t[1], z = t[2];
-        t[0] = z;
-        t[1] = x;
-        t[2] = y;
-        float q[] = Quat4f.getQuat4f();
-        Quat4f.setFromMat4f(q, m);
-        x = q[Quat4f.x];
-        y = q[Quat4f.y];
-        z = q[Quat4f.z];
-        q[Quat4f.x] = z;
-        q[Quat4f.y] = x;
-        q[Quat4f.z] = y;
-        Mat4f.setRotation(res, q);
-        Mat4f.setTranslation(res, t);
-        return res;
-    }
-
     private String getJointMatrices(List<float[]> jointMatrices)
     {
         StringBuffer buf = new StringBuffer();
@@ -160,35 +134,7 @@ public class IpaacaEmbodiment implements Embodiment
         }
         return buf.toString().trim();
     }
-    /*
-    private String getJointMatrices(List<VJoint> jointList)
-    {
-        StringBuffer buf = new StringBuffer();
-        for (VJoint vj : jointList)
-        {
-            System.out.println("coord relocate for joint " + vj.getSid());
-            // buf.append(getMatrix(coordinateRelocate(vj.getLocalMatrix())));
-            buf.append(getMatrix(vj.getLocalMatrix()));
-            buf.append(" ");
-
-            float m[] = new float[16];
-            Mat4f.set(m, vj.getGlobalMatrix());
-            float mRes[] = new float[16];
-            float q[] = Quat4f.getQuat4f();
-            vj.getRotation(q);
-            float mQ[] = new float[16];
-            Mat4f.setFromTR(mQ, Vec3f.getZero(), q);
-            Mat4f.invertRigid(mQ);
-            Mat4f.mul(mRes, m, mQ);
-            // buf.append(getMatrix(coordinateRelocate(mRes)));
-            // buf.append(getMatrix(coordinateRelocate(vj.getGlobalMatrix())));
-            buf.append(getMatrix(vj.getGlobalMatrix()));
-            buf.append(" ");
-        }
-        return buf.toString().trim();
-    }
-    */
-
+    
     public void waitForAvailableJoints()
     {
         synchronized (availableJoints)
