@@ -44,32 +44,36 @@ public class MURMLDescription extends MURMLElement
     @Getter
     private Symmetrical symetrical;
 
+    @Getter
+    private Sequence sequence;
+
     @Override
     public void decodeContent(XMLTokenizer tokenizer) throws IOException
     {
         String tag = tokenizer.getTagName();
-        if (tag.equals(Dynamic.xmlTag()))
+        switch (tag)
         {
+        case Dynamic.XMLTAG:
             dynamic = new Dynamic();
             dynamic.readXML(tokenizer);
-        }
-        else if (tag.equals(Parallel.xmlTag()))
-        {
+            break;
+        case Parallel.XMLTAG:
             parallel = new Parallel();
             parallel.readXML(tokenizer);
-        }
-        else if (tag.equals(Symmetrical.xmlTag()))
-        {
+            break;
+        case Symmetrical.XMLTAG:
             symetrical = new Symmetrical();
             symetrical.readXML(tokenizer);
-        }
-        else if (tag.equals(Static.xmlTag()))
-        {
+            break;
+        case Static.XMLTAG:
             staticElement = new Static();
             staticElement.readXML(tokenizer);
-        }
-        else
-        {
+            break;
+        case Sequence.XMLTAG:
+            sequence = new Sequence();
+            sequence.readXML(tokenizer);
+            break;
+        default:
             throw new XMLScanException("Invalid tag " + tag + " in <murml-description>");
         }
     }

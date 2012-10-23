@@ -158,4 +158,34 @@ public class MURMLDescriptionTest
         assertEquals("DirL", stat.getValue());
         assertEquals(Slot.PalmOrientation, stat.getSlot());
     }
+    
+    @Test
+    public void testSequence()
+    {
+      //@formatter:off
+        String murmlScript = 
+        "<murml-description xmlns=\"http://www.techfak.uni-bielefeld.de/ags/soa/murml\" scope=\"hand\">"+
+          "<sequence>"+
+            "<static slot=\"HandShape\" value=\"BSfist (ThExt)\" scope=\"right_arm\"/>"+
+            "<static slot=\"ExtFingerOrientation\" value=\"DirU\" scope=\"right_arm\"/>"+
+            "<static slot=\"PalmOrientation\" value=\"DirLTL\" scope=\"right_arm\"/>"+
+            "<static slot=\"HandLocation\""+
+                   "value=\"LocNeck LocCenterRRight LocNorm\""+
+                   "scope=\"right_arm\"/>"+
+            "<dynamic slot=\"PalmOrientation\" scope=\"right_arm\">"+
+                   "<dynamicElement>"+
+                     "<value type=\"start\" name=\"PalmLU\"/>"+
+                     "<value type=\"end\" name=\"PalmU\"/>"+
+                   "</dynamicElement>"+
+            "</dynamic>"+
+          "</sequence>"+
+        "</murml-description>";
+        // @formatter:on
+        MURMLDescription desc = new MURMLDescription();
+        desc.readXML(murmlScript);
+        Sequence seq = desc.getSequence();
+        assertNotNull(seq);
+        
+        assertEquals(5,seq.getSequence().size());        
+    }
 }

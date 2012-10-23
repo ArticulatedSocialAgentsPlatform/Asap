@@ -11,7 +11,7 @@ import lombok.Getter;
  * @author hvanwelbergen
  *
  */
-public class Static extends MURMLElement
+public class Static extends MURMLElement implements MovementConstraint
 {
     @Getter
     private String scope;
@@ -34,7 +34,7 @@ public class Static extends MURMLElement
         value = getRequiredAttribute("value", attrMap, tokenizer);        
     }
     
-    private static final String XMLTAG = "static";
+    static final String XMLTAG = "static";
 
     public static String xmlTag()
     {

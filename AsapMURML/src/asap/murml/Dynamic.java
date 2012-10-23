@@ -14,7 +14,7 @@ import lombok.Getter;
  * Parses the MURML dynamic element
  * @author hvanwelbergen
  */
-public class Dynamic extends MURMLElement
+public class Dynamic extends MURMLElement implements MovementConstraint
 {
     @Getter
     private Keyframing keyframing;
@@ -62,7 +62,7 @@ public class Dynamic extends MURMLElement
         }
     }
 
-    private static final String XMLTAG = "dynamic";
+    static final String XMLTAG = "dynamic";
 
     public static String xmlTag()
     {

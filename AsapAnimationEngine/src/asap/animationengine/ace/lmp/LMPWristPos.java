@@ -328,7 +328,6 @@ public class LMPWristPos extends LMPPos
         if(time<this.getTime("strokeEnd"))
         {
             float pos [] = getPosition(time);
-            //Vec3f.set(pos,0.2f,1.5f,0.2f);
             System.out.println(Vec3f.toString(pos));
             if(scope.equals("left_arm"))
             {

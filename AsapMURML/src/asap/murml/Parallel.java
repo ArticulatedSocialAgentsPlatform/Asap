@@ -14,7 +14,7 @@ import lombok.Getter;
  * @author hvanwelbergen
  * 
  */
-public class Parallel extends MURMLElement
+public class Parallel extends MURMLElement implements MovementConstraint
 {
     @Getter
     private List<Dynamic> dynamics = new ArrayList<Dynamic>();
@@ -47,7 +47,7 @@ public class Parallel extends MURMLElement
         }
     }
 
-    private static final String XMLTAG = "parallel";
+    static final String XMLTAG = "parallel";
 
     public static String xmlTag()
     {

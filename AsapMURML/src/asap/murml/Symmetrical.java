@@ -12,7 +12,7 @@ import lombok.Getter;
  * Parser for the symmetrical murml element
  * @author hvanwelbergen
  */
-public class Symmetrical extends MURMLElement
+public class Symmetrical extends MURMLElement implements MovementConstraint
 {
     @Getter
     private Dominant dominant;
@@ -44,7 +44,7 @@ public class Symmetrical extends MURMLElement
         }
     }
     
-    private static final String XMLTAG = "symmetrical";
+    static final String XMLTAG = "symmetrical";
 
     public static String xmlTag()
     {
