@@ -38,11 +38,13 @@ public class Keyframing extends MURMLElement
     @Getter private double postponeStartframe;
     @Getter private boolean insertStartframe;
     @Getter private boolean notify;
+    @Getter private String scope;
     @Getter private List<Phase> phases = new ArrayList<Phase>();
     
     @Override
     public void decodeAttributes(HashMap<String, String> attrMap, XMLTokenizer tokenizer)
     {
+        scope = getOptionalAttribute("scope", attrMap,"");
         mode = Mode.valueOf(getOptionalAttribute("mode", attrMap,"spline").toUpperCase());
         priority = getOptionalIntAttribute("priority", attrMap, 0);
         easescale = getOptionalDoubleAttribute("easescale", attrMap, 1);

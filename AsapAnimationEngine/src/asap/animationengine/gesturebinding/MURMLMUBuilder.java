@@ -84,6 +84,17 @@ public final class MURMLMUBuilder
         return hns.getHandLocation(elem.getName("start"), result);
     }
 
+    /**
+     * return start position [0..2] and swivel [3] of the wrist for this movement constraint in
+     * body root coordinates.
+     */
+    private boolean getStartConf(float[] result, Static staticElem, Hns hns)
+    {
+        float startconf[] = new float[4];
+        startconf[3] = 0;
+        return hns.getHandLocation(staticElem.getValue(), result);
+    }
+
     /*
      * Vorgehen:
      * Die Segmente werden zusammenhaengend(!) ausgefuehrt. Dazu wird eine
@@ -107,17 +118,11 @@ public final class MURMLMUBuilder
         List<GuidingStroke> sSeq = new ArrayList<>();
 
         float sPos[] = traj.getEndPos();
-        double sT, eT = traj.getEndTime();
-        float[] dir = Vec3f.getVec3f();
 
-        tEst = eT;
+        float[] dir = Vec3f.getVec3f();
 
         for (DynamicElement segment : elements)
         {
-            sT = eT;
-            // TODO
-            // eT = segment.getEndTPC().time;
-
             // -- create guiding strokes for linear movement segment --------------------------------------
             if (segment.getType() == Type.LINEAR)
             {
@@ -161,7 +166,7 @@ public final class MURMLMUBuilder
 
                 // cout << "NEW LINEAR Guiding Stroke to " << eT << ":" << ePos << endl;
 
-                LinearGStroke lgs = new LinearGStroke(GStrokePhaseID.STP_STROKE, new TPConstraint(eT), ePos);
+                LinearGStroke lgs = new LinearGStroke(GStrokePhaseID.STP_STROKE, ePos);
                 lgs.setEDt(FittsLaw.getHandTrajectoryDuration(lgs.getArcLengthFrom(sPos)));
                 tEst += lgs.getEDt();
                 // cout << "est. duration=" << lgs->eDt << " -> est. end time=" << tEst << endl;
@@ -220,11 +225,14 @@ public final class MURMLMUBuilder
                 }
 
                 // create curved stroke
-                CurvedGStroke cgs = new CurvedGStroke(GStrokePhaseID.STP_STROKE, new TPConstraint(eT), ePos, nVec, shape, extent,
-                        roundness, skewedness);
+                CurvedGStroke cgs = new CurvedGStroke(GStrokePhaseID.STP_STROKE, ePos, nVec, shape, extent, roundness, skewedness);
                 // build geometric parameters for given start position
                 // (necessary for estimating duration!)
-                cgs.formAt(sPos, sT);
+
+                // XXX not needed here, done in refine (?)
+                // do this dynamically
+                // /cgs.formAt(sPos, sT);
+
                 // cgs->vGain = 0.;
 
                 // -- stroke time smaller than affiliate duration, i.e., post-stroke hold required?
@@ -250,62 +258,63 @@ public final class MURMLMUBuilder
         // -- append subtrajectory to overall guiding sequence
         if (!sSeq.isEmpty())
         {
-            // -- intra-stroke scheduling:
-            // estimated stroke duration smaller than affiliate duration,
-            // i.e. post-stroke hold required?
-            // cout << "required time:" << tEst << " < " << eT << "?" << endl;
-            if (tEst < eT)
-            {
-                // cout << "yes -> re-scheduling!";
-                // -- re-schedule all inner elements and append to subtrajectory
-                double ssT = traj.getEndTime();
-                for (int i = 0; i < sSeq.size(); i++)
-                {
-                    // cout << ssT << "->";
-                    ssT += sSeq.get(i).getEDt();
-                    // cout << ssT << endl;
-                    sSeq.get(i).setET(new TPConstraint(ssT));
-                    traj.addGuidingStroke(sSeq.get(i));
-                }
-
-                // -- create respective motor program
-                // cout << "creating lmp from:"; traj.writeTo(cout); cout << endl;
-
-                // TODO: implement proper scope selection when no scope is provided. I think this is handled through MotorControlFigure::suggestMotorScopeFor in ACE.
-                if (scope == null)
-                {
-                    scope = "left_arm";
-                }
-                if (!(scope.equals("left_arm") || scope.equals("right_arm")))
-                {
-                    scope = "left_arm";
-                }
-                LMPWristPos wristMove = new LMPWristPos(scope, bbf, bmlBlockPeg, bmlId, id, pegBoard, traj, aniPlayer);
-
-                // XXX needed?
-                // wristMove->setBaseFrame( mp->getBase2Root() );
-
-                if (tmu == null)
-                {
-                    mp.addLMP(wristMove);
-                }
-                else
-                {
-                    // TODO: solve this with TimePegs
-                    // lmp->activateSuccessorAt( wristMove, traj.getStartTPC() );
-                }
-                tmu = wristMove;
-
-                // -- reset guiding sequence for subsequent movement phase(s)
-                traj.clear();
-                traj.setST(new TPConstraint(eT, TPConstraint.Mode.Rigorous));
-                traj.setStartPos(ePos);
-
-                // XXX needed?
-                // rescheduled = true;
-                // tEndNew = tEst;
-            }
-            else
+            // TODO: this should happen automatically in LMPWristPos
+            // // -- intra-stroke scheduling:
+            // // estimated stroke duration smaller than affiliate duration,
+            // // i.e. post-stroke hold required?
+            // // cout << "required time:" << tEst << " < " << eT << "?" << endl;
+            // if (tEst < eT)
+            // {
+            // // cout << "yes -> re-scheduling!";
+            // // -- re-schedule all inner elements and append to subtrajectory
+            // double ssT = traj.getEndTime();
+            // for (int i = 0; i < sSeq.size(); i++)
+            // {
+            // // cout << ssT << "->";
+            // ssT += sSeq.get(i).getEDt();
+            // // cout << ssT << endl;
+            // sSeq.get(i).setET(new TPConstraint(ssT));
+            // traj.addGuidingStroke(sSeq.get(i));
+            // }
+            //
+            // // -- create respective motor program
+            // // cout << "creating lmp from:"; traj.writeTo(cout); cout << endl;
+            //
+            // // TODO: implement proper scope selection when no scope is provided. I think this is handled through MotorControlFigure::suggestMotorScopeFor in ACE.
+            // if (scope == null)
+            // {
+            // scope = "left_arm";
+            // }
+            // if (!(scope.equals("left_arm") || scope.equals("right_arm")))
+            // {
+            // scope = "left_arm";
+            // }
+            // LMPWristPos wristMove = new LMPWristPos(scope, bbf, bmlBlockPeg, bmlId, id, pegBoard, traj, aniPlayer);
+            //
+            // // XXX needed?
+            // // wristMove->setBaseFrame( mp->getBase2Root() );
+            //
+            // if (tmu == null)
+            // {
+            // mp.addLMP(wristMove);
+            // }
+            // else
+            // {
+            // // TODO: solve this with TimePegs
+            // // lmp->activateSuccessorAt( wristMove, traj.getStartTPC() );
+            // }
+            // tmu = wristMove;
+            //
+            // // -- reset guiding sequence for subsequent movement phase(s)
+            // traj.clear();
+            // traj.setST(new TPConstraint(eT, TPConstraint.Mode.Rigorous));
+            // traj.setStartPos(ePos);
+            //
+            // // XXX needed?
+            // // rescheduled = true;
+            // // tEndNew = tEst;
+            // }
+            // else
             // -- no, just insert completed trajectory as planned
             {
                 for (GuidingStroke gs : sSeq)
@@ -625,6 +634,81 @@ public final class MURMLMUBuilder
         return formWristMovement(scope, staticElem, bbm, bmlBlockPeg, bmlId, id, pb, mcp, aniPlayer);
     }
 
+    public void getStaticHandLocationElementsTMU(String scope, Static staticElem, FeedbackManager bbm, BMLBlockPeg bmlBlockPeg,
+            String bmlId, String id, PegBoard pb, MotorControlProgram mcp, AnimationPlayer aniPlayer)
+    {
+        GuidingSequence trajectory = new GuidingSequence();
+        TPConstraint sT = new TPConstraint();
+        float[] ePos = Vec3f.getVec3f();
+        trajectory.setST(sT);
+
+        TimedAnimationUnit tmu = null;
+
+        if (getStartConf(ePos, staticElem, hns))
+        {
+            if (getStartConf(ePos, staticElem, hns))
+            {
+                // --- create linear guiding stroke for the preparatory movement which
+                // ends with the constraints start configuration
+                trajectory.addGuidingStroke(new LinearGStroke(GStrokePhaseID.STP_PREP, ePos));
+
+                // create local motor program for anticipated stroke sequence
+                LMPWristPos wristMove = new LMPWristPos(scope, bbm, bmlBlockPeg, bmlId, id, pb, trajectory, aniPlayer);
+                
+                // //cout << "creating lmp from guiding sequence:" << endl; trajectory.writeTo(cout);
+                // //lmp->overshoot(mcLoc->getEndTPC().time);
+
+                if (tmu == null)
+                {
+                    mcp.addLMP(wristMove);
+                }
+                // TODO: solve with timepegs
+                // else lmp->activateSuccessorAt( wristMove, trajectory.getStartTPC() );
+                tmu = wristMove;
+                
+                
+                //
+                // // optionally, add special lmp for swivel movement
+                // if (swivel != 0.)
+                // {
+                // MgcVectorN q (1);
+                // q[0] = swivel;
+                // deque<MgcVectorN> goalVec;
+                // deque<MgcReal> timeVec;
+                // goalVec.push_back(q);
+                // timeVec.push_back( trajectory.getEndTime() );
+                // LMP_Swivel *lmpSwiv = new LMP_Swivel ( "SW_Prep", scope );
+                // lmpSwiv->setSwivelVec(goalVec);
+                // lmpSwiv->setTimeVec(timeVec);
+                // lmp->activatePeerAt( lmpSwiv, trajectory.getEndTime()-0.2 );
+                // mp->addLMP( lmpSwiv );
+                // }
+                //
+                
+                // clear trajectory plan and set origin for subsequent trajectory
+                // trajectory.clear();
+                // trajectory.setStartPos( ePos );
+                // trajectory.setStartTPC( TPConstraint( scLoc->getEndTPC().time,
+                // TPConstraint::Rigorous ) ); // timing is mandatory
+            }
+
+            // TODO: implement retraction, retraction modes
+            // // --- shall we retract at all?
+            // if ( retrMode == RTRCT_FULL || retrMode == RTRCT_INTERMEDIATE )
+            // {
+            // // -- complete ongoing guiding sequence by appending a retracting stroke
+            // // (estimate retraction duration by applying Fitts' law)
+            // ePos = restPos;
+            // MgcReal duration = LMP_WristPos::getPosDurationFromAmplitude( (ePos-sPos).Length()); // * 0.9;
+            // eT = trajectory.getEndTime() + duration;
+            // eT.mode = TPConstraint::Soft; // end time of retraction not of great importance
+            // trajectory.addGuidingStroke( new LinearGStroke (GuidingStroke::STP_RETRACT, eT,ePos) );
+            // }
+
+            //createPosLMP(scope, trajectory, mcp, tmu, bbm, bmlBlockPeg, bmlId, id, pb, aniPlayer);
+        }
+    }
+
     public void getDynamicHandLocationElementsTMU(String scope, List<DynamicElement> elements, FeedbackManager bbm,
             BMLBlockPeg bmlBlockPeg, String bmlId, String id, PegBoard pb, MotorControlProgram mcp, AnimationPlayer aniPlayer)
     {
@@ -633,7 +717,6 @@ public final class MURMLMUBuilder
             return;
         }
         GuidingSequence trajectory = new GuidingSequence();
-        TPConstraint eT = new TPConstraint();
         TPConstraint sT = new TPConstraint();
         float[] ePos = Vec3f.getVec3f();
         trajectory.setST(sT);
@@ -644,7 +727,7 @@ public final class MURMLMUBuilder
         {
             // --- create linear guiding stroke for the preparatory movement which
             // ends with the constraints start configuration
-            trajectory.addGuidingStroke(new LinearGStroke(GStrokePhaseID.STP_PREP, eT, ePos));
+            trajectory.addGuidingStroke(new LinearGStroke(GStrokePhaseID.STP_PREP, ePos));
 
             appendSubTrajectory(elements, scope, trajectory, tmu, bbm, bmlBlockPeg, bmlId, id, pb, mcp, aniPlayer);
         }
@@ -937,6 +1020,7 @@ public final class MURMLMUBuilder
         case Neck:
             break;
         case HandLocation:
+            getStaticHandLocationElementsTMU(staticElem.getScope(), staticElem, bbm, bmlBlockPeg, bmlId, id, localPegBoard, mcp, aniPlayer);
             break;
         case HandShape:
             break;

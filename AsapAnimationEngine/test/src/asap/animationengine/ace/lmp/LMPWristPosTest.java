@@ -9,6 +9,7 @@ import static org.mockito.Mockito.when;
 import hmi.math.Vec3f;
 import hmi.testutil.animation.HanimBody;
 
+import org.hamcrest.collection.IsIterableContainingInAnyOrder;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.powermock.core.classloader.annotations.PowerMockIgnore;
@@ -19,7 +20,6 @@ import asap.animationengine.AnimationPlayer;
 import asap.animationengine.ace.CurvedGStroke;
 import asap.animationengine.ace.GStrokePhaseID;
 import asap.animationengine.ace.GuidingSequence;
-import asap.animationengine.ace.TPConstraint;
 import asap.animationengine.motionunit.TimedAnimationUnit;
 import asap.hns.ShapeSymbols;
 import asap.motionunit.TMUPlayException;
@@ -30,7 +30,6 @@ import asap.realizer.planunit.TimedPlanUnitState;
 import asap.realizer.scheduler.BMLBlockManager;
 import asap.realizertestutil.planunit.AbstractTimedPlanUnitTest;
 import asap.realizertestutil.util.TimePegUtil;
-import org.hamcrest.collection.IsIterableContainingInAnyOrder;
 /**
  * Unit tests for the LMPWristPos
  * @author hvanwelbergen
@@ -48,8 +47,8 @@ public class LMPWristPosTest extends AbstractTimedPlanUnitTest
     private LMPWristPos setupPlanUnit(FeedbackManager bfm, BMLBlockPeg bbPeg, String bmlId, String id)
     {
         GuidingSequence gSeq = new GuidingSequence();
-        gSeq.addGuidingStroke(new CurvedGStroke(GStrokePhaseID.STP_STROKE, new TPConstraint(0), Vec3f.getVec3f(0.1f,0,0), Vec3f.getZero(),ShapeSymbols.LeftC,0,0,0));
-        gSeq.addGuidingStroke(new CurvedGStroke(GStrokePhaseID.STP_STROKE, new TPConstraint(0), Vec3f.getVec3f(0.2f,0,0), Vec3f.getZero(),ShapeSymbols.LeftC,0,0,0));
+        gSeq.addGuidingStroke(new CurvedGStroke(GStrokePhaseID.STP_STROKE, Vec3f.getVec3f(0.1f,0,0), Vec3f.getZero(),ShapeSymbols.LeftC,0,0,0));
+        gSeq.addGuidingStroke(new CurvedGStroke(GStrokePhaseID.STP_STROKE, Vec3f.getVec3f(0.2f,0,0), Vec3f.getZero(),ShapeSymbols.LeftC,0,0,0));
         when(mockAniPlayer.getVCurr()).thenReturn(HanimBody.getLOA1HanimBody());
         when(mockAniPlayer.getVNext()).thenReturn(HanimBody.getLOA1HanimBody());
         return new LMPWristPos("right_arm", bfm, bbPeg, bmlId, id, pegBoard, gSeq, mockAniPlayer);

@@ -78,14 +78,14 @@ public class GuidingSequence
         }
     }
 
-    public double getEndTime()
-    {
-        if (strokes.isEmpty())
-        {
-            return sT.getTime();
-        }
-        return strokes.get(strokes.size() - 1).getEndTime();
-    }
+//    public double getEndTime()
+//    {
+//        if (strokes.isEmpty())
+//        {
+//            return sT.getTime();
+//        }
+//        return strokes.get(strokes.size() - 1).getEndTime();
+//    }
 
     public float[] getEndPos()
     {
@@ -131,53 +131,53 @@ public class GuidingSequence
         return result;
     }
 
-    public double getStartTimeOfStroke(int i)
-    {
+//    public double getStartTimeOfStroke(int i)
+//    {
+//
+//        if (i >= strokes.size())
+//        {
+//            log.warn("GuidingSequence::getStartTimeOfStroke : no. of strokes exceeded!");
+//            return 0;
+//        }
+//
+//        if (i == 0)
+//        {
+//            return sT.getTime();
+//        }
+//        else
+//        {
+//            return strokes.get(i - 1).getEndTime();
+//        }
+//    }
 
-        if (i >= strokes.size())
-        {
-            log.warn("GuidingSequence::getStartTimeOfStroke : no. of strokes exceeded!");
-            return 0;
-        }
-
-        if (i == 0)
-        {
-            return sT.getTime();
-        }
-        else
-        {
-            return strokes.get(i - 1).getEndTime();
-        }
-    }
-
-    /**
-     * return values:
-     * -1 -> stroke sequence empty
-     * 0..n-1 -> index of stroke at t = fTime
-     * n -> stroke sequence exceeded at t = fTime
-     */
-    public int getStrokeIndexAt(double time)
-    {
-        if (strokes.isEmpty())
-        {
-            log.warn("GuidingSequence::getStrokeIndexAt : stroke sequence empty!");
-            return -1;
-        }
-
-        int gStrokeIndex = 0;
-        for (GuidingStroke gs : strokes)
-        {
-            if (gs.getEndTime() <= time)
-            {
-                gStrokeIndex++;
-            }
-            else
-            {
-                break;
-            }
-        }
-        return gStrokeIndex;
-    }
+//    /**
+//     * return values:
+//     * -1 -> stroke sequence empty
+//     * 0..n-1 -> index of stroke at t = fTime
+//     * n -> stroke sequence exceeded at t = fTime
+//     */
+//    public int getStrokeIndexAt(double time)
+//    {
+//        if (strokes.isEmpty())
+//        {
+//            log.warn("GuidingSequence::getStrokeIndexAt : stroke sequence empty!");
+//            return -1;
+//        }
+//
+//        int gStrokeIndex = 0;
+//        for (GuidingStroke gs : strokes)
+//        {
+//            if (gs.getEndTime() <= time)
+//            {
+//                gStrokeIndex++;
+//            }
+//            else
+//            {
+//                break;
+//            }
+//        }
+//        return gStrokeIndex;
+//    }
 
     public GuidingStroke getStroke(int i)
     {
@@ -189,14 +189,14 @@ public class GuidingSequence
         return strokes.get(i);
     }
 
-    public void postPone(double time)
-    {
-        sT.add(time);
-        for (GuidingStroke gs : strokes)
-        {
-            gs.eT.add(time);
-        }
-    }
+//    public void postPone(double time)
+//    {
+//        sT.add(time);
+//        for (GuidingStroke gs : strokes)
+//        {
+//            gs.eT.add(time);
+//        }
+//    }
 
     public void replaceStroke(int i, List<GuidingStroke> gsSubs)
     {
@@ -251,8 +251,8 @@ public class GuidingSequence
         // --- fetch both guiding strokes
         GuidingStroke gs1 = getStroke(i);
         GuidingStroke gs2 = getStroke(i + 1);
-        double tDur1 = (gs1.getEndTime() - getStartTimeOfStroke(i));
-        double tDur2 = gs2.getEndTime() - gs1.getEndTime();
+        double tDur1 = gs1.getEDt();
+        double tDur2 = gs2.getEDt();
         float s1[] = Vec3f.getVec3f();
         float s2[] = Vec3f.getVec3f();
         float s3[] = Vec3f.getVec3f();

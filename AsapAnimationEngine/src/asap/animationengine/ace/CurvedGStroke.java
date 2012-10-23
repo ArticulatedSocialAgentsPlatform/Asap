@@ -25,15 +25,15 @@ public class CurvedGStroke extends GuidingStroke
     @Getter private double fT1;
     @Getter private double fT2;
 
-    public CurvedGStroke(GStrokePhaseID phase, TPConstraint t, float[] p, float n[], ShapeSymbols a, double w, double r, double s)
+    public CurvedGStroke(GStrokePhaseID phase, float[] p, float n[], ShapeSymbols a, double w, double r, double s)
     {
-        this(phase, t, p, n, a, w, r, s, Vec3f.getZero(), Vec3f.getZero(), 0, 0);
+        this(phase, p, n, a, w, r, s, Vec3f.getZero(), Vec3f.getZero(), 0, 0);
     }
 
-    public CurvedGStroke(GStrokePhaseID phase, TPConstraint t, float[] p, float n[], ShapeSymbols a, double w, double r, double s,
+    public CurvedGStroke(GStrokePhaseID phase, float[] p, float n[], ShapeSymbols a, double w, double r, double s,
             float[] n1, float[] n2, double fT1, double fT2)
     {
-        super(phase, t, p, Vec3f.getZero());
+        super(phase, p, Vec3f.getZero());
         Vec3f.normalize(this.n, n);
         this.a = a;
         this.w = w;
@@ -188,7 +188,7 @@ public class CurvedGStroke extends GuidingStroke
         Vec3f.add(n2, tempD);
 
         // -- set chordal parametrization => fT1,fT2
-        double fDur = eT.getTime() - sT;
+        double fDur = this.getEDt();
         fT1 = sT + 2 * fDur / 5; // (fDur/fS)*fS1;
         fT2 = sT + 3 * fDur / 5; // (fDur/fS)*(fS2+fS1);
     }

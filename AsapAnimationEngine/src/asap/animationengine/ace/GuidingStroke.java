@@ -23,9 +23,7 @@ public class GuidingStroke
     @Getter @Setter
     private double eDt; // anticipated duration
     
-    @Getter @Setter
-    protected TPConstraint eT; // target/end time
-
+    
     @Getter
     GStrokePhaseID phaseId;
 
@@ -37,9 +35,8 @@ public class GuidingStroke
         eDt = 0;
     }
 
-    public GuidingStroke(GStrokePhaseID phaseId, TPConstraint et, float[] ep, float ed[])
+    public GuidingStroke(GStrokePhaseID phaseId, float[] ep, float ed[])
     {
-        eT = et;
         endPos = ep;
         endDir = ed;
         this.phaseId = phaseId;
@@ -62,11 +59,6 @@ public class GuidingStroke
         return Vec3f.getVec3f(endPos);
     }
 
-    public double getEndTime()
-    {
-        return eT.getTime();
-    }
-
     /**
      * Transforms the boundary constraints with 4x4 matrix m
      */
@@ -86,6 +78,6 @@ public class GuidingStroke
     @Override
     public String toString()
     {
-        return "GStroke: -> " + Vec3f.toString(endPos) + "(" + eT + ")," + Vec3f.toString(endDir) + "(Phase:" + phaseId + ")";
+        return "GStroke: -> " + "endPos: "+Vec3f.toString(endPos) + "endDir: " + Vec3f.toString(endDir) + "(Phase:" + phaseId + ")";
     }
 }

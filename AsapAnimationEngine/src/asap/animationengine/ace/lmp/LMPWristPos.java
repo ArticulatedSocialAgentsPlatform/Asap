@@ -17,6 +17,7 @@ import asap.animationengine.ace.GuidingSequence;
 import asap.animationengine.ace.GuidingStroke;
 import asap.animationengine.ace.LinearGStroke;
 import asap.animationengine.ace.TPConstraint;
+import asap.animationengine.procanimation.IKBody;
 import asap.math.splines.NUSSpline3;
 import asap.math.splines.SparseVelocityDef;
 import asap.motionunit.TMUPlayException;
@@ -43,6 +44,8 @@ public class LMPWristPos extends LMPPos
 
     private NUSSpline3 spline;
     private AnimationPlayer aniPlayer;
+    private IKBody ikBody;
+    private String scope;
 
     public void resolveSynchs(BMLBlockPeg bbPeg, Behaviour b, List<TimePegAndConstraint> sac) throws BehaviourPlanningException
     {
@@ -57,6 +60,9 @@ public class LMPWristPos extends LMPPos
         this.gSeq = gSeq;
         this.pegBoard = pegBoard;
         this.aniPlayer = aniPlayer;
+        this.ikBody = new IKBody(aniPlayer.getVNext()); //TODO: may also be on additive joint
+        this.scope = scope;
+        
         if (scope.equals("left_arm"))
         {
             kinematicJoints = ImmutableSet.of(Hanim.l_shoulder, Hanim.l_elbow);
@@ -71,11 +77,11 @@ public class LMPWristPos extends LMPPos
     {
         if (spline != null)
         {
-            return spline.getPosition(t);
+            return spline.getPosition(t);            
         }
         else
         {
-            return Vec3f.getVec3f(0, 0, 0);
+            return null;
         }
     }
 
@@ -116,13 +122,9 @@ public class LMPWristPos extends LMPPos
     {
         if (gSeq != null && !gSeq.isEmpty())
         {
-
-            float[] p = Vec3f.getVec3f();
-            // TODO: p = global wrist pos
-            gSeq.setStartPos(p);
+            gSeq.setStartPos(getGlobalWristPosition());
             gSeq.setST(new TPConstraint(time));
             refine();
-
         }
         else
         {
@@ -199,7 +201,8 @@ public class LMPWristPos extends LMPPos
 
             // complete curvilinear guiding strokes
             // cout << "completing curvilinear strokes..." << endl;
-            double sT = _gSeq.getStartTPC().getTime();
+            double sT = _gSeq.getStartTPC().getTime();            
+            
             for (int i = 0; i < _gSeq.size(); i++)
             {
                 if (_gSeq.getStroke(i) instanceof CurvedGStroke)
@@ -207,21 +210,25 @@ public class LMPWristPos extends LMPPos
                     CurvedGStroke cs = (CurvedGStroke) _gSeq.getStroke(i);
                     cs.formAt(_gSeq.getStartPosOfStroke(i), sT);
                 }
-                sT = _gSeq.getStroke(i).getEndTime();
+                //sT = _gSeq.getStroke(i).getEndTime();
+                sT += _gSeq.getStroke(i).getEDt();                
             }
 
             // append guiding strokes
             // cout << "setting up trajectory constraints..." << endl;
             float[] p, v;
+            
+            sT = _gSeq.getStartTPC().getTime();
+            sT += getPreparationDuration();
             for (int i = 0; i < _gSeq.size(); i++)
             {
-                sT = tv.get(tv.size() - 1);
                 if (_gSeq.getStroke(i) instanceof LinearGStroke)
                 {
                     // cout << "appending linear stroke for t=" << sT << "-"
                     // << _gSeq->getStroke(i)->eT << endl;
                     pv.add(_gSeq.getStroke(i).getEndPos());
-                    tv.add(_gSeq.getStroke(i).getEndTime());
+                    tv.add(_gSeq.getStroke(i).getEDt()+sT);
+                    sT+=_gSeq.getStroke(i).getEDt();
                 }
                 else if (_gSeq.getStroke(i) instanceof CurvedGStroke)
                 {
@@ -236,8 +243,8 @@ public class LMPWristPos extends LMPPos
                     tv.add(cs.getFT2());
 
                     // append stroke end point & velocity
-                    pv.add(cs.getEndPos()); // cout << pv.back() << endl;
-                    tv.add(cs.getEndTime());
+                    tv.add(_gSeq.getStroke(i).getEDt()+sT);
+                    sT+=_gSeq.getStroke(i).getEDt();
                 }
                 else log.warn("Trajectory::build : unknown stroke type!");
             }
@@ -318,15 +325,30 @@ public class LMPWristPos extends LMPPos
     @Override
     protected void playUnit(double time) throws TimedPlanUnitPlayException
     {
-        // TODO Auto-generated method stub
-
+        if(time<this.getTime("strokeEnd"))
+        {
+            float pos [] = getPosition(time);
+            //Vec3f.set(pos,0.2f,1.5f,0.2f);
+            System.out.println(Vec3f.toString(pos));
+            if(scope.equals("left_arm"))
+            {
+                ikBody.setLeftHand(pos);
+            }
+            else
+            {            
+                ikBody.setRightHand(pos);
+            }
+        }
+        else
+        {
+            //TODO: let retraction from posture take over
+        }
     }
 
     @Override
     protected void stopUnit(double time) throws TimedPlanUnitPlayException
     {
         // TODO Auto-generated method stub
-
     }
 
     @Override
@@ -376,19 +398,29 @@ public class LMPWristPos extends LMPPos
         }
     }
 
-    // get preparation duration, given current hand position
-    private double getPreparationDuration()
+    private float[] getGlobalWristPosition()
+    {
+        VJoint vj = aniPlayer.getVCurr().getPartBySid(getWristJointSid());
+        float wristCurr[] = Vec3f.getVec3f();
+        vj.getPathTranslation(aniPlayer.getVCurr(), wristCurr);
+        return wristCurr;
+    }
+    
+    private String getWristJointSid()
     {
         String wristJoint = Hanim.l_wrist;
         if (getKinematicJoints().contains(Hanim.r_shoulder))
         {
             wristJoint = Hanim.r_wrist;
         }
-        VJoint vj = aniPlayer.getVCurr().getPartBySid(wristJoint);
-        float wristCurr[] = Vec3f.getVec3f();
-        vj.getPathTranslation(aniPlayer.getVCurr(), wristCurr);
+        return wristJoint;
+    }
+    
+    // get preparation duration, given current hand position
+    private double getPreparationDuration()
+    {
         GuidingStroke gstroke = gSeq.getStroke(0);
-        return FittsLaw.getHandTrajectoryDuration(Vec3f.distanceBetweenPoints(gstroke.getEndPos(), wristCurr));
+        return FittsLaw.getHandTrajectoryDuration(Vec3f.distanceBetweenPoints(gstroke.getEndPos(), getGlobalWristPosition()));
     }
 
     private void resolveTimePegs(double time)
@@ -470,24 +502,16 @@ public class LMPWristPos extends LMPPos
         if (!isLurking()) return;
         resolveTimePegs(time);
 
+        //TODO: should do something like resolveTimePegs multiple times, updating the preparation 
+        //and retraction durations timing at each run.
+        
+        
         // get first timing constraint and guiding stroke
-        TPConstraint startTPC = gSeq.getStartTPC();
-        GuidingStroke gstroke = gSeq.getStroke(0);
-
-        // TODO: implement this
-        // // determine the duration of the currently needed prep movement
-        // duration = getPosDurationFromAmplitude((x - gstroke.getEndPos()).Length());
-        //
-        // // check whether movement needs to start now or not yet
-        // activateFlag = false;
-        // if (tActivation > -1) {
-        // activateFlag = (tActivation <= t);
-        // }
-        // else
-        // // or activate just in time for target position(s)? --
-        // activateFlag = (( startTPC.mode == TPConstraint::Rigorous && startTPC.time <= t ) ||
-        // ( startTPC.mode != TPConstraint::Rigorous && (gstroke->eT.time - t) <= duration ));
-        //
+        //TPConstraint startTPC = gSeq.getStartTPC();
+        //GuidingStroke gstroke = gSeq.getStroke(0);
+        
+        
+        // TODO: implement this(?)        
         // if (activateFlag)
         // {
         // gSeq->setStartPos(x);

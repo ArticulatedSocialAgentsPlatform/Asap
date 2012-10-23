@@ -140,17 +140,6 @@ public class NUBSpline3
                     // i=k..n
                     
                     t.set(i, m_afTime.get(i - k + 1));
-                    /* disabled bugfix
-                    if(i-k+1<m_afTime.size())
-                    {
-                        t.set(i, m_afTime.get(i - k + 1));
-                    }
-                    else
-                    {
-                        t.set(i, m_afTime.get(m_afTime.size()-1));
-                    }
-                    */
-                    
                     // cout << "Knoten " << i << "=" << m_afTime[i-k+1] << endl;
                 }
             }
@@ -159,7 +148,15 @@ public class NUBSpline3
                 for (int i = n + 1; i <= k; i++)
                 {
                     // i=n..k
-                    t.set(i, m_afTime.get(i - n + 1));
+                    //t.set(i, m_afTime.get(i - n + 1));
+                    
+                    //BUGFIX by Herwin
+                    int tIndex = (i - n + 1);
+                    if( tIndex >=m_afTime.size())
+                    {
+                        tIndex = m_afTime.size()-1;
+                    }
+                    t.set(i, m_afTime.get(tIndex));
                 }
             }
 

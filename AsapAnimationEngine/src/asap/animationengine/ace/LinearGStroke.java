@@ -10,8 +10,8 @@ import hmi.math.Vec3f;
  */
 public class LinearGStroke extends GuidingStroke
 {
-    public LinearGStroke(GStrokePhaseID phaseId, TPConstraint et, float[]ep)
+    public LinearGStroke(GStrokePhaseID phaseId, float[]ep)
     {
-        super(phaseId, et, ep, Vec3f.getZero());
+        super(phaseId, ep, Vec3f.getZero());
     }
 }
