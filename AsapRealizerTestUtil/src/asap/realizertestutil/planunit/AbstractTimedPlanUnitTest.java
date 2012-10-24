@@ -16,6 +16,7 @@ import asap.realizer.planunit.TimedPlanUnit;
 import asap.realizer.planunit.TimedPlanUnitPlayException;
 import asap.realizer.planunit.TimedPlanUnitState;
 import asap.realizer.scheduler.BMLBlockManager;
+import asap.realizertestutil.util.TimePegUtil;
 
 import saiba.bml.BMLGestureSync;
 import saiba.bml.feedback.BMLSyncPointProgressFeedback;
@@ -213,6 +214,7 @@ public abstract class AbstractTimedPlanUnitTest
         relaxPeg.setGlobalValue(2);
         relaxPeg.setAbsoluteTime(true);
         tpu.setTimePeg(BMLGestureSync.RELAX.toString(), relaxPeg);
+        tpu.setTimePeg("end", TimePegUtil.createTimePeg(2.2));
         tpu.setState(TimedPlanUnitState.LURKING);
         tpu.start(0);
         tpu.play(2.1);

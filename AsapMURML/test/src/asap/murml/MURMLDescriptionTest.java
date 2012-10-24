@@ -1,7 +1,9 @@
 package asap.murml;
 
+import static org.hamcrest.CoreMatchers.instanceOf;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
+import static org.junit.Assert.assertThat;
 
 import org.junit.Test;
 
@@ -162,7 +164,7 @@ public class MURMLDescriptionTest
     @Test
     public void testSequence()
     {
-      //@formatter:off
+        //@formatter:off
         String murmlScript = 
         "<murml-description xmlns=\"http://www.techfak.uni-bielefeld.de/ags/soa/murml\" scope=\"hand\">"+
           "<sequence>"+
@@ -187,5 +189,6 @@ public class MURMLDescriptionTest
         assertNotNull(seq);
         
         assertEquals(5,seq.getSequence().size());        
+        assertThat(seq.getSequence().get(4), instanceOf(Dynamic.class));
     }
 }

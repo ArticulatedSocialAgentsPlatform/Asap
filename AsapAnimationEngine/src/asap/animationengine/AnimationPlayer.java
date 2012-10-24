@@ -36,14 +36,20 @@ import hmi.worldobjectenvironment.WorldObjectManager;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Set;
 
 import lombok.Getter;
 import lombok.Setter;
 import lombok.extern.slf4j.Slf4j;
 import net.jcip.annotations.GuardedBy;
 import asap.animationengine.mixed.MixedPlayer;
+import asap.animationengine.motionunit.TimedAnimationUnit;
 import asap.animationengine.restpose.RestPose;
 import asap.realizer.Player;
+import asap.realizer.feedback.FeedbackManager;
+import asap.realizer.pegboard.BMLBlockPeg;
+import asap.realizer.pegboard.PegBoard;
+import asap.realizer.pegboard.TimePeg;
 import asap.realizer.planunit.TimedPlanUnitState;
 
 /**
@@ -60,8 +66,9 @@ public class AnimationPlayer implements Player, MixedAnimationPlayer
     private VJoint vCurr;
     private VJoint vNext;
     private VJoint vAdditive;
-    
-    @Getter @Setter
+
+    @Getter
+    @Setter
     private String gazeTarget;
 
     private PhysicalHumanoid pHuman;
@@ -156,7 +163,6 @@ public class AnimationPlayer implements Player, MixedAnimationPlayer
         woManager = wom;
         // VJoint[] emptyArray = new VJoint[0];
 
-        
         vPrevStartPose = new SkeletonPose("prev", prevSkel, "TR");
         vCurrStartPose = new SkeletonPose("cur", curSkel, "TR");
         vNextStartPose = new SkeletonPose("next", nextSkel, "TR");
@@ -177,6 +183,23 @@ public class AnimationPlayer implements Player, MixedAnimationPlayer
         stepTime = h;
         app = planPlayer;
         prevValid = false;
+    }
+
+    public double getTransitionToRestDuration(Set<String> joints)
+    {
+        return app.getRestPose().getTransitionToRestDuration(vCurr, joints);
+    }
+
+    public TimedAnimationUnit createTransitionToRest(FeedbackManager fbm, Set<String> joints, double startTime, double duration,
+            String bmlId, String id, BMLBlockPeg bmlBlockPeg, PegBoard pb)
+    {
+        return app.getRestPose().createTransitionToRest(fbm, joints, startTime, duration, bmlId, id, bmlBlockPeg, pb);
+    }
+    
+    public TimedAnimationUnit createTransitionToRest(FeedbackManager fbm, Set<String> joints, TimePeg startPeg, TimePeg endPeg,
+            String bmlId, String id, BMLBlockPeg bmlBlockPeg, PegBoard pb)
+    {
+        return app.getRestPose().createTransitionToRest(fbm, joints, startPeg, endPeg, bmlId, id, bmlBlockPeg, pb);
     }
 
     @Override

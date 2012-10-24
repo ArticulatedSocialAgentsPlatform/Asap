@@ -52,10 +52,10 @@ public class SkeletonPoseRestPose implements RestPose
         poseTree = player.getVCurr().copyTree("rest-");
         for (VJoint vj : poseTree.getParts())
         {
-            if(vj.getSid()!=null)
+            if (vj.getSid() != null)
             {
                 vj.setRotation(Quat4f.getIdentity());
-            }            
+            }
         }
         if (pose != null)
         {
@@ -78,42 +78,49 @@ public class SkeletonPoseRestPose implements RestPose
     @Override
     public void play(double time, Set<String> kinematicJoints, Set<String> physicalJoints)
     {
-        if (poseTree==null)return;
-        for(VJoint vj:poseTree.getParts())
+        if (poseTree == null) return;
+        for (VJoint vj : poseTree.getParts())
         {
-            if(!kinematicJoints.contains(vj.getSid())&&!physicalJoints.contains(vj.getSid()))
+            if (!kinematicJoints.contains(vj.getSid()) && !physicalJoints.contains(vj.getSid()))
             {
                 float q[] = new float[4];
                 vj.getRotation(q);
                 String search = vj.getSid();
-                if (search==null)search = vj.getName();
+                if (search == null) search = vj.getName();
                 player.getVNext().getPart(search).setRotation(q);
             }
         }
     }
 
     @Override
-    public TimedAnimationMotionUnit createTransitionToRest(FeedbackManager fbm, Set<String> joints, double startTime, String bmlId, String id,
-            BMLBlockPeg bmlBlockPeg, PegBoard pb)
+    public TimedAnimationMotionUnit createTransitionToRest(FeedbackManager fbm, Set<String> joints, double startTime, String bmlId,
+            String id, BMLBlockPeg bmlBlockPeg, PegBoard pb)
     {
         return createTransitionToRest(fbm, joints, startTime, 1, bmlId, id, bmlBlockPeg, pb);
     }
 
     @Override
-    public TimedAnimationMotionUnit createTransitionToRest(FeedbackManager fbm, Set<String> joints, double startTime, double duration,
+    public TimedAnimationMotionUnit createTransitionToRest(FeedbackManager fbm, Set<String> joints, TimePeg startPeg, TimePeg endPeg,
             String bmlId, String id, BMLBlockPeg bmlBlockPeg, PegBoard pb)
     {
         TransitionMU mu = createTransitionToRest(joints);
         mu.addKeyPosition(new KeyPosition("start", 0));
         mu.addKeyPosition(new KeyPosition("end", 1));
         TimedAnimationMotionUnit tmu = new TimedAnimationMotionUnit(fbm, bmlBlockPeg, bmlId, id, mu, pb);
-        TimePeg startPeg = new TimePeg(bmlBlockPeg);
-        startPeg.setGlobalValue(startTime);
         tmu.setTimePeg("start", startPeg);
-        TimePeg endPeg = new OffsetPeg(startPeg, duration);
         tmu.setTimePeg("end", endPeg);
         tmu.setState(TimedPlanUnitState.LURKING);
         return tmu;
+    }
+
+    @Override
+    public TimedAnimationMotionUnit createTransitionToRest(FeedbackManager fbm, Set<String> joints, double startTime, double duration,
+            String bmlId, String id, BMLBlockPeg bmlBlockPeg, PegBoard pb)
+    {
+        TimePeg startPeg = new TimePeg(bmlBlockPeg);
+        startPeg.setGlobalValue(startTime);
+        TimePeg endPeg = new OffsetPeg(startPeg, duration);
+        return createTransitionToRest(fbm, joints, startPeg, endPeg, bmlId, id, bmlBlockPeg, pb);
     }
 
     @Override
@@ -190,4 +197,5 @@ public class SkeletonPoseRestPose implements RestPose
     {
 
     }
+
 }

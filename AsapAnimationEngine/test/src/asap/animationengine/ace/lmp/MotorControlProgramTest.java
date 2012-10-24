@@ -1,12 +1,15 @@
 package asap.animationengine.ace.lmp;
 
 import static asap.testutil.bml.feedback.FeedbackAsserts.assertEqualSyncPointProgress;
+import static org.mockito.Matchers.any;
 import static org.junit.Assert.assertEquals;
+import static org.mockito.Matchers.anyString;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Set;
 
 import org.junit.Before;
 import org.junit.Test;
@@ -17,6 +20,7 @@ import org.powermock.modules.junit4.PowerMockRunner;
 
 import saiba.bml.feedback.BMLSyncPointProgressFeedback;
 import saiba.bml.parser.Constraint;
+import asap.animationengine.AnimationPlayer;
 import asap.animationengine.motionunit.TimedAnimationUnit;
 import asap.bml.ext.murml.MURMLGestureBehaviour;
 import asap.motionunit.TMUPlayException;
@@ -24,6 +28,7 @@ import asap.realizer.BehaviourPlanningException;
 import asap.realizer.feedback.FeedbackManager;
 import asap.realizer.pegboard.BMLBlockPeg;
 import asap.realizer.pegboard.PegBoard;
+import asap.realizer.pegboard.TimePeg;
 import asap.realizer.planunit.TimedPlanUnitPlayException;
 import asap.realizer.planunit.TimedPlanUnitState;
 import asap.realizer.scheduler.BMLBlockManager;
@@ -44,11 +49,13 @@ public class MotorControlProgramTest extends AbstractTimedPlanUnitTest
 {
     private PegBoard pegBoard = new PegBoard();
     private TimedAnimationUnit mockTimedAnimationUnit = mock(TimedAnimationUnit.class);
+    private AnimationPlayer mockAnimationPlayer = mock(AnimationPlayer.class);
     private static double TIMING_PRECISION = 0.001;
     private static final double LMP_STROKE_TIME = 2d;
     private static final double LMP_END_TIME = 4d;
     private static final double LMP_START_TIME = 1d;
     
+    @SuppressWarnings("unchecked")
     @Before
     public void setup()
     {
@@ -56,17 +63,20 @@ public class MotorControlProgramTest extends AbstractTimedPlanUnitTest
         when(mockTimedAnimationUnit.getStartTime()).thenReturn(LMP_START_TIME);
         when(mockTimedAnimationUnit.getTime("stroke")).thenReturn(LMP_STROKE_TIME);
         when(mockTimedAnimationUnit.getTimePeg("stroke")).thenReturn(TimePegUtil.createTimePeg(LMP_STROKE_TIME));
+        when(mockAnimationPlayer.createTransitionToRest(any(FeedbackManager.class), any(Set.class), any(TimePeg.class), any(TimePeg.class),
+                anyString(), anyString(), any(BMLBlockPeg.class), any(PegBoard.class))).thenReturn(mockTimedAnimationUnit);
     }
     
     private MotorControlProgram setupPlanUnit(FeedbackManager bfm, BMLBlockPeg bbPeg, String bmlId, String id)
     {
-        return new MotorControlProgram(bfm, bbPeg, bmlId, id, pegBoard, new PegBoard());        
+        return new MotorControlProgram(bfm, bbPeg, bmlId, id, pegBoard, new PegBoard(), mockAnimationPlayer);        
     }
     
     @Override
     protected MotorControlProgram setupPlanUnit(FeedbackManager bfm, BMLBlockPeg bbPeg, String id, String bmlId, double startTime)
     {
         MotorControlProgram mcp = setupPlanUnit(bfm, bbPeg, bmlId,id);
+        mcp.addLMP(mockTimedAnimationUnit);
         mcp.setTimePeg("start",  TimePegUtil.createTimePeg(bbPeg, startTime));
         return mcp;
     }
@@ -205,7 +215,7 @@ public class MotorControlProgramTest extends AbstractTimedPlanUnitTest
         assertEquals(2, mcp.getTime("strokeStart"), TIMING_PRECISION);
         assertEquals(2, mcp.getTime("stroke"), TIMING_PRECISION);
         assertEquals(3, mcp.getTime("strokeEnd"), TIMING_PRECISION);
-        assertEquals(8, mcp.getTime("relax"), TIMING_PRECISION);
+        assertEquals(4, mcp.getTime("relax"), TIMING_PRECISION);
         assertEquals(8, mcp.getEndTime(), TIMING_PRECISION);
     }
     

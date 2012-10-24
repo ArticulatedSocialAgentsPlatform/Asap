@@ -938,7 +938,7 @@ public final class MURMLMUBuilder
             String id, PegBoard pb, AnimationPlayer aniPlayer) throws MUSetupException
     {
         PegBoard localPegBoard = new PegBoard();
-        MotorControlProgram mcp = new MotorControlProgram(bbm, bmlBlockPeg, bmlId, id, pb, localPegBoard);
+        MotorControlProgram mcp = new MotorControlProgram(bbm, bmlBlockPeg, bmlId, id, pb, localPegBoard, aniPlayer);
 
         if (murmlDescription.getDynamic() != null)
         {

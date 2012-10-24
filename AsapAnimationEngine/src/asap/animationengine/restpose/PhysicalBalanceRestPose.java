@@ -250,4 +250,12 @@ public class PhysicalBalanceRestPose implements RestPose
         resource = res;
     }
 
+    @Override
+    public TimedAnimationMotionUnit createTransitionToRest(FeedbackManager fbm, Set<String> joints, TimePeg startPeg, TimePeg endPeg,
+            String bmlId, String id, BMLBlockPeg bmlBlockPeg, PegBoard pb)
+    {
+        // TODO Auto-generated method stub
+        return null;
+    }
+
 }
