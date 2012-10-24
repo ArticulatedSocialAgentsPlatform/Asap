@@ -421,7 +421,7 @@ public class MotorControlProgram extends TimedAbstractPlanUnit implements TimedA
         }
         relaxUnit = aniPlayer.createTransitionToRest(NullFeedbackManager.getInstance(), usedJoints, startPeg, endPeg, getBMLId(), getId(),
                 bmlBlockPeg, globalPegBoard);
-        //relaxUnit.start(time);
+        relaxUnit.start(time);
         
         super.relaxUnit(time);
     }
