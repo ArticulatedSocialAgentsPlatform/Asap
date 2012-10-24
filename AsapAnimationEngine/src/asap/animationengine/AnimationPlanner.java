@@ -32,6 +32,7 @@ import saiba.bml.core.PostureShiftBehaviour;
 import asap.animationengine.gesturebinding.GestureBinding;
 import asap.animationengine.gesturebinding.MURMLMUBuilder;
 import asap.animationengine.motionunit.MUSetupException;
+import asap.animationengine.motionunit.TMUSetupException;
 import asap.animationengine.motionunit.TimedAnimationMotionUnit;
 import asap.animationengine.motionunit.TimedAnimationUnit;
 import asap.animationengine.restpose.RestPose;
@@ -132,7 +133,6 @@ public class AnimationPlanner extends AbstractPlanner<TimedAnimationUnit>
         // XXX ugly...
         if (tmu instanceof TimedAnimationMotionUnit)
         {
-            TimedAnimationMotionUnit tmut = (TimedAnimationMotionUnit) tmu;
             // apply syncs to tmu
             resolveDefaultKeyPositions(b, (TimedAnimationMotionUnit) tmu);
         }
@@ -175,9 +175,9 @@ public class AnimationPlanner extends AbstractPlanner<TimedAnimationUnit>
                 tmu = murmlMUBuilder.setupTMU(((MURMLGestureBehaviour) b).getMurmlDescription(), fbManager, bbPeg, b.getBmlId(), b.id,
                         pegBoard, player);
             }
-            catch (MUSetupException e)
+            catch (TMUSetupException e)
             {
-                throw new BehaviourPlanningException(b, "MURMLGestureBehaviour " + b.id + " could not be constructed.", e);
+                throw new BehaviourPlanningException(b, "MURMLGestureBehaviour " + b.id + " could not be constructed: "+e.getMessage(), e);
             }
         }
         else if (b instanceof PostureShiftBehaviour)

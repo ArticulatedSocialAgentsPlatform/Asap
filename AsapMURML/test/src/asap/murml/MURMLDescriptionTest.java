@@ -7,6 +7,7 @@ import static org.junit.Assert.assertThat;
 
 import org.junit.Test;
 
+import asap.murml.DynamicElement.Type;
 import asap.murml.testutil.MURMLTestUtil;
 
 /**
@@ -62,6 +63,32 @@ public class MURMLDescriptionTest
         assertEquals("vc2", frame1.getPosture().getJointValues().get(0).getJointSid());
     }
 
+    @Test
+    public void testHandLocationCurved()
+    {
+        // @formatter:off
+            String murmlScript =
+            "<murml-description xmlns=\"http://www.techfak.uni-bielefeld.de/ags/soa/murml\" id=\"voila_center\" scope=\"hand\">"+                
+                  "<dynamic slot=\"HandLocation\" scope=\"right_arm\">"+
+                    "<dynamicElement type=\"curve\" scope=\"right_arm\">"+
+                      "<value type=\"start\" name=\"LocLowerChest LocCCenter LocNorm\"/>"+
+                      "<value type=\"end\" name=\"LocStomach LocCenterRight LocFFar\"/>"+
+                    "</dynamicElement>"+
+                  "</dynamic>"+                                               
+            "</murml-description>";
+       // @formatter:on
+        MURMLDescription desc = new MURMLDescription();
+        desc.readXML(murmlScript);
+        
+        Dynamic handLoc = desc.getDynamic();
+        assertEquals(Slot.HandLocation, handLoc.getSlot());
+        assertEquals("right_arm", handLoc.getScope());
+        DynamicElement dynElem = handLoc.getDynamicElements().get(0);
+        assertEquals("LocLowerChest LocCCenter LocNorm", dynElem.getName("start"));
+        assertEquals("LocStomach LocCenterRight LocFFar", dynElem.getName("end"));
+        assertEquals(Type.CURVE, dynElem.getType());
+    }
+    
     @Test
     public void testProceduralGesture()
     {

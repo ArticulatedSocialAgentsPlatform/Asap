@@ -28,6 +28,7 @@ import asap.animationengine.ace.lmp.MotorControlProgram;
 import asap.animationengine.keyframe.MURMLKeyframeMU;
 import asap.animationengine.motionunit.AnimationUnit;
 import asap.animationengine.motionunit.MUSetupException;
+import asap.animationengine.motionunit.TMUSetupException;
 import asap.animationengine.motionunit.TimedAnimationUnit;
 import asap.hns.Hns;
 import asap.hns.ShapeSymbols;
@@ -110,7 +111,7 @@ public final class MURMLMUBuilder
      */
     private void appendSubTrajectory(List<DynamicElement> elements, String scope, GuidingSequence traj, TimedAnimationUnit tmu,
             FeedbackManager bbf, BMLBlockPeg bmlBlockPeg, String bmlId, String id, PegBoard pegBoard, MotorControlProgram mp,
-            AnimationPlayer aniPlayer)
+            AnimationPlayer aniPlayer) throws TMUSetupException
     {
         float[] ePos = Vec3f.getVec3f();
         double tEst = 0;
@@ -130,16 +131,17 @@ public final class MURMLMUBuilder
                 double d = 0;
 
                 // linear movement given absolutely in terms of start and end points
-                if (hns.getHandLocation(segment.getName("end"), ePos))
+                if (segment.getName("end") != null && hns.getHandLocation(segment.getName("end"), ePos))
                 {
                     Vec3f.sub(dir, ePos, sPos);
                     Vec3f.normalize(dir);
                 }
                 // linear movement given in terms of start point end direction
-                else if (hns.getAbsoluteDirection(segment.getName("direction"), dir))
+                else if (segment.getName("direction") != null && segment.getName("distance") != null
+                        && hns.getAbsoluteDirection(segment.getName("direction"), dir))
                 {
                     Vec3f.normalize(dir);
-                    double dist = hns.getDistance(segment.getName("disance"));
+                    double dist = hns.getDistance(segment.getName("distance"));
 
                     if (dist > 0)
                     {
@@ -158,8 +160,7 @@ public final class MURMLMUBuilder
                 // no valid definition, ignoring movement segment
                 else
                 {
-                    log.warn("ArmMotorControl::appendSubtrajectory : invalid definition of for linear segment");
-                    return;
+                    throw new TMUSetupException("ArmMotorControl::appendSubtrajectory : invalid definition of for linear segment", mp);
                 }
 
                 // -- create guiding stroke, estimate duration and add to subtrajectory
@@ -181,31 +182,22 @@ public final class MURMLMUBuilder
                 float[] nVec = Vec3f.getVec3f();
                 ShapeSymbols shape = ShapeSymbols.RightS;
 
-                // parse obligatory parameters
-                boolean valid = true;
-
-                if (!hns.getHandLocation(segment.getName("end"), ePos))
+                if (segment.getName("end") == null || !hns.getHandLocation(segment.getName("end"), ePos))
                 {
-                    log.warn("ArmMotorControl::appendSubtrajectory : invalid parameter end={} for curved guiding stroke!",
-                            segment.getName("end"));
-                    return;
+                    throw new TMUSetupException("ArmMotorControl::appendSubtrajectory : invalid or missing parameter end" + segment.getName("end")
+                            + "for curved guiding stroke!", mp);
                 }
 
-                if (!hns.getAbsoluteDirection(segment.getName("normal"), nVec))
+                if (segment.getName("normal")==null||!hns.getAbsoluteDirection(segment.getName("normal"), nVec))
                 {
-                    log.warn("ArmMotorControl::appendSubtrajectory : invalid parameter normal={} for curved guiding stroke!",
-                            segment.getName("normal"));
-                    return;
+                    throw new TMUSetupException("ArmMotorControl::appendSubtrajectory : invalid or missing parameter normal for curved guiding stroke!, normal="+
+                            segment.getName("normal"),mp);                    
                 }
 
-                /*
-                 * if ( vn = segment->getValueFor("shape") ) {
-                 * 
-                 * // shape
-                 * valid &= figure->HNStranslator.getElementShape( vn->getValue(), shape );
-                 * }
-                 */
-                shape = hns.getElementShape(segment.getName("shape"));
+                if (segment.getName("shape") != null)
+                {
+                    shape = hns.getElementShape(segment.getName("shape"));
+                }
 
                 // parse optional parameters
                 float extent = 0.2f;
@@ -654,7 +646,7 @@ public final class MURMLMUBuilder
 
                 // create local motor program for anticipated stroke sequence
                 LMPWristPos wristMove = new LMPWristPos(scope, bbm, bmlBlockPeg, bmlId, id, pb, trajectory, aniPlayer);
-                
+
                 // //cout << "creating lmp from guiding sequence:" << endl; trajectory.writeTo(cout);
                 // //lmp->overshoot(mcLoc->getEndTPC().time);
 
@@ -665,8 +657,7 @@ public final class MURMLMUBuilder
                 // TODO: solve with timepegs
                 // else lmp->activateSuccessorAt( wristMove, trajectory.getStartTPC() );
                 tmu = wristMove;
-                
-                
+
                 //
                 // // optionally, add special lmp for swivel movement
                 // if (swivel != 0.)
@@ -684,7 +675,7 @@ public final class MURMLMUBuilder
                 // mp->addLMP( lmpSwiv );
                 // }
                 //
-                
+
                 // clear trajectory plan and set origin for subsequent trajectory
                 // trajectory.clear();
                 // trajectory.setStartPos( ePos );
@@ -705,12 +696,13 @@ public final class MURMLMUBuilder
             // trajectory.addGuidingStroke( new LinearGStroke (GuidingStroke::STP_RETRACT, eT,ePos) );
             // }
 
-            //createPosLMP(scope, trajectory, mcp, tmu, bbm, bmlBlockPeg, bmlId, id, pb, aniPlayer);
+            // createPosLMP(scope, trajectory, mcp, tmu, bbm, bmlBlockPeg, bmlId, id, pb, aniPlayer);
         }
     }
 
     public void getDynamicHandLocationElementsTMU(String scope, List<DynamicElement> elements, FeedbackManager bbm,
             BMLBlockPeg bmlBlockPeg, String bmlId, String id, PegBoard pb, MotorControlProgram mcp, AnimationPlayer aniPlayer)
+            throws TMUSetupException
     {
         if (elements.isEmpty())
         {
@@ -806,10 +798,18 @@ public final class MURMLMUBuilder
     }
 
     public TimedAnimationUnit getKeyFramingTMU(Keyframing kf, FeedbackManager bbm, BMLBlockPeg bmlBlockPeg, String bmlId, String id,
-            PegBoard pb, AnimationPlayer aniPlayer) throws MUSetupException
+            PegBoard pb, AnimationPlayer aniPlayer) throws TMUSetupException
     {
         AnimationUnit mu = getKeyFramingMU(kf);
-        AnimationUnit muCopy = mu.copy(aniPlayer);
+        AnimationUnit muCopy;
+        try
+        {
+            muCopy = mu.copy(aniPlayer);
+        }
+        catch (MUSetupException e)
+        {
+            throw new TMUSetupException(e.getMessage(), null, e);
+        }
         return muCopy.createTMU(bbm, bmlBlockPeg, bmlId, id, pb);
     }
 
@@ -879,7 +879,7 @@ public final class MURMLMUBuilder
     }
 
     public TimedAnimationUnit setupTMU(String murmlStr, FeedbackManager bbm, BMLBlockPeg bmlBlockPeg, String bmlId, String id, PegBoard pb,
-            AnimationPlayer aniPlayer) throws MUSetupException
+            AnimationPlayer aniPlayer) throws TMUSetupException
     {
         MURMLDescription def = new MURMLDescription();
         def.readXML(murmlStr);
@@ -935,7 +935,7 @@ public final class MURMLMUBuilder
     }
 
     public TimedAnimationUnit setupTMU(MURMLDescription murmlDescription, FeedbackManager bbm, BMLBlockPeg bmlBlockPeg, String bmlId,
-            String id, PegBoard pb, AnimationPlayer aniPlayer) throws MUSetupException
+            String id, PegBoard pb, AnimationPlayer aniPlayer) throws TMUSetupException
     {
         PegBoard localPegBoard = new PegBoard();
         MotorControlProgram mcp = new MotorControlProgram(bbm, bmlBlockPeg, bmlId, id, pb, localPegBoard, aniPlayer);
@@ -1036,7 +1036,7 @@ public final class MURMLMUBuilder
     }
 
     private void parseProceduralDynamic(FeedbackManager bbm, BMLBlockPeg bmlBlockPeg, String bmlId, String id, AnimationPlayer aniPlayer,
-            PegBoard localPegBoard, MotorControlProgram mcp, Dynamic dyn, List<OrientConstraint> ocVec)
+            PegBoard localPegBoard, MotorControlProgram mcp, Dynamic dyn, List<OrientConstraint> ocVec) throws TMUSetupException
     {
         switch (dyn.getSlot())
         {

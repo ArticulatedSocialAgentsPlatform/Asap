@@ -29,6 +29,7 @@ import asap.animationengine.ace.lmp.MotorControlProgram;
 import asap.animationengine.keyframe.MURMLKeyframeMU;
 import asap.animationengine.motionunit.AnimationUnit;
 import asap.animationengine.motionunit.MUSetupException;
+import asap.animationengine.motionunit.TMUSetupException;
 import asap.animationengine.motionunit.TimedAnimationUnit;
 import asap.hns.Hns;
 import asap.hns.ShapeSymbols;
@@ -218,7 +219,7 @@ public class MURMLMUBuilderTest
     }
 
     @Test
-    public void setupTMUStaticHandLocation() throws MUSetupException
+    public void setupTMUStaticHandLocation() throws TMUSetupException
     {
         //@formatter:off
         String murmlString =
@@ -236,7 +237,7 @@ public class MURMLMUBuilderTest
     }
 
     @Test
-    public void setupTMUHandLocation() throws MUSetupException
+    public void setupTMUHandLocation() throws TMUSetupException
     {
         //@formatter:off
         String murmlString =
@@ -247,7 +248,7 @@ public class MURMLMUBuilderTest
                             "<value type=\"end\" name=\"LocShoulder LocCenterLeft LocNorm\"/>"+
                             "<value type=\"normal\" name=\"DirU\"/>"+
                             "<value type=\"shape\" name=\"LeftC\"/>"+
-                            "<value type=\"extension\" name=\"0.6\"/>"+
+                            "<value type=\"extension\" name=\"0.6\"/>"+                                                        
                         "</dynamicElement>"+
                         "<dynamicElement type=\"curve\">"+
                             "<value type=\"start\" name=\"LocShoulder LocCenterLeft LocNorm\"/>"+
@@ -291,7 +292,7 @@ public class MURMLMUBuilderTest
     }
 
     @Test
-    public void setupTMUPalmOrientation() throws MUSetupException
+    public void setupTMUPalmOrientation() throws TMUSetupException
     {
         //@formatter:off
         String murmlString = 
@@ -317,7 +318,7 @@ public class MURMLMUBuilderTest
     }
 
     @Test
-    public void setupTMURelativeDynamicPalmOrientation() throws MUSetupException
+    public void setupTMURelativeDynamicPalmOrientation() throws TMUSetupException
     {
         //@formatter:off
         String murmlString = 
@@ -344,7 +345,7 @@ public class MURMLMUBuilderTest
     }
 
     @Test
-    public void setupTMUStaticPalmOrientation() throws MUSetupException
+    public void setupTMUStaticPalmOrientation() throws TMUSetupException
     {
         //@formatter:off
         String murmlString = 
@@ -365,7 +366,7 @@ public class MURMLMUBuilderTest
     }
 
     @Test
-    public void setupTMURelativeStaticPalmOrientation() throws MUSetupException
+    public void setupTMURelativeStaticPalmOrientation() throws TMUSetupException
     {
         //@formatter:off
         String murmlString =
@@ -387,7 +388,7 @@ public class MURMLMUBuilderTest
     }
 
     @Test
-    public void setupTMUStaticPalmAndFingerOrientation() throws MUSetupException
+    public void setupTMUStaticPalmAndFingerOrientation() throws TMUSetupException
     {
         //@formatter:off
         String murmlString = 
@@ -411,7 +412,7 @@ public class MURMLMUBuilderTest
     }
 
     @Test
-    public void setupTMUHandLocation2() throws MUSetupException
+    public void setupTMUHandLocation2() throws TMUSetupException
     {
         //@formatter:off
         String murmlString =
