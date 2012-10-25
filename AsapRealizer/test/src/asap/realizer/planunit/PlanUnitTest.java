@@ -96,5 +96,6 @@ public class PlanUnitTest
         apu.play(3);        
         assertTrue(apu.getState()==TimedPlanUnitState.DONE);
         verify(apu,times(0)).playUnit(anyDouble());
+        verify(apu,times(1)).relaxUnit(3);
     }
 }

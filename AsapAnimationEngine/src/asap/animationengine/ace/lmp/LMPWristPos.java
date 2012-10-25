@@ -135,6 +135,12 @@ public class LMPWristPos extends LMPPos
         super.startUnit(time);
     }
 
+    @Override
+    public void relaxUnit(double time)
+    {
+        
+    }
+    
     private void buildTrajectory()
     {
         spline = buildSpline(gSeq);
@@ -243,6 +249,7 @@ public class LMPWristPos extends LMPPos
                     tv.add(cs.getFT2());
 
                     // append stroke end point & velocity
+                    pv.add(cs.getEndPos());
                     tv.add(_gSeq.getStroke(i).getEDt()+sT);
                     sT+=_gSeq.getStroke(i).getEDt();
                 }

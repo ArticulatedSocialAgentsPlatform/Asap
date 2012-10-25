@@ -5,7 +5,6 @@ import asap.animationengine.ace.GuidingSequence;
 import asap.realizer.feedback.FeedbackManager;
 import asap.realizer.pegboard.BMLBlockPeg;
 import asap.realizer.pegboard.PegBoard;
-import asap.realizer.pegboard.TimePeg;
 
 /**
  * Base class of all local motor programs for positioning in Cartesian space.
@@ -16,11 +15,9 @@ public abstract class LMPPos extends LMP
 {
     public LMPPos(FeedbackManager bbf, BMLBlockPeg bmlBlockPeg, String bmlId, String id, PegBoard pb)
     {
-        super(bbf, bmlBlockPeg, bmlId, id, pb);
-        Mat4f.setIdentity(baseFrame);
+        super(bbf, bmlBlockPeg, bmlId, id, pb);        
     }
-    protected GuidingSequence gSeq;
-    private float baseFrame[] = Mat4f.getMat4f();
+    protected GuidingSequence gSeq;    
 
     public void setGuidingSeq(GuidingSequence gSeq)
     {

@@ -140,17 +140,19 @@ public abstract class TimedAbstractPlanUnit implements TimedPlanUnit
                 logger.warn("Calling sub unit of {}:{} play with time : {} < startTime({}).", new Object[]{getBMLId(),getId(),time, getStartTime()});
             }
         }
+        
+        if(getRelaxTime()!=TimePeg.VALUE_UNKNOWN)
+        {
+            if(time>getRelaxTime() && getState() == TimedPlanUnitState.IN_EXEC)
+            {
+                setState(TimedPlanUnitState.SUBSIDING);
+                relaxUnit(time);
+            }
+        }
+        
         if (time < getEndTime() || getEndTime() == TimePeg.VALUE_UNKNOWN)
         {
-            logger.debug("Entering playUnit {}:{}", bmlBlockId, id);
-            if(getRelaxTime()!=TimePeg.VALUE_UNKNOWN)
-            {
-                if(time>getRelaxTime() && getState() == TimedPlanUnitState.IN_EXEC)
-                {
-                    setState(TimedPlanUnitState.SUBSIDING);
-                    relaxUnit(time);
-                }
-            }
+            logger.debug("Entering playUnit {}:{}", bmlBlockId, id);            
             playUnit(time);
         }
         else

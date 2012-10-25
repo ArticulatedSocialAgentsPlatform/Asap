@@ -3,10 +3,7 @@ package asap.animationengine.ace.lmp;
 import java.util.ArrayList;
 import java.util.List;
 
-import saiba.bml.core.Behaviour;
-
 import asap.animationengine.motionunit.TimedAnimationUnit;
-import asap.realizer.BehaviourPlanningException;
 import asap.realizer.feedback.FeedbackManager;
 import asap.realizer.pegboard.BMLBlockPeg;
 import asap.realizer.pegboard.OffsetPeg;
