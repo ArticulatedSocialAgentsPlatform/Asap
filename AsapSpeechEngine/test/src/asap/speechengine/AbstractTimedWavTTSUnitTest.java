@@ -63,6 +63,12 @@ public abstract class AbstractTimedWavTTSUnitTest extends AbstractTimedPlanUnitT
         }                
     }
     
+    @Override //behavior does not subside
+    public void testSubsiding()
+    {
+        
+    }
+    
     @Override
     protected void assertSubsiding(TimedPlanUnit tpu)
     {
