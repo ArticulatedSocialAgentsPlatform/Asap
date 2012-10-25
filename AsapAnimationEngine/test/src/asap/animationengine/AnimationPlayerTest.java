@@ -27,7 +27,7 @@ import saiba.bml.feedback.BMLWarningFeedback;
 import asap.animationengine.motionunit.TimedAnimationMotionUnit;
 import asap.animationengine.motionunit.TimedAnimationUnit;
 import asap.animationengine.restpose.SkeletonPoseRestPose;
-import asap.bml.feedback.ListBMLWarningListener;
+import asap.bml.feedback.ListBMLFeedbackListener;
 import asap.realizer.feedback.FeedbackManager;
 import asap.realizer.feedback.FeedbackManagerImpl;
 import asap.realizer.pegboard.PegBoard;
@@ -76,7 +76,7 @@ public class AnimationPlayerTest
                         new DefaultTimedPlanUnitPlayer(),pegBoard)                
                 );
         beList = new ArrayList<BMLWarningFeedback>();
-        fbManager.addWarningListener(new ListBMLWarningListener(beList));
+        fbManager.addFeedbackListener(new ListBMLFeedbackListener.Builder().warningList(beList).build());
     }    
 
     @Test

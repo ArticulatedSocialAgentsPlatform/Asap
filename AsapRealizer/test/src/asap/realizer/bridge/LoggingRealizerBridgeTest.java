@@ -8,6 +8,7 @@ import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
 import static org.powermock.api.mockito.PowerMockito.mock;
 import static org.powermock.api.mockito.PowerMockito.when;
+import hmi.util.Clock;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -21,13 +22,11 @@ import org.powermock.modules.junit4.PowerMockRunner;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import saiba.bml.feedback.BMLFeedback;
 import saiba.bml.feedback.BMLSyncPointProgressFeedback;
 import asap.bml.bridge.RealizerPort;
-import asap.bml.feedback.BMLListener;
-import asap.bml.feedback.ListFeedbackListener;
-import asap.bml.util.BMLFeedbackManager;
-import hmi.util.Clock;
+import asap.bml.feedback.BMLFeedbackListener;
+import asap.bml.feedback.BMLFeedbackManager;
+import asap.bml.feedback.ListBMLFeedbackListener;
 /**
  * Unit tests for the LoggingRealizerBridge
  * @author Herwin
@@ -49,9 +48,9 @@ public class LoggingRealizerBridgeTest
         private BMLFeedbackManager feedbackManager = new BMLFeedbackManager();
         private String performedBML;
         
-        public void sendFeedback(BMLFeedback fb)
+        public void sendFeedback(String feedback)
         {
-            feedbackManager.sendFeedback(fb);
+            feedbackManager.sendFeedback(feedback);
         }
         
         public String getPerformedBML()
@@ -60,7 +59,7 @@ public class LoggingRealizerBridgeTest
         }
 
         @Override
-        public void addListeners(BMLListener... bmlListeners)
+        public void addListeners(BMLFeedbackListener... bmlListeners)
         {
             feedbackManager.addListeners(bmlListeners);
         }
@@ -75,7 +74,7 @@ public class LoggingRealizerBridgeTest
         public void removeAllListeners()
         {
             feedbackManager.removeAllListeners();
-        }        
+        }
     }
     
     private static class StubInputBridge implements RealizerPort
@@ -87,7 +86,7 @@ public class LoggingRealizerBridgeTest
         }
         
         @Override
-        public void addListeners(BMLListener... listeners)
+        public void addListeners(BMLFeedbackListener... listeners)
         {
             outBridge.addListeners(listeners);            
         }
@@ -116,7 +115,7 @@ public class LoggingRealizerBridgeTest
         logBridge = new LoggingRealizerBridge(mockLogger, outputBridge, mockSchedulingClock);
         inputBridge = new StubInputBridge(logBridge);
         fbList = new ArrayList<BMLSyncPointProgressFeedback>();
-        inputBridge.addListeners(new ListFeedbackListener(fbList));        
+        inputBridge.addListeners(new ListBMLFeedbackListener.Builder().feedBackList(fbList).build());        
     }
     
     @Test
@@ -135,7 +134,7 @@ public class LoggingRealizerBridgeTest
     public void testLogFeedback()
     {
         BMLSyncPointProgressFeedback spp = new BMLSyncPointProgressFeedback("bml1", "beh1", "sync1", 0, 0);
-        outputBridge.sendFeedback(spp);
+        outputBridge.sendFeedback(spp.toXMLString());
         assertOneFeedback(spp,fbList);
         
         final String logString = spp.toXMLString();

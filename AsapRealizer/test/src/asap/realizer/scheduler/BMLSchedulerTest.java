@@ -6,6 +6,8 @@ import static org.hamcrest.number.OrderingComparison.greaterThan;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNull;
 import static org.junit.Assert.fail;
+import hmi.util.Clock;
+import hmi.util.ClockListener;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -31,8 +33,7 @@ import saiba.bml.feedback.BMLPredictionFeedback;
 import saiba.bml.feedback.BMLSyncPointProgressFeedback;
 import saiba.bml.parser.BMLParser;
 import asap.bml.ext.bmlt.BMLTBMLBehaviorAttributes;
-import asap.bml.feedback.ListBMLPredictionListener;
-import asap.bml.feedback.ListFeedbackListener;
+import asap.bml.feedback.ListBMLFeedbackListener;
 import asap.realizer.BehaviorNotFoundException;
 import asap.realizer.BehaviourPlanningException;
 import asap.realizer.Engine;
@@ -48,8 +49,6 @@ import asap.realizer.planunit.PlanUnitFloatParameterNotFoundException;
 import asap.realizer.planunit.PlanUnitParameterNotFoundException;
 import asap.realizer.planunit.TimedPlanUnit;
 import asap.realizer.planunit.TimedPlanUnitState;
-import hmi.util.Clock;
-import hmi.util.ClockListener;
 
 import com.google.common.collect.ImmutableSet;
 
@@ -295,8 +294,7 @@ public class BMLSchedulerTest
 
     private BMLParser parser;
 
-    private ListFeedbackListener listFeedbackListener;
-    private ListBMLPredictionListener listPredictionListener;
+    private ListBMLFeedbackListener listFeedbackListener;    
 
     private List<BMLSyncPointProgressFeedback> feedBackList;
 
@@ -380,10 +378,12 @@ public class BMLSchedulerTest
 
         feedBackList = new ArrayList<BMLSyncPointProgressFeedback>();
         blockProgressFeedbackList = new ArrayList<BMLBlockProgressFeedback>();
-        listFeedbackListener = new ListFeedbackListener(feedBackList, blockProgressFeedbackList);
-        scheduler.addFeedbackListener(listFeedbackListener);
-        listPredictionListener = new ListBMLPredictionListener(predictionFeedback);
-        scheduler.addPredictionListener(listPredictionListener);
+        listFeedbackListener = new ListBMLFeedbackListener.Builder()
+                                    .predictionList(predictionFeedback)
+                                    .feedBackList(feedBackList)
+                                    .blockFeedbackList(blockProgressFeedbackList)
+                                    .build();
+        scheduler.addFeedbackListener(listFeedbackListener);        
     }
 
     private void parseBML(String str)
@@ -885,7 +885,7 @@ public class BMLSchedulerTest
         parseBML(createNonEmptyBML("bml2"));
         parseBML(createNonEmptyBML("bml3", "composition=\"APPEND\""));
         scheduler.schedule();
-        List<BMLBlockPredictionFeedback> blockStartPredictions = listPredictionListener.getBlockStartOnlyPredictions();
+        List<BMLBlockPredictionFeedback> blockStartPredictions = listFeedbackListener.getBlockStartOnlyPredictions();
         assertEquals(3, blockStartPredictions.size());
         assertEquals(2d, blockStartPredictions.get(2).getGlobalStart(), PREDICTION_PRECISION);
         assertEquals(2, pegBoard.getBMLBlockPeg("bml3").getValue(), PREDICTION_PRECISION);
@@ -900,7 +900,7 @@ public class BMLSchedulerTest
         parseBML(createNonEmptyBML("bml2", "composition=\"APPEND\""));
         parseBML(createNonEmptyBML("bml3", "composition=\"APPEND\""));
         scheduler.schedule();
-        List<BMLBlockPredictionFeedback> blockStartPredictions = listPredictionListener.getBlockStartOnlyPredictions();
+        List<BMLBlockPredictionFeedback> blockStartPredictions = listFeedbackListener.getBlockStartOnlyPredictions();
         assertEquals(3, blockStartPredictions.size());
         assertEquals(0d, blockStartPredictions.get(0).getGlobalStart(), PREDICTION_PRECISION);
         assertEquals(2d, blockStartPredictions.get(1).getGlobalStart(), PREDICTION_PRECISION);
@@ -918,8 +918,8 @@ public class BMLSchedulerTest
         parseBML(createNonEmptyBML("bml2"));
         parseBML(createNonEmptyBML("bml3", "composition=\"APPEND-AFTER(bml2)\""));
         scheduler.schedule();
-        List<BMLBlockPredictionFeedback> blockStartPredictions = listPredictionListener.getBlockStartOnlyPredictions();
-        List<BMLBlockPredictionFeedback> blockFinishedPredictions = listPredictionListener.getBlockEndPredictions();
+        List<BMLBlockPredictionFeedback> blockStartPredictions = listFeedbackListener.getBlockStartOnlyPredictions();
+        List<BMLBlockPredictionFeedback> blockFinishedPredictions = listFeedbackListener.getBlockEndPredictions();
 
         assertEquals(3, blockStartPredictions.size());
         assertEquals(1d, blockStartPredictions.get(2).getGlobalStart(), PREDICTION_PRECISION);
@@ -939,8 +939,8 @@ public class BMLSchedulerTest
         parseBML(createNonEmptyBML("bml2"));
         parseBML(createNonEmptyBML("bml3", "composition=\"APPEND\""));
         scheduler.schedule();
-        List<BMLBlockPredictionFeedback> blockStartPredictions = listPredictionListener.getBlockStartOnlyPredictions();
-        List<BMLBlockPredictionFeedback> blockFinishedPredictions = listPredictionListener.getBlockEndPredictions();
+        List<BMLBlockPredictionFeedback> blockStartPredictions = listFeedbackListener.getBlockStartOnlyPredictions();
+        List<BMLBlockPredictionFeedback> blockFinishedPredictions = listFeedbackListener.getBlockEndPredictions();
         assertEquals(3, blockStartPredictions.size());
         assertEquals(5d, blockStartPredictions.get(2).getGlobalStart(), PREDICTION_PRECISION);
         assertEquals(5d, blockFinishedPredictions.get(2).getGlobalStart(), PREDICTION_PRECISION);
@@ -956,8 +956,8 @@ public class BMLSchedulerTest
         stubEngine.addBlockEnd("bml1", 0);
         parseBML(createEmptyBML("bml1", ""));
         scheduler.schedule();
-        List<BMLBlockPredictionFeedback> blockStartPredictions = listPredictionListener.getBlockStartOnlyPredictions();
-        List<BMLBlockPredictionFeedback> blockFinishedPredictions = listPredictionListener.getBlockEndPredictions();
+        List<BMLBlockPredictionFeedback> blockStartPredictions = listFeedbackListener.getBlockStartOnlyPredictions();
+        List<BMLBlockPredictionFeedback> blockFinishedPredictions = listFeedbackListener.getBlockEndPredictions();
         assertEquals(3d, blockStartPredictions.get(0).getGlobalStart(), PREDICTION_PRECISION);
         assertEquals(3d, blockFinishedPredictions.get(0).getGlobalStart(), PREDICTION_PRECISION);
         assertEquals(3d, blockFinishedPredictions.get(0).getGlobalEnd(), PREDICTION_PRECISION);

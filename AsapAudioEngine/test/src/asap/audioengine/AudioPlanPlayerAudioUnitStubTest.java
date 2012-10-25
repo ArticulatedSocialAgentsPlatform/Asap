@@ -10,8 +10,7 @@ import org.junit.Before;
 import org.junit.Test;
 
 import saiba.bml.feedback.BMLWarningFeedback;
-
-import asap.bml.feedback.ListBMLWarningListener;
+import asap.bml.feedback.ListBMLFeedbackListener;
 import asap.realizer.feedback.FeedbackManager;
 import asap.realizer.pegboard.BMLBlockPeg;
 import asap.realizer.pegboard.TimePeg;
@@ -48,7 +47,7 @@ public class AudioPlanPlayerAudioUnitStubTest
         tpStart.setGlobalValue(0);
         auStub.setStart(tpStart);
         
-        app.addWarningListener(new ListBMLWarningListener(beList));        
+        app.addFeedbackListener(new ListBMLFeedbackListener.Builder().warningList(beList).build());        
         planManager.addPlanUnit(auStub);
         app.play(0);
         

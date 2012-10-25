@@ -36,8 +36,6 @@ import saiba.bml.core.BehaviourBlock;
 import saiba.bml.feedback.BMLWarningFeedback;
 import saiba.bml.parser.BMLParser;
 import asap.bml.feedback.BMLFeedbackListener;
-import asap.bml.feedback.BMLPredictionListener;
-import asap.bml.feedback.BMLWarningListener;
 import asap.realizer.anticipator.Anticipator;
 import asap.realizer.feedback.FeedbackManager;
 import asap.realizer.pegboard.PegBoard;
@@ -150,34 +148,12 @@ public class AsapRealizer
     }
 
     /**
-     * Remove all feedback listeners and set a new one for the animation planner (who sets it in all newly created tmus).
+     * Remove all feedback listeners and set a new one for the planners (who sets it in all newly created tmus).
      */
     public void setFeedbackListener(BMLFeedbackListener f)
     {
         fbManager.removeAllFeedbackListeners();
         fbManager.addFeedbackListener(f);
-    }
-
-    /**
-     * Remove all warning listeners and set a new one for the scheduler and animation player.
-     */
-    public void setWarningListener(BMLWarningListener w)
-    {
-        scheduler.removeAllWarningListeners();
-        scheduler.addWarningListener(w);
-    }
-
-    public void addPredictionListener(BMLPredictionListener bp)
-    {
-        scheduler.addPredictionListener(bp);
-    }
-
-    /**
-     * add a warninglistener to the realizer. This listener will be registered with the scheduler.
-     */
-    public void addWarningListener(BMLWarningListener newListener)
-    {
-        scheduler.addWarningListener(newListener);
     }
 
     /**

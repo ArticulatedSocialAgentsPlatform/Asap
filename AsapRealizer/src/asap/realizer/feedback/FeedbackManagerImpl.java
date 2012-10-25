@@ -14,8 +14,6 @@ import saiba.bml.feedback.BMLPredictionFeedback;
 import saiba.bml.feedback.BMLSyncPointProgressFeedback;
 import saiba.bml.feedback.BMLWarningFeedback;
 import asap.bml.feedback.BMLFeedbackListener;
-import asap.bml.feedback.BMLPredictionListener;
-import asap.bml.feedback.BMLWarningListener;
 import asap.realizer.planunit.TimedPlanUnit;
 import asap.realizer.scheduler.BMLBlockManager;
 
@@ -35,11 +33,6 @@ public class FeedbackManagerImpl implements FeedbackManager
     @GuardedBy("feedbackListeners")
     private final List<BMLFeedbackListener> feedbackListeners = Collections.synchronizedList(new ArrayList<BMLFeedbackListener>());
 
-    @GuardedBy("warningListeners")
-    private final List<BMLWarningListener> warningListeners = Collections.synchronizedList(new ArrayList<BMLWarningListener>());
-
-    @GuardedBy("planningListeners")
-    private final List<BMLPredictionListener> predictionListeners = Collections.synchronizedList(new ArrayList<BMLPredictionListener>());
     private final String characterId;
 
     public FeedbackManagerImpl(BMLBlockManager bbm, String characterId)
@@ -72,7 +65,7 @@ public class FeedbackManagerImpl implements FeedbackManager
             {
                 try
                 {
-                    fbl.syncProgress(fb);
+                    fbl.feedback(fb.toXMLString());
                 }
                 catch (Exception ex)
                 {
@@ -100,7 +93,7 @@ public class FeedbackManagerImpl implements FeedbackManager
                 {
                     try
                     {
-                        fbl.syncProgress(fb);
+                        fbl.feedback(fb.toXMLString());
                     }
                     catch (Exception ex)
                     {
@@ -142,7 +135,7 @@ public class FeedbackManagerImpl implements FeedbackManager
             {
                 try
                 {
-                    fbl.blockProgress(psf);
+                    fbl.feedback(psf.toXMLString());
                 }
                 catch (Exception ex)
                 {
@@ -153,46 +146,17 @@ public class FeedbackManagerImpl implements FeedbackManager
         bmlBlockManager.blockProgress(psf);
     }    
 
-    @Override
-    public void addPredictionListener(BMLPredictionListener p)
-    {
-        predictionListeners.add(p);
-    }
-
-    @Override
-    public void removeAllPredictionListeners()
-    {
-        predictionListeners.clear();
-    }
-
-    @Override
-    public void addWarningListener(BMLWarningListener ws)
-    {
-        warningListeners.add(ws);
-    }
-
-    @Override
-    public void removeAllWarningListeners()
-    {
-        warningListeners.clear();
-    }
-
-    @Override
-    public void removeWarningListener(BMLWarningListener ws)
-    {
-        warningListeners.remove(ws);
-    }
-
+    
     @Override
     public void prediction(BMLPredictionFeedback bpf)
     {
-        synchronized (predictionListeners)
+        synchronized (feedbackListeners)
         {
-            for (BMLPredictionListener pl : predictionListeners)
+            for (BMLFeedbackListener pl : feedbackListeners)
             {
                 try
                 {
-                    pl.prediction(bpf);
+                    pl.feedback(bpf.toXMLString());
                 }
                 catch (Exception ex)
                 {
@@ -206,13 +170,13 @@ public class FeedbackManagerImpl implements FeedbackManager
     public void warn(BMLWarningFeedback w)
     {
         w.setCharacterId(characterId);
-        synchronized (warningListeners)
+        synchronized (feedbackListeners)
         {
-            for (BMLWarningListener wl : warningListeners)
+            for (BMLFeedbackListener wl : feedbackListeners)
             {
                 try
                 {
-                    wl.warn(w);
+                    wl.feedback(w.toXMLString());
                 }
                 catch (Exception ex)
                 {

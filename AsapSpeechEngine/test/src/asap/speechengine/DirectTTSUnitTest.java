@@ -16,7 +16,7 @@ import org.powermock.modules.junit4.PowerMockRunner;
 
 import saiba.bml.core.SpeechBehaviour;
 import saiba.bml.feedback.BMLSyncPointProgressFeedback;
-import asap.bml.feedback.ListFeedbackListener;
+import asap.bml.feedback.ListBMLFeedbackListener;
 import asap.realizer.feedback.FeedbackManager;
 import asap.realizer.feedback.FeedbackManagerImpl;
 import asap.realizer.pegboard.BMLBlockPeg;
@@ -94,7 +94,7 @@ public class DirectTTSUnitTest extends AbstractTimedPlanUnitTest
         when(mockTTSBinding.getTiming(SpeechBehaviour.class, "Hello world")).thenReturn(mockTimingInfo);
         when(mockTimingInfo.getDuration()).thenReturn(3d);
 
-        fbManager.addFeedbackListener(new ListFeedbackListener(feedbackList));
+        fbManager.addFeedbackListener(new ListBMLFeedbackListener.Builder().feedBackList(feedbackList).build());
         ttsUnit.setStart(tp);
         ttsUnit.setup();
         ttsUnit.setState(TimedPlanUnitState.LURKING);

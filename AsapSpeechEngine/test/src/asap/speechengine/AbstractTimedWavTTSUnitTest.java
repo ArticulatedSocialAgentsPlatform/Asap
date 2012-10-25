@@ -15,7 +15,7 @@ import org.junit.BeforeClass;
 import org.junit.Test;
 
 import saiba.bml.core.SpeechBehaviour;
-import asap.bml.feedback.ListFeedbackListener;
+import asap.bml.feedback.ListBMLFeedbackListener;
 import asap.realizer.feedback.FeedbackManager;
 import asap.realizer.pegboard.BMLBlockPeg;
 import asap.realizer.pegboard.TimePeg;
@@ -33,7 +33,7 @@ import asap.speechengine.ttsbinding.TTSBinding;
 public abstract class AbstractTimedWavTTSUnitTest extends AbstractTimedPlanUnitTest
 {
     protected TTSBinding ttsBinding;
-    private ListFeedbackListener feedbackListener = new ListFeedbackListener(fbList);
+    private ListBMLFeedbackListener feedbackListener = new ListBMLFeedbackListener.Builder().feedBackList(fbList).build();
     private static SoundManager soundManager = new LWJGLJoalSoundManager();
     
     @BeforeClass
@@ -98,7 +98,7 @@ public abstract class AbstractTimedWavTTSUnitTest extends AbstractTimedPlanUnitT
     public void testBookmark()
     {
         TimedWavTTSUnit ttsUnit = setupPlanUnit("Hello <sync id=\"s1\"/> world", fbManager, BMLBlockPeg.GLOBALPEG, "id1", "bml1", 0);
-        fbManager.addFeedbackListener(new ListFeedbackListener(fbList));
+        fbManager.addFeedbackListener(new ListBMLFeedbackListener.Builder().feedBackList(fbList).build());
         Bookmark bm = ttsUnit.getBookmarks().get(0);
         assertEquals("s1", bm.getName());
         assertEquals("world", bm.getWord().getWord().trim());

@@ -8,7 +8,7 @@ import java.util.Set;
 import saiba.bml.feedback.BMLWarningFeedback;
 
 import net.jcip.annotations.ThreadSafe;
-import asap.bml.feedback.BMLWarningListener;
+import asap.bml.feedback.BMLFeedbackListener;
 import asap.realizer.feedback.FeedbackManager;
 import asap.realizer.feedback.NullFeedbackManager;
 import asap.realizer.pegboard.TimePeg;
@@ -52,16 +52,6 @@ public final class SingleThreadedPlanPlayer<T extends TimedPlanUnit> implements 
     public void warn(BMLWarningFeedback e)
     {
         fbManager.warn(e);
-    }
-
-    public void addWarningListener(BMLWarningListener ws)
-    {
-        fbManager.addWarningListener(ws);
-    }
-
-    public void removeAllWarningListeners()
-    {
-        fbManager.removeAllWarningListeners();
     }
 
     private List<T> playingPlanUnits = new ArrayList<T>();
@@ -245,6 +235,9 @@ public final class SingleThreadedPlanPlayer<T extends TimedPlanUnit> implements 
     {
     }
 
-    
+    public void addFeedbackListener(BMLFeedbackListener fl)
+    {
+        fbManager.addFeedbackListener(fl);
+    }
 
 }

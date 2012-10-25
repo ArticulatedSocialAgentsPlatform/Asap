@@ -14,7 +14,7 @@ import saiba.bml.feedback.BMLWarningFeedback;
 
 import saiba.bml.core.Behaviour;
 import saiba.bml.core.SpeechBehaviour;
-import asap.bml.feedback.ListBMLWarningListener;
+import asap.bml.feedback.ListBMLFeedbackListener;
 import asap.realizer.feedback.FeedbackManager;
 import asap.realizer.pegboard.BMLBlockPeg;
 import asap.realizer.pegboard.TimePeg;
@@ -114,7 +114,7 @@ public class VerbalPlanPlayerTest
         ttsUnitStub.setStart(tpStart);
 
         MultiThreadedPlanPlayer<TimedAbstractSpeechUnit> vpp = new MultiThreadedPlanPlayer<TimedAbstractSpeechUnit>(mockFeedbackManager,planManager);
-        vpp.addWarningListener(new ListBMLWarningListener(bwList));
+        vpp.addFeedbackListener(new ListBMLFeedbackListener.Builder().warningList(bwList).build());
 
         planManager.addPlanUnit(ttsUnitStub);
         vpp.play(0);

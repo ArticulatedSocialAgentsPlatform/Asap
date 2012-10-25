@@ -16,8 +16,7 @@ import org.powermock.core.classloader.annotations.PrepareForTest;
 import org.powermock.modules.junit4.PowerMockRunner;
 
 import saiba.bml.feedback.BMLWarningFeedback;
-
-import asap.bml.feedback.ListBMLWarningListener;
+import asap.bml.feedback.ListBMLFeedbackListener;
 import asap.realizer.DefaultPlayer;
 import asap.realizer.Player;
 import asap.realizer.feedback.FeedbackManager;
@@ -57,7 +56,7 @@ public class FacePlayerTest
     {
         facePlayer = new DefaultPlayer(new SingleThreadedPlanPlayer<TimedFaceUnit>(fbManager, planManager));
         beList = new ArrayList<BMLWarningFeedback>();
-        fbManager.addWarningListener(new ListBMLWarningListener(beList));
+        fbManager.addFeedbackListener(new ListBMLFeedbackListener.Builder().warningList(beList).build());
     }
 
     @Test

@@ -1,25 +1,21 @@
 package asap.realizertester;
 
-import java.util.HashSet;
-import java.util.Set;
-
 import asap.bml.bridge.RealizerPort;
-import bml.realizertestport.BMLExceptionListener;
-import bml.realizertestport.BMLFeedbackListener;
-import bml.realizertestport.BMLWarningListener;
-import bml.realizertestport.RealizerTestPort;
+import asap.bml.feedback.BMLFeedbackListener;
+import bml.realizertestport.XMLRealizerTestPort;
 
 /**
  * Maps RealizerPort feedback to RealizerTestPort feedback
  * @author welberge
  */
-public class AsapRealizerPort implements RealizerTestPort
+public class AsapRealizerPort extends XMLRealizerTestPort implements RealizerPort
 {
     private final RealizerPort realizerPort;
 
     public AsapRealizerPort(RealizerPort port)
     {
-        realizerPort = port;        
+        realizerPort = port;
+        realizerPort.addListeners(new MyListener());
     }
 
     @Override
@@ -29,71 +25,23 @@ public class AsapRealizerPort implements RealizerTestPort
     }
 
     @Override
-    public void addBMLWarningListener(final BMLWarningListener l)
+    public void addListeners(asap.bml.feedback.BMLFeedbackListener... listeners)
     {
-        realizerPort.addListeners(new asap.bml.feedback.BMLWarningListener()
-        {
-            @Override
-            public void warn(saiba.bml.feedback.BMLWarningFeedback warn)
-            {
-                Set<String>failedBehaviours = new HashSet<String>();
-                String idSplit[] = warn.getId().split(":");
-                if(idSplit.length==2)
-                {
-                    failedBehaviours.add(idSplit[1]);
-                }
-                l.warn(new bml.realizertestport.BMLWarningFeedback(warn.getType(), warn.getId(), 0, failedBehaviours, new HashSet<String>(), 
-                        warn.getDescription()));
-            }
-        });
+        realizerPort.addListeners(listeners);
     }
 
     @Override
-    public void addBMLFeedbackListener(final BMLFeedbackListener l)
+    public void removeAllListeners()
     {
-        realizerPort.addListeners(new asap.bml.feedback.BMLFeedbackListener()
-        {
-            @Override
-            public void blockProgress(saiba.bml.feedback.BMLBlockProgressFeedback fb)
-            {
-                if(fb.getSyncId().equals("start"))
-                {
-                l.performanceStart(new bml.realizertestport.BMLPerformanceStartFeedback(fb.getCharacterId(),fb.getBmlId(),fb.getGlobalTime(),
-                        fb.getGlobalTime()));
-                }
-                else if (fb.getSyncId().equals("end"))
-                {
-                    l.performanceStop(new bml.realizertestport.BMLPerformanceStopFeedback(fb.getCharacterId(),fb.getBmlId(),"",fb.getGlobalTime()));
-                }
-            }
-
-            @Override
-            public void syncProgress(saiba.bml.feedback.BMLSyncPointProgressFeedback fb)
-            {
-                l.syncProgress(new bml.realizertestport.BMLSyncPointProgressFeedback(fb.getCharacterId(), 
-                        fb.getBMLId(), fb.getBehaviourId(), fb.getSyncId(), fb.getTime(), fb.getGlobalTime()));
-            }
-        });
+        realizerPort.removeAllListeners();
     }
-
-    @Override
-    public void addBMLExceptionListener(final BMLExceptionListener l)
+    
+    private class MyListener implements BMLFeedbackListener
     {
-        realizerPort.addListeners(new asap.bml.feedback.BMLWarningListener()
+        @Override
+        public void feedback(String feedback)
         {
-            @Override            
-            public void warn(saiba.bml.feedback.BMLWarningFeedback warn)
-            {
-                Set<String>failedBehaviours = new HashSet<String>();
-                String idSplit[] = warn.getId().split(":");
-                if(idSplit.length==2)
-                {
-                    failedBehaviours.add(idSplit[1]);
-                }
-                l.exception(new bml.realizertestport.BMLExceptionFeedback(warn.getType(), warn.getId(), 0, failedBehaviours, new HashSet<String>(), 
-                        warn.getDescription(),false));
-            }
-        });
-        
+            AsapRealizerPort.this.feedback(feedback);
+        }        
     }
 }

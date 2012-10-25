@@ -1,12 +1,15 @@
 package asap.audioengine;
 
-import static org.junit.Assert.*;
-import static org.mockito.Mockito.*;
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertTrue;
+import static org.mockito.Matchers.anyDouble;
+import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.spy;
+import static org.mockito.Mockito.times;
+import static org.mockito.Mockito.verify;
 
 import java.util.ArrayList;
 import java.util.List;
-
-import saiba.bml.feedback.BMLSyncPointProgressFeedback;
 
 import org.junit.Before;
 import org.junit.Test;
@@ -14,7 +17,8 @@ import org.junit.runner.RunWith;
 import org.powermock.core.classloader.annotations.PrepareForTest;
 import org.powermock.modules.junit4.PowerMockRunner;
 
-import asap.bml.feedback.ListFeedbackListener;
+import saiba.bml.feedback.BMLSyncPointProgressFeedback;
+import asap.bml.feedback.ListBMLFeedbackListener;
 import asap.realizer.feedback.FeedbackManager;
 import asap.realizer.feedback.FeedbackManagerImpl;
 import asap.realizer.pegboard.BMLBlockPeg;
@@ -34,14 +38,14 @@ public class AudioUnitTest
     private BMLBlockManager mockBmlBlockManager = mock(BMLBlockManager.class);
     private FeedbackManager fbManager = new FeedbackManagerImpl(mockBmlBlockManager,"character1");
     
-    private ListFeedbackListener feedbackListener;
+    private ListBMLFeedbackListener feedbackListener;
     private List<BMLSyncPointProgressFeedback> feedbackList;
     
     @Before
     public void setup()
     {
         feedbackList = new ArrayList<BMLSyncPointProgressFeedback>(); 
-        feedbackListener = new ListFeedbackListener(feedbackList);        
+        feedbackListener = new ListBMLFeedbackListener.Builder().feedBackList(feedbackList).build();        
     }
     
     @Test

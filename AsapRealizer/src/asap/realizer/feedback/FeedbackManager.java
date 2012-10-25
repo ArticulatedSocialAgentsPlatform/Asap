@@ -7,8 +7,6 @@ import saiba.bml.feedback.BMLPredictionFeedback;
 import saiba.bml.feedback.BMLSyncPointProgressFeedback;
 import saiba.bml.feedback.BMLWarningFeedback;
 import asap.bml.feedback.BMLFeedbackListener;
-import asap.bml.feedback.BMLPredictionListener;
-import asap.bml.feedback.BMLWarningListener;
 import asap.realizer.planunit.TimedPlanUnit;
 
 import com.google.common.collect.ImmutableSet;
@@ -36,22 +34,12 @@ public interface FeedbackManager
     
     void puException(TimedPlanUnit timedMU, String message, double time);
     
-    void addPredictionListener(BMLPredictionListener p);
-    
-    void removeAllPredictionListeners();
-    
     void prediction(BMLPredictionFeedback bpsf);    
     
     /**
      * Generates a feedback message on only the start time of a BML block
      */
     void blockStartPrediction(String bmlId, double time);
-    
-    void addWarningListener(BMLWarningListener ws);
-    
-    void removeAllWarningListeners();
-    
-    void removeWarningListener(BMLWarningListener ws);
     
     void warn(BMLWarningFeedback w);
 }

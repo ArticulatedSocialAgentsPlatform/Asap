@@ -68,7 +68,7 @@ import asap.audioengine.AudioPlanner;
 import asap.audioengine.TimedAbstractAudioUnit;
 import asap.bml.ext.bmlt.BMLTBMLBehaviorAttributes;
 import asap.bml.ext.bmlt.BMLTInfo;
-import asap.bml.feedback.BMLWarningListener;
+import asap.bml.feedback.ListBMLFeedbackListener;
 import asap.hns.Hns;
 import asap.realizer.AsapRealizer;
 import asap.realizer.DefaultEngine;
@@ -346,7 +346,7 @@ public class SchedulerParameterizedIntegrationTest
         res = new Resources("bmltest");
         warnings = new ArrayList<BMLWarningFeedback>();
 
-        realizer.setWarningListener(new MyWarningListener());
+        realizer.setFeedbackListener(new ListBMLFeedbackListener.Builder().warningList(warnings).build());
         scheduler = realizer.getScheduler();
         scheduler.addAnticipator("dummyanticipator", new DummyAnticipator());
     }
@@ -1109,15 +1109,5 @@ public class SchedulerParameterizedIntegrationTest
         assertEquals(pegBoard.getRelativePegTime("bml1", "bml1", "h1", "start"), pegBoard.getRelativePegTime("bml1", "bml1", "g1", "end"),
                 PEGBOARD_PRECISION);
         assertThat(pegBoard.getRelativePegTime("bml1", "bml1", "h1", "start"), greaterThan(4d));
-    }
-
-    class MyWarningListener implements BMLWarningListener
-    {
-
-        @Override
-        public void warn(BMLWarningFeedback bw)
-        {
-            warnings.add(bw);
-        }
-    }
+    }    
 }

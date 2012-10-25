@@ -1,16 +1,13 @@
 package asap.realizer.feedback;
 
+import java.util.List;
+
 import saiba.bml.feedback.BMLBlockProgressFeedback;
 import saiba.bml.feedback.BMLPredictionFeedback;
 import saiba.bml.feedback.BMLSyncPointProgressFeedback;
-
-import java.util.List;
-
-import asap.bml.feedback.BMLFeedbackListener;
-import asap.bml.feedback.BMLPredictionListener;
-import asap.bml.feedback.BMLWarningListener;
-import asap.realizer.planunit.TimedPlanUnit;
 import saiba.bml.feedback.BMLWarningFeedback;
+import asap.bml.feedback.BMLFeedbackListener;
+import asap.realizer.planunit.TimedPlanUnit;
 
 import com.google.common.collect.ImmutableSet;
 
@@ -58,31 +55,6 @@ public final class NullFeedbackManager implements FeedbackManager
     public void puException(TimedPlanUnit timedMU, String message, double time){}
 
     
-    @Override
-    public void addPredictionListener(BMLPredictionListener p)
-    {
-    }
-
-    @Override
-    public void removeAllPredictionListeners()
-    {
-    }
-
-    @Override
-    public void addWarningListener(BMLWarningListener ws)
-    {
-    }
-
-    @Override
-    public void removeAllWarningListeners()
-    {
-    }
-
-    @Override
-    public void removeWarningListener(BMLWarningListener ws)
-    {
-    }
-
     @Override
     public void prediction(BMLPredictionFeedback bpsf)
     {

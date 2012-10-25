@@ -33,7 +33,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import saiba.bml.feedback.BMLWarningFeedback;
-import asap.bml.feedback.BMLWarningListener;
+import asap.bml.feedback.BMLFeedbackListener;
 import asap.realizer.feedback.FeedbackManager;
 import asap.realizer.feedback.NullFeedbackManager;
 
@@ -266,14 +266,10 @@ public class MultiThreadedPlanPlayer<T extends TimedPlanUnit>  implements PlanPl
     {
         fbManager.warn(e);
     }
-
-    public void addWarningListener(BMLWarningListener ws)
+    
+    public void addFeedbackListener(BMLFeedbackListener ws)
     {
-        fbManager.addWarningListener(ws);
+        fbManager.addFeedbackListener(ws);
     }
 
-    public void removeAllWarningListeners()
-    {
-        fbManager.removeAllWarningListeners();
-    }
 }

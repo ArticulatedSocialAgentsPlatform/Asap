@@ -1,7 +1,5 @@
 package asap.bml.bridge;
 
-import hmi.xml.XMLTokenizer;
-
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
@@ -18,13 +16,10 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import saiba.bml.feedback.BMLWarningFeedback;
+import asap.bml.feedback.BMLFeedbackListener;
+import asap.bml.feedback.BMLFeedbackManager;
 
-import saiba.bml.feedback.BMLFeedback;
-import saiba.bml.feedback.BMLBlockProgressFeedback;
-import saiba.bml.feedback.BMLPredictionFeedback;
-import saiba.bml.feedback.BMLSyncPointProgressFeedback;
-import asap.bml.feedback.BMLListener;
-import asap.bml.util.BMLFeedbackManager;
+import com.google.common.io.CharStreams;
 
 /**
  * A {@link asap.bml.bridge.bml.bridge.RealizerPort RealizerBridge} that uses a tcp/ip connection to provide
@@ -37,10 +32,9 @@ import asap.bml.util.BMLFeedbackManager;
  */
 public final class BMLRealizerToTCPIPAdapter implements RealizerPort, Runnable
 {
-    private BMLFeedbackManager fbManager = new BMLFeedbackManager();
-
     private static Logger logger = LoggerFactory.getLogger(BMLRealizerToTCPIPAdapter.class.getName());
 
+    private BMLFeedbackManager fbManager = new BMLFeedbackManager();
     /*
      * ========================================================================================= A
      * FEW GLOBAL STATIC PARAMETERS THAT YOU MIGHT WANT TO PLAY AROUND WITH
@@ -123,7 +117,7 @@ public final class BMLRealizerToTCPIPAdapter implements RealizerPort, Runnable
 
     /** Listeners must be stored; they will get updates from the feedbackRedirectionThread */
     @Override
-    public void addListeners(BMLListener... bmlListeners)
+    public void addListeners(BMLFeedbackListener... bmlListeners)
     {
         synchronized (feedbackLock)
         {
@@ -163,7 +157,7 @@ public final class BMLRealizerToTCPIPAdapter implements RealizerPort, Runnable
             BMLWarningFeedback feedback = new BMLWarningFeedback("", "CANNOT_SEND", "Failure to send BML: no connection to BML Realizer Server.");
             synchronized (feedbackLock)
             {
-                fbManager.sendFeedback(feedback);
+                fbManager.sendFeedback(feedback.toXMLString());
             }
         }
     }
@@ -315,7 +309,9 @@ public final class BMLRealizerToTCPIPAdapter implements RealizerPort, Runnable
             }
             logger.debug("Feedback channel open, starting to read");
             // feedback channel is connected. Keep reading from it, and processing what comes in
-            XMLTokenizer tok = new XMLTokenizer(feedbackReadReader);
+            
+            //XMLTokenizer tok = new XMLTokenizer(feedbackReadReader);
+            
             while (!stop)
             {
                 // logger.debug("Still reading feedback...");
@@ -330,46 +326,10 @@ public final class BMLRealizerToTCPIPAdapter implements RealizerPort, Runnable
                      * ); try { Thread.sleep(WAIT_IF_NO_FEEDBACK); } catch(InterruptedException ex)
                      * { } continue; }
                      */
-                    if (tok.atSTag(BMLWarningFeedback.xmlTag()))
-                    {
-                        BMLWarningFeedback feedback = new BMLWarningFeedback();
-                        feedback.readXML(tok);
-                        feedbackQ.add(feedback);
-                        // feedbackRedirectorThread.interrupt() when new feedback was put in queue!
-                        // let op SecurityException
-                    }                    
-                    else if (tok.atSTag(BMLBlockProgressFeedback.xmlTag()))
-                    {
-                        BMLBlockProgressFeedback feedback = new BMLBlockProgressFeedback();
-                        feedback.readXML(tok);
-                        feedbackQ.add(feedback);
-                        // feedbackRedirectorThread.interrupt() when new feedback was put in queue!
-                        // let op SecurityException
-                    }                 
-                    else if (tok.atSTag(BMLSyncPointProgressFeedback.xmlTag()))
-                    {
-                        BMLSyncPointProgressFeedback feedback = new BMLSyncPointProgressFeedback();
-                        feedback.readXML(tok);
-                        feedbackQ.add(feedback);
-                        // feedbackRedirectorThread.interrupt() when new feedback was put in queue!
-                        // let op SecurityException
-                    } 
-                    else if (tok.atSTag(BMLPredictionFeedback.xmlTag()))
-                    {
-                        BMLPredictionFeedback feedback = new BMLPredictionFeedback();
-                        feedback.readXML(tok);
-                        feedbackQ.add(feedback);
-                        // feedbackRedirectorThread.interrupt() when new feedback was put in queue!
-                        // let op SecurityException
-                    }                    
-                    else
-                    { // give up when not a feedback tag...
-                        logger.warn("Failed to read feedback from server, unexpected feedback format. Disconnecting from server.");
-                        stop = true;
-                        mustdisconnect = true;
-                        mustconnect = true; // see if we can restore connection
-                        nextMainLoopWait = 1;
-                    }
+                    String feedback = CharStreams.toString(feedbackReadReader);
+                    feedbackQ.add(feedback);
+                    // feedbackRedirectorThread.interrupt() when new feedback was put in queue!
+                    // let op SecurityException                    
                 }
                 catch (IOException e)
                 {
@@ -624,7 +584,7 @@ public final class BMLRealizerToTCPIPAdapter implements RealizerPort, Runnable
      * Incoming feedback from the server are stored here. The feedbackredirector loop will get tehm
      * and send them to the BML FeedbackListeners.
      */
-    private ConcurrentLinkedQueue<BMLFeedback> feedbackQ = new ConcurrentLinkedQueue<BMLFeedback>();
+    private ConcurrentLinkedQueue<String> feedbackQ = new ConcurrentLinkedQueue<String>();
 
     /**
      * The process that reads feedback from the feedback queue, and sends it to the BML feedback
@@ -637,7 +597,7 @@ public final class BMLRealizerToTCPIPAdapter implements RealizerPort, Runnable
             while (!mustshutdown) // this thread should also stop when the client shuts down, and
                                   // not before.
             {
-                BMLFeedback nextFeedback = feedbackQ.poll();
+                String nextFeedback = feedbackQ.poll();
                 if (nextFeedback != null)
                 {
                     synchronized (feedbackLock) // not allowed t change feedback listeners while

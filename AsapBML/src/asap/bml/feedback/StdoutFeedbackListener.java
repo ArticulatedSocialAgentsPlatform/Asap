@@ -18,26 +18,16 @@
  ******************************************************************************/
 package asap.bml.feedback;
 
-import saiba.bml.feedback.BMLBlockProgressFeedback;
-import saiba.bml.feedback.BMLSyncPointProgressFeedback;
 
 /**
- * Sends BMLPerformanceStart, Stop and Progress feedback to the stdout 
+ * Sends BML feedback to the stdout
  * @author welberge
  */
 public class StdoutFeedbackListener implements BMLFeedbackListener
 {
-
     @Override
-    public void blockProgress(BMLBlockProgressFeedback psf)
+    public void feedback(String feedback)
     {
-        System.out.println(psf);        
+        System.out.println(feedback);        
     }
-
-    @Override
-    public void syncProgress(BMLSyncPointProgressFeedback spp)
-    {
-        System.out.println(spp);
-    }
-
 }

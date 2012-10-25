@@ -28,8 +28,7 @@ import saiba.bml.core.Behaviour;
 import saiba.bml.core.SpeechBehaviour;
 import saiba.bml.feedback.BMLSyncPointProgressFeedback;
 import saiba.bml.parser.Constraint;
-import asap.bml.feedback.ListBMLWarningListener;
-import asap.bml.feedback.ListFeedbackListener;
+import asap.bml.feedback.ListBMLFeedbackListener;
 import asap.realizer.BehaviourPlanningException;
 import asap.realizer.DefaultEngine;
 import asap.realizer.DefaultPlayer;
@@ -153,9 +152,8 @@ public class TTSPlannerIntegrationTest
         ttsEngine = new DefaultEngine<TimedTTSUnit>(ttsPlanner, verbalPlayer, planManager);
         exceptionList = Collections.synchronizedList(new ArrayList<BMLWarningFeedback>());
 
-        fbManager.addWarningListener(new ListBMLWarningListener(exceptionList));
         feedbackList = Collections.synchronizedList(new ArrayList<BMLSyncPointProgressFeedback>());
-        fbManager.addFeedbackListener(new ListFeedbackListener(feedbackList));
+        fbManager.addFeedbackListener(new ListBMLFeedbackListener.Builder().warningList(exceptionList).feedBackList(feedbackList).build());        
     }
 
     @After

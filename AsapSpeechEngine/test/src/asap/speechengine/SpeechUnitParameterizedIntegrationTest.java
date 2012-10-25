@@ -22,7 +22,7 @@ import org.junit.runners.Parameterized.Parameters;
 
 import saiba.bml.core.SpeechBehaviour;
 import saiba.bml.feedback.BMLSyncPointProgressFeedback;
-import asap.bml.feedback.ListFeedbackListener;
+import asap.bml.feedback.ListBMLFeedbackListener;
 import asap.realizer.feedback.FeedbackManager;
 import asap.realizer.feedback.FeedbackManagerImpl;
 import asap.realizer.pegboard.BMLBlockPeg;
@@ -84,7 +84,7 @@ public class SpeechUnitParameterizedIntegrationTest
                 ttsBinding, SpeechBehaviour.class);
         ttsUnit.setup();
         List<BMLSyncPointProgressFeedback> fbList = new ArrayList<BMLSyncPointProgressFeedback>();
-        ListFeedbackListener fbl = new ListFeedbackListener(fbList);
+        ListBMLFeedbackListener fbl = new ListBMLFeedbackListener.Builder().feedBackList(fbList).build();
         fbManager.addFeedbackListener(fbl);
         TimePeg tpStart = new TimePeg(BMLBlockPeg.GLOBALPEG);
         tpStart.setGlobalValue(0);

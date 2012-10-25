@@ -1,13 +1,22 @@
 package asap.realizertestutil.planunit;
 
-import static org.junit.Assert.*;
+import static asap.testutil.bml.feedback.FeedbackAsserts.assertEqualSyncPointProgress;
+import static asap.testutil.bml.feedback.FeedbackAsserts.assertOneFeedback;
+import static org.hamcrest.MatcherAssert.assertThat;
+import static org.hamcrest.Matchers.anyOf;
+import static org.hamcrest.Matchers.equalTo;
+import static org.hamcrest.collection.IsCollectionWithSize.hasSize;
+import static org.junit.Assert.assertEquals;
+import static org.powermock.api.mockito.PowerMockito.mock;
 
 import java.util.ArrayList;
 import java.util.List;
 
 import org.junit.Test;
 
-import asap.bml.feedback.ListFeedbackListener;
+import saiba.bml.BMLGestureSync;
+import saiba.bml.feedback.BMLSyncPointProgressFeedback;
+import asap.bml.feedback.ListBMLFeedbackListener;
 import asap.realizer.feedback.FeedbackManager;
 import asap.realizer.feedback.FeedbackManagerImpl;
 import asap.realizer.pegboard.BMLBlockPeg;
@@ -16,15 +25,6 @@ import asap.realizer.planunit.TimedPlanUnit;
 import asap.realizer.planunit.TimedPlanUnitPlayException;
 import asap.realizer.planunit.TimedPlanUnitState;
 import asap.realizer.scheduler.BMLBlockManager;
-
-import saiba.bml.BMLGestureSync;
-import saiba.bml.feedback.BMLSyncPointProgressFeedback;
-import static asap.testutil.bml.feedback.FeedbackAsserts.*;
-import static org.hamcrest.MatcherAssert.assertThat;
-import static org.hamcrest.Matchers.anyOf;
-import static org.hamcrest.Matchers.equalTo;
-import static org.hamcrest.collection.IsCollectionWithSize.hasSize;
-import static org.powermock.api.mockito.PowerMockito.*;
 
 
 /**
@@ -45,7 +45,7 @@ public abstract class AbstractTimedPlanUnitTest
     protected TimedPlanUnit setupPlanUnitWithListener(BMLBlockPeg bbPeg, String id, String bmlId, double startTime)
     {
         TimedPlanUnit tpu = setupPlanUnit(fbManager, bbPeg, id, bmlId, startTime);
-        fbManager.addFeedbackListener(new ListFeedbackListener(fbList));
+        fbManager.addFeedbackListener(new ListBMLFeedbackListener.Builder().feedBackList(fbList).build());
         return tpu;
     }
 

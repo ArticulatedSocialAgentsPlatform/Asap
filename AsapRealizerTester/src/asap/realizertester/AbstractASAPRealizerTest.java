@@ -10,11 +10,13 @@ import java.util.List;
 import org.junit.Test;
 
 import saiba.bml.feedback.BMLBlockPredictionFeedback;
+import saiba.bml.feedback.BMLFeedback;
+import saiba.bml.feedback.BMLFeedbackParser;
 import saiba.bml.feedback.BMLPredictionFeedback;
 
 import asap.bml.ext.bmlt.BMLTAudioFileBehaviour;
 import asap.bml.ext.bmlt.BMLTParameterValueChangeBehaviour;
-import asap.bml.feedback.BMLPredictionListener;
+import asap.bml.feedback.BMLFeedbackListener;
 import bml.bmlinfo.DefaultSyncPoints;
 import bml.realizertest.AbstractBML1RealizerTest;
 
@@ -23,7 +25,7 @@ import bml.realizertest.AbstractBML1RealizerTest;
  * @author hvanwelbergen
  * 
  */
-public abstract class AbstractASAPRealizerTest extends AbstractBML1RealizerTest implements BMLPredictionListener
+public abstract class AbstractASAPRealizerTest extends AbstractBML1RealizerTest implements BMLFeedbackListener
 {
     private List<BMLPredictionFeedback> predictionList = Collections.synchronizedList(new ArrayList<BMLPredictionFeedback>());
 
@@ -69,13 +71,29 @@ public abstract class AbstractASAPRealizerTest extends AbstractBML1RealizerTest 
         return false;
     }
 
-    @Override
     public synchronized void prediction(BMLPredictionFeedback bpf)
     {
         predictionList.add(bpf);
         notifyAll();
     }
 
+    public void feedback(String feedback)
+    {
+        BMLFeedback fb;
+        try
+        {
+            fb = BMLFeedbackParser.parseFeedback(feedback);
+        }
+        catch (IOException e)
+        {
+            throw new RuntimeException(e);
+        }
+        if (fb instanceof saiba.bml.feedback.BMLPredictionFeedback)
+        {
+            prediction((BMLPredictionFeedback)fb);            
+        }
+    }
+    
     @Test
     public void testParameterValueChangeWithTightMerge() throws IOException, InterruptedException
     {

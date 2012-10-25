@@ -1,6 +1,6 @@
 package asap.bml.bridge;
 
-import asap.bml.feedback.BMLListener;
+import asap.bml.feedback.BMLFeedbackListener;
 
 /**
  * See package documentation.
@@ -11,7 +11,7 @@ public interface RealizerPort
     /**
      * Add some listeners to which BML Feedback will be sent
      */
-    void addListeners(BMLListener ... listeners);
+    void addListeners(BMLFeedbackListener ... listeners);
     
     /**
      * Removes all BMLListeners

@@ -10,10 +10,6 @@ import static org.mockito.Matchers.doubleThat;
 import static org.mockito.Mockito.spy;
 import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
-import saiba.bml.BMLGestureSync;
-import saiba.bml.feedback.BMLSyncPointProgressFeedback;
-import asap.realizertestutil.planunit.AbstractTimedPlanUnitTest;
-import asap.realizertestutil.util.TimePegUtil;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -25,7 +21,9 @@ import org.powermock.core.classloader.annotations.PowerMockIgnore;
 import org.powermock.core.classloader.annotations.PrepareForTest;
 import org.powermock.modules.junit4.PowerMockRunner;
 
-import asap.bml.feedback.ListFeedbackListener;
+import saiba.bml.BMLGestureSync;
+import saiba.bml.feedback.BMLSyncPointProgressFeedback;
+import asap.bml.feedback.ListBMLFeedbackListener;
 import asap.motionunit.MUPlayException;
 import asap.realizer.SyncPointNotFoundException;
 import asap.realizer.feedback.FeedbackManager;
@@ -37,6 +35,8 @@ import asap.realizer.planunit.TimedPlanUnit;
 import asap.realizer.planunit.TimedPlanUnitPlayException;
 import asap.realizer.planunit.TimedPlanUnitState;
 import asap.realizer.scheduler.BMLBlockManager;
+import asap.realizertestutil.planunit.AbstractTimedPlanUnitTest;
+import asap.realizertestutil.util.TimePegUtil;
 
 /**
  * Testcases for the TimedMotionUnit
@@ -52,7 +52,7 @@ public class TimedMotionUnitTest extends AbstractTimedPlanUnitTest
     private AnimationUnit muMock;
     
     private List<BMLSyncPointProgressFeedback> fbList;
-    private ListFeedbackListener fbl;
+    private ListBMLFeedbackListener fbl;
     private TimedAnimationMotionUnit tmu;
     private PegBoard pegBoard = new PegBoard();
     private static final double TIMING_PRECISION = 0.01;
@@ -61,7 +61,7 @@ public class TimedMotionUnitTest extends AbstractTimedPlanUnitTest
     public void setup()
     {
         fbList = new ArrayList<BMLSyncPointProgressFeedback>();
-        fbl = new ListFeedbackListener(fbList);
+        fbl = new ListBMLFeedbackListener.Builder().feedBackList(fbList).build();
         muMock = spy(new StubMotionUnit());
         tmu = new TimedAnimationMotionUnit(fbManager, BMLBlockPeg.GLOBALPEG, "bml1", "behaviour1", muMock, pegBoard);
         fbManager.addFeedbackListener(fbl);

@@ -11,7 +11,7 @@ import java.util.concurrent.TimeUnit;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import asap.bml.feedback.BMLListener;
+import asap.bml.feedback.BMLFeedbackListener;
 
 /**
  * 
@@ -35,7 +35,7 @@ public class LinkedBlockingQueuePipe implements RealizerPort
     }
 
     @Override
-    public void addListeners(BMLListener... listeners)
+    public void addListeners(BMLFeedbackListener... listeners)
     {
         outBridge.addListeners(listeners);
     }

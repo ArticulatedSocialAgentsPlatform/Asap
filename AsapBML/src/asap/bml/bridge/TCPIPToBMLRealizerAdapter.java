@@ -1,8 +1,5 @@
 package asap.bml.bridge;
 
-import saiba.bml.feedback.BMLBlockProgressFeedback;
-import saiba.bml.feedback.BMLPredictionFeedback;
-import saiba.bml.feedback.BMLSyncPointProgressFeedback;
 import hmi.xml.XMLTokenizer;
 
 import java.io.BufferedReader;
@@ -22,11 +19,7 @@ import java.util.concurrent.ConcurrentLinkedQueue;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import saiba.bml.feedback.BMLWarningFeedback;
-
 import asap.bml.feedback.BMLFeedbackListener;
-import asap.bml.feedback.BMLPredictionListener;
-import asap.bml.feedback.BMLWarningListener;
 
 /**
  * Takes a {@link asap.bml.bridge.bml.bridge.RealizerPort RealizerBridge}, and exposes access to it through a
@@ -36,8 +29,7 @@ import asap.bml.feedback.BMLWarningListener;
  * 
  * @author Dennis Reidsma
  */
-public final class TCPIPToBMLRealizerAdapter implements Runnable, BMLWarningListener, BMLFeedbackListener,
-        BMLPredictionListener
+public final class TCPIPToBMLRealizerAdapter implements Runnable, BMLFeedbackListener
 {
 
     private static Logger logger = LoggerFactory.getLogger(TCPIPToBMLRealizerAdapter.class.getName());
@@ -141,29 +133,11 @@ public final class TCPIPToBMLRealizerAdapter implements Runnable, BMLWarningList
      */
 
     @Override
-    public void warn(BMLWarningFeedback bw)
+    public void feedback(String feedback)
     {
-        queueFeedback(bw.toXMLString());
-    }
-
-    @Override
-    public void syncProgress(BMLSyncPointProgressFeedback spp)
-    {
-        queueFeedback(spp.toXMLString());
+        queueFeedback(feedback);        
     }
     
-    @Override
-    public void blockProgress(BMLBlockProgressFeedback psf)
-    {
-        queueFeedback(psf.toXMLString());
-    }   
-
-    @Override
-    public void prediction(BMLPredictionFeedback bpf)
-    {
-        queueFeedback(bpf.toXMLString());
-    }
-   
     private void queueFeedback(String fb)
     {
         boolean send = true;
@@ -735,5 +709,7 @@ public final class TCPIPToBMLRealizerAdapter implements Runnable, BMLWarningList
         bmlReaderThread = new Thread(bmlReader);
         bmlReaderThread.start();
     }
+
+    
 
 }

@@ -23,7 +23,7 @@ import saiba.bml.feedback.BMLWarningFeedback;
 
 import saiba.bml.core.SpeechBehaviour;
 import saiba.bml.parser.Constraint;
-import asap.bml.feedback.ListBMLWarningListener;
+import asap.bml.feedback.ListBMLFeedbackListener;
 import asap.realizer.BehaviourPlanningException;
 import asap.realizer.DefaultPlayer;
 import asap.realizer.Player;
@@ -60,7 +60,7 @@ public class TextPlannerIntegrationTest
         List<BMLWarningFeedback> exceptionList = new ArrayList<BMLWarningFeedback>();
         Player vp = new DefaultPlayer(new MultiThreadedPlanPlayer<TimedSpeechTextUnit>(fbManager, planManager));
         TextPlanner textP = new TextPlanner(fbManager, mockTextOutput, planManager);
-        fbManager.addWarningListener(new ListBMLWarningListener(exceptionList));
+        fbManager.addFeedbackListener(new ListBMLFeedbackListener.Builder().warningList(exceptionList).build());
         final BMLBlockPeg bbPeg = new BMLBlockPeg("Peg1", 0.3);
 
         SpeechBehaviour beh = new SpeechBehaviour("bml1", new XMLTokenizer("<speech xmlns=\"http://www.bml-initiative.org/bml/bml-1.0\""

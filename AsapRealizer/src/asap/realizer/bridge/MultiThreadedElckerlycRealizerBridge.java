@@ -2,7 +2,7 @@ package asap.realizer.bridge;
 
 import asap.bml.bridge.LinkedBlockingQueuePipe;
 import asap.bml.bridge.RealizerPort;
-import asap.bml.feedback.BMLListener;
+import asap.bml.feedback.BMLFeedbackListener;
 import asap.realizer.AsapRealizer;
 
 
@@ -31,7 +31,7 @@ public class MultiThreadedElckerlycRealizerBridge implements RealizerPort
 
 
     @Override
-    public void addListeners(BMLListener ... listeners)
+    public void addListeners(BMLFeedbackListener ... listeners)
     {
         queueBridge.addListeners(listeners);            
     }
@@ -45,5 +45,5 @@ public class MultiThreadedElckerlycRealizerBridge implements RealizerPort
     public void removeAllListeners()
     {
         queueBridge.removeAllListeners();        
-    }
+    }   
 }

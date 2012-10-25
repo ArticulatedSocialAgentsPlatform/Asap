@@ -1,17 +1,11 @@
 package asap.realizer.bridge;
 
+import hmi.util.Clock;
+
 import org.slf4j.Logger;
 
-import saiba.bml.feedback.BMLBlockProgressFeedback;
-import saiba.bml.feedback.BMLPredictionFeedback;
-import saiba.bml.feedback.BMLSyncPointProgressFeedback;
-import saiba.bml.feedback.BMLWarningFeedback;
 import asap.bml.bridge.RealizerPort;
 import asap.bml.feedback.BMLFeedbackListener;
-import asap.bml.feedback.BMLListener;
-import asap.bml.feedback.BMLPredictionListener;
-import asap.bml.feedback.BMLWarningListener;
-import hmi.util.Clock;
 
 
 /**
@@ -23,7 +17,7 @@ import hmi.util.Clock;
  * @author welberge
  * @author reidsma
  */
-public class LogPipe implements RealizerPort, BMLFeedbackListener, BMLWarningListener, BMLPredictionListener
+public class LogPipe implements RealizerPort, BMLFeedbackListener
 {
     private final Logger requestLogger;
     private final Logger feedbackLogger;
@@ -44,32 +38,7 @@ public class LogPipe implements RealizerPort, BMLFeedbackListener, BMLWarningLis
     }
 
     @Override
-    public void blockProgress(BMLBlockProgressFeedback psf)
-    {
-        if (logFeedback)feedbackLogger.info(psf.toXMLString());
-    }
-
-    @Override
-    public void syncProgress(BMLSyncPointProgressFeedback spp)
-    {
-        if (logFeedback)feedbackLogger.info(spp.toXMLString());
-    }
-
-    @Override
-    public void warn(BMLWarningFeedback bw)
-    {
-        if (logFeedback)feedbackLogger.info(bw.toXMLString());
-    }
-
-    @Override
-    public void prediction(BMLPredictionFeedback bpf)
-    {
-        if (logFeedback)feedbackLogger.info(bpf.toXMLString());
-    }
-    
-
-    @Override
-    public void addListeners(BMLListener... listeners)
+    public void addListeners(BMLFeedbackListener... listeners)
     {
         outputBridge.addListeners(listeners);
     }
@@ -92,4 +61,10 @@ public class LogPipe implements RealizerPort, BMLFeedbackListener, BMLWarningLis
         outputBridge.removeAllListeners();        
         outputBridge.addListeners(this); //logger itself needs to remain connected :)
     }
+
+    @Override
+    public void feedback(String feedback)
+    {
+        if(logFeedback)feedbackLogger.info(feedback);
+    }    
 }

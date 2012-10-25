@@ -33,8 +33,7 @@ import asap.animationengine.motionunit.TimedAnimationMotionUnit;
 import asap.animationengine.motionunit.TimedAnimationUnit;
 import asap.animationengine.restpose.RestPose;
 import asap.animationengine.transitions.TransitionMU;
-import asap.bml.feedback.ListBMLWarningListener;
-import asap.bml.feedback.ListFeedbackListener;
+import asap.bml.feedback.ListBMLFeedbackListener;
 import asap.motionunit.MUPlayException;
 import asap.realizer.feedback.FeedbackManager;
 import asap.realizer.feedback.FeedbackManagerImpl;
@@ -74,16 +73,16 @@ public class AnimationPlanPlayerTest
     private PegBoard pegBoard = new PegBoard();
     PlanManager<TimedAnimationUnit> planManager = new PlanManager<>();
 
-    private ListFeedbackListener fbl;
+    private ListBMLFeedbackListener fbl;
     private AnimationPlanPlayer app;
     private static final double TIMING_PRECISION = 0.0001;
 
     @Before
     public void setup()
     {
-        fbl = new ListFeedbackListener(fbList);
+        fbl = new ListBMLFeedbackListener.Builder().feedBackList(fbList).build();
         app = new AnimationPlanPlayer(mockRestPose, fbManager, planManager, new DefaultTimedPlanUnitPlayer(), pegBoard);
-        app.addWarningListener(new ListBMLWarningListener(exList));
+        app.addFeedbackListener(new ListBMLFeedbackListener.Builder().warningList(exList).build());
         fbManager.addFeedbackListener(fbl);
     }
 

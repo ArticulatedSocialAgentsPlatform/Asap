@@ -38,8 +38,6 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import asap.bml.feedback.BMLFeedbackListener;
-import asap.bml.feedback.BMLWarningListener;
-import asap.bml.feedback.BMLPredictionListener;
 import asap.realizer.BehaviorNotFoundException;
 import asap.realizer.Engine;
 import asap.realizer.SyncPointNotFoundException;
@@ -87,16 +85,6 @@ public final class BMLScheduler
 
     private interface FeedbackManagerDelegates
     {
-        void addWarningListener(BMLWarningListener ws);
-
-        void removeWarningListener(BMLWarningListener ws);
-
-        void removeAllWarningListeners();
-        
-        void addPredictionListener(BMLPredictionListener p);
-
-        void removeAllPredictionListeners();
-
         void warn(BMLWarningFeedback w);
 
         void prediction(BMLPredictionFeedback bpf);        

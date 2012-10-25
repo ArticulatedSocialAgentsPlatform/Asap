@@ -18,14 +18,12 @@ import saiba.bml.feedback.BMLWarningFeedback;
 
 import asap.bml.bridge.RealizerPort;
 import asap.bml.feedback.BMLFeedbackListener;
-import asap.bml.feedback.BMLPredictionListener;
-import asap.bml.feedback.BMLWarningListener;
 
 /**
  * User interface element to hook up to BML feedback information
  * @author reidsma, welberge
  */
-public class FeedbackPanel extends JPanel implements BMLWarningListener, BMLFeedbackListener, BMLPredictionListener
+public class FeedbackPanel extends JPanel implements BMLFeedbackListener
 {
     // XXX class is not serializable (see findbugs). Better to make this class HAVE a panel rather than BE a panel
     private static final long serialVersionUID = 1L;
@@ -88,29 +86,31 @@ public class FeedbackPanel extends JPanel implements BMLWarningListener, BMLFeed
         warningOutput.setCaretPosition(warningOutput.getText().length());
     }
 
-    @Override
     public void blockProgress(BMLBlockProgressFeedback psf)
     {
         feedbackOutput.append(psf.toString());
     }    
 
-    @Override
     public void syncProgress(BMLSyncPointProgressFeedback spp)
     {
         feedbackOutput.append(spp.toString());
     }
 
-    @Override
     public void prediction(BMLPredictionFeedback bpf)
     {
         predictionOutput.append(bpf.toString());
     }
 
-    @Override
     public void warn(BMLWarningFeedback bw)
     {
         // show the feedback from the realizer
         warningOutput.append(bw.toString());
         warningOutput.setCaretPosition(warningOutput.getText().length());
+    }
+
+    @Override
+    public void feedback(String feedback)
+    {
+         //TODO       
     }
 }

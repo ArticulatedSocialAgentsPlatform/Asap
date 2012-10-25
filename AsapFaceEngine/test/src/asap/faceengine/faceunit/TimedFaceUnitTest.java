@@ -17,7 +17,7 @@ import org.powermock.core.classloader.annotations.PrepareForTest;
 import org.powermock.modules.junit4.PowerMockRunner;
 
 import saiba.bml.feedback.BMLSyncPointProgressFeedback;
-import asap.bml.feedback.ListFeedbackListener;
+import asap.bml.feedback.ListBMLFeedbackListener;
 import asap.motionunit.MUPlayException;
 import asap.realizer.feedback.FeedbackManager;
 import asap.realizer.feedback.FeedbackManagerImpl;
@@ -56,7 +56,7 @@ public class TimedFaceUnitTest extends AbstractTimedPlanUnitTest
         // state is IN_PREP, play shouldn't do anything
         List<BMLSyncPointProgressFeedback> fbList = new ArrayList<BMLSyncPointProgressFeedback>();
         TimedFaceUnit tfu = createTimedFaceUnit("behaviour1", "bml1", fuMock);
-        fbManager.addFeedbackListener(new ListFeedbackListener(fbList));
+        fbManager.addFeedbackListener(new ListBMLFeedbackListener.Builder().feedBackList(fbList).build());
 
         TimePeg tp = new TimePeg(BMLBlockPeg.GLOBALPEG);
         tp.setGlobalValue(0);
@@ -74,7 +74,7 @@ public class TimedFaceUnitTest extends AbstractTimedPlanUnitTest
     {
         List<BMLSyncPointProgressFeedback> fbList = new ArrayList<BMLSyncPointProgressFeedback>();
         TimedFaceUnit tfu = createTimedFaceUnit("behaviour1", "bml1", fuMock);
-        fbManager.addFeedbackListener(new ListFeedbackListener(fbList));
+        fbManager.addFeedbackListener(new ListBMLFeedbackListener.Builder().feedBackList(fbList).build());
 
         TimePeg tpStart = new TimePeg(BMLBlockPeg.GLOBALPEG);
         tpStart.setGlobalValue(0);
