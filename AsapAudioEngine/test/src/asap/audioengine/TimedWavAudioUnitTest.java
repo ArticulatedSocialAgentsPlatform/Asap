@@ -32,12 +32,12 @@ public class TimedWavAudioUnitTest extends AbstractTimedPlanUnitTest
     WavUnit mockWavUnit = mock(WavUnit.class);
     SoundManager mockSoundManager = mock(SoundManager.class);
 
-    @Override
-    protected void assertSubsiding(TimedPlanUnit tpu)
+    @Override //behavior does not subside
+    public void testSubsiding()
     {
-        assertEquals(TimedPlanUnitState.DONE, tpu.getState());
+        
     }
-
+    
     @Override
     // XXX no stroke on this behavior
     public void testSetStrokePeg()

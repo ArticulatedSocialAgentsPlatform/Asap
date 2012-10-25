@@ -60,6 +60,12 @@ public class DirectTTSUnitTest extends AbstractTimedPlanUnitTest
     {
         assertEquals(TimedPlanUnitState.DONE, tpu.getState());
     }
+    
+    @Override //behavior does not subside
+    public void testSubsiding()
+    {
+        
+    }
 
     @Override
     protected TimedPlanUnit setupPlanUnit(FeedbackManager bfm, BMLBlockPeg bbPeg, String id, String bmlId, double startTime)
