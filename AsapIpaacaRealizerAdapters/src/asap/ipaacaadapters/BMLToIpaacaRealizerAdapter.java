@@ -1,6 +1,7 @@
 package asap.ipaacaadapters;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.EnumSet;
 import java.util.List;
 
@@ -19,7 +20,7 @@ import ipaaca.LocalMessageIU;
 import ipaaca.OutputBuffer;
 
 /**
- * Submits BML through ipaaca messages; submits received feedback to registered listeners. 
+ * Submits BML through ipaaca messages; submits received feedback to registered listeners.
  * @author Herwin
  */
 public class BMLToIpaacaRealizerAdapter implements RealizerPort
@@ -32,7 +33,7 @@ public class BMLToIpaacaRealizerAdapter implements RealizerPort
     private final InputBuffer inBuffer = new InputBuffer("BMLToIpaacaRealizerAdapter",
             ImmutableSet.of(IpaacaBMLConstants.BML_FEEDBACK_CATEGORY));
     private final OutputBuffer outBuffer = new OutputBuffer("BMLToIpaacaRealizerAdapter");
-    private List<BMLFeedbackListener> feedbackListeners = new ArrayList<>();
+    private List<BMLFeedbackListener> feedbackListeners = Collections.synchronizedList(new ArrayList<BMLFeedbackListener>());
 
     public BMLToIpaacaRealizerAdapter()
     {
@@ -42,9 +43,12 @@ public class BMLToIpaacaRealizerAdapter implements RealizerPort
             @Override
             public void handle(AbstractIU iu, IUEventType type, boolean local)
             {
-                for (BMLFeedbackListener l : feedbackListeners)
+                synchronized (feedbackListeners)
                 {
-                    l.feedback(iu.getPayload().get(IpaacaBMLConstants.BML_FEEDBACK_KEY));
+                    for (BMLFeedbackListener l : feedbackListeners)
+                    {
+                        l.feedback(iu.getPayload().get(IpaacaBMLConstants.BML_FEEDBACK_KEY));
+                    }
                 }
             }
         }, types, ImmutableSet.of(IpaacaBMLConstants.BML_FEEDBACK_CATEGORY)));
