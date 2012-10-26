@@ -625,8 +625,99 @@ public final class MURMLMUBuilder
     {
         return formWristMovement(scope, staticElem, bbm, bmlBlockPeg, bmlId, id, pb, mcp, aniPlayer);
     }
+    
+    public void getStaticHandShapeElementTMU(String scope, Static staticElem, FeedbackManager bbm, BMLBlockPeg bmlBlockPeg,
+            String bmlId, String id, PegBoard pb, MotorControlProgram mcp, AnimationPlayer aniPlayer)
+    {
+        
+//        // --- preparations
+//        FrameData *frame;
+//        LMP_HandMove *lmp = new LMP_HandMove ("HF_Stroke", scope);
+//        list<pair<MgcReal,GuidingStroke::GStrokePhaseID> > phaseVec;
+//        
+//        // --- create posture sequence
+//        MgcReal eT;
+//        Posture pose;
+//        int constrCounter = 0;
+//        vector<MovementConstraintBranchNode*>::iterator it;
+//        for (it = mcMap.begin(); it!= mcMap.end(); ++it) {
+//          ++constrCounter;
+//          //cout << (*it)->toString() << endl;
+//          
+//          if ( (*it)->getScope() == handScope &&
+//           (*it)->getSlot() == "HandShape" ) {
+//            
+//            // --- static movement constraint
+//            StaticConstraint *sc = dynamic_cast<StaticConstraint*>(*it);
+//            if (sc != 0) //->nodeType == NT_STATIC_CONSTRAINT)
+//          {
+//            // get corresponding hand shape
+//            if (getHNSHandShape(sc->getValue(), pose)) {
+//              // constraint start conf
+//              frame = new FrameData (pose, sc->getStartTPC().time);
+//              lmp->appendTransitionTo(frame, (int)figure->updateRate, 15, 0.5);
+//              phaseVec.push_back(make_pair( sc->getStartTPC().time, GuidingStroke::STP_STROKE ));
+//
+//              // --- VL-HACK ------------------------------------------
+//              //if ( !fullRetract && !interimRetract )
+//              //{
+//              //phaseVec.back().second = STP_FINISH;
+//              //eT = sc->getStartTPC().time;
+//              //}
+//              //else {
+//              // --- VL-HACK ------------------------------------------
+//
+//              // constraint end conf
+//              frame = new FrameData (pose, sc->getEndTPC().time);
+//              lmp->appendTransitionTo(frame, (int)figure->updateRate);
+//              phaseVec.push_back(make_pair( sc->getEndTPC().time, GuidingStroke::STP_RETRACT ));
+//              eT = sc->getEndTPC().time;
+//            }
+//            else {
+//              //dbout.Error("HandMotorControl : invalid hand shape spec %s\n",
+//              //  sc->getValue().c_str());
+//              delete lmp;
+//              return;
+//            }
+//          }
+//            
 
-    public void getStaticHandLocationElementsTMU(String scope, Static staticElem, FeedbackManager bbm, BMLBlockPeg bmlBlockPeg,
+//          else {
+//            dbout.Error("HandMotorControl : invalid movement constraint %s (%s)\n",
+//                (*it)->getSlot().c_str(), (*it)->getScope().c_str());
+//            delete lmp;
+//            return;
+//          }
+//        }
+//        
+//
+//        // -- if retraction is planned at all
+//        if ( retrMode != RTRCT_NO )
+//          {
+//            // insert post-stroke hold if retraction is to start later than 'eT'
+//            float fRetrStartT = mp->getRetractionStartTime();
+//            if ( fRetrStartT > eT )
+//          {
+//            eT = fRetrStartT;
+//            frame = new FrameData (pose, eT);
+//            phaseVec.push_back(make_pair( eT, GuidingStroke::STP_RETRACT ));
+//            lmp->appendTransitionTo(frame, (int)figure->updateRate, 15,0.5);    
+//          }
+//
+//            // --- 3. retraction to neutral hand pose
+//            frame = new FrameData (restPose, eT+handTransitionTime);
+//            phaseVec.push_back(make_pair( eT+handTransitionTime, GuidingStroke::STP_FINISH ));
+//            lmp->appendTransitionTo(frame, (int)figure->updateRate, 15,0.5);
+//          }
+//        else
+//          phaseVec.back().second = GuidingStroke::STP_FINISH;
+//        
+//        // -- transfer lmp for execution
+//        lmp->setPhaseVec(phaseVec);
+//        mp->addLMP(lmp);
+    }
+    
+    public void getStaticHandLocationElementTMU(String scope, Static staticElem, FeedbackManager bbm, BMLBlockPeg bmlBlockPeg,
             String bmlId, String id, PegBoard pb, MotorControlProgram mcp, AnimationPlayer aniPlayer)
     {
         GuidingSequence trajectory = new GuidingSequence();
@@ -1020,9 +1111,10 @@ public final class MURMLMUBuilder
         case Neck:
             break;
         case HandLocation:
-            getStaticHandLocationElementsTMU(staticElem.getScope(), staticElem, bbm, bmlBlockPeg, bmlId, id, localPegBoard, mcp, aniPlayer);
+            getStaticHandLocationElementTMU(staticElem.getScope(), staticElem, bbm, bmlBlockPeg, bmlId, id, localPegBoard, mcp, aniPlayer);
             break;
         case HandShape:
+            getStaticHandShapeElementTMU(staticElem.getScope(), staticElem, bbm, bmlBlockPeg, bmlId, id, localPegBoard, mcp, aniPlayer);
             break;
         case ExtFingerOrientation:
             ocVec.addAll(getStaticExtFingerOrientationOrientationTMU(staticElem.getScope(), staticElem, bbm, bmlBlockPeg, bmlId, id,

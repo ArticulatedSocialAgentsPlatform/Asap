@@ -4,6 +4,7 @@ import java.io.IOException;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Map.Entry;
+import java.util.Set;
 
 import lombok.extern.slf4j.Slf4j;
 
@@ -29,6 +30,9 @@ public class Hns extends XMLStructureAdapter
     private static final String HAND_DISTANCES = "handDistances";
     private static final String PALM_ORIENTATIONS = "palmOrientations";
     private static final String DISTANCES = "distances";
+    private static final String HANDSHAPES = "handShapes";
+    private static final String BASIC_HANDSHAPES = "basicHandShapes";
+    private static final String SPECIFIC_HANDSHAPES = "specificHandShapes";
 
     private static final float[] UP_VEC = Vec3f.getVec3f(0, 1, 0);
     private static final float[] DOWN_VEC = Vec3f.getVec3f(0, -1, 0);
@@ -50,6 +54,21 @@ public class Hns extends XMLStructureAdapter
     enum SkewdnessSymbols
     {
         Round, FunnelS, FunnelE
+    }
+    
+    public Set<String> getBasicHandShapes()
+    {
+        return symbols.get(BASIC_HANDSHAPES).keySet();
+    }
+    
+    public Set<String> getSpecificHandShapes()
+    {
+        return symbols.get(SPECIFIC_HANDSHAPES).keySet();
+    }
+    
+    public Set<String> getHandShapes()
+    {
+        return symbols.get(HANDSHAPES).keySet();
     }
 
     /**

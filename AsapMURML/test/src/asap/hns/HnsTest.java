@@ -1,10 +1,12 @@
 package asap.hns;
 
 import static hmi.testutil.math.Vec3fTestUtil.assertVec3fEquals;
-import static org.junit.Assert.assertTrue;
+import static org.hamcrest.MatcherAssert.assertThat;
 import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertTrue;
 import hmi.math.Vec3f;
 
+import org.hamcrest.collection.IsIterableContainingInAnyOrder;
 import org.junit.Before;
 import org.junit.Test;
 
@@ -34,6 +36,15 @@ public class HnsTest
         "<symbol class=\"palmOrientations\" name=\"PalmLU\" value=\"-135.0\"/>"+
         
         "<symbol class=\"distances\" name=\"DistNorm\" value=\"20\"/>"+
+        
+        "<symbol class=\"basicHandShapes\" name=\"BSfist\" value=\"\"/>"+
+        "<symbol class=\"basicHandShapes\" name=\"BSflat\" value=\"\"/>"+
+        
+        "<symbol class=\"specificHandShapes\" name=\"BSifinger\"  value=\"\"/>"+ 
+        "<symbol class=\"specificHandShapes\" name=\"BSimcfinger\" value=\"\"/>"+
+        
+        "<symbol class=\"handShapes\" name=\"ASLy\" value=\"\"/>"+ 
+        "<symbol class=\"handShapes\" name=\"ASLgrasp\" value=\"\"/>"+       
       "</symbols>"+
     "</hns>";
     // @formatter:on           
@@ -44,6 +55,24 @@ public class HnsTest
         hns.readXML(hnsXML);
     }
 
+    @Test
+    public void testGetSpecificHandShapes()
+    {
+        assertThat(hns.getSpecificHandShapes(),IsIterableContainingInAnyOrder.containsInAnyOrder("BSifinger","BSimcfinger"));
+    }
+    
+    @Test
+    public void testGetBasicHandShapes()
+    {
+        assertThat(hns.getBasicHandShapes(),IsIterableContainingInAnyOrder.containsInAnyOrder("BSfist","BSflat"));
+    }
+    
+    @Test
+    public void getHandShapes()
+    {
+        assertThat(hns.getHandShapes(),IsIterableContainingInAnyOrder.containsInAnyOrder("ASLy","ASLgrasp"));
+    }
+    
     @Test
     public void testGetHandLocationVec()
     {

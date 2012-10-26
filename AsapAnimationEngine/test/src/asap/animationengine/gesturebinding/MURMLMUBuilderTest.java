@@ -51,7 +51,8 @@ public class MURMLMUBuilderTest
     private static final float ROT_PRECISION = 0.001f;
     private Hns mockHns = mock(Hns.class);
     private MURMLMUBuilder murmlMuBuilder = new MURMLMUBuilder(mockHns);
-
+    private PegBoard pb = new PegBoard();
+    
     @Before
     public void setup()
     {
@@ -227,8 +228,7 @@ public class MURMLMUBuilderTest
                 "<static slot=\"HandLocation\" value=\"LocShoulder LocCenterRight LocNorm\" scope=\"left_arm\"/>"+
                 "</murml-description>";
         // @formatter:on
-        
-        PegBoard pb = new PegBoard();
+
         TimedAnimationUnit tau = murmlMuBuilder.setupTMU(murmlString, new FeedbackManagerImpl(new BMLBlockManager(), ""),
                 BMLBlockPeg.GLOBALPEG, "bml1", "g1", pb, mockAnimationPlayer);
 
@@ -274,7 +274,6 @@ public class MURMLMUBuilderTest
                         "</dynamic>"+
                 "</murml-description>";
         // @formatter:on
-        PegBoard pb = new PegBoard();
         TimedAnimationUnit tau = murmlMuBuilder.setupTMU(murmlString, new FeedbackManagerImpl(new BMLBlockManager(), ""),
                 BMLBlockPeg.GLOBALPEG, "bml1", "g1", pb, mockAnimationPlayer);
 
@@ -305,7 +304,6 @@ public class MURMLMUBuilderTest
                         "</dynamic>"+
                 "</murml-description>";
         // @formatter:on
-        PegBoard pb = new PegBoard();
         TimedAnimationUnit tau = murmlMuBuilder.setupTMU(murmlString, new FeedbackManagerImpl(new BMLBlockManager(), ""),
                 BMLBlockPeg.GLOBALPEG, "bml1", "g1", pb, mockAnimationPlayer);
 
@@ -331,7 +329,6 @@ public class MURMLMUBuilderTest
                         "</dynamic>"+
                 "</murml-description>";
         // @formatter:on
-        PegBoard pb = new PegBoard();
         TimedAnimationUnit tau = murmlMuBuilder.setupTMU(murmlString, new FeedbackManagerImpl(new BMLBlockManager(), ""),
                 BMLBlockPeg.GLOBALPEG, "bml1", "g1", pb, mockAnimationPlayer);
 
@@ -353,7 +350,6 @@ public class MURMLMUBuilderTest
                         "<static slot=\"PalmOrientation\" scope=\"right_arm\" value=\"DirU\"/>"+
                 "</murml-description>";
         // @formatter:on
-        PegBoard pb = new PegBoard();
         TimedAnimationUnit tau = murmlMuBuilder.setupTMU(murmlString, new FeedbackManagerImpl(new BMLBlockManager(), ""),
                 BMLBlockPeg.GLOBALPEG, "bml1", "g1", pb, mockAnimationPlayer);
 
@@ -374,7 +370,6 @@ public class MURMLMUBuilderTest
                         "<static slot=\"PalmOrientation\" scope=\"right_arm\" value=\"PalmU\"/>"+
                 "</murml-description>";
         // @formatter:on
-        PegBoard pb = new PegBoard();
         TimedAnimationUnit tau = murmlMuBuilder.setupTMU(murmlString, new FeedbackManagerImpl(new BMLBlockManager(), ""),
                 BMLBlockPeg.GLOBALPEG, "bml1", "g1", pb, mockAnimationPlayer);
 
@@ -399,7 +394,6 @@ public class MURMLMUBuilderTest
                         "</parallel>"+
                 "</murml-description>";
         // @formatter:on
-        PegBoard pb = new PegBoard();
         TimedAnimationUnit tau = murmlMuBuilder.setupTMU(murmlString, new FeedbackManagerImpl(new BMLBlockManager(), ""),
                 BMLBlockPeg.GLOBALPEG, "bml1", "g1", pb, mockAnimationPlayer);
 
@@ -429,7 +423,7 @@ public class MURMLMUBuilderTest
         "  </murml-description>";
         //@formatter:on
 
-        PegBoard pb = new PegBoard();
+        
         TimedAnimationUnit tau = murmlMuBuilder.setupTMU(murmlString, new FeedbackManagerImpl(new BMLBlockManager(), ""),
                 BMLBlockPeg.GLOBALPEG, "bml1", "gesture1", pb, mockAnimationPlayer);
 
@@ -439,5 +433,25 @@ public class MURMLMUBuilderTest
         @SuppressWarnings("unchecked")
         List<TimedAnimationUnit> lmps = field("lmpQueue").ofType(List.class).in(tau).get();
         assertEquals(1, lmps.size());
+    }
+
+    @Test
+    public void setupStaticHandshape() throws TMUSetupException
+    {
+        //@formatter:off
+        String murmlString =
+        "<murml-description xmlns=\"http://www.techfak.uni-bielefeld.de/ags/soa/murml\">" +
+        "  <static slot=\"HandShape\" value=\"BSfist (ThExt)\"/>"+
+        "</murml-description>";
+        //@formatter:on
+        TimedAnimationUnit tau = murmlMuBuilder.setupTMU(murmlString, new FeedbackManagerImpl(new BMLBlockManager(), ""),
+                BMLBlockPeg.GLOBALPEG, "bml1", "gesture1", pb, mockAnimationPlayer);
+        
+        assertThat(tau, instanceOf(MotorControlProgram.class));
+        @SuppressWarnings("unchecked")
+        List<TimedAnimationUnit> lmps = field("lmpQueue").ofType(List.class).in(tau).get();
+        
+        //TODO
+        //assertEquals(1, lmps.size());
     }
 }
