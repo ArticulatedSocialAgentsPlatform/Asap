@@ -2,6 +2,7 @@
    <info organisation="HMI" module="LiveMocapEngineTest"/>
    <dependencies >
       <dependency org="Asap"  name="AsapRealizerTestUtil"      transitive="false" rev="latest.${resolve.status}"/>
+      <dependency org="Asap"  name="AsapTestUtil"      transitive="false" rev="latest.${resolve.status}"/>
       <dependency org="junit" name="junit-dep"  rev="latest.release" />
       <dependency org="powermock" name="powermock-mockito"  rev="latest.release" />
       <dependency org="mockito" name="mockito-all"  rev="latest.release" />
