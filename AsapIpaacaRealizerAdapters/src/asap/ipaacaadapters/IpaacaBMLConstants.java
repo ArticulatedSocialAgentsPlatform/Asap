@@ -10,7 +10,7 @@ public final class IpaacaBMLConstants
     private IpaacaBMLConstants(){}
     
     public static final String BML_CATEGORY = "BML";
-    public static final String BML_FEEDBACK_CATEGORY = "BML_FEEDBACK";
-    public static final String BML_FEEDBACK_KEY = "BML_FEEDBACK";
+    public static final String BML_FEEDBACK_CATEGORY = "BMLFEEDBACK";
+    public static final String BML_FEEDBACK_KEY = "BMLFEEDBACK";
     public static final String BML_KEY = "BML";
 }

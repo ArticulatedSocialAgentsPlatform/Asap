@@ -45,7 +45,6 @@ import asap.bml.bridge.TCPIPToBMLRealizerAdapter;
 import asap.bml.ext.bmlt.BMLTBMLBehaviorAttributes;
 import asap.realizer.AsapRealizer;
 import asap.realizer.Engine;
-import asap.realizer.bridge.LogPipe;
 import asap.realizer.bridge.MultiThreadedElckerlycRealizerBridge;
 import asap.realizer.feedback.FeedbackManager;
 import asap.realizer.feedback.FeedbackManagerImpl;

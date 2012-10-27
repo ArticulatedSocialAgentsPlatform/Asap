@@ -18,6 +18,7 @@ import com.google.common.collect.ImmutableSet;
 
 /**
  * Submits ipaaca messages (from an InputBuffer) to a RealizerPort; submits RealizerPort feedbacks to the OutputBuffer. 
+ * Assumes that the connected realizerport is threadsafe (or at least that its performBML function is).
  * @author Herwin
  */
 public class IpaacaToBMLRealizerAdapter implements BMLFeedbackListener
