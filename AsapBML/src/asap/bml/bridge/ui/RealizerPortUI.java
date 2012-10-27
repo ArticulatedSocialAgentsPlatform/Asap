@@ -62,15 +62,15 @@ import org.slf4j.LoggerFactory;
 import asap.bml.bridge.RealizerPort;
 
 /**
- * A graphical UI to a RealizerBridge, allowing for a few simple interactions with it such as
+ * A graphical UI to a RealizerPort, allowing for a few simple interactions with it such as
  * sending BML to it.
  * 
  * @author Dennis Reidsma
  */
-public class RealizerBridgeUI extends JPanel
+public class RealizerPortUI extends JPanel
 {
 
-    private static Logger logger = LoggerFactory.getLogger(RealizerBridgeUI.class.getName());
+    private static Logger logger = LoggerFactory.getLogger(RealizerPortUI.class.getName());
 
     private URL demoScriptUrl = null;
     private String demoScriptResource = null;
@@ -107,13 +107,13 @@ public class RealizerBridgeUI extends JPanel
      * Init the frame with input text are -- use default set of demo
      * scripts
      */
-    public RealizerBridgeUI(RealizerPort bridge)
+    public RealizerPortUI(RealizerPort bridge)
     {
         this(bridge, null);
     }
 
     /** Init the frame with input text area, play button */
-    public RealizerBridgeUI(RealizerPort bridge, String resource)
+    public RealizerPortUI(RealizerPort bridge, String resource)
     {
         super();
 

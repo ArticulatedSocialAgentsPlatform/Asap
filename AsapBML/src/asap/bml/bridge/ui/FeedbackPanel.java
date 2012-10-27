@@ -1,12 +1,15 @@
 package asap.bml.bridge.ui;
 
 import saiba.bml.feedback.BMLBlockProgressFeedback;
+import saiba.bml.feedback.BMLFeedback;
+import saiba.bml.feedback.BMLFeedbackParser;
 import saiba.bml.feedback.BMLPredictionFeedback;
 import saiba.bml.feedback.BMLSyncPointProgressFeedback;
 
 import java.awt.Dimension;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.io.IOException;
 
 import javax.swing.JButton;
 import javax.swing.JPanel;
@@ -35,7 +38,7 @@ public class FeedbackPanel extends JPanel implements BMLFeedbackListener
 
     private static final int PREF_WIDTH = 500;
     private static final int PREF_HEIGHT = 80;
-    
+
     public FeedbackPanel(RealizerPort bridge)
     {
         super();
@@ -89,7 +92,7 @@ public class FeedbackPanel extends JPanel implements BMLFeedbackListener
     public void blockProgress(BMLBlockProgressFeedback psf)
     {
         feedbackOutput.append(psf.toString());
-    }    
+    }
 
     public void syncProgress(BMLSyncPointProgressFeedback spp)
     {
@@ -111,6 +114,29 @@ public class FeedbackPanel extends JPanel implements BMLFeedbackListener
     @Override
     public void feedback(String feedback)
     {
-         //TODO       
+        try
+        {
+            BMLFeedback fb = BMLFeedbackParser.parseFeedback(feedback);
+            if(fb instanceof BMLPredictionFeedback)
+            {
+                prediction((BMLPredictionFeedback)fb);
+            }
+            else if (fb instanceof BMLBlockProgressFeedback)
+            {
+                blockProgress((BMLBlockProgressFeedback)fb);
+            }
+            else if (fb instanceof BMLSyncPointProgressFeedback)
+            {
+                syncProgress((BMLSyncPointProgressFeedback)fb);
+            }
+            else if (fb instanceof BMLWarningFeedback)
+            {
+                warn((BMLWarningFeedback)fb);
+            }
+        }
+        catch (IOException e)
+        {
+            appendWarning("Could not parse feedback " + feedback + "\n");
+        }
     }
 }

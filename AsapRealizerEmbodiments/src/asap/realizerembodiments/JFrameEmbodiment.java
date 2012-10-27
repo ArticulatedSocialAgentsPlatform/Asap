@@ -47,7 +47,7 @@ import org.slf4j.LoggerFactory;
 import asap.bml.bridge.TCPIPToBMLRealizerAdapter;
 import asap.bml.bridge.ui.BridgeServerUI;
 import asap.bml.bridge.ui.FeedbackPanel;
-import asap.bml.bridge.ui.RealizerBridgeUI;
+import asap.bml.bridge.ui.RealizerPortUI;
 
 
 /** This "embodiment" allows a VH to create Swing GUI components. */
@@ -105,6 +105,40 @@ public class JFrameEmbodiment implements JComponentEmbodiment, EmbodimentLoader
         return loaderId;
     }
 
+    public void initialize(final String finalName)
+    {
+        try
+        {
+            SwingUtilities.invokeAndWait(new Runnable()
+            {
+
+                @Override
+                public void run()
+                {
+                    // make UI frame
+                    theUI = new JFrame(finalName);
+                    theUI.setLocation(650, 50);
+                    theUI.setSize(600, 500);
+                    theUI.setDefaultCloseOperation(JFrame.DO_NOTHING_ON_CLOSE);
+                    theUI.setVisible(true);
+                    contentPanel.setLayout(new BoxLayout(contentPanel, BoxLayout.PAGE_AXIS));
+                    contentPanel.setAlignmentX(JFrame.LEFT_ALIGNMENT);
+                    contentPanel.setBorder(BorderFactory.createEmptyBorder(10, 10, 10, 10));
+                    theUI.getContentPane().add(contentPanel);
+                }
+            });
+        }
+        catch (InterruptedException e)
+        {
+            logger.warn("Exception in JFrameEmbodiment initialization",e);
+            Thread.interrupted();
+        }
+        catch (InvocationTargetException e)
+        {
+            logger.warn("Exception in JFrameEmbodiment initialization",e);
+        }
+    }
+    
     /** No loading necessary, actually! Empty content expected. No required embodiments */
     @Override
     public void readXML(XMLTokenizer tokenizer, String loaderId, String vhId, String vhName, Environment[] environments, Loader ... requiredLoaders) 
@@ -126,24 +160,12 @@ public class JFrameEmbodiment implements JComponentEmbodiment, EmbodimentLoader
         final XMLTokenizer tok = tokenizer;
         try
         {
+            initialize(finalName);
             SwingUtilities.invokeAndWait(new Runnable()
             {
-
                 @Override
                 public void run()
-                {
-                    // make UI frame
-                    theUI = new JFrame(finalName);
-                    theUI.setLocation(650, 50);
-                    theUI.setSize(600, 500);
-                    theUI.setDefaultCloseOperation(JFrame.DO_NOTHING_ON_CLOSE);
-                    theUI.setVisible(true);
-                    contentPanel.setLayout(new BoxLayout(contentPanel, BoxLayout.PAGE_AXIS));
-                    contentPanel.setAlignmentX(JFrame.LEFT_ALIGNMENT);
-                    contentPanel.setBorder(BorderFactory.createEmptyBorder(10, 10, 10, 10));
-                    theUI.getContentPane().add(contentPanel);
-
-                    
+                {                    
                     // if specified by XML, create serverUI and/or BML test interface and/or feedbackpanel based on the elckerlycrealizer
                     try
                     {
@@ -196,7 +218,7 @@ public class JFrameEmbodiment implements JComponentEmbodiment, EmbodimentLoader
         {
             attrMap = tokenizer.getAttributes();
             String demoscriptdir = adapter.getOptionalAttribute("demoscriptresources", attrMap, "bml1.0/defaultexamples");
-            addJComponent(new RealizerBridgeUI(are.getRealizerPort(), demoscriptdir));
+            addJComponent(new RealizerPortUI(are.getRealizerPort(), demoscriptdir));
             tokenizer.takeSTag("BmlUI");
             tokenizer.takeETag("BmlUI");
         }
