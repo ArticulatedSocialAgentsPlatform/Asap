@@ -23,7 +23,7 @@ import ipaaca.OutputBuffer;
  * Submits BML through ipaaca messages; submits received feedback to registered listeners.
  * @author Herwin
  */
-public class BMLToIpaacaRealizerAdapter implements RealizerPort
+public class BMLRealizerToIpaacaAdapter implements RealizerPort
 {
     static
     {
@@ -35,7 +35,7 @@ public class BMLToIpaacaRealizerAdapter implements RealizerPort
     private final OutputBuffer outBuffer = new OutputBuffer("BMLToIpaacaRealizerAdapter");
     private List<BMLFeedbackListener> feedbackListeners = Collections.synchronizedList(new ArrayList<BMLFeedbackListener>());
 
-    public BMLToIpaacaRealizerAdapter()
+    public BMLRealizerToIpaacaAdapter()
     {
         EnumSet<IUEventType> types = EnumSet.of(IUEventType.ADDED);
         inBuffer.registerHandler(new IUEventHandler(new HandlerFunctor()
