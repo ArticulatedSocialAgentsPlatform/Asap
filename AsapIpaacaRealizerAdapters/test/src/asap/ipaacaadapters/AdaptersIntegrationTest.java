@@ -19,7 +19,7 @@ public class AdaptersIntegrationTest
 {
     private RealizerPort mockRealizerPort = mock(RealizerPort.class);
     private BMLFeedbackListener mockFeedbackListener = mock(BMLFeedbackListener.class);
-    private BMLToIpaacaRealizerAdapter bmlToIpaaca = new BMLToIpaacaRealizerAdapter();
+    private BMLRealizerToIpaacaAdapter bmlToIpaaca = new BMLRealizerToIpaacaAdapter();
     private IpaacaToBMLRealizerAdapter ipaacaToBML = new IpaacaToBMLRealizerAdapter(mockRealizerPort);
     
     @After
