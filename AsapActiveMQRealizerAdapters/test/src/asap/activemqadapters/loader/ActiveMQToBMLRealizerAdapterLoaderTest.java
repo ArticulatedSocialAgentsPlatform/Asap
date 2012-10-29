@@ -10,6 +10,7 @@ import hmi.xml.XMLTokenizer;
 
 import java.io.IOException;
 
+import org.junit.Ignore;
 import org.junit.Test;
 
 import asap.bml.bridge.RealizerPort;
@@ -24,6 +25,7 @@ public class ActiveMQToBMLRealizerAdapterLoaderTest
     private RealizerPort mockRealizerPort = mock(RealizerPort.class);
     private Clock mockSchedulingClock = mock(Clock.class);
     
+    @Ignore //FIXME: re-enable when an ActiveMQ server is running properly on the daily build server
     @Test
     public void testReadFromXML() throws IOException
     {

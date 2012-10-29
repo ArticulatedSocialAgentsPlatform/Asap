@@ -6,6 +6,7 @@ import static org.mockito.Mockito.verify;
 import javax.jms.JMSException;
 
 import org.junit.Before;
+import org.junit.Ignore;
 import org.junit.Test;
 
 import asap.bml.bridge.RealizerPort;
@@ -30,6 +31,7 @@ public class AdaptersIntegrationTest
         ipaacaToBML = new ActiveMQToBMLRealizerAdapter(mockRealizerPort);
     }
     
+    @Ignore //FIXME: re-enable when an ActiveMQ server is running properly on the daily build server
     @Test(timeout=1000)
     public void testPerformBML() throws InterruptedException
     {
@@ -38,6 +40,7 @@ public class AdaptersIntegrationTest
         verify(mockRealizerPort).performBML("bmltest");
     }
     
+    @Ignore //FIXME: re-enable when an ActiveMQ server is running properly on the daily build server
     @Test(timeout=1000)
     public void testFeedback() throws InterruptedException
     {
