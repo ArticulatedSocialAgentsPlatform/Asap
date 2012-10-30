@@ -1,5 +1,7 @@
 package asap.animationengine.ace.lmp;
 
+import hmi.animation.Hanim;
+
 import java.util.List;
 import java.util.Set;
 
