@@ -84,7 +84,7 @@ public class AnimationPlannerTest
     @Before
     public void setup() throws MUSetupException
     {
-        animationPlanner = new AnimationPlanner(fbManager, mockPlayer, mockBinding, mockHns, planManager, pegBoard);
+        animationPlanner = new AnimationPlanner(fbManager, mockPlayer, mockBinding, mockHns, null, planManager, pegBoard);
         plannerTests = new PlannerTests<TimedAnimationUnit>(animationPlanner, bbPeg);
         PostureShiftTMU tmups = new PostureShiftTMU(fbManager, bbPeg, BMLID, "shift1", mockUnit, pegBoard, mockRestPose, mockPlayer);
         TimedAnimationMotionUnit tmu = new TimedAnimationMotionUnit(fbManager, bbPeg, BMLID, "nod1", mockUnit, pegBoard);

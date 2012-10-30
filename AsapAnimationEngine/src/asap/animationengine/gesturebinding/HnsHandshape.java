@@ -33,9 +33,14 @@ public class HnsHandshape
     private final Hns hns;
     private ImmutableMap<String, SkeletonPose> poseMap;
 
-    public HnsHandshape(Hns hns, String... handshapePaths) throws IOException
+    public HnsHandshape(Hns hns)
     {
         this.hns = hns;
+    }
+
+    public HnsHandshape(Hns hns, String... handshapePaths) throws IOException
+    {
+        this(hns);
         Reflections reflections = new Reflections(new ConfigurationBuilder().setUrls(ClasspathHelper.forPackage("")).setScanners(
                 new ResourcesScanner()));
         Set<String> xmlFiles = reflections.getResources(Pattern.compile(".*\\.xml"));
@@ -47,7 +52,15 @@ public class HnsHandshape
                 if (file.startsWith(path))
                 {
                     SkeletonPose p = new SkeletonPose(new XMLTokenizer(new Resources("").getReader(file)));
-                    poses.add(p);
+
+                    if (p.getId() != null)
+                    {
+                        poses.add(p);
+                    }
+                    else
+                    {
+                        log.warn("pose without id " + file);
+                    }
                 }
             }
         }
@@ -56,7 +69,7 @@ public class HnsHandshape
 
     public HnsHandshape(Hns hns, Collection<SkeletonPose> shapes)
     {
-        this.hns = hns;
+        this(hns);
         setHandshapes(shapes);
     }
 
@@ -81,7 +94,7 @@ public class HnsHandshape
         {
             return poseMap.get(basicSymbol);
             // TODO: parse and handle stuff between ()'s
-            
+
             // if (readPostureFile(basicSymbol, poseStr)) {
             // p = figure->string_to_posture(poseStr);
             // while (HNSStr.grep('(',')',basicSymbol)) {
@@ -99,6 +112,6 @@ public class HnsHandshape
         {
             log.warn("no correct HNS hand shape description: " + basicSymbol);
             return null;
-        }        
+        }
     }
 }

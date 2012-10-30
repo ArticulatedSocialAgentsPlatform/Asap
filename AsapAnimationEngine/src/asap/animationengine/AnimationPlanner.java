@@ -30,6 +30,7 @@ import saiba.bml.core.PointingBehaviour;
 import saiba.bml.core.PostureBehaviour;
 import saiba.bml.core.PostureShiftBehaviour;
 import asap.animationengine.gesturebinding.GestureBinding;
+import asap.animationengine.gesturebinding.HnsHandshape;
 import asap.animationengine.gesturebinding.MURMLMUBuilder;
 import asap.animationengine.motionunit.MUSetupException;
 import asap.animationengine.motionunit.TMUSetupException;
@@ -71,7 +72,7 @@ public class AnimationPlanner extends AbstractPlanner<TimedAnimationUnit>
         BMLInfo.addDescriptionExtension(MURMLGestureBehaviour.xmlTag(), MURMLGestureBehaviour.class);
     }
 
-    public AnimationPlanner(FeedbackManager bfm, AnimationPlayer p, GestureBinding g, Hns hns, PlanManager<TimedAnimationUnit> planManager,
+    public AnimationPlanner(FeedbackManager bfm, AnimationPlayer p, GestureBinding g, Hns hns, HnsHandshape hnsHandshapes, PlanManager<TimedAnimationUnit> planManager,
             PegBoard pb)
     {
         super(bfm, planManager);
@@ -80,14 +81,15 @@ public class AnimationPlanner extends AbstractPlanner<TimedAnimationUnit>
         player = p;
         Hns hnsNew = hns;
         if (hnsNew == null) hnsNew = new Hns();
-        murmlMUBuilder = new MURMLMUBuilder(hnsNew);
+        if (hnsHandshapes == null) hnsHandshapes = new HnsHandshape(hnsNew);
+        murmlMUBuilder = new MURMLMUBuilder(hnsNew, hnsHandshapes);
     }
 
     public AnimationPlanner(FeedbackManager bfm, AnimationPlayer p, GestureBinding g, PlanManager<TimedAnimationUnit> planManager,
             PegBoard pb)
     {
 
-        this(bfm, p, g, null, planManager, pb);
+        this(bfm, p, g, null, null, planManager, pb);
     }
 
     public void setGestureBinding(GestureBinding g)

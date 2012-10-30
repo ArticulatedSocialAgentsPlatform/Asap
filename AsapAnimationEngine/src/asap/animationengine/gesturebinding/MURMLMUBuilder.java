@@ -1,5 +1,6 @@
 package asap.animationengine.gesturebinding;
 
+import hmi.animation.SkeletonPose;
 import hmi.math.Quat4f;
 import hmi.math.Vec3f;
 import hmi.neurophysics.FittsLaw;
@@ -20,7 +21,9 @@ import asap.animationengine.ace.GuidingStroke;
 import asap.animationengine.ace.LinearGStroke;
 import asap.animationengine.ace.OrientConstraint;
 import asap.animationengine.ace.PoConstraint;
+import asap.animationengine.ace.PostureConstraint;
 import asap.animationengine.ace.TPConstraint;
+import asap.animationengine.ace.lmp.LMPHandMove;
 import asap.animationengine.ace.lmp.LMPPoRot;
 import asap.animationengine.ace.lmp.LMPWristPos;
 import asap.animationengine.ace.lmp.LMPWristRot;
@@ -61,10 +64,12 @@ import com.google.common.collect.ImmutableList;
 public final class MURMLMUBuilder
 {
     private final Hns hns;
+    private final HnsHandshape hnsHandshapes;
 
-    public MURMLMUBuilder(Hns hns)
+    public MURMLMUBuilder(Hns hns, HnsHandshape handshapes)
     {
         this.hns = hns;
+        this.hnsHandshapes = handshapes;
     }
 
     public AnimationUnit setup(String murml)
@@ -630,27 +635,17 @@ public final class MURMLMUBuilder
             String bmlId, String id, PegBoard pb, MotorControlProgram mcp, AnimationPlayer aniPlayer)
     {
         
+        
 //        // --- preparations
 //        FrameData *frame;
 //        LMP_HandMove *lmp = new LMP_HandMove ("HF_Stroke", scope);
 //        list<pair<MgcReal,GuidingStroke::GStrokePhaseID> > phaseVec;
-//        
-//        // --- create posture sequence
-//        MgcReal eT;
-//        Posture pose;
-//        int constrCounter = 0;
-//        vector<MovementConstraintBranchNode*>::iterator it;
-//        for (it = mcMap.begin(); it!= mcMap.end(); ++it) {
-//          ++constrCounter;
-//          //cout << (*it)->toString() << endl;
-//          
-//          if ( (*it)->getScope() == handScope &&
-//           (*it)->getSlot() == "HandShape" ) {
-//            
-//            // --- static movement constraint
-//            StaticConstraint *sc = dynamic_cast<StaticConstraint*>(*it);
-//            if (sc != 0) //->nodeType == NT_STATIC_CONSTRAINT)
-//          {
+
+        List<PostureConstraint> phaseVec = new ArrayList<>();  
+        SkeletonPose pose = hnsHandshapes.getHNSHandShape(staticElem.getValue());
+        phaseVec.add(new PostureConstraint("strokeStart",pose));
+        phaseVec.add(new PostureConstraint("strokeEnd",pose));
+
 //            // get corresponding hand shape
 //            if (getHNSHandShape(sc->getValue(), pose)) {
 //              // constraint start conf
@@ -712,9 +707,8 @@ public final class MURMLMUBuilder
 //        else
 //          phaseVec.back().second = GuidingStroke::STP_FINISH;
 //        
-//        // -- transfer lmp for execution
-//        lmp->setPhaseVec(phaseVec);
-//        mp->addLMP(lmp);
+        LMPHandMove hm = new LMPHandMove(scope, phaseVec, bbm, bmlBlockPeg, bmlId, id, pb, aniPlayer);
+        mcp.addLMP(hm);
     }
     
     public void getStaticHandLocationElementTMU(String scope, Static staticElem, FeedbackManager bbm, BMLBlockPeg bmlBlockPeg,

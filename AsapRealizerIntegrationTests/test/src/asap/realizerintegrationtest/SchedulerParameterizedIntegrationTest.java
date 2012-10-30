@@ -60,6 +60,7 @@ import asap.animationengine.AnimationPlanPlayer;
 import asap.animationengine.AnimationPlanner;
 import asap.animationengine.AnimationPlayer;
 import asap.animationengine.gesturebinding.GestureBinding;
+import asap.animationengine.gesturebinding.HnsHandshape;
 import asap.animationengine.gesturebinding.SpeechBinding;
 import asap.animationengine.motionunit.TimedAnimationUnit;
 import asap.animationengine.restpose.RestPose;
@@ -316,7 +317,8 @@ public class SchedulerParameterizedIntegrationTest
         
         Hns hns = new Hns();
         hns.readXML(gres.getReader("Humanoids/shared/hns/hns.xml"));
-        AnimationPlanner ap = new AnimationPlanner(bfm, aPlayer, gestureBinding, hns, animationPlanManager, pegBoard);
+        HnsHandshape HnsHandshape = new HnsHandshape(hns,"Humanoids/shared/handshapes");
+        AnimationPlanner ap = new AnimationPlanner(bfm, aPlayer, gestureBinding, hns, HnsHandshape, animationPlanManager, pegBoard);
         Engine animationEngine = new DefaultEngine<TimedAnimationUnit>(ap, aPlayer, animationPlanManager);
 
         SystemClock clock = new SystemClock();

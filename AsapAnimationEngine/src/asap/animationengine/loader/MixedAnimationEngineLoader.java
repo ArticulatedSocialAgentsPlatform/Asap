@@ -36,12 +36,15 @@ import hmi.xml.XMLStructureAdapter;
 import hmi.xml.XMLTokenizer;
 
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 
 import asap.animationengine.AnimationPlanPlayer;
 import asap.animationengine.AnimationPlanner;
 import asap.animationengine.AnimationPlayer;
 import asap.animationengine.gesturebinding.GestureBinding;
+import asap.animationengine.gesturebinding.HnsHandshape;
 import asap.animationengine.motionunit.TimedAnimationUnit;
 import asap.animationengine.restpose.RestPose;
 import asap.animationengine.restpose.SkeletonPoseRestPose;
@@ -70,7 +73,9 @@ public class MixedAnimationEngineLoader implements EngineLoader
     private AnimationPlanner animationPlanner = null;
     private SkeletonPose restpose;
     private Hns hns = new Hns();
-
+    private HnsHandshape hnsHandshape = new HnsHandshape(hns);
+    private List<String> handShapeDir = new ArrayList<>();
+    
     String id = "";
     // some variables cached during loading
     GestureBinding gesturebinding = null;
@@ -184,6 +189,13 @@ public class MixedAnimationEngineLoader implements EngineLoader
             tokenizer.takeSTag("Hns");            
             tokenizer.takeETag("Hns");
         }
+        else if (tokenizer.atSTag("HnsHandShape"))
+        {
+            attrMap = tokenizer.getAttributes();
+            handShapeDir.add(adapter.getRequiredAttribute("dir",attrMap, tokenizer));
+            tokenizer.takeSTag("HnsHandShapes");            
+            tokenizer.takeETag("HnsHandShapes");
+        }
         else if (tokenizer.atSTag("StartPosition"))
         {
             attrMap = tokenizer.getAttributes();
@@ -242,10 +254,18 @@ public class MixedAnimationEngineLoader implements EngineLoader
                 MixedAnimationPlayerManager.getH(), we.getWorldObjectManager(), animationPlanPlayer);
 
         pose.setAnimationPlayer((AnimationPlayer) animationPlayer);
-        // IKBody nextBody = new IKBody(se.getNextVJoint()); not used?
-
+        
+        try
+        {
+            hnsHandshape = new HnsHandshape(hns, this.handShapeDir.toArray(new String[0]));
+        }
+        catch (IOException e)
+        {
+            throw new RuntimeException(e);
+        }
+        
         // make planner
-        animationPlanner = new AnimationPlanner(are.getFeedbackManager(), (AnimationPlayer) animationPlayer, gesturebinding, hns,
+        animationPlanner = new AnimationPlanner(are.getFeedbackManager(), (AnimationPlayer) animationPlayer, gesturebinding, hns, hnsHandshape,
                 animationPlanManager, are.getPegBoard());
 
         engine = new DefaultEngine<TimedAnimationUnit>(animationPlanner, (AnimationPlayer) animationPlayer, animationPlanManager);

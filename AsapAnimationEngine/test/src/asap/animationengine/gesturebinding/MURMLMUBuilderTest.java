@@ -50,7 +50,8 @@ public class MURMLMUBuilderTest
     private VJoint vCurr = HanimBody.getLOA1HanimBody();
     private static final float ROT_PRECISION = 0.001f;
     private Hns mockHns = mock(Hns.class);
-    private MURMLMUBuilder murmlMuBuilder = new MURMLMUBuilder(mockHns);
+    private HnsHandshape mockHnsHandshapes = mock(HnsHandshape.class);
+    private MURMLMUBuilder murmlMuBuilder = new MURMLMUBuilder(mockHns, mockHnsHandshapes);
     private PegBoard pb = new PegBoard();
     
     @Before
@@ -441,7 +442,7 @@ public class MURMLMUBuilderTest
         //@formatter:off
         String murmlString =
         "<murml-description xmlns=\"http://www.techfak.uni-bielefeld.de/ags/soa/murml\">" +
-        "  <static slot=\"HandShape\" value=\"BSfist (ThExt)\"/>"+
+        "  <static scope=\"left_arm\" slot=\"HandShape\" value=\"BSfist (ThExt)\"/>"+
         "</murml-description>";
         //@formatter:on
         TimedAnimationUnit tau = murmlMuBuilder.setupTMU(murmlString, new FeedbackManagerImpl(new BMLBlockManager(), ""),
@@ -451,7 +452,8 @@ public class MURMLMUBuilderTest
         @SuppressWarnings("unchecked")
         List<TimedAnimationUnit> lmps = field("lmpQueue").ofType(List.class).in(tau).get();
         
-        //TODO
-        //assertEquals(1, lmps.size());
+        assertEquals(1, lmps.size());
+        
+        assertThat(tau.getKinematicJoints(), IsIterableContainingInAnyOrder.containsInAnyOrder(Hanim.LEFTHAND_JOINTS));
     }
 }
