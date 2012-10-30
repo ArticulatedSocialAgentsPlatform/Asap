@@ -10,6 +10,7 @@ import static org.mockito.Matchers.startsWith;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
 import hmi.animation.Hanim;
+import hmi.animation.SkeletonPose;
 import hmi.animation.VJoint;
 import hmi.math.Quat4f;
 import hmi.testutil.animation.HanimBody;
@@ -50,9 +51,11 @@ public class MURMLMUBuilderTest
     private VJoint vCurr = HanimBody.getLOA1HanimBody();
     private static final float ROT_PRECISION = 0.001f;
     private Hns mockHns = mock(Hns.class);
+    private SkeletonPose mockSkeletonPose = mock(SkeletonPose.class);
     private HnsHandshape mockHnsHandshapes = mock(HnsHandshape.class);
     private MURMLMUBuilder murmlMuBuilder = new MURMLMUBuilder(mockHns, mockHnsHandshapes);
     private PegBoard pb = new PegBoard();
+    
     
     @Before
     public void setup()
@@ -64,6 +67,7 @@ public class MURMLMUBuilderTest
         when(mockHns.getAbsoluteDirection(startsWith("Dir"), any(float[].class))).thenReturn(true);
         when(mockHns.isPalmOrientation(startsWith("Palm"))).thenReturn(true);
         when(mockHns.getElementShape(anyString())).thenReturn(ShapeSymbols.LeftC);
+        when(mockHnsHandshapes.getHNSHandShape(anyString())).thenReturn(mockSkeletonPose);
     }
 
     @Test

@@ -80,5 +80,6 @@
       <dependency org="gnu" name="trove" rev="latest.release"  />   
       <dependency org="hsqldb" name="hsqldb" rev="latest.release"  />     
       <dependency org="Jama" name="Jama" rev="latest.release"  />             
+      <dependency org="reflections" name="reflections" rev="latest.release"  />             
    </dependencies>
 </ivy-module>
