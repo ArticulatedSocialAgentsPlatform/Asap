@@ -193,8 +193,8 @@ public class MixedAnimationEngineLoader implements EngineLoader
         {
             attrMap = tokenizer.getAttributes();
             handShapeDir.add(adapter.getRequiredAttribute("dir",attrMap, tokenizer));
-            tokenizer.takeSTag("HnsHandShapes");            
-            tokenizer.takeETag("HnsHandShapes");
+            tokenizer.takeSTag("HnsHandShape");            
+            tokenizer.takeETag("HnsHandShape");
         }
         else if (tokenizer.atSTag("StartPosition"))
         {
