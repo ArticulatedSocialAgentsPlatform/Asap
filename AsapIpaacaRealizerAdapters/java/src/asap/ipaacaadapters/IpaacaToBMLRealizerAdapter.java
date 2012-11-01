@@ -11,8 +11,9 @@ import ipaaca.OutputBuffer;
 
 import java.util.EnumSet;
 
-import asap.bml.bridge.RealizerPort;
-import asap.bml.feedback.BMLFeedbackListener;
+
+import asap.realizerport.BMLFeedbackListener;
+import asap.realizerport.RealizerPort;
 
 import com.google.common.collect.ImmutableSet;
 

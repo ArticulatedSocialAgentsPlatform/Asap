@@ -8,8 +8,8 @@ import java.util.List;
 import com.google.common.collect.ImmutableList;
 import com.google.common.collect.ImmutableSet;
 
-import asap.bml.bridge.RealizerPort;
-import asap.bml.feedback.BMLFeedbackListener;
+import asap.realizerport.BMLFeedbackListener;
+import asap.realizerport.RealizerPort;
 import ipaaca.AbstractIU;
 import ipaaca.HandlerFunctor;
 import ipaaca.IUEventHandler;

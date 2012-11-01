@@ -6,9 +6,9 @@ import hmi.xml.XMLTokenizer;
 
 import java.io.IOException;
 
-import asap.bml.bridge.RealizerPort;
 import asap.ipaacaadapters.IpaacaToBMLRealizerAdapter;
 import asap.realizerembodiments.PipeLoader;
+import asap.realizerport.RealizerPort;
 
 /**
  * Loads a IpaacaToBMLRealizerAdapter from XML
