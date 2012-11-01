@@ -48,7 +48,7 @@ public abstract class KeyFrameMotionUnit implements MotionUnit
         return preferedDuration;
     }
     
-    protected void setupDynamicStart(double t, List<KeyFrame> keyFrames)
+    protected void setupDynamicStart(List<KeyFrame> keyFrames)
     {
         if(allowDynamicStart)
         {

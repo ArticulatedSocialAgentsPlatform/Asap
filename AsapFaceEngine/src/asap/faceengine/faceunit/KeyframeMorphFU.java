@@ -135,7 +135,7 @@ public class KeyframeMorphFU extends KeyFrameMotionUnit implements FaceUnit
     @Override
     public void startUnit(double t) throws MUPlayException
     {
-        super.setupDynamicStart(t, keyFrames);
+        super.setupDynamicStart(keyFrames);
         interp.setKeyFrames(keyFrames, nrOfDofs);
     }
 }

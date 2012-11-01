@@ -107,4 +107,25 @@ public class MixedAnimationEngineLoaderTest
         assertEquals("ma1", loader.getId());
         assertNotNull(loader.getEngine());
     }
+    
+    @Test
+    public void testWithHnsHandshape() throws IOException 
+    {
+        //@formatter:off
+        String loaderStr =
+          "<Loader id=\"animationengine\""+ 
+                "loader=\"asap.animationengine.loader.MixedAnimationEngineLoader\""+
+                "requiredloaders=\"mixedskeletonembodiment,physicalembodiment\">"+
+            "<GestureBinding basedir=\"\" resources=\"Humanoids/armandia/gesturebinding/\" filename=\"gesturebinding.xml\"/>"+
+            "<StartPose resources=\"Humanoids/armandia/restposes/\" filename=\"looselyhangingarms.xml\"/>"+
+            "<Hns resources=\"Humanoids/shared/hns\" filename=\"hns.xml\"/>"+
+            "<HnsHandShape dir=\"Humanoids/shared/handshapes\" />"+
+          "</Loader>";          
+        //@formatter:on
+        XMLTokenizer tok = new XMLTokenizer(loaderStr);
+        tok.takeSTag();
+        loader.readXML(tok, "ma1", "billie", "billie", reqEnvironments, reqLoaders);
+        assertEquals("ma1", loader.getId());
+        assertNotNull(loader.getEngine());
+    }
 }

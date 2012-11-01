@@ -78,6 +78,7 @@
       <dependency org="bml" name="realizertester"         rev="latest.${resolve.status}"  />
       <dependency org="bml" name="realizertester-utils-bml1"         rev="latest.${resolve.status}"  />
       <dependency org="lwjgl" name="lwjgl" rev="latest.release"  />
+      <dependency org="reflections"   name="reflections"         rev="latest.release"  />
 
    </dependencies>
 </ivy-module>
