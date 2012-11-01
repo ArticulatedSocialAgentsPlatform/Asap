@@ -23,10 +23,10 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import saiba.bml.feedback.BMLSyncPointProgressFeedback;
-import asap.bml.bridge.RealizerPort;
-import asap.bml.feedback.BMLFeedbackListener;
 import asap.bml.feedback.BMLFeedbackManager;
 import asap.bml.feedback.ListBMLFeedbackListener;
+import asap.realizerport.BMLFeedbackListener;
+import asap.realizerport.RealizerPort;
 /**
  * Unit tests for the LoggingRealizerBridge
  * @author Herwin

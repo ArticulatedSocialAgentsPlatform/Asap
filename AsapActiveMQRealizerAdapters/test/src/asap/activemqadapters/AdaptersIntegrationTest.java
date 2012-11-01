@@ -8,8 +8,8 @@ import javax.jms.JMSException;
 import org.junit.Before;
 import org.junit.Test;
 
-import asap.bml.bridge.RealizerPort;
-import asap.bml.feedback.BMLFeedbackListener;
+import asap.realizerport.BMLFeedbackListener;
+import asap.realizerport.RealizerPort;
 
 /**
  * Integration tests for the BMLToIpaaca and IpaacaToBML adapters.

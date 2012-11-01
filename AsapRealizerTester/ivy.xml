@@ -4,7 +4,7 @@
       <include file="${ivy.settings.dir}/configurations.xml"/>
    </configurations>
    <dependencies>
-         
+	   <dependency org="Asap"     name="AsapRealizerPort"           rev="latest.${resolve.status}"    />         
       <dependency org="Asap"     name="AsapBML"            rev="latest.${resolve.status}"  />
       <dependency org="Asap"     name="AsapMURML"            rev="latest.${resolve.status}"  />
       <dependency org="Asap"     name="AsapMath"            rev="latest.${resolve.status}"  />

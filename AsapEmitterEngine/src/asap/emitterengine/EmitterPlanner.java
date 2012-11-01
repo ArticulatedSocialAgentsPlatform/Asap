@@ -23,7 +23,6 @@ import java.util.List;
 
 import saiba.bml.BMLInfo;
 import saiba.bml.core.Behaviour;
-import asap.bml.bridge.RealizerPort;
 import asap.emitterengine.bml.CreateEmitterBehaviour;
 import asap.emitterengine.planunit.CreateEmitterEU;
 import asap.emitterengine.planunit.TimedEmitterUnit;
@@ -39,6 +38,7 @@ import asap.realizer.planunit.PlanManager;
 import asap.realizer.scheduler.LinearStretchResolver;
 import asap.realizer.scheduler.TimePegAndConstraint;
 import asap.realizer.scheduler.UniModalResolver;
+import asap.realizerport.RealizerPort;
 
 /**
  */

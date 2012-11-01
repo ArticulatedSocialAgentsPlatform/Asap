@@ -1,6 +1,7 @@
 <ivy-module version="2.0">
    <info organisation="Asap" module="AsapFaceEngine"/>
    <dependencies>
+	   	   <dependency org="Asap"     name="AsapRealizerPort"           rev="latest.${resolve.status}"    />
      <dependency org="Asap"   name="AsapMotionUnit"            rev="latest.${resolve.status}"   />
      <dependency org="Asap"   name="AsapMURML"            rev="latest.${resolve.status}"   />
      <dependency org="Asap"   name="AsapBinding"            rev="latest.${resolve.status}"   />

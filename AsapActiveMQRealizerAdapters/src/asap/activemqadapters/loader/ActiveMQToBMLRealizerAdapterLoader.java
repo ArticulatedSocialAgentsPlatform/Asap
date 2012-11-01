@@ -10,8 +10,8 @@ import hmi.util.Clock;
 import hmi.xml.XMLScanException;
 import hmi.xml.XMLTokenizer;
 import asap.activemqadapters.ActiveMQToBMLRealizerAdapter;
-import asap.bml.bridge.RealizerPort;
 import asap.realizerembodiments.PipeLoader;
+import asap.realizerport.RealizerPort;
 
 /**
  * Loader for and ActiveMQToRealizerAdapter

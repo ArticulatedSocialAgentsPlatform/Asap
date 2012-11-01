@@ -4,8 +4,8 @@ import hmi.util.Clock;
 
 import org.slf4j.Logger;
 
-import asap.bml.bridge.RealizerPort;
-import asap.bml.feedback.BMLFeedbackListener;
+import asap.realizerport.BMLFeedbackListener;
+import asap.realizerport.RealizerPort;
 
 /**
  * A LoggingRealizerBridge can be put between two bridges to log their communication.

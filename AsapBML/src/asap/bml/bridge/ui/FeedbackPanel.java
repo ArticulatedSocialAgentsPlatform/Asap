@@ -19,8 +19,8 @@ import javax.swing.JTextArea;
 
 import saiba.bml.feedback.BMLWarningFeedback;
 
-import asap.bml.bridge.RealizerPort;
-import asap.bml.feedback.BMLFeedbackListener;
+import asap.realizerport.BMLFeedbackListener;
+import asap.realizerport.RealizerPort;
 
 /**
  * User interface element to hook up to BML feedback information

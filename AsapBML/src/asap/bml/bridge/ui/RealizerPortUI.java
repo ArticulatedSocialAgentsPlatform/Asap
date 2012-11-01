@@ -59,7 +59,7 @@ import javax.swing.undo.UndoManager;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import asap.bml.bridge.RealizerPort;
+import asap.realizerport.RealizerPort;
 
 /**
  * A graphical UI to a RealizerPort, allowing for a few simple interactions with it such as

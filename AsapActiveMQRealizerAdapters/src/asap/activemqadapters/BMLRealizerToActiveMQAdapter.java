@@ -13,8 +13,8 @@ import lombok.extern.slf4j.Slf4j;
 
 import com.google.common.collect.ImmutableList;
 
-import asap.bml.bridge.RealizerPort;
-import asap.bml.feedback.BMLFeedbackListener;
+import asap.realizerport.BMLFeedbackListener;
+import asap.realizerport.RealizerPort;
 
 /**
  * Submits BML through activemq messages; submits received feedback to registered listeners.

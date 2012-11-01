@@ -1,8 +1,8 @@
 package asap.realizer.bridge;
 
-import asap.bml.bridge.RealizerPort;
-import asap.bml.feedback.BMLFeedbackListener;
 import asap.realizer.AsapRealizer;
+import asap.realizerport.BMLFeedbackListener;
+import asap.realizerport.RealizerPort;
 
 /** Access to an Elckerlyc VH through the RealizerBridge interface. */
 public class ElckerlycRealizerPipe implements RealizerPort

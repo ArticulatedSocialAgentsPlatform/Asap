@@ -40,7 +40,6 @@ import org.slf4j.LoggerFactory;
 import saiba.bml.core.BMLBehaviorAttributeExtension;
 import saiba.bml.core.Behaviour;
 import saiba.bml.parser.BMLParser;
-import asap.bml.bridge.RealizerPort;
 import asap.bml.bridge.TCPIPToBMLRealizerAdapter;
 import asap.bml.ext.bmlt.BMLTBMLBehaviorAttributes;
 import asap.realizer.AsapRealizer;
@@ -55,6 +54,7 @@ import asap.realizer.scheduler.BMLTSchedulingHandler;
 import asap.realizer.scheduler.SortedSmartBodySchedulingStrategy;
 import asap.realizerembodiments.impl.BMLParserAssembler;
 import asap.realizerembodiments.impl.BMLSchedulerAssembler;
+import asap.realizerport.RealizerPort;
 
 import com.google.common.collect.ImmutableSet;
 

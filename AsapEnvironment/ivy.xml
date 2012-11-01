@@ -4,7 +4,8 @@
       <include file="${ivy.settings.dir}/configurations.xml"/>
    </configurations>
    <dependencies>
-      <dependency org="Asap"      name="AsapRealizer"       transitive="false" rev="latest.${resolve.status}"  />
+	   <dependency org="Asap"      name="AsapRealizer"       transitive="false" rev="latest.${resolve.status}"  />
+	    <dependency org="Asap"      name="AsapRealizerPort"       transitive="false" rev="latest.${resolve.status}"  />
       <dependency org="Asap"      name="AsapRealizerEmbodiments"       transitive="false" rev="latest.${resolve.status}"  />
 	  <dependency org="Asap"      name="AsapBML"       transitive="false" rev="latest.${resolve.status}"  />
 	  <dependency org="Asap"      name="AsapTestUtil"       transitive="false" rev="latest.${resolve.status}"  />

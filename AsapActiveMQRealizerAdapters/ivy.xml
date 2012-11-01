@@ -1,7 +1,7 @@
 <ivy-module version="2.0">
    <info organisation="Asap" module="AsapActiveMQRealizerAdapters"/>
    <dependencies>
-     <dependency org="Asap"   name="AsapBML"            rev="latest.${resolve.status}"   />
+	   <dependency org="Asap"   name="AsapRealizerPort"            rev="latest.${resolve.status}"   />
      <dependency org="Asap"   name="AsapRealizer"       rev="latest.${resolve.status}"   />
           <dependency org="Asap"   name="AsapRealizerEmbodiments"       rev="latest.${resolve.status}"   />
       

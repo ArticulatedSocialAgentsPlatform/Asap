@@ -18,6 +18,8 @@
  ******************************************************************************/
 package asap.bml.feedback;
 
+import asap.realizerport.BMLFeedbackListener;
+
 
 /**
  * Sends BML feedback to the stdout

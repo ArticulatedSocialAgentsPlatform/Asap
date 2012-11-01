@@ -5,7 +5,7 @@ import java.io.IOException;
 import hmi.util.Clock;
 import hmi.xml.XMLScanException;
 import hmi.xml.XMLTokenizer;
-import asap.bml.bridge.RealizerPort;
+import asap.realizerport.RealizerPort;
 
 /**
  * A PipeLoader can adapt the realizerport of the BMLRealizer loaded into a AsapRealizerEmbodment.

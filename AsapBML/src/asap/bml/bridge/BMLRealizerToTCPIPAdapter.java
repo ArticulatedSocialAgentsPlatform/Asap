@@ -16,13 +16,14 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import saiba.bml.feedback.BMLWarningFeedback;
-import asap.bml.feedback.BMLFeedbackListener;
 import asap.bml.feedback.BMLFeedbackManager;
+import asap.realizerport.BMLFeedbackListener;
+import asap.realizerport.RealizerPort;
 
 import com.google.common.io.CharStreams;
 
 /**
- * A {@link asap.bml.bridge.bml.bridge.RealizerPort RealizerBridge} that uses a tcp/ip connection to provide
+ * A {@link asap.realizerport.bml.bridge.RealizerPort RealizerBridge} that uses a tcp/ip connection to provide
  * transparent access to a BML Realizer running on a remote machine. The connection is
  * "self-healing".
  * 

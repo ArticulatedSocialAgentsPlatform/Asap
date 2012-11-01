@@ -40,7 +40,6 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import saiba.bml.core.Behaviour;
-import asap.bml.bridge.RealizerPort;
 import asap.environment.impl.ActivateEngineLoader;
 import asap.environment.impl.InterruptEngineLoader;
 import asap.environment.impl.ParameterValueChangeEngineLoader;
@@ -50,6 +49,7 @@ import asap.realizer.pegboard.PegBoard;
 import asap.realizerembodiments.AsapRealizerEmbodiment;
 import asap.realizerembodiments.EngineLoader;
 import asap.realizerembodiments.SchedulingClockEmbodiment;
+import asap.realizerport.RealizerPort;
 
 /**
  * Loads and unloads an AsapVirtualHuman and provides access to its elements (realizer, embodiments, engines, etc)

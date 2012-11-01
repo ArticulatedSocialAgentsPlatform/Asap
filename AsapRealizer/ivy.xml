@@ -1,6 +1,7 @@
 <ivy-module version="2.0">
    <info organisation="Asap" module="AsapRealizer"/>
    <dependencies>
+  	   <dependency org="Asap"     name="AsapRealizerPort"           rev="latest.${resolve.status}"    />
       <dependency org="Asap"    name="AsapBML"   		 	rev="latest.${resolve.status}" transitive="false"   />
       <dependency org="saiba"   name="saibabml"           		rev="latest.release"    />
 

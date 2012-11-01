@@ -1,7 +1,7 @@
 package asap.realizertester;
 
-import asap.bml.bridge.RealizerPort;
-import asap.bml.feedback.BMLFeedbackListener;
+import asap.realizerport.BMLFeedbackListener;
+import asap.realizerport.RealizerPort;
 import bml.realizertestport.XMLRealizerTestPort;
 
 /**
@@ -25,7 +25,7 @@ public class AsapRealizerPort extends XMLRealizerTestPort implements RealizerPor
     }
 
     @Override
-    public void addListeners(asap.bml.feedback.BMLFeedbackListener... listeners)
+    public void addListeners(asap.realizerport.BMLFeedbackListener... listeners)
     {
         realizerPort.addListeners(listeners);
     }

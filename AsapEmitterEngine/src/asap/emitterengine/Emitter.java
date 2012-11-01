@@ -20,7 +20,7 @@ package asap.emitterengine;
 
 import java.util.*;
 
-import asap.bml.bridge.RealizerPort;
+import asap.realizerport.RealizerPort;
 
 //import org.slf4j.Logger;
 //import org.slf4j.LoggerFactory;

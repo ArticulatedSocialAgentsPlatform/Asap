@@ -1,4 +1,3 @@
-<?xml version="1.0" encoding="UTF-8"?>
-<project name="AsapIpaacaRealizerAdapters"  default="run">
-   <import file="../../hmibuild/build.xml" />
+<project name="AsapIpaacaRealizerAdapters" default="build" basedir=".">
+  <import file="../../hmibuild/build-recurse.xml" />
 </project>

@@ -33,9 +33,9 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import saiba.bml.feedback.BMLWarningFeedback;
-import asap.bml.feedback.BMLFeedbackListener;
 import asap.realizer.feedback.FeedbackManager;
 import asap.realizer.feedback.NullFeedbackManager;
+import asap.realizerport.BMLFeedbackListener;
 
 import com.google.common.collect.ImmutableList;
 

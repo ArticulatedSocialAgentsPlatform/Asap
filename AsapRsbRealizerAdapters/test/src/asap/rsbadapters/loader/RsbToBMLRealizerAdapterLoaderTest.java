@@ -12,8 +12,8 @@ import java.io.IOException;
 
 import org.junit.Test;
 
-import asap.bml.bridge.RealizerPort;
-import asap.bml.feedback.BMLFeedbackListener;
+import asap.realizerport.BMLFeedbackListener;
+import asap.realizerport.RealizerPort;
 
 /**
  * Unit tests for the RsbToBMLRealizerAdapterLoader

@@ -3,6 +3,8 @@ package asap.bml.feedback;
 import java.util.ArrayList;
 import java.util.List;
 
+import asap.realizerport.BMLFeedbackListener;
+
 /**
  * Manages multiple feedback listeners
  * @author Herwin

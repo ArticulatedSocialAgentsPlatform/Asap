@@ -11,8 +11,8 @@ import java.util.HashMap;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import asap.bml.bridge.RealizerPort;
 import asap.realizer.bridge.LogPipe;
+import asap.realizerport.RealizerPort;
 
 /**
  * LogPipeLoader has one element as child: <Log> with optional attributes requestlog and feedbacklog

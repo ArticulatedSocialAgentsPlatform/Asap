@@ -30,9 +30,9 @@ import javax.swing.SpinnerNumberModel;
 import javax.swing.SwingUtilities;
 
 import asap.bml.bridge.ConnectionStateListener;
-import asap.bml.bridge.RealizerPort;
 import asap.bml.bridge.TCPIPToBMLRealizerAdapter;
 import asap.bml.bridge.TCPIPToBMLRealizerAdapter.ServerState;
+import asap.realizerport.RealizerPort;
 
 /**
  * A graphical UI that, given a RealizerBridge, offers functinoality to start and stop

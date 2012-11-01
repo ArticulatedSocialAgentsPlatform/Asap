@@ -25,8 +25,8 @@ import java.util.*;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import asap.bml.bridge.RealizerPort;
 import asap.emitterengine.*;
+import asap.realizerport.RealizerPort;
 
 /**
  * based on simple blink emitter; uses shoulder animation to breathe

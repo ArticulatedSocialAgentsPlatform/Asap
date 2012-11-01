@@ -8,8 +8,8 @@ import rsb.Informer;
 import rsb.InitializeException;
 import rsb.Listener;
 import rsb.RSBException;
-import asap.bml.bridge.RealizerPort;
-import asap.bml.feedback.BMLFeedbackListener;
+import asap.realizerport.BMLFeedbackListener;
+import asap.realizerport.RealizerPort;
 
 /**
  * Submits rsb BML messages to a RealizerPort; submits RealizerPort feedbacks to the rsb. 

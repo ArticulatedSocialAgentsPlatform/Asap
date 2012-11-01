@@ -19,10 +19,11 @@ import java.util.concurrent.ConcurrentLinkedQueue;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import asap.bml.feedback.BMLFeedbackListener;
+import asap.realizerport.BMLFeedbackListener;
+import asap.realizerport.RealizerPort;
 
 /**
- * Takes a {@link asap.bml.bridge.bml.bridge.RealizerPort RealizerBridge}, and exposes access to it through a
+ * Takes a {@link asap.realizerport.bml.bridge.RealizerPort RealizerBridge}, and exposes access to it through a
  * tcp/ip connection. The connection is "self-healing".
  * 
  * Detailed documentation can be found in the project report.

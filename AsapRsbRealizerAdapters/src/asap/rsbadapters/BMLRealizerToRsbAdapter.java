@@ -14,8 +14,8 @@ import rsb.Informer;
 import rsb.InitializeException;
 import rsb.Listener;
 import rsb.RSBException;
-import asap.bml.bridge.RealizerPort;
-import asap.bml.feedback.BMLFeedbackListener;
+import asap.realizerport.BMLFeedbackListener;
+import asap.realizerport.RealizerPort;
 
 /**
  * Submits BML through rsb messages; submits received feedback (from rsb) to registered listeners.

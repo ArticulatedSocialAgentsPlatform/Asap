@@ -27,7 +27,6 @@ import org.junit.Test;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import asap.bml.bridge.RealizerPort;
 import asap.bml.ext.bmlt.BMLTInfo;
 import asap.environment.AsapEnvironment;
 import asap.environment.AsapVirtualHuman;
@@ -35,6 +34,7 @@ import asap.realizer.anticipator.Anticipator;
 import asap.realizer.pegboard.BMLBlockPeg;
 import asap.realizer.pegboard.TimePeg;
 import asap.realizerembodiments.AsapRealizerEmbodiment;
+import asap.realizerport.RealizerPort;
 
 /**
  * Integration test cases for the AsapRealizer

@@ -1,7 +1,7 @@
-package asap.bml.feedback;
+package asap.realizerport;
 
 /**
- * Marker interface for all BML Listeners
+ * Listener for BML feedback Strings
  * @author welberge
  */
 public interface BMLFeedbackListener
