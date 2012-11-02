@@ -26,6 +26,8 @@ import org.powermock.modules.junit4.PowerMockRunner;
 
 import saiba.bml.core.SpeechBehaviour;
 import saiba.bml.parser.Constraint;
+import asap.bml.ext.bmlt.BMLTBehaviour;
+import asap.bml.ext.bmlt.BMLTInfo;
 import asap.realizer.BehaviourPlanningException;
 import asap.realizer.lipsync.LipSynchProvider;
 import asap.realizer.pegboard.BMLBlockPeg;
@@ -126,5 +128,15 @@ public class TTSPlannerTest extends AbstractSpeechPlannerTest<TimedTTSUnit>
         stubTTSUnit.setTimePeg("start", TimePegUtil.createTimePeg(bbPeg,0));
         speechPlanner.addBehaviour(bbPeg, beh, sacs, stubTTSUnit);
         verify(mockLipSyncher,atLeast(1)).addLipSyncMovement(eq(bbPeg), eq(beh), (TimedPlanUnit)any(), (List<Visime>)any());        
+    }
+    
+    @Test
+    public void testVoiceExtension() throws IOException, BehaviourPlanningException
+    {
+        BMLTInfo.init();
+        SpeechBehaviour beh = createSpeechBehaviour(SPEECHID, BMLID, "xmlns:bmlt=\""+BMLTBehaviour.BMLTNAMESPACE+"\" bmlt:voice=\"testvoice\"",SPEECHTEXT);
+        ArrayList<TimePegAndConstraint> sacs = new ArrayList<TimePegAndConstraint>();
+        speechPlanner.addBehaviour(bbPeg, beh, sacs, null);
+        verify(mockTTSBinding).setVoice("testvoice");
     }
 }
