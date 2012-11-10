@@ -27,11 +27,11 @@ import org.mockito.stubbing.Answer;
  */
 public class IpaacaEmbodimentInitStub
 {
-    public static final String MORPHS[]={"morph1","morph2","morph3"};
-    public static final String JOINTS[]={"joint1","joint2","joint3"};
-    public static final String JOINT_PARENTS[]={"-","joint1","joint2"};
-    public static final float JOINT_TRANSLATIONS[][]={{1,2,3},{4,5,6},{7,8,9}};
-    public static final float JOINT_ROTATIONS[][]={{1,0,0,0},{0,1,0,0},{0,0.707f,0.707f,0}};
+    static final String MORPHS[]={"morph1","morph2","morph3"};
+    static final String JOINTS[]={"joint1","joint2","joint3"};
+    static final String JOINT_PARENTS[]={"-","joint1","joint2"};
+    static final float JOINT_TRANSLATIONS[][]={{1,2,3},{4,5,6},{7,8,9}};
+    static final float JOINT_ROTATIONS[][]={{1,0,0,0},{0,1,0,0},{0,0.707f,0.707f,0}};
     
     private static String toCommaSeperatedString(String str[])
     {

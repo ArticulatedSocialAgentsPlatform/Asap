@@ -9,7 +9,7 @@ import java.net.Socket;
 
 public class NaoServer implements Runnable {
 
-	public static int PORT = 8881;
+	public static final int PORT = 8881;
 
 	private Socket clientSocket;
 

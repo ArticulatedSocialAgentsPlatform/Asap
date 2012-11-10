@@ -25,7 +25,7 @@ public class IpaacaToBMLRealizerAdapterLoader implements PipeLoader
             throws XMLScanException, IOException
     {
         adaptedRealizerPort = realizerPort;
-        new IpaacaToBMLRealizerAdapter(realizerPort);        
+        ipaacaAdapter = new IpaacaToBMLRealizerAdapter(realizerPort);        
         if (!theTokenizer.atETag("PipeLoader")) throw new XMLScanException("IpaacaToBMLRealizerAdapterLoader should be an empty element");
     }
 

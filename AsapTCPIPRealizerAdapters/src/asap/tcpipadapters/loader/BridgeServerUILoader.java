@@ -25,6 +25,7 @@ public class BridgeServerUILoader implements Loader
     public void readXML(XMLTokenizer tokenizer, String loaderId, String vhId, String vhName, Environment[] environments, Loader ... requiredLoaders) 
         throws IOException
     {
+        this.id = loaderId;
         JComponentEmbodimentLoader jcc = ArrayUtils.getFirstClassOfType(requiredLoaders, JComponentEmbodimentLoader.class);
         if(jcc==null)
         {

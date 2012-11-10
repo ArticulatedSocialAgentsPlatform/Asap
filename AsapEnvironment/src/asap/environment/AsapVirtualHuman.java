@@ -36,6 +36,7 @@ import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.Setter;
 
+import org.fest.swing.util.Arrays;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -132,7 +133,7 @@ public class AsapVirtualHuman
         }
 
         theTokenizer = tokenizer;
-        allEnvironments = environments;
+        allEnvironments = Arrays.copyOf(environments);
         theSchedulingClock = sc;
         this.name = name;
 
