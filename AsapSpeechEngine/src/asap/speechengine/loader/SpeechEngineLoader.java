@@ -96,7 +96,7 @@ public class SpeechEngineLoader implements EngineLoader
     private AudioEnvironment aue = null;
     // private FaceEngineLoader fel = null;
 
-    private JComboBox voiceList = null;
+    private JComboBox<String> voiceList = null;
     private JPanel speechUIPanel = null;
     private boolean initUI = false;
 
@@ -112,25 +112,24 @@ public class SpeechEngineLoader implements EngineLoader
     String marydir = "MARYTTS";
 
     String id = "";
-    
+
     private AsapRealizerEmbodiment are = null;
-    
+
     private List<LipSynchProvider> lipSyncProviders = new ArrayList<LipSynchProvider>();
 
     @Override
-    public void readXML(XMLTokenizer tokenizer, String loaderId, String vhId, String vhName, Environment[] environments, Loader ... requiredLoaders) 
-    	throws IOException
+    public void readXML(XMLTokenizer tokenizer, String loaderId, String vhId, String vhName, Environment[] environments,
+            Loader... requiredLoaders) throws IOException
     {
         id = loaderId;
         for (Loader e : requiredLoaders)
         {
             if (e instanceof LipSynchProviderLoader) lipSyncProviders.add(((LipSynchProviderLoader) e).getLipSyncProvider());
             // if (e instanceof FaceEngineLoader) fel = (FaceEngineLoader) e;
-            if (e instanceof EmbodimentLoader && ((EmbodimentLoader) e).getEmbodiment() 
-                    instanceof JComponentEmbodiment) jce = (JComponentEmbodiment) ((EmbodimentLoader) e)
+            if (e instanceof EmbodimentLoader && ((EmbodimentLoader) e).getEmbodiment() instanceof JComponentEmbodiment) jce = (JComponentEmbodiment) ((EmbodimentLoader) e)
                     .getEmbodiment();
-            if (e instanceof EmbodimentLoader && ((EmbodimentLoader) e).getEmbodiment() 
-                    instanceof AsapRealizerEmbodiment) are = (AsapRealizerEmbodiment) ((EmbodimentLoader) e).getEmbodiment();
+            if (e instanceof EmbodimentLoader && ((EmbodimentLoader) e).getEmbodiment() instanceof AsapRealizerEmbodiment) are = (AsapRealizerEmbodiment) ((EmbodimentLoader) e)
+                    .getEmbodiment();
         }
         for (Environment e : environments)
         {
@@ -238,8 +237,7 @@ public class SpeechEngineLoader implements EngineLoader
     {
 
         speechPlanManager = new PlanManager<TimedTTSUnit>();
-        speechPlanPlayer = new MultiThreadedPlanPlayer<TimedTTSUnit>(are.getFeedbackManager(),
-                speechPlanManager);
+        speechPlanPlayer = new MultiThreadedPlanPlayer<TimedTTSUnit>(are.getFeedbackManager(), speechPlanManager);
         speechPlayer = new DefaultPlayer(speechPlanPlayer);
         speechPlanner = null;
 
@@ -305,7 +303,7 @@ public class SpeechEngineLoader implements EngineLoader
                     @Override
                     public void run()
                     {
-                        voiceList = new JComboBox(ttsp.getVoices());
+                        voiceList = new JComboBox<String>(ttsp.getVoices());
                         voiceList.setEditable(false);
                         voiceList.setSelectedItem(voicename);
                         voiceList.addActionListener(new VoiceSelectionListener());
@@ -336,8 +334,7 @@ public class SpeechEngineLoader implements EngineLoader
             System.err.println("cannot initialize this factory, wrong type.");
             return null;
         }
-        TTSPlanner ttsPlanner = new TTSPlanner(are.getFeedbackManager(), ttsFactory, ttsBin,
-                speechPlanManager);
+        TTSPlanner ttsPlanner = new TTSPlanner(are.getFeedbackManager(), ttsFactory, ttsBin, speechPlanManager);
         for (LipSynchProvider lsp : lipSyncProviders)
         {
             ttsPlanner.addLipSyncher(lsp);

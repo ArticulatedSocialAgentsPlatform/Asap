@@ -346,15 +346,11 @@ public class GuidingSequence
         double vel;
         if (Vec3f.length(axis) > 1E-10)
         {
-            /*
-             * FIXME: enable this after daily release of HmiCore
-             * double alpha = fabs(Vec3f.angleBetweenVectors(outDir,inDir));
-             * double r = Math.abs(1-(alpha/Math.PI));
-             * 
-             * // -- apply law of 2/3
-             * vel = k * v * Math.pow(r,0.333);
-             */
-            vel = 0;
+            double alpha = Math.abs(Vec3f.angleBetweenVectors(outDir,inDir));
+            double r = Math.abs(1-(alpha/Math.PI));
+            
+            // -- apply law of 2/3
+            vel = k * v * Math.pow(r,0.333);            
         }
         else
         {
