@@ -53,4 +53,10 @@ public class LogPipeLoader implements PipeLoader {
 		return adaptedRealizerPort;
 	}
 
+    @Override
+    public void shutdown()
+    {
+                
+    }
+
 }

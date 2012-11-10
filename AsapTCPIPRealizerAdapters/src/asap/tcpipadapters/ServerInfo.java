@@ -1,4 +1,4 @@
-package asap.bml.bridge;
+package asap.tcpipadapters;
 
 /** 
 See package documentation.

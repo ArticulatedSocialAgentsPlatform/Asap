@@ -120,7 +120,7 @@ public class TTSPlanner extends AbstractPlanner<TimedTTSUnit>
                 if (voice!=null && !voice.equals(oldVoice))
                 {
                     ttsBinding.setVoice(oldVoice);
-                }                
+                }          
             }
             logger.debug("Created speech unit {} duration: {}", b.id, bs.getPreferedDuration());
             return bs;

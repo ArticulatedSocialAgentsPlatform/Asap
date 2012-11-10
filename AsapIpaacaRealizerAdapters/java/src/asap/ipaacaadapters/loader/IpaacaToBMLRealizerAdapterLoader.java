@@ -18,6 +18,7 @@ import asap.realizerport.RealizerPort;
 public class IpaacaToBMLRealizerAdapterLoader implements PipeLoader
 {
     private RealizerPort adaptedRealizerPort = null;
+    private IpaacaToBMLRealizerAdapter ipaacaAdapter;
     
     @Override
     public void readXML(XMLTokenizer theTokenizer, String id, String vhId, String name, RealizerPort realizerPort, Clock theSchedulingClock)
@@ -32,6 +33,12 @@ public class IpaacaToBMLRealizerAdapterLoader implements PipeLoader
     public RealizerPort getAdaptedRealizerPort()
     {
         return adaptedRealizerPort;
+    }
+
+    @Override
+    public void shutdown()
+    {
+        ipaacaAdapter.close();
     }
 
 }

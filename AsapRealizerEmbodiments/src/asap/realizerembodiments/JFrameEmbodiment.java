@@ -18,10 +18,9 @@
  * along with Elckerlyc.  If not, see http://www.gnu.org/licenses/.
  ******************************************************************************/
 package asap.realizerembodiments;
-import hmi.environmentbase.Embodiment;
-import hmi.environmentbase.EmbodimentLoader;
 import hmi.environmentbase.Environment;
 import hmi.environmentbase.Loader;
+import hmi.util.ArrayUtils;
 import hmi.xml.XMLStructureAdapter;
 import hmi.xml.XMLTokenizer;
 
@@ -44,14 +43,12 @@ import javax.swing.SwingUtilities;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import asap.bml.bridge.TCPIPToBMLRealizerAdapter;
-import asap.bml.bridge.ui.BridgeServerUI;
 import asap.bml.bridge.ui.FeedbackPanel;
 import asap.bml.bridge.ui.RealizerPortUI;
 
 
 /** This "embodiment" allows a VH to create Swing GUI components. */
-public class JFrameEmbodiment implements JComponentEmbodiment, EmbodimentLoader
+public class JFrameEmbodiment implements JComponentEmbodiment, JComponentEmbodimentLoader
 {
     private Logger logger = LoggerFactory.getLogger(JFrameEmbodiment.class.getName());
 
@@ -147,10 +144,8 @@ public class JFrameEmbodiment implements JComponentEmbodiment, EmbodimentLoader
         setId(loaderId);
         final String finalName = vhName;
 
-        for (Loader l : requiredLoaders)
-        {
-            if (l instanceof AsapRealizerEmbodiment) are = ((AsapRealizerEmbodiment) l);
-        }
+        are = ArrayUtils.getFirstClassOfType(requiredLoaders, AsapRealizerEmbodiment.class);
+        
         if (are == null)
         {
             throw new RuntimeException("JFrameEmbodiment requires an AsapRealizerEmbodiment when loading");
@@ -198,6 +193,7 @@ public class JFrameEmbodiment implements JComponentEmbodiment, EmbodimentLoader
     protected void readSection(XMLTokenizer tokenizer) throws IOException
     {
         HashMap<String, String> attrMap = null;
+        /*        
         if (tokenizer.atSTag("ServerUI"))
         {
             TCPIPToBMLRealizerAdapter theServer = are.getTcpipToBMLRealizerAdapter();
@@ -214,7 +210,9 @@ public class JFrameEmbodiment implements JComponentEmbodiment, EmbodimentLoader
             tokenizer.takeSTag("ServerUI");
             tokenizer.takeETag("ServerUI");
         }
-        else if (tokenizer.atSTag("BmlUI"))
+        else
+        */
+        if (tokenizer.atSTag("BmlUI"))
         {
             attrMap = tokenizer.getAttributes();
             String demoscriptdir = adapter.getOptionalAttribute("demoscriptresources", attrMap, "bml1.0/defaultexamples");
@@ -287,7 +285,7 @@ public class JFrameEmbodiment implements JComponentEmbodiment, EmbodimentLoader
 
     /** Return this embodiment */
     @Override
-    public Embodiment getEmbodiment()
+    public JComponentEmbodiment getEmbodiment()
     {
         return this;
     }

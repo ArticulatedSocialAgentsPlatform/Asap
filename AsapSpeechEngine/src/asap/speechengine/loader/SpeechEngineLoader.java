@@ -273,6 +273,10 @@ public class SpeechEngineLoader implements EngineLoader
             {
                 ttsBin.setVoice(voicename);
             }
+            else
+            {
+                ttsBin.setVoice(ttsBin.getVoices()[0]);
+            }
             ttsBin.speak(SpeechBehaviour.class, ""); // HACK HACK: speak a sentence to counter delays
             speechPlanner = getTTSPlanner(ttsBin);
             break;

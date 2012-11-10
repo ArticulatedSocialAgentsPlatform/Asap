@@ -16,36 +16,33 @@
  * You should have received a copy of the GNU General Public License
  * along with Elckerlyc.  If not, see http://www.gnu.org/licenses/.
  ******************************************************************************/
-package asap.bml.bridge.ui;
+package asap.tcpipadapters.ui;
 
 
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 
 import javax.swing.JButton;
+import javax.swing.JComponent;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.JSpinner;
 import javax.swing.SpinnerNumberModel;
 import javax.swing.SwingUtilities;
 
-import asap.bml.bridge.ConnectionStateListener;
-import asap.bml.bridge.TCPIPToBMLRealizerAdapter;
-import asap.bml.bridge.TCPIPToBMLRealizerAdapter.ServerState;
 import asap.realizerport.RealizerPort;
+import asap.tcpipadapters.ConnectionStateListener;
+import asap.tcpipadapters.TCPIPToBMLRealizerAdapter;
+import asap.tcpipadapters.TCPIPToBMLRealizerAdapter.ServerState;
 
 /**
- * A graphical UI that, given a RealizerBridge, offers functinoality to start and stop
+ * A graphical UI that, given a RealizerBridge, offers functionality to start and stop
  * TCPIPRealizerBridgeServer for it
  * 
  * @author Dennis Reidsma
  */
-public class BridgeServerUI extends JPanel implements ConnectionStateListener
+public class BridgeServerUI implements ConnectionStateListener
 {
-    // XXX class is not serializable (see findbugs). Better to make this class HAVE a panel rather
-    // than BE a panel
-    public static final long serialVersionUID = 1L;
-
     /** The realizerbridge */
     protected RealizerPort realizerBridge = null;
 
@@ -61,6 +58,8 @@ public class BridgeServerUI extends JPanel implements ConnectionStateListener
     protected JSpinner feedbackPortSpinner = null;
 
     protected JLabel stateLabel = null;
+    
+    private JPanel mainPanel = new JPanel();
 
     public BridgeServerUI(RealizerPort newBridge)
     {
@@ -76,29 +75,33 @@ public class BridgeServerUI extends JPanel implements ConnectionStateListener
 
     public BridgeServerUI(RealizerPort newBridge, int bmlPort, int feedbackPort)
     {
-        super();
         realizerBridge = newBridge;
 
         stateLabel = new JLabel("" + ServerState.NOT_RUNNING);
-        add(stateLabel);
+        mainPanel.add(stateLabel);
         stopButton = new JButton("STOP");
         stopButton.addActionListener(new StopListener());
-        add(stopButton);
+        mainPanel.add(stopButton);
         startButton = new JButton("START");
         startButton.addActionListener(new StartListener(this));
-        add(startButton);
+        mainPanel.add(startButton);
 
         bmlPortSpinner = new JSpinner(new SpinnerNumberModel(bmlPort, 1, 65000, 1));
         feedbackPortSpinner = new JSpinner(new SpinnerNumberModel(feedbackPort, 1, 65000, 1));
-        add(new JLabel("bmlPort:"));
-        add(bmlPortSpinner);
-        add(new JLabel("feedbackPort:"));
-        add(feedbackPortSpinner);
+        mainPanel.add(new JLabel("bmlPort:"));
+        mainPanel.add(bmlPortSpinner);
+        mainPanel.add(new JLabel("feedbackPort:"));
+        mainPanel.add(feedbackPortSpinner);
 
         stopButton.setEnabled(false);
 
     }
 
+    public JComponent getUI()
+    {
+        return mainPanel;
+    }
+    
     public void stateChanged(final ServerState state)
     {
         SwingUtilities.invokeLater(new Runnable() {
