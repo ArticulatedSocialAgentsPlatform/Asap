@@ -4,6 +4,7 @@ import hmi.xml.XMLStructureAdapter;
 import hmi.xml.XMLTokenizer;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
 
@@ -24,8 +25,11 @@ public class MatrixSymbol extends XMLStructureAdapter
     @Getter
     private String name;
     
-    @Getter
     private float values[];
+    public float[] getValues()
+    {
+        return Arrays.copyOf(values, values.length);
+    }
     
     @Override
     public void decodeAttributes(HashMap<String, String> attrMap, XMLTokenizer tokenizer)

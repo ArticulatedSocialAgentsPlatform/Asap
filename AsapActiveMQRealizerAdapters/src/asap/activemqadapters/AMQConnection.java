@@ -1,6 +1,7 @@
 package asap.activemqadapters;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -35,8 +36,8 @@ public class AMQConnection implements MessageListener
 {
 
     private static String url = ActiveMQConnection.DEFAULT_BROKER_URL;
-    private String[] receiveTopics = null;
-    private String[] sendTopics = null;
+    private final String[] receiveTopics;
+    private final String[] sendTopics;
     private String name = null;
 
     private Session session;
@@ -44,8 +45,8 @@ public class AMQConnection implements MessageListener
 
     public AMQConnection(String name, String[] sendTopics, String[] receiveTopics)
     {
-        this.sendTopics = sendTopics;
-        this.receiveTopics = receiveTopics;
+        this.sendTopics = Arrays.copyOf(sendTopics,sendTopics.length);
+        this.receiveTopics = Arrays.copyOf(receiveTopics, receiveTopics.length);
         this.name = name;
 
         try
