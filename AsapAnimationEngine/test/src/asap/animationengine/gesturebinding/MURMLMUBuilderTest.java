@@ -47,8 +47,8 @@ import asap.realizer.scheduler.BMLBlockManager;
 public class MURMLMUBuilderTest
 {
     private AnimationPlayer mockAnimationPlayer = mock(AnimationPlayer.class);
-    private VJoint vNext = HanimBody.getLOA1HanimBody();
-    private VJoint vCurr = HanimBody.getLOA1HanimBody();
+    private VJoint vNext = HanimBody.getLOA2HanimBody();
+    private VJoint vCurr = HanimBody.getLOA2HanimBody();
     private static final float ROT_PRECISION = 0.001f;
     private Hns mockHns = mock(Hns.class);
     private SkeletonPose mockSkeletonPose = mock(SkeletonPose.class);
