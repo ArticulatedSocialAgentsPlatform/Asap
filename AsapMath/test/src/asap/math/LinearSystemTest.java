@@ -14,8 +14,8 @@ import org.junit.Test;
  */
 public class LinearSystemTest
 {
-    final int ROWS = 5;
-    private final float PRECISION = 0.001f;
+    private static final int ROWS = 5;
+    private static final float PRECISION = 0.001f;
     
     private List<List<Float>> getA()
     {

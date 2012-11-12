@@ -135,6 +135,7 @@ public class IpaacaEmbodiment implements Embodiment
         return buf.toString().trim();
     }
     
+    @edu.umd.cs.findbugs.annotations.SuppressWarnings(value="JLM_JSR166_UTILCONCURRENT_MONITORENTER ", justification="Used for wait/notify")
     public void waitForAvailableJoints()
     {
         synchronized (availableJoints)
@@ -291,6 +292,7 @@ public class IpaacaEmbodiment implements Embodiment
         }
     }
 
+    @edu.umd.cs.findbugs.annotations.SuppressWarnings(value="JLM_JSR166_UTILCONCURRENT_MONITORENTER ", justification="Used for wait/notify")    
     private void setAvailableJoints(String[] joints)
     {
         availableJoints.set(ImmutableList.copyOf(joints));

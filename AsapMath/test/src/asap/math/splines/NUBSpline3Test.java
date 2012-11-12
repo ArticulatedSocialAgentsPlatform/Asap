@@ -14,7 +14,7 @@ import org.junit.Test;
  */
 public class NUBSpline3Test
 {
-    private final float PRECISION = 0.001f;
+    private static final float PRECISION = 0.001f;
     @Test
     public void test()
     {
