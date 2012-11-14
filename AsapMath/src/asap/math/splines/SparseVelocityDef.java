@@ -1,5 +1,6 @@
 package asap.math.splines;
 
+import hmi.math.Vec3f;
 import lombok.Data;
 
 /**
@@ -10,6 +11,11 @@ import lombok.Data;
 @Data
 public class SparseVelocityDef
 {
-    private final int index;
+    private final int index;    
     private final float[] velocity;
+    
+    public float[] getVelocity()
+    {
+        return Vec3f.getVec3f(velocity);
+    }
 }

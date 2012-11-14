@@ -283,7 +283,7 @@ public class TCBSplineN
     }
 
     @Data
-    class KeyInfo
+    private static class KeyInfo
     {
         private final int riKey;
         private final double rfDt;
