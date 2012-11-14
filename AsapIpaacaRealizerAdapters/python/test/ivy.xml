@@ -2,5 +2,6 @@
    <info organisation="HMI" module="AsapIpaacaRealizerAdaptersTest"/>
    <dependencies >
       <dependency org="nose" name="nose"  rev="latest.release" />
+      <dependency org="mockito" name="mockito"  rev="latest.release" />
    </dependencies>
 </ivy-module>
