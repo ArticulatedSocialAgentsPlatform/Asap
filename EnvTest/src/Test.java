@@ -26,7 +26,7 @@ import hmi.renderenvironment.HmiRenderEnvironment;
 import hmi.renderenvironment.HmiRenderEnvironment.RenderStyle;
 import hmi.worldobjectenvironment.WorldObject;
 import hmi.worldobjectenvironment.WorldObjectEnvironment;
-
+import hmi.graphics.util.*;
 import java.awt.Toolkit;
 import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
@@ -120,13 +120,18 @@ public class Test extends WindowAdapter
         // add worldobject "camera" that we can use as target for looking at user
         VJoint camera = hre.getCameraTarget();
         we.getWorldObjectManager().addWorldObject("camera", new WorldObject(camera));
-
+		//SceneIO.writeGScene("pupil.bin",SceneIO.readGScene("Humanoids/armandia/dae", "armandia_boring_neckfix_light_toplevel.dae","NONE"));
+		
         // load a virtual human
         try
         {
         	//AsapVirtualHuman avh = ae.loadVirtualHuman("blueguy", "Humanoids/blueguy", "blueguy_asaploader_mary_hudson.xml", "blueguy - test avatar");
         	//AsapVirtualHuman avh = ae.loadVirtualHuman("billie", "Humanoids/billie", "asaploader_billie.xml", "billie");
-        	AsapVirtualHuman avh2 = ae.loadVirtualHuman("armandia1", "Humanoids/armandia", "asapvhloader_test.xml", "armandia - testing new environment setup");
+        	//AsapVirtualHuman avh2 = ae.loadVirtualHuman("armandia1", "Humanoids/armandia", "asapvhloader_test.xml", "armandia - testing new environment setup");
+        
+			AsapVirtualHuman avh2 = ae.loadVirtualHuman("armandiapupil", "Humanoids/armandia", "asapvhloader_test_pupil.xml", "armandia - testing pupils");
+			//avh2.getRealizerPort.performBML("...");
+		
         	//AsapVirtualHuman avh = ae.loadVirtualHuman("relion", "Humanoids/relion", "relion_asaploader.xml", "Relion avatar - testing system integration");
         	//AsapVirtualHuman avh = ae.loadVirtualHuman("armandiahudson", "Humanoids/armandia", "armandia_asaploader_mary_hudson.xml", "armandia for hudson");
         }
@@ -134,7 +139,7 @@ public class Test extends WindowAdapter
         {
             System.out.println("Cannot load VH");
         }
-
+		
         // load the checkerboard ground plane of Herwin into the hmirenderenvironment
         hre.loadCheckerBoardGround("groundplane", 0.5f, 0f);
 

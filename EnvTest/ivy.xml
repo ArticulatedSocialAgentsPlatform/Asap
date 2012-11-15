@@ -47,6 +47,8 @@
       <dependency org="Asap"   name="AsapPictureEngine"     rev="latest.${resolve.status}"   />    
       <dependency org="Asap"   name="AsapEmitterEngine"     rev="latest.${resolve.status}"   />    
 
+      <dependency org="HMI"   name="HmiShaderEngine"     rev="latest.${resolve.status}"   />    
+
       <!--dependency org="HMI"   name="HmiNabaztag"     rev="latest.${resolve.status}"   />    
       <dependency org="Sera"   name="Sera"   rev="latest.{$resolve.status}"  /--> <!--0.2 proven to work -->
 
