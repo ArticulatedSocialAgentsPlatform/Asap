@@ -1,17 +1,17 @@
-package hmi.shaderengine.bml;
+package hmi.naoqiengine.bml;
 import java.util.HashMap;
 
-import hmi.shaderengine.*;
+import hmi.naoqiengine.*;
 import asap.bml.ext.bmlt.*;
 import hmi.xml.XMLTokenizer;
 import java.io.IOException;
 /**
  * @author Dennis Reidsma
  */
-public class SetShaderParameterBehaviour extends ShaderBehaviour
+public class PlayCachedClipBehaviour extends NaoQiBehaviour
 {
 
-    public SetShaderParameterBehaviour(String bmlId,XMLTokenizer tokenizer)throws IOException
+    public PlayCachedClipBehaviour(String bmlId,XMLTokenizer tokenizer)throws IOException
     {
         super(bmlId);
         readXML(tokenizer);
@@ -21,16 +21,13 @@ public class SetShaderParameterBehaviour extends ShaderBehaviour
     @Override
     public boolean specifiesParameter(String name)
     {
-        return (name.equals("mesh")||name.equals("material")||name.equals("parameter")||name.equals("value"));
+        return (name.equals("name"));
     }
     
     @Override
     public StringBuilder appendAttributeString(StringBuilder buf)
     {
-        appendAttribute(buf, "mesh", getStringParameterValue("mesh"));
-        appendAttribute(buf, "material", getStringParameterValue("material"));
-        appendAttribute(buf, "parameter", getStringParameterValue("parameter"));
-        appendAttribute(buf, "value", getFloatParameterValue("value"));
+        appendAttribute(buf, "name", getStringParameterValue("name"));
         return super.appendAttributeString(buf);
     }
 
@@ -38,22 +35,9 @@ public class SetShaderParameterBehaviour extends ShaderBehaviour
     public void decodeAttributes(HashMap<String, String> attrMap, XMLTokenizer tokenizer)
     {
 		BMLTParameter p = new BMLTParameter();
-		p.name="mesh";
-		p.value=getRequiredAttribute("mesh", attrMap, tokenizer);
-		parameters.put("mesh", p);
-		p = new BMLTParameter();
-		p.name="material";
-		p.value=getRequiredAttribute("material", attrMap, tokenizer);
-		parameters.put("material", p);
-		p = new BMLTParameter();
-		p.name="parameter";
-		p.value=getRequiredAttribute("parameter", attrMap, tokenizer);
-		parameters.put("parameter", p);
-		p = new BMLTParameter();
-		p.name="value";
-		p.value=getRequiredAttribute("value", attrMap, tokenizer);
-		parameters.put("value", p);
-
+		p.name="clip";
+		p.value=getRequiredAttribute("clip", attrMap, tokenizer);
+		parameters.put("clip", p);
         super.decodeAttributes(attrMap, tokenizer);
     }
     
@@ -64,7 +48,7 @@ public class SetShaderParameterBehaviour extends ShaderBehaviour
      */
     public static String xmlTag()
     {
-        return "setshaderparameter";
+        return "playcachedclip";
     }
 
     /**
@@ -74,6 +58,6 @@ public class SetShaderParameterBehaviour extends ShaderBehaviour
     @Override
     public String getXMLTag()
     {
-        return "setshaderparameter";
+        return "playcachedclip";
     }    
 }

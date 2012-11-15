@@ -16,7 +16,7 @@
  * You should have received a copy of the GNU General Public License
  * along with Elckerlyc.  If not, see http://www.gnu.org/licenses/.
  ******************************************************************************/
-package hmi.shaderengine.bml;
+package hmi.naoqiengine.bml;
 
 import java.util.List;
 
@@ -30,9 +30,9 @@ import saiba.bml.parser.SyncPoint;
  * 
  * @author Dennis Reidsma
  */
-public class ShaderBehaviour extends BMLTBehaviour
+public class NaoQiBehaviour extends BMLTBehaviour
 {
-    public ShaderBehaviour(String bmlId)
+    public NaoQiBehaviour(String bmlId)
     {
         super(bmlId);        
     }

@@ -16,22 +16,22 @@
  * You should have received a copy of the GNU General Public License
  * along with Elckerlyc.  If not, see http://www.gnu.org/licenses/.
  ******************************************************************************/
-package hmi.shaderengine.planunit;
+package hmi.naoqiengine.planunit;
 
 import asap.realizer.planunit.TimedPlanUnitPlayException;
 
 /**
- * Thrown when playback of a TSU fails
+ * Thrown when playback of a TNQU fails
  * @author Dennis
  *
  */
-public class TSUPlayException extends TimedPlanUnitPlayException
+public class TNQUPlayException extends TimedPlanUnitPlayException
 {
-    public TimedShaderUnit timedSU;
-    public TSUPlayException(String str, TimedShaderUnit tsu)
+    public TimedNaoQiUnit timedNQU;
+    public TNQUPlayException(String str, TimedNaoQiUnit tnqu)
     {
-        super(str,tsu);
-        timedSU = tsu;        
+        super(str,tnqu);
+        timedNQU = tnqu;        
     }
     
     private static final long serialVersionUID = -6983533422653209435L;

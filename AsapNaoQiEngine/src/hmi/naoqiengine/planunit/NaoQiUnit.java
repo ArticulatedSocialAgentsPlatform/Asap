@@ -16,7 +16,7 @@
  * You should have received a copy of the GNU General Public License
  * along with Elckerlyc.  If not, see http://www.gnu.org/licenses/.
  ******************************************************************************/
-package hmi.shaderengine.planunit;
+package hmi.naoqiengine.planunit;
 
 import asap.realizer.feedback.FeedbackManager;
 import asap.realizer.pegboard.BMLBlockPeg;
@@ -29,7 +29,7 @@ import asap.realizer.planunit.TimedPlanUnitPlayException;
  * 
  * @author Dennis Reidsma
  */
-public interface ShaderUnit extends KeyPositionManager
+public interface NaoQiUnit extends KeyPositionManager
 {
     void setFloatParameterValue(String name, float value)throws ParameterException;
     void setParameterValue(String name, String value)throws ParameterException;
@@ -38,36 +38,15 @@ public interface ShaderUnit extends KeyPositionManager
     
     boolean hasValidParameters();
    
-    /** start the unit. this may involve things such as creating the actual emitter */
     void startUnit(double time) throws TimedPlanUnitPlayException;
         
-    /**
-     * Executes the emitter unit
-     * @param t execution time, 0 &lt t &lt 1
-     * @throws SUPlayException if the play fails for some reason
-     */
-    void play(double t)throws SUPlayException;
+    void play(double t)throws NQUPlayException;
     
-    /** Clean up the unit -- e.g., stop and clean up emitter */    
     void cleanup();
 
-    /**
-     * Creates the TimedEmitterUnit corresponding to this emitter unit
-     * @param bmlId     BML block id
-     * @param id         behaviour id
-     * @return          the TSU
-     */
-    TimedShaderUnit createTSU(FeedbackManager bfm, BMLBlockPeg bbPeg,String bmlId,String id);
+    TimedNaoQiUnit createTNQU(FeedbackManager bfm, BMLBlockPeg bbPeg,String bmlId,String id);
     
-    /**
-     * @return Prefered duration (in seconds) of this nabaztag unit, 0 means not determined/infinite 
-     */
     double getPreferedDuration();
     
-    /**
-     * Get the replacement group 
-     * Used to determine the currently active persistent TEU for this group in the player
-     * Only one group is active at a time
-     */
     String getReplacementGroup();    
 }

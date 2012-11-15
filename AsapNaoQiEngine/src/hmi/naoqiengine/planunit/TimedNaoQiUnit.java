@@ -16,7 +16,7 @@
  * You should have received a copy of the GNU General Public License
  * along with Elckerlyc.  If not, see http://www.gnu.org/licenses/.
  ******************************************************************************/
-package hmi.shaderengine.planunit;
+package hmi.naoqiengine.planunit;
 
 
 import java.util.ArrayList;
@@ -37,9 +37,9 @@ import saiba.bml.feedback.BMLSyncPointProgressFeedback;
  * 
  * @author Dennis Reidsma
  */
-public class TimedShaderUnit extends TimedAbstractPlanUnit
+public class TimedNaoQiUnit extends TimedAbstractPlanUnit
 {
-    public final ShaderUnit su;
+    public final NaoQiUnit nqu;
     protected ArrayList<KeyPosition> progressHandled = new ArrayList<KeyPosition>();
     
     @Delegate
@@ -55,10 +55,10 @@ public class TimedShaderUnit extends TimedAbstractPlanUnit
      * @param s
      *            shader unit
      */
-    public TimedShaderUnit(FeedbackManager bfm, BMLBlockPeg bbPeg, String bmlId, String id, ShaderUnit s)
+    public TimedNaoQiUnit(FeedbackManager bfm, BMLBlockPeg bbPeg, String bmlId, String id, NaoQiUnit n
     {
         super(bfm, bbPeg, bmlId, id);
-        su = s;
+        nqu = n;
         puTimeManager = new PlanUnitTimeManager(s);
     }
 
@@ -70,7 +70,7 @@ public class TimedShaderUnit extends TimedAbstractPlanUnit
      */
     protected void startUnit(double time) throws TimedPlanUnitPlayException
     {
-        su.startUnit(time);
+        nqu.startUnit(time);
     };
 
     /**
@@ -78,7 +78,7 @@ public class TimedShaderUnit extends TimedAbstractPlanUnit
      */
     public KeyPosition getKeyPosition(String kid)
     {
-        return su.getKeyPosition(kid);
+        return nqu.getKeyPosition(kid);
     }
 
     /**
@@ -91,7 +91,7 @@ public class TimedShaderUnit extends TimedAbstractPlanUnit
      */
     private void sendProgress(double t, double time)
     {
-        for (KeyPosition k : su.getKeyPositions())
+        for (KeyPosition k : nqu.getKeyPositions())
         {
             if (k.time <= t)
             {
@@ -121,26 +121,26 @@ public class TimedShaderUnit extends TimedAbstractPlanUnit
         double t = puTimeManager.getRelativeTime(time);
         try
         {
-            su.play(t);
+            nqu.play(t);
         }
-        catch (SUPlayException ex)
+        catch (NQUPlayException ex)
         {
-            throw new TSUPlayException(ex.getLocalizedMessage(), this);
+            throw new TNQUPlayException(ex.getLocalizedMessage(), this);
         }
         sendProgress(t, time);
     }
 
     public void cleanup()
     {
-        su.cleanup();
+        nqu.cleanup();
     }
 
     /**
-     * @return the encapsulated Shader unit
+     * @return the encapsulated  unit
      */
-    public ShaderUnit getShaderUnit()
+    public NaoQiUnit getNaoQiUnit()
     {
-        return su;
+        return nqu;
     }
 
     @Override
@@ -153,13 +153,13 @@ public class TimedShaderUnit extends TimedAbstractPlanUnit
     @Override
     public String getReplacementGroup()
     {
-        return su.getReplacementGroup();
+        return nqu.getReplacementGroup();
     }
 
     @Override
     public double getPreferedDuration()
     {
-        return su.getPreferedDuration();
+        return nqu.getPreferedDuration();
     }
 
     @Override
@@ -167,7 +167,7 @@ public class TimedShaderUnit extends TimedAbstractPlanUnit
     {
         try
         {
-            su.setParameterValue(paramId, value);
+            nqu.setParameterValue(paramId, value);
         }
         catch (ParameterNotFoundException e)
         {
@@ -181,7 +181,7 @@ public class TimedShaderUnit extends TimedAbstractPlanUnit
     {
         try
         {
-            su.setFloatParameterValue(paramId, value);
+            nqu.setFloatParameterValue(paramId, value);
         }
         catch (ParameterNotFoundException e)
         {
@@ -194,7 +194,7 @@ public class TimedShaderUnit extends TimedAbstractPlanUnit
     {
         try
         {
-            return su.getFloatParameterValue(paramId);
+            return nqu.getFloatParameterValue(paramId);
         }
         catch (ParameterNotFoundException e)
         {
@@ -207,7 +207,7 @@ public class TimedShaderUnit extends TimedAbstractPlanUnit
     {
         try
         {
-            return su.getParameterValue(paramId);
+            return nqu.getParameterValue(paramId);
         }
         catch (ParameterNotFoundException e)
         {

@@ -16,12 +16,12 @@
  * You should have received a copy of the GNU General Public License
  * along with Elckerlyc.  If not, see http://www.gnu.org/licenses/.
  ******************************************************************************/
-package hmi.shaderengine.planunit;
+package hmi.naoqiengine.planunit;
 
 
 import java.util.*;
 
-import hmi.shaderengine.*;
+import hmi.naoqiengine.*;
 import asap.realizer.feedback.FeedbackManager;
 import asap.realizer.pegboard.BMLBlockPeg;
 import asap.realizer.planunit.InvalidParameterException;
@@ -31,7 +31,7 @@ import asap.realizer.planunit.KeyPositionManagerImpl;
 import asap.realizer.planunit.ParameterException;
 import asap.realizer.planunit.ParameterNotFoundException;
 import asap.realizer.planunit.TimedPlanUnitPlayException;
-import hmi.renderenvironment.*;
+
 
 import hmi.util.StringUtil;
 
@@ -39,15 +39,13 @@ import hmi.util.StringUtil;
 /**
  * @author Dennis Reidsma
  */
-public class SetShaderParameterSU implements ShaderUnit
+public class PlayCachedClipNQU implements NaoQiUnit
 {
-private String mesh = null;
-private String material = null;
-private String parameter = null;
-private float value = 0f;
+private String name = null;
 
     private final KeyPositionManager keyPositionManager = new KeyPositionManagerImpl();
 	private HmiRenderBodyEmbodiment hrbe = null;
+	
     public SetShaderParameterSU()
     {
         KeyPosition start = new KeyPosition("start", 0d, 1d);

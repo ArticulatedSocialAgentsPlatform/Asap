@@ -16,34 +16,33 @@
  * You should have received a copy of the GNU General Public License
  * along with Elckerlyc.  If not, see http://www.gnu.org/licenses/.
  ******************************************************************************/
-package hmi.shaderengine.planunit;
+package hmi.naoqiengine.planunit;
 
 
 import asap.realizer.PlayException;
 
 /**
- * Thrown whenever an ShaderUnit fails during play
  * @author Dennis Reidsma
  */
-public class SUPlayException extends PlayException
+public class NQUPlayException extends PlayException
 {
     private static final long serialVersionUID = 1423L;
-    private final ShaderUnit su;
+    private final NaoQiUnit nqu;
     
-    public SUPlayException(String str, ShaderUnit s, Exception ex)
+    public NQUPlayException(String str, NaoQiUnit n, Exception ex)
     {
-        this(str,s);
+        this(str,n);
         initCause(ex);
     }
     
-    public SUPlayException(String str, ShaderUnit s)
+    public NQUPlayException(String str, NaoQiUnit n)
     {
         super(str);
-        su = s;
+        nqu = n;
     }
     
-    public final ShaderUnit getShaderUnit()
+    public final NaoQiUnit getNaoQiUnit()
     {
-        return su;
+        return nqu;
     }
 }
