@@ -36,7 +36,7 @@ public abstract class BMLTBehaviour extends Behaviour
         super(bmlId);
     }
 
-    static final String BMLTNAMESPACE = "http://hmi.ewi.utwente.nl/bmlt";
+    public static final String BMLTNAMESPACE = "http://hmi.ewi.utwente.nl/bmlt";
 
     @Override
     public String getNamespace()

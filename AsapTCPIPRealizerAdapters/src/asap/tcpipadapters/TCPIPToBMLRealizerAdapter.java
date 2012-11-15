@@ -1,4 +1,4 @@
-package asap.bml.bridge;
+package asap.tcpipadapters;
 
 import hmi.xml.XMLTokenizer;
 
@@ -16,6 +16,8 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.ConcurrentLinkedQueue;
 
+import lombok.extern.slf4j.Slf4j;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -30,6 +32,7 @@ import asap.realizerport.RealizerPort;
  * 
  * @author Dennis Reidsma
  */
+@Slf4j
 public final class TCPIPToBMLRealizerAdapter implements Runnable, BMLFeedbackListener
 {
 
@@ -393,6 +396,7 @@ public final class TCPIPToBMLRealizerAdapter implements Runnable, BMLFeedbackLis
                             else
                             {
                                 String bmlRequest = tok.getXMLSection();
+                                log.debug("adding bml "+bmlRequest);                                
                                 bmlQ.add(bmlRequest);
                                 logger.debug("Gotten BML request, putting it on queue");
                                 try
@@ -601,7 +605,7 @@ public final class TCPIPToBMLRealizerAdapter implements Runnable, BMLFeedbackLis
         // if any next feedback, send it and set sleeptime to 1; upon error, dodisconnect
         try
         {
-            logger.debug("Sending feedback");
+            logger.debug("Sending feedback :{}",feedback);
             feedbackSendWriter.println(feedback);
         }
         catch (Exception e)
@@ -644,6 +648,7 @@ public final class TCPIPToBMLRealizerAdapter implements Runnable, BMLFeedbackLis
             {
                 // logger.debug("Is there new BML in the queue?");
                 String nextBml = bmlQ.poll();
+                log.debug("realizing bml {}", nextBml);
                 if (nextBml != null)
                 {
                     try
@@ -653,8 +658,7 @@ public final class TCPIPToBMLRealizerAdapter implements Runnable, BMLFeedbackLis
                     }
                     catch (Exception ex)
                     { // failing realizer means the application is down. shutdown server.
-                        logger.warn("Error sending BML to realizer -- shutting down server! {}", ex.getMessage());
-                        ex.printStackTrace();
+                        logger.warn("Error sending BML to realizer -- shutting down server! {}", ex);
                         mustshutdown = true;
                         nextMainLoopWait = 1;
                     }
@@ -668,6 +672,7 @@ public final class TCPIPToBMLRealizerAdapter implements Runnable, BMLFeedbackLis
                     }
                     catch (InterruptedException ex)
                     {
+                        Thread.interrupted();
                         // no matter -- just continue with next round :) Maybe we were woken up
                         // because new bml is available?
                     }

@@ -15,7 +15,7 @@ import asap.realizer.pegboard.TimePeg;
 public class KeyPositionManagerTest
 {
     private KeyPositionManager kpm;
-    private final double TIME_PRECISION = 0.0001;
+    private static final double TIME_PRECISION = 0.0001;
     
     @Before
     public void setup()

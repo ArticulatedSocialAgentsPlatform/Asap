@@ -28,7 +28,11 @@ import hmi.xml.XMLStructureAdapter;
 import hmi.xml.XMLTokenizer;
 
 import java.io.IOException;
+import java.util.ArrayList;
+import java.util.Collection;
 import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 
 import lombok.AccessLevel;
 import lombok.Getter;
@@ -40,7 +44,6 @@ import org.slf4j.LoggerFactory;
 import saiba.bml.core.BMLBehaviorAttributeExtension;
 import saiba.bml.core.Behaviour;
 import saiba.bml.parser.BMLParser;
-import asap.bml.bridge.TCPIPToBMLRealizerAdapter;
 import asap.bml.ext.bmlt.BMLTBMLBehaviorAttributes;
 import asap.realizer.AsapRealizer;
 import asap.realizer.Engine;
@@ -72,18 +75,12 @@ public class AsapRealizerEmbodiment implements EmbodimentLoader, Embodiment
      */
     private AsapRealizer elckerlycRealizer = null;
 
+    private Map<String,PipeLoader> pipeLoaders = new HashMap<>();
+    
     /** Use the RealizerPort to send BML to the Realizer */
     @Getter
     @Setter(AccessLevel.PROTECTED)
     private RealizerPort realizerPort = null;
-
-    /**
-     * This is the server providing access to the realizer through TCPIP.
-     * Access this variable to start/stop the server, and to create a GUI for it.
-     */
-    @Getter
-    @Setter(AccessLevel.PROTECTED)
-    private TCPIPToBMLRealizerAdapter tcpipToBMLRealizerAdapter = null;
 
     /** Some engines (interrupt engine, paramvalchange) need access to the scheduler */
     @Getter
@@ -125,14 +122,11 @@ public class AsapRealizerEmbodiment implements EmbodimentLoader, Embodiment
     /** Unload: remove the virtual human from the AsapEnvironment; stop scheduler etc; onload all other loaders */
     public void unload()
     {
-        if (tcpipToBMLRealizerAdapter != null)
+        for(PipeLoader pipeLoader:pipeLoaders.values())
         {
-            tcpipToBMLRealizerAdapter.shutdown();
-            logger.debug("Attempting to shutdown server...");
-        }
-
+            pipeLoader.shutdown();
+        }        
         elckerlycRealizer.shutdown(); // can you do this before all engines and emitters have been shut down?
-
     }
 	@Override
 	public String getId() {
@@ -234,8 +228,19 @@ public class AsapRealizerEmbodiment implements EmbodimentLoader, Embodiment
         return scheduler;
     }
 
+    public PipeLoader getPipeLoader(String id)
+    {
+        return pipeLoaders.get(id);
+    }
+    
+    public Collection<PipeLoader> getPipeLoaders()
+    {
+        return pipeLoaders.values();
+    }
+    
     protected void readBMLRealizerSubsection() throws IOException
     {
+        /*
         if (theTokenizer.atSTag("ServerAdapter"))
         {
             attrMap = theTokenizer.getAttributes();
@@ -246,7 +251,9 @@ public class AsapRealizerEmbodiment implements EmbodimentLoader, Embodiment
             theTokenizer.takeSTag("ServerAdapter");
             theTokenizer.takeETag("ServerAdapter");
         }
-        else if (theTokenizer.atSTag("Scheduler"))
+        */
+        
+        if (theTokenizer.atSTag("Scheduler"))
         {
             // TODO
             logger.error("Encountered Scheduler section that was not at beginning of AsapRealizerEmbodiment section");
@@ -283,6 +290,7 @@ public class AsapRealizerEmbodiment implements EmbodimentLoader, Embodiment
             pipeloader.readXML(theTokenizer, id, vhId, name, realizerPort, theSchedulingClock);
             theTokenizer.takeETag("PipeLoader");
             realizerPort = pipeloader.getAdaptedRealizerPort();
+            pipeLoaders.put(id,pipeloader);
         }
         else
         {

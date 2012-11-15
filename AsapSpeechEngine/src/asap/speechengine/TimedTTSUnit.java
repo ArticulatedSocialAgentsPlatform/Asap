@@ -40,8 +40,6 @@ import asap.speechengine.ttsbinding.TTSBinding;
  */
 public abstract class TimedTTSUnit extends TimedAbstractSpeechUnit
 {
-    // TODO: replace all bookmark specific stuff to generic PlanUnit calls
-
     protected TTSBinding ttsBinding;
 
     private double duration;

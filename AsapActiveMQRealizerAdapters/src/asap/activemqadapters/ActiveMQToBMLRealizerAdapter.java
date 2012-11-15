@@ -31,7 +31,7 @@ public class ActiveMQToBMLRealizerAdapter implements BMLFeedbackListener, AMQCon
                 new String[] { AMQBMLConstants.BML });
         amqConnection.addListeners(this);
         realizerPort = rp;
-        realizerPort.addListeners(this);
+        realizerPort.addListeners(this);        
     }
 
     @Override

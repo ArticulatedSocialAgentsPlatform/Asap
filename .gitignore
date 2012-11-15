@@ -5,6 +5,9 @@ dist
 privateprops
 .classpath
 .project
+.pydevproject
+.settings
+*.pyc
 *.*~
 manifest.mf
 docs/Asap

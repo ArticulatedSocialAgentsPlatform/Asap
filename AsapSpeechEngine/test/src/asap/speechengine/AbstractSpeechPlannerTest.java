@@ -52,10 +52,15 @@ public abstract class AbstractSpeechPlannerTest<T extends TimedAbstractSpeechUni
         return new SpeechBehaviour(bmlId, new XMLTokenizer(speechBML));
     }
 
-    protected SpeechBehaviour createSpeechBehaviour(String id, String bmlId, String speech) throws IOException
+    protected SpeechBehaviour createSpeechBehaviour(String id, String bmlId, String otherAttributes, String speech) throws IOException
     {
         return createSpeechBehaviour(String.format("<speech xmlns=\"http://www.bml-initiative.org/bml/bml-1.0\" "
-                + "id=\"%s\"><text>%s</text></speech>", id, speech), bmlId);
+                + "id=\"%s\" %s><text>%s</text></speech>", id, otherAttributes, speech), bmlId);
+    }
+    
+    protected SpeechBehaviour createSpeechBehaviour(String id, String bmlId, String speech) throws IOException
+    {
+        return createSpeechBehaviour(id,bmlId,"",speech);
     }
 
     @Test

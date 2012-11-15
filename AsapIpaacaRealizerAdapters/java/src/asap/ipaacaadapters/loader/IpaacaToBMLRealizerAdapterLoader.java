@@ -18,13 +18,14 @@ import asap.realizerport.RealizerPort;
 public class IpaacaToBMLRealizerAdapterLoader implements PipeLoader
 {
     private RealizerPort adaptedRealizerPort = null;
+    private IpaacaToBMLRealizerAdapter ipaacaAdapter;
     
     @Override
     public void readXML(XMLTokenizer theTokenizer, String id, String vhId, String name, RealizerPort realizerPort, Clock theSchedulingClock)
             throws XMLScanException, IOException
     {
         adaptedRealizerPort = realizerPort;
-        new IpaacaToBMLRealizerAdapter(realizerPort);        
+        ipaacaAdapter = new IpaacaToBMLRealizerAdapter(realizerPort);        
         if (!theTokenizer.atETag("PipeLoader")) throw new XMLScanException("IpaacaToBMLRealizerAdapterLoader should be an empty element");
     }
 
@@ -32,6 +33,12 @@ public class IpaacaToBMLRealizerAdapterLoader implements PipeLoader
     public RealizerPort getAdaptedRealizerPort()
     {
         return adaptedRealizerPort;
+    }
+
+    @Override
+    public void shutdown()
+    {
+        ipaacaAdapter.close();
     }
 
 }

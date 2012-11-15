@@ -3,6 +3,7 @@ package asap.bml.ext.bmlt;
 import saiba.bml.BMLInfo;
 import saiba.bml.core.Behaviour;
 import saiba.bml.core.GazeBehaviour;
+import saiba.bml.core.SpeechBehaviour;
 
 import asap.bml.ext.maryxml.MaryAllophonesBehaviour;
 import asap.bml.ext.maryxml.MaryWordsBehaviour;
@@ -55,5 +56,6 @@ public final class BMLTInfo
         BMLInfo.addDescriptionExtensions(DESCRIPTION_EXTENSIONS);
         BMLInfo.addExternalBlockId(ANTICIPATORBLOCKID);
         BMLInfo.addCustomStringAttribute(GazeBehaviour.class, BMLTBehaviour.BMLTNAMESPACE, "dynamic");
+        BMLInfo.addCustomStringAttribute(SpeechBehaviour.class, BMLTBehaviour.BMLTNAMESPACE, "voice");
     }
 }

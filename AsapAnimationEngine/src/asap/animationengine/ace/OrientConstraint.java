@@ -11,8 +11,19 @@ import hmi.math.Vec3f;
  */
 public class OrientConstraint
 {
-    @Getter private float [] d = Vec3f.getVec3f();  //extended finger direction:
-    @Getter private float [] p = Vec3f.getVec3f();  //palm normal
+    private float [] d = Vec3f.getVec3f();  //extended finger direction:
+    private float [] p = Vec3f.getVec3f();  //palm normal
+    
+    public float[] getD()
+    {
+        return Vec3f.getVec3f(d);
+    }
+    
+    public float[] getP()
+    {
+        return Vec3f.getVec3f(p);
+    }
+    
     @Getter @Setter private GStrokePhaseID phase;
     @Getter private final String id;
     

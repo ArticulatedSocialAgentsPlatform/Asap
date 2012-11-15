@@ -18,7 +18,6 @@ import org.powermock.core.classloader.annotations.PrepareForTest;
 import org.powermock.modules.junit4.PowerMockRunner;
 
 import saiba.bml.feedback.BMLSyncPointProgressFeedback;
-import asap.bml.feedback.ListBMLFeedbackListener;
 import asap.realizer.feedback.FeedbackManager;
 import asap.realizer.feedback.FeedbackManagerImpl;
 import asap.realizer.pegboard.BMLBlockPeg;
@@ -26,6 +25,7 @@ import asap.realizer.pegboard.TimePeg;
 import asap.realizer.planunit.TimedPlanUnitPlayException;
 import asap.realizer.planunit.TimedPlanUnitState;
 import asap.realizer.scheduler.BMLBlockManager;
+import asap.realizerport.util.ListBMLFeedbackListener;
 
 /**
  * Test cases for TimedAbstractAudioUnit, executed by making a stub out of it and spying on some internal method calls

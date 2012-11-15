@@ -1,4 +1,7 @@
-package asap.bml.bridge;
+package asap.tcpipadapters;
+
+import hmi.xml.XMLScanException;
+import hmi.xml.XMLTokenizer;
 
 import java.io.BufferedReader;
 import java.io.IOException;
@@ -12,15 +15,11 @@ import java.net.SocketTimeoutException;
 import java.nio.channels.IllegalBlockingModeException;
 import java.util.concurrent.ConcurrentLinkedQueue;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
+import lombok.extern.slf4j.Slf4j;
 import saiba.bml.feedback.BMLWarningFeedback;
-import asap.bml.feedback.BMLFeedbackManager;
 import asap.realizerport.BMLFeedbackListener;
 import asap.realizerport.RealizerPort;
-
-import com.google.common.io.CharStreams;
+import asap.realizerport.util.BMLFeedbackManager;
 
 /**
  * A {@link asap.realizerport.bml.bridge.RealizerPort RealizerBridge} that uses a tcp/ip connection to provide
@@ -31,10 +30,10 @@ import com.google.common.io.CharStreams;
  * 
  * @author Dennis Reidsma
  */
+@Slf4j
 public final class BMLRealizerToTCPIPAdapter implements RealizerPort, Runnable
 {
-    private static Logger logger = LoggerFactory.getLogger(BMLRealizerToTCPIPAdapter.class.getName());
-
+    
     private BMLFeedbackManager fbManager = new BMLFeedbackManager();
     /*
      * ========================================================================================= A
@@ -150,6 +149,7 @@ public final class BMLRealizerToTCPIPAdapter implements RealizerPort, Runnable
         }
         if (send)
         {
+            log.debug("adding BML {}", bmlString);
             bmlRequestQ.add(bmlString);
         }
         else
@@ -244,7 +244,7 @@ public final class BMLRealizerToTCPIPAdapter implements RealizerPort, Runnable
 
         public void run()
         {
-            logger.debug("Starting feedback reader");
+            log.debug("Starting feedback reader");
             ServerInfo info = getServerInfo();
             // attempt to connect until successful or until serious error
             try
@@ -256,7 +256,7 @@ public final class BMLRealizerToTCPIPAdapter implements RealizerPort, Runnable
                 failFeedbackConnect(e.getMessage());
                 return;
             }
-            logger.debug("Server socket ready");
+            log.debug("Server socket ready");
             try
             {
                 feedbackReadServerSocket.setSoTimeout(SOCKET_TIMEOUT);
@@ -271,10 +271,10 @@ public final class BMLRealizerToTCPIPAdapter implements RealizerPort, Runnable
             {
                 try
                 {
-                    logger.debug("Waiting for server to connect to feedback channel");
+                    log.debug("Waiting for server to connect to feedback channel");
                     feedbackReadSocket = feedbackReadServerSocket.accept();
                     feedbackconnected = true;
-                    logger.debug("Making BufferedReader");
+                    log.debug("Making BufferedReader");
                     feedbackReadReader = new BufferedReader(new InputStreamReader(feedbackReadSocket.getInputStream()));
                 }
                 catch (SocketTimeoutException e)
@@ -308,10 +308,10 @@ public final class BMLRealizerToTCPIPAdapter implements RealizerPort, Runnable
                     }
                 }
             }
-            logger.debug("Feedback channel open, starting to read");
+            log.debug("Feedback channel open, starting to read");
             // feedback channel is connected. Keep reading from it, and processing what comes in
             
-            //XMLTokenizer tok = new XMLTokenizer(feedbackReadReader);
+            XMLTokenizer tok = new XMLTokenizer(feedbackReadReader);
             
             while (!stop)
             {
@@ -327,26 +327,35 @@ public final class BMLRealizerToTCPIPAdapter implements RealizerPort, Runnable
                      * ); try { Thread.sleep(WAIT_IF_NO_FEEDBACK); } catch(InterruptedException ex)
                      * { } continue; }
                      */
-                    String feedback = CharStreams.toString(feedbackReadReader);
+                    String feedback = tok.getXMLSection();
+                    log.debug("Adding feedback {}",feedback);
                     feedbackQ.add(feedback);
                     // feedbackRedirectorThread.interrupt() when new feedback was put in queue!
                     // let op SecurityException                    
                 }
+                catch (XMLScanException e)
+                {
+                    //XMLScanExceptions may occur when disconnecting/stopping
+                    if(!stop)
+                    {
+                        throw e;
+                    }
+                }
                 catch (IOException e)
                 {
-                    logger.warn("Error reading feedback from server, error: {}. Disconnecting from server.", e.getMessage());
+                    log.warn("Error reading feedback from server, error: {}. Disconnecting from server.", e.getMessage());
                     stop = true;
                     mustdisconnect = true;
                     mustconnect = true; // see if we can restore connection
                     nextMainLoopWait = 1;
                 }
             }
-            logger.debug("Leaving the feedback channel reader");
+            log.debug("Leaving the feedback channel reader");
         }
 
         private void failFeedbackConnect(String msg)
         {
-            logger.warn("Failed to connect feedback reader to server {}: {}.  Disconnecting from server.", getServerInfo(), msg);
+            log.warn("Failed to connect feedback reader to server {}: {}.  Disconnecting from server.", getServerInfo(), msg);
             mustdisconnect = true; // don't restore connection if we get an immediate fail on
                                    // opening feedback channel...
             nextMainLoopWait = 1;
@@ -354,7 +363,7 @@ public final class BMLRealizerToTCPIPAdapter implements RealizerPort, Runnable
 
         private void retryFeedbackConnect(String msg)
         {
-            logger.debug("Problem connecting to feedback channel: {}\n" + "Will try again in {} msec...", msg, CONNECT_RETRY_WAIT);
+            log.debug("Problem connecting to feedback channel: {}\n" + "Will try again in {} msec...", msg, CONNECT_RETRY_WAIT);
         }
 
     }
@@ -406,7 +415,7 @@ public final class BMLRealizerToTCPIPAdapter implements RealizerPort, Runnable
                 // no matter -- just continue with next round :)
             }
         }
-        logger.debug("Client shutdown finished");
+        log.debug("Client shutdown finished");
     }
 
     /**
@@ -415,9 +424,9 @@ public final class BMLRealizerToTCPIPAdapter implements RealizerPort, Runnable
      */
     private void dodisconnect()
     {
-        logger.debug("Starting to disconnect from server");
+        log.debug("Starting to disconnect from server");
         feedbackReader.stopReading();
-        logger.debug("Waiting for feedbackreader to end...");
+        log.debug("Waiting for feedbackreader to end...");
         try
         { // wait till feedbackreader stopped
             if (feedbackReaderThread != null) feedbackReaderThread.join();
@@ -427,7 +436,7 @@ public final class BMLRealizerToTCPIPAdapter implements RealizerPort, Runnable
             ex.printStackTrace();
         }
         // close the sockets etc
-        logger.debug("Trying to close bml sending sockets...");
+        log.debug("Trying to close bml sending sockets...");
         try
         {
             if (bmlSendSocket != null) bmlSendSocket.close();
@@ -436,7 +445,7 @@ public final class BMLRealizerToTCPIPAdapter implements RealizerPort, Runnable
         {
             ex.printStackTrace();
         }
-        logger.debug("Trying to close feedback reading socket...");
+        log.debug("Trying to close feedback reading socket...");
         try
         {
             if (feedbackReadSocket != null) feedbackReadSocket.close();
@@ -457,7 +466,7 @@ public final class BMLRealizerToTCPIPAdapter implements RealizerPort, Runnable
         isconnected = false;
         bmlRequestQ.clear();
         nextMainLoopWait = 1;
-        logger.debug("Disconnected from server");
+        log.debug("Disconnected from server");
     }
 
     /**
@@ -467,7 +476,7 @@ public final class BMLRealizerToTCPIPAdapter implements RealizerPort, Runnable
      */
     private void doconnect()
     {
-        logger.debug("Connecting to server...");
+        log.debug("Connecting to server...");
         ServerInfo info = getServerInfo();
         if (info == null || info.getServerName() == null)
         {
@@ -479,9 +488,9 @@ public final class BMLRealizerToTCPIPAdapter implements RealizerPort, Runnable
         bmlSendSocket = new Socket();
         try
         {
-            logger.debug("Making socket");
+            log.debug("Making socket");
             bmlSendSocket.connect(bmlSendSocketAddress, SOCKET_TIMEOUT);
-            logger.debug("Making bml writer");
+            log.debug("Making bml writer");
             bmlSendWriter = new PrintWriter(bmlSendSocket.getOutputStream(), true);
         }
         catch (SocketTimeoutException e)
@@ -507,17 +516,17 @@ public final class BMLRealizerToTCPIPAdapter implements RealizerPort, Runnable
         mustconnect = false; // success!
         isconnected = true;
         // next, prepare the feedback reading channel.
-        logger.debug("Preparing feedback channel");
+        log.debug("Preparing feedback channel");
         feedbackReader = new FeedbackReader();
         feedbackReaderThread = new Thread(feedbackReader);
         feedbackReaderThread.start();
-        logger.debug("Connected to server");
+        log.debug("Connected to server");
     }
 
     /** Fail and don't try again */
     private void failConnect(String msg)
     {
-        logger.warn("Cannot connect to server {}: {}", getServerInfo(), msg);
+        log.warn("Cannot connect to server {}: {}", getServerInfo(), msg);
         mustconnect = false;
         nextMainLoopWait = 1;
     }
@@ -525,16 +534,16 @@ public final class BMLRealizerToTCPIPAdapter implements RealizerPort, Runnable
     /** Error connecting, prepare to retry */
     private void retryConnect(String msg)
     {
-        logger.debug("Error connecting to server: {}\n" + "Will try again in {} msec...", msg, CONNECT_RETRY_WAIT);
+        log.debug("Error connecting to server: {}\n" + "Will try again in {} msec...", msg, CONNECT_RETRY_WAIT);
         nextMainLoopWait = CONNECT_RETRY_WAIT;
     }
 
     /** Disconnect. Clean up feedbackredirectionloop. Called from the run() loop. */
     private void doshutdown()
     {
-        logger.debug("Disconnect before shutdown");
+        log.debug("Disconnect before shutdown");
         dodisconnect();
-        logger.debug("Wait till feedbackredirectorthread finished");
+        log.debug("Wait till feedbackredirectorthread finished");
         try
         { // wait till feedbackRedirector stopped
             if (feedbackRedirectorThread != null) feedbackRedirectorThread.join();
@@ -543,12 +552,13 @@ public final class BMLRealizerToTCPIPAdapter implements RealizerPort, Runnable
         {
             ex.printStackTrace();
         }
-        logger.debug("Shutdown client almost finished");
+        log.debug("Shutdown client almost finished");
     }
 
     /** Send given BML request. If fail: drop request, fire off feedback, disconnect. */
     private void dosendBML(String bmlRequest)
     {
+        log.debug("Sending bml {}",bmlRequest);
         // if any next bml request, send it and set sleeptime to 1; upon error, mustdisconnect
         try
         {
@@ -556,7 +566,7 @@ public final class BMLRealizerToTCPIPAdapter implements RealizerPort, Runnable
         }
         catch (Exception e)
         {
-            logger.warn("Error sending BML; disconnecting from server");
+            log.warn("Error sending BML; disconnecting from server");
             mustdisconnect = true;
             mustconnect = true; // see if we can restore connection...
         }

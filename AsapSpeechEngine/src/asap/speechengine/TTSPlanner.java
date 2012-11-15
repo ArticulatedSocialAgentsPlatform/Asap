@@ -18,8 +18,6 @@
  ******************************************************************************/
 package asap.speechengine;
 
-import saiba.bml.core.Behaviour;
-import saiba.bml.core.SpeechBehaviour;
 import hmi.tts.Bookmark;
 
 import java.util.ArrayList;
@@ -29,6 +27,9 @@ import java.util.List;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import saiba.bml.core.Behaviour;
+import saiba.bml.core.SpeechBehaviour;
+import asap.bml.ext.bmlt.BMLTBehaviour;
 import asap.realizer.AbstractPlanner;
 import asap.realizer.BehaviourPlanningException;
 import asap.realizer.SyncAndTimePeg;
@@ -44,7 +45,7 @@ import asap.speechengine.ttsbinding.TTSBinding;
 /**
  * Planner that creates and plans TimedTTSUnits from e.g. SpeechBehaviours.
  * @author hvanwelbergen
- *
+ * 
  */
 public class TTSPlanner extends AbstractPlanner<TimedTTSUnit>
 {
@@ -64,10 +65,10 @@ public class TTSPlanner extends AbstractPlanner<TimedTTSUnit>
     {
         lipSynchers.add(ls);
     }
-    
+
     public TTSPlanner(FeedbackManager bfm, TimedTTSUnitFactory suf, TTSBinding ttsBin, PlanManager<TimedTTSUnit> planManager)
     {
-        super(bfm, planManager);        
+        super(bfm, planManager);
         suFactory = suf;
         ttsBinding = ttsBin;
     }
@@ -99,14 +100,27 @@ public class TTSPlanner extends AbstractPlanner<TimedTTSUnit>
         try
         {
             SpeechBehaviour bSpeech = (SpeechBehaviour) b;
-            //TODO: ultimately, this should be the characterId from the behavior -- but remember that characterId may be empty
+
+            String voice = bSpeech.getStringParameterValue(BMLTBehaviour.BMLTNAMESPACE + ":" + "voice");
+            
+            // TODO: ultimately, this may be the characterId from the behavior -- but remember that characterId may be empty
             String voiceId = "voice1";
-            TimedTTSUnit bs = suFactory.createTimedTTSUnit(bbPeg, bSpeech.getContent(), voiceId, bSpeech.getBmlId(), bSpeech.id, ttsBinding,
-                    b.getClass());
+            
+            TimedTTSUnit bs = suFactory.createTimedTTSUnit(bbPeg, bSpeech.getContent(), voiceId, bSpeech.getBmlId(), bSpeech.id,
+                    ttsBinding, b.getClass());
 
             synchronized (ttsBinding)
             {
+                String oldVoice = ttsBinding.getVoice();
+                if (voice != null)
+                {
+                    ttsBinding.setVoice(voice);
+                }
                 bs.setup();
+                if (voice!=null && !voice.equals(oldVoice))
+                {
+                    ttsBinding.setVoice(oldVoice);
+                }          
             }
             logger.debug("Created speech unit {} duration: {}", b.id, bs.getPreferedDuration());
             return bs;
@@ -127,8 +141,7 @@ public class TTSPlanner extends AbstractPlanner<TimedTTSUnit>
     }
 
     @Override
-    public TimedTTSUnit resolveSynchs(BMLBlockPeg bbPeg, Behaviour b, List<TimePegAndConstraint> sacs)
-            throws BehaviourPlanningException
+    public TimedTTSUnit resolveSynchs(BMLBlockPeg bbPeg, Behaviour b, List<TimePegAndConstraint> sacs) throws BehaviourPlanningException
     {
         TimedTTSUnit bs = createSpeechUnit(bbPeg, b);
         validateSacs(b, bs, sacs);
@@ -224,14 +237,14 @@ public class TTSPlanner extends AbstractPlanner<TimedTTSUnit>
      * Creates a SpeechUnit that satisfies sacs and adds it to the motion plan. All registered BMLFeedbackListeners are linked to this SpeechUnit.
      */
     @Override
-    public List<SyncAndTimePeg> addBehaviour(BMLBlockPeg bbPeg, Behaviour b, List<TimePegAndConstraint> sacs,
-            TimedTTSUnit bs) throws BehaviourPlanningException
+    public List<SyncAndTimePeg> addBehaviour(BMLBlockPeg bbPeg, Behaviour b, List<TimePegAndConstraint> sacs, TimedTTSUnit bs)
+            throws BehaviourPlanningException
     {
         if (bs == null)
         {
             bs = createSpeechUnit(bbPeg, b);
         }
-        
+
         validateSacs(b, bs, sacs);
 
         linkStartAndEnd(b, sacs, bs);
@@ -252,8 +265,8 @@ public class TTSPlanner extends AbstractPlanner<TimedTTSUnit>
                 satp.add(new SyncAndTimePeg(b.getBmlId(), b.id, bm.getName(), p));
             }
         }
-        
-        for(LipSynchProvider ls:lipSynchers)
+
+        for (LipSynchProvider ls : lipSynchers)
         {
             ls.addLipSyncMovement(bbPeg, b, bs, bs.visimes);
         }

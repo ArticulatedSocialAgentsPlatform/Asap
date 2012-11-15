@@ -18,7 +18,7 @@ class RealizerPort(object):
         '''
         
     @abc.abstractmethod
-    def addListeners(self, feedbackListeners):
+    def addListeners(self, *feedbackListeners):
         '''
         Add some listeners to which BML Feedback will be sent
         '''

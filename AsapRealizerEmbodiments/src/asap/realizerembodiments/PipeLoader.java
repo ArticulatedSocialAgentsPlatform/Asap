@@ -23,4 +23,6 @@ public interface PipeLoader
 
     /** return the adapted realizerPort */
     RealizerPort getAdaptedRealizerPort();
+    
+    void shutdown();
 }

@@ -6,6 +6,7 @@ import hmi.util.CollectionUtils;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Arrays; 
 
 import lombok.Data;
 
@@ -267,7 +268,7 @@ public class TCBSplineN
         StringBuffer buf = new StringBuffer();
         for (double u = GetMinTime(); u <= GetMaxTime(); u += 0.1)
         {
-            buf.append(GetPosition(u));
+            buf.append(Arrays.toString(GetPosition(u)));
         }
         return buf.toString();
     }    
@@ -282,7 +283,7 @@ public class TCBSplineN
     }
 
     @Data
-    class KeyInfo
+    private static class KeyInfo
     {
         private final int riKey;
         private final double rfDt;

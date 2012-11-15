@@ -98,7 +98,7 @@ public class RealizerPortUI extends JPanel
     protected JTextArea bmlInput = null;
 
     /** combobox for demo scripts */
-    protected JComboBox demoScriptList = null;
+    protected JComboBox<String> demoScriptList = null;
 
     /** The realizerbridge */
     protected RealizerPort realizerBridge = null;
@@ -212,7 +212,7 @@ public class RealizerPortUI extends JPanel
         // did we obtain demoscripts? if so, load them to GUI
         if (demoScripts.size() > 0)
         {
-            demoScriptList = new JComboBox(demoScriptNames.toArray(new String[demoScriptNames.size()]));
+            demoScriptList = new JComboBox<String>(demoScriptNames.toArray(new String[demoScriptNames.size()]));
             demoScriptList.insertItemAt("", 0);
             demoScriptList.setEditable(false);
             demoScriptList.setSelectedItem("");

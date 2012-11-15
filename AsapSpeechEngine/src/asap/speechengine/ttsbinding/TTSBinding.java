@@ -107,8 +107,14 @@ public abstract class TTSBinding
     
     public void setVoice(String voice)
     {
-        ttsGenerator.setVoice(voice);
+        ttsGenerator.setVoice(voice);        
     }
+    
+    public String getVoice()
+    {
+        return ttsGenerator.getVoice();
+    }
+    
     public String[] getVoices()
     {
         return ttsGenerator.getVoices();

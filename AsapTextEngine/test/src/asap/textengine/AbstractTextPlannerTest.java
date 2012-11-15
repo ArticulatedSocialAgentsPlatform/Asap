@@ -33,7 +33,6 @@ import asap.realizertestutil.PlannerTests;
  */
 public abstract class AbstractTextPlannerTest<T extends TimedSpeechTextUnit>
 {
-    protected PlanManager<T> planManager = new PlanManager<T>();
     protected static final String SPEECHID = "speech1";
     protected static final String BMLID = "bml1";
     protected static final String SPEECHTEXT = "Hello<sync id=\"s1\"/> world";

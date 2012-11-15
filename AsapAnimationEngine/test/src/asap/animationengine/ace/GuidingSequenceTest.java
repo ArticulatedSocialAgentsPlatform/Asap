@@ -1,15 +1,10 @@
 package asap.animationengine.ace;
 
 import static hmi.testutil.math.Vec3fTestUtil.assertVec3fEquals;
-import static org.junit.Assert.assertEquals;
 import hmi.math.Vec3f;
-
-import java.util.List;
 
 import org.junit.Before;
 import org.junit.Test;
-
-import com.google.common.collect.ImmutableList;
 
 /**
  * Unit tests for the GuidingSequence

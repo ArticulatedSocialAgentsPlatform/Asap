@@ -22,6 +22,8 @@ import com.google.common.collect.ImmutableList;
 import com.google.common.collect.ImmutableMap;
 import com.google.common.collect.Lists;
 
+import edu.umd.cs.findbugs.annotations.NonNull;
+
 /**
  * Sends joint rotations from its animation joint to a renderer through Ipaaca.
  * Assumes that the animation joint is not changed during the copy(). That is: assumes that there is only one thread accessing animationJoint, 
@@ -68,7 +70,7 @@ public class IpaacaBodyEmbodiment implements SkeletonEmbodiment
         availableJoints = Lists.transform(ipaacaJoints, new Function<String, String>()
         {
             @Override
-            public String apply(@Nullable String str)
+            public String apply(String str)
             {
                 return str.replaceAll(" ", "_");
             }
