@@ -21,13 +21,13 @@ public class PlayCachedClipBehaviour extends NaoQiBehaviour
     @Override
     public boolean specifiesParameter(String name)
     {
-        return (name.equals("name"));
+        return (name.equals("clip"));
     }
     
     @Override
     public StringBuilder appendAttributeString(StringBuilder buf)
     {
-        appendAttribute(buf, "name", getStringParameterValue("name"));
+        appendAttribute(buf, "clip", getStringParameterValue("clip"));
         return super.appendAttributeString(buf);
     }
 

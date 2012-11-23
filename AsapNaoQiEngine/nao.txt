@@ -1,3 +1,5 @@
+IETS MET HET TIME MANAGEMENT -- JE WEET NU NIET WAT 0..1 IS? HOE WEET JE DE DURATION A PRIORI?
+
 NO CONFLICT MANAGEMENT YET // you cannot start two copies in parallel, but you CAN start two different clips simultaneously.
 
 JNaoQiEngine:
