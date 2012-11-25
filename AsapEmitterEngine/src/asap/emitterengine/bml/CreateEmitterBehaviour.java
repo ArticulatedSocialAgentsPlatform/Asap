@@ -17,7 +17,7 @@ public class CreateEmitterBehaviour extends EmitterBehaviour
         super(bmlId);        
     }
     
-    protected static EmitterInfo emitterInfo = null;
+    static EmitterInfo emitterInfo = null;
      
     protected static void setEmitterInfo(EmitterInfo ei)
     {

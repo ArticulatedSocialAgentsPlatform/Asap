@@ -9,43 +9,67 @@ import java.io.InputStreamReader;
 import java.net.Socket;
 import java.net.UnknownHostException;
 
+import lombok.Getter;
+import lombok.extern.slf4j.Slf4j;
 
 /**
  * Reads head input from Mark's sensor system
  * @author welberge
- *
+ * //XXX: should really make use of e.g. an ExecutorService rather than hard-coded thread management 
+ * (see MultiThreadedPlanPlayer for an example); shutdown is probably a bit fragile now...
  */
+@Slf4j
 public class RemoteFACSFaceInput implements FACSFaceInput
 {
-    private String id;
+    @Getter
+    private final String id;
+    
     private BufferedReader in;
     private MyThread serverThread;
     private AUConfig[] aus = new AUConfig[84];
 
     private String hostName;
     private int port;
+    private Socket socket = null;
+    private volatile boolean shouldStop = false;
     
-    @Override
-    public String getId()
+    public RemoteFACSFaceInput(String id)
     {
-        return id;
+        this.id = id;
+    }
+    
+    public void shutdown()
+    {
+        shouldStop = true;        
+        if(socket!=null)
+        {
+            try
+            {
+                socket.close();
+            }
+            catch (IOException e)
+            {
+                log.warn("Exception in shutdown of RemoteFACSFaceInput", e);
+            }
+        }
     }
 
     public void connectToServer(String hostName, int port)
     {
         this.hostName = hostName;
-    		this.port = port;
+        this.port = port;
         connectToServer();
-        
+
         serverThread = new MyThread();
         serverThread.start();
     }
-    
+
     public void connectToServer()
     {
-    		try
+        if(shouldStop)return;
+        try
         {
-            Socket socket = new Socket(hostName, port);
+            socket = new Socket(hostName, port);
             in = new BufferedReader(new InputStreamReader(socket.getInputStream()));
         }
         catch (UnknownHostException e)
@@ -58,13 +82,13 @@ public class RemoteFACSFaceInput implements FACSFaceInput
             in = null;
         }
     }
-    
+
     class MyThread extends Thread
     {
         @Override
         public void run()
         {
-            while (true)
+            while (!shouldStop)
             {
                 if (in != null)
                 {
@@ -75,40 +99,37 @@ public class RemoteFACSFaceInput implements FACSFaceInput
                     }
                     catch (IOException e)
                     {
-                        e.printStackTrace();
+                        log.warn("IOException face data from socket "+e);
                         in = null;
                     }
-                    
-                    //TODO: new parsing stuff here!
+
                     if (line != null)
                     {
                         String[] recValues = line.split(" ");
                         if (recValues.length == 84)
                         {
                             synchronized (this)
-                            {	
-                            		for( int i=0; i<42; i++ ) {
-                            			aus[i] = new AUConfig(Side.LEFT, i, Float.valueOf(recValues[i]));
-                            		}
-                            		for( int i=42; i<84; i++ ) {
-                            			aus[i] = new AUConfig(Side.RIGHT, i-42, Float.valueOf(recValues[i]));
-                            		}
-                                /*
-                                faceValues = new Float[84];
-                                for (int i = 0; i < 84; i++)
+                            {
+                                for (int i = 0; i < 42; i++)
                                 {
-                                    faceValues[i] = Float.valueOf(recValues[i]);
+                                    aus[i] = new AUConfig(Side.LEFT, i, Float.valueOf(recValues[i]));
                                 }
-                                */
+                                for (int i = 42; i < 84; i++)
+                                {
+                                    aus[i] = new AUConfig(Side.RIGHT, i - 42, Float.valueOf(recValues[i]));
+                                }
                             }
                         }
                     }
-                } else {
-                		connectToServer();
                 }
-            }
+                else
+                {
+                    connectToServer();
+                }
+            }            
         }
     }
+
     @Override
     public synchronized AUConfig[] getAUConfigs()
     {

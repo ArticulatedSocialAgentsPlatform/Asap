@@ -8,32 +8,31 @@ import asap.realizerport.RealizerPort;
 public class ElckerlycRealizerPipe implements RealizerPort
 {
     private AsapRealizer realizer;
-    
+
     public ElckerlycRealizerPipe(AsapRealizer realizer)
     {
         this.realizer = realizer;
     }
-    
+
     @Override
     public void performBML(String bmlString)
     {
-        //realizer.parseXML(bmlString);
         realizer.scheduleBML(bmlString);
     }
-    
+
     @Override
     public void removeAllListeners()
     {
-        realizer.getScheduler().removeAllFeedbackListeners();        
+        realizer.getScheduler().removeAllFeedbackListeners();
     }
-    
+
     @Override
-    public void addListeners(BMLFeedbackListener ... listeners)
+    public void addListeners(BMLFeedbackListener... listeners)
     {
-        for (BMLFeedbackListener listener: listeners)
+        for (BMLFeedbackListener listener : listeners)
         {
-            realizer.addFeedbackListener((BMLFeedbackListener)listener);
+            realizer.addFeedbackListener((BMLFeedbackListener) listener);
         }
     }
-    
+
 }
