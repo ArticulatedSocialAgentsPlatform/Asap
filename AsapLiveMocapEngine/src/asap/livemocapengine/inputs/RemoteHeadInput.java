@@ -6,43 +6,55 @@ import java.io.InputStreamReader;
 import java.net.Socket;
 import java.net.UnknownHostException;
 
+import lombok.extern.slf4j.Slf4j;
+import com.google.common.util.concurrent.AtomicDouble;
+
 /**
  * Reads head input from Mark's sensor system
  * @author welberge
  */
+@Slf4j
 public class RemoteHeadInput implements EulerInput
 {
-    private String id;
-    private float pitch;
-    private float roll;
-    private float yaw;
+    private final String id;
+    private AtomicDouble pitch = new AtomicDouble();
+    private AtomicDouble roll = new AtomicDouble();
+    private AtomicDouble yaw = new AtomicDouble();
     private BufferedReader in;
     private MyThread serverThread;
-    
+
     private String hostName;
     private int port;
+    private Socket socket = null;
+    private volatile boolean shouldStop = false;
+    
+    public RemoteHeadInput(String id)
+    {
+        this.id = id;
+    }
 
-    //("localhost", 9123)
+    // ("localhost", 9123)
     public void connectToServer(String hostName, int port)
     {
-    		this.hostName = hostName;
-    		this.port = port;
+        this.hostName = hostName;
+        this.port = port;
         connectToServer();
-        
+
         serverThread = new MyThread();
         serverThread.start();
     }
-    
+
     public void connectToServer()
     {
-    		try
+        if(shouldStop)return;
+        try
         {
-            Socket socket = new Socket(hostName, port);
+            socket = new Socket(hostName, port);
             in = new BufferedReader(new InputStreamReader(socket.getInputStream()));
         }
         catch (UnknownHostException e)
         {
-            System.out.println("Unknown host");
+            log.warn("Unknown host");
             in = null;
         }
         catch (IOException e)
@@ -51,11 +63,27 @@ public class RemoteHeadInput implements EulerInput
         }
     }
 
+    public void shutdown()
+    {
+        shouldStop = true;        
+        if(socket!=null)
+        {
+            try
+            {
+                socket.close();
+            }
+            catch (IOException e)
+            {
+                log.warn("Exception in shutdown of RemoteHeadInput", e);
+            }
+        }
+    }
+
     class MyThread extends Thread
     {
         public void run()
         {
-            while (true)
+            while (!shouldStop)
             {
                 if (in != null)
                 {
@@ -74,16 +102,15 @@ public class RemoteHeadInput implements EulerInput
                         String[] recValues = line.split(" ");
                         if (recValues.length == 3)
                         {
-                            synchronized (this)
-                            {
-                                roll = Float.parseFloat(recValues[0]);
-                                pitch = Float.parseFloat(recValues[1]);
-                                yaw = Float.parseFloat(recValues[2]);
-                            }
+                            roll.set(Float.parseFloat(recValues[0]));
+                            pitch.set(Float.parseFloat(recValues[1]));
+                            yaw.set(Float.parseFloat(recValues[2]));
                         }
                     }
-                } else {
-                		connectToServer();
+                }
+                else
+                {
+                    connectToServer();
                 }
             }
         }
@@ -96,20 +123,20 @@ public class RemoteHeadInput implements EulerInput
     }
 
     @Override
-    public synchronized float getPitchDegrees()
+    public float getPitchDegrees()
     {
-        return pitch;
+        return pitch.floatValue();
     }
 
     @Override
-    public synchronized float getYawDegrees()
+    public float getYawDegrees()
     {
-        return yaw;
+        return yaw.floatValue();
     }
 
     @Override
-    public synchronized float getRollDegrees()
+    public float getRollDegrees()
     {
-        return roll;
+        return roll.floatValue();
     }
 }

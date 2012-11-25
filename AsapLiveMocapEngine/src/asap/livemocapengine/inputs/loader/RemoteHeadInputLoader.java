@@ -42,7 +42,7 @@ public class RemoteHeadInputLoader implements SensorLoader
         {
             throw new XMLScanException("No inner serverinfo element in RemoteHeadInputLoader");
         }        
-        headInput = new RemoteHeadInput();
+        headInput = new RemoteHeadInput(loaderId);
         headInput.connectToServer(rh.getHostName(), rh.getPort());
     }
 
