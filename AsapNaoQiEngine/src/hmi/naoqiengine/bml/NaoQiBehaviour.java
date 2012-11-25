@@ -26,7 +26,7 @@ import asap.bml.ext.bmlt.*;
 
 import saiba.bml.parser.SyncPoint;
 /**
- * Abstract class for all shader engine specific Behaviours.
+ * Abstract class for all NaoQi engine specific Behaviours.
  * 
  * @author Dennis Reidsma
  */
