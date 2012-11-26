@@ -174,7 +174,7 @@ public final class LinearSystem
      * return value is TRUE if successful, FALSE if pivoting failed
      * U[iSize] is solution
      */
-    public static boolean SolveTri2(List<Float> afA, List<Float> afB, List<Float> afC, List<float[]> afR, List<float[]> afU)
+    public static boolean solveTri2(List<Float> afA, List<Float> afB, List<Float> afC, List<float[]> afR, List<float[]> afU)
     {
         float tmp[] = Vec3f.getVec3f();
         if (afB.get(0) == 0.0) return false;

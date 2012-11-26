@@ -57,7 +57,7 @@ public class LMPWristRot extends LMP
     }
 
     @Data
-    private class OrientPos
+    private static class OrientPos
     {
         private final TimePeg tp;
         private final float q[];
@@ -412,7 +412,7 @@ public class LMPWristRot extends LMP
         return true;
     }
 
-    class OrientBound
+    private static class OrientBound
     {
         int index;
         double time;

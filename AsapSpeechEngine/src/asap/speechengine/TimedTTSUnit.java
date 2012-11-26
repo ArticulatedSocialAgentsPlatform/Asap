@@ -27,6 +27,8 @@ import java.util.*;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import com.google.common.collect.ImmutableList;
+
 import asap.realizer.*;
 import asap.realizer.feedback.FeedbackManager;
 import asap.realizer.pegboard.BMLBlockPeg;
@@ -300,6 +302,11 @@ public abstract class TimedTTSUnit extends TimedAbstractSpeechUnit
      */
     public List<Visime> getVisimes()
     {
-        return visimes;
+        List<Visime> list;
+        synchronized(ttsBinding)
+        {
+            list = ImmutableList.copyOf(visimes);
+        }
+        return list;
     }
 }
