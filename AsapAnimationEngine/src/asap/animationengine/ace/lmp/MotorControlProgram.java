@@ -79,7 +79,7 @@ public class MotorControlProgram extends TimedAbstractPlanUnit implements TimedA
         {
 
             @Override
-            public boolean apply(@Nullable TimePegAndConstraint tpac)
+            public boolean apply(TimePegAndConstraint tpac)
             {
                 if (tpac.syncId.equals("start")) return false;
                 if (tpac.syncId.equals("end")) return false;
@@ -281,7 +281,7 @@ public class MotorControlProgram extends TimedAbstractPlanUnit implements TimedA
             double startTime = Doubles.min(Doubles.toArray(Collections2.transform(lmpQueue, new Function<TimedAnimationUnit, Double>()
             {
                 @Override
-                public Double apply(@Nullable TimedAnimationUnit tau)
+                public Double apply(TimedAnimationUnit tau)
                 {
                     if (tau.getStartTime() != TimePeg.VALUE_UNKNOWN)
                     {
@@ -307,7 +307,7 @@ public class MotorControlProgram extends TimedAbstractPlanUnit implements TimedA
             double relaxTime = Doubles.max(Doubles.toArray(Collections2.transform(lmpQueue, new Function<TimedAnimationUnit, Double>()
             {
                 @Override
-                public Double apply(@Nullable TimedAnimationUnit tau)
+                public Double apply(TimedAnimationUnit tau)
                 {
                     if (tau.getEndTime() != TimePeg.VALUE_UNKNOWN)
                     {

@@ -422,7 +422,7 @@ public class NUBSpline3
         beta.set(s - 1, 1f);
 
         // solve corresponding tridiaginal linear system
-        if (!LinearSystem.SolveTri2(alpha, beta, gamma, data, c)) log.warn("MgcNUBSpline3::interpolate : couldn't solve linear system!");
+        if (!LinearSystem.solveTri2(alpha, beta, gamma, data, c)) log.warn("MgcNUBSpline3::interpolate : couldn't solve linear system!");
 
         // double boundary points: c[1]=c[0];c[s]=c[s-1];
         for (int i = s; i > 0; i--)
