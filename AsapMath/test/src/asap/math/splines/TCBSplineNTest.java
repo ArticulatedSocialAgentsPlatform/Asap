@@ -7,8 +7,6 @@ import java.util.List;
 
 import org.junit.Test;
 
-import asap.math.splines.TCBSplineN;
-
 /**
  * Unit tests for the TCBSplineN
  * @author hvanwelbergen
@@ -49,7 +47,7 @@ public class TCBSplineNTest
         }
         assertEquals(segments, spline.GetPosition(segments + 0.2)[0], PRECISION);
     }
-    
+
     @Test
     public void testQuadratic()
     {
@@ -61,25 +59,24 @@ public class TCBSplineNTest
             afBias.add(0d);
             afTime.add((double) i);
             float av[] = new float[1];
-            av[0] = i*i;
+            av[0] = i * i;
             akPoint.add(av);
         }
-        
+
         TCBSplineN spline = new TCBSplineN(segments, afTime, akPoint, afTension, afContinuity, afBias);
-        for (double i = 0; i < segments; i ++)
+        for (double i = 0; i < segments; i++)
         {
-            assertEquals(i*i, spline.GetPosition(i)[0], PRECISION);            
+            assertEquals(i * i, spline.GetPosition(i)[0], PRECISION);
         }
-        
-        assertEquals(segments*segments, spline.GetPosition(segments + 0.2)[0], PRECISION);
-        
-        //some random test values obtained from the C++ version
+
+        assertEquals(segments * segments, spline.GetPosition(segments + 0.2)[0], PRECISION);
+
+        // some random test values obtained from the C++ version
         assertEquals(14.44, spline.GetPosition(3.8)[0], PRECISION);
         assertEquals(7.6, spline.GetFirstDerivative(3.8)[0], PRECISION);
         assertEquals(2, spline.GetSecondDerivative(3.8)[0], PRECISION);
         assertEquals(0, spline.GetThirdDerivative(3.8)[0], PRECISION);
-        
-        
+
         assertEquals(16.819, spline.GetPosition(4.1)[0], PRECISION);
         assertEquals(8.37, spline.GetFirstDerivative(4.1)[0], PRECISION);
         assertEquals(3.4, spline.GetSecondDerivative(4.1)[0], PRECISION);

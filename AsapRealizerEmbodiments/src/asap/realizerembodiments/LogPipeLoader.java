@@ -17,19 +17,21 @@ import asap.realizerport.RealizerPort;
 /**
  * LogPipeLoader has one element as child: <Log> with optional attributes requestlog and feedbacklog
  */
-public class LogPipeLoader implements PipeLoader {
+public class LogPipeLoader implements PipeLoader
+{
 
-	private LogPipe adaptedRealizerPort = null;
+    private LogPipe adaptedRealizerPort = null;
 
-	@Override
-	public void readXML(XMLTokenizer theTokenizer, String id, String vhId,
-			String name, RealizerPort realizerPort, Clock theSchedulingClock) throws XMLScanException, IOException {
-	    XMLStructureAdapter adapter = new XMLStructureAdapter();
-	    HashMap<String, String> attrMap = null;
+    @Override
+    public void readXML(XMLTokenizer theTokenizer, String id, String vhId, String name, RealizerPort realizerPort, Clock theSchedulingClock)
+            throws XMLScanException, IOException
+    {
+        XMLStructureAdapter adapter = new XMLStructureAdapter();
+        HashMap<String, String> attrMap = null;
 
-	    if (!theTokenizer.atSTag("Log")) throw new XMLScanException("LogPipeLoader can have only one <Log> child element");
-        
-	    attrMap = theTokenizer.getAttributes();
+        if (!theTokenizer.atSTag("Log")) throw new XMLScanException("LogPipeLoader can have only one <Log> child element");
+
+        attrMap = theTokenizer.getAttributes();
         String requestLog = adapter.getOptionalAttribute("requestlog", attrMap);
         String feedbackLog = adapter.getOptionalAttribute("feedbacklog", attrMap);
         Logger rl = null;
@@ -42,21 +44,22 @@ public class LogPipeLoader implements PipeLoader {
         {
             fl = LoggerFactory.getLogger(feedbackLog);
         }
-        adaptedRealizerPort  = new LogPipe(rl, fl, realizerPort, theSchedulingClock);
+        adaptedRealizerPort = new LogPipe(rl, fl, realizerPort, theSchedulingClock);
         theTokenizer.takeSTag("Log");
-        theTokenizer.takeETag("Log");		
-		if (!theTokenizer.atETag("PipeLoader")) throw new XMLScanException("LogPipeLoader can have only one <Log> child element");
-	}
+        theTokenizer.takeETag("Log");
+        if (!theTokenizer.atETag("PipeLoader")) throw new XMLScanException("LogPipeLoader can have only one <Log> child element");
+    }
 
-	@Override
-	public RealizerPort getAdaptedRealizerPort() {
-		return adaptedRealizerPort;
-	}
+    @Override
+    public RealizerPort getAdaptedRealizerPort()
+    {
+        return adaptedRealizerPort;
+    }
 
     @Override
     public void shutdown()
     {
-                
+
     }
 
 }

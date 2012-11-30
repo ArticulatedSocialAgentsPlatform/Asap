@@ -54,13 +54,13 @@ public class JLabelTextEmbodiment implements TextEmbodiment, EmbodimentLoader
 
     /** No loading necessary, actually! Empty content expected. No required embodiments */
     @Override
-    public void readXML(XMLTokenizer tokenizer, String loaderId, String vhId, String vhName, Environment[] environments, Loader ... requiredLoaders) throws IOException
+    public void readXML(XMLTokenizer tokenizer, String loaderId, String vhId, String vhName, Environment[] environments,
+            Loader... requiredLoaders) throws IOException
     {
         setId(loaderId);
         for (Loader e : requiredLoaders)
         {
-            if (e instanceof EmbodimentLoader && ((EmbodimentLoader) e).getEmbodiment() instanceof 
-                    JComponentEmbodiment) jce = (JComponentEmbodiment) ((EmbodimentLoader) e)
+            if (e instanceof EmbodimentLoader && ((EmbodimentLoader) e).getEmbodiment() instanceof JComponentEmbodiment) jce = (JComponentEmbodiment) ((EmbodimentLoader) e)
                     .getEmbodiment();
         }
         if (jce == null)

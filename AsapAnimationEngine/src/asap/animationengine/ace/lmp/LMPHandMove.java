@@ -69,6 +69,9 @@ public class LMPHandMove extends LMP
 
         @Override
         @Deprecated
+        /**
+         * @deprecated
+         */
         public String getReplacementGroup()
         {
             return null;

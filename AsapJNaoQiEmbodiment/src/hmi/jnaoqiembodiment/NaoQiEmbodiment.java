@@ -24,51 +24,51 @@ public class NaoQiEmbodiment implements Embodiment
     private ALLedsProxy ledsProxy;
     private ALBehaviorManagerProxy behaviorProxy;
     private String id = "";
-    
+
     static
     {
-      System.loadLibrary("JNaoQi");
+        System.loadLibrary("JNaoQi");
     }
-    
+
     public NaoQiEmbodiment(String id, String ip, int port)
     {
         this.id = id;
         this.ip = ip;
         this.port = port;
     }
-    
+
     public NaoQiEmbodiment(String ip, int port)
     {
-        this("",ip,port);
+        this("", ip, port);
     }
-    
+
     public DCMProxy getDCMProxy()
     {
-        if(dcmProxy==null)
+        if (dcmProxy == null)
         {
-            dcmProxy = new DCMProxy(ip,port);
-        }        
+            dcmProxy = new DCMProxy(ip, port);
+        }
         return dcmProxy;
     }
 
     public ALLedsProxy getLedsProxy()
     {
-        if(ledsProxy==null)
+        if (ledsProxy == null)
         {
-            ledsProxy = new ALLedsProxy(ip,port);
+            ledsProxy = new ALLedsProxy(ip, port);
         }
         return ledsProxy;
     }
-    
+
     public ALBehaviorManagerProxy getBehaviorManagerProxy()
     {
-        if(behaviorProxy==null)
+        if (behaviorProxy == null)
         {
-        	behaviorProxy = new ALBehaviorManagerProxy(ip,port);
+            behaviorProxy = new ALBehaviorManagerProxy(ip, port);
         }
         return behaviorProxy;
     }
-    
+
     @Override
     public String getId()
     {

@@ -12,13 +12,13 @@ import asap.livemocapengine.inputs.KeyboardInput;
 /**
  * Loads the KeyboardInput
  * @author Herwin
- *
+ * 
  */
 public class KeyboardInputLoader implements SensorLoader
 {
-    private String id="";
+    private String id = "";
     private KeyboardInput sensor;
-    
+
     @Override
     public String getId()
     {
@@ -26,30 +26,17 @@ public class KeyboardInputLoader implements SensorLoader
     }
 
     @Override
-    public void readXML(XMLTokenizer tokenizer, String loaderId, String vhId, String vhName, Environment[] environments, Loader ... requiredLoaders) throws IOException
+    public void readXML(XMLTokenizer tokenizer, String loaderId, String vhId, String vhName, Environment[] environments,
+            Loader... requiredLoaders) throws IOException
     {
-        this.id = loaderId;
-        /*
-        JFrameEmbodiment jframeEmbodiment = null;
-        for(Loader l:requiredLoaders)
-        {
-            if(l instanceof JFrameEmbodiment)
-            {
-                jframeEmbodiment = (JFrameEmbodiment)l;
-            }
-        }
-        if(jframeEmbodiment==null)
-        {
-            throw new XMLScanException("KeyboardEulerInput requires a JFrameEmbodiment");
-        }     
-        */   
-        sensor = new KeyboardInput(id);        
+        this.id = loaderId;        
+        sensor = new KeyboardInput(id);
     }
 
     @Override
     public void unload()
     {
-                
+
     }
 
     @Override

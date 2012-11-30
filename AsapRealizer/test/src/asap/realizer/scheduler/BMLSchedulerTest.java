@@ -78,11 +78,11 @@ public class BMLSchedulerTest
         {
             return time;
         }
-		
-		@Override
-		public void addClockListener(ClockListener l)
-		{
-		}
+
+        @Override
+        public void addClockListener(ClockListener l)
+        {
+        }
     }
 
     private static class StubEngine implements Engine
@@ -294,7 +294,7 @@ public class BMLSchedulerTest
 
     private BMLParser parser;
 
-    private ListBMLFeedbackListener listFeedbackListener;    
+    private ListBMLFeedbackListener listFeedbackListener;
 
     private List<BMLSyncPointProgressFeedback> feedBackList;
 
@@ -371,19 +371,16 @@ public class BMLSchedulerTest
                 }
             }
         }
-        scheduler = new BMLScheduler("avatar1", parser, fbManager, stubClock, new BMLTSchedulingHandler(
-                new StubSchedulingStrategy()), bbManager, pegBoard);
+        scheduler = new BMLScheduler("avatar1", parser, fbManager, stubClock, new BMLTSchedulingHandler(new StubSchedulingStrategy()),
+                bbManager, pegBoard);
 
         scheduler.addEngine(SpeechBehaviour.class, stubEngine);
 
         feedBackList = new ArrayList<BMLSyncPointProgressFeedback>();
         blockProgressFeedbackList = new ArrayList<BMLBlockProgressFeedback>();
-        listFeedbackListener = new ListBMLFeedbackListener.Builder()
-                                    .predictionList(predictionFeedback)
-                                    .feedBackList(feedBackList)
-                                    .blockFeedbackList(blockProgressFeedbackList)
-                                    .build();
-        scheduler.addFeedbackListener(listFeedbackListener);        
+        listFeedbackListener = new ListBMLFeedbackListener.Builder().predictionList(predictionFeedback).feedBackList(feedBackList)
+                .blockFeedbackList(blockProgressFeedbackList).build();
+        scheduler.addFeedbackListener(listFeedbackListener);
     }
 
     private void parseBML(String str)

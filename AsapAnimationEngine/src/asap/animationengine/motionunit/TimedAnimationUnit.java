@@ -18,10 +18,10 @@ import asap.realizer.scheduler.TimePegAndConstraint;
  */
 public interface TimedAnimationUnit extends TimedPlanUnit
 {
-    public Set<String> getKinematicJoints();
-    public Set<String> getPhysicalJoints();
-    public void updateTiming(double time) throws TMUPlayException;    
-    public void setSubUnit(boolean subUnit);
+    Set<String> getKinematicJoints();
+    Set<String> getPhysicalJoints();
+    void updateTiming(double time) throws TMUPlayException;    
+    void setSubUnit(boolean subUnit);
     
-    public void resolveSynchs(BMLBlockPeg bbPeg, Behaviour b, List<TimePegAndConstraint> sac)throws BehaviourPlanningException;    
+    void resolveSynchs(BMLBlockPeg bbPeg, Behaviour b, List<TimePegAndConstraint> sac)throws BehaviourPlanningException;    
 }

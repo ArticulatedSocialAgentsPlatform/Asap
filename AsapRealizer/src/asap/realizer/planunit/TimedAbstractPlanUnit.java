@@ -1,15 +1,12 @@
 package asap.realizer.planunit;
 
-import saiba.bml.BMLGestureSync;
-import saiba.bml.feedback.BMLSyncPointProgressFeedback;
-
-import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.atomic.AtomicReference;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import saiba.bml.feedback.BMLSyncPointProgressFeedback;
 import asap.realizer.SyncPointNotFoundException;
 import asap.realizer.feedback.FeedbackManager;
 import asap.realizer.pegboard.BMLBlockPeg;

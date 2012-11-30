@@ -155,9 +155,10 @@ public class PersistentFixtureAsapRealizerTest extends AbstractASAPRealizerTest
         realizerHandler.setRealizerTestPort(new AsapRealizerPort(realizerPort));
 
         anticipator = new DummyAnticipator(1000000d, 2000000d);
-        for (Loader l: vHuman.getLoaders().values())
+        for (Loader l : vHuman.getLoaders().values())
         {
-        	if (l instanceof AsapRealizerEmbodiment)((AsapRealizerEmbodiment)l).getBmlScheduler().addAnticipator("dummyanticipator", anticipator);
+            if (l instanceof AsapRealizerEmbodiment) ((AsapRealizerEmbodiment) l).getBmlScheduler().addAnticipator("dummyanticipator",
+                    anticipator);
         }
         realizerHandler.performBML("<bml xmlns=\"http://www.bml-initiative.org/bml/bml-1.0\" "
                 + "id=\"replacesetup\" composition=\"REPLACE\"/>");

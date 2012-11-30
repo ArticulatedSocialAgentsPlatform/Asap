@@ -11,16 +11,15 @@ import hmi.xml.XMLTokenizer;
 
 import java.io.IOException;
 
-
 /**
- * Constructs a NaoGazeEmbodiment, requires a NaoQiEmbodimentLoader 
+ * Constructs a NaoGazeEmbodiment, requires a NaoQiEmbodimentLoader
  * @author welberge
  */
 public class NaoGazeEmbodimentLoader implements EmbodimentLoader
 {
     private String id = "";
     private NaoGazeEmbodiment embodiment;
-    
+
     @Override
     public String getId()
     {
@@ -28,29 +27,30 @@ public class NaoGazeEmbodimentLoader implements EmbodimentLoader
     }
 
     @Override
-    public void readXML(XMLTokenizer tokenizer, String loaderId, String vhId, String vhName, Environment[] environments, Loader ... requiredLoaders) throws IOException
+    public void readXML(XMLTokenizer tokenizer, String loaderId, String vhId, String vhName, Environment[] environments,
+            Loader... requiredLoaders) throws IOException
     {
         this.id = loaderId;
-        
+
         NaoQiEmbodiment nqEmbodiment = null;
-        for (Loader l:requiredLoaders)
+        for (Loader l : requiredLoaders)
         {
             if (l instanceof NaoQiEmbodimentLoader)
             {
                 nqEmbodiment = ((NaoQiEmbodimentLoader) l).getEmbodiment();
             }
         }
-        if(nqEmbodiment == null)
+        if (nqEmbodiment == null)
         {
             throw new XMLScanException("NaoHeadEmbodimentLoader requires an NaoQiEmbodimentLoader");
         }
-        embodiment = new NaoGazeEmbodiment(id, nqEmbodiment.getDCMProxy());        
+        embodiment = new NaoGazeEmbodiment(id, nqEmbodiment.getDCMProxy());
     }
 
     @Override
     public void unload()
     {
-        embodiment.shutdown();        
+        embodiment.shutdown();
     }
 
     @Override

@@ -55,7 +55,7 @@ import asap.realizerport.RealizerPort;
 /**
  * Loads and unloads an AsapVirtualHuman and provides access to its elements (realizer, embodiments, engines, etc)
  */
-public class AsapVirtualHuman 
+public class AsapVirtualHuman
 {
     private Logger logger = LoggerFactory.getLogger(AsapVirtualHuman.class.getName());
 
@@ -115,7 +115,7 @@ public class AsapVirtualHuman
     {
         return are.getPegBoard();
     }
-    
+
     public void load(String resources, String filename, String name, Environment[] environments, Clock sc) throws IOException
     {
         load(XMLTokenizer.forResource(resources, filename), name, environments, sc);
@@ -142,28 +142,44 @@ public class AsapVirtualHuman
             theTokenizer.takeSTag("AsapVirtualHuman");
 
             Loader loader = null;
-            
+
             loader = new EmbodimentLoader()
             {
-            	public String getId(){return "schedulingclockembodimentloader";}
-            	public Embodiment getEmbodiment()
-            	{
-            		return new SchedulingClockEmbodiment()
-            		{
-            			public String getId(){return "schedulingclockembodiment";}
-                        public Clock getSchedulingClock() {
-                    		return theSchedulingClock;
-                    	}
-            		};
-            	}
-				public void readXML(XMLTokenizer tokenizer, String loaderId, String vhId, String vhName, Environment[] environments, Loader... requiredLoaders) throws IOException {}
-				public void unload() {}
+                public String getId()
+                {
+                    return "schedulingclockembodimentloader";
+                }
+
+                public Embodiment getEmbodiment()
+                {
+                    return new SchedulingClockEmbodiment()
+                    {
+                        public String getId()
+                        {
+                            return "schedulingclockembodiment";
+                        }
+
+                        public Clock getSchedulingClock()
+                        {
+                            return theSchedulingClock;
+                        }
+                    };
+                }
+
+                public void readXML(XMLTokenizer tokenizer, String loaderId, String vhId, String vhName, Environment[] environments,
+                        Loader... requiredLoaders) throws IOException
+                {
+                }
+
+                public void unload()
+                {
+                }
             };
             loaders.put("schedulingclockembodimentloader", loader);
             Loader sel = loader;
             // ================= REALIZER (ALWAYS FIRST) =====================
 
-        	//is at loader? type must be realizerloader!
+            // is at loader? type must be realizerloader!
             if (theTokenizer.atSTag("Loader"))
             {
                 attrMap = theTokenizer.getAttributes();
@@ -193,23 +209,23 @@ public class AsapVirtualHuman
 
                 if (!(loader instanceof AsapRealizerEmbodiment))
                 {
-                	logger.error("AsapVirtualHuman: The first loader *must* be a AsapRealizerEmbodiment");
-                	throw new RuntimeException("AsapVirtualHuman: The first loader *must* be a AsapRealizerEmbodiment");
+                    logger.error("AsapVirtualHuman: The first loader *must* be a AsapRealizerEmbodiment");
+                    throw new RuntimeException("AsapVirtualHuman: The first loader *must* be a AsapRealizerEmbodiment");
                 }
-                
+
                 if (!requiredLoaderIds.equals(""))
                 {
-                	logger.error("AsapVirtualHuman: no required loaders allowed for AsapRealizerEmbodiment");
-                	throw new RuntimeException("AsapVirtualHuman: no required loaders allowed for AsapRealizerEmbodiment");
+                    logger.error("AsapVirtualHuman: no required loaders allowed for AsapRealizerEmbodiment");
+                    throw new RuntimeException("AsapVirtualHuman: no required loaders allowed for AsapRealizerEmbodiment");
                 }
-                are = (AsapRealizerEmbodiment)loader;
+                are = (AsapRealizerEmbodiment) loader;
                 theTokenizer.takeSTag("Loader");
                 logger.debug("Parsing Loader: {}", id);
-                loader.readXML(theTokenizer, id, vhId, name, allEnvironments, new Loader[]{sel});
+                loader.readXML(theTokenizer, id, vhId, name, allEnvironments, new Loader[] { sel });
                 theTokenizer.takeETag("Loader");
                 loaders.put(id, loader);
             }
-	
+
             // ================= LOADERS (embodiment&engine) =====================
             while (theTokenizer.atSTag("Loader"))
             {
@@ -227,7 +243,7 @@ public class AsapVirtualHuman
                         requiredLoaders.add(loaders.get(reqId));
                     }
                 }
-                //always add "are" -- just in case someone forgets
+                // always add "are" -- just in case someone forgets
                 requiredLoaders.add(are);
                 try
                 {
@@ -256,7 +272,7 @@ public class AsapVirtualHuman
                 loaders.put(id, loader);
                 if (loader instanceof EngineLoader)
                 {
-                    logger.info("Adding engine {}",loader.getId());
+                    logger.info("Adding engine {}", loader.getId());
                     engines.add(((EngineLoader) loader).getEngine());
                 }
             }
@@ -273,25 +289,25 @@ public class AsapVirtualHuman
             // ================= DEFAULT ENGINES =====================
             String id = "waitengine";
             loader = new WaitEngineLoader();
-            loader.readXML(null, id, vhId, name, allEnvironments, new Loader[]{are});
+            loader.readXML(null, id, vhId, name, allEnvironments, new Loader[] { are });
             loaders.put(id, loader);
             engines.add(((EngineLoader) loader).getEngine());
 
             id = "parametervaluechangeengine";
             loader = new ParameterValueChangeEngineLoader();
-            loader.readXML(null, id, vhId, name, allEnvironments, new Loader[]{are});
+            loader.readXML(null, id, vhId, name, allEnvironments, new Loader[] { are });
             loaders.put(id, loader);
             engines.add(((EngineLoader) loader).getEngine());
 
             id = "activateengine";
             loader = new ActivateEngineLoader();
-            loader.readXML(null, id, vhId, name, allEnvironments, new Loader[]{are});
+            loader.readXML(null, id, vhId, name, allEnvironments, new Loader[] { are });
             loaders.put(id, loader);
             engines.add(((EngineLoader) loader).getEngine());
 
             id = "interruptengine";
             loader = new InterruptEngineLoader();
-            loader.readXML(null, id, vhId, name, allEnvironments, new Loader[]{are});
+            loader.readXML(null, id, vhId, name, allEnvironments, new Loader[] { are });
             loaders.put(id, loader);
             engines.add(((EngineLoader) loader).getEngine());
 
@@ -305,8 +321,6 @@ public class AsapVirtualHuman
         }
 
     }
-
-
 
     private void loadBMLRoutingSection() throws IOException
     {
@@ -365,6 +379,6 @@ public class AsapVirtualHuman
 
     public RealizerPort getRealizerPort()
     {
-    	return are.getRealizerPort();
+        return are.getRealizerPort();
     }
 }

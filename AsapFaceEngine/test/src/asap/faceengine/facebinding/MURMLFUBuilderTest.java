@@ -43,9 +43,10 @@ public class MURMLFUBuilderTest
     @Test
     public void testTwoFrames() throws MUPlayException
     {
-        String murmlString = "<murml-description xmlns=\"http://www.techfak.uni-bielefeld.de/ags/soa/murml\">" + "<dynamic><keyframing><phase>"
-                + "<frame ftime=\"0\"><posture>Humanoid " + "(dB_Smile 3 70 0 0)</posture></frame>"
-                + "<frame ftime=\"1\"><posture>Humanoid " + "(dB_Smile 3 80 0 0)</posture></frame>" + "</phase></keyframing></dynamic></murml-description>";
+        String murmlString = "<murml-description xmlns=\"http://www.techfak.uni-bielefeld.de/ags/soa/murml\">"
+                + "<dynamic><keyframing><phase>" + "<frame ftime=\"0\"><posture>Humanoid " + "(dB_Smile 3 70 0 0)</posture></frame>"
+                + "<frame ftime=\"1\"><posture>Humanoid " + "(dB_Smile 3 80 0 0)</posture></frame>"
+                + "</phase></keyframing></dynamic></murml-description>";
         FaceUnit fu = MURMLFUBuilder.setup(murmlString);
         assertThat(fu, instanceOf(KeyframeMorphFU.class));
         KeyframeMorphFU kfu = (KeyframeMorphFU) fu;
@@ -78,10 +79,10 @@ public class MURMLFUBuilderTest
     @Test
     public void testUnification() throws MUPlayException
     {
-        String murmlString = "<murml-description xmlns=\"http://www.techfak.uni-bielefeld.de/ags/soa/murml\">" + "<dynamic><keyframing><phase>"
-                + "<frame ftime=\"1\"><posture>Humanoid " + "(dB_Smile 3 70 0 0)(dB_Dummy 1 30)</posture></frame>"
-                + "<frame ftime=\"4\"><posture>Humanoid " + "(dB_Smile 3 80 0 0)(dB_Dummy 1 20)</posture></frame>"
-                + "</phase></keyframing></dynamic></murml-description>";
+        String murmlString = "<murml-description xmlns=\"http://www.techfak.uni-bielefeld.de/ags/soa/murml\">"
+                + "<dynamic><keyframing><phase>" + "<frame ftime=\"1\"><posture>Humanoid "
+                + "(dB_Smile 3 70 0 0)(dB_Dummy 1 30)</posture></frame>" + "<frame ftime=\"4\"><posture>Humanoid "
+                + "(dB_Smile 3 80 0 0)(dB_Dummy 1 20)</posture></frame>" + "</phase></keyframing></dynamic></murml-description>";
         FaceUnit fu = MURMLFUBuilder.setup(murmlString);
         assertThat(fu, instanceOf(KeyframeMorphFU.class));
         KeyframeMorphFU kfu = (KeyframeMorphFU) fu;
@@ -96,10 +97,10 @@ public class MURMLFUBuilderTest
     @Test
     public void testFlexibleStartAtStart() throws MUPlayException
     {
-        String murmlString = "<murml-description xmlns=\"http://www.techfak.uni-bielefeld.de/ags/soa/murml\">" + "<dynamic><keyframing><phase>"
-                + "<frame ftime=\"1\"><posture>Humanoid " + "(dB_Smile 3 70 0 0)(dB_Dummy 1 30)</posture></frame>"
-                + "<frame ftime=\"4\"><posture>Humanoid " + "(dB_Smile 3 80 0 0)(dB_Dummy 1 20)</posture></frame>"
-                + "</phase></keyframing></dynamic></murml-description>";
+        String murmlString = "<murml-description xmlns=\"http://www.techfak.uni-bielefeld.de/ags/soa/murml\">"
+                + "<dynamic><keyframing><phase>" + "<frame ftime=\"1\"><posture>Humanoid "
+                + "(dB_Smile 3 70 0 0)(dB_Dummy 1 30)</posture></frame>" + "<frame ftime=\"4\"><posture>Humanoid "
+                + "(dB_Smile 3 80 0 0)(dB_Dummy 1 20)</posture></frame>" + "</phase></keyframing></dynamic></murml-description>";
         FaceUnit fu = MURMLFUBuilder.setup(murmlString);
         assertThat(fu, instanceOf(KeyframeMorphFU.class));
         KeyframeMorphFU kfu = (KeyframeMorphFU) fu;
@@ -115,10 +116,10 @@ public class MURMLFUBuilderTest
     @Test
     public void testFlexibleStartAtEnd() throws MUPlayException
     {
-        String murmlString = "<murml-description xmlns=\"http://www.techfak.uni-bielefeld.de/ags/soa/murml\">" + "<dynamic><keyframing><phase>"
-                + "<frame ftime=\"1\"><posture>Humanoid " + "(dB_Smile 3 70 0 0)(dB_Dummy 1 30)</posture></frame>"
-                + "<frame ftime=\"4\"><posture>Humanoid " + "(dB_Smile 3 80 0 0)(dB_Dummy 1 20)</posture></frame>"
-                + "</phase></keyframing></dynamic></murml-description>";
+        String murmlString = "<murml-description xmlns=\"http://www.techfak.uni-bielefeld.de/ags/soa/murml\">"
+                + "<dynamic><keyframing><phase>" + "<frame ftime=\"1\"><posture>Humanoid "
+                + "(dB_Smile 3 70 0 0)(dB_Dummy 1 30)</posture></frame>" + "<frame ftime=\"4\"><posture>Humanoid "
+                + "(dB_Smile 3 80 0 0)(dB_Dummy 1 20)</posture></frame>" + "</phase></keyframing></dynamic></murml-description>";
         FaceUnit fu = MURMLFUBuilder.setup(murmlString);
         assertThat(fu, instanceOf(KeyframeMorphFU.class));
         KeyframeMorphFU kfu = (KeyframeMorphFU) fu;

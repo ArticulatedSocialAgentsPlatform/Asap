@@ -7,69 +7,81 @@ import java.io.InputStreamReader;
 import java.net.ServerSocket;
 import java.net.Socket;
 
-public class NaoServer implements Runnable {
+public class NaoServer implements Runnable
+{
 
-	public static final int PORT = 8881;
+    public static final int PORT = 8881;
 
-	private Socket clientSocket;
+    private Socket clientSocket;
 
-	private DataOutputStream outToClient;
-	private BufferedReader inFromClient;
-	
-	/**
-	 * Start the server in a new thread
-	 */
+    private DataOutputStream outToClient;
+    private BufferedReader inFromClient;
 
-	public NaoServer() {
-		(new Thread(this)).start();
-	}
-	
-	/**
-	 * Runs the server so it accepts incoming clients and connects to the Nao
-	 */
+    /**
+     * Start the server in a new thread
+     */
 
-	@Override
-	public void run() {
-		try {
-			ServerSocket ssock = new ServerSocket(PORT);
-			clientSocket = ssock.accept();
-			while (true) {
-				inFromClient = new BufferedReader(new InputStreamReader(
-						clientSocket.getInputStream()));
-				outToClient = new DataOutputStream(
-						clientSocket.getOutputStream());
+    public NaoServer()
+    {
+        (new Thread(this)).start();
+    }
 
-				while (true) {
-					String clientSentence = inFromClient.readLine();
+    /**
+     * Runs the server so it accepts incoming clients and connects to the Nao
+     */
 
-					// berichten van de NAO
-					System.out.println(clientSentence);
+    @Override
+    public void run()
+    {
+        try
+        {
+            ServerSocket ssock = new ServerSocket(PORT);
+            clientSocket = ssock.accept();
+            while (true)
+            {
+                inFromClient = new BufferedReader(new InputStreamReader(clientSocket.getInputStream()));
+                outToClient = new DataOutputStream(clientSocket.getOutputStream());
 
-					if (clientSentence.equals("NAO_SAY_DONE")) {
-						System.out.println("Activate voice recognizer");
-					}
+                while (true)
+                {
+                    String clientSentence = inFromClient.readLine();
 
-				}
-			}
-		} catch (IOException e) {
-		}
-	}
+                    // berichten van de NAO
+                    System.out.println(clientSentence);
 
-	/**
-	 * Sends a message to the Nao
-	 * @param message the message to be send
-	 */
-	 
-	  public void sendMessage(String message) {
+                    if (clientSentence.equals("NAO_SAY_DONE"))
+                    {
+                        System.out.println("Activate voice recognizer");
+                    }
 
-		try {
-			if (outToClient != null) {
-				outToClient.writeBytes(message);
-				System.out.println("Server: " + message);
-			}
-		} catch (IOException e) {
-			e.printStackTrace();
-		}
+                }
+            }
+        }
+        catch (IOException e)
+        {
+        }
+    }
 
-	}
+    /**
+     * Sends a message to the Nao
+     * @param message the message to be send
+     */
+
+    public void sendMessage(String message)
+    {
+
+        try
+        {
+            if (outToClient != null)
+            {
+                outToClient.writeBytes(message);
+                System.out.println("Server: " + message);
+            }
+        }
+        catch (IOException e)
+        {
+            e.printStackTrace();
+        }
+
+    }
 }

@@ -1,12 +1,11 @@
 package asap.math.splines;
 
-import hmi.math.Vec3f;
 import hmi.math.Vecf;
 import hmi.util.CollectionUtils;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
-import java.util.Arrays; 
 
 import lombok.Data;
 

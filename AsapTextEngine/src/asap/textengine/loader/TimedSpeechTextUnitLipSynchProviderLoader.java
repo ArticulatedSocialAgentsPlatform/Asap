@@ -33,35 +33,42 @@ import asap.textengine.lipsync.TimedSpeechTextUnitLipSynchProvider;
 
 /**
  * Loader for a TimedTextSpeechUnitLipSynchProvider.
- *
+ * 
  * @author Jordi Hendrix
  */
-public class TimedSpeechTextUnitLipSynchProviderLoader implements LipSynchProviderLoader {
+public class TimedSpeechTextUnitLipSynchProviderLoader implements LipSynchProviderLoader
+{
 
     private String id;
     private LipSynchProvider lipSyncProvider;
 
-    public void setId(String newId) {
+    public void setId(String newId)
+    {
         id = newId;
     }
 
     @Override
-    public String getId() {
+    public String getId()
+    {
         return id;
     }
 
     @Override
-    public void readXML(XMLTokenizer tokenizer, String loaderId, String vhId, String vhName, Environment[] environments, Loader ... requiredLoaders) throws IOException
+    public void readXML(XMLTokenizer tokenizer, String loaderId, String vhId, String vhName, Environment[] environments,
+            Loader... requiredLoaders) throws IOException
     {
         TextEngineLoader tel = null;
 
-        for (Loader e : requiredLoaders) {
-            if (e instanceof TextEngineLoader) {
+        for (Loader e : requiredLoaders)
+        {
+            if (e instanceof TextEngineLoader)
+            {
                 tel = (TextEngineLoader) e;
             }
         }
 
-        if (tel == null) {
+        if (tel == null)
+        {
             throw new RuntimeException("TimedTextSpeechUnitLipSynchProviderLoader requires an Embodiment of type TextSpeechEngineLoader");
         }
 
@@ -69,11 +76,13 @@ public class TimedSpeechTextUnitLipSynchProviderLoader implements LipSynchProvid
     }
 
     @Override
-    public void unload() {
+    public void unload()
+    {
     }
 
     @Override
-    public LipSynchProvider getLipSyncProvider() {
+    public LipSynchProvider getLipSyncProvider()
+    {
         return lipSyncProvider;
     }
 }

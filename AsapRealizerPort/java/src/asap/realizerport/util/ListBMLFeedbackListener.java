@@ -40,7 +40,7 @@ public class ListBMLFeedbackListener implements BMLFeedbackListener
         this.blockFeedbackList = blockFeedbackList;
     }
 
-    public static class Builder
+    public final static class Builder
     {
         private List<BMLPredictionFeedback> predictionList = new ArrayList<>();
         private List<BMLWarningFeedback> warningList = new ArrayList<>();

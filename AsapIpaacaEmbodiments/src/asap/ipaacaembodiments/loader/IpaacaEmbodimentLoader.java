@@ -12,7 +12,7 @@ import asap.ipaacaembodiments.IpaacaEmbodiment;
 /**
  * Loads an IpaacaEmbodiment
  * @author hvanwelbergen
- *
+ * 
  */
 public class IpaacaEmbodimentLoader implements EmbodimentLoader
 {
@@ -26,7 +26,8 @@ public class IpaacaEmbodimentLoader implements EmbodimentLoader
     }
 
     @Override
-    public void readXML(XMLTokenizer tokenizer, String loaderId, String vhId, String vhName, Environment[] environments, Loader ... requiredLoaders) throws IOException
+    public void readXML(XMLTokenizer tokenizer, String loaderId, String vhId, String vhName, Environment[] environments,
+            Loader... requiredLoaders) throws IOException
     {
         this.id = loaderId;
         embodiment = new IpaacaEmbodiment();

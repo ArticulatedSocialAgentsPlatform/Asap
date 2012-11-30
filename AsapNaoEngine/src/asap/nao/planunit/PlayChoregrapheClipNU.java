@@ -11,167 +11,168 @@ import asap.realizer.planunit.TimedPlanUnitPlayException;
 
 import java.util.List;
 
-public class PlayChoregrapheClipNU implements NaoUnit{
+public class PlayChoregrapheClipNU implements NaoUnit
+{
 
-	  private final KeyPositionManager keyPositionManager = new KeyPositionManagerImpl();
+    private final KeyPositionManager keyPositionManager = new KeyPositionManagerImpl();
 
-	    private Nao nao;
-	    
-	    private String filename;
-	    
-	    public PlayChoregrapheClipNU()
-	    {
-	        KeyPosition start = new KeyPosition("start", 0d, 1d);
-	        KeyPosition end = new KeyPosition("end", 1d, 1d);
-	        addKeyPosition(start);
-	        addKeyPosition(end);
-	    }
+    private Nao nao;
 
-	    public void setNao(Nao nao)
-	    {
-	        this.nao = nao;
-	    }
+    private String filename;
 
-	    @Override
-	    public void setFloatParameterValue(String name, float value) throws ParameterException
-	    {
-	        
-	    }
+    public PlayChoregrapheClipNU()
+    {
+        KeyPosition start = new KeyPosition("start", 0d, 1d);
+        KeyPosition end = new KeyPosition("end", 1d, 1d);
+        addKeyPosition(start);
+        addKeyPosition(end);
+    }
 
-	    @SuppressWarnings("static-access")
-		@Override
-	    public void setParameterValue(String name, String value) throws ParameterException
-	    {
-	        if (name.equals("filename"))
-	        {
-	        	filename = filename.valueOf(value);
-	        }
-	    }
+    public void setNao(Nao nao)
+    {
+        this.nao = nao;
+    }
 
-	    @Override
-	    public String getParameterValue(String name) throws ParameterException
-	    {
-	        if (name.equals("filename"))
-	        {
-	            return filename.toString();
-	        }
-	        return "";
-	    }
+    @Override
+    public void setFloatParameterValue(String name, float value) throws ParameterException
+    {
 
-	    @Override
-	    public float getFloatParameterValue(String name) throws ParameterException
-	    {
-	    	return 0;
-	    }
+    }
 
-	    @Override
-	    public boolean hasValidParameters()
-	    {
-	        if (filename == null) return false;
-	        return true;
-	    }
+    @SuppressWarnings("static-access")
+    @Override
+    public void setParameterValue(String name, String value) throws ParameterException
+    {
+        if (name.equals("filename"))
+        {
+            filename = filename.valueOf(value);
+        }
+    }
 
-	    /** 
-	     * Start the unit. this will go automatic since there is nothing required.
-	     */
-	    public void startUnit(double time) throws TimedPlanUnitPlayException
-	    {
-	      
-	    }
+    @Override
+    public String getParameterValue(String name) throws ParameterException
+    {
+        if (name.equals("filename"))
+        {
+            return filename.toString();
+        }
+        return "";
+    }
 
-	    /**
-	     * Test play to see if its working
-	     */
-	    public void play(double t) throws NUPlayException
-	    {
-			nao.playChoregrapheClip(filename);
-	    }
-	    
-	    public void cleanup()
-	    {
-	      try
-	      {
-	        play(1d);
-	      }
-	      catch(NUPlayException ex)
-	      {
-	        //logger.warn("Error cleaning up NaoUnit",ex);
-	      }
-	    }
-	    
-	    /**
-	     * Creates the TimedNaoUnit corresponding to this face unit
-	     * 
-	     * @param bmlId
-	     *            BML block id
-	     * @param id
-	     *            behaviour id
-	     * 
-	     * @return the TNU
-	     */
-	    @Override
-	    public TimedNaoUnit createTNU(FeedbackManager bfm, BMLBlockPeg bbPeg, String bmlId, String id)
-	    {
-	        return new TimedNaoUnit(bfm, bbPeg, bmlId, id, this);
-	    }
+    @Override
+    public float getFloatParameterValue(String name) throws ParameterException
+    {
+        return 0;
+    }
 
-	    @Override
-	    public String getReplacementGroup()
-	    {
-	      return "getReplacementGroup";
-	    }
+    @Override
+    public boolean hasValidParameters()
+    {
+        if (filename == null) return false;
+        return true;
+    }
 
-	    /**
-	     * @return Prefered duration (in seconds) of this face unit, 0 means not determined/infinite
-	     */
-	    public double getPreferedDuration()
-	    {
-	        return 1d;
-	    }
+    /**
+     * Start the unit. this will go automatic since there is nothing required.
+     */
+    public void startUnit(double time) throws TimedPlanUnitPlayException
+    {
 
-	    /**
-	     * Create a copy of this nao unit and link it to the Nao
-	     */
-	    public NaoUnit copy(Nao nao)
-	    {
-	        PlayChoregrapheClipNU result = new PlayChoregrapheClipNU();
-	        result.setNao(nao);
-	        result.filename = filename;
-	        for (KeyPosition keypos : getKeyPositions())
-	        {
-	            result.addKeyPosition(keypos.deepCopy());
-	        }
-	        return result;
-	    }
+    }
 
-	    @Override
-	    public void addKeyPosition(KeyPosition kp)
-	    {
-	        keyPositionManager.addKeyPosition(kp);
-	    }
+    /**
+     * Test play to see if its working
+     */
+    public void play(double t) throws NUPlayException
+    {
+        nao.playChoregrapheClip(filename);
+    }
 
-	    @Override
-	    public KeyPosition getKeyPosition(String name)
-	    {
-	        return keyPositionManager.getKeyPosition(name);
-	    }
+    public void cleanup()
+    {
+        try
+        {
+            play(1d);
+        }
+        catch (NUPlayException ex)
+        {
+            // logger.warn("Error cleaning up NaoUnit",ex);
+        }
+    }
 
-	    @Override
-	    public List<KeyPosition> getKeyPositions()
-	    {
-	        return keyPositionManager.getKeyPositions();
-	    }
+    /**
+     * Creates the TimedNaoUnit corresponding to this face unit
+     * 
+     * @param bmlId
+     *            BML block id
+     * @param id
+     *            behaviour id
+     * 
+     * @return the TNU
+     */
+    @Override
+    public TimedNaoUnit createTNU(FeedbackManager bfm, BMLBlockPeg bbPeg, String bmlId, String id)
+    {
+        return new TimedNaoUnit(bfm, bbPeg, bmlId, id, this);
+    }
 
-	    @Override
-	    public void setKeyPositions(List<KeyPosition> p)
-	    {
-	        keyPositionManager.setKeyPositions(p);
-	    }
+    @Override
+    public String getReplacementGroup()
+    {
+        return "getReplacementGroup";
+    }
 
-	    @Override
-	    public void removeKeyPosition(String id)
-	    {
-	        keyPositionManager.removeKeyPosition(id);
-	    }
+    /**
+     * @return Prefered duration (in seconds) of this face unit, 0 means not determined/infinite
+     */
+    public double getPreferedDuration()
+    {
+        return 1d;
+    }
+
+    /**
+     * Create a copy of this nao unit and link it to the Nao
+     */
+    public NaoUnit copy(Nao nao)
+    {
+        PlayChoregrapheClipNU result = new PlayChoregrapheClipNU();
+        result.setNao(nao);
+        result.filename = filename;
+        for (KeyPosition keypos : getKeyPositions())
+        {
+            result.addKeyPosition(keypos.deepCopy());
+        }
+        return result;
+    }
+
+    @Override
+    public void addKeyPosition(KeyPosition kp)
+    {
+        keyPositionManager.addKeyPosition(kp);
+    }
+
+    @Override
+    public KeyPosition getKeyPosition(String name)
+    {
+        return keyPositionManager.getKeyPosition(name);
+    }
+
+    @Override
+    public List<KeyPosition> getKeyPositions()
+    {
+        return keyPositionManager.getKeyPositions();
+    }
+
+    @Override
+    public void setKeyPositions(List<KeyPosition> p)
+    {
+        keyPositionManager.setKeyPositions(p);
+    }
+
+    @Override
+    public void removeKeyPosition(String id)
+    {
+        keyPositionManager.removeKeyPosition(id);
+    }
 
 }
