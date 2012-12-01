@@ -25,7 +25,6 @@
  <filelist id="rebuildList" dir="${shared.project.root}" files="${rebuild.list}" />
    
    <target name="resolveAll">
-    <antcall target="Ivy.resolve"/>
     <delegate target="resolve" list="rebuildList" verbose="true"/>
    </target>
 
