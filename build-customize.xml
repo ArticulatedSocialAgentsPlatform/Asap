@@ -92,32 +92,26 @@
    <target name="buildAll" depends="cleanAll, compileAll" description="cleanAll, compileAll"/>  
   
    <target name="compileAll"  description="compile HMI projects">     
-    <antcall target="Core.compile"/>
     <delegate target="compile" list="rebuildList" verbose="true"/>
    </target>
    
    <target name="compilelistAll">
-    <antcall target="Core.compile"/>
     <delegate target="compilelist" list="rebuildList" verbose="true"/>     
    </target> 
     
    <target name="cleanAll"  description="cleans HMI projects">     
-        <antcall target="Core.clean"/> <!-- JavaProjects.clean is the clean target from  (.../JavaProjects/)ant/build-impl.xml -->
         <delegate target="clean" list="rebuildList" verbose="true"/>
    </target>
  
    <target name="compile-testsAll"  description="Runs junit tests on all HMI projects">     
-        <!--antcall target="Core.junit"/--> 
         <delegate target="compile-tests" list="rebuildList"/>
    </target>
     
    <target name="junitAll"  description="Runs junit tests on all HMI projects">     
-        <!--antcall target="Core.junit"/--> 
         <delegate target="-junit" list="rebuildList"/>
    </target>
  
     <target name="junitreportAll"  description="Runs junit tests on all HMI projects">     
-        <!--antcall target="Core.junit"/--> 
         <delegate target="junitreport" list="rebuildList"/>
    </target>
    
