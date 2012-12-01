@@ -1,6 +1,26 @@
 <project name="Asap-ALL" default="build" basedir="."
         xmlns:ac="antlib:net.sf.antcontrib"	
 	>   
+	
+	
+	<!-- really ugly way to handle nested properties: http://orthogonal.me/2010/03/29/nested-ant-properties/ -->
+	<!--
+	<macrodef name="propertycopy">
+  <attribute name="name"/>
+  <attribute name="from"/>
+  <sequential>
+    <property name="@{name}" value="${@{from}}"/>
+  </sequential>
+</macrodef>
+	
+	
+
+
+ <property name="rebuild.list.prop" value="${language}.rebuild.list"/>
+ <property name="release.list.prop" value="${language}.release.list"/>
+  <propertycopy name="rebuild.list" from="${rebuild.list.prop}"/>
+  <propertycopy name="release.list" from="${release.list.prop}"/>
+ -->
  
  <filelist id="rebuildList" dir="${shared.project.root}" files="${rebuild.list}" />
    
@@ -16,8 +36,11 @@
       <antcall target="releaselist" />
    </target>
    
-   <target name="nightlybuild" >
-    <!-- first some checking for parameters. We require either a version or a build number -->
+   <target name="-setupnightlybuildparams">
+      <echo message="Python release list: ${python.release.list}"/>
+      <echo message="Release list: ${release.list}"/>
+      
+      <!-- first some checking for parameters. We require either a version or a build number -->
       <fail message="Asap nightlybuild: No release.list specified" unless="release.list" />
       <ac:if>
          <isset property="version"/> 
@@ -46,16 +69,25 @@
       <!-- after checking, we finally do the real work here: -->
       <property name="devnum" value="${build}"/>
       <property name="release.target" value="-devrelease"/>
-      <!--input message="Ivy password:" defaultvalue="" addproperty="pw"/-->
+   </target> 
+   
+   <target name="nightlylibbuild" depends="-setupnightlybuildparams">
       <antcall target="releaselist" >
-         <!--param name="passwd" value="${pw}"/-->
-         <param name="publish.resolver" value="asap.sftp.publish"/> <!-- overrides build.properties value -->
-         <!--param name="publish.resolver" value="asapcore.filesystem.repository"/--> <!-- overrides build.properties value -->
+         <param name="publish.resolver" value="asap.sftp.publish"/> <!-- overrides build.properties value -->      
       </antcall>
+   </target> 
+   
+   <target name="nightlyresourcebuild" depends="-setupnightlybuildparams">
       <antcall target="releaseresourcelist">
          <param name="publish.resolver" value="asap.resource.sftp.publish"/> <!-- overrides build.properties value -->
-      </antcall>
+      </antcall> 
    </target>
+   
+   <target name="nightlybuild" depends="nightlylibbuild, nightlyresourcebuild"/>
+    
+      
+      
+   
 
    <!-- targets: -->
    <target name="buildAll" depends="cleanAll, compileAll" description="cleanAll, compileAll"/>  
