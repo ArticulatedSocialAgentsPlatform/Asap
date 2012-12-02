@@ -112,9 +112,19 @@ public class IpaacaBodyEmbodiment implements SkeletonEmbodiment
                 }
             }
             submitJoint = submitJoint.getPart(Hanim.HumanoidRoot);
+<<<<<<< HEAD
+            
+            VJoint vjDummy = new VJoint();
+            vjDummy.addChild(submitJoint);            
+            //VJointUtils.setHAnimPose(submitJoint);
+            VJointUtils.setHAnimPose(vjDummy);
+            
+            skel = new Skeleton(submitJoint.getId()+"skel", submitJoint);
+=======
 
             VJointUtils.setHAnimPose(submitJoint);
             skel = new Skeleton(submitJoint.getId() + "skel", submitJoint);
+>>>>>>> fdaa6471ce54f5581d0772646887fc70e653cda5
             updateJointLists(jointFilter);
             skel.setJointSids(jointList);
 
