@@ -173,6 +173,7 @@ public class IpaacaEmbodiment implements Embodiment
 
         LocalMessageIU iu = new LocalMessageIU();
         iu.setCategory("jointData");
+        
         iu.getPayload().put("morph_data", toSpaceSeperatedList(values));
         if (jointLocalMatrices.isEmpty())
         {

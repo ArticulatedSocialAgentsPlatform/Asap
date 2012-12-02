@@ -25,7 +25,7 @@ import com.google.common.collect.Lists;
  * 
  * Also assumes no other animation (e.g. on the face) is used. Use the IpaacaFaceAndBodyEmbodiment if the face is also to be animated.
  * 
- * XXX alternatively: have getAnimationJoint create a 
+ * XXX alternatively: have getAnimationJoint create a
  * copyJoint and copy the transformations from this copyJoint back to the animationJoint at each copy?
  * @author hvanwelbergen
  * 
@@ -75,7 +75,12 @@ public class IpaacaBodyEmbodiment implements SkeletonEmbodiment
         int i = 0;
         for (String j : availableJoints)
         {
-            VJoint vj = submitJoint.getPart(renamingMap.get(j));
+            VJoint vj = submitJoint.getPart(j);
+            if(vj==null)
+            {
+                vj = submitJoint.getPart(renamingMap.get(j));
+            }
+            
             if (vj == null || !jointFilter.contains(vj.getSid()))
             {
                 unusedJoints.add(ipaacaJoints.get(i));
@@ -112,19 +117,13 @@ public class IpaacaBodyEmbodiment implements SkeletonEmbodiment
                 }
             }
             submitJoint = submitJoint.getPart(Hanim.HumanoidRoot);
-<<<<<<< HEAD
-            
-            VJoint vjDummy = new VJoint();
-            vjDummy.addChild(submitJoint);            
-            //VJointUtils.setHAnimPose(submitJoint);
-            VJointUtils.setHAnimPose(vjDummy);
-            
-            skel = new Skeleton(submitJoint.getId()+"skel", submitJoint);
-=======
 
-            VJointUtils.setHAnimPose(submitJoint);
+            VJoint vjDummy = new VJoint();
+            vjDummy.addChild(submitJoint);
+            // VJointUtils.setHAnimPose(submitJoint);
+            VJointUtils.setHAnimPose(vjDummy);
+
             skel = new Skeleton(submitJoint.getId() + "skel", submitJoint);
->>>>>>> fdaa6471ce54f5581d0772646887fc70e653cda5
             updateJointLists(jointFilter);
             skel.setJointSids(jointList);
 
