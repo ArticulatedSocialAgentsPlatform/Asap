@@ -26,13 +26,13 @@ import java.io.IOException;
  * @author Robin ten Buuren
  */
 public class NaoDoeIetsBehaviour extends NaoBehaviour
-{		
-	public  NaoDoeIetsBehaviour(String bmlId, XMLTokenizer tokenizer) throws IOException
-	{
-		super(bmlId);
-		readXML(tokenizer);
-	}
-	
+{
+    public NaoDoeIetsBehaviour(String bmlId, XMLTokenizer tokenizer) throws IOException
+    {
+        super(bmlId);
+        readXML(tokenizer);
+    }
+
     /*
      * The XML Stag for XML encoding
      */
@@ -56,22 +56,25 @@ public class NaoDoeIetsBehaviour extends NaoBehaviour
     {
         return XMLTAG;
     }
-    
-	@Override
-	public float getFloatParameterValue(String arg0) {
-		// TODO Auto-generated method stub
-		return 0;
-	}
 
-	@Override
-	public String getStringParameterValue(String arg0) {
-		// TODO Auto-generated method stub
-		return null;
-	}
+    @Override
+    public float getFloatParameterValue(String arg0)
+    {
+        // TODO Auto-generated method stub
+        return 0;
+    }
 
-	@Override
-	public boolean specifiesParameter(String arg0) {
-		// TODO Auto-generated method stub
-		return false;
-	}
+    @Override
+    public String getStringParameterValue(String arg0)
+    {
+        // TODO Auto-generated method stub
+        return null;
+    }
+
+    @Override
+    public boolean specifiesParameter(String arg0)
+    {
+        // TODO Auto-generated method stub
+        return false;
+    }
 }

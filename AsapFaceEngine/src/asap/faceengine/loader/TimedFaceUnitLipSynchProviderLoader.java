@@ -40,7 +40,8 @@ public class TimedFaceUnitLipSynchProviderLoader implements LipSynchProviderLoad
     }
 
     @Override
-    public void readXML(XMLTokenizer tokenizer, String loaderId, String vhId, String vhName, Environment[] environments, Loader ... requiredLoaders) throws IOException
+    public void readXML(XMLTokenizer tokenizer, String loaderId, String vhId, String vhName, Environment[] environments,
+            Loader... requiredLoaders) throws IOException
     {
         setId(loaderId);
 
@@ -60,8 +61,8 @@ public class TimedFaceUnitLipSynchProviderLoader implements LipSynchProviderLoad
             {
                 HashMap<String, String> attrMap = tokenizer.getAttributes();
                 VisemeToMorphMapping mapping = new VisemeToMorphMapping();
-                mapping.readXML(new Resources(adapter.getOptionalAttribute("resources", attrMap, "")).getReader(adapter.getRequiredAttribute(
-                        "filename", attrMap, tokenizer)));
+                mapping.readXML(new Resources(adapter.getOptionalAttribute("resources", attrMap, "")).getReader(adapter
+                        .getRequiredAttribute("filename", attrMap, tokenizer)));
                 visBinding = new MorphVisemeBinding(mapping);
                 tokenizer.takeEmptyElement("MorphVisemeBinding");
             }
@@ -69,19 +70,18 @@ public class TimedFaceUnitLipSynchProviderLoader implements LipSynchProviderLoad
             {
                 HashMap<String, String> attrMap = tokenizer.getAttributes();
                 VisemeToFACSMapping mapping = new VisemeToFACSMapping();
-                mapping.readXML(new Resources(adapter.getOptionalAttribute("resources", attrMap, "")).getReader(adapter.getRequiredAttribute(
-                        "filename", attrMap, tokenizer)));
-                visBinding = new FACSVisemeBinding(mapping,fal.getFACSConverter());
+                mapping.readXML(new Resources(adapter.getOptionalAttribute("resources", attrMap, "")).getReader(adapter
+                        .getRequiredAttribute("filename", attrMap, tokenizer)));
+                visBinding = new FACSVisemeBinding(mapping, fal.getFACSConverter());
                 tokenizer.takeEmptyElement("FACSVisemeBinding");
             }
         }
-        
 
         if (visBinding == null)
         {
             throw tokenizer.getXMLScanException("TimedFaceUnitLipSynchProvider requires a visimebinding.");
         }
-        
+
         lipSyncProvider = new TimedFaceUnitLipSynchProvider(visBinding, fal.getFaceController(), fal.getPlanManager());
     }
 

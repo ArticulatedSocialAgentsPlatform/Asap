@@ -44,38 +44,33 @@ import asap.speechengine.util.TTSUnitStub;
 import com.google.common.collect.ImmutableList;
 
 /**
- * Unit test cases for SpeechBehaviour planning using a TTSPlanner 
+ * Unit test cases for SpeechBehaviour planning using a TTSPlanner
  * @author welberge
  */
 @RunWith(PowerMockRunner.class)
-@PrepareForTest({BMLBlockManager.class,PlanManager.class})
+@PrepareForTest({ BMLBlockManager.class, PlanManager.class })
 public class TTSPlannerTest extends AbstractSpeechPlannerTest<TimedTTSUnit>
 {
     protected TTSBinding mockTTSBinding = mock(TTSBinding.class);
     protected TimedTTSUnitFactory mockTTSUnitFactory = mock(TimedTTSUnitFactory.class);
     protected LipSynchProvider mockLipSyncher = mock(LipSynchProvider.class);
-    
+
     public static final double SPEECH_DURATION = 3.0;
     public static final double SYNC1_OFFSET = 1.0;
     private static final double TIMING_PRECISION = 0.0001;
-    
+
     private final ImmutableList<Bookmark> BOOKMARKS = new ImmutableList.Builder<Bookmark>()
             .add(new Bookmark("s1", new WordDescription("world", new ArrayList<Phoneme>(), new ArrayList<Visime>()),
                     (int) (SYNC1_OFFSET * 1000))).build();
 
     final TTSUnitStub stubTTSUnit = new TTSUnitStub(mockFeedbackManager, bbPeg, SPEECHTEXT, SPEECHID, BMLID, mockTTSBinding,
             SpeechBehaviour.class, SPEECH_DURATION, BOOKMARKS);
-    
+
     protected void mockTTSUnitFactoryExpectations()
     {
-        when(mockTTSUnitFactory.createTimedTTSUnit(                  
-                (BMLBlockPeg)any(), 
-                anyString(),
-                anyString(),
-                eq(BMLID), 
-                eq(SPEECHID),
-                eq(mockTTSBinding), 
-                eq(SpeechBehaviour.class))).thenReturn(stubTTSUnit);        
+        when(
+                mockTTSUnitFactory.createTimedTTSUnit((BMLBlockPeg) any(), anyString(), anyString(), eq(BMLID), eq(SPEECHID),
+                        eq(mockTTSBinding), eq(SpeechBehaviour.class))).thenReturn(stubTTSUnit);
     }
 
     @Before
@@ -83,13 +78,13 @@ public class TTSPlannerTest extends AbstractSpeechPlannerTest<TimedTTSUnit>
     public void setup()
     {
         MockitoAnnotations.initMocks(this);
-        mockTTSUnitFactoryExpectations();        
+        mockTTSUnitFactoryExpectations();
         TTSPlanner ttsPlanner = new TTSPlanner(mockFeedbackManager, mockTTSUnitFactory, mockTTSBinding, planManager);
         speechPlanner = ttsPlanner;
-        ttsPlanner.addLipSyncher(mockLipSyncher);        
+        ttsPlanner.addLipSyncher(mockLipSyncher);
         super.setup();
     }
-    
+
     @Test
     public void testResolveUnknownStartKnownEnd() throws BehaviourPlanningException, IOException
     {
@@ -98,8 +93,7 @@ public class TTSPlannerTest extends AbstractSpeechPlannerTest<TimedTTSUnit>
         ArrayList<TimePegAndConstraint> sacs = new ArrayList<TimePegAndConstraint>();
         TimePeg endPeg = new TimePeg(bbPeg);
         endPeg.setGlobalValue(5);
-        sacs.add(new TimePegAndConstraint("end", endPeg, new Constraint(), 0,
-                false));
+        sacs.add(new TimePegAndConstraint("end", endPeg, new Constraint(), 0, false));
         TimePeg s1Peg = new TimePeg(bbPeg);
         sacs.add(new TimePegAndConstraint("s1", s1Peg, new Constraint(), 0, false));
         TimePeg startPeg = new OffsetPeg(new TimePeg(bbPeg), 0, bbPeg);
@@ -118,23 +112,24 @@ public class TTSPlannerTest extends AbstractSpeechPlannerTest<TimedTTSUnit>
         assertEquals(5 - SPEECH_DURATION, startPeg.getGlobalValue(), TIMING_PRECISION);
         TestUtil.assertInRangeExclusive(s1Peg.getGlobalValue(), startPeg.getGlobalValue(), endPeg.getGlobalValue());
     }
-    
+
     @SuppressWarnings("unchecked")
     @Test
     public void testAddBehaviour() throws IOException, BehaviourPlanningException
     {
         SpeechBehaviour beh = createSpeechBehaviour(SPEECHID, BMLID, SPEECHTEXT);
         ArrayList<TimePegAndConstraint> sacs = new ArrayList<TimePegAndConstraint>();
-        stubTTSUnit.setTimePeg("start", TimePegUtil.createTimePeg(bbPeg,0));
+        stubTTSUnit.setTimePeg("start", TimePegUtil.createTimePeg(bbPeg, 0));
         speechPlanner.addBehaviour(bbPeg, beh, sacs, stubTTSUnit);
-        verify(mockLipSyncher,atLeast(1)).addLipSyncMovement(eq(bbPeg), eq(beh), (TimedPlanUnit)any(), (List<Visime>)any());        
+        verify(mockLipSyncher, atLeast(1)).addLipSyncMovement(eq(bbPeg), eq(beh), (TimedPlanUnit) any(), (List<Visime>) any());
     }
-    
+
     @Test
     public void testVoiceExtension() throws IOException, BehaviourPlanningException
     {
         BMLTInfo.init();
-        SpeechBehaviour beh = createSpeechBehaviour(SPEECHID, BMLID, "xmlns:bmlt=\""+BMLTBehaviour.BMLTNAMESPACE+"\" bmlt:voice=\"testvoice\"",SPEECHTEXT);
+        SpeechBehaviour beh = createSpeechBehaviour(SPEECHID, BMLID, "xmlns:bmlt=\"" + BMLTBehaviour.BMLTNAMESPACE
+                + "\" bmlt:voice=\"testvoice\"", SPEECHTEXT);
         ArrayList<TimePegAndConstraint> sacs = new ArrayList<TimePegAndConstraint>();
         speechPlanner.addBehaviour(bbPeg, beh, sacs, null);
         verify(mockTTSBinding).setVoice("testvoice");

@@ -18,6 +18,7 @@
  * along with Elckerlyc.  If not, see http://www.gnu.org/licenses/.
  ******************************************************************************/
 package asap.realizerembodiments;
+
 import hmi.environmentbase.Environment;
 import hmi.environmentbase.Loader;
 import hmi.util.ArrayUtils;
@@ -45,7 +46,6 @@ import org.slf4j.LoggerFactory;
 
 import asap.bml.bridge.ui.FeedbackPanel;
 import asap.bml.bridge.ui.RealizerPortUI;
-
 
 /** This "embodiment" allows a VH to create Swing GUI components. */
 public class JFrameEmbodiment implements JComponentEmbodiment, JComponentEmbodimentLoader
@@ -79,14 +79,14 @@ public class JFrameEmbodiment implements JComponentEmbodiment, JComponentEmbodim
         }
         catch (InterruptedException e)
         {
-            logger.warn("Exception constructing contentPanel",e);
+            logger.warn("Exception constructing contentPanel", e);
             Thread.interrupted();
         }
         catch (InvocationTargetException e)
         {
-            logger.warn("Exception constructing contentPanel",e);
+            logger.warn("Exception constructing contentPanel", e);
         }
-        
+
     }
 
     private String loaderId = "";
@@ -127,31 +127,30 @@ public class JFrameEmbodiment implements JComponentEmbodiment, JComponentEmbodim
         }
         catch (InterruptedException e)
         {
-            logger.warn("Exception in JFrameEmbodiment initialization",e);
+            logger.warn("Exception in JFrameEmbodiment initialization", e);
             Thread.interrupted();
         }
         catch (InvocationTargetException e)
         {
-            logger.warn("Exception in JFrameEmbodiment initialization",e);
+            logger.warn("Exception in JFrameEmbodiment initialization", e);
         }
     }
-    
+
     /** No loading necessary, actually! Empty content expected. No required embodiments */
     @Override
-    public void readXML(XMLTokenizer tokenizer, String loaderId, String vhId, String vhName, Environment[] environments, Loader ... requiredLoaders) 
-    	throws IOException
+    public void readXML(XMLTokenizer tokenizer, String loaderId, String vhId, String vhName, Environment[] environments,
+            Loader... requiredLoaders) throws IOException
     {
         setId(loaderId);
         final String finalName = vhName;
 
         are = ArrayUtils.getFirstClassOfType(requiredLoaders, AsapRealizerEmbodiment.class);
-        
+
         if (are == null)
         {
             throw new RuntimeException("JFrameEmbodiment requires an AsapRealizerEmbodiment when loading");
         }
 
-        
         final XMLTokenizer tok = tokenizer;
         try
         {
@@ -160,7 +159,7 @@ public class JFrameEmbodiment implements JComponentEmbodiment, JComponentEmbodim
             {
                 @Override
                 public void run()
-                {                    
+                {
                     // if specified by XML, create serverUI and/or BML test interface and/or feedbackpanel based on the elckerlycrealizer
                     try
                     {
@@ -171,47 +170,45 @@ public class JFrameEmbodiment implements JComponentEmbodiment, JComponentEmbodim
                     }
                     catch (IOException e)
                     {
-                        logger.warn("IOException reading section",e);
+                        logger.warn("IOException reading section", e);
                     }
                 }
             });
         }
         catch (InterruptedException e)
         {
-            logger.warn("Exception JFrameEmbodiment from XML",e);
+            logger.warn("Exception JFrameEmbodiment from XML", e);
             Thread.interrupted();
         }
         catch (InvocationTargetException e)
         {
-            logger.warn("Exception JFrameEmbodiment from XML",e);
+            logger.warn("Exception JFrameEmbodiment from XML", e);
         }
-        
 
-        
     }
 
     protected void readSection(XMLTokenizer tokenizer) throws IOException
     {
         HashMap<String, String> attrMap = null;
-        /*        
-        if (tokenizer.atSTag("ServerUI"))
-        {
-            TCPIPToBMLRealizerAdapter theServer = are.getTcpipToBMLRealizerAdapter();
-            BridgeServerUI bsui = null;
-            if (theServer == null)
-            {
-                bsui = new BridgeServerUI(are.getRealizerPort(), 7521, 1257);
-            }
-            else
-            {
-                bsui = new BridgeServerUI(are.getRealizerPort(), theServer);
-            }
-            addJComponent(bsui);
-            tokenizer.takeSTag("ServerUI");
-            tokenizer.takeETag("ServerUI");
-        }
-        else
-        */
+        /*
+         * if (tokenizer.atSTag("ServerUI"))
+         * {
+         * TCPIPToBMLRealizerAdapter theServer = are.getTcpipToBMLRealizerAdapter();
+         * BridgeServerUI bsui = null;
+         * if (theServer == null)
+         * {
+         * bsui = new BridgeServerUI(are.getRealizerPort(), 7521, 1257);
+         * }
+         * else
+         * {
+         * bsui = new BridgeServerUI(are.getRealizerPort(), theServer);
+         * }
+         * addJComponent(bsui);
+         * tokenizer.takeSTag("ServerUI");
+         * tokenizer.takeETag("ServerUI");
+         * }
+         * else
+         */
         if (tokenizer.atSTag("BmlUI"))
         {
             attrMap = tokenizer.getAttributes();
@@ -228,19 +225,20 @@ public class JFrameEmbodiment implements JComponentEmbodiment, JComponentEmbodim
         }
         else if (tokenizer.atSTag("KillButton"))
         {
-/*
-            // make kill button
-            // make the 'kill VH' button and add it to this UI
-            killVH = new JButton("KILL VH");
-            killVH.addActionListener(new ActionListener()
-            {
-                public void actionPerformed(ActionEvent e)
-                {
-                    theVirtualHuman.unload();
-                }
-            });
-            addJComponent(killVH);*/
-        	logger.error("no kill button implemented");
+            /*
+             * // make kill button
+             * // make the 'kill VH' button and add it to this UI
+             * killVH = new JButton("KILL VH");
+             * killVH.addActionListener(new ActionListener()
+             * {
+             * public void actionPerformed(ActionEvent e)
+             * {
+             * theVirtualHuman.unload();
+             * }
+             * });
+             * addJComponent(killVH);
+             */
+            logger.error("no kill button implemented");
             tokenizer.takeSTag("KillButton");
             tokenizer.takeETag("KillButton");
         }
@@ -260,14 +258,14 @@ public class JFrameEmbodiment implements JComponentEmbodiment, JComponentEmbodim
     public void addKeyListener(KeyListener kl)
     {
         theUI.addKeyListener(kl);
-        //contentPanel.addKeyListener(kl);
+        // contentPanel.addKeyListener(kl);
     }
-    
+
     public void addWindowListener(WindowListener wl)
     {
         theUI.addWindowListener(wl);
     }
-    
+
     public void addJComponent(JComponent jc)
     {
         jc.setAlignmentX(JFrame.LEFT_ALIGNMENT);
@@ -289,7 +287,7 @@ public class JFrameEmbodiment implements JComponentEmbodiment, JComponentEmbodim
     {
         return this;
     }
-    
+
     /**
      * method to programatically close the frame, from
      * http://stackoverflow.com/questions

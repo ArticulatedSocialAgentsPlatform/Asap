@@ -9,12 +9,8 @@ import hmi.math.Mat4f;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Set;
 
-import javax.annotation.Nullable;
 import javax.annotation.concurrent.GuardedBy;
-
-import lombok.extern.slf4j.Slf4j;
 
 import com.google.common.base.Function;
 import com.google.common.collect.BiMap;
@@ -22,20 +18,18 @@ import com.google.common.collect.ImmutableList;
 import com.google.common.collect.ImmutableMap;
 import com.google.common.collect.Lists;
 
-import edu.umd.cs.findbugs.annotations.NonNull;
-
 /**
  * Sends joint rotations from its animation joint to a renderer through Ipaaca.
- * Assumes that the animation joint is not changed during the copy(). That is: assumes that there is only one thread accessing animationJoint, 
+ * Assumes that the animation joint is not changed during the copy(). That is: assumes that there is only one thread accessing animationJoint,
  * and that this same thread calls copy() upon this embodiment. Init constructs the animationjoint and should also be called by the same thread.
  * 
  * Also assumes no other animation (e.g. on the face) is used. Use the IpaacaFaceAndBodyEmbodiment if the face is also to be animated.
  * 
- * XXX alternatively: have getAnimationJoint create a copyJoint and copy the transformations from this copyJoint back to the animationJoint at each copy?
+ * XXX alternatively: have getAnimationJoint create a 
+ * copyJoint and copy the transformations from this copyJoint back to the animationJoint at each copy?
  * @author hvanwelbergen
  * 
  */
-@Slf4j
 public class IpaacaBodyEmbodiment implements SkeletonEmbodiment
 {
     private final String id;
@@ -44,18 +38,18 @@ public class IpaacaBodyEmbodiment implements SkeletonEmbodiment
     private List<String> unusedJoints;
     private List<String> usedJoints;
     private float[][] transformMatrices;
-    
+
     private BiMap<String, String> renamingMap;
-    
+
     @GuardedBy("submitJointLock")
     private VJoint submitJoint;
-    
+
     private List<String> jointList = new ArrayList<String>();// same order as availableJoints
-    
+
     @GuardedBy("submitJointLock")
-    //private AdditiveT1RBlend blend;
+    // private AdditiveT1RBlend blend;
     private Skeleton skel;
-    
+
     private Object submitJointLock = new Object();
 
     public IpaacaBodyEmbodiment(String id, IpaacaEmbodiment ipaacaEmbodiment)
@@ -64,7 +58,7 @@ public class IpaacaBodyEmbodiment implements SkeletonEmbodiment
         this.ipaacaEmbodiment = ipaacaEmbodiment;
     }
 
-    private void updateJointLists(List<String>jointFilter)
+    private void updateJointLists(List<String> jointFilter)
     {
         ImmutableList<String> ipaacaJoints = ImmutableList.copyOf(ipaacaEmbodiment.getAvailableJoints());
         availableJoints = Lists.transform(ipaacaJoints, new Function<String, String>()
@@ -75,7 +69,7 @@ public class IpaacaBodyEmbodiment implements SkeletonEmbodiment
                 return str.replaceAll(" ", "_");
             }
         });
-        
+
         unusedJoints = new ArrayList<>();
 
         int i = 0;
@@ -94,7 +88,7 @@ public class IpaacaBodyEmbodiment implements SkeletonEmbodiment
         }
         usedJoints = new ArrayList<>(ipaacaJoints);
         usedJoints.removeAll(unusedJoints);
-        ipaacaEmbodiment.setUsedJoints(usedJoints);        
+        ipaacaEmbodiment.setUsedJoints(usedJoints);
     }
 
     /**
@@ -102,9 +96,9 @@ public class IpaacaBodyEmbodiment implements SkeletonEmbodiment
      */
     public void init(BiMap<String, String> renamingMap, List<String> jointFilter)
     {
-        ipaacaEmbodiment.waitForAvailableJoints();        
+        ipaacaEmbodiment.waitForAvailableJoints();
         this.renamingMap = renamingMap;
-        
+
         synchronized (submitJointLock)
         {
             submitJoint = ipaacaEmbodiment.getRootJointCopy("copy");
@@ -118,6 +112,7 @@ public class IpaacaBodyEmbodiment implements SkeletonEmbodiment
                 }
             }
             submitJoint = submitJoint.getPart(Hanim.HumanoidRoot);
+<<<<<<< HEAD
             
             VJoint vjDummy = new VJoint();
             vjDummy.addChild(submitJoint);            
@@ -125,10 +120,14 @@ public class IpaacaBodyEmbodiment implements SkeletonEmbodiment
             VJointUtils.setHAnimPose(vjDummy);
             
             skel = new Skeleton(submitJoint.getId()+"skel", submitJoint);
+=======
+
+            VJointUtils.setHAnimPose(submitJoint);
+            skel = new Skeleton(submitJoint.getId() + "skel", submitJoint);
+>>>>>>> fdaa6471ce54f5581d0772646887fc70e653cda5
             updateJointLists(jointFilter);
             skel.setJointSids(jointList);
-            
-            
+
             skel.setNeutralPose();
             transformMatrices = skel.getTransformMatricesRef();
             skel.setUpdateOnWrite(true);
@@ -138,44 +137,42 @@ public class IpaacaBodyEmbodiment implements SkeletonEmbodiment
     protected List<float[]> getJointMatrices()
     {
         List<float[]> jointMatrices = new ArrayList<>();
-        synchronized(submitJointLock)
+        synchronized (submitJointLock)
         {
             skel.putData();
             skel.getData();
-            
-            for(int i=0;i<jointList.size();i++)
+
+            for (int i = 0; i < jointList.size(); i++)
             {
-                float m[]=Mat4f.getMat4f();
-                                
-                
-                
-                VJoint vj = submitJoint.getPartBySid(jointList.get(i));                
+                float m[] = Mat4f.getMat4f();
+
+                VJoint vj = submitJoint.getPartBySid(jointList.get(i));
                 VJoint vjParent = vj.getParent();
-                
-                                
-                if(vjParent == null || vj.getSid().equals(Hanim.HumanoidRoot))
+
+                if (vjParent == null || vj.getSid().equals(Hanim.HumanoidRoot))
                 {
-                    Mat4f.set(m,transformMatrices[i]);
+                    Mat4f.set(m, transformMatrices[i]);
                 }
                 else
                 {
                     float[] pInverse = Mat4f.getMat4f();
-                    if(jointList.contains(vjParent.getSid()))
+                    if (jointList.contains(vjParent.getSid()))
                     {
-                        Mat4f.invertRigid(pInverse,transformMatrices[jointList.indexOf(vjParent.getSid())]);
+                        Mat4f.invertRigid(pInverse, transformMatrices[jointList.indexOf(vjParent.getSid())]);
                     }
                     else
                     {
-                        Mat4f.invertRigid(pInverse,vjParent.getGlobalMatrix());//FIXME: does not take into account inverse binds between parent and root
+                        // FIXME: does not take into account inverse binds between parent and root
+                        Mat4f.invertRigid(pInverse, vjParent.getGlobalMatrix());
                     }
-                    Mat4f.mul(m,pInverse,transformMatrices[i]);
+                    Mat4f.mul(m, pInverse, transformMatrices[i]);
                 }
-                jointMatrices.add(m);                
+                jointMatrices.add(m);
             }
         }
         return jointMatrices;
     }
-    
+
     @Override
     public void copy()
     {

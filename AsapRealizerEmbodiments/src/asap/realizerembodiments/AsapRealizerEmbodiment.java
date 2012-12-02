@@ -28,10 +28,8 @@ import hmi.xml.XMLStructureAdapter;
 import hmi.xml.XMLTokenizer;
 
 import java.io.IOException;
-import java.util.ArrayList;
 import java.util.Collection;
 import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
 
 import lombok.AccessLevel;
@@ -75,8 +73,8 @@ public class AsapRealizerEmbodiment implements EmbodimentLoader, Embodiment
      */
     private AsapRealizer elckerlycRealizer = null;
 
-    private Map<String,PipeLoader> pipeLoaders = new HashMap<>();
-    
+    private Map<String, PipeLoader> pipeLoaders = new HashMap<>();
+
     /** Use the RealizerPort to send BML to the Realizer */
     @Getter
     @Setter(AccessLevel.PROTECTED)
@@ -92,14 +90,12 @@ public class AsapRealizerEmbodiment implements EmbodimentLoader, Embodiment
     @Getter
     FeedbackManager feedbackManager = null;
 
-
     /** "human readable name" */
     private String name = "<no name>";
-    
+
     private String loaderId = "";
-    
+
     private String vhId = "";
-    
 
     /** used for loading the virtual human from an XML specification file */
     private XMLStructureAdapter adapter = new XMLStructureAdapter();
@@ -107,7 +103,6 @@ public class AsapRealizerEmbodiment implements EmbodimentLoader, Embodiment
     private HashMap<String, String> attrMap = null;
     /** used for loading the virtual human from an XML specification file */
     private XMLTokenizer theTokenizer = null;
-
 
     /**
      * Needed during the loading process in order to offer all other loaders access to the scheduling clock during load
@@ -122,32 +117,36 @@ public class AsapRealizerEmbodiment implements EmbodimentLoader, Embodiment
     /** Unload: remove the virtual human from the AsapEnvironment; stop scheduler etc; onload all other loaders */
     public void unload()
     {
-        for(PipeLoader pipeLoader:pipeLoaders.values())
+        for (PipeLoader pipeLoader : pipeLoaders.values())
         {
             pipeLoader.shutdown();
-        }        
+        }
         elckerlycRealizer.shutdown(); // can you do this before all engines and emitters have been shut down?
     }
-	@Override
-	public String getId() {
-		return loaderId;
-	}
-	@Override
-	public Embodiment getEmbodiment() {
-		return this;
-	}
 
-    public void readXML(XMLTokenizer tokenizer, String loaderId, String vhId, String vhName, Environment[] environments, Loader ... requiredLoaders) 
-    	throws IOException
-   	{
-    	this.loaderId = loaderId;
-    	this.name = vhName;
-    	this.vhId = vhId;
-    	
+    @Override
+    public String getId()
+    {
+        return loaderId;
+    }
+
+    @Override
+    public Embodiment getEmbodiment()
+    {
+        return this;
+    }
+
+    public void readXML(XMLTokenizer tokenizer, String loaderId, String vhId, String vhName, Environment[] environments,
+            Loader... requiredLoaders) throws IOException
+    {
+        this.loaderId = loaderId;
+        this.name = vhName;
+        this.vhId = vhId;
+
         for (Loader l : requiredLoaders)
         {
-            if ((l instanceof EmbodimentLoader) && (((EmbodimentLoader)l).getEmbodiment() instanceof SchedulingClockEmbodiment ))
-            	 theSchedulingClock = ((SchedulingClockEmbodiment) ((EmbodimentLoader)l).getEmbodiment()).getSchedulingClock();
+            if ((l instanceof EmbodimentLoader) && (((EmbodimentLoader) l).getEmbodiment() instanceof SchedulingClockEmbodiment)) theSchedulingClock = ((SchedulingClockEmbodiment) ((EmbodimentLoader) l)
+                    .getEmbodiment()).getSchedulingClock();
         }
         if (theSchedulingClock == null)
         {
@@ -155,8 +154,6 @@ public class AsapRealizerEmbodiment implements EmbodimentLoader, Embodiment
         }
 
         theTokenizer = tokenizer;
-  
-
 
         // ====== load BML parsing and scheduling stuff
 
@@ -171,9 +168,8 @@ public class AsapRealizerEmbodiment implements EmbodimentLoader, Embodiment
 
         elckerlycRealizer = new AsapRealizer(parser, feedbackManager, theSchedulingClock, bmlScheduler);
 
-        //we can't ensure that the port will only be called singlethreaded, so we put a multithread adapter on top of it
-        realizerPort = new MultiThreadedElckerlycRealizerBridge(elckerlycRealizer); 
-        
+        // we can't ensure that the port will only be called singlethreaded, so we put a multithread adapter on top of it
+        realizerPort = new MultiThreadedElckerlycRealizerBridge(elckerlycRealizer);
 
         // ====== subsequently, read in XML all requests for pipes, ports and adapters, and create / insert / attach them.
 
@@ -182,16 +178,16 @@ public class AsapRealizerEmbodiment implements EmbodimentLoader, Embodiment
             readBMLRealizerSubsection();
         }
 
-
     }
 
     public void addEngine(Engine e)
     {
-    	elckerlycRealizer.addEngine(e);
+        elckerlycRealizer.addEngine(e);
     }
+
     public void addEngine(Class<? extends Behaviour> behaviorClass, Engine e)
     {
-    	elckerlycRealizer.addEngine(behaviorClass, e);
+        elckerlycRealizer.addEngine(behaviorClass, e);
     }
 
     protected BMLParser readParserSection() throws IOException
@@ -232,27 +228,27 @@ public class AsapRealizerEmbodiment implements EmbodimentLoader, Embodiment
     {
         return pipeLoaders.get(id);
     }
-    
+
     public Collection<PipeLoader> getPipeLoaders()
     {
         return pipeLoaders.values();
     }
-    
+
     protected void readBMLRealizerSubsection() throws IOException
     {
         /*
-        if (theTokenizer.atSTag("ServerAdapter"))
-        {
-            attrMap = theTokenizer.getAttributes();
-            String requestPort = adapter.getRequiredAttribute("requestport", attrMap, theTokenizer);
-            String feedbackPort = adapter.getRequiredAttribute("feedbackport", attrMap, theTokenizer);
-            tcpipToBMLRealizerAdapter = new TCPIPToBMLRealizerAdapter(realizerPort, Integer.valueOf(requestPort),
-                    Integer.valueOf(feedbackPort));
-            theTokenizer.takeSTag("ServerAdapter");
-            theTokenizer.takeETag("ServerAdapter");
-        }
-        */
-        
+         * if (theTokenizer.atSTag("ServerAdapter"))
+         * {
+         * attrMap = theTokenizer.getAttributes();
+         * String requestPort = adapter.getRequiredAttribute("requestport", attrMap, theTokenizer);
+         * String feedbackPort = adapter.getRequiredAttribute("feedbackport", attrMap, theTokenizer);
+         * tcpipToBMLRealizerAdapter = new TCPIPToBMLRealizerAdapter(realizerPort, Integer.valueOf(requestPort),
+         * Integer.valueOf(feedbackPort));
+         * theTokenizer.takeSTag("ServerAdapter");
+         * theTokenizer.takeETag("ServerAdapter");
+         * }
+         */
+
         if (theTokenizer.atSTag("Scheduler"))
         {
             // TODO
@@ -266,7 +262,7 @@ public class AsapRealizerEmbodiment implements EmbodimentLoader, Embodiment
             PipeLoader pipeloader = null;
             try
             {
-            	pipeloader = (PipeLoader) Class.forName(loaderClass).newInstance();
+                pipeloader = (PipeLoader) Class.forName(loaderClass).newInstance();
             }
             catch (InstantiationException e)
             {
@@ -290,7 +286,7 @@ public class AsapRealizerEmbodiment implements EmbodimentLoader, Embodiment
             pipeloader.readXML(theTokenizer, id, vhId, name, realizerPort, theSchedulingClock);
             theTokenizer.takeETag("PipeLoader");
             realizerPort = pipeloader.getAdaptedRealizerPort();
-            pipeLoaders.put(id,pipeloader);
+            pipeLoaders.put(id, pipeloader);
         }
         else
         {

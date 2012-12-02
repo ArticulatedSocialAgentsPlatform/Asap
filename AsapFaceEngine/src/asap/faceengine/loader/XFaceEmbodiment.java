@@ -34,11 +34,10 @@ import hmi.xml.XMLTokenizer;
 import java.io.IOException;
 import java.util.HashMap;
 
-
 /**
  * Loader for an XFaceEmbodiment
  * @author hvanwelbergen
- *
+ * 
  */
 public class XFaceEmbodiment implements FaceEmbodiment, CopyEmbodiment, EmbodimentLoader
 {
@@ -62,7 +61,8 @@ public class XFaceEmbodiment implements FaceEmbodiment, CopyEmbodiment, Embodime
     }
 
     @Override
-    public void readXML(XMLTokenizer tokenizer, String loaderId, String vhId, String vhName, Environment[] environments, Loader ... requiredLoaders) throws IOException
+    public void readXML(XMLTokenizer tokenizer, String loaderId, String vhId, String vhName, Environment[] environments,
+            Loader... requiredLoaders) throws IOException
     {
         id = loaderId;
 

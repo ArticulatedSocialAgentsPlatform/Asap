@@ -35,7 +35,7 @@ public class LiveMocapEngineLoader implements EngineLoader
     private NameTypeBinding inputBinding = new NameTypeBinding();
     private NameTypeBinding outputBinding = new NameTypeBinding();
     private Engine engine;
-    
+
     @Override
     public String getId()
     {
@@ -43,25 +43,26 @@ public class LiveMocapEngineLoader implements EngineLoader
     }
 
     @Override
-    public void readXML(XMLTokenizer tokenizer, String loaderId, String vhId, String vhName, Environment[] environments, Loader ... requiredLoaders) throws IOException
+    public void readXML(XMLTokenizer tokenizer, String loaderId, String vhId, String vhName, Environment[] environments,
+            Loader... requiredLoaders) throws IOException
     {
         id = loaderId;
         AsapRealizerEmbodiment are = null;
         for (Loader e : requiredLoaders)
         {
-            if (e instanceof EmbodimentLoader && ((EmbodimentLoader) e).getEmbodiment() 
-                    instanceof AsapRealizerEmbodiment) are = (AsapRealizerEmbodiment) ((EmbodimentLoader) e).getEmbodiment();
+            if (e instanceof EmbodimentLoader && ((EmbodimentLoader) e).getEmbodiment() instanceof AsapRealizerEmbodiment) are = (AsapRealizerEmbodiment) ((EmbodimentLoader) e)
+                    .getEmbodiment();
         }
         while (!tokenizer.atETag("Loader"))
         {
             readSection(tokenizer, requiredLoaders);
         }
         FeedbackManager fbm = are.getFeedbackManager();
-        PlanManager<LiveMocapTMU> planManager = new PlanManager<LiveMocapTMU>(); 
-        LiveMocapPlanner planner = new LiveMocapPlanner(fbm,planManager,inputBinding,outputBinding);
-        DefaultPlayer player = new DefaultPlayer(new SingleThreadedPlanPlayer<LiveMocapTMU>(fbm,planManager));
-        engine = new DefaultEngine<LiveMocapTMU>(planner,player,planManager);
-        
+        PlanManager<LiveMocapTMU> planManager = new PlanManager<LiveMocapTMU>();
+        LiveMocapPlanner planner = new LiveMocapPlanner(fbm, planManager, inputBinding, outputBinding);
+        DefaultPlayer player = new DefaultPlayer(new SingleThreadedPlanPlayer<LiveMocapTMU>(fbm, planManager));
+        engine = new DefaultEngine<LiveMocapTMU>(planner, player, planManager);
+
         // add engine to realizer;
         are.addEngine(engine);
     }
@@ -72,15 +73,15 @@ public class LiveMocapEngineLoader implements EngineLoader
         private String name;
         @Getter
         private String interfaceStr;
-        
+
         @Override
         public void decodeAttributes(HashMap<String, String> attrMap, XMLTokenizer tokenizer)
         {
             name = getRequiredAttribute("name", attrMap, tokenizer);
-            interfaceStr = getRequiredAttribute("interface", attrMap, tokenizer);        
+            interfaceStr = getRequiredAttribute("interface", attrMap, tokenizer);
             super.decodeAttributes(attrMap, tokenizer);
         }
-        
+
         private static final String XMLTAG = "input";
 
         public static String xmlTag()
@@ -102,7 +103,7 @@ public class LiveMocapEngineLoader implements EngineLoader
         private String name;
         @Getter
         private String interfaceStr;
-        
+
         public static String xmlTag()
         {
             return XMLTAG;
@@ -112,10 +113,10 @@ public class LiveMocapEngineLoader implements EngineLoader
         public void decodeAttributes(HashMap<String, String> attrMap, XMLTokenizer tokenizer)
         {
             name = getRequiredAttribute("name", attrMap, tokenizer);
-            interfaceStr = getRequiredAttribute("interface", attrMap, tokenizer);        
+            interfaceStr = getRequiredAttribute("interface", attrMap, tokenizer);
             super.decodeAttributes(attrMap, tokenizer);
         }
-        
+
         @Override
         public String getXMLTag()
         {
@@ -125,13 +126,13 @@ public class LiveMocapEngineLoader implements EngineLoader
 
     private Loader findLoader(String id, Loader... requiredLoaders)
     {
-        for(Loader l:requiredLoaders)
+        for (Loader l : requiredLoaders)
         {
-            if(l.getId().equals(id))return l;
+            if (l.getId().equals(id)) return l;
         }
         return null;
     }
-    
+
     private void checkInterface(String interfaceStr, Object obj)
     {
         Class<?> interfaceClass;
@@ -141,34 +142,34 @@ public class LiveMocapEngineLoader implements EngineLoader
         }
         catch (ClassNotFoundException e)
         {
-            throw new XMLScanException("Interface "+interfaceStr+" not found.",e);
+            throw new XMLScanException("Interface " + interfaceStr + " not found.", e);
         }
-        if( !interfaceClass.isInstance(obj))           
+        if (!interfaceClass.isInstance(obj))
         {
-            throw new XMLScanException("Object "+obj+" is not an instance of "+interfaceStr);
+            throw new XMLScanException("Object " + obj + " is not an instance of " + interfaceStr);
         }
     }
-    
+
     protected void readSection(XMLTokenizer tokenizer, Loader... requiredLoaders) throws IOException
     {
         if (tokenizer.atSTag(Input.xmlTag()))
         {
             Input input = new Input();
-            input.readXML(tokenizer);      
+            input.readXML(tokenizer);
             Loader l = findLoader(input.getName(), requiredLoaders);
-            if(l==null)
+            if (l == null)
             {
-                throw new XMLScanException("Cannot find input sensor with name: "+input.getName());
+                throw new XMLScanException("Cannot find input sensor with name: " + input.getName());
             }
             SensorLoader loader;
-            if(l instanceof SensorLoader)
+            if (l instanceof SensorLoader)
             {
-                loader = (SensorLoader)l;
+                loader = (SensorLoader) l;
             }
             else
             {
-                throw new XMLScanException("input "+input+" is not coupled to an SensorLoader");
-            }   
+                throw new XMLScanException("input " + input + " is not coupled to an SensorLoader");
+            }
             checkInterface(input.getInterfaceStr(), loader.getSensor());
             inputBinding.put(input.getName(), input.getInterfaceStr(), loader.getSensor());
         }
@@ -176,28 +177,28 @@ public class LiveMocapEngineLoader implements EngineLoader
         {
             Output output = new Output();
             output.readXML(tokenizer);
-            Loader l = findLoader(output.getName(),requiredLoaders);
-            if(l==null)
+            Loader l = findLoader(output.getName(), requiredLoaders);
+            if (l == null)
             {
-                throw new XMLScanException("Cannot find output embodimentloader with name: "+output.getName());
+                throw new XMLScanException("Cannot find output embodimentloader with name: " + output.getName());
             }
-            
+
             EmbodimentLoader loader;
-            if(l instanceof EmbodimentLoader)
+            if (l instanceof EmbodimentLoader)
             {
-                loader = (EmbodimentLoader)l;
+                loader = (EmbodimentLoader) l;
             }
             else
             {
-                throw new XMLScanException("output "+output+" is not coupled to an EmbodimentLoader");
+                throw new XMLScanException("output " + output + " is not coupled to an EmbodimentLoader");
             }
-            
-            checkInterface(output.getInterfaceStr(),loader.getEmbodiment());
+
+            checkInterface(output.getInterfaceStr(), loader.getEmbodiment());
             outputBinding.put(output.getName(), output.getInterfaceStr(), loader.getEmbodiment());
         }
         else
         {
-            throw new XMLScanException("Invalid content "+tokenizer.currentTokenString()+" in LiveMocapEngineLoader xml.");
+            throw new XMLScanException("Invalid content " + tokenizer.currentTokenString() + " in LiveMocapEngineLoader xml.");
         }
     }
 

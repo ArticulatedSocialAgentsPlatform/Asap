@@ -189,14 +189,15 @@ public final class MURMLMUBuilder
 
                 if (segment.getName("end") == null || !hns.getHandLocation(segment.getName("end"), ePos))
                 {
-                    throw new TMUSetupException("ArmMotorControl::appendSubtrajectory : invalid or missing parameter end" + segment.getName("end")
-                            + "for curved guiding stroke!", mp);
+                    throw new TMUSetupException("ArmMotorControl::appendSubtrajectory : invalid or missing parameter end"
+                            + segment.getName("end") + "for curved guiding stroke!", mp);
                 }
 
-                if (segment.getName("normal")==null||!hns.getAbsoluteDirection(segment.getName("normal"), nVec))
+                if (segment.getName("normal") == null || !hns.getAbsoluteDirection(segment.getName("normal"), nVec))
                 {
-                    throw new TMUSetupException("ArmMotorControl::appendSubtrajectory : invalid or missing parameter normal for curved guiding stroke!, normal="+
-                            segment.getName("normal"),mp);                    
+                    throw new TMUSetupException(
+                            "ArmMotorControl::appendSubtrajectory : invalid or missing parameter normal for curved guiding stroke!, normal="
+                                    + segment.getName("normal"), mp);
                 }
 
                 if (segment.getName("shape") != null)
@@ -277,7 +278,8 @@ public final class MURMLMUBuilder
             // // -- create respective motor program
             // // cout << "creating lmp from:"; traj.writeTo(cout); cout << endl;
             //
-            // // TODO: implement proper scope selection when no scope is provided. I think this is handled through MotorControlFigure::suggestMotorScopeFor in ACE.
+            // // TODO: implement proper scope selection when no scope is provided. 
+            //    I think this is handled through MotorControlFigure::suggestMotorScopeFor in ACE.
             // if (scope == null)
             // {
             // scope = "left_arm";
@@ -630,87 +632,86 @@ public final class MURMLMUBuilder
     {
         return formWristMovement(scope, staticElem, bbm, bmlBlockPeg, bmlId, id, pb, mcp, aniPlayer);
     }
-    
-    public void getStaticHandShapeElementTMU(String scope, Static staticElem, FeedbackManager bbm, BMLBlockPeg bmlBlockPeg,
-            String bmlId, String id, PegBoard pb, MotorControlProgram mcp, AnimationPlayer aniPlayer)
+
+    public void getStaticHandShapeElementTMU(String scope, Static staticElem, FeedbackManager bbm, BMLBlockPeg bmlBlockPeg, String bmlId,
+            String id, PegBoard pb, MotorControlProgram mcp, AnimationPlayer aniPlayer)
     {
-        
-        
-//        // --- preparations
-//        FrameData *frame;
-//        LMP_HandMove *lmp = new LMP_HandMove ("HF_Stroke", scope);
-//        list<pair<MgcReal,GuidingStroke::GStrokePhaseID> > phaseVec;
 
-        List<PostureConstraint> phaseVec = new ArrayList<>();  
+        // // --- preparations
+        // FrameData *frame;
+        // LMP_HandMove *lmp = new LMP_HandMove ("HF_Stroke", scope);
+        // list<pair<MgcReal,GuidingStroke::GStrokePhaseID> > phaseVec;
+
+        List<PostureConstraint> phaseVec = new ArrayList<>();
         SkeletonPose pose = hnsHandshapes.getHNSHandShape(staticElem.getValue());
-        phaseVec.add(new PostureConstraint("strokeStart",pose));
-        phaseVec.add(new PostureConstraint("strokeEnd",pose));
+        phaseVec.add(new PostureConstraint("strokeStart", pose));
+        phaseVec.add(new PostureConstraint("strokeEnd", pose));
 
-//            // get corresponding hand shape
-//            if (getHNSHandShape(sc->getValue(), pose)) {
-//              // constraint start conf
-//              frame = new FrameData (pose, sc->getStartTPC().time);
-//              lmp->appendTransitionTo(frame, (int)figure->updateRate, 15, 0.5);
-//              phaseVec.push_back(make_pair( sc->getStartTPC().time, GuidingStroke::STP_STROKE ));
-//
-//              // --- VL-HACK ------------------------------------------
-//              //if ( !fullRetract && !interimRetract )
-//              //{
-//              //phaseVec.back().second = STP_FINISH;
-//              //eT = sc->getStartTPC().time;
-//              //}
-//              //else {
-//              // --- VL-HACK ------------------------------------------
-//
-//              // constraint end conf
-//              frame = new FrameData (pose, sc->getEndTPC().time);
-//              lmp->appendTransitionTo(frame, (int)figure->updateRate);
-//              phaseVec.push_back(make_pair( sc->getEndTPC().time, GuidingStroke::STP_RETRACT ));
-//              eT = sc->getEndTPC().time;
-//            }
-//            else {
-//              //dbout.Error("HandMotorControl : invalid hand shape spec %s\n",
-//              //  sc->getValue().c_str());
-//              delete lmp;
-//              return;
-//            }
-//          }
-//            
+        // // get corresponding hand shape
+        // if (getHNSHandShape(sc->getValue(), pose)) {
+        // // constraint start conf
+        // frame = new FrameData (pose, sc->getStartTPC().time);
+        // lmp->appendTransitionTo(frame, (int)figure->updateRate, 15, 0.5);
+        // phaseVec.push_back(make_pair( sc->getStartTPC().time, GuidingStroke::STP_STROKE ));
+        //
+        // // --- VL-HACK ------------------------------------------
+        // //if ( !fullRetract && !interimRetract )
+        // //{
+        // //phaseVec.back().second = STP_FINISH;
+        // //eT = sc->getStartTPC().time;
+        // //}
+        // //else {
+        // // --- VL-HACK ------------------------------------------
+        //
+        // // constraint end conf
+        // frame = new FrameData (pose, sc->getEndTPC().time);
+        // lmp->appendTransitionTo(frame, (int)figure->updateRate);
+        // phaseVec.push_back(make_pair( sc->getEndTPC().time, GuidingStroke::STP_RETRACT ));
+        // eT = sc->getEndTPC().time;
+        // }
+        // else {
+        // //dbout.Error("HandMotorControl : invalid hand shape spec %s\n",
+        // // sc->getValue().c_str());
+        // delete lmp;
+        // return;
+        // }
+        // }
+        //
 
-//          else {
-//            dbout.Error("HandMotorControl : invalid movement constraint %s (%s)\n",
-//                (*it)->getSlot().c_str(), (*it)->getScope().c_str());
-//            delete lmp;
-//            return;
-//          }
-//        }
-//        
-//
-//        // -- if retraction is planned at all
-//        if ( retrMode != RTRCT_NO )
-//          {
-//            // insert post-stroke hold if retraction is to start later than 'eT'
-//            float fRetrStartT = mp->getRetractionStartTime();
-//            if ( fRetrStartT > eT )
-//          {
-//            eT = fRetrStartT;
-//            frame = new FrameData (pose, eT);
-//            phaseVec.push_back(make_pair( eT, GuidingStroke::STP_RETRACT ));
-//            lmp->appendTransitionTo(frame, (int)figure->updateRate, 15,0.5);    
-//          }
-//
-//            // --- 3. retraction to neutral hand pose
-//            frame = new FrameData (restPose, eT+handTransitionTime);
-//            phaseVec.push_back(make_pair( eT+handTransitionTime, GuidingStroke::STP_FINISH ));
-//            lmp->appendTransitionTo(frame, (int)figure->updateRate, 15,0.5);
-//          }
-//        else
-//          phaseVec.back().second = GuidingStroke::STP_FINISH;
-//        
+        // else {
+        // dbout.Error("HandMotorControl : invalid movement constraint %s (%s)\n",
+        // (*it)->getSlot().c_str(), (*it)->getScope().c_str());
+        // delete lmp;
+        // return;
+        // }
+        // }
+        //
+        //
+        // // -- if retraction is planned at all
+        // if ( retrMode != RTRCT_NO )
+        // {
+        // // insert post-stroke hold if retraction is to start later than 'eT'
+        // float fRetrStartT = mp->getRetractionStartTime();
+        // if ( fRetrStartT > eT )
+        // {
+        // eT = fRetrStartT;
+        // frame = new FrameData (pose, eT);
+        // phaseVec.push_back(make_pair( eT, GuidingStroke::STP_RETRACT ));
+        // lmp->appendTransitionTo(frame, (int)figure->updateRate, 15,0.5);
+        // }
+        //
+        // // --- 3. retraction to neutral hand pose
+        // frame = new FrameData (restPose, eT+handTransitionTime);
+        // phaseVec.push_back(make_pair( eT+handTransitionTime, GuidingStroke::STP_FINISH ));
+        // lmp->appendTransitionTo(frame, (int)figure->updateRate, 15,0.5);
+        // }
+        // else
+        // phaseVec.back().second = GuidingStroke::STP_FINISH;
+        //
         LMPHandMove hm = new LMPHandMove(scope, phaseVec, bbm, bmlBlockPeg, bmlId, id, pb, aniPlayer);
         mcp.addLMP(hm);
     }
-    
+
     public void getStaticHandLocationElementTMU(String scope, Static staticElem, FeedbackManager bbm, BMLBlockPeg bmlBlockPeg,
             String bmlId, String id, PegBoard pb, MotorControlProgram mcp, AnimationPlayer aniPlayer)
     {

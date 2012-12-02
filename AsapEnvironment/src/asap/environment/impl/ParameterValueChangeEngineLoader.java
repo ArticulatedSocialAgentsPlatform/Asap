@@ -51,14 +51,15 @@ public class ParameterValueChangeEngineLoader implements EngineLoader
     private String id = "";
 
     @Override
-    public void readXML(XMLTokenizer tokenizer, String loaderId, String vhId, String vhName, Environment[] environments, Loader ... requiredLoaders) throws IOException
+    public void readXML(XMLTokenizer tokenizer, String loaderId, String vhId, String vhName, Environment[] environments,
+            Loader... requiredLoaders) throws IOException
     {
         id = loaderId;
         AsapRealizerEmbodiment are = null;
         for (Loader e : requiredLoaders)
         {
-            if (e instanceof EmbodimentLoader && ((EmbodimentLoader) e).getEmbodiment() 
-                    instanceof AsapRealizerEmbodiment) are = (AsapRealizerEmbodiment) ((EmbodimentLoader) e).getEmbodiment();
+            if (e instanceof EmbodimentLoader && ((EmbodimentLoader) e).getEmbodiment() instanceof AsapRealizerEmbodiment) are = (AsapRealizerEmbodiment) ((EmbodimentLoader) e)
+                    .getEmbodiment();
         }
         if (are == null)
         {
@@ -66,8 +67,7 @@ public class ParameterValueChangeEngineLoader implements EngineLoader
         }
         pvcPlanManager = new PlanManager<TimedParameterValueChangeUnit>();
         pvcPlayer = new DefaultPlayer(new SingleThreadedPlanPlayer<TimedParameterValueChangeUnit>(are.getFeedbackManager(), pvcPlanManager));
-        pvcPlanner = new ParameterValueChangePlanner(are.getFeedbackManager(), new TrajectoryBinding(),
-                pvcPlanManager);
+        pvcPlanner = new ParameterValueChangePlanner(are.getFeedbackManager(), new TrajectoryBinding(), pvcPlanManager);
         pvcPlanner.setScheduler(are.getBmlScheduler());
         engine = new DefaultEngine<TimedParameterValueChangeUnit>(pvcPlanner, pvcPlayer, pvcPlanManager);
         engine.setId(id);

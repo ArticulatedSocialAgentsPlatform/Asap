@@ -25,10 +25,14 @@ public class XMLHumanoidTest
         String str =
         "<Humanoid name=\"Billie\" version=\"1.0\">"+
         "  <Limbs>"+
-        "    <Limb name=\"Torso\"      type=\"Torso_Limb\"  start_joint=\"HumanoidRoot\"   end_joint=\"vc1\"   prefix=\"t_\"    is_start_limb=\"1\"/>"+
-        "    <Limb name=\"RLeg\"       type=\"Leg_Limb\"    start_joint=\"rl_hip\"      end_joint=\"rl_toe2\" prefix=\"rl_\"   is_start_limb=\"0\"/>"+
-        "    <Limb name=\"LLeg\"       type=\"Leg_Limb\"    start_joint=\"ll_hip\"      end_joint=\"ll_toe2\" prefix=\"ll_\"   is_start_limb=\"0\"/>"+
-        "    <Limb name=\"LArm\"       type=\"Arm_Limb\"    start_joint=\"l_clavicle\"     end_joint=\"l_wrist\" prefix=\"l_\"   is_start_limb=\"0\"/>" +
+        "    <Limb name=\"Torso\"      type=\"Torso_Limb\"  start_joint=\"HumanoidRoot\"   " +
+        "       end_joint=\"vc1\"   prefix=\"t_\"    is_start_limb=\"1\"/>"+
+        "    <Limb name=\"RLeg\"       type=\"Leg_Limb\"    start_joint=\"rl_hip\"      " +
+        "           end_joint=\"rl_toe2\" prefix=\"rl_\"   is_start_limb=\"0\"/>"+
+        "    <Limb name=\"LLeg\"       type=\"Leg_Limb\"    start_joint=\"ll_hip\"      " +
+        "           end_joint=\"ll_toe2\" prefix=\"ll_\"   is_start_limb=\"0\"/>"+
+        "    <Limb name=\"LArm\"       type=\"Arm_Limb\"    start_joint=\"l_clavicle\"     " +
+        "       end_joint=\"l_wrist\" prefix=\"l_\"   is_start_limb=\"0\"/>" +
         "  </Limbs>"+
         "  <Joint name=\"HumanoidRoot\" alias=\"BipKevin\" type=\"Euler_JointXYZ\" num_childs=\"1\">"+ 
         "    <Axis1 angle=\"0\" llimit=\"-180\"   ulimit=\"180\"/>"+

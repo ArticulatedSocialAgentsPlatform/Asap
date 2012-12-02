@@ -18,6 +18,7 @@
  * along with Elckerlyc.  If not, see http://www.gnu.org/licenses/.
  ******************************************************************************/
 package asap.environment.impl;
+
 import hmi.environmentbase.EmbodimentLoader;
 import hmi.environmentbase.Environment;
 import hmi.environmentbase.Loader;
@@ -44,22 +45,22 @@ public class ActivateEngineLoader implements EngineLoader
     private Engine engine = null;
 
     @Override
-    public void readXML(XMLTokenizer tokenizer, String loaderId, String vhId, String vhName, Environment[] environments, Loader ... requiredLoaders) throws IOException
+    public void readXML(XMLTokenizer tokenizer, String loaderId, String vhId, String vhName, Environment[] environments,
+            Loader... requiredLoaders) throws IOException
     {
         id = loaderId;
         AsapRealizerEmbodiment are = null;
         for (Loader e : requiredLoaders)
         {
-            if (e instanceof EmbodimentLoader && ((EmbodimentLoader) e).getEmbodiment() 
-                    instanceof AsapRealizerEmbodiment) are = (AsapRealizerEmbodiment) ((EmbodimentLoader) e).getEmbodiment();
+            if (e instanceof EmbodimentLoader && ((EmbodimentLoader) e).getEmbodiment() instanceof AsapRealizerEmbodiment) are = (AsapRealizerEmbodiment) ((EmbodimentLoader) e)
+                    .getEmbodiment();
         }
         if (are == null)
         {
             throw new RuntimeException("SpeechEngineLoader requires an EmbodimentLoader containing a AsapRealizerEmbodiment");
         }
         PlanManager<TimedActivateUnit> planManager = new PlanManager<TimedActivateUnit>();
-        DefaultPlayer player = new DefaultPlayer(new SingleThreadedPlanPlayer<TimedActivateUnit>(are.getFeedbackManager(),
-                planManager));
+        DefaultPlayer player = new DefaultPlayer(new SingleThreadedPlanPlayer<TimedActivateUnit>(are.getFeedbackManager(), planManager));
         ActivatePlanner planner = new ActivatePlanner(are.getFeedbackManager(), planManager);
         planner.setScheduler(are.getBmlScheduler());
         engine = new DefaultEngine<TimedActivateUnit>(planner, player, planManager);
@@ -71,7 +72,7 @@ public class ActivateEngineLoader implements EngineLoader
     @Override
     public void unload()
     {
-        //engine.shutdown();already done in scheduler...
+        // engine.shutdown();already done in scheduler...
     }
 
     /** Return the Engine that was constructed from the XML specification */

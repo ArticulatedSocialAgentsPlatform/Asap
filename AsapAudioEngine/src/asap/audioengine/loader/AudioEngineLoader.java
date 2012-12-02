@@ -55,18 +55,19 @@ public class AudioEngineLoader implements EngineLoader
     private AsapRealizerEmbodiment are = null;
 
     @Override
-    public void readXML(XMLTokenizer tokenizer, String loaderId, String vhId, String vhName, Environment[] environments, Loader ... requiredLoaders) throws IOException
+    public void readXML(XMLTokenizer tokenizer, String loaderId, String vhId, String vhName, Environment[] environments,
+            Loader... requiredLoaders) throws IOException
     {
         id = loaderId;
         for (Loader e : requiredLoaders)
         {
-          if (e instanceof EmbodimentLoader && ((EmbodimentLoader) e).getEmbodiment() 
-                  instanceof AsapRealizerEmbodiment) are = (AsapRealizerEmbodiment) ((EmbodimentLoader) e).getEmbodiment();
+            if (e instanceof EmbodimentLoader && ((EmbodimentLoader) e).getEmbodiment() instanceof AsapRealizerEmbodiment) are = (AsapRealizerEmbodiment) ((EmbodimentLoader) e)
+                    .getEmbodiment();
         }
         if (are == null)
         {
             throw new RuntimeException("AudioEngineLoader requires an EmbodimentLoader containing a AsapRealizerEmbodiment");
-        }        
+        }
         for (Environment e : environments)
         {
             if (e instanceof AudioEnvironment) aue = (AudioEnvironment) e;
@@ -77,8 +78,7 @@ public class AudioEngineLoader implements EngineLoader
         }
         audioPlanManager = new PlanManager<TimedAbstractAudioUnit>();
         audioPlayer = new DefaultPlayer(new MultiThreadedPlanPlayer<TimedAbstractAudioUnit>(are.getFeedbackManager(), audioPlanManager));
-        AudioPlanner audioPlanner = new AudioPlanner(are.getFeedbackManager(), new Resources(""),
-                audioPlanManager, aue.getSoundManager());
+        AudioPlanner audioPlanner = new AudioPlanner(are.getFeedbackManager(), new Resources(""), audioPlanManager, aue.getSoundManager());
         engine = new DefaultEngine<TimedAbstractAudioUnit>(audioPlanner, audioPlayer, audioPlanManager);
         engine.setId(id);
 

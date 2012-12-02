@@ -33,16 +33,14 @@ import asap.nao.planunit.PlayChoregrapheClipNU;
 
 public class NaoUnitAssembler extends XMLStructureAdapter
 {
-    private static Logger logger = LoggerFactory
-            .getLogger(NaoUnitAssembler.class.getName());
+    private static Logger logger = LoggerFactory.getLogger(NaoUnitAssembler.class.getName());
 
     private NaoUnit naoUnit;
 
     public NaoUnitAssembler()
     {
     }
-    
-    
+
     /**
      * Decode the BMl to see, which NaoUnit should be created.
      */
@@ -51,19 +49,22 @@ public class NaoUnitAssembler extends XMLStructureAdapter
     public void decodeAttributes(HashMap<String, String> attrMap, XMLTokenizer tokenizer)
     {
         String type = getRequiredAttribute("type", attrMap, tokenizer);
-        
-        if (type.equals("DoeIets")){
-        	naoUnit = new DoeIetsNU();
+
+        if (type.equals("DoeIets"))
+        {
+            naoUnit = new DoeIetsNU();
         }
-        else if(type.equals("PlayChoregrapheClip")){
+        else if (type.equals("PlayChoregrapheClip"))
+        {
             naoUnit = new PlayChoregrapheClipNU();
         }
-        else if(type.equals("NaoSay")){
+        else if (type.equals("NaoSay"))
+        {
             naoUnit = new NaoSayNU();
         }
         else
         {
-          logger.warn("Cannot read NaoUnit type \"{}\" in NaoBinding; omitting this NaoUnit", type);
+            logger.warn("Cannot read NaoUnit type \"{}\" in NaoBinding; omitting this NaoUnit", type);
         }
     }
 
@@ -76,22 +77,26 @@ public class NaoUnitAssembler extends XMLStructureAdapter
         return naoUnit;
     }
 
-   /*
-    * The XML Stag for XML encoding
-    */
-   private static final String XMLTAG = "NaoUnit";
- 
-   /**
-    * The XML Stag for XML encoding -- use this static method when you want to see if a given String equals
-    * the xml tag for this class
-    */
-   public static String xmlTag() { return XMLTAG; }
- 
-   /**
-    * The XML Stag for XML encoding -- use this method to find out the run-time xml tag of an object
-    */
-   @Override
-   public String getXMLTag() {
-      return XMLTAG;
-   }
+    /*
+     * The XML Stag for XML encoding
+     */
+    private static final String XMLTAG = "NaoUnit";
+
+    /**
+     * The XML Stag for XML encoding -- use this static method when you want to see if a given String equals
+     * the xml tag for this class
+     */
+    public static String xmlTag()
+    {
+        return XMLTAG;
+    }
+
+    /**
+     * The XML Stag for XML encoding -- use this method to find out the run-time xml tag of an object
+     */
+    @Override
+    public String getXMLTag()
+    {
+        return XMLTAG;
+    }
 }

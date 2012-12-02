@@ -55,9 +55,9 @@ public class NaoPlanner extends AbstractPlanner<TimedNaoUnit>
         BMLInfo.addBehaviourType(NaoPlayChoregrapheClipBehaviour.xmlTag(), NaoPlayChoregrapheClipBehaviour.class);
         BMLInfo.addBehaviourType(NaoSayBehaviour.xmlTag(), NaoSayBehaviour.class);
     }
-  
+
     @SuppressWarnings("unused")
-	private static Logger logger = LoggerFactory.getLogger(NaoPlanner.class.getName());
+    private static Logger logger = LoggerFactory.getLogger(NaoPlanner.class.getName());
 
     private final Nao theNao;
     private final NaoBinding naoBinding;
@@ -80,15 +80,15 @@ public class NaoPlanner extends AbstractPlanner<TimedNaoUnit>
      * Creates a TimedNaoUnit that satisfies sacs and adds it to the plan. All registered BMLFeedbackListener are linked to this TimedNaoUnit.
      */
     @Override
-    public List<SyncAndTimePeg> addBehaviour(BMLBlockPeg bbPeg, Behaviour b, List<TimePegAndConstraint> sacs,
-            TimedNaoUnit planElement) throws BehaviourPlanningException
+    public List<SyncAndTimePeg> addBehaviour(BMLBlockPeg bbPeg, Behaviour b, List<TimePegAndConstraint> sacs, TimedNaoUnit planElement)
+            throws BehaviourPlanningException
     {
         List<SyncAndTimePeg> satps = new ArrayList<SyncAndTimePeg>();
         TimedNaoUnit tnu;
 
         if (planElement == null)
         {
-            List<TimedNaoUnit> tnus = naoBinding.getNaoUnit(fbManager,bbPeg, b, theNao);
+            List<TimedNaoUnit> tnus = naoBinding.getNaoUnit(fbManager, bbPeg, b, theNao);
             if (tnus.isEmpty())
             {
                 throw new BehaviourPlanningException(b, "Behavior " + b.id
@@ -123,10 +123,9 @@ public class NaoPlanner extends AbstractPlanner<TimedNaoUnit>
     }
 
     @Override
-    public TimedNaoUnit resolveSynchs(BMLBlockPeg bbPeg, Behaviour b, List<TimePegAndConstraint> sac)
-            throws BehaviourPlanningException
+    public TimedNaoUnit resolveSynchs(BMLBlockPeg bbPeg, Behaviour b, List<TimePegAndConstraint> sac) throws BehaviourPlanningException
     {
-        List<TimedNaoUnit> tnus = naoBinding.getNaoUnit(fbManager,bbPeg, b, theNao);
+        List<TimedNaoUnit> tnus = naoBinding.getNaoUnit(fbManager, bbPeg, b, theNao);
         if (tnus.isEmpty())
         {
             throw new BehaviourPlanningException(b, "Behavior " + b.id
@@ -167,7 +166,6 @@ public class NaoPlanner extends AbstractPlanner<TimedNaoUnit>
         }
     }
 
-
     @Override
     public List<Class<? extends Behaviour>> getSupportedBehaviours()
     {
@@ -183,11 +181,14 @@ public class NaoPlanner extends AbstractPlanner<TimedNaoUnit>
     {
         List<Class<? extends Behaviour>> list = new ArrayList<Class<? extends Behaviour>>();
         return list;
-    }    
+    }
+
     @Override
     public double getRigidity(Behaviour beh)
     {
-        return 0.5;  //actually, some of the physical movements are quite inflexible; more so than the average vjoint animation. Maybe 0.8 would express this better?
-    }    
-    
+        // actually, some of the physical movements are quite inflexible; more so than the average vjoint animation. 
+        //Maybe 0.8 would express this better?
+        return 0.5; 
+    }
+
 }

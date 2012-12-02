@@ -1,6 +1,5 @@
 package asap.animationengine.ace.lmp;
 
-import hmi.math.Mat4f;
 import asap.animationengine.ace.GuidingSequence;
 import asap.realizer.feedback.FeedbackManager;
 import asap.realizer.pegboard.BMLBlockPeg;
