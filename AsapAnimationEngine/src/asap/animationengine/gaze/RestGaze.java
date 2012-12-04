@@ -13,6 +13,12 @@ import asap.realizer.pegboard.BMLBlockPeg;
 import asap.realizer.pegboard.PegBoard;
 import asap.realizer.planunit.ParameterException;
 
+/**
+ * The restgaze is a dynamic controller that handles all animation
+ * related to the gaze to and from the rest position. Only one restgaze is active at a time, 
+ * and it should normally be played after all other motion units are executed
+ * @author hvanwelbergen
+ */
 public interface RestGaze
 {
     RestGaze copy(AnimationPlayer player);

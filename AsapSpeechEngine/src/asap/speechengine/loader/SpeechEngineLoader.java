@@ -76,12 +76,12 @@ public class SpeechEngineLoader implements EngineLoader
 {
     private static Logger logger = LoggerFactory.getLogger(SpeechEngineLoader.class.getName());
 
-    public enum Voicetype
+    private enum Voicetype
     {
         NOVOICE, SAPI5, MARY
     };
 
-    public enum Factory
+    private enum Factory
     {
         DIRECT_TTS, WAV_TTS
     };

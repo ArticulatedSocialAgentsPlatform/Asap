@@ -16,8 +16,8 @@ public class ValueTest
     @Test
     public void test()
     {
-        String valueScript = "<value xmlns=\"http://www.techfak.uni-bielefeld.de/ags/soa/murml\" " +
-        		"type=\"start\" name=\"LocLowerChest LocCenterRight LocNorm\"/>";
+        String valueScript = "<value xmlns=\"http://www.techfak.uni-bielefeld.de/ags/soa/murml\" "
+                + "type=\"start\" name=\"LocLowerChest LocCenterRight LocNorm\"/>";
         value.readXML(valueScript);
         assertEquals("start", value.getType());
         assertEquals("LocLowerChest LocCenterRight LocNorm", value.getName());

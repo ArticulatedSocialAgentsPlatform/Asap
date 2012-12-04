@@ -22,7 +22,7 @@ import saiba.bml.feedback.BMLWarningFeedback;
  * @author welberge
  */
 @Slf4j
-public class ListBMLFeedbackListener implements BMLFeedbackListener
+public final class ListBMLFeedbackListener implements BMLFeedbackListener
 {
     private final List<BMLPredictionFeedback> predictionList;
     private final List<BMLWarningFeedback> warningList;
@@ -40,6 +40,10 @@ public class ListBMLFeedbackListener implements BMLFeedbackListener
         this.blockFeedbackList = blockFeedbackList;
     }
 
+    /**
+     * Builder for a ListBMLFeedbackListener
+     * @author Herwin
+     */
     public final static class Builder
     {
         private List<BMLPredictionFeedback> predictionList = new ArrayList<>();
