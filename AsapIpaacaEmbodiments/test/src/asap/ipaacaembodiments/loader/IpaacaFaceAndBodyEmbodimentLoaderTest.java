@@ -19,7 +19,6 @@ import asap.ipaacaembodiments.IpaacaEmbodiment;
 
 import com.google.common.collect.ImmutableList;
 import com.google.common.collect.ImmutableMap;
-import com.google.common.collect.ImmutableSet;
 
 /**
  * Loads an IpaacaFaceAndBodyEmbodiment
@@ -37,7 +36,7 @@ public class IpaacaFaceAndBodyEmbodimentLoaderTest
     {
         when(mockEmbodimentLoader.getEmbodiment()).thenReturn(mockEmbodiment);
         when(mockEmbodiment.getRootJointCopy(anyString())).thenReturn(new VJoint("BipKevin_Pelvis","BipKevin_Pelvis"));
-        when(mockEmbodiment.getAvailableJoints()).thenReturn(ImmutableSet.of("BipKevin_Pelvis"));
+        when(mockEmbodiment.getAvailableJoints()).thenReturn(ImmutableList.of("BipKevin_Pelvis"));
                
         
         String str = "<Loader id=\"ipaacabodyandfaceembodiment\" loader=\"asap.ipaacaembodiments.loader.IpaacaFaceAndBodyEmbodimentLoader\">"+

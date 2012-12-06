@@ -192,14 +192,14 @@ public class IpaacaEmbodiment implements Embodiment
         }
     }
 
-    public ImmutableSet<String> getAvailableJoints()
+    public ImmutableList<String> getAvailableJoints()
     {
-        return ImmutableSet.copyOf(availableJoints.get());
+        return ImmutableList.copyOf(availableJoints.get());
     }
 
-    public ImmutableSet<String> getAvailableMorphs()
+    public ImmutableList<String> getAvailableMorphs()
     {
-        return ImmutableSet.copyOf(availableMorphs.get());
+        return ImmutableList.copyOf(availableMorphs.get());
     }
 
     private String toCommaSeperatedList(List<String> strSet)
