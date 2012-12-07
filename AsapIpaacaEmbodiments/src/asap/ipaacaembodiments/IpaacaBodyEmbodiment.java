@@ -61,15 +61,8 @@ public class IpaacaBodyEmbodiment implements SkeletonEmbodiment
     private void updateJointLists(List<String> jointFilter)
     {
         ImmutableList<String> ipaacaJoints = ImmutableList.copyOf(ipaacaEmbodiment.getAvailableJoints());
-        availableJoints = Lists.transform(ipaacaJoints, new Function<String, String>()
-        {
-            @Override
-            public String apply(String str)
-            {
-                return str.replaceAll(" ", "_");
-            }
-        });
-
+        availableJoints = new ArrayList<>(ipaacaJoints);
+        
         unusedJoints = new ArrayList<>();
 
         int i = 0;
@@ -111,9 +104,9 @@ public class IpaacaBodyEmbodiment implements SkeletonEmbodiment
             // apply renaming
             for (VJoint vj : submitJoint.getParts())
             {
-                if (renamingMap.get(vj.getSid().replace(" ", "_")) != null)
+                if (renamingMap.get(vj.getSid()) != null)
                 {
-                    vj.setSid(renamingMap.get(vj.getSid().replace(" ", "_")));
+                    vj.setSid(renamingMap.get(vj.getSid()));
                 }
             }
             submitJoint = submitJoint.getPart(Hanim.HumanoidRoot);

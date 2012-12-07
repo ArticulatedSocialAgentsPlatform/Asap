@@ -1,8 +1,8 @@
 package asap.ipaacaembodiments;
 
-import com.google.common.collect.ImmutableMap;
-
 import hmi.faceembodiments.FaceEmbodiment;
+
+import com.google.common.collect.ImmutableMap;
 
 /**
  * FaceEmbodiment that makes use of an IpaacaFaceController
@@ -14,9 +14,10 @@ public class IpaacaFaceEmbodiment implements FaceEmbodiment
     private final IpaacaFaceController fc;
     private String id;
     
+    
     public IpaacaFaceEmbodiment(IpaacaFaceController fc)
     {
-        this.fc = fc;
+        this.fc = fc;         
     }
     
     @Override

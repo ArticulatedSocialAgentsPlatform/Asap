@@ -11,5 +11,6 @@ privateprops
 *.*~
 manifest.mf
 docs/Asap
+docs/html
 report
 *.swp

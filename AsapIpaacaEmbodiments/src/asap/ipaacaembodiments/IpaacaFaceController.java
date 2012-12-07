@@ -2,6 +2,8 @@ package asap.ipaacaembodiments;
 
 import java.util.Collection;
 
+import com.google.common.collect.BiMap;
+import com.google.common.collect.HashBiMap;
 import com.google.common.collect.ImmutableMap;
 
 import hmi.faceanimation.FaceController;
@@ -17,7 +19,12 @@ public class IpaacaFaceController implements FaceController
 {
     public IpaacaFaceController(IpaacaEmbodiment env)
     {
-        mfc = new IpaacaMorphFaceController(env);
+        this(env, HashBiMap.<String,String>create());
+    }
+    
+    public IpaacaFaceController(IpaacaEmbodiment env, BiMap<String, String> renamingMap)
+    {
+        mfc = new IpaacaMorphFaceController(env, renamingMap);
     }
 
     private interface Excludes
