@@ -12,6 +12,7 @@
       <dependency org="HMI"   name="HmiMath"            rev="latest.${resolve.status}"   />
       <dependency org="HMI"   name="HmiAnimation"       rev="latest.${resolve.status}"   />
       <dependency org="HMI"   name="HmiFaceAnimation"   rev="latest.${resolve.status}"   />
+      <dependency org="HMI"   name="HmiFaceAnimationUI"   rev="latest.${resolve.status}"   />
       
 	  <dependency org="HMI"   name="HmiTTS"             transitive="false" rev="latest.${resolve.status}"   />
 	  <dependency org="HMI"   name="HmiEnvironmentBase"             rev="latest.${resolve.status}"   />

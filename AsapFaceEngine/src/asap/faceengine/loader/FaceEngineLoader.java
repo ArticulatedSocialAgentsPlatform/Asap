@@ -25,9 +25,9 @@ import hmi.environmentbase.Loader;
 import hmi.faceanimation.FaceController;
 import hmi.faceanimation.converters.EmotionConverter;
 import hmi.faceanimation.converters.FACSConverter;
-import hmi.faceanimation.converters.ui.EmotionConverterFrame;
-import hmi.faceanimation.converters.ui.FACSConverterFrame;
-import hmi.faceanimation.converters.ui.MPEG4ControllerFrame;
+import hmi.faceanimationui.converters.EmotionConverterFrame;
+import hmi.faceanimationui.converters.FACSConverterFrame;
+import hmi.faceanimationui.converters.MPEG4ControllerFrame;
 import hmi.faceembodiments.FaceEmbodiment;
 import hmi.util.Resources;
 import hmi.xml.XMLStructureAdapter;
@@ -127,7 +127,8 @@ public class FaceEngineLoader implements EngineLoader
         else if (tokenizer.atSTag("FACSConverterData"))
         {
             attrMap = tokenizer.getAttributes();
-            fconv = new FACSConverter(new Resources(adapter.getOptionalAttribute("resources", attrMap, "")),adapter.getRequiredAttribute("filename", attrMap, tokenizer));
+            fconv = new FACSConverter(new Resources(adapter.getOptionalAttribute("resources", attrMap, "")),
+                    adapter.getRequiredAttribute("filename", attrMap, tokenizer));
             tokenizer.takeEmptyElement("FACSConverterData");
         }
         else if (tokenizer.atSTag("FaceUI"))
