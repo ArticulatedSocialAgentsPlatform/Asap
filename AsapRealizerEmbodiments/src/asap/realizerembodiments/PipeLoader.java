@@ -17,9 +17,10 @@ public interface PipeLoader
      * read the piping specification from the XML, and adapt the given realizerPort
      * @param theSchedulingClock
      * @throws IOException
+     * @throws XMLScanException
      */
     void readXML(XMLTokenizer theTokenizer, String id, String vhId, String name, RealizerPort realizerPort, Clock theSchedulingClock)
-            throws XMLScanException, IOException;
+            throws IOException;
 
     /** return the adapted realizerPort */
     RealizerPort getAdaptedRealizerPort();

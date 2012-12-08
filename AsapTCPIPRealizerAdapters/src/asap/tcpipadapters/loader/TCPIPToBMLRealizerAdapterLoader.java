@@ -27,8 +27,11 @@ public class TCPIPToBMLRealizerAdapterLoader implements PipeLoader
     private TCPIPToBMLRealizerAdapter tcpIpAdapter;
     
     @Override
+    /**
+     * @throws XMLScanException on invalid loader XML
+     */
     public void readXML(XMLTokenizer theTokenizer, String id, String vhId, String name, RealizerPort realizerPort, Clock theSchedulingClock)
-            throws XMLScanException, IOException
+            throws IOException
     {
         adaptedRealizerPort = realizerPort;
         if(!theTokenizer.atSTag("ServerOptions"))

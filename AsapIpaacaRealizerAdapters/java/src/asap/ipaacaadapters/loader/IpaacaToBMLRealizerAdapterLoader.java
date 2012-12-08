@@ -20,9 +20,12 @@ public class IpaacaToBMLRealizerAdapterLoader implements PipeLoader
     private RealizerPort adaptedRealizerPort = null;
     private IpaacaToBMLRealizerAdapter ipaacaAdapter;
     
+    /**
+     * @throws XMLScanException
+     */
     @Override
     public void readXML(XMLTokenizer theTokenizer, String id, String vhId, String name, RealizerPort realizerPort, Clock theSchedulingClock)
-            throws XMLScanException, IOException
+            throws IOException
     {
         adaptedRealizerPort = realizerPort;
         ipaacaAdapter = new IpaacaToBMLRealizerAdapter(realizerPort);        

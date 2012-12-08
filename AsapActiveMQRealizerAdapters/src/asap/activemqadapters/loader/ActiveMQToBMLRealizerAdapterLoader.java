@@ -22,9 +22,13 @@ import asap.realizerport.RealizerPort;
 public class ActiveMQToBMLRealizerAdapterLoader implements PipeLoader
 {
     private RealizerPort adaptedRealizerPort = null;
+    
+    /**
+     * @throws XMLScanException
+     */
     @Override
     public void readXML(XMLTokenizer theTokenizer, String id, String vhId, String name, RealizerPort realizerPort, Clock theSchedulingClock)
-            throws XMLScanException, IOException
+            throws IOException
     {
         try
         {

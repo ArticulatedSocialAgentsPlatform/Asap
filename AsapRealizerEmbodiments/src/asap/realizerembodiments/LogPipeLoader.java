@@ -22,9 +22,12 @@ public class LogPipeLoader implements PipeLoader
 
     private LogPipe adaptedRealizerPort = null;
 
+    /**
+     * @throws XMLScanException
+     */
     @Override
     public void readXML(XMLTokenizer theTokenizer, String id, String vhId, String name, RealizerPort realizerPort, Clock theSchedulingClock)
-            throws XMLScanException, IOException
+            throws IOException
     {
         XMLStructureAdapter adapter = new XMLStructureAdapter();
         HashMap<String, String> attrMap = null;
