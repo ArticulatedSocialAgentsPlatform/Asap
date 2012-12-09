@@ -1,5 +1,5 @@
 <ivy-module version="2.0">
-   <info organisation="Asap" module="AsapIpaacaRealizerAdapters" />
+   <info organisation="Asap" module="AsapIpaacaRealizerAdaptersPython" />
    <publications>
    <artifact type="py.zip" ext="py.zip"/>
    </publications>
@@ -7,6 +7,6 @@
       <dependency org="google" name="protobuf" rev="latest.release"/>
       <dependency org="rsb" name="rsb" rev="latest.release"/>
       <dependency org="ipaaca" name="IpaacaPython" rev="latest.release"/>
-      <dependency org="Asap" name="AsapRealizerPort" rev="latest.release"/>
+      <dependency org="Asap" name="AsapRealizerPortPython" rev="latest.release"/>
    </dependencies>
 </ivy-module>
