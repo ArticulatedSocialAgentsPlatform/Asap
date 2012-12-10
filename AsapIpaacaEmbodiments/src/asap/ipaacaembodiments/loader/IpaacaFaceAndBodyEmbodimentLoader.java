@@ -1,6 +1,5 @@
 package asap.ipaacaembodiments.loader;
 
-import hmi.animation.RenamingMap;
 import hmi.animation.RenamingXMLMap;
 import hmi.environmentbase.ClockDrivenCopyEnvironment;
 import hmi.environmentbase.Embodiment;
@@ -97,7 +96,7 @@ public class IpaacaFaceAndBodyEmbodimentLoader implements EmbodimentLoader
             String skelRenamingFile = adapter.getRequiredAttribute("skeletonRenamingFile",attrMap,tokenizer);
             skeletonRenaming = getRenamingMap(skelRenamingFile);
             
-            String morphsRenamingFile = adapter.getOptionalAttribute("skeletonRenamingFile",attrMap);            
+            String morphsRenamingFile = adapter.getOptionalAttribute("morphRenamingFile",attrMap);            
             if(morphsRenamingFile!=null)
             {
                 morphRenaming = getRenamingMap(morphsRenamingFile);
