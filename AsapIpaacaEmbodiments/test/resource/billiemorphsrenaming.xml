@@ -1,0 +1,53 @@
+<renamingMap xmlns="http://www.asap-project.org/renaming">
+<rename src="KevinHead.mesh-0"	dst="KevinHead.mesh-MouthOpen"/>
+<rename src="KevinHead.mesh-1"	dst="KevinHead.mesh-LipsOpen"/>
+<rename src="KevinHead.mesh-2"	dst="KevinHead.mesh-Smile"/>
+<rename src="KevinHead.mesh-3"	dst="KevinHead.mesh-EvilInnocent"/>
+<rename src="KevinHead.mesh-4"	dst="KevinHead.mesh-MandibleFront"/>
+<rename src="KevinHead.mesh-5"	dst="KevinHead.mesh-MandibleOpen"/>
+<rename src="KevinHead.mesh-6"	dst="KevinHead.mesh-EyeLeft"/>
+<rename src="KevinHead.mesh-7"	dst="KevinHead.mesh-EyeRight"/>
+<rename src="KevinHead.mesh-8"	dst="KevinHead.mesh-BrowLeft"/>
+<rename src="KevinHead.mesh-9"	dst="KevinHead.mesh-BrowRight"/>
+<rename src="KevinHead.mesh-10"	dst="KevinHead.mesh-LipTipLeft"/>
+<rename src="KevinHead.mesh-11"	dst="KevinHead.mesh-LipTipRight"/>
+<rename src="KevinHead.mesh-12"	dst="KevinHead.mesh-LipsUpleft"/>
+<rename src="KevinHead.mesh-13"	dst="KevinHead.mesh-LipsUpRight"/>
+<rename src="KevinHead.mesh-14"	dst="KevinHead.mesh-LipsDownLeft"/>
+<rename src="KevinHead.mesh-15"	dst="KevinHead.mesh-LipsDownRight"/>
+<rename src="KevinHead.mesh-16"	dst="KevinHead.mesh-TongueLick"/>
+<rename src="KevinHead.mesh-17"	dst="KevinHead.mesh-TongueLipsLick"/>
+<rename src="KevinHead.mesh-18"	dst="KevinHead.mesh-TongueLeftRight"/>
+<rename src="KevinHead.mesh-19"	dst="KevinHead.mesh-ChinUpDown"/>
+<rename src="KevinHead.mesh-20"	dst="KevinHead.mesh-A"/>
+<rename src="KevinHead.mesh-21"	dst="KevinHead.mesh-E"/>
+<rename src="KevinHead.mesh-22"	dst="KevinHead.mesh-O"/>
+<rename src="KevinHead.mesh-23"	dst="KevinHead.mesh-U"/>
+<rename src="KevinHead.mesh-24"	dst="KevinHead.mesh-DGKNRSY"/>
+<rename src="KevinHead.mesh-25"	dst="KevinHead.mesh-FV"/>
+<rename src="KevinHead.mesh-26"	dst="KevinHead.mesh-Th"/>
+<rename src="KevinHead.mesh-27"	dst="KevinHead.mesh-L"/>
+<rename src="KevinHead.mesh-28"	dst="KevinHead.mesh-MBP"/>
+<rename src="KevinHead.mesh-29"	dst="KevinHead.mesh-WOOQ"/>
+<rename src="KevinHead.mesh-30"	dst="KevinHead.mesh-Rest"/>
+<rename src="KevinHead.mesh-31"	dst="KevinHead.mesh-LipsLeftRight"/>
+<rename src="KevinHead.mesh-32"	dst="KevinHead.mesh-LipsUpDown"/>
+<rename src="KevinHead.mesh-33"	dst="KevinHead.mesh-CheekLeft"/>
+<rename src="KevinHead.mesh-34"	dst="KevinHead.mesh-CheekRight"/>
+<rename src="Teeth Lower.mesh-0"	dst="Teeth Lower.mesh-Open"/>
+<rename src="Teeth Lower.mesh-1"	dst="Teeth Lower.mesh-MandibleLeft"/>
+<rename src="Teeth Lower.mesh-2"	dst="Teeth Lower.mesh-MandibleRight"/>
+<rename src="Teeth Lower.mesh-3"	dst="Teeth Lower.mesh-MandibleFront"/>
+<rename src="Teeth Lower.mesh-4"	dst="Teeth Lower.mesh-JawOpen"/>
+<rename src="Teeth Lower.mesh-5"	dst="Teeth Lower.mesh-A"/>
+<rename src="Teeth Lower.mesh-6"	dst="Teeth Lower.mesh-E"/>
+<rename src="Teeth Lower.mesh-7"	dst="Teeth Lower.mesh-O"/>
+<rename src="Teeth Lower.mesh-8"	dst="Teeth Lower.mesh-U"/>
+<rename src="Teeth Lower.mesh-9"	dst="Teeth Lower.mesh-DGKNRSY"/>
+<rename src="Teeth Lower.mesh-10"	dst="Teeth Lower.mesh-FV"/>
+<rename src="Teeth Lower.mesh-11"	dst="Teeth Lower.mesh-Th"/>
+<rename src="Teeth Lower.mesh-12"	dst="Teeth Lower.mesh-L"/>
+<rename src="Teeth Lower.mesh-13"	dst="Teeth Lower.mesh-MBP"/>
+<rename src="Teeth Lower.mesh-14"	dst="Teeth Lower.mesh-WOOQ"/>
+<rename src="Teeth Lower.mesh-15"	dst="Teeth Lower.mesh-Rest"/>
+</renamingMap>

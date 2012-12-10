@@ -1,0 +1,74 @@
+<renamingMap xmlns="http://www.asap-project.org/renaming">
+<rename src="BipKevin" dst="HumanoidRoot"/>
+<rename src="BipKevin Pelvis" dst="vl5"/>
+<rename src="BipKevin Spine" dst="vt10"/>
+<rename src="BipKevin Spine1" dst="vt6"/>
+<rename src="BipKevin Spine2" dst="vt3"/>
+<rename src="BipKevin Spine3" dst="vt1"/>
+<rename src="BipKevin Neck" dst="vc4"/>
+<rename src="BipKevin Head" dst="skullbase"/>
+<rename src="BipKevin L Thigh" dst="l_hip"/>
+<rename src="BipKevin L Calf" dst="l_knee"/>
+<rename src="BipKevin L Foot" dst="l_ankle"/>
+<rename src="BipKevin L Toe0" dst="l_subtalar"/>
+<rename src="BipKevin L Toe1" dst="l_midtarsal"/>
+<rename src="BipKevin R Thigh" dst="r_hip"/>
+<rename src="BipKevin R Calf" dst="r_knee"/>
+<rename src="BipKevin R Foot" dst="r_ankle"/>
+<rename src="BipKevin R Toe0" dst="r_subtalar"/>
+<rename src="BipKevin R Toe1" dst="r_midtarsal"/>
+<rename src="BipKevin L Clavicle" dst="l_sternoclavicular"/>
+<rename src="BipKevin L UpperArm" dst="l_shoulder"/>
+<rename src="BipKevin L Forearm" dst="l_elbow"/>
+<rename src="BipKevin L Hand" dst="l_wrist"/>
+<rename src="BipKevin L Finger0" dst="l_thumb1"/>
+<rename src="BipKevin L Finger01" dst="l_thumb2"/>
+<rename src="BipKevin L Finger02" dst="l_thumb3"/>
+<rename src="BipKevin L Finger0Nub" dst="l_thumb_distal_tip"/>
+<rename src="BipKevin L Finger1" dst="l_index1"/>
+<rename src="BipKevin L Finger11" dst="l_index2"/>
+<rename src="BipKevin L Finger12" dst="l_index3"/>
+<rename src="BipKevin L Finger1Nub" dst="l_index_distal_tip"/>
+<rename src="BipKevin L Finger2" dst="l_middle1"/>
+<rename src="BipKevin L Finger21" dst="l_middle2"/>
+<rename src="BipKevin L Finger22" dst="l_middle3"/>
+<rename src="BipKevin L Finger2Nub" dst="l_middle_distal_tip"/>
+<rename src="BipKevin L Finger3" dst="l_ring1"/>
+<rename src="BipKevin L Finger31" dst="l_ring2"/>
+<rename src="BipKevin L Finger32" dst="l_ring3"/>
+<rename src="BipKevin L Finger3Nub" dst="l_ring_distal_tip"/>
+<rename src="BipKevin L Finger4" dst="l_pinky1"/>
+<rename src="BipKevin L Finger41" dst="l_pinky2"/>
+<rename src="BipKevin L Finger42" dst="l_pinky3"/>
+<rename src="BipKevin L Finger4Nub" dst="l_pinky_distal_tip"/>
+<rename src="BipKevin R Clavicle" dst="r_sternoclavicular"/>
+<rename src="BipKevin R UpperArm" dst="r_shoulder"/>
+<rename src="BipKevin R Forearm" dst="r_elbow"/>
+<rename src="BipKevin R Hand" dst="r_wrist"/>
+<rename src="BipKevin R Finger0" dst="r_thumb1"/>
+<rename src="BipKevin R Finger01" dst="r_thumb2"/>
+<rename src="BipKevin R Finger02" dst="r_thumb3"/>
+<rename src="BipKevin R Finger0Nub" dst="r_thumb_distal_tip"/>
+<rename src="BipKevin R Finger1" dst="r_index1"/>
+<rename src="BipKevin R Finger11" dst="r_index2"/>
+<rename src="BipKevin R Finger12" dst="r_index3"/>
+<rename src="BipKevin R Finger1Nub" dst="r_index_distal_tip"/>
+<rename src="BipKevin R Finger2" dst="r_middle1"/>
+<rename src="BipKevin R Finger21" dst="r_middle2"/>
+<rename src="BipKevin R Finger22" dst="r_middle3"/>
+<rename src="BipKevin R Finger2Nub" dst="r_middle_distal_tip"/>
+<rename src="BipKevin R Finger3" dst="r_ring1"/>
+<rename src="BipKevin R Finger31" dst="r_ring2"/>
+<rename src="BipKevin R Finger32" dst="r_ring3"/>
+<rename src="BipKevin R Finger3Nub" dst="r_ring_distal_tip"/>
+<rename src="BipKevin R Finger4" dst="r_pinky1"/>
+<rename src="BipKevin R Finger41" dst="r_pinky2"/>
+<rename src="BipKevin R Finger42" dst="r_pinky3"/>
+<rename src="BipKevin R Finger4Nub" dst="r_pinky_distal_tip"/>
+<rename src="EyeLeft" dst="l_eyeball_joint"/>
+<rename src="EyeRight" dst="r_eyeball_joint"/>
+<rename src="Teeth Lower" dst="temporomandibular"/>
+<rename src="BipKevin HeadNub" dst="skulltop"/>
+<rename src="BipKevin L Toe0Nub" dst="l_forefoot_tip"/>
+<rename src="BipKevin R Toe0Nub" dst="r_forefoot_tip"/>
+</renamingMap>

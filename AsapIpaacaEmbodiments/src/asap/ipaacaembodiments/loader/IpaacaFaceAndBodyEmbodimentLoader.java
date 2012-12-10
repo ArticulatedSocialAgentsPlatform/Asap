@@ -1,12 +1,14 @@
 package asap.ipaacaembodiments.loader;
 
 import hmi.animation.RenamingMap;
+import hmi.animation.RenamingXMLMap;
 import hmi.environmentbase.ClockDrivenCopyEnvironment;
 import hmi.environmentbase.Embodiment;
 import hmi.environmentbase.EmbodimentLoader;
 import hmi.environmentbase.Environment;
 import hmi.environmentbase.Loader;
 import hmi.util.ArrayUtils;
+import hmi.util.Resources;
 import hmi.xml.XMLScanException;
 import hmi.xml.XMLStructureAdapter;
 import hmi.xml.XMLTokenizer;
@@ -21,6 +23,7 @@ import asap.ipaacaembodiments.IpaacaFaceController;
 import asap.ipaacaembodiments.IpaacaFaceEmbodiment;
 
 import com.google.common.collect.BiMap;
+import com.google.common.collect.HashBiMap;
 import com.google.common.collect.ImmutableList;
 
 /**
@@ -32,7 +35,9 @@ public class IpaacaFaceAndBodyEmbodimentLoader implements EmbodimentLoader
     private String id;
     private IpaacaFaceAndBodyEmbodiment embodiment;
     private XMLStructureAdapter adapter = new XMLStructureAdapter();
-    private String renamingFile;
+    private BiMap<String,String> skeletonRenaming = null;
+    private BiMap<String,String> morphRenaming = HashBiMap.create();
+
     
     @Override
     public String getId()
@@ -64,14 +69,21 @@ public class IpaacaFaceAndBodyEmbodimentLoader implements EmbodimentLoader
         }     
         
         IpaacaEmbodiment ipEmb = ldr.getEmbodiment();
-        BiMap<String, String> renamingMap = RenamingMap.renamingMapFromFileOnClasspath(renamingFile);
-        IpaacaFaceController fc = new IpaacaFaceController(ldr.getEmbodiment());
+        
+        IpaacaFaceController fc = new IpaacaFaceController(ldr.getEmbodiment(), morphRenaming);
         IpaacaFaceEmbodiment faceEmbodiment = new IpaacaFaceEmbodiment(fc);        
         IpaacaBodyEmbodiment bodyEmbodiment = new IpaacaBodyEmbodiment(id, ipEmb);
-        bodyEmbodiment.init(renamingMap, ImmutableList.copyOf(renamingMap.values()));
+        bodyEmbodiment.init(skeletonRenaming, ImmutableList.copyOf(skeletonRenaming.values()));
         embodiment = new IpaacaFaceAndBodyEmbodiment(id, ipEmb, faceEmbodiment,bodyEmbodiment);
            
         copyEnv.addCopyEmbodiment(embodiment);
+    }
+    
+    private BiMap<String,String> getRenamingMap(String mappingFile)throws IOException
+    {
+        RenamingXMLMap map = new RenamingXMLMap();
+        map.readXML(new XMLTokenizer(new Resources("").getInputStream(mappingFile)));
+        return map.getRenamingMap();
     }
 
     protected void readSection(XMLTokenizer tokenizer) throws IOException
@@ -80,7 +92,16 @@ public class IpaacaFaceAndBodyEmbodimentLoader implements EmbodimentLoader
         if (tokenizer.atSTag("renaming"))
         {
             attrMap = tokenizer.getAttributes();
-            renamingFile = adapter.getRequiredAttribute("renamingFile",attrMap,tokenizer);
+            
+            attrMap = tokenizer.getAttributes();
+            String skelRenamingFile = adapter.getRequiredAttribute("skeletonRenamingFile",attrMap,tokenizer);
+            skeletonRenaming = getRenamingMap(skelRenamingFile);
+            
+            String morphsRenamingFile = adapter.getOptionalAttribute("skeletonRenamingFile",attrMap);            
+            if(morphsRenamingFile!=null)
+            {
+                morphRenaming = getRenamingMap(morphsRenamingFile);
+            }            
         }
         else
         {

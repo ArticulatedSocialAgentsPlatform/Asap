@@ -35,10 +35,10 @@ public class IpaacaBodyEmbodimentLoaderTest
     public void test() throws IOException
     {
         when(mockEmbodimentLoader.getEmbodiment()).thenReturn(mockEmbodiment);
-        when(mockEmbodiment.getRootJointCopy(anyString())).thenReturn(new VJoint("BipKevin_Pelvis","BipKevin_Pelvis"));
-        when(mockEmbodiment.getAvailableJoints()).thenReturn(ImmutableList.of("BipKevin_Pelvis"));
+        when(mockEmbodiment.getRootJointCopy(anyString())).thenReturn(new VJoint("BipKevin","BipKevin"));
+        when(mockEmbodiment.getAvailableJoints()).thenReturn(ImmutableList.of("BipKevin"));
         String str = "<Loader id=\"ipaacabodyembodiment\" loader=\"asap.ipaacaembodiments.loader.IpaacaBodyEmbodimentLoader\">"
-        + "<renaming renamingFile=\"billierenaming.txt\"/>"
+        + "<renaming skeletonRenamingFile=\"billieskeletonrenaming.xml\"/>"
         +"</Loader>";
         ClockDrivenCopyEnvironment env = new ClockDrivenCopyEnvironment(20);
         IpaacaBodyEmbodimentLoader loader = new IpaacaBodyEmbodimentLoader();
