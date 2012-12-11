@@ -57,7 +57,7 @@ public class VisemeToMorphMapping extends XMLStructureAdapter
             int viseme = getRequiredIntAttribute("viseme", attrMap, tokenizer);
             String target = getRequiredAttribute("target", attrMap, tokenizer);
             float intensity = getOptionalFloatAttribute("intensity",attrMap, 1f);
-            mappings.put(Integer.valueOf(viseme),new MorphVisemeDescription(target,intensity));
+            mappings.put(Integer.valueOf(viseme),new MorphVisemeDescription(target.split(","),intensity));
             tokenizer.takeSTag("Mapping");
             tokenizer.takeETag("Mapping");
         }

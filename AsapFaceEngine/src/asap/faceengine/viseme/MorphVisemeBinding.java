@@ -18,19 +18,27 @@
  ******************************************************************************/
 package asap.faceengine.viseme;
 
+import hmi.faceanimation.FaceController;
+
+import java.util.ArrayList;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Set;
+
+import lombok.extern.slf4j.Slf4j;
+import saiba.bml.core.Behaviour;
 import asap.faceengine.faceunit.MorphFU;
 import asap.faceengine.faceunit.TimedFaceUnit;
 import asap.realizer.feedback.FeedbackManager;
 import asap.realizer.feedback.NullFeedbackManager;
 import asap.realizer.pegboard.BMLBlockPeg;
-import saiba.bml.core.Behaviour;
-import hmi.faceanimation.FaceController;
 
 /**
  * Implementation that realizers visemes as morphs
  * 
  * @author Dennis Reidsma
  */
+@Slf4j
 public class MorphVisemeBinding implements VisemeBinding
 {
     private VisemeToMorphMapping visemeMapping;
@@ -50,19 +58,27 @@ public class MorphVisemeBinding implements VisemeBinding
             viseme = 0;
         MorphVisemeDescription desc = visemeMapping.getMorphTargetForViseme(viseme);
         
-        String targetName = "";
+        Set<String> targetNames = new HashSet<String>();
         visemeFU.setIntensity(1);
         if(desc!=null)
         {
             visemeFU.setIntensity(desc.getIntensity());
-            targetName = desc.getMorphName();
+            targetNames.addAll(desc.getMorphNames());
         }
         
-        if (!fc.getPossibleFaceMorphTargetNames().contains(targetName))
-            targetName = "";
+        List<String>removeTargets = new ArrayList<String>();
+        for(String target:targetNames)
+        {
+            if (!fc.getPossibleFaceMorphTargetNames().contains(target))
+            {
+                removeTargets.add(target);
+                log.warn("Morphvisemebinding refers to non-existing morph {}", target);
+            }
+        }
+        targetNames.removeAll(removeTargets);
             
-        visemeFU.setTargetName(targetName);
-
+        visemeFU.setMorphTargets(targetNames);
+        
         TimedFaceUnit tfu = visemeFU.copy(fc, null, null).createTFU(bfm, bbPeg, b.getBmlId(), b.id);
         // time pegs not yet set. Here we just arrange relative timing
         tfu.getKeyPosition("attackPeak").time = 0.5;

@@ -2,7 +2,9 @@ package asap.faceengine.viseme;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNull;
+import static org.junit.Assert.assertThat;
 
+import org.hamcrest.collection.IsIterableContainingInAnyOrder;
 import org.junit.Test;
 /**
  * Unit tests for VisemeToMorphMapping
@@ -17,16 +19,24 @@ public class VisemeToMorphMappingTest
     public void testReadXML()
     {
         map.readXML("<VisemeToMorphMapping><Mapping viseme=\"10\" target=\"visemetest\"/></VisemeToMorphMapping>");
-        assertEquals("visemetest",map.getMorphTargetForViseme(10).morphName);
-        assertEquals(1,map.getMorphTargetForViseme(10).intensity,PARAMETER_PRECISION);
+        assertThat(map.getMorphTargetForViseme(10).getMorphNames(), IsIterableContainingInAnyOrder.containsInAnyOrder("visemetest"));
+        assertEquals(1,map.getMorphTargetForViseme(10).intensity,PARAMETER_PRECISION);        
     }
     
     @Test
     public void testReadXML2()
     {
         map.readXML("<VisemeToMorphMapping><Mapping viseme=\"10\" intensity=\"0.5\" target=\"visemetest\"/></VisemeToMorphMapping>");
-        assertEquals("visemetest",map.getMorphTargetForViseme(10).morphName);
+        assertThat(map.getMorphTargetForViseme(10).getMorphNames(), IsIterableContainingInAnyOrder.containsInAnyOrder("visemetest"));
         assertEquals(0.5,map.getMorphTargetForViseme(10).intensity,PARAMETER_PRECISION);
+    }
+    
+    @Test
+    public void testReadXMLMultipleMorphs()
+    {
+        map.readXML("<VisemeToMorphMapping><Mapping viseme=\"10\" target=\"visemetest,visemetest2\"/></VisemeToMorphMapping>");
+        assertThat(map.getMorphTargetForViseme(10).getMorphNames(), IsIterableContainingInAnyOrder.containsInAnyOrder("visemetest","visemetest2"));
+        assertEquals(1,map.getMorphTargetForViseme(10).intensity,PARAMETER_PRECISION);
     }
     
     @Test

@@ -25,6 +25,7 @@ import hmi.util.AnimationSync;
 import hmi.util.StringUtil;
 
 import java.util.Arrays;
+import java.util.Set;
 
 import lombok.Delegate;
 import lombok.extern.slf4j.Slf4j;
@@ -36,6 +37,8 @@ import asap.realizer.planunit.KeyPositionManager;
 import asap.realizer.planunit.KeyPositionManagerImpl;
 import asap.realizer.planunit.ParameterException;
 import asap.realizer.planunit.ParameterNotFoundException;
+
+import com.google.common.base.Joiner;
 
 /**
  * A basic facial animation unit consisting of one morph target. The key
@@ -72,10 +75,16 @@ public class MorphFU implements FaceUnit
 
     private FaceController faceController;
 
-    private float prevMorphedWeight = 0; // remember last morph weight sent to
+    private volatile float prevMorphedWeight = 0; // remember last morph weight sent to
                                          // FaceController, because we need to
                                          // subtract it again later on!
 
+    public void setMorphTargets(Set<String> targets)
+    {
+        morphTargets = targets.toArray(new String[targets.size()]);
+        setTargetName(Joiner.on(",").join(morphTargets));
+    }
+    
     public MorphFU()
     {
         KeyPosition attackPeak = new KeyPosition("attackPeak", 0.1d, 1d);
@@ -206,12 +215,16 @@ public class MorphFU implements FaceUnit
 
     public void cleanup()
     {
-        float[] prevWeights = new float[morphTargets.length];
-        for (int i = 0; i < prevWeights.length; i++)
-            prevWeights[i] = prevMorphedWeight;
-        faceController.removeMorphTargets(morphTargets, prevWeights);
+        synchronized (AnimationSync.getSync())
+        {
+            float[] prevWeights = new float[morphTargets.length];
+            for (int i = 0; i < prevWeights.length; i++)
+                prevWeights[i] = prevMorphedWeight;
+            faceController.removeMorphTargets(morphTargets, prevWeights);
+        }
         prevMorphedWeight = 0;
     }
+    
 
     /**
      * Creates the TimedFaceUnit corresponding to this face unit

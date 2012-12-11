@@ -36,6 +36,7 @@ public interface FaceUnit extends MotionUnit
    
     /** Clean up the face - i.e. remove traces of this faceunit */    
     void cleanup();    
+    
     /**
      * Creates the TimedFaceUnit corresponding to this face unit
      * @param bmlId     BML block id
