@@ -1,12 +1,13 @@
 package asap.ipaacaembodiments.loader;
 
-import hmi.animation.RenamingMap;
+import hmi.animation.RenamingXMLMap;
 import hmi.environmentbase.ClockDrivenCopyEnvironment;
 import hmi.environmentbase.Embodiment;
 import hmi.environmentbase.EmbodimentLoader;
 import hmi.environmentbase.Environment;
 import hmi.environmentbase.Loader;
 import hmi.util.ArrayUtils;
+import hmi.util.Resources;
 import hmi.xml.XMLScanException;
 import hmi.xml.XMLStructureAdapter;
 import hmi.xml.XMLTokenizer;
@@ -29,7 +30,7 @@ public class IpaacaBodyEmbodimentLoader implements EmbodimentLoader
     private IpaacaBodyEmbodiment embodiment;
     private String id;
     private XMLStructureAdapter adapter = new XMLStructureAdapter();
-    private String renamingFile;
+    private BiMap<String,String> skeletonRenaming = null;    
 
     @Override
     public String getId()
@@ -61,23 +62,30 @@ public class IpaacaBodyEmbodimentLoader implements EmbodimentLoader
         }
         embodiment = new IpaacaBodyEmbodiment(id, ldr.getEmbodiment());
         
-        if (renamingFile == null)
+        if (skeletonRenaming == null)
         {
             throw new XMLScanException("IpaacaBodyEmbodimentLoader requires inner renaming element");
         }
-        BiMap<String, String> renamingMap = RenamingMap.renamingMapFromFileOnClasspath(renamingFile);
-        embodiment.init(renamingMap, ImmutableList.copyOf(renamingMap.values()));
+        embodiment.init(skeletonRenaming, ImmutableList.copyOf(skeletonRenaming.values()));
         copyEnv.addCopyEmbodiment(embodiment);
 
     }
 
+    private BiMap<String,String> getRenamingMap(String mappingFile)throws IOException
+    {
+        RenamingXMLMap map = new RenamingXMLMap();
+        map.readXML(new XMLTokenizer(new Resources("").getInputStream(mappingFile)));
+        return map.getRenamingMap();
+    }
+    
     protected void readSection(XMLTokenizer tokenizer) throws IOException
     {
         HashMap<String, String> attrMap = null;
         if (tokenizer.atSTag("renaming"))
         {
             attrMap = tokenizer.getAttributes();
-            renamingFile = adapter.getRequiredAttribute("renamingFile",attrMap,tokenizer);
+            String skelRenamingFile = adapter.getRequiredAttribute("skeletonRenamingFile",attrMap,tokenizer);
+            skeletonRenaming = getRenamingMap(skelRenamingFile);
         }
         else
         {

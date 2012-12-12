@@ -21,7 +21,32 @@
   <propertycopy name="rebuild.list" from="${rebuild.list.prop}"/>
   <propertycopy name="release.list" from="${release.list.prop}"/>
  -->
- 
+  <!-- Settings for "javadoc" -->
+   <property name="docs.dir"              value="docs"     />
+   <property name="javadoc.dir"           location="${docs.dir}/Asap"/>
+   <property name="javadoc.doctitle"      value="${module.name} API Documentation"/>
+   <property name="javadoc.overview"      value="javadoc-overview.html"/>
+   <property name="javadoc.noindex"       value="false"/>
+   <property name="javadoc.nonavbar"      value="false"/>
+   <property name="javadoc.notree"        value="false"/>
+   <property name="javadoc.private"       value="false"/>
+   <property name="javadoc.splitindex"    value="false"/>
+   <property name="javadoc.use"           value="true"/>
+   <property name="javadoc.author"        value="true"/>
+   <property name="javadoc.version"       value="true"/>
+   <property name="javadoc.windowtitle"   value="${module.name}"/>
+   <property name="javadoc.link"          value="http://java.sun.com/javase/6/docs/api/"/>
+   <property name="javadoc.linksource"    value="yes"/>
+   <property name="javadoc.packages"      value="*"/>
+    <property name="dist.dir"              value="dist"  />
+ <fileset id="lib.fileset" dir=".">
+      <include name="${lib.dir}/**/*.jar"   />
+      <include name="${lib.local}/**/*.jar" />
+   </fileset>
+   <path id="javac-classpath">
+       <pathelement location="${build.classes.dir}"/>
+       <fileset refid="lib.fileset"/>
+   </path>
  <filelist id="rebuildList" dir="${shared.project.root}" files="${rebuild.list}" />
    
    <target name="resolveAll">

@@ -34,7 +34,6 @@ public interface FaceUnit extends MotionUnit
 {
     boolean hasValidParameters();    
    
-       
     /**
      * Creates the TimedFaceUnit corresponding to this face unit
      * @param bmlId     BML block id

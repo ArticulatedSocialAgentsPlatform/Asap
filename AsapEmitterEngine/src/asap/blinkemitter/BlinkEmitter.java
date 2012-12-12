@@ -125,13 +125,15 @@ public class BlinkEmitter extends Emitter implements Runnable
     {
         lastblink = System.currentTimeMillis();
         scheduling = "composition=\"APPEND-AFTER(blinkbml" + blinkcount + ")\"";
-        String bml = "<bml xmlns=\"http://www.bml-initiative.org/bml/bml-1.0\" " + "id=\"blinkbml" + (blinkcount + 1) + "\" " + scheduling
+        String interrupter = "";
+        if(blinkcount>1)
+        {
+            interrupter = " bmlt:interrupt=\"blinkbml"+blinkcount+"\" ";
+        }
+        
+        String bml = "<bml xmlns=\"http://www.bml-initiative.org/bml/bml-1.0\" " + "id=\"blinkbml" + (blinkcount + 1) + "\" " + scheduling +interrupter
                 + "xmlns:bmlt=\"http://hmi.ewi.utwente.nl/bmlt\"><faceLexeme id=\"b1\"  lexeme=\"BLINK\" start=\"0\" end=\"0.15\" "
                 + "amount=\"1\" attackPeak=\"0.03\" relax=\"0.12\"/>";
-        if (blinkcount > 1)
-        {
-            bml += "<bmlt:interrupt id=\"interruptPrevBlink\" target=\"blinkbml" + blinkcount + "\">" + "</bmlt:interrupt>";
-        }
         realizerBridge.performBML(bml + "</bml>");
 
         /*
@@ -140,7 +142,7 @@ public class BlinkEmitter extends Emitter implements Runnable
          * "\" interrupt=\"blinkbml"+(blinkcount-3)+"\"></bml>"); }
          */
         blinkcount++;
-        // System.out.println("Blink! " + blinkcount);
+        //System.out.println("Blink! " + blinkcount);
 
     }
 
