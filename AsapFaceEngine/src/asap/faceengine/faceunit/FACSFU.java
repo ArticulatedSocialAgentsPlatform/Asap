@@ -23,10 +23,8 @@ import hmi.faceanimation.converters.EmotionConverter;
 import hmi.faceanimation.converters.FACSConverter;
 import hmi.faceanimation.model.FACSConfiguration;
 import hmi.faceanimation.model.MPEG4Configuration;
-import hmi.util.AnimationSync;
 import hmi.util.StringUtil;
 import lombok.Delegate;
-
 import asap.realizer.feedback.FeedbackManager;
 import asap.realizer.pegboard.BMLBlockPeg;
 import asap.realizer.planunit.InvalidParameterException;
@@ -58,23 +56,9 @@ public class FACSFU implements FaceUnit
     private FaceController faceController;
     private FACSConverter facsConverter;
 
-    private final MPEG4Configuration mpeg4Config = new MPEG4Configuration(); // remember
-                                                                             // last
-                                                                             // face
-                                                                             // configuration
-                                                                             // sent
-                                                                             // to
-                                                                             // FaceController,
-                                                                             // because
-                                                                             // we
-                                                                             // need
-                                                                             // to
-                                                                             // subtract
-                                                                             // it
-                                                                             // again
-                                                                             // later
-                                                                             // on!
-
+    //initialized here for efficiency
+    private MPEG4Configuration mpeg4Config = new MPEG4Configuration();
+    
     public FACSFU()
     {
         KeyPosition start = new KeyPosition("start", 0d, 1d);
@@ -177,21 +161,14 @@ public class FACSFU implements FaceUnit
                     * (float) (1 - ((t - relax) / (1 - relax)));
         }
 
-        synchronized (AnimationSync.getSync())
-        {
-
-            faceController.removeMPEG4Configuration(mpeg4Config);
-            facsConverter.convert(facsConfig, mpeg4Config);
+             
+        facsConverter.convert(facsConfig, mpeg4Config);
             mpeg4Config.multiply(newAppliedWeight);
             faceController.addMPEG4Configuration(mpeg4Config);
-        }
+        
     }
 
-    public void cleanup()
-    {
-        if (mpeg4Config != null) faceController.removeMPEG4Configuration(mpeg4Config);
-    }
-
+   
     /**
      * Creates the TimedFaceUnit corresponding to this face unit
      * @param bmlId

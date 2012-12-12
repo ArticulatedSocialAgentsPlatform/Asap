@@ -22,11 +22,8 @@ import hmi.faceanimation.FaceController;
 import hmi.faceanimation.converters.EmotionConverter;
 import hmi.faceanimation.converters.FACSConverter;
 import hmi.faceanimation.model.MPEG4Configuration;
-import hmi.util.AnimationSync;
 import hmi.util.StringUtil;
-
 import lombok.Delegate;
-
 import asap.realizer.feedback.FeedbackManager;
 import asap.realizer.pegboard.BMLBlockPeg;
 import asap.realizer.planunit.InvalidParameterException;
@@ -60,10 +57,6 @@ public class PlutchikFU implements FaceUnit
     private FaceController faceController;
     private EmotionConverter emotionConverter;
 
-    private MPEG4Configuration config = null; // remember last face
-                                              // configuration sent to
-                                              // FaceController, because we need
-                                              // to subtract it again later on!
     @Override
     public void startUnit(double t)
     {
@@ -172,20 +165,8 @@ public class PlutchikFU implements FaceUnit
                     * (float) (1 - ((t - relax) / (1 - relax)));
         }
 
-        synchronized (AnimationSync.getSync())
-        {
-            if (config != null)
-                faceController.removeMPEG4Configuration(config);
-            config = emotionConverter.convert(angle,activation * newAppliedWeight);
-            faceController.addMPEG4Configuration(config);
-        }
-    }
-
-    public void cleanup()
-    {
-        if (config != null)
-            faceController.removeMPEG4Configuration(config);
-        config = null;
+        MPEG4Configuration config = emotionConverter.convert(angle,activation * newAppliedWeight);
+        faceController.addMPEG4Configuration(config);        
     }
 
     /**

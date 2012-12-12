@@ -49,23 +49,11 @@ public class TimedFaceUnit extends TimedMotionUnit
         fu = f;        
     }
 
-    public void cleanup()
-    {
-        fu.cleanup();
-    }
-
     /**
      * @return the encapsulated face unit
      */
     public FaceUnit getFaceUnit()
     {
         return fu;
-    }
-
-    @Override
-    protected void stopUnit(double time)
-    {
-        super.stopUnit(time);
-        cleanup();
-    }    
+    }     
 }

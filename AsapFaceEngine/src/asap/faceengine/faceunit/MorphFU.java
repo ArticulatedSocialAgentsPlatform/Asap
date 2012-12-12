@@ -21,10 +21,10 @@ package asap.faceengine.faceunit;
 import hmi.faceanimation.FaceController;
 import hmi.faceanimation.converters.EmotionConverter;
 import hmi.faceanimation.converters.FACSConverter;
-import hmi.util.AnimationSync;
 import hmi.util.StringUtil;
 
 import java.util.Arrays;
+
 import lombok.Delegate;
 
 import org.slf4j.Logger;
@@ -61,22 +61,21 @@ public class MorphFU implements FaceUnit
     {
         this.targetName = targetName;
     }
+
     @Override
     public void startUnit(double t)
     {
-        
+
     }
+
     private static Logger logger = LoggerFactory.getLogger(MorphFU.class.getName());
     private boolean multiple = false;
-    @Delegate private final KeyPositionManager keyPositionManager = new KeyPositionManagerImpl();
+    @Delegate
+    private final KeyPositionManager keyPositionManager = new KeyPositionManagerImpl();
 
     private String[] morphTargets = new String[] { "" };
 
     private FaceController faceController;
-
-    private float prevMorphedWeight = 0; // remember last morph weight sent to
-                                         // FaceController, because we need to
-                                         // subtract it again later on!
 
     public MorphFU()
     {
@@ -200,32 +199,13 @@ public class MorphFU implements FaceUnit
         {
             newMorphedWeight = intensity * (float) (1 - ((t - relax) / (1 - relax)));
         }
-        float[] prevWeights = new float[morphTargets.length];
-        for (int i = 0; i < prevWeights.length; i++)
-            prevWeights[i] = prevMorphedWeight;
 
-        synchronized (AnimationSync.getSync())
-        {
-            faceController.removeMorphTargets(morphTargets, prevWeights);
-            // System.out.println("Playing FU at time=" + t);
-            logger.debug("RemoveWeight=" + prevMorphedWeight);
-            logger.debug("NewWeight=" + newMorphedWeight);
-            logger.debug("target: " + Arrays.toString(morphTargets));
-            float[] newWeights = new float[morphTargets.length];
-            for (int i = 0; i < newWeights.length; i++)
-                newWeights[i] = newMorphedWeight;
-            faceController.addMorphTargets(morphTargets, newWeights);
-        }
-        prevMorphedWeight = newMorphedWeight;
-    }
-
-    public void cleanup()
-    {
-        float[] prevWeights = new float[morphTargets.length];
-        for (int i = 0; i < prevWeights.length; i++)
-            prevWeights[i] = prevMorphedWeight;
-        faceController.removeMorphTargets(morphTargets, prevWeights);
-        prevMorphedWeight = 0;
+        logger.debug("NewWeight=" + newMorphedWeight);
+        logger.debug("target: " + Arrays.toString(morphTargets));
+        float[] newWeights = new float[morphTargets.length];
+        for (int i = 0; i < newWeights.length; i++)
+            newWeights[i] = newMorphedWeight;
+        faceController.addMorphTargets(morphTargets, newWeights);
     }
 
     /**

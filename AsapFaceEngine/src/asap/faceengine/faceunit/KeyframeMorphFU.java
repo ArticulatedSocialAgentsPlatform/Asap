@@ -1,14 +1,11 @@
 package asap.faceengine.faceunit;
 
-import java.util.List;
-
-import com.google.common.collect.ImmutableList;
-import com.google.common.collect.Lists;
-
 import hmi.faceanimation.FaceController;
 import hmi.faceanimation.converters.EmotionConverter;
 import hmi.faceanimation.converters.FACSConverter;
-import hmi.util.AnimationSync;
+
+import java.util.List;
+
 import asap.motionunit.MUPlayException;
 import asap.motionunit.keyframe.Interpolator;
 import asap.motionunit.keyframe.KeyFrame;
@@ -17,6 +14,9 @@ import asap.realizer.feedback.FeedbackManager;
 import asap.realizer.pegboard.BMLBlockPeg;
 import asap.realizer.planunit.KeyPosition;
 import asap.timemanipulator.TimeManipulator;
+
+import com.google.common.collect.ImmutableList;
+import com.google.common.collect.Lists;
 
 /**
  * A group of morph targets, controlled by key frames
@@ -27,7 +27,6 @@ public class KeyframeMorphFU extends KeyFrameMotionUnit implements FaceUnit
 {
     private FaceController faceController;
     private String[] targets;
-    private float[] prevWeights;
     private Interpolator interp;
     private boolean allowDynamicStart;
     private int nrOfDofs;
@@ -48,7 +47,6 @@ public class KeyframeMorphFU extends KeyFrameMotionUnit implements FaceUnit
 
         interp.setKeyFrames(keyFrames, nrOfDofs);
 
-        prevWeights = new float[targets.size()];
         this.targets = targets.toArray(new String[targets.size()]);
         KeyPosition attackPeak = new KeyPosition("attackPeak", 0.1d, 1d);
         KeyPosition relax = new KeyPosition("relax", 0.9d, 1d);
@@ -76,16 +74,6 @@ public class KeyframeMorphFU extends KeyFrameMotionUnit implements FaceUnit
     public boolean hasValidParameters()
     {
         return true;
-    }
-
-    @Override
-    public void cleanup()
-    {
-        faceController.removeMorphTargets(targets, prevWeights);
-        for (int i = 0; i < prevWeights.length; i++)
-        {
-            prevWeights[i] = 0;
-        }
     }
 
     public void setFaceController(FaceController fc)
@@ -116,12 +104,7 @@ public class KeyframeMorphFU extends KeyFrameMotionUnit implements FaceUnit
     @Override
     public void applyKeyFrame(KeyFrame kf)
     {
-        synchronized (AnimationSync.getSync())
-        {
-            faceController.removeMorphTargets(targets, prevWeights);
-            faceController.addMorphTargets(targets, kf.getDofs());
-            System.arraycopy(kf.getDofs(), 0, prevWeights, 0, prevWeights.length);
-        }
+        faceController.addMorphTargets(targets, kf.getDofs());        
     }
 
     @Override
