@@ -205,16 +205,19 @@ public class SpeechEngineLoader implements EngineLoader
                 {
                     if (localMaryDir == null)
                     {
-                        throw tokenizer.getXMLScanException("neither marydir nor localmarydir specified.");
+                        marydir = System.getProperty("user.dir") + "/lib/MARYTTS";
                     }
-                    String spr = System.getProperty("shared.project.root");
-                    if (spr == null)
+                    else
                     {
-                        throw tokenizer.getXMLScanException("the use of the localmarydir setting "
-                                + "requires a shared.project.root system variable (often: -Dshared.project.root=\"../..\" "
-                                + "but this may depend on your system setup).");
+                        String spr = System.getProperty("shared.project.root");
+                        if (spr == null)
+                        {
+                            throw tokenizer.getXMLScanException("the use of the localmarydir setting "
+                                    + "requires a shared.project.root system variable (often: -Dshared.project.root=\"../..\" "
+                                    + "but this may depend on your system setup).");
+                        }
+                        marydir = System.getProperty("shared.project.root") + "/" + localMaryDir;
                     }
-                    marydir = System.getProperty("shared.project.root") + "/" + localMaryDir;
                 }
             }
             tokenizer.takeEmptyElement("Voice");
