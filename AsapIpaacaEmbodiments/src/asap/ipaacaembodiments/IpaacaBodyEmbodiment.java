@@ -12,11 +12,9 @@ import java.util.List;
 
 import javax.annotation.concurrent.GuardedBy;
 
-import com.google.common.base.Function;
 import com.google.common.collect.BiMap;
 import com.google.common.collect.ImmutableList;
 import com.google.common.collect.ImmutableMap;
-import com.google.common.collect.Lists;
 
 /**
  * Sends joint rotations from its animation joint to a renderer through Ipaaca.
