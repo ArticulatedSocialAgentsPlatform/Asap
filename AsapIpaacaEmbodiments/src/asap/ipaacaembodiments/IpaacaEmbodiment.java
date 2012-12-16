@@ -30,7 +30,7 @@ import com.google.common.collect.ImmutableSet;
 
 /**
  * Interfaces with an Ipaaca graphical environment. Should currently be initialized before that environment itself is initialized.
- * Currently Ipaaca graphcial environments contain only one character.
+ * Currently Ipaaca graphical environments contain only one character.
  * @author hvanwelbergen
  * 
  */
