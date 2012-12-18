@@ -124,7 +124,7 @@ public class MURMLKeyframeMU extends KeyFrameMotionUnit implements AnimationUnit
         return PHJOINTS;
     }
 
-    public AnimationUnit copy(AnimationPlayer p) throws MUSetupException
+    public MURMLKeyframeMU copy(AnimationPlayer p) throws MUSetupException
     {
         MURMLKeyframeMU copy = new MURMLKeyframeMU(targets, interp, manip, keyFrames, nrOfDofs, allowDynamicStart);
         copy.aniPlayer = p;
@@ -141,7 +141,7 @@ public class MURMLKeyframeMU extends KeyFrameMotionUnit implements AnimationUnit
     @Override
     public TimedAnimationMotionUnit createTMU(FeedbackManager bbm, BMLBlockPeg bmlBlockPeg, String bmlId, String id, PegBoard pb)
     {
-        return new MURMLKeyframeTMU(bmlBlockPeg, bmlId, id, this, pb);
+        return new MURMLKeyframeTMU(bbm,bmlBlockPeg, bmlId, id, this, pb);
     }
 
     @Override
@@ -167,7 +167,7 @@ public class MURMLKeyframeMU extends KeyFrameMotionUnit implements AnimationUnit
     
     public void setupRelaxUnit()
     {
-        relaxUnit = aniPlayer.getRestPose().createTransitionToRest(getKinematicJoints());
+        relaxUnit = aniPlayer.createTransitionToRest(getKinematicJoints());
     }
     
     public double getRetractionDuration()

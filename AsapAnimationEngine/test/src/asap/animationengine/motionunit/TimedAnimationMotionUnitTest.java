@@ -39,7 +39,7 @@ import asap.realizertestutil.planunit.AbstractTimedPlanUnitTest;
 import asap.realizertestutil.util.TimePegUtil;
 
 /**
- * Testcases for the TimedMotionUnit
+ * Testcases for the TimedAnimationMotionUnit
  * @author welberge
  */
 @PowerMockIgnore({ "javax.management.*", "javax.xml.parsers.*",
@@ -47,7 +47,7 @@ import asap.realizertestutil.util.TimePegUtil;
     "org.slf4j.*" })
 @RunWith(PowerMockRunner.class)
 @PrepareForTest({BMLBlockManager.class})
-public class TimedMotionUnitTest extends AbstractTimedPlanUnitTest
+public class TimedAnimationMotionUnitTest extends AbstractTimedPlanUnitTest
 {
     private AnimationUnit muMock;
     

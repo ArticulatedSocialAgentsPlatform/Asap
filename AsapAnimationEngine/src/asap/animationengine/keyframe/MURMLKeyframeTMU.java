@@ -5,11 +5,11 @@ import java.util.List;
 import saiba.bml.core.Behaviour;
 import asap.animationengine.motionunit.TimedAnimationMotionUnit;
 import asap.realizer.BehaviourPlanningException;
+import asap.realizer.feedback.FeedbackManager;
 import asap.realizer.pegboard.BMLBlockPeg;
 import asap.realizer.pegboard.PegBoard;
 import asap.realizer.pegboard.TimePeg;
 import asap.realizer.planunit.TimedPlanUnitPlayException;
-import asap.realizer.scheduler.LinearStretchResolver;
 import asap.realizer.scheduler.TimePegAndConstraint;
 
 /**
@@ -20,9 +20,9 @@ public class MURMLKeyframeTMU extends TimedAnimationMotionUnit
 {
     private final MURMLKeyframeMU mu;
 
-    public MURMLKeyframeTMU(BMLBlockPeg bmlBlockPeg, String bmlId, String id, MURMLKeyframeMU mu, PegBoard pb)
+    public MURMLKeyframeTMU(FeedbackManager bbf,BMLBlockPeg bmlBlockPeg, String bmlId, String id, MURMLKeyframeMU mu, PegBoard pb)
     {
-        super(bmlBlockPeg, bmlId, id, mu, pb);
+        super(bbf,bmlBlockPeg, bmlId, id, mu, pb);
         this.mu = mu;
     }
 

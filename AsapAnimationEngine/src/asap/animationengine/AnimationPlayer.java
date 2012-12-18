@@ -43,6 +43,7 @@ import lombok.Setter;
 import lombok.extern.slf4j.Slf4j;
 import net.jcip.annotations.GuardedBy;
 import asap.animationengine.mixed.MixedPlayer;
+import asap.animationengine.motionunit.AnimationUnit;
 import asap.animationengine.motionunit.TimedAnimationUnit;
 import asap.animationengine.restpose.RestPose;
 import asap.realizer.Player;
@@ -194,6 +195,11 @@ public class AnimationPlayer implements Player, MixedAnimationPlayer
             String bmlId, String id, BMLBlockPeg bmlBlockPeg, PegBoard pb)
     {
         return app.getRestPose().createTransitionToRest(fbm, joints, startTime, duration, bmlId, id, bmlBlockPeg, pb);
+    }
+    
+    public AnimationUnit createTransitionToRest(Set<String>joints)
+    {
+        return app.getRestPose().createTransitionToRest(joints);
     }
     
     public TimedAnimationUnit createTransitionToRest(FeedbackManager fbm, Set<String> joints, TimePeg startPeg, TimePeg endPeg,

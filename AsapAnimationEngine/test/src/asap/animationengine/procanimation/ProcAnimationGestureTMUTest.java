@@ -27,7 +27,7 @@ import org.powermock.modules.junit4.PowerMockRunner;
 
 import asap.animationengine.AnimationPlayer;
 import asap.animationengine.motionunit.AnimationUnit;
-import asap.animationengine.motionunit.TimedMotionUnitTest;
+import asap.animationengine.motionunit.TimedAnimationMotionUnitTest;
 import asap.animationengine.restpose.RestPose;
 import asap.motionunit.TMUPlayException;
 import asap.realizer.BehaviourPlanningException;
@@ -51,7 +51,7 @@ import asap.realizer.scheduler.TimePegAndConstraint;
     "org.slf4j.*" })
 @RunWith(PowerMockRunner.class)
 @PrepareForTest(BMLBlockManager.class)
-public class ProcAnimationGestureTMUTest extends TimedMotionUnitTest
+public class ProcAnimationGestureTMUTest extends TimedAnimationMotionUnitTest
 {
     private ProcAnimationMU mockProcAnimation = mock(ProcAnimationMU.class);
     private AnimationPlayer mockAnimationPlayer = mock(AnimationPlayer.class);
