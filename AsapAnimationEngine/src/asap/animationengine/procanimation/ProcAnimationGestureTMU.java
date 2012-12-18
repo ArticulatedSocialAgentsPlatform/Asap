@@ -517,26 +517,7 @@ public class ProcAnimationGestureTMU extends TimedAnimationMotionUnit
         mu.setupRelaxUnit();
     }
 
-    private void skipPegs(double time, String... pegs)
-    {
-        for (String peg : pegs)
-        {
-            if (getTime(peg) > time)
-            {
-                TimePeg tp = getTimePeg(peg);
-                TimePeg tpNew = tp;
-                if(pegBoard.getPegKeys(tp).size()>1)
-                {
-                    tpNew = new TimePeg(tp.getBmlBlockPeg());
-                    pegBoard.addTimePeg(getBMLId(), getId(), peg, tpNew);
-                }
-                tpNew.setGlobalValue(time-0.01);
-                setTimePeg(peg, tpNew);                
-            }
-        }
-    }
-
-    private void gracefullInterrupt(double time) throws TimedPlanUnitPlayException
+     private void gracefullInterrupt(double time) throws TimedPlanUnitPlayException
     {
         interrupted = true;
         skipPegs(time, "ready", "strokeStart", "stroke", "strokeEnd");

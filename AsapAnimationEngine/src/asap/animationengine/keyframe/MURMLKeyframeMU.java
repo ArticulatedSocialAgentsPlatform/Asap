@@ -32,14 +32,14 @@ public class MURMLKeyframeMU extends KeyFrameMotionUnit implements AnimationUnit
 {
     private ImmutableList<String> targets;
     private List<KeyFrame> keyFrames;
-    private VJoint vNext;
-    private VJoint vCurr;
     private int nrOfDofs;
     private Interpolator interp;
     private boolean allowDynamicStart;
     private double preferedDuration = 1;
     private TimeManipulator manip;
-
+    private AnimationPlayer aniPlayer;
+    private AnimationUnit relaxUnit;
+    
     public MURMLKeyframeMU(List<String> targets, Interpolator interp, TimeManipulator manip, List<KeyFrame> keyFrames, int nrOfDofs,
             boolean allowDynamicStart)
     {
@@ -69,6 +69,20 @@ public class MURMLKeyframeMU extends KeyFrameMotionUnit implements AnimationUnit
         addKeyPosition(end);
     }
 
+    @Override
+    public void play(double t) throws MUPlayException
+    {
+        double relaxTime = getKeyPosition("relax").time;
+        if(t<=relaxTime)
+        {
+            super.play(t/relaxTime);
+        }
+        else
+        {
+            relaxUnit.play( (t-relaxTime)/(1-relaxTime));
+        }
+    }
+    
     /**
      * @deprecated no longer relevant in BML 1.0
      */
@@ -91,7 +105,7 @@ public class MURMLKeyframeMU extends KeyFrameMotionUnit implements AnimationUnit
         int i = 0;
         for (String target : targets)
         {
-            vNext.getPartBySid(target).setRotation(kf.getDofs(), i * 4);
+            aniPlayer.getVNext().getPartBySid(target).setRotation(kf.getDofs(), i * 4);
             i++;
         }
     }
@@ -110,11 +124,10 @@ public class MURMLKeyframeMU extends KeyFrameMotionUnit implements AnimationUnit
         return PHJOINTS;
     }
 
-    public AnimationUnit copy(VJoint vC, VJoint vN)
+    public AnimationUnit copy(AnimationPlayer p) throws MUSetupException
     {
         MURMLKeyframeMU copy = new MURMLKeyframeMU(targets, interp, manip, keyFrames, nrOfDofs, allowDynamicStart);
-        copy.vNext = vN;
-        copy.vCurr = vC;
+        copy.aniPlayer = p;
         copy.preferedDuration = preferedDuration;
         for (KeyPosition keypos : getKeyPositions())
         {
@@ -123,16 +136,12 @@ public class MURMLKeyframeMU extends KeyFrameMotionUnit implements AnimationUnit
         return copy;
     }
 
-    @Override
-    public AnimationUnit copy(AnimationPlayer p) throws MUSetupException
-    {
-        return copy(p.getVCurr(), p.getVNext());
-    }
+    
 
     @Override
     public TimedAnimationMotionUnit createTMU(FeedbackManager bbm, BMLBlockPeg bmlBlockPeg, String bmlId, String id, PegBoard pb)
     {
-        return new TimedAnimationMotionUnit(bbm, bmlBlockPeg, bmlId, id, this, pb);
+        return new MURMLKeyframeTMU(bmlBlockPeg, bmlId, id, this, pb);
     }
 
     @Override
@@ -142,7 +151,7 @@ public class MURMLKeyframeMU extends KeyFrameMotionUnit implements AnimationUnit
         int i = 0;
         for (String target : targets)
         {
-            VJoint vj = vCurr.getPartBySid(target);
+            VJoint vj = aniPlayer.getVCurr().getPartBySid(target);
             vj.getRotation(q, i);
             i += 4;
         }
@@ -154,5 +163,22 @@ public class MURMLKeyframeMU extends KeyFrameMotionUnit implements AnimationUnit
     {
         super.setupDynamicStart(keyFrames);
         interp.setKeyFrames(keyFrames, nrOfDofs);
+    }
+    
+    public void setupRelaxUnit()
+    {
+        relaxUnit = aniPlayer.getRestPose().createTransitionToRest(getKinematicJoints());
+    }
+    
+    public double getRetractionDuration()
+    {
+        //XXX: would be more accurate to do this from relax pos..
+        return aniPlayer.getTransitionToRestDuration(getKinematicJoints());
+    }
+
+    
+    public double getRetractionDurationFromCurrent()
+    {
+        return aniPlayer.getTransitionToRestDuration(getKinematicJoints());
     }
 }

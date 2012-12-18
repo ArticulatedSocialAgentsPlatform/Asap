@@ -29,6 +29,7 @@ import asap.realizer.feedback.FeedbackManager;
 import asap.realizer.feedback.NullFeedbackManager;
 import asap.realizer.pegboard.BMLBlockPeg;
 import asap.realizer.pegboard.PegBoard;
+import asap.realizer.pegboard.TimePeg;
 import asap.realizer.scheduler.LinearStretchResolver;
 import asap.realizer.scheduler.TimePegAndConstraint;
 import asap.realizer.scheduler.UniModalResolver;
@@ -84,5 +85,24 @@ public class TimedAnimationMotionUnit extends TimedMotionUnit implements TimedAn
     public void updateTiming(double time) throws TMUPlayException
     {
 
+    }
+    
+    protected void skipPegs(double time, String... pegs)
+    {
+        for (String peg : pegs)
+        {
+            if (getTime(peg) > time)
+            {
+                TimePeg tp = getTimePeg(peg);
+                TimePeg tpNew = tp;
+                if(pegBoard.getPegKeys(tp).size()>1)
+                {
+                    tpNew = new TimePeg(tp.getBmlBlockPeg());
+                    pegBoard.addTimePeg(getBMLId(), getId(), peg, tpNew);
+                }
+                tpNew.setGlobalValue(time-0.01);
+                setTimePeg(peg, tpNew);                
+            }
+        }
     }
 }
