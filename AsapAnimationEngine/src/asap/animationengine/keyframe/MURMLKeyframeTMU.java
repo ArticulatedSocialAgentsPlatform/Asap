@@ -20,9 +20,9 @@ public class MURMLKeyframeTMU extends TimedAnimationMotionUnit
 {
     private final MURMLKeyframeMU mu;
 
-    public MURMLKeyframeTMU(FeedbackManager bbf,BMLBlockPeg bmlBlockPeg, String bmlId, String id, MURMLKeyframeMU mu, PegBoard pb)
+    public MURMLKeyframeTMU(FeedbackManager bbf, BMLBlockPeg bmlBlockPeg, String bmlId, String id, MURMLKeyframeMU mu, PegBoard pb)
     {
-        super(bbf,bmlBlockPeg, bmlId, id, mu, pb);
+        super(bbf, bmlBlockPeg, bmlId, id, mu, pb);
         this.mu = mu;
     }
 
@@ -32,6 +32,7 @@ public class MURMLKeyframeTMU extends TimedAnimationMotionUnit
         TimePeg startPeg = null;
         TimePeg endPeg = null;
         TimePeg relaxPeg = null;
+        TimePeg readyPeg = null;
         for (TimePegAndConstraint sac : sacs)
         {
             switch (sac.syncId)
@@ -39,26 +40,42 @@ public class MURMLKeyframeTMU extends TimedAnimationMotionUnit
             case "start":
                 startPeg = sac.peg;
                 break;
-            case "end":
-                endPeg = sac.peg;
-                break;
+            case "ready":
+            case "strokeStart":
+            case "stroke":
+                readyPeg = sac.peg;
+            case "strokeEnd":
             case "relax":
                 relaxPeg = sac.peg;
+                break;            
+            case "end":
+                endPeg = sac.peg;
                 break;
             default:
                 throw new BehaviourPlanningException(b, "Invalid sync " + sac.syncId + " for standalone MURMLKeyframeTMU.");
             }
         }
-
+        
+        
+        
         if (startPeg == null)
         {
-            startPeg = new TimePeg(bbPeg);
-            this.setTimePeg("start",startPeg);
+            startPeg = new TimePeg(bbPeg);            
         }        
         if (endPeg == null)
         {
-            endPeg = new TimePeg(bbPeg);
-            this.setTimePeg("end",endPeg);
+            endPeg = new TimePeg(bbPeg);            
+        }
+        if (readyPeg == null)
+        {
+            if(mu.getKeyPositions().size()>2)
+            {
+                readyPeg = new TimePeg(bbPeg);                
+            }
+            else
+            {
+                readyPeg = startPeg;
+            }            
         }
         if (relaxPeg == null)
         {
@@ -66,11 +83,19 @@ public class MURMLKeyframeTMU extends TimedAnimationMotionUnit
             this.setTimePeg("relax",relaxPeg);
         }
 
+        double readyDuration = 0;
+        if(mu.getKeyPositions().size()>2)
+        {
+            readyDuration = mu.getKeyPositions().get(1).time;
+        }
+        
         if (startPeg.getGlobalValue() == TimePeg.VALUE_UNKNOWN &&
             relaxPeg.getGlobalValue() == TimePeg.VALUE_UNKNOWN &&
+            readyPeg.getGlobalValue() == TimePeg.VALUE_UNKNOWN &&
             endPeg.getGlobalValue() == TimePeg.VALUE_UNKNOWN)
         {
             startPeg.setLocalValue(0);
+            readyPeg.setLocalValue(readyDuration);
             relaxPeg.setLocalValue(mu.getPreferedDuration());
             endPeg.setLocalValue(mu.getPreferedDuration() + mu.getRetractionDuration());
         }
@@ -84,6 +109,10 @@ public class MURMLKeyframeTMU extends TimedAnimationMotionUnit
             {
                 endPeg.setGlobalValue(relaxPeg.getGlobalValue() + mu.getRetractionDuration());                
             }
+            if (readyPeg.getGlobalValue() == TimePeg.VALUE_UNKNOWN)
+            {
+                readyPeg.setGlobalValue(startPeg.getGlobalValue()+readyDuration);
+            }
         }
         else if (relaxPeg.getGlobalValue() != TimePeg.VALUE_UNKNOWN)
         {
@@ -92,12 +121,36 @@ public class MURMLKeyframeTMU extends TimedAnimationMotionUnit
             {
                 endPeg.setGlobalValue(relaxPeg.getGlobalValue() + mu.getRetractionDuration());                
             }
+            if (readyPeg.getGlobalValue() == TimePeg.VALUE_UNKNOWN)
+            {
+                readyPeg.setGlobalValue(startPeg.getGlobalValue()+readyDuration);
+            }
+        }
+        else if (readyPeg.getGlobalValue() != TimePeg.VALUE_UNKNOWN)
+        {
+            startPeg.setGlobalValue(readyPeg.getGlobalValue()-readyDuration);
+            if (relaxPeg.getGlobalValue() == TimePeg.VALUE_UNKNOWN)
+            {
+                relaxPeg.setGlobalValue(startPeg.getGlobalValue() + mu.getPreferedDuration());                
+            }
+            if (endPeg.getGlobalValue() == TimePeg.VALUE_UNKNOWN)
+            {
+                endPeg.setGlobalValue(relaxPeg.getGlobalValue() + mu.getRetractionDuration());                
+            }            
         }
         else
         {
             relaxPeg.setGlobalValue(endPeg.getGlobalValue()-mu.getRetractionDuration());
             startPeg.setGlobalValue(relaxPeg.getGlobalValue()-mu.getPreferedDuration());
+            readyPeg.setGlobalValue(startPeg.getGlobalValue()+readyDuration);
         }
+        setTimePeg("start",startPeg);
+        setTimePeg("ready",readyPeg);
+        setTimePeg("strokeStart",readyPeg);
+        setTimePeg("stroke",readyPeg);
+        setTimePeg("strokeEnd",relaxPeg);
+        setTimePeg("relax",relaxPeg);
+        setTimePeg("end",endPeg);
     }
 
     @Override
