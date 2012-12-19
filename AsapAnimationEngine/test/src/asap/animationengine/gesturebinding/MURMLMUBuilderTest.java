@@ -17,6 +17,7 @@ import hmi.testutil.animation.HanimBody;
 import hmi.testutil.math.Quat4fTestUtil;
 
 import java.util.List;
+import java.util.Set;
 
 import org.hamcrest.collection.IsIterableContainingInAnyOrder;
 import org.junit.Before;
@@ -47,6 +48,7 @@ import asap.realizer.scheduler.BMLBlockManager;
 public class MURMLMUBuilderTest
 {
     private AnimationPlayer mockAnimationPlayer = mock(AnimationPlayer.class);
+    private AnimationUnit mockMu = mock(AnimationUnit.class);
     private VJoint vNext = HanimBody.getLOA2HanimBody();
     private VJoint vCurr = HanimBody.getLOA2HanimBody();
     private static final float ROT_PRECISION = 0.001f;
@@ -57,11 +59,13 @@ public class MURMLMUBuilderTest
     private PegBoard pb = new PegBoard();
     
     
+    @SuppressWarnings("unchecked")
     @Before
     public void setup()
     {
         when(mockAnimationPlayer.getVNext()).thenReturn(vNext);
         when(mockAnimationPlayer.getVCurr()).thenReturn(vCurr);
+        when(mockAnimationPlayer.createTransitionToRest(any(Set.class))).thenReturn(mockMu);
         when(mockHns.getHandLocation(anyString(), any(float[].class))).thenReturn(true);
         when(mockHns.getAbsoluteDirection(startsWith("Palm"), any(float[].class))).thenReturn(false);
         when(mockHns.getAbsoluteDirection(startsWith("Dir"), any(float[].class))).thenReturn(true);
@@ -99,8 +103,9 @@ public class MURMLMUBuilderTest
         AnimationUnit au = murmlMuBuilder.setup(murmlString);
         assertThat(au, instanceOf(MURMLKeyframeMU.class));
         MURMLKeyframeMU mu = (MURMLKeyframeMU) au;
-        au = mu.copy(mockAnimationPlayer);
-        au.play(1);
+        mu = mu.copy(mockAnimationPlayer);
+        mu.setupRelaxUnit();
+        mu.play(mu.getKeyPosition("relax").time);
 
         float[] qExp = Quat4f.getQuat4f();
         Quat4f.setFromRollPitchYawDegrees(qExp, 0, 80, 0);
@@ -119,8 +124,9 @@ public class MURMLMUBuilderTest
         AnimationUnit au = murmlMuBuilder.setup(murmlString);
         assertThat(au, instanceOf(MURMLKeyframeMU.class));
         MURMLKeyframeMU mu = (MURMLKeyframeMU) au;
-        au = mu.copy(mockAnimationPlayer);
-        au.play(1);
+        mu = mu.copy(mockAnimationPlayer);
+        mu.setupRelaxUnit();
+        mu.play(mu.getKeyPosition("relax").time);
 
         float[] qExp = Quat4f.getQuat4f();
         Quat4f.setFromRollPitchYawDegrees(qExp, 0, 80, 0);
@@ -144,7 +150,7 @@ public class MURMLMUBuilderTest
         assertThat(au, instanceOf(MURMLKeyframeMU.class));
         MURMLKeyframeMU mu = (MURMLKeyframeMU) au;
         au = mu.copy(mockAnimationPlayer);
-        au.play(1);
+        au.play(mu.getKeyPosition("relax").time);
 
         float[] qExp = Quat4f.getQuat4f();
         Quat4f.setFromRollPitchYawDegrees(qExp, 0, 80, 0);
@@ -185,7 +191,7 @@ public class MURMLMUBuilderTest
         Quat4f.setFromAxisAngle4f(qRefStart, 0, 0, 1, (float) Math.PI);
         vNext.getPart("l_shoulder").setRotation(qRefStart);
         au.startUnit(0);
-        au.play(1);
+        au.play(au.getKeyPosition("relax").time);
         float[] qExp = Quat4f.getQuat4f();
         Quat4f.setFromRollPitchYawDegrees(qExp, 0, 80, 0);
         float q[] = Quat4f.getQuat4f();
@@ -214,7 +220,7 @@ public class MURMLMUBuilderTest
         Quat4f.setFromAxisAngle4f(qRefStart, 0, 0, 1, (float) Math.PI);
         vCurr.getPart("l_shoulder").setRotation(qRefStart);
         au.startUnit(0);
-        au.play(0.5);
+        au.play(0.5*au.getKeyPosition("relax").time);
         float[] qRefEnd = Quat4f.getQuat4f();
         Quat4f.setFromRollPitchYawDegrees(qRefEnd, 0, 80, 0);
         float[] qExp = Quat4f.getQuat4f();
