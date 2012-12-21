@@ -18,6 +18,7 @@ import ipaaca.InputBuffer;
 import ipaaca.LocalIU;
 import ipaaca.OutputBuffer;
 import ipaaca.Payload;
+import ipaaca.util.ComponentNotifier;
 
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -102,12 +103,14 @@ public class IpaacaEmbodimentTest
     {
         AbstractIU mockIUNotify = mock(AbstractIU.class);
         Payload mockNotifyPayload = mock(Payload.class);
-        when(mockIUNotify.getCategory()).thenReturn("componentNotify");
+        when(mockIUNotify.getCategory()).thenReturn(ComponentNotifier.NOTIFY_CATEGORY);
         when(mockIUNotify.getPayload()).thenReturn(mockNotifyPayload);
         when(mockInBuffer.getIU("iuNotify")).thenReturn(mockIUNotify);
-        when(mockNotifyPayload.get("state")).thenReturn(state);
-        
-        initStub.callHandlers(mockInBuffer, "iuNotify", false, IUEventType.ADDED, "componentNotify");        
+        when(mockNotifyPayload.get(ComponentNotifier.STATE)).thenReturn(state);
+        when(mockNotifyPayload.get(ComponentNotifier.NAME)).thenReturn("namex");
+        when(mockNotifyPayload.get(ComponentNotifier.SEND_CATEGORIES)).thenReturn("");
+        when(mockNotifyPayload.get(ComponentNotifier.RECEIVE_CATEGORIES)).thenReturn("");
+        initStub.callHandlers(mockInBuffer, "iuNotify", false, IUEventType.ADDED, ComponentNotifier.NOTIFY_CATEGORY);
     }
     
     @Test
@@ -188,4 +191,6 @@ public class IpaacaEmbodimentTest
         assertEquals("1 0 0 0  0 1 0 0  0 0 1 0  0 0 0 1    1 0 0 0  0 1 0 0  0 0 1 0  0 0 0 1", iu.getPayload().get("joint_data"));
         assertEquals("jointData",iu.getCategory());
     }
+    
+    
 }

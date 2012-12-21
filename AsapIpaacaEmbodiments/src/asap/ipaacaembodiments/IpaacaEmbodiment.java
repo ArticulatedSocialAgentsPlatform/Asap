@@ -11,9 +11,9 @@ import ipaaca.IUEventHandler;
 import ipaaca.IUEventType;
 import ipaaca.Initializer;
 import ipaaca.InputBuffer;
-import ipaaca.LocalIU;
 import ipaaca.LocalMessageIU;
 import ipaaca.OutputBuffer;
+import ipaaca.util.ComponentNotifier;
 
 import java.util.ArrayList;
 import java.util.EnumSet;
@@ -24,13 +24,14 @@ import javax.annotation.concurrent.GuardedBy;
 
 import lombok.extern.slf4j.Slf4j;
 
+import com.google.common.base.Joiner;
 import com.google.common.collect.ImmutableList;
 import com.google.common.collect.ImmutableMap;
 import com.google.common.collect.ImmutableSet;
 
 /**
- * Interfaces with an Ipaaca graphical environment. Should currently be initialized before that environment itself is initialized.
- * Currently Ipaaca graphical environments contain only one character.
+ * Interfaces with an Ipaaca graphical environment.
+ * Currently Ipaaca graphical environments are assumed to contain only one character.
  * @author hvanwelbergen
  * 
  */
@@ -48,6 +49,7 @@ public class IpaacaEmbodiment implements Embodiment
     private List<String> usedMorphs = new ArrayList<>();
     private List<String> usedJoints = new ArrayList<>();    
     private Object rootJointLock = new Object();
+    private static final String COMPONENT_NAME = "ipaacaenvironment";
     
     @GuardedBy("rootJointLock")
     private VJoint rootJoint;
@@ -83,32 +85,17 @@ public class IpaacaEmbodiment implements Embodiment
         availableMorphs.set(new ArrayList<String>());
 
         ImmutableSet<String> categories = ImmutableSet.of("jointDataConfigRequest", "componentNotify");
+        
         synchronized (ipaacaLock)
         {
-            inBuffer = new InputBuffer("ipaacaenvironment" + id, categories);
+            inBuffer = new InputBuffer(COMPONENT_NAME + id, categories);
+            outBuffer = new OutputBuffer(COMPONENT_NAME + id);
             inBuffer.registerHandler(new IUEventHandler(new JointDataConfigReqHandler(), EnumSet.of(IUEventType.ADDED), ImmutableSet
-                    .of("jointDataConfigRequest")));
-            inBuffer.registerHandler(new IUEventHandler(new ComponentNotifyHandler(), EnumSet.of(IUEventType.ADDED), ImmutableSet
-                    .of("componentNotify")));
-            outBuffer = new OutputBuffer("ipaacaenvironment" + id);
+                    .of("jointDataConfigRequest")));            
         }
-        submitNotify(true);
-    }
-
-    private void submitNotify(boolean isNew)
-    {
-        LocalIU notifyIU = new LocalIU();
-        notifyIU.setCategory("componentNotify");
-        notifyIU.getPayload().put("name", "IpaacaEmbodiment");
-        notifyIU.getPayload().put("function", "realizer");
-        notifyIU.getPayload().put("send_categories", "jointDataConfigReply, jointData, componentNotify");
-        notifyIU.getPayload().put("recv_categories", "jointDataConfigRequest, componentNotify");
-        notifyIU.getPayload().put("state", isNew ? "new" : "old");
-        synchronized (ipaacaLock)
-        {
-            outBuffer.add(notifyIU);
-        }
-        log.debug("Notify submitted");
+        ComponentNotifier notifier = new ComponentNotifier(COMPONENT_NAME+id,"animationprovider",  ImmutableSet.of("jointDataConfigReply",
+                "jointData"), ImmutableSet.of("jointDataConfigRequest"),outBuffer, inBuffer);
+        notifier.initialize();        
     }
 
     private String getMatrix(float[] m)
@@ -174,7 +161,7 @@ public class IpaacaEmbodiment implements Embodiment
         LocalMessageIU iu = new LocalMessageIU();
         iu.setCategory("jointData");
         
-        iu.getPayload().put("morph_data", toSpaceSeperatedList(values));
+        iu.getPayload().put("morph_data", Joiner.on(" ").join(values));
         if (jointLocalMatrices.isEmpty())
         {
             // XXX no jointlist: add dummy joint data to force re-render of face
@@ -202,42 +189,18 @@ public class IpaacaEmbodiment implements Embodiment
         return ImmutableList.copyOf(availableMorphs.get());
     }
 
-    private String toCommaSeperatedList(List<String> strSet)
-    {
-        return toSeperatedList(strSet, ",");
-    }
-
-    private String toSpaceSeperatedList(List<String> strSet)
-    {
-        return toSeperatedList(strSet, " ");
-    }
-
-    private String toSeperatedList(List<String> strSet, String seperator)
-    {
-        StringBuffer sBuf = new StringBuffer();
-        for (String s : strSet)
-        {
-            if (sBuf.length() > 0)
-            {
-                sBuf.append(seperator);
-            }
-            sBuf.append(s);
-        }
-        return sBuf.toString();
-    }
-
     private void updateUsedSet()
     {
         LocalMessageIU iuConfig = new LocalMessageIU();
         iuConfig.setCategory("jointDataConfigReply");
-        iuConfig.getPayload().put("joints_provided", toCommaSeperatedList(usedJoints));
+        iuConfig.getPayload().put("joints_provided", Joiner.on(",").join(usedJoints));
         List<String> np = new ArrayList<>(availableJoints.get());
         np.removeAll(usedJoints);
-        iuConfig.getPayload().put("joints_not_provided", toCommaSeperatedList(np));
-        iuConfig.getPayload().put("morphs_provided", toCommaSeperatedList(usedMorphs));
+        iuConfig.getPayload().put("joints_not_provided", Joiner.on(",").join(np));
+        iuConfig.getPayload().put("morphs_provided", Joiner.on(",").join(usedMorphs));
         np = new ArrayList<>(availableMorphs.get());
         np.removeAll(usedMorphs);
-        iuConfig.getPayload().put("morphs_not_provided", toCommaSeperatedList(np));
+        iuConfig.getPayload().put("morphs_not_provided", Joiner.on(",").join(np));
         synchronized (ipaacaLock)
         {
             outBuffer.add(iuConfig);
@@ -306,20 +269,6 @@ public class IpaacaEmbodiment implements Embodiment
     private void setAvailableMorphs(String[] morphs)
     {
         availableMorphs.set(ImmutableList.copyOf(morphs));
-    }
-
-    class ComponentNotifyHandler implements HandlerFunctor
-    {
-        @Override
-        public void handle(AbstractIU iu, IUEventType type, boolean local)
-        {
-            log.info("IpaacaEmbodiment Notified");
-            if (iu.getPayload().get("state").equals("new"))
-            {
-                submitNotify(false);
-            }            
-        }
-
     }
 
     private List<Integer> getRootIndices(String parents[])
