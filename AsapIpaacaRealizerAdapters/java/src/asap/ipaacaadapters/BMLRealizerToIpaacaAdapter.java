@@ -18,6 +18,7 @@ import ipaaca.Initializer;
 import ipaaca.InputBuffer;
 import ipaaca.LocalMessageIU;
 import ipaaca.OutputBuffer;
+import ipaaca.util.ComponentNotifier;
 
 /**
  * Submits BML through ipaaca messages; submits received feedback to registered listeners.
@@ -52,6 +53,11 @@ public class BMLRealizerToIpaacaAdapter implements RealizerPort
                 }
             }
         }, types, ImmutableSet.of(IpaacaBMLConstants.BML_FEEDBACK_CATEGORY)));
+        
+        ComponentNotifier notifier = new ComponentNotifier("BMLToIpaacaRealizerAdapter", "bmlprovider",
+                ImmutableSet.of(IpaacaBMLConstants.BML_CATEGORY),ImmutableSet.of(IpaacaBMLConstants.BML_FEEDBACK_CATEGORY),
+                outBuffer, inBuffer);
+        notifier.initialize();
     }
 
     @Override

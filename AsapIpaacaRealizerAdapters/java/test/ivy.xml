@@ -6,5 +6,7 @@
       <dependency org="logback" name="logback-core"   rev="latest.release" />
       <dependency org="hamcrest" name="hamcrest-all"       rev="latest.release"  />
        <dependency org="mockito"   name="mockito-all"            rev="latest.release"  />
+       <dependency org="jboss"			name="javassist" rev="latest.release"  />
+      <dependency org="powermock"			name="powermock-mockito" rev="latest.release"  />
    </dependencies>
 </ivy-module>

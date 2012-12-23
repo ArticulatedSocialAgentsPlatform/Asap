@@ -8,9 +8,9 @@ import ipaaca.Initializer;
 import ipaaca.InputBuffer;
 import ipaaca.LocalMessageIU;
 import ipaaca.OutputBuffer;
+import ipaaca.util.ComponentNotifier;
 
 import java.util.EnumSet;
-
 
 import asap.realizerport.BMLFeedbackListener;
 import asap.realizerport.RealizerPort;
@@ -36,7 +36,7 @@ public class IpaacaToBMLRealizerAdapter implements BMLFeedbackListener
 
     public IpaacaToBMLRealizerAdapter(RealizerPort port)
     {
-        this.realizerPort = port;
+        this.realizerPort = port;        
         realizerPort.addListeners(this);
         EnumSet<IUEventType> types = EnumSet.of(IUEventType.ADDED);
         inBuffer.registerHandler(new IUEventHandler(new HandlerFunctor()
@@ -47,6 +47,11 @@ public class IpaacaToBMLRealizerAdapter implements BMLFeedbackListener
                 realizerPort.performBML(iu.getPayload().get(IpaacaBMLConstants.BML_KEY));
             }
         }, types, ImmutableSet.of(IpaacaBMLConstants.BML_CATEGORY)));
+        
+        ComponentNotifier notifier = new ComponentNotifier("IpaacaToBMLRealizerAdapter", "bmlrealizer",
+                ImmutableSet.of(IpaacaBMLConstants.BML_FEEDBACK_CATEGORY),ImmutableSet.of(IpaacaBMLConstants.BML_CATEGORY),
+                outBuffer, inBuffer);
+        notifier.initialize();
     }
 
     @Override
