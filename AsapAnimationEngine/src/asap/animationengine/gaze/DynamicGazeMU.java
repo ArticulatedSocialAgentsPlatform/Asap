@@ -24,7 +24,7 @@ import hmi.math.Quat4f;
 import asap.animationengine.AnimationPlayer;
 import asap.motionunit.MUPlayException;
 import asap.realizer.planunit.KeyPosition;
-import asap.realizer.util.timemanipulator.SigmoidManipulator;
+import asap.timemanipulator.SigmoidManipulator;
 
 /**
  * Very simple dynamic gaze tracker, does not use any prediction. Interpolates

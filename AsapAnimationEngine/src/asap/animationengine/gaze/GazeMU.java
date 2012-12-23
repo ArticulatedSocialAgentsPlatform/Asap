@@ -49,14 +49,13 @@ import asap.realizer.planunit.KeyPositionManager;
 import asap.realizer.planunit.KeyPositionManagerImpl;
 import asap.realizer.planunit.ParameterException;
 import asap.realizer.planunit.ParameterNotFoundException;
-import asap.realizer.util.timemanipulator.SigmoidManipulator;
-import asap.realizer.util.timemanipulator.TimeManipulator;
+import asap.timemanipulator.SigmoidManipulator;
+import asap.timemanipulator.TimeManipulator;
 
 import com.google.common.collect.ImmutableSet;
 
 /**
- * Timing: ready: gaze target reached relax: start to move back to previous pose
- * (should be rest pose?)
+ * Timing: ready: gaze target reached relax: start to move back to rest pose
  * 
  * @author welberge
  * 
@@ -104,7 +103,7 @@ public class GazeMU implements AnimationUnit
 
     protected WorldObjectManager woManager;
 
-    protected String target;
+    protected String target="";
 
     protected TimeManipulator tmp;
 
@@ -113,9 +112,6 @@ public class GazeMU implements AnimationUnit
     protected double preparationDuration;
 
     protected double relaxDuration = TimePeg.VALUE_UNKNOWN;
-
-    // private static Logger logger =
-    // LoggerFactory.getLogger(GazeMU.class.getName());
 
     private KeyPositionManager keyPositionManager = new KeyPositionManagerImpl();
 
@@ -137,16 +133,20 @@ public class GazeMU implements AnimationUnit
         qStartLeftEye = new float[4];
         qStartRightEye = new float[4];
         vecTemp = new float[3];
+        setupKeyPositions();        
+
+        // defaults from presenter
+        tmp = new SigmoidManipulator(5, 1);
+    }
+
+    protected void setupKeyPositions()
+    {
         ready = new KeyPosition("ready", RELATIVE_READY_TIME, 1);
         relax = new KeyPosition("relax", RELATIVE_RELAX_TIME, 1);
         addKeyPosition(ready);
         addKeyPosition(relax);
         addKeyPosition(new KeyPosition("start", 0, 1));
         addKeyPosition(new KeyPosition("end", 1, 1));
-        target = "";
-
-        // defaults from presenter
-        tmp = new SigmoidManipulator(5, 1);
     }
 
     protected float[] getOffsetRotation()
@@ -343,9 +343,9 @@ public class GazeMU implements AnimationUnit
     @Override
     public void play(double t) throws MUPlayException
     {
-        if (t < 0.25)
+        if (t < RELATIVE_READY_TIME)
         {
-            float tManip = (float) tmp.manip(t / 0.25);
+            float tManip = (float) tmp.manip(t / RELATIVE_READY_TIME);
             Quat4f.interpolate(qTemp, qStart, qGaze, tManip);
             neck.setRotation(qTemp);
             playEyes(t);

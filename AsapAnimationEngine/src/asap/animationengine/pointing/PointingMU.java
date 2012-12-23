@@ -40,8 +40,8 @@ import asap.realizer.planunit.KeyPosition;
 import asap.realizer.planunit.KeyPositionManager;
 import asap.realizer.planunit.KeyPositionManagerImpl;
 import asap.realizer.planunit.ParameterNotFoundException;
-import asap.realizer.util.timemanipulator.SigmoidManipulator;
-import asap.realizer.util.timemanipulator.TimeManipulator;
+import asap.timemanipulator.SigmoidManipulator;
+import asap.timemanipulator.TimeManipulator;
 
 import com.google.common.collect.ImmutableSet;
 
