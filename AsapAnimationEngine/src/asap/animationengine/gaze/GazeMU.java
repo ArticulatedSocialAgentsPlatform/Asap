@@ -75,6 +75,9 @@ import com.google.common.collect.ImmutableSet;
 @Slf4j
 public class GazeMU implements AnimationUnit
 {
+    protected static final double TARGET_IMPORTANCE = 8;
+    protected static final double NECK_VELOCITY = 2 * Math.PI;
+    
     protected float qGaze[];
 
     protected float qTemp[];
@@ -215,6 +218,11 @@ public class GazeMU implements AnimationUnit
         {
             throw new MUPlayException("Gaze target not found", this);
         }
+        setTarget();
+    }
+    
+    protected void setTarget() throws MUPlayException
+    {
         woTarget.getTranslation2(localGaze, neck);
         Quat4f.transformVec3f(getOffsetRotation(), localGaze);
         setEndRotation(localGaze);
@@ -263,16 +271,32 @@ public class GazeMU implements AnimationUnit
     @Override
     public double getPreferedDuration()
     {
-        // TODO Auto-generated method stub
-        return 0;
-    }
-
-    public double getReadyDuration()
+        return getPreferedReadyDuration()+getPreferedRelaxDuration()+getPreferedStayDuration();
+    }    
+    
+    /**
+     * Time to stay on target
+     */
+    public double getPreferedStayDuration()
     {
-        // TODO: determine readyDuration with Fitts' law
-        return 1;
+        return 2;
     }
-
+    
+    public double getPreferedRelaxDuration()
+    {
+        return getPreferedReadyDuration();
+    }
+    
+    public double getPreferedReadyDuration()
+    {
+        float q[]=Quat4f.getQuat4f();
+        Quat4f.set(q, qGaze);
+        Quat4f.mulConjugateRight(q, qStart);
+        System.out.println("Angle: "+Quat4f.getAngle(q));
+        return TARGET_IMPORTANCE*Quat4f.getAngle(q)/NECK_VELOCITY;
+        
+    }
+    
     private void playEye(double t, float[] qDesNeck, float[] qStartEye, VJoint eye, VJoint eyeCurr) throws MUPlayException
     {
 

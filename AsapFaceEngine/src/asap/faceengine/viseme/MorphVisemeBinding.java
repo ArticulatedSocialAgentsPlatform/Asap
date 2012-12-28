@@ -72,7 +72,7 @@ public class MorphVisemeBinding implements VisemeBinding
             if (!fc.getPossibleFaceMorphTargetNames().contains(target))
             {
                 removeTargets.add(target);
-                log.warn("Morphvisemebinding refers to non-existing morph {}", target);
+                log.warn("Morphvisemebinding refers to non-existing morph \"{}\" for viseme {}", target,viseme);
             }
         }
         targetNames.removeAll(removeTargets);

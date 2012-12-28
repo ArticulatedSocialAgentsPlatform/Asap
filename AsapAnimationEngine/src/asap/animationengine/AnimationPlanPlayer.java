@@ -1,6 +1,5 @@
 package asap.animationengine;
 
-
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashSet;
@@ -44,7 +43,7 @@ public class AnimationPlanPlayer implements PlanPlayer
     {
         currentRestPose = rp;
     }
-    
+
     public RestPose getRestPose()
     {
         return currentRestPose;
@@ -61,35 +60,37 @@ public class AnimationPlanPlayer implements PlanPlayer
         this.pegBoard = pegBoard;
         currentRestPose = defaultRestPose;
     }
-    
-    ///only update 5 seconds in the future (for performance reasons)
-    private static final double UPDATE_BUFFER = 5;  
-    
+
+    // /only update 5 seconds in the future (for performance reasons)
+    private static final double UPDATE_BUFFER = 5;
+
     private void updateTiming(double t)
     {
-        List<TimedAnimationUnit> tuUpdateFailed = new ArrayList<>();        
+        List<TimedAnimationUnit> tuUpdateFailed = new ArrayList<>();
         // check which units should be playing
         for (TimedAnimationUnit tmu : planManager.getPlanUnits())
         {
-            if(tmu.isPlaying()||tmu.isLurking())
-            //if(tmu.isLurking())
-            if(tmu.getStartTime()<t+UPDATE_BUFFER)                
+            if(tmu.isSubUnit())continue;
+            if (tmu.isPlaying() || tmu.isLurking())
             {
-                try
+                if (tmu.getStartTime() < t + UPDATE_BUFFER)
                 {
-                    tmu.updateTiming(t);
+                    try
+                    {
+                        tmu.updateTiming(t);
+                    }
+                    catch (TMUPlayException e)
+                    {
+                        tuUpdateFailed.add(tmu);
+                        log.warn("updateTiming failure, TimedMotionUnit dropped", e);
+                        continue;
+                    }
                 }
-                catch (TMUPlayException e)
-                {
-                    tuUpdateFailed.add(tmu);
-                    log.warn("updateTiming failure, TimedMotionUnit dropped",e);
-                    continue;
-                }
-            }            
+            }
         }
         planManager.removePlanUnits(tuUpdateFailed, t);
     }
-    
+
     @Override
     public synchronized void play(double t)
     {
@@ -100,12 +101,12 @@ public class AnimationPlanPlayer implements PlanPlayer
 
         playingPlanUnits.clear();
         tmuRemove.clear();
-        log.debug("plan Units: {}",planManager.getPlanUnits());
-        
-        //long time = System.nanoTime();
+        log.debug("plan Units: {}", planManager.getPlanUnits());
+
+        // long time = System.nanoTime();
         updateTiming(t);
-        //log.debug("update time: {} ms", (System.nanoTime()-time)/1000000d );
-        
+        // log.debug("update time: {} ms", (System.nanoTime()-time)/1000000d );
+
         // check which units should be playing
         for (TimedAnimationUnit tmu : planManager.getPlanUnits())
         {
@@ -114,10 +115,9 @@ public class AnimationPlanPlayer implements PlanPlayer
                 playingPlanUnits.add(tmu);
             }
         }
-        
-        
-        log.debug("playing plan Units: {}",playingPlanUnits);
-        
+
+        log.debug("playing plan Units: {}", playingPlanUnits);
+
         // sort by priority
         Collections.sort(playingPlanUnits, new PlanUnitPriorityComparator());
 
@@ -153,18 +153,18 @@ public class AnimationPlanPlayer implements PlanPlayer
             {
                 if (tmu.isLurking() && !tmu.isSubUnit())
                 {
-                    fbManager.puException(tmu, "Dropping " + tmu.getBMLId() + ":" + tmu.getId()
-                            + "with priority "+tmu.getPriority()+ " for higher priority behaviors before it was even started", t);
+                    fbManager.puException(tmu, "Dropping " + tmu.getBMLId() + ":" + tmu.getId() + "with priority " + tmu.getPriority()
+                            + " for higher priority behaviors before it was even started", t);
                 }
-                log.debug("Dropping {}:{}",tmu.getBMLId(),tmu.getId());
+                log.debug("Dropping {}:{}", tmu.getBMLId(), tmu.getId());
                 Set<String> cleanup = new HashSet<String>(tmu.getKinematicJoints());
                 cleanup.removeAll(kinematicJoints);
                 cleanup.addAll(tmu.getPhysicalJoints());
-                cleanup.removeAll(physicalJoints);                
-                TimedAnimationUnit tmuCleanup = this.currentRestPose.createTransitionToRest(NullFeedbackManager.getInstance(),
-                        cleanup, t, tmu.getBMLId(), tmu.getId(), tmu.getBMLBlockPeg(), pegBoard);
+                cleanup.removeAll(physicalJoints);
+                TimedAnimationUnit tmuCleanup = this.currentRestPose.createTransitionToRest(NullFeedbackManager.getInstance(), cleanup, t,
+                        tmu.getBMLId(), tmu.getId(), tmu.getBMLBlockPeg(), pegBoard);
                 tmuCleanup.setSubUnit(true);
-                
+
                 tmuRemove.add(tmu);
                 tmuAdd.add(tmuCleanup);
             }
@@ -187,11 +187,11 @@ public class AnimationPlanPlayer implements PlanPlayer
     {
         defPlayer.stopBehaviourBlock(bmlId, time);
     }
-    
+
     @Override
     public void interruptPlanUnit(String bmlId, String id, double globalTime)
     {
-        defPlayer.interruptPlanUnit(bmlId, id, globalTime);        
+        defPlayer.interruptPlanUnit(bmlId, id, globalTime);
     }
 
     @Override
@@ -224,11 +224,11 @@ public class AnimationPlanPlayer implements PlanPlayer
     {
         defPlayer.addFeedbackListener(fl);
     }
-    
+
     public void updateTiming(String bmlId)
     {
         List<TimedAnimationUnit> failedBehaviors = new ArrayList<>();
-        for(TimedAnimationUnit tmu :planManager.getPlanUnits(bmlId))
+        for (TimedAnimationUnit tmu : planManager.getPlanUnits(bmlId))
         {
             try
             {
@@ -238,10 +238,9 @@ public class AnimationPlanPlayer implements PlanPlayer
             {
                 log.warn("Failure in updating the timing of TimedAnimationUnit {}, TimedAnimationUnit removed", tmu);
                 failedBehaviors.add(tmu);
-            }            
+            }
         }
         planManager.removePlanUnits(failedBehaviors, 0);
     }
 
-    
 }

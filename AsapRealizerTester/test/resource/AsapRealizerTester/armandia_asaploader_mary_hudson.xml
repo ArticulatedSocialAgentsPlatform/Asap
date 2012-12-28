@@ -75,11 +75,10 @@
   <Loader id="animationengine" 
           loader="asap.animationengine.loader.MixedAnimationEngineLoader"
           requiredloaders="mixedskeletonembodiment,physicalembodiment">
-<!--
     <GestureBinding basedir="" resources="Humanoids/armandia/gesturebinding/" filename="gesturebinding.xml"/>
-   -->
+    <!--
     <GestureBinding basedir="" resources="Humanoids/shared/gesturebinding/" filename="gesturebinding.xml"/>
-
+    -->
 
     <StartPose resources="Humanoids/armandia/restposes/" filename="looselyhangingarms.xml"/>
     <Hns resources="Humanoids/shared/hns" filename="hns.xml"/>
@@ -101,22 +100,14 @@
 	<SpeechBinding basedir="" resources="Humanoids/shared/speechbinding/" filename="ikpspeechbinding.xml"/>
   </Loader>
 
- <Loader id="speechengine" loader="asap.speechengine.loader.SpeechEngineLoader" requiredloaders="facelipsync,jawlipsync">
-	<!--    
-<SpeechBinding basedir="" resources="Humanoids/shared/speechbinding/" filename="ikpspeechbinding.xml"/>
-    <MorphVisemeBinding resources="Humanoids/armandia/facebinding/" filename="ikpvisemebinding.xml"/>
--->
-    <Voice voicetype="MARY" localmarydir="HmiResource/MARYTTS" factory="WAV_TTS"/>
+ <Loader id="speechengine" loader="asap.speechengine.loader.SpeechEngineLoader" requiredloaders="facelipsync,jawlipsync"> 
+   <Voice voicetype="MARY" localmarydir="HmiResource/MARYTTS/resource/MARYTTS" factory="WAV_TTS"/>
   </Loader>
 
 
   
   <!-- Engine for playing audio files, nice for sound effects (e.g., clapping) or for prerecorded speech fragments -->
   <Loader id="audioengine" loader="asap.audioengine.loader.AudioEngineLoader"/>
-
-  <!-- Text label embodiment and text speech engine together can be used to put all text on a label (kind of "subcaptions") instead of turning them into audio. If using this, remove the other speechengine -->
-  <!--Loader id="textlabel" loader="hmi.textengine.JLabelTextEmbodiment" requiredloaders="guiembodiment"/-->
-  <!--Loader id="textspeechengine" loader="hmi.textengine.TextSpeechEngineLoader" requiredloaders="textlabel"/-->
 
   <!-- possibly: routing for BMLBehaviors to Engines -->
   

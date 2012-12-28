@@ -1,19 +1,19 @@
 package asap.realizertester;
 
-import static org.junit.Assert.*;
+import static org.junit.Assert.assertEquals;
 
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
+import org.junit.Ignore;
 import org.junit.Test;
 
 import saiba.bml.feedback.BMLBlockPredictionFeedback;
 import saiba.bml.feedback.BMLFeedback;
 import saiba.bml.feedback.BMLFeedbackParser;
 import saiba.bml.feedback.BMLPredictionFeedback;
-
 import asap.bml.ext.bmlt.BMLTAudioFileBehaviour;
 import asap.bml.ext.bmlt.BMLTParameterValueChangeBehaviour;
 import asap.realizerport.BMLFeedbackListener;
@@ -221,12 +221,21 @@ public abstract class AbstractASAPRealizerTest extends AbstractBML1RealizerTest 
         realizerHandler.assertBlockStartLinkedToBlockStop("bml2", "bml1");
     }
 
+    @Override
+    @Test
+    @Ignore
+    public void testGazeWaist() throws InterruptedException, IOException
+    {
+        
+    }
+    
     @Test
     public void testInterruptBehaviour() throws InterruptedException, IOException
     {
         String bmlString1 = readTestFile("bmlt/interrupt/testlongspeechandnod.xml");
         String bmlString2 = readTestFile("bmlt/interrupt/testspeechinterrupt.xml");
         realizerHandler.performBML(bmlString1);
+        realizerHandler.waitForBMLStartFeedback("bml1");
         realizerHandler.performBML(bmlString2);
 
         realizerHandler.waitForBMLEndFeedback("bml1");
@@ -236,7 +245,6 @@ public abstract class AbstractASAPRealizerTest extends AbstractBML1RealizerTest 
         realizerHandler.assertNoWarnings();
         realizerHandler.assertNoDuplicateFeedbacks();
 
-        System.out.println(realizerHandler.getTrace());
         assertEquals(realizerHandler.getBMLPerformanceStartFeedback("bml2").timeStamp + 2,
                 realizerHandler.getBMLPerformanceStopFeedback("bml1").timeStamp, 0.2);
     }

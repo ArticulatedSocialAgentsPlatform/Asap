@@ -160,6 +160,18 @@ public class GestureBindingTest
                 + "</parametermap>"
                 + "<MotionUnit type=\"class\" class=\"asap.animationengine.gaze.DynamicGazeMU\"/>"
                 + "</MotionUnitSpec>"
+                + "<MotionUnitSpec type=\"gaze\">"
+                + "<constraints>"
+                +    "<constraint name=\"influence\" value=\"WAIST\"/>"                
+                + "</constraints>"
+                + "<parametermap>"
+                +    "<parameter src=\"target\" dst=\"target\"/>"          
+                +    "<parameter src=\"offsetAngle\" dst=\"offsetangle\"/>"
+                +    "<parameter src=\"offsetDirection\" dst=\"offsetdirection\"/>"
+                +    "<parameter src=\"influence\" dst=\"influence\"/>"
+                + "</parametermap>"
+                + "<MotionUnit type=\"class\" class=\"asap.animationengine.gaze.DynamicTorsoGazeMU\"/>"
+                + "</MotionUnitSpec>"
                 + "</gesturebinding>";
         gestureBinding.readXML(s);
         when(mockAniPlayer.getVNext()).thenReturn(human);
@@ -203,6 +215,15 @@ public class GestureBindingTest
     }
     
     @Test
+    public void testGetDynamicTorsoGaze() throws IOException, ParameterException
+    {
+        GazeBehaviour b = createGazeBehaviour("bml1", "<gaze xmlns=\"http://www.bml-initiative.org/bml/bml-1.0\"" +
+                "id=\"gaze1\" influence=\"WAIST\" target=\"greensphere\"/>");
+        List<TimedAnimationMotionUnit> m = gestureBinding.getMotionUnit(BMLBlockPeg.GLOBALPEG, b, mockAniPlayer, pegBoard);
+        assertEquals(1, m.size());
+    }
+    
+    @Test
     public void testGetDynamicGaze() throws IOException, ParameterException
     {
         GazeBehaviour b = createGazeBehaviour("bml1", "<gaze xmlns=\"http://www.bml-initiative.org/bml/bml-1.0\"" +
@@ -210,6 +231,7 @@ public class GestureBindingTest
         List<TimedAnimationMotionUnit> m = gestureBinding.getMotionUnit(BMLBlockPeg.GLOBALPEG, b, mockAniPlayer, pegBoard);
         assertEquals(1, m.size());
     }
+    
     
     @Test
     public void testGetHeadNodWithRepeats2() throws IOException, ParameterException

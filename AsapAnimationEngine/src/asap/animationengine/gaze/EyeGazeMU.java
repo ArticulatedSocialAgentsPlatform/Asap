@@ -93,7 +93,7 @@ public class EyeGazeMU extends GazeMU
         EyeSaturation.sat(q, Quat4f.getIdentity(), qEyeLeft);
     }
     
-    public double getReadyDuration()
+    public double getPreferedReadyDuration()
     {
         float q[]=Quat4f.getQuat4f();
         Quat4f.mulConjugateRight(q, qStartLeftEye, qEyeLeft);

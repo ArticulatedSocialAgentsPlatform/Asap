@@ -20,6 +20,7 @@ package asap.realizerintegrationtest;
 
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.number.OrderingComparison.greaterThan;
+import static org.hamcrest.number.OrderingComparison.lessThan;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
 import hmi.animation.VJoint;
@@ -273,7 +274,7 @@ public class SchedulerParameterizedIntegrationTest
         }
 
         speechEngineFactories.add(new TTSEngineFactory(new WavTTSUnitFactory(bfm, soundManager), new MaryTTSBindingFactory(System
-                .getProperty("shared.project.root") + "/HmiResource/MARYTTS", new NullPhonemeToVisemeMapping()), soundManager));
+                .getProperty("shared.project.root") + "/HmiResource/MARYTTS/resource/MARYTTS", new NullPhonemeToVisemeMapping()), soundManager));
         speechEngineFactories.add(new TextEngineFactory());
 
         Collection<Object[]> objs = new ArrayList<Object[]>();
@@ -936,18 +937,28 @@ public class SchedulerParameterizedIntegrationTest
         assertEquals(pegBoard.getRelativePegTime("bml1", "bml1", "beat1", "ready"), 2, PEGBOARD_PRECISION);
     }
 
-    @Ignore
-    // TODO: currently broken, gaze does not work if ready timing is not
-    // provided
     @Test(timeout = SCHEDULE_TIMEOUT)
     public void testOffsetGazeTimed()
     {
         readXML("testoffsetgaze.xml");
         assertNoWarnings();
 
-        assertTrue(pegBoard.getPegTime("bml1", "gaze1", "start") == 2);
-        assertTrue(pegBoard.getPegTime("bml1", "speech1", "start") == pegBoard.getPegTime("bml1", "gaze1", "ready"));
-        assertTrue(pegBoard.getPegTime("bml1", "speech1", "start") > 2);
+        assertEquals(pegBoard.getRelativePegTime("bml1", "gaze1", "start"),2,PEGBOARD_PRECISION);
+        assertEquals(pegBoard.getRelativePegTime("bml1", "speech1", "start"), pegBoard.getRelativePegTime("bml1", "gaze1", "ready"), PEGBOARD_PRECISION);
+        assertTrue(pegBoard.getRelativePegTime("bml1", "speech1", "start") > 2);
+    }
+    
+    @Test(timeout = SCHEDULE_TIMEOUT)
+    @Ignore
+    //fails because of smartbody scheduling algorithm
+    public void testOffsetGazeTimed2()
+    {
+        readXML("testoffsetgaze2.xml");
+        assertNoWarnings();
+
+        assertEquals(pegBoard.getRelativePegTime("bml1", "gaze1", "start"),2,PEGBOARD_PRECISION);
+        assertEquals(pegBoard.getRelativePegTime("bml1", "speech1", "start"), pegBoard.getRelativePegTime("bml1", "gaze1", "ready"), PEGBOARD_PRECISION);
+        assertTrue(pegBoard.getRelativePegTime("bml1", "speech1", "start") > 2);
     }
 
     @Test(timeout = SCHEDULE_TIMEOUT)
@@ -1081,20 +1092,15 @@ public class SchedulerParameterizedIntegrationTest
         assertOneWarning();
     }
 
-    @Ignore
     @Test(timeout = SCHEDULE_TIMEOUT)
     public void testGazeReadyTimed()
     {
-        // TODO: this fails because the AnimationPlanner assumes that each
-        // behavior has a prefered
-        // duration, switch to prefered duration between keys instead?
-        /*
-         * readXML("testgazereadytimed.xml"); assertTrue(warnings.size()==0);
-         * assertTrue(exceptions.size()==0); assertTrue(realizer.getAnimationPlayer
-         * ().getTimedMotionUnits().size()==1); gaze1 =
-         * realizer.getAnimationPlayer().getTimedMotionUnit("gaze1", "bml1");
-         * assertTrue(gaze1.getPegTime("ready")==1); assertTrue(gaze1.getEndTime()==10);
-         */
+         readXML("testgazereadytimed.xml"); 
+         assertNoWarnings();
+         assertEquals(pegBoard.getRelativePegTime("bml1", "bml1", "gaze1", "ready"), 1, PEGBOARD_PRECISION);
+         assertEquals(pegBoard.getRelativePegTime("bml1", "bml1", "gaze1", "end"), 10, PEGBOARD_PRECISION);
+         assertThat(pegBoard.getRelativePegTime("bml1", "bml1", "gaze1", "start"), greaterThan(-PEGBOARD_PRECISION));
+         assertThat(pegBoard.getRelativePegTime("bml1", "bml1", "gaze1", "start"), lessThan(1d));         
     }
 
     @Ignore

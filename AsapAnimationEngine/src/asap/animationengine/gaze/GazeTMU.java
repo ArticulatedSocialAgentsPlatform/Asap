@@ -61,7 +61,7 @@ public class GazeTMU extends TimedAnimationMotionUnit
             }
             else
             {
-                readyDuration = gmu.getReadyDuration();
+                readyDuration = gmu.getPreferedReadyDuration();
                 
                 if(getEndTime()!=TimePeg.VALUE_UNKNOWN && getStartTime()!=TimePeg.VALUE_UNKNOWN )
                 {
