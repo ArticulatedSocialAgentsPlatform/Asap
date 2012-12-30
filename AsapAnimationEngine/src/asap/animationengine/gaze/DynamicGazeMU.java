@@ -31,6 +31,7 @@ import asap.timemanipulator.SigmoidManipulator;
  * between current neck pose and desired (moving) neck pose with interpolation
  * weight timestep/remainingduration when t &lt; 0.25 Perfectly tracks target
  * when 0.25 &lt; t &lt; 0.75
+ * no eye rotation
  * 
  * @author welberge
  */
@@ -86,12 +87,6 @@ public class DynamicGazeMU extends GazeMU
         }
         else if (t > RELATIVE_RELAX_TIME)
         {
-            /*
-            float tManip = (float) tmp.manip((t - RELATIVE_RELAX_TIME) / (1 - RELATIVE_RELAX_TIME));
-            // Quat4f.interpolate(qTemp, qGaze,Quat4f.getIdentity(), tManip);
-            Quat4f.interpolate(qTemp, qGaze, qStart, tManip);
-            neck.setRotation(qTemp);
-            */
             relaxUnit.play( (t-RELATIVE_RELAX_TIME)/(1-RELATIVE_RELAX_TIME));
         }
         else

@@ -118,10 +118,12 @@ public class GazeMU implements AnimationUnit
 
     private KeyPositionManager keyPositionManager = new KeyPositionManagerImpl();
 
-    private float[] localGaze = new float[3];
+    protected float[] localGaze = new float[3];
 
     protected double offsetAngle = 0;
     protected OffsetDirection offsetDirection = OffsetDirection.NONE;
+    
+    protected String influence = "NECK";
 
     protected static final double RELATIVE_READY_TIME = 0.25;
     protected static final double RELATIVE_RELAX_TIME = 0.75;
@@ -291,8 +293,7 @@ public class GazeMU implements AnimationUnit
     {
         float q[]=Quat4f.getQuat4f();
         Quat4f.set(q, qGaze);
-        Quat4f.mulConjugateRight(q, qStart);
-        System.out.println("Angle: "+Quat4f.getAngle(q));
+        Quat4f.mulConjugateRight(q, qStart);        
         return TARGET_IMPORTANCE*Quat4f.getAngle(q)/NECK_VELOCITY;
         
     }
@@ -403,6 +404,10 @@ public class GazeMU implements AnimationUnit
         {
             offsetDirection = OffsetDirection.valueOf(value);
         }
+        else if (name.equals("influence"))
+        {
+            influence = value;
+        }
         else if (StringUtil.isNumeric(value))
         {
             setFloatParameterValue(name, Float.parseFloat(value));
@@ -414,6 +419,7 @@ public class GazeMU implements AnimationUnit
     public String getParameterValue(String name) throws ParameterNotFoundException
     {
         if (name.equals("target")) return target;
+        if (name.equals("influence")) return influence;
         if (name.equals("offsetdirection")) return "" + offsetDirection;
         return "" + getFloatParameterValue(name);
     }

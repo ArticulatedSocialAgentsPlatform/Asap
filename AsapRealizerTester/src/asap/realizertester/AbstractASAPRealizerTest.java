@@ -130,7 +130,7 @@ public abstract class AbstractASAPRealizerTest extends AbstractBML1RealizerTest 
 
         realizerHandler.assertSyncsInOrder("bml1", "speech1", DefaultSyncPoints.getDefaultSyncPoints("speech"));
         realizerHandler.assertSyncsInOrder("bml2", "nod1", DefaultSyncPoints.getDefaultSyncPoints("head"));
-        realizerHandler.assertLinkedSyncs("bml1", "speech1", "start", "bml2", "nod1", "end");
+        realizerHandler.assertLinkedSyncs("bml2", "nod1", "end", "bml1", "speech1", "start");
         realizerHandler.assertNoExceptions();
         realizerHandler.assertNoWarnings();
         realizerHandler.assertNoDuplicateFeedbacks();
@@ -221,14 +221,6 @@ public abstract class AbstractASAPRealizerTest extends AbstractBML1RealizerTest 
         realizerHandler.assertBlockStartLinkedToBlockStop("bml2", "bml1");
     }
 
-    @Override
-    @Test
-    @Ignore
-    public void testGazeWaist() throws InterruptedException, IOException
-    {
-        
-    }
-    
     @Test
     public void testInterruptBehaviour() throws InterruptedException, IOException
     {

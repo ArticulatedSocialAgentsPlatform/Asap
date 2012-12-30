@@ -49,6 +49,8 @@ public class DynamicEyeGazeMU extends DynamicGazeMU
         DynamicEyeGazeMU gmu = new DynamicEyeGazeMU();
         gmu.lEye = p.getVNext().getPart(Hanim.l_eyeball_joint);
         gmu.rEye = p.getVNext().getPart(Hanim.r_eyeball_joint);
+        gmu.lEyeCurr = p.getVCurr().getPart(Hanim.l_eyeball_joint);
+        gmu.rEyeCurr = p.getVCurr().getPart(Hanim.r_eyeball_joint);
         gmu.player = p;
         gmu.woManager = p.getWoManager();
         gmu.target = target;
@@ -87,22 +89,23 @@ public class DynamicEyeGazeMU extends DynamicGazeMU
         {
             double remDuration = ((RELATIVE_READY_TIME - t) / RELATIVE_READY_TIME) * preparationDuration;
             float deltaT = (float) (player.getStepTime() / remDuration);
-            setEndRotation(targetPosCurrL, lEye, qEndCurr);            
             
-            lEye.getRotation(qCurr);
+            setEndRotation(targetPosCurrL, lEye, qEndCurr);
+            lEyeCurr.getRotation(qCurr);
             Quat4f.interpolate(qGazeL, qCurr, qEndCurr, deltaT);
             
             setEndRotation(targetPosCurrR, rEye, qEndCurr);
-            rEye.getRotation(qCurr);
+            rEyeCurr.getRotation(qCurr);
             Quat4f.interpolate(qGazeR, qCurr, qEndCurr, deltaT);
         } 
         else if (t > RELATIVE_RELAX_TIME)
         {
             float tManip = (float) tmp.manip((t - RELATIVE_RELAX_TIME) / (1-RELATIVE_RELAX_TIME));
-            lEye.getRotation(qCurr);
+            
+            lEyeCurr.getRotation(qCurr);
             Quat4f.interpolate(qGazeL, qCurr, qStartLeftEye, tManip);
             
-            rEye.getRotation(qCurr);
+            rEyeCurr.getRotation(qCurr);
             Quat4f.interpolate(qGazeR, qCurr, qStartRightEye, tManip);            
         } 
         else
