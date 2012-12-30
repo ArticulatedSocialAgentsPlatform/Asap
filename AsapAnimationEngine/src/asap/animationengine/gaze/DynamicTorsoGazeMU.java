@@ -5,7 +5,6 @@ import hmi.animation.VJoint;
 import hmi.animation.VJointUtils;
 import hmi.math.Quat4f;
 import hmi.math.Vec3f;
-import hmi.math.Vec4f;
 import hmi.neurophysics.EyeSaturation;
 import hmi.neurophysics.ListingsLaw;
 import hmi.neurophysics.Saccade;
@@ -15,28 +14,49 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Set;
 
-import lombok.extern.slf4j.Slf4j;
 import asap.animationengine.AnimationPlayer;
 import asap.animationengine.motionunit.MUSetupException;
 import asap.motionunit.MUPlayException;
 import asap.timemanipulator.ErfManipulator;
+import asap.timemanipulator.TimeManipulator;
 
 import com.google.common.collect.ImmutableList;
 import com.google.common.collect.ImmutableSet;
 
-@Slf4j
+/**
+ * Provides (up to) full torso gaze to moving targets.
+ * 
+ * Implementation inspired by:<br>
+ * Helena Grillon and Daniel Thalmann, Simulating gaze attention behaviors for crowds (2009), in: Computer Animation and Virtual Worlds, 20 2-3(111-- 119)<br>
+ * 
+ * Additions to their work:<br>
+ * Eyes reach the target first and then lock on to it, that is, they overshoot their end rotation and then move back while remaining locked on the target (as in
+ * P. Radua, D. Tweed, and T. Vilis. Three-dimensional eye, head, and chest orientations after large gaze shifts and the
+ * underlying neural strategies. Journal of Neurophysiology, 72(6):2840–2852, 1994.).
+ * The eye max speed and speed profile is biologically motivated (using R. H. S. Carpenter. Movements of the Eyes. Pion Ltd, London, UK, second edition, 1988).
+ * Eyes adhere to biologically motivated rotation limits; eye rotation is calculated using Listing's law
+ * (using D. Tweed. Three-dimensional model of the human eye-head saccadic system.
+ * Journal of Neurophysiology, 77(2):654–666, February 1997).
+ * @author Herwin
+ */
 public class DynamicTorsoGazeMU extends GazeMU
 {
     // SMAX/Smax(t) in Grillion
 
     private static final double TORSO_TIME_SCALE = 2; // 2x slower than neck
-    private static final int FPS = 3; // used as multiplier for the tmp setup
-
+    private static final int FPS_THORACIC = 3; // used as multiplier for the tmp setup
+    private static final int FPS_CERVICAL = 3; // used as multiplier for the tmp setup
+    private TimeManipulator tmpThoracic;
+    private TimeManipulator tmpCervical;
+    
     private ImmutableList<VJoint> joints;
+    private ImmutableList<VJoint> cervicalJoints;
+    private ImmutableList<VJoint> thoracicJoints;
+
     private ImmutableSet<String> kinematicJoints;
 
     float qStart[];
-    float qStartCombined[] = Quat4f.getQuat4f();    
+    float qStartCombined[] = Quat4f.getQuat4f();
 
     public DynamicTorsoGazeMU()
     {
@@ -114,9 +134,9 @@ public class DynamicTorsoGazeMU extends GazeMU
             {
                 double delta = player.getStepTime() / dur;
                 float q[] = Quat4f.getQuat4f();
-                Quat4f.interpolate(q, qCurrLeft, qDesLeft, (float)delta);
+                Quat4f.interpolate(q, qCurrLeft, qDesLeft, (float) delta);
                 lEye.setRotation(q);
-                Quat4f.interpolate(q, qCurrRight, qDesRight, (float)delta);
+                Quat4f.interpolate(q, qCurrRight, qDesRight, (float) delta);
                 rEye.setRotation(q);
             }
         }
@@ -127,17 +147,48 @@ public class DynamicTorsoGazeMU extends GazeMU
         }
     }
 
+    private void setThoracic(float qStart[], float qSpine[], double tRel)
+    {
+        int i = 0;
+        float q[] = Quat4f.getQuat4f();
+        for (VJoint vj : thoracicJoints)
+        {
+            Quat4f.interpolate(q, 0, qStart, i, qSpine, i, (float) tmpThoracic.manip(tRel));
+            vj.setRotation(q);
+            i += 4;
+        }
+    }
+
+    private void setCervical(float qStart[], float qSpine[], double tRel)
+    {
+        int i = thoracicJoints.size() * 4;
+        float q[] = Quat4f.getQuat4f();
+        for (VJoint vj : cervicalJoints)
+        {
+            Quat4f.interpolate(q, 0, qStart, i, qSpine, i, (float) tmpCervical.manip(tRel));
+            vj.setRotation(q);
+            i += 4;
+        }
+    }
+
     @Override
     public void play(double t) throws MUPlayException
     {
         setTarget();
         float qSpine[] = getSpine(qGaze);
-        float q[] = new float[joints.size() * 4];
+
         if (t < RELATIVE_READY_TIME)
         {
             double tRel = t / RELATIVE_READY_TIME;
-            Quat4f.interpolateArrays(q, qStart, qSpine, (float) tmp.manip(tRel));
-            setSpine(q);
+            setThoracic(qStart, qSpine, tRel);
+            if (t < RELATIVE_READY_TIME / TORSO_TIME_SCALE)
+            {
+                setCervical(qStart, qSpine, tRel / (RELATIVE_READY_TIME / TORSO_TIME_SCALE));
+            }
+            else
+            {
+                setCervical(qStart, qSpine, 1);
+            }
         }
         else if (t > RELATIVE_RELAX_TIME)
         {
@@ -173,19 +224,19 @@ public class DynamicTorsoGazeMU extends GazeMU
     @Override
     protected void setTarget() throws MUPlayException
     {
-        VJoint neck = joints.get(joints.size() - 1);        
+        VJoint neck = joints.get(joints.size() - 1);
         woTarget.getTranslation2(localGaze, neck);
-        
-        //lgazeneck = gazepos - neck
-        //lgazeeyes = gazepos - eye = gazepos - (neck+localeye) = gazepos-neck-localeye = lgazeneck - localeye
+
+        // lgazeneck = gazepos - neck
+        // lgazeeyes = gazepos - eye = gazepos - (neck+localeye) = gazepos-neck-localeye = lgazeneck - localeye
         float rOffset[] = Vec3f.getVec3f();
         float lOffset[] = Vec3f.getVec3f();
         rEye.getPathTranslation(neck, rOffset);
         lEye.getPathTranslation(neck, lOffset);
         Vec3f.scale(-0.5f, rOffset);
         Vec3f.scale(-0.5f, lOffset);
-        Vec3f.add(localGaze,rOffset);
-        Vec3f.add(localGaze,lOffset);
+        Vec3f.add(localGaze, rOffset);
+        Vec3f.add(localGaze, lOffset);
         Quat4f.transformVec3f(getOffsetRotation(), localGaze);
         setEndRotation(localGaze);
     }
@@ -218,7 +269,8 @@ public class DynamicTorsoGazeMU extends GazeMU
     public void setDurations(double prepDur, double relaxDur)
     {
         preparationDuration = prepDur;
-        tmp = new ErfManipulator((int) (prepDur * FPS));
+        tmpThoracic = new ErfManipulator((int) (FPS_THORACIC));
+        tmpCervical = new ErfManipulator((int) (FPS_CERVICAL));
     }
 
     @Override
@@ -231,11 +283,12 @@ public class DynamicTorsoGazeMU extends GazeMU
     public DynamicTorsoGazeMU copy(AnimationPlayer p) throws MUSetupException
     {
         DynamicTorsoGazeMU copy = new DynamicTorsoGazeMU();
-        List<VJoint> joints = new ArrayList<VJoint>(VJointUtils.gatherJoints(Hanim.THORACIC_JOINTS, p.getVNext()));
-        joints.addAll(VJointUtils.gatherJoints(Hanim.CERVICAL_JOINTS, p.getVNext()));
-        copy.joints = ImmutableList.copyOf(joints);
-        copy.kinematicJoints = new ImmutableSet.Builder<String>().addAll(VJointUtils.transformToSidList(joints)).add(Hanim.r_eyeball_joint)
-                .add(Hanim.l_eyeball_joint).build();
+        copy.cervicalJoints = ImmutableList.copyOf(VJointUtils.gatherJoints(Hanim.CERVICAL_JOINTS, p.getVNext()));
+        copy.thoracicJoints = ImmutableList.copyOf(VJointUtils.gatherJoints(Hanim.THORACIC_JOINTS, p.getVNext()));
+        copy.joints = new ImmutableList.Builder<VJoint>().addAll(copy.thoracicJoints).addAll(copy.cervicalJoints).build();
+
+        copy.kinematicJoints = new ImmutableSet.Builder<String>().addAll(VJointUtils.transformToSidList(copy.joints))
+                .add(Hanim.r_eyeball_joint).add(Hanim.l_eyeball_joint).build();
         copy.offsetAngle = offsetAngle;
         copy.offsetDirection = offsetDirection;
         copy.influence = influence;
