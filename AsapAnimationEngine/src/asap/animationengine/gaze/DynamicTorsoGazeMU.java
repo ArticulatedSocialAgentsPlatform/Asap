@@ -30,7 +30,7 @@ public class DynamicTorsoGazeMU extends GazeMU
     // SMAX/Smax(t) in Grillion
 
     private static final double TORSO_TIME_SCALE = 2; // 2x slower than neck
-    private static final int FPS = 4; // used as multiplier for the tmp setup
+    private static final int FPS = 3; // used as multiplier for the tmp setup
 
     private ImmutableList<VJoint> joints;
     private ImmutableSet<String> kinematicJoints;
@@ -173,7 +173,19 @@ public class DynamicTorsoGazeMU extends GazeMU
     @Override
     protected void setTarget() throws MUPlayException
     {
-        woTarget.getTranslation2(localGaze, joints.get(joints.size() - 1));
+        VJoint neck = joints.get(joints.size() - 1);        
+        woTarget.getTranslation2(localGaze, neck);
+        
+        //lgazeneck = gazepos - neck
+        //lgazeeyes = gazepos - eye = gazepos - (neck+localeye) = gazepos-neck-localeye = lgazeneck - localeye
+        float rOffset[] = Vec3f.getVec3f();
+        float lOffset[] = Vec3f.getVec3f();
+        rEye.getPathTranslation(neck, rOffset);
+        lEye.getPathTranslation(neck, lOffset);
+        Vec3f.scale(-0.5f, rOffset);
+        Vec3f.scale(-0.5f, lOffset);
+        Vec3f.add(localGaze,rOffset);
+        Vec3f.add(localGaze,lOffset);
         Quat4f.transformVec3f(getOffsetRotation(), localGaze);
         setEndRotation(localGaze);
     }
