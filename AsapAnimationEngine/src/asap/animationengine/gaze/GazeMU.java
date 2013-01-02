@@ -192,6 +192,22 @@ public class GazeMU implements AnimationUnit
         return q;
     }
 
+    protected void setEndEyeRotation(VJoint eye, float qEye[]) throws MUPlayException
+    {
+        float gazeDir[]=Vec3f.getVec3f();
+        woTarget = woManager.getWorldObject(target);
+        if (woTarget == null)
+        {
+            throw new MUPlayException("Gaze target not found", this);
+        }
+        woTarget.getTranslation2(gazeDir, eye);
+        Quat4f.transformVec3f(getOffsetRotation(), gazeDir);
+        Vec3f.normalize(gazeDir);
+        float q[] = Quat4f.getQuat4f();
+        ListingsLaw.listingsEye(gazeDir, q);
+        EyeSaturation.sat(q, Quat4f.getIdentity(), qEye);
+    }
+    
     @Override
     public GazeMU copy(AnimationPlayer p) throws MUSetupException
     {

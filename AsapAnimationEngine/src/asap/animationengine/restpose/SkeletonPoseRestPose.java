@@ -79,17 +79,19 @@ public class SkeletonPoseRestPose implements RestPose
     public void play(double time, Set<String> kinematicJoints, Set<String> physicalJoints)
     {
         if (poseTree == null) return;
+        float q[] = new float[4];
         for (VJoint vj : poseTree.getParts())
         {
             if (!kinematicJoints.contains(vj.getSid()) && !physicalJoints.contains(vj.getSid()))
-            {
-                float q[] = new float[4];
+            {                
                 vj.getRotation(q);
-                String search = vj.getSid();
-                if (search == null) search = vj.getName();
-                player.getVNext().getPart(search).setRotation(q);
+                VJoint vjSet = player.getVNext().getPartBySid(vj.getSid());
+                if (vjSet != null)
+                {
+                    vjSet.setRotation(q);
+                }                
             }
-        }
+        }        
     }
 
     @Override

@@ -38,7 +38,7 @@ import com.google.common.collect.ImmutableSet;
 
 /**
  * Constant velocity saccade to target.
- * Assumes target and head are not moving. Gaze is on target at ready, moves back to rest position at relax.
+ * Gaze is on target at ready, moves back to rest position at relax.
  * @author Herwin van Welbergen
  */
 public class EyeGazeMU extends GazeMU
@@ -103,20 +103,28 @@ public class EyeGazeMU extends GazeMU
         return Saccade.getSaccadeDuration(angle);
     }
     
+    
+    
     @Override
     public void play(double t) throws MUPlayException
     {
+        setEndEyeRotation(lEye, qEyeLeft);
+        setEndEyeRotation(rEye, qEyeRight);
+        
         float qLeft[]=Quat4f.getQuat4f();
         float qRight[]=Quat4f.getQuat4f();
+        
+        
         if (t < RELATIVE_READY_TIME)
         {
-            Quat4f.interpolate(qLeft, qStartLeftEye, qEyeLeft, (float)t/(float)RELATIVE_READY_TIME);            
-            Quat4f.interpolate(qRight, qStartRightEye, qEyeRight, (float)t/(float)RELATIVE_READY_TIME);
+            float relT = (float)t/(float)RELATIVE_READY_TIME;
+            Quat4f.interpolate(qLeft, qStartLeftEye, qEyeLeft, relT);            
+            Quat4f.interpolate(qRight, qStartRightEye, qEyeRight, relT);
         }
         else if(t>RELATIVE_RELAX_TIME)
         {
-            Quat4f.interpolate(qLeft, qStartLeftEye, qEyeLeft, (float)(1-t)/(float)(1-RELATIVE_RELAX_TIME));            
-            Quat4f.interpolate(qRight, qStartRightEye, qEyeRight, (float)(1-t)/(float)(1-RELATIVE_RELAX_TIME));
+            relaxUnit.play((t - RELATIVE_RELAX_TIME) / (1 - RELATIVE_RELAX_TIME));
+            return;
         }
         else
         {

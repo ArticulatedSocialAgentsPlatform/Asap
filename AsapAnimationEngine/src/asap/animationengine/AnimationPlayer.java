@@ -136,7 +136,7 @@ public class AnimationPlayer implements Player, MixedAnimationPlayer
         float q[] = Quat4f.getQuat4f();
         for (VJoint vj : vNext.getParts())
         {
-            if (vj.getSid() != null)
+            if (vj.getSid() != null && !vj.getSid().equals(Hanim.l_eyeball_joint) && !vj.getSid().equals(Hanim.r_eyeball_joint))
             {
                 vj.getRotation(q);
                 if (Quat4f.epsilonEquals(q, Quat4f.getIdentity(), 0.001f))

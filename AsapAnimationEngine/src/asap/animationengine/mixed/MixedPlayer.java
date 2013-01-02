@@ -273,7 +273,7 @@ public class MixedPlayer
 
     /**
      * Calculates joint rotations, joint angular velocity and joint angular
-     * accelration from the prev, current, next joint configuration
+     * acceleration from the prev, current, next joint configuration
      */
     private void calculateKinematics()
     {

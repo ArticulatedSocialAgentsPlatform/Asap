@@ -5,13 +5,9 @@ import hmi.animation.VJoint;
 import hmi.animation.VJointUtils;
 import hmi.math.Quat4f;
 import hmi.math.Vec3f;
-import hmi.neurophysics.EyeSaturation;
-import hmi.neurophysics.ListingsLaw;
 import hmi.neurophysics.Saccade;
 import hmi.neurophysics.Torso;
 
-import java.util.ArrayList;
-import java.util.List;
 import java.util.Set;
 
 import asap.animationengine.AnimationPlayer;
@@ -88,37 +84,19 @@ public class DynamicTorsoGazeMU extends GazeMU
         }
     }
 
-    // copy-paste from DynamicEyeGazeMU
-    private void setEndEyeRotation(float[] gazeDir, VJoint eye, float qEye[]) throws MUPlayException
-    {
-        woTarget = woManager.getWorldObject(target);
-        if (woTarget == null)
-        {
-            throw new MUPlayException("Gaze target not found", this);
-        }
-        woTarget.getTranslation2(gazeDir, eye);
-        Quat4f.transformVec3f(getOffsetRotation(), gazeDir);
-        Vec3f.normalize(gazeDir);
-        float q[] = Quat4f.getQuat4f();
-        ListingsLaw.listingsEye(gazeDir, q);
-        EyeSaturation.sat(q, Quat4f.getIdentity(), qEye);
-    }
+    
+    
 
     public void playEye(double t) throws MUPlayException
     {
-        VJoint neck = joints.get(joints.size() - 1);
-        float targetPosCurr[] = Vec3f.getVec3f();
-        woTarget.getTranslation2(targetPosCurr, neck);
-        Quat4f.transformVec3f(getOffsetRotation(), targetPosCurr);
-
         float qCurrRight[] = Quat4f.getQuat4f();
         float qCurrLeft[] = Quat4f.getQuat4f();
         lEyeCurr.getRotation(qCurrLeft);
         rEyeCurr.getRotation(qCurrRight);
         float qDesRight[] = Quat4f.getQuat4f();
         float qDesLeft[] = Quat4f.getQuat4f();
-        setEndEyeRotation(targetPosCurr, lEye, qDesLeft);
-        setEndEyeRotation(targetPosCurr, rEye, qDesRight);
+        setEndEyeRotation(lEye, qDesLeft);
+        setEndEyeRotation(rEye, qDesRight);
 
         double dur = Math.max(Saccade.getSaccadeDuration(getAngle(qDesRight, qCurrRight)),
                 Saccade.getSaccadeDuration(getAngle(qDesLeft, qCurrLeft)));
