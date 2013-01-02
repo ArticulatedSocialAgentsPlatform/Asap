@@ -123,7 +123,7 @@ public class GazeMU implements AnimationUnit
     protected double offsetAngle = 0;
     protected OffsetDirection offsetDirection = OffsetDirection.NONE;
     
-    protected String influence = "NECK";
+    protected GazeInfluence influence = GazeInfluence.NECK;
 
     protected static final double RELATIVE_READY_TIME = 0.25;
     protected static final double RELATIVE_RELAX_TIME = 0.75;
@@ -243,7 +243,7 @@ public class GazeMU implements AnimationUnit
     {
         woTarget.getTranslation2(localGaze, neck);
         Quat4f.transformVec3f(getOffsetRotation(), localGaze);
-        setEndRotation(localGaze);
+        setEndRotation(localGaze);        
     }
 
     public void setStartPose() throws MUPlayException
@@ -409,6 +409,11 @@ public class GazeMU implements AnimationUnit
         return new GazeTMU(bfm, bmlBlockPeg, bmlId, id, this, pb);
     }
 
+    protected void setInfluence(GazeInfluence influence)
+    {
+        this.influence = influence;
+    }
+    
     @Override
     public void setParameterValue(String name, String value) throws ParameterException
     {
@@ -422,7 +427,7 @@ public class GazeMU implements AnimationUnit
         }
         else if (name.equals("influence"))
         {
-            influence = value;
+            setInfluence(GazeInfluence.valueOf(value));
         }
         else if (StringUtil.isNumeric(value))
         {
@@ -435,7 +440,7 @@ public class GazeMU implements AnimationUnit
     public String getParameterValue(String name) throws ParameterNotFoundException
     {
         if (name.equals("target")) return target;
-        if (name.equals("influence")) return influence;
+        if (name.equals("influence")) return influence.toString();
         if (name.equals("offsetdirection")) return "" + offsetDirection;
         return "" + getFloatParameterValue(name);
     }
