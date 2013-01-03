@@ -251,8 +251,13 @@ public class GuidingSequence
         // --- fetch both guiding strokes
         GuidingStroke gs1 = getStroke(i);
         GuidingStroke gs2 = getStroke(i + 1);
+        
+        //MgcReal tDur1 = (gs1->eT.time - getStartTimeOfStroke(i));
+        //MgcReal tDur2 = (gs2->eT.time - gs1->eT.time);        
         double tDur1 = gs1.getEDt();
         double tDur2 = gs2.getEDt();
+        
+        
         float s1[] = Vec3f.getVec3f();
         float s2[] = Vec3f.getVec3f();
         float s3[] = Vec3f.getVec3f();
