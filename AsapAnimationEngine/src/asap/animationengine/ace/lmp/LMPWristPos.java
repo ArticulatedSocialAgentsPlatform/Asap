@@ -29,6 +29,7 @@ import asap.realizer.pegboard.TimePeg;
 import asap.realizer.planunit.TimedPlanUnitPlayException;
 import asap.realizer.scheduler.TimePegAndConstraint;
 
+import com.google.common.base.Joiner;
 import com.google.common.collect.ImmutableSet;
 
 /**
@@ -46,6 +47,8 @@ public class LMPWristPos extends LMPPos
     private AnimationPlayer aniPlayer;
     private IKBody ikBody;
     private String scope;
+    private double rightArmStartSwivel;
+    private double leftArmStartSwivel;
 
     public void resolveSynchs(BMLBlockPeg bbPeg, Behaviour b, List<TimePegAndConstraint> sac) throws BehaviourPlanningException
     {
@@ -124,6 +127,8 @@ public class LMPWristPos extends LMPPos
         {
             gSeq.setStartPos(getGlobalWristPosition());
             gSeq.setST(new TPConstraint(time));
+            rightArmStartSwivel = ikBody.getSwivelRightArm();
+            leftArmStartSwivel = ikBody.getSwivelLeftArm();
             refine();
         }
         else
@@ -207,7 +212,9 @@ public class LMPWristPos extends LMPPos
 
             // complete curvilinear guiding strokes
             // cout << "completing curvilinear strokes..." << endl;
-            double sT = _gSeq.getStartTPC().getTime();            
+            double sT = getStartTime();            
+            double prepDur = getTime("strokeStart")-getStartTime();            
+            _gSeq.getStroke(0).setEDt(prepDur);
             
             for (int i = 0; i < _gSeq.size(); i++)
             {
@@ -224,8 +231,12 @@ public class LMPWristPos extends LMPPos
             // cout << "setting up trajectory constraints..." << endl;
             float[] p, v;
             
-            sT = _gSeq.getStartTPC().getTime();
-            sT += getPreparationDuration();
+            //sT = _gSeq.getStartTPC().getTime();
+            sT = getStartTime();
+            
+            //double prepDur = getPreparationDuration();
+            
+            
             for (int i = 0; i < _gSeq.size(); i++)
             {
                 if (_gSeq.getStroke(i) instanceof LinearGStroke)
@@ -268,6 +279,14 @@ public class LMPWristPos extends LMPPos
             }
 
             _spline = new NUSSpline3(4);
+            System.out.println("Times: "+Joiner.on(",").join(tv));
+            System.out.println("Points: ");
+            for(float []point:pv)
+            {
+                System.out.print(Vec3f.toString(point)+",");                
+            }
+            System.out.println("");
+            
             _spline.interpolate3(pv, tv, vv);
         }
 
@@ -332,29 +351,40 @@ public class LMPWristPos extends LMPPos
     @Override
     protected void playUnit(double time) throws TimedPlanUnitPlayException
     {
-        if(time<this.getTime("strokeEnd"))
+        double swivel = 0;
+        if(time<getTime("strokeStart"))
         {
-            float pos [] = getPosition(time);
-            System.out.println(Vec3f.toString(pos));
+            double relT = (time-getStartTime())/(getTime("strokeStart")-getStartTime());
             if(scope.equals("left_arm"))
             {
-                ikBody.setLeftHand(pos);
+                swivel = leftArmStartSwivel+(0-leftArmStartSwivel)*relT;
+            }
+            else
+            {
+                swivel = rightArmStartSwivel+(0-rightArmStartSwivel)*relT;
+            }
+        }
+        
+        if(time<getTime("strokeEnd"))
+        {
+            float pos [] = getPosition(time);
+            if(scope.equals("left_arm"))
+            {
+                //ikBody.setSwivelLeftHand(swivel);
+                ikBody.setLeftHand(pos);                
             }
             else
             {            
-                ikBody.setRightHand(pos);
+                //ikBody.setSwivelRightHand(swivel);
+                ikBody.setRightHand(pos);                
             }
-        }
-        else
-        {
-            //TODO: let retraction from posture take over
-        }
+        }        
     }
 
     @Override
     protected void stopUnit(double time) throws TimedPlanUnitPlayException
     {
-        // TODO Auto-generated method stub
+        
     }
 
     @Override
@@ -387,8 +417,7 @@ public class LMPWristPos extends LMPPos
 
         for (int i = 1; i < gSeq.size(); i++)
         {
-            defaultStrokeDuration += FittsLaw.getHandTrajectoryDuration(Vec3f.distanceBetweenPoints(prevGstroke.getEndPos(), gSeq
-                    .getStroke(i).getEndPos()));
+            defaultStrokeDuration += gSeq.getStroke(i).getEDt();
         }
 
         if (getTimePeg("strokeStart").getGlobalValue() == TimePeg.VALUE_UNKNOWN
@@ -488,7 +517,7 @@ public class LMPWristPos extends LMPPos
 
         if (getTimePeg("relax").getGlobalValue() == TimePeg.VALUE_UNKNOWN)
         {
-            pegBoard.setPegTime(getBMLId(), getId(), "relax", getEndTime());
+            pegBoard.setPegTime(getBMLId(), getId(), "relax", getTime("strokeEnd"));
         }
 
         if (getTimePeg("ready").getGlobalValue() == TimePeg.VALUE_UNKNOWN)

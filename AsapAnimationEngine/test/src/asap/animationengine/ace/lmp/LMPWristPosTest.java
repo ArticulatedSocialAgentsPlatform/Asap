@@ -49,6 +49,8 @@ public class LMPWristPosTest extends AbstractTimedPlanUnitTest
         GuidingSequence gSeq = new GuidingSequence();
         gSeq.addGuidingStroke(new CurvedGStroke(GStrokePhaseID.STP_STROKE, Vec3f.getVec3f(0.1f,0,0), Vec3f.getZero(),ShapeSymbols.LeftC,0,0,0));
         gSeq.addGuidingStroke(new CurvedGStroke(GStrokePhaseID.STP_STROKE, Vec3f.getVec3f(0.2f,0,0), Vec3f.getZero(),ShapeSymbols.LeftC,0,0,0));
+        gSeq.getStroke(0).setEDt(0.7);
+        gSeq.getStroke(1).setEDt(0.7);
         when(mockAniPlayer.getVCurr()).thenReturn(HanimBody.getLOA1HanimBody());
         when(mockAniPlayer.getVNext()).thenReturn(HanimBody.getLOA1HanimBody());
         return new LMPWristPos("right_arm", bfm, bbPeg, bmlId, id, pegBoard, gSeq, mockAniPlayer);
@@ -73,7 +75,7 @@ public class LMPWristPosTest extends AbstractTimedPlanUnitTest
         assertThat(tau.getTime("stroke"),greaterThan(tau.getTime("start")));
         assertThat(tau.getTime("strokeEnd"),greaterThan(tau.getTime("strokeStart")));        
         assertThat(tau.getTime("end"),greaterThan(tau.getTime("strokeEnd")));
-        assertEquals(tau.getTime("relax"),tau.getTime("end"), TIMING_PRECISION);
+        assertEquals(tau.getTime("relax"),tau.getTime("strokeEnd"), TIMING_PRECISION);
     }
     
     @Test
@@ -90,7 +92,7 @@ public class LMPWristPosTest extends AbstractTimedPlanUnitTest
         assertEquals(0.5, tau.getTime("stroke"), TIMING_PRECISION);
         assertThat(tau.getTime("strokeEnd"),greaterThan(tau.getTime("strokeStart")));        
         assertThat(tau.getTime("end"),greaterThan(tau.getTime("strokeEnd")));
-        assertEquals(tau.getTime("relax"),tau.getTime("end"), TIMING_PRECISION);
+        assertEquals(tau.getTime("relax"),tau.getTime("strokeEnd"), TIMING_PRECISION);
     }
     
 
@@ -109,7 +111,7 @@ public class LMPWristPosTest extends AbstractTimedPlanUnitTest
         assertEquals(0.5, tau.getTime("stroke"), TIMING_PRECISION);
         assertEquals(2.5, tau.getTime("strokeEnd"), TIMING_PRECISION);
         assertThat(tau.getTime("end"),greaterThan(tau.getTime("strokeEnd")));
-        assertEquals(tau.getTime("relax"),tau.getTime("end"), TIMING_PRECISION);
+        assertEquals(tau.getTime("relax"),tau.getTime("strokeEnd"), TIMING_PRECISION);
     }
     
     @Test
@@ -120,7 +122,7 @@ public class LMPWristPosTest extends AbstractTimedPlanUnitTest
         tau.setState(TimedPlanUnitState.LURKING);
         tau.updateTiming(0);
         assertEquals(10, tau.getTime("end"), TIMING_PRECISION);
-        assertEquals(tau.getTime("relax"),tau.getTime("end"), TIMING_PRECISION);
+        assertEquals(tau.getTime("relax"),tau.getTime("strokeEnd"), TIMING_PRECISION);
         assertThat(tau.getTime("start"),greaterThanOrEqualTo(0d));
         assertThat(tau.getTime("strokeStart"),greaterThan(tau.getTime("start")));
         assertThat(tau.getTime("strokeStart"),greaterThan(tau.getTime("ready")));
@@ -144,7 +146,7 @@ public class LMPWristPosTest extends AbstractTimedPlanUnitTest
         assertThat(tau.getTime("strokeEnd"),greaterThan(tau.getTime("strokeStart")));
         assertThat(tau.getTime("strokeEnd"),greaterThan(tau.getTime("strokeStart")));
         assertThat(tau.getTime("end"),greaterThan(tau.getTime("strokeEnd")));
-        assertEquals(tau.getTime("relax"),tau.getTime("end"), TIMING_PRECISION);        
+        assertEquals(tau.getTime("relax"),tau.getTime("strokeEnd"), TIMING_PRECISION);        
     }
     
     @Test

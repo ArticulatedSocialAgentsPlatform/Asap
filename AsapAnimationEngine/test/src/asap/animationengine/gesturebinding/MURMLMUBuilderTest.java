@@ -1,5 +1,6 @@
 package asap.animationengine.gesturebinding;
 
+import static hmi.testutil.math.Vec3fTestUtil.assertVec3fEquals;
 import static org.fest.reflect.core.Reflection.field;
 import static org.hamcrest.CoreMatchers.instanceOf;
 import static org.hamcrest.MatcherAssert.assertThat;
@@ -57,7 +58,7 @@ public class MURMLMUBuilderTest
     private HnsHandshape mockHnsHandshapes = mock(HnsHandshape.class);
     private MURMLMUBuilder murmlMuBuilder = new MURMLMUBuilder(mockHns, mockHnsHandshapes);
     private PegBoard pb = new PegBoard();
-    
+    private static final float POSITION_PRECISION = 0.001f;
     
     @SuppressWarnings("unchecked")
     @Before
@@ -298,9 +299,50 @@ public class MURMLMUBuilderTest
         LMPWristPos pos = (LMPWristPos) lmps.get(0);
         assertThat(pos.getKinematicJoints(), IsIterableContainingInAnyOrder.containsInAnyOrder(Hanim.l_shoulder, Hanim.l_elbow));
         GuidingSequence gSeq = field("gSeq").ofType(GuidingSequence.class).in(pos).get();
-        assertEquals(5, gSeq.size());
+        assertEquals(5, gSeq.size());        
     }
 
+    @Test
+    public void setupTMUHandLocationLinear() throws TMUSetupException
+    {
+      //@formatter:off
+        String murmlString =
+                "<murml-description xmlns=\"http://www.techfak.uni-bielefeld.de/ags/soa/murml\">" +
+                        "<dynamic slot=\"HandLocation\" scope=\"left_arm\">"+
+                        "<dynamicElement type=\"linear\" scope=\"left_arm\">"+
+                        "<value type=\"start\" name=\"0.2 1.8 0.2\"/>"+
+                        "<value type=\"end\" name=\"0.5 1.8 0.2\"/>"+
+                        "</dynamicElement>"+
+                        "<dynamicElement type=\"linear\" scope=\"left_arm\">"+
+                        "<value type=\"end\" name=\"0.2 1.5 0.2\"/>"+
+                        "</dynamicElement>" +
+                        "<dynamicElement type=\"linear\" scope=\"left_arm\">"+
+                        "<value type=\"end\" name=\"0.2 1.5 0.5\"/>"+
+                        "</dynamicElement>" +
+                        "</dynamic>"+
+                "</murml-description>";
+        // @formatter:on
+        MURMLMUBuilder murmlMuBuilder = new MURMLMUBuilder(new Hns(), mockHnsHandshapes);
+        TimedAnimationUnit tau = murmlMuBuilder.setupTMU(murmlString, new FeedbackManagerImpl(new BMLBlockManager(), ""),
+                BMLBlockPeg.GLOBALPEG, "bml1", "g1", pb, mockAnimationPlayer);
+
+        assertThat(tau, instanceOf(MotorControlProgram.class));
+        assertThat(tau.getKinematicJoints(), IsIterableContainingInAnyOrder.containsInAnyOrder(Hanim.l_shoulder, Hanim.l_elbow));
+        
+        @SuppressWarnings("unchecked")
+        List<TimedAnimationUnit> lmps = field("lmpQueue").ofType(List.class).in(tau).get();
+        assertEquals(1, lmps.size());
+        assertThat(lmps.get(0), instanceOf(LMPWristPos.class));
+        LMPWristPos pos = (LMPWristPos) lmps.get(0);
+        assertThat(pos.getKinematicJoints(), IsIterableContainingInAnyOrder.containsInAnyOrder(Hanim.l_shoulder, Hanim.l_elbow));
+        GuidingSequence gSeq = field("gSeq").ofType(GuidingSequence.class).in(pos).get();
+        assertEquals(4, gSeq.size());
+        assertVec3fEquals(0.2f,1.8f,0.2f,gSeq.getStroke(0).getEndPos(),POSITION_PRECISION);
+        assertVec3fEquals(0.5f,1.8f,0.2f,gSeq.getStroke(1).getEndPos(),POSITION_PRECISION);
+        assertVec3fEquals(0.2f,1.5f,0.2f,gSeq.getStroke(2).getEndPos(),POSITION_PRECISION);
+        assertVec3fEquals(0.2f,1.5f,0.5f,gSeq.getStroke(3).getEndPos(),POSITION_PRECISION);
+    }
+    
     @Test
     public void setupTMUPalmOrientation() throws TMUSetupException
     {
