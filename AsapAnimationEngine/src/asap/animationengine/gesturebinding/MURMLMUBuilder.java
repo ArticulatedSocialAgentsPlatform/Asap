@@ -118,20 +118,24 @@ public final class MURMLMUBuilder
             FeedbackManager bbf, BMLBlockPeg bmlBlockPeg, String bmlId, String id, PegBoard pegBoard, MotorControlProgram mp,
             AnimationPlayer aniPlayer) throws TMUSetupException
     {
-        float[] ePos = Vec3f.getVec3f();
         double tEst = 0;
         float swivel = -99;
         List<GuidingStroke> sSeq = new ArrayList<>();
 
         float sPos[] = traj.getEndPos();
 
-        float[] dir = Vec3f.getVec3f();
+        
 
         for (DynamicElement segment : elements)
         {
+            
             // -- create guiding strokes for linear movement segment --------------------------------------
             if (segment.getType() == Type.LINEAR)
             {
+                float[] dir = Vec3f.getVec3f();
+                float[] ePos = Vec3f.getVec3f();
+                
+                
                 // cout << "appending linear segment" << endl;
                 double d = 0;
 
@@ -184,6 +188,7 @@ public final class MURMLMUBuilder
             // -- create guiding strokes for curvilinear movement segment ---------------------
             else if (segment.getType() == Type.CURVE)
             {
+                float[] ePos = Vec3f.getVec3f();
                 float[] nVec = Vec3f.getVec3f();
                 ShapeSymbols shape = ShapeSymbols.RightS;
 

@@ -316,6 +316,9 @@ public class MURMLMUBuilderTest
                         "<dynamicElement type=\"linear\" scope=\"left_arm\">"+
                         "<value type=\"end\" name=\"0.2 1.5 0.2\"/>"+
                         "</dynamicElement>" +
+                        "<dynamicElement type=\"linear\" scope=\"left_arm\">"+
+                        "<value type=\"end\" name=\"0.2 1.5 0.5\"/>"+
+                        "</dynamicElement>" +
                         "</dynamic>"+
                 "</murml-description>";
         // @formatter:on
@@ -333,10 +336,11 @@ public class MURMLMUBuilderTest
         LMPWristPos pos = (LMPWristPos) lmps.get(0);
         assertThat(pos.getKinematicJoints(), IsIterableContainingInAnyOrder.containsInAnyOrder(Hanim.l_shoulder, Hanim.l_elbow));
         GuidingSequence gSeq = field("gSeq").ofType(GuidingSequence.class).in(pos).get();
-        assertEquals(3, gSeq.size());
+        assertEquals(4, gSeq.size());
         assertVec3fEquals(0.2f,1.8f,0.2f,gSeq.getStroke(0).getEndPos(),POSITION_PRECISION);
         assertVec3fEquals(0.5f,1.8f,0.2f,gSeq.getStroke(1).getEndPos(),POSITION_PRECISION);
         assertVec3fEquals(0.2f,1.5f,0.2f,gSeq.getStroke(2).getEndPos(),POSITION_PRECISION);
+        assertVec3fEquals(0.2f,1.5f,0.5f,gSeq.getStroke(3).getEndPos(),POSITION_PRECISION);
     }
     
     @Test
