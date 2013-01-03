@@ -170,7 +170,7 @@ public class GestureBindingTest
                 +    "<parameter src=\"offsetDirection\" dst=\"offsetdirection\"/>"
                 +    "<parameter src=\"influence\" dst=\"influence\"/>"
                 + "</parametermap>"
-                + "<MotionUnit type=\"class\" class=\"asap.animationengine.gaze.DynamicTorsoGazeMU\"/>"
+                + "<MotionUnit type=\"class\" class=\"asap.animationengine.gaze.DynamicGazeMU\"/>"
                 + "</MotionUnitSpec>"
                 + "</gesturebinding>";
         gestureBinding.readXML(s);

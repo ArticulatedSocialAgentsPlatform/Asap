@@ -47,6 +47,8 @@ public class LMPWristPos extends LMPPos
     private AnimationPlayer aniPlayer;
     private IKBody ikBody;
     private String scope;
+    private double rightArmStartSwivel;
+    private double leftArmStartSwivel;
 
     public void resolveSynchs(BMLBlockPeg bbPeg, Behaviour b, List<TimePegAndConstraint> sac) throws BehaviourPlanningException
     {
@@ -125,6 +127,8 @@ public class LMPWristPos extends LMPPos
         {
             gSeq.setStartPos(getGlobalWristPosition());
             gSeq.setST(new TPConstraint(time));
+            rightArmStartSwivel = ikBody.getSwivelRightArm();
+            leftArmStartSwivel = ikBody.getSwivelLeftArm();
             refine();
         }
         else
@@ -275,6 +279,14 @@ public class LMPWristPos extends LMPPos
             }
 
             _spline = new NUSSpline3(4);
+            System.out.println("Times: "+Joiner.on(",").join(tv));
+            System.out.println("Points: ");
+            for(float []point:pv)
+            {
+                System.out.print(Vec3f.toString(point)+",");                
+            }
+            System.out.println("");
+            
             _spline.interpolate3(pv, tv, vv);
         }
 
@@ -339,16 +351,32 @@ public class LMPWristPos extends LMPPos
     @Override
     protected void playUnit(double time) throws TimedPlanUnitPlayException
     {
-        if(time<this.getTime("strokeEnd"))
+        double swivel = 0;
+        if(time<getTime("strokeStart"))
+        {
+            double relT = (time-getStartTime())/(getTime("strokeStart")-getStartTime());
+            if(scope.equals("left_arm"))
+            {
+                swivel = leftArmStartSwivel+(0-leftArmStartSwivel)*relT;
+            }
+            else
+            {
+                swivel = rightArmStartSwivel+(0-rightArmStartSwivel)*relT;
+            }
+        }
+        
+        if(time<getTime("strokeEnd"))
         {
             float pos [] = getPosition(time);
             if(scope.equals("left_arm"))
             {
-                ikBody.setLeftHand(pos);
+                //ikBody.setSwivelLeftHand(swivel);
+                ikBody.setLeftHand(pos);                
             }
             else
             {            
-                ikBody.setRightHand(pos);
+                //ikBody.setSwivelRightHand(swivel);
+                ikBody.setRightHand(pos);                
             }
         }        
     }
@@ -389,11 +417,6 @@ public class LMPWristPos extends LMPPos
 
         for (int i = 1; i < gSeq.size(); i++)
         {
-            /*
-            defaultStrokeDuration += FittsLaw.getHandTrajectoryDuration(Vec3f.distanceBetweenPoints(prevGstroke.getEndPos(), gSeq
-                    .getStroke(i).getEndPos()));
-            prevGstroke = gSeq.getStroke(i);
-            */
             defaultStrokeDuration += gSeq.getStroke(i).getEDt();
         }
 
