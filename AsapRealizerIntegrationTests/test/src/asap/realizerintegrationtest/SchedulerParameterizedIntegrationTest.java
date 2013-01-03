@@ -1097,10 +1097,10 @@ public class SchedulerParameterizedIntegrationTest
     {
          readXML("testgazereadytimed.xml"); 
          assertNoWarnings();
-         assertEquals(pegBoard.getRelativePegTime("bml1", "bml1", "gaze1", "ready"), 1, PEGBOARD_PRECISION);
+         assertEquals(pegBoard.getRelativePegTime("bml1", "bml1", "gaze1", "ready"), 3, PEGBOARD_PRECISION);
          assertEquals(pegBoard.getRelativePegTime("bml1", "bml1", "gaze1", "end"), 10, PEGBOARD_PRECISION);
          assertThat(pegBoard.getRelativePegTime("bml1", "bml1", "gaze1", "start"), greaterThan(-PEGBOARD_PRECISION));
-         assertThat(pegBoard.getRelativePegTime("bml1", "bml1", "gaze1", "start"), lessThan(1d));         
+         assertThat(pegBoard.getRelativePegTime("bml1", "bml1", "gaze1", "start"), lessThan(3d));         
     }
 
     @Ignore

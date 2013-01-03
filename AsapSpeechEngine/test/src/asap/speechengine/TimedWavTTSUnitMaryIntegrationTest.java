@@ -26,7 +26,7 @@ public class TimedWavTTSUnitMaryIntegrationTest extends AbstractTimedWavTTSUnitT
     {
         super.setup();
         ttsBinding = new MaryTTSBinding(System.getProperty("shared.project.root")+
-                "/HmiResource/MARYTTS",
+                "/HmiResource/MARYTTS/resource/MARYTTS",
                 new NullPhonemeToVisemeMapping());
         
     }    

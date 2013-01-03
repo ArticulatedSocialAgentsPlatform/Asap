@@ -133,7 +133,7 @@ public class SpeechUnitParameterizedIntegrationTest
         }
         
         ttsBindingFactories.add(new
-        MaryTTSBindingFactory(System.getProperty("shared.project.root")+"/HmiResource/MARYTTS",
+        MaryTTSBindingFactory(System.getProperty("shared.project.root")+"/HmiResource/MARYTTS/resource/MARYTTS",
         new NullPhonemeToVisemeMapping()));
 
         for (TimedTTSUnitFactory ttsF : ttsFactories)
