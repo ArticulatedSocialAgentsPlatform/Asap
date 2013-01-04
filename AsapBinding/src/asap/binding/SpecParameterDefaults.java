@@ -60,7 +60,7 @@ public class SpecParameterDefaults extends XMLStructureAdapter
         return parameterdefault.values();
     }
     
-    private static final String XMLTAG = "parameterdefaults";
+    public static final String XMLTAG = "parameterdefaults";
 
     public static String xmlTag()
     {

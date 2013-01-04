@@ -27,16 +27,16 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
+import lombok.extern.slf4j.Slf4j;
 import saiba.bml.BMLInfo;
 import saiba.bml.core.Behaviour;
 import saiba.bml.core.PostureShiftBehaviour;
 import asap.animationengine.AnimationPlayer;
 import asap.animationengine.motionunit.AnimationUnit;
 import asap.animationengine.motionunit.MUSetupException;
+import asap.animationengine.motionunit.TMUSetupException;
 import asap.animationengine.motionunit.TimedAnimationMotionUnit;
+import asap.animationengine.motionunit.TimedAnimationUnit;
 import asap.animationengine.restpose.RestPose;
 import asap.binding.SpecParameterDefault;
 import asap.realizer.feedback.FeedbackManager;
@@ -48,12 +48,13 @@ import asap.realizer.planunit.ParameterException;
  * The GestureBinding maps from BML to a set of motionunits
  * @author Herwin van Welbergen
  */
+@Slf4j
 public class GestureBinding extends XMLStructureAdapter
 {
-    private ArrayList<MotionUnitSpec> specs = new ArrayList<MotionUnitSpec>();
-    private ArrayList<RestPoseSpec> restPoseSpecs = new ArrayList<RestPoseSpec>();
+    private List<MotionUnitSpec> muSpecs = new ArrayList<>();
+    private List<TimedMotionUnitSpec> tmuSpecs = new ArrayList<>();
+    private List<RestPoseSpec> restPoseSpecs = new ArrayList<>();
     private final Resources resources;
-    private final Logger logger = LoggerFactory.getLogger(GestureBinding.class.getName());
     private final FeedbackManager fbManager;
 
     public GestureBinding(Resources r, FeedbackManager fbm)
@@ -61,25 +62,25 @@ public class GestureBinding extends XMLStructureAdapter
         fbManager = fbm;
         resources = r;
     }
-    
+
     private boolean hasEqualNameSpace(Behaviour b, String ns)
     {
-        if(b.getNamespace() == null && ns == null) return true;
-        if(ns==null && b.getNamespace().equals(BMLInfo.BMLNAMESPACE))return true;
-        if(ns==null)return false;
-        if(ns.equals(b.getNamespace()))return true;
+        if (b.getNamespace() == null && ns == null) return true;
+        if (ns == null && b.getNamespace().equals(BMLInfo.BMLNAMESPACE)) return true;
+        if (ns == null) return false;
+        if (ns.equals(b.getNamespace())) return true;
         return false;
     }
-    
+
     public RestPose getRestPose(PostureShiftBehaviour b, AnimationPlayer player)
     {
         for (RestPoseSpec s : restPoseSpecs)
         {
-            if (hasEqualNameSpace(b,s.getSpecnamespace()))
+            if (hasEqualNameSpace(b, s.getSpecnamespace()))
             {
                 if (s.satisfiesConstraints(b))
                 {
-                    RestPose rp = s.getRestPose().copy(player);                    
+                    RestPose rp = s.getRestPose().copy(player);
                     // set default parameter values
                     for (SpecParameterDefault mupc : s.getParameterDefaults())
                     {
@@ -89,11 +90,10 @@ public class GestureBinding extends XMLStructureAdapter
                         }
                         catch (ParameterException e)
                         {
-                            logger.warn("Error setting up restpose", e);                            
+                            log.warn("Error setting up restpose", e);
                         }
                     }
-                    
-                    
+
                     // map parameters
                     for (String param : s.getParameters())
                     {
@@ -106,7 +106,7 @@ public class GestureBinding extends XMLStructureAdapter
                             }
                             catch (ParameterException e)
                             {
-                                logger.warn("Error setting up restpose", e);
+                                log.warn("Error setting up restpose", e);
                             }
                         }
                     }
@@ -117,20 +117,62 @@ public class GestureBinding extends XMLStructureAdapter
         return null;
     }
 
+    public List<TimedAnimationUnit> getMotionUnit(BMLBlockPeg bbPeg, Behaviour b, AnimationPlayer player, PegBoard pegBoard)
+    {
+        return getMotionUnit(bbPeg, b, player, pegBoard, null);
+    }
+
     /**
      * Gets a list of timed motion units that satisfy the constraints of behaviour b
      */
-    public List<TimedAnimationMotionUnit> getMotionUnit(BMLBlockPeg bbPeg, Behaviour b, AnimationPlayer player, PegBoard pegBoard)
+    public List<TimedAnimationUnit> getMotionUnit(BMLBlockPeg bbPeg, Behaviour b, AnimationPlayer player, PegBoard pegBoard,
+            MURMLMUBuilder murmlMUBuilder)
     {
-        ArrayList<TimedAnimationMotionUnit> mus = new ArrayList<TimedAnimationMotionUnit>();
-        for (MotionUnitSpec s : specs)
+        ArrayList<TimedAnimationUnit> mus = new ArrayList<>();
+
+        for (TimedMotionUnitSpec s : tmuSpecs)
         {
-            if (s.getType().equals(b.getXMLTag())
-                    && hasEqualNameSpace(b,s.getSpecnamespace()))
+            if (s.getType().equals(b.getXMLTag()) && hasEqualNameSpace(b, s.getSpecnamespace()))
+            {
+                if (s.satisfiesConstraints(b))
+                {
+                    if (s.getTimedMotionUnitConstructionInfo().getType().equals("MURML"))
+                    {
+                        if (murmlMUBuilder == null)
+                        {
+                            log.warn("Cannot construct MURML tmu: {},\n no murmlMUBuilder provided", s.getTimedMotionUnitConstructionInfo()
+                                    .getContent());
+                            continue;
+                        }
+
+                        TimedAnimationUnit tmu;
+                        try
+                        {
+                            tmu = murmlMUBuilder.setupTMU(s.getTimedMotionUnitConstructionInfo().getContent(), fbManager, bbPeg,
+                                    b.getBmlId(), b.id, pegBoard, player);
+                        }
+                        catch (TMUSetupException e)
+                        {
+                            log.warn("Cannot construct MURML tmu from content " + s.getTimedMotionUnitConstructionInfo().getContent(), e);
+                            continue;
+                        }
+                        mus.add(tmu);
+                    }
+                    else
+                    {
+                        log.warn("Cannot construct TimedMotionUnit of type {}", s.getTimedMotionUnitConstructionInfo().getType());
+                    }
+                }
+            }
+        }
+
+        for (MotionUnitSpec s : muSpecs)
+        {
+            if (s.getType().equals(b.getXMLTag()) && hasEqualNameSpace(b, s.getSpecnamespace()))
             {
                 if (!s.satisfiesConstraints(b))
                 {
-                    logger.debug("Constraint mismatch");
+                    log.debug("Constraint mismatch");
                 }
                 else
                 {
@@ -141,7 +183,7 @@ public class GestureBinding extends XMLStructureAdapter
                     }
                     catch (MUSetupException e1)
                     {
-                        logger.warn("Error in setting up motion unit", e1);
+                        log.warn("Error in setting up motion unit", e1);
                         continue;
                     }
                     TimedAnimationMotionUnit tmu = muCopy.createTMU(fbManager, bbPeg, b.getBmlId(), b.id, pegBoard);
@@ -155,10 +197,10 @@ public class GestureBinding extends XMLStructureAdapter
                         }
                         catch (ParameterException e)
                         {
-                            logger.warn("Error in setting default value in getMotionUnit " + mupc, e);
+                            log.warn("Error in setting default value in getMotionUnit " + mupc, e);
                             // continue;
                         }
-                        logger.debug("Setting parameter {}  to default {}", mupc.name, mupc.value);
+                        log.debug("Setting parameter {}  to default {}", mupc.name, mupc.value);
                     }
 
                     // map parameters
@@ -173,10 +215,10 @@ public class GestureBinding extends XMLStructureAdapter
                             }
                             catch (ParameterException e)
                             {
-                                logger.warn("Error in parameter mapping in getMotionUnit, parameter " + param, e);
+                                log.warn("Error in parameter mapping in getMotionUnit, parameter " + param, e);
                                 // continue;
                             }
-                            logger.debug("Setting parameter {} mapped to {}", param, s.getParameter(param));
+                            log.debug("Setting parameter {} mapped to {}", param, s.getParameter(param));
                         }
                     }
                     mus.add(tmu);
@@ -196,21 +238,27 @@ public class GestureBinding extends XMLStructureAdapter
             {
                 MotionUnitSpec muSpec = new MotionUnitSpec(resources);
                 muSpec.readXML(tokenizer);
-                if (muSpec.motionUnit != null) specs.add(muSpec);
-                else logger.warn("Dropped motion unit spec because we could not construct the motion unit of type {}, constraints {}",
+                if (muSpec.motionUnit != null) muSpecs.add(muSpec);
+                else log.warn("Dropped motion unit spec because we could not construct the motion unit of type {}, constraints {}",
                         muSpec.getType(), muSpec.getConstraints());
+            }
+            else if (tag.equals(TimedMotionUnitSpec.xmlTag()))
+            {
+                TimedMotionUnitSpec spec = new TimedMotionUnitSpec();
+                spec.readXML(tokenizer);
+                tmuSpecs.add(spec);
             }
             else if (tag.equals(RestPoseSpec.xmlTag()))
             {
                 RestPoseSpec rpSpec = new RestPoseSpec(resources);
                 rpSpec.readXML(tokenizer);
-                if(rpSpec.getRestPose()!=null)
+                if (rpSpec.getRestPose() != null)
                 {
                     restPoseSpecs.add(rpSpec);
                 }
                 else
                 {
-                    logger.warn("Dropped RestPose spec "+rpSpec+" constraints "+rpSpec.getConstraints());
+                    log.warn("Dropped RestPose spec " + rpSpec + " constraints " + rpSpec.getConstraints());
                 }
             }
             else

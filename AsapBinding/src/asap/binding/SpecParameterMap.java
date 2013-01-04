@@ -62,7 +62,7 @@ public class SpecParameterMap extends XMLStructureAdapter
         return parametermap.get(src);
     }
     
-    private static final String XMLTAG = "parametermap";
+    public static final String XMLTAG = "parametermap";
 
     public static String xmlTag()
     {

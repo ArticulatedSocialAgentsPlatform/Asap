@@ -26,9 +26,7 @@ import hmi.xml.XMLTokenizer;
 
 import java.util.HashMap;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
+import lombok.extern.slf4j.Slf4j;
 import asap.animationengine.controller.CompoundController;
 import asap.animationengine.controller.ControllerMU;
 import asap.animationengine.keyframe.KeyframeMU;
@@ -43,11 +41,9 @@ import asap.animationengine.transitions.TransitionMU;
  * &lt;MotionUnit type="ProcAnimation" file="Humanoids/shared/procanimation/breathe_clavicular.xml"/&gt;
  * @author welberge
  */
+@Slf4j
 class MotionUnitAssembler extends XMLStructureAdapter
 {
-    private static Logger logger = LoggerFactory
-            .getLogger(MotionUnitAssembler.class.getName());
-              
     private Resources resources;
 
     private AnimationUnit motionUnit = null;
@@ -77,8 +73,8 @@ class MotionUnitAssembler extends XMLStructureAdapter
                 catch (Exception e)
                 {
                     motionUnit = null;
-                    logger.warn("Cannot read ProcAnimation from file \"{}\"", file);
-                    logger.warn("Exception: ", e);
+                    log.warn("Cannot read ProcAnimation from file \"{}\"", file);
+                    log.warn("Exception: ", e);
                 }
                 
             }
@@ -97,8 +93,8 @@ class MotionUnitAssembler extends XMLStructureAdapter
                 catch (Exception e)
                 {
                     motionUnit = null;
-                    logger.warn("Cannot read CompoundController from file \"{}\"", file);
-                    logger.warn("Exception: ", e);
+                    log.warn("Cannot read CompoundController from file \"{}\"", file);
+                    log.warn("Exception: ", e);
                 }
             }
         }
@@ -113,8 +109,8 @@ class MotionUnitAssembler extends XMLStructureAdapter
             catch (Exception e)
             {
                 motionUnit = null;
-                logger.warn("Cannot read KeyFrame animation from file \"{}\"", file);
-                logger.warn("Exception: ", e);
+                log.warn("Cannot read KeyFrame animation from file \"{}\"", file);
+                log.warn("Exception: ", e);
             }
         }
         else if (type.equals("PhysicalController"))
@@ -131,20 +127,20 @@ class MotionUnitAssembler extends XMLStructureAdapter
                 catch (InstantiationException e)
                 {
                     motionUnit = null;
-                    logger.warn("Cannot instantiate PhysicalController \"{}\"", className);
-                    logger.warn("Exception: ", e);
+                    log.warn("Cannot instantiate PhysicalController \"{}\"", className);
+                    log.warn("Exception: ", e);
                 }
                 catch (IllegalAccessException e)
                 {
                     motionUnit = null;
-                    logger.warn("Cannot instantiate PhysicalController \"{}\"", className);
-                    logger.warn("Exception: ", e);
+                    log.warn("Cannot instantiate PhysicalController \"{}\"", className);
+                    log.warn("Exception: ", e);
                 }
                 catch (ClassNotFoundException e)
                 {
                     motionUnit = null;
-                    logger.warn("Cannot instantiate PhysicalController \"{}\"", className);
-                    logger.warn("Exception: ", e);
+                    log.warn("Cannot instantiate PhysicalController \"{}\"", className);
+                    log.warn("Exception: ", e);
                 }
             }
         }
@@ -161,20 +157,20 @@ class MotionUnitAssembler extends XMLStructureAdapter
                 catch (InstantiationException e)
                 {
                     motionUnit = null;
-                    logger.warn("Cannot instantiate GestureUnit \"{}\"", className);
-                    logger.warn("Exception: ", e);
+                    log.warn("Cannot instantiate GestureUnit \"{}\"", className);
+                    log.warn("Exception: ", e);
                 }
                 catch (IllegalAccessException e)
                 {
                     motionUnit = null;
-                    logger.warn("Cannot instantiate GestureUnit \"{}\"", className);
-                    logger.warn("Exception: ", e);
+                    log.warn("Cannot instantiate GestureUnit \"{}\"", className);
+                    log.warn("Exception: ", e);
                 }
                 catch (ClassNotFoundException e)
                 {
                     motionUnit = null;
-                    logger.warn("Cannot instantiate GestureUnit \"{}\"", className);
-                    logger.warn("Exception: ", e);
+                    log.warn("Cannot instantiate GestureUnit \"{}\"", className);
+                    log.warn("Exception: ", e);
                 }
             }
         }
@@ -191,20 +187,20 @@ class MotionUnitAssembler extends XMLStructureAdapter
                 catch (InstantiationException e)
                 {
                     motionUnit = null;
-                    logger.warn("Cannot instantiate Transition \"{}\"", className);
-                    logger.warn("Exception: ", e);
+                    log.warn("Cannot instantiate Transition \"{}\"", className);
+                    log.warn("Exception: ", e);
                 }
                 catch (IllegalAccessException e)
                 {
                     motionUnit = null;
-                    logger.warn("Cannot instantiate Transition \"{}\"", className);
-                    logger.warn("Exception: ", e);
+                    log.warn("Cannot instantiate Transition \"{}\"", className);
+                    log.warn("Exception: ", e);
                 }
                 catch (ClassNotFoundException e)
                 {
                     motionUnit = null;
-                    logger.warn("Cannot instantiate Transition \"{}\"", className);
-                    logger.warn("Exception: ", e);
+                    log.warn("Cannot instantiate Transition \"{}\"", className);
+                    log.warn("Exception: ", e);
                 }
             }
             
@@ -221,14 +217,14 @@ class MotionUnitAssembler extends XMLStructureAdapter
                 catch (ClassNotFoundException e)
                 {
                     motionUnit = null;
-                    logger.warn("Cannot instantiate MotionUnit \"{}\"", className);
-                    logger.warn("Exception: ", e);
+                    log.warn("Cannot instantiate MotionUnit \"{}\"", className);
+                    log.warn("Exception: ", e);
                     return;
                 }
                 if (!AnimationUnit.class.isAssignableFrom(muClass))
                 {
                     motionUnit = null;
-                    logger.warn("{} does not implement the MotionUnit interface", className);
+                    log.warn("{} does not implement the MotionUnit interface", className);
                     return;
                 }
                 
@@ -239,15 +235,15 @@ class MotionUnitAssembler extends XMLStructureAdapter
                 catch (InstantiationException e)
                 {
                     motionUnit = null;
-                    logger.warn("Cannot instantiate MotionUnit \"{}\"", className);
-                    logger.warn("Exception: ", e);
+                    log.warn("Cannot instantiate MotionUnit \"{}\"", className);
+                    log.warn("Exception: ", e);
 
                 }
                 catch (IllegalAccessException e)
                 {
                     motionUnit = null;
-                    logger.warn("Cannot instantiate MotionUnit \"{}\"", className);
-                    logger.warn("Exception: ", e);
+                    log.warn("Cannot instantiate MotionUnit \"{}\"", className);
+                    log.warn("Exception: ", e);
                 }                
             }
         }
