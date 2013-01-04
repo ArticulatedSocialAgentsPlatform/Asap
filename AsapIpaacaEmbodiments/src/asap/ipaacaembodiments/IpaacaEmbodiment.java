@@ -46,6 +46,8 @@ public class IpaacaEmbodiment implements Embodiment
 
     private AtomicReference<List<String>> availableMorphs = new AtomicReference<>();
     private AtomicReference<List<String>> availableJoints = new AtomicReference<>();
+    private Object availableJointsLock = new Object();
+    
     private List<String> usedMorphs = new ArrayList<>();
     private List<String> usedJoints = new ArrayList<>();    
     private Object rootJointLock = new Object();
@@ -122,15 +124,14 @@ public class IpaacaEmbodiment implements Embodiment
         return buf.toString().trim();
     }
     
-    @edu.umd.cs.findbugs.annotations.SuppressWarnings(value="JLM_JSR166_UTILCONCURRENT_MONITORENTER ", justification="Used for wait/notify")
     public void waitForAvailableJoints()
     {
-        synchronized (availableJoints)
+        synchronized (availableJointsLock)
         {
             if (!availableJoints.get().isEmpty()) return;
             try
             {
-                availableJoints.wait();
+                availableJointsLock.wait();
             }
             catch (InterruptedException e)
             {
@@ -256,13 +257,12 @@ public class IpaacaEmbodiment implements Embodiment
         }
     }
 
-    @edu.umd.cs.findbugs.annotations.SuppressWarnings(value="JLM_JSR166_UTILCONCURRENT_MONITORENTER ", justification="Used for wait/notify")    
     private void setAvailableJoints(String[] joints)
     {
         availableJoints.set(ImmutableList.copyOf(joints));
-        synchronized (availableJoints)
+        synchronized (availableJointsLock)
         {
-            availableJoints.notifyAll();
+            availableJointsLock.notifyAll();
         }        
     }
 
@@ -316,20 +316,21 @@ public class IpaacaEmbodiment implements Embodiment
     private VJoint constructSkeleton(String joints[], String parents[], String translations[], String rotations[])
     {
         List<Integer> indices = getRootIndices(parents);
+        VJoint vj;
         if(indices.size()==1)
         {
-            rootJoint = constructJoint(indices.get(0), joints, parents, translations, rotations);
+            vj = constructJoint(indices.get(0), joints, parents, translations, rotations);
         }
         else
         {
             //introduce artifical root joint to bind stuff together
-            VJoint rootJoint = new VJoint("","");
+            vj = new VJoint("","");
             for (int i: getRootIndices(parents))
             {
-                rootJoint.addChild(constructJoint(i, joints, parents, translations, rotations));
+                vj.addChild(constructJoint(i, joints, parents, translations, rotations));
             }
         }
-        return rootJoint;
+        return vj;
     }
 
     class JointDataConfigReqHandler implements HandlerFunctor
@@ -352,7 +353,7 @@ public class IpaacaEmbodiment implements Embodiment
             setAvailableMorphs(iu.getPayload().get("morphs").split("\\s*,\\s*"));
             setAvailableJoints(joints);
             
-            log.debug("Available joints received");
+            log.debug("Available joints received {}", iu.getPayload().get("joints"));
         }
     }
 
