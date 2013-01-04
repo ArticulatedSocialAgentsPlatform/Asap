@@ -5,6 +5,8 @@ import hmi.animation.VJoint;
 import java.util.List;
 import java.util.Set;
 
+import lombok.Getter;
+
 import asap.animationengine.AnimationPlayer;
 import asap.animationengine.motionunit.AnimationUnit;
 import asap.animationengine.motionunit.MUSetupException;
@@ -40,6 +42,9 @@ public class MURMLKeyframeMU extends KeyFrameMotionUnit implements AnimationUnit
     private AnimationPlayer aniPlayer;
     private AnimationUnit relaxUnit;
     
+    @Getter
+    private double preparationDuration;
+    
     public MURMLKeyframeMU(List<String> targets, Interpolator interp, TimeManipulator manip, List<KeyFrame> keyFrames, int nrOfDofs,
             boolean allowDynamicStart)
     {
@@ -50,13 +55,23 @@ public class MURMLKeyframeMU extends KeyFrameMotionUnit implements AnimationUnit
         this.nrOfDofs = nrOfDofs;
         this.keyFrames = Lists.newArrayList(keyFrames);
         this.interp = interp;
+        if(allowDynamicStart)
+        {
+            preparationDuration = keyFrames.get(0).getFrameTime();
+        }
+        else if (keyFrames.size()>1)
+        {
+            preparationDuration = keyFrames.get(1).getFrameTime();
+        }
+        
         preferedDuration = unifyKeyFrames(keyFrames);
         interp.setKeyFrames(keyFrames, nrOfDofs);
 
         KeyPosition start = new KeyPosition("start", 0d, 1d);
-        KeyPosition ready = new KeyPosition("ready", 0.1d, 1d);
-        KeyPosition strokeStart = new KeyPosition("strokeStart", 0.1d, 1d);
-        KeyPosition stroke = new KeyPosition("stroke", 0.5d, 1d);
+        double relativeReady = preparationDuration/preferedDuration;
+        KeyPosition ready = new KeyPosition("ready", relativeReady, 1d);        
+        KeyPosition strokeStart = new KeyPosition("strokeStart", relativeReady, 1d);
+        KeyPosition stroke = new KeyPosition("stroke", relativeReady, 1d);
         KeyPosition strokeEnd = new KeyPosition("strokeEnd", 0.9d, 1d);
         KeyPosition relax = new KeyPosition("relax", 0.9d, 1d);
         KeyPosition end = new KeyPosition("end", 1d, 1d);
@@ -69,6 +84,7 @@ public class MURMLKeyframeMU extends KeyFrameMotionUnit implements AnimationUnit
         addKeyPosition(end);
     }
 
+    
     @Override
     public void play(double t) throws MUPlayException
     {
@@ -129,6 +145,7 @@ public class MURMLKeyframeMU extends KeyFrameMotionUnit implements AnimationUnit
         MURMLKeyframeMU copy = new MURMLKeyframeMU(targets, interp, manip, keyFrames, nrOfDofs, allowDynamicStart);
         copy.aniPlayer = p;
         copy.preferedDuration = preferedDuration;
+        copy.preparationDuration = preparationDuration;
         for (KeyPosition keypos : getKeyPositions())
         {
             copy.addKeyPosition(keypos.deepCopy());

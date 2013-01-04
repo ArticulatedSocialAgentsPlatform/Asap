@@ -196,7 +196,7 @@ public class AnimationPlanner extends AbstractPlanner<TimedAnimationUnit>
         }
         else
         {
-            List<TimedAnimationMotionUnit> tmus = gestureBinding.getMotionUnit(bbPeg, b, player, pegBoard);
+            List<TimedAnimationUnit> tmus = gestureBinding.getMotionUnit(bbPeg, b, player, pegBoard, murmlMUBuilder);
             if (tmus.isEmpty())
             {
                 throw new BehaviourPlanningException(b, "Behavior " + b.id

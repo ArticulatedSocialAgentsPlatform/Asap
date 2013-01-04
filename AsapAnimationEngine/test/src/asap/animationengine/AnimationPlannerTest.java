@@ -31,6 +31,7 @@ import saiba.bml.core.HeadBehaviour;
 import saiba.bml.core.PostureShiftBehaviour;
 import saiba.bml.parser.Constraint;
 import asap.animationengine.gesturebinding.GestureBinding;
+import asap.animationengine.gesturebinding.MURMLMUBuilder;
 import asap.animationengine.motionunit.AnimationUnit;
 import asap.animationengine.motionunit.MUSetupException;
 import asap.animationengine.motionunit.TimedAnimationMotionUnit;
@@ -89,10 +90,11 @@ public class AnimationPlannerTest
         PostureShiftTMU tmups = new PostureShiftTMU(fbManager, bbPeg, BMLID, "shift1", mockUnit, pegBoard, mockRestPose, mockPlayer);
         TimedAnimationMotionUnit tmu = new TimedAnimationMotionUnit(fbManager, bbPeg, BMLID, "nod1", mockUnit, pegBoard);
         KeyPositionMocker.stubKeyPositions(mockUnit, new KeyPosition("start", 0, 1), new KeyPosition("end", 1, 1));
-        final List<TimedAnimationMotionUnit> tmus = new ArrayList<TimedAnimationMotionUnit>();
+        final List<TimedAnimationUnit> tmus = new ArrayList<>();
         tmus.add(tmu);
         when(mockBinding.getRestPose((PostureShiftBehaviour) any(), eq(mockPlayer))).thenReturn(mockRestPose);
         when(mockBinding.getMotionUnit((BMLBlockPeg) any(), (Behaviour) any(), eq(mockPlayer), eq(pegBoard))).thenReturn(tmus);
+        when(mockBinding.getMotionUnit((BMLBlockPeg) any(), (Behaviour) any(), eq(mockPlayer), eq(pegBoard),(MURMLMUBuilder)any())).thenReturn(tmus);
         when(mockUnit.getPreferedDuration()).thenReturn(3.0);
         when(mockRestPose.copy(eq(mockPlayer))).thenReturn(mockRestPose);
         when(mockRestPose.createPostureShiftTMU(eq(fbManager), (BMLBlockPeg) any(), eq(BMLID), (String) any(), eq(pegBoard))).thenReturn(

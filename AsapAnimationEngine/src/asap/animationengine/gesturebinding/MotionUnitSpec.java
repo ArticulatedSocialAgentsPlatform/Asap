@@ -28,10 +28,7 @@ import java.util.HashMap;
 import java.util.Set;
 
 import lombok.Getter;
-
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
+import lombok.extern.slf4j.Slf4j;
 import saiba.bml.core.Behaviour;
 import asap.animationengine.motionunit.AnimationUnit;
 import asap.binding.SpecConstraints;
@@ -44,12 +41,15 @@ import asap.binding.SpecParameterMap;
  * @author Herwin
  * 
  */
+@Slf4j
 class MotionUnitSpec extends XMLStructureAdapter
 {
-    private final static Logger logger = LoggerFactory.getLogger(MotionUnitSpec.class.getName());
-
     public AnimationUnit motionUnit;
+    
+    @Getter
     private String type;
+    
+    @Getter
     private String specnamespace;
 
     @Getter
@@ -62,22 +62,6 @@ class MotionUnitSpec extends XMLStructureAdapter
     public boolean satisfiesConstraints(Behaviour b)
     {
         return constraints.satisfiesConstraints(b);
-    }
-
-    /**
-     * @return the specnamespace
-     */
-    public String getSpecnamespace()
-    {
-        return specnamespace;
-    }
-
-    /**
-     * @return the type
-     */
-    public String getType()
-    {
-        return type;
     }
 
     public Set<String> getParameters()
@@ -141,7 +125,7 @@ class MotionUnitSpec extends XMLStructureAdapter
         }
         catch (RuntimeException ex)
         {
-            logger.warn("Cannot read motion unit spec, dropping element from gesture binding. Tag: {} ", tag);
+            log.warn("Cannot read motion unit spec, dropping element from gesture binding. Tag: {} ", tag);
             motionUnit = null;
         }
     }

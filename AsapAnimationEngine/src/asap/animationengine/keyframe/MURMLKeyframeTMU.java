@@ -86,7 +86,8 @@ public class MURMLKeyframeTMU extends TimedAnimationMotionUnit
         double readyDuration = 0;
         if(mu.getKeyPositions().size()>2)
         {
-            readyDuration = mu.getKeyPositions().get(1).time;
+            //readyDuration = mu.getKeyPositions().get(1).time;
+            readyDuration = mu.getPreparationDuration();
         }
         
         if (startPeg.getGlobalValue() == TimePeg.VALUE_UNKNOWN &&

@@ -72,7 +72,7 @@ public class SpecConstraints extends XMLStructureAdapter
         return true;
     }
     
-    private static final String XMLTAG = "constraints";
+    public static final String XMLTAG = "constraints";
 
     public static String xmlTag()
     {

@@ -11,7 +11,9 @@ import org.junit.runners.Parameterized.Parameters;
 
 /**
  * Validates all gesturebindings in 
- * /HmiResource/HmiHumanoidBodyControl/resource/Humanoids/shared/gesturebinding, using the xsd
+ * asapresource/AsapHumanoidControlShared/resource/Humanoids/shared/gesturebinding and  
+ * asapresource/AsapHumanoidControlArmandia/resource/Humanoids/armandia/gesturebinding
+ * using the xsd
  * @author welberge
  *
  */
