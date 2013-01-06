@@ -33,6 +33,10 @@ import asap.binding.SpecParameterDefaults;
 import asap.binding.SpecParameterMap;
 import asap.picture.planunit.PictureUnit;
 
+/**
+ * XML parser for the PictureUnitSpec in a picturebinding
+ * @author Herwin
+ */
 public class PictureUnitSpec extends XMLStructureAdapter
 {
     public PictureUnit pictureUnit;
