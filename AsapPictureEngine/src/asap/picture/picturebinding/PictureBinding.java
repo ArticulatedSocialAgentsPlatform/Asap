@@ -30,6 +30,7 @@ import org.slf4j.LoggerFactory;
 
 import saiba.bml.BMLInfo;
 import saiba.bml.core.Behaviour;
+import asap.binding.SpecParameterDefault;
 import asap.picture.display.PictureDisplay;
 import asap.picture.planunit.PUPrepareException;
 import asap.picture.planunit.PictureUnit;
@@ -70,7 +71,7 @@ public class PictureBinding extends XMLStructureAdapter
 
                     // System.out.println("set def params");
                     // set default parameter values
-                    for (PictureUnitParameterDefault pupc : s.getParameterDefaults())
+                    for (SpecParameterDefault pupc : s.getParameterDefaults())
                     {
                         try
                         {

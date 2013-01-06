@@ -18,23 +18,27 @@
  ******************************************************************************/
 package asap.picture.picturebinding;
 
-import saiba.bml.core.Behaviour;
-import asap.picture.planunit.PictureUnit;
 import hmi.xml.XMLStructureAdapter;
 import hmi.xml.XMLTokenizer;
 
 import java.io.IOException;
-import java.util.ArrayList;
 import java.util.Collection;
 import java.util.HashMap;
 import java.util.Set;
+
+import saiba.bml.core.Behaviour;
+import asap.binding.SpecConstraints;
+import asap.binding.SpecParameterDefault;
+import asap.binding.SpecParameterDefaults;
+import asap.binding.SpecParameterMap;
+import asap.picture.planunit.PictureUnit;
 
 public class PictureUnitSpec extends XMLStructureAdapter
 {
     public PictureUnit pictureUnit;
     private String type;
     private String specnamespace;
-
+    private SpecParameterMap parametermap = new SpecParameterMap();
     /**
      * @return the type
      */
@@ -51,57 +55,34 @@ public class PictureUnitSpec extends XMLStructureAdapter
         return specnamespace;
     }
 
-    private ArrayList<PictureUnitSpecConstraint> constraints = new ArrayList<PictureUnitSpecConstraint>();
-    private HashMap<String, String> parametermap = new HashMap<String, String>();
-    private HashMap<String, PictureUnitParameterDefault> parameterdefault = new HashMap<String, PictureUnitParameterDefault>();
+    private SpecConstraints constraints = new SpecConstraints();
+    private SpecParameterDefaults parameterdefaults = new SpecParameterDefaults();
 
     public boolean satisfiesConstraints(Behaviour b)
     {
-        for (PictureUnitSpecConstraint c : constraints)
-        {
-            if (!b.satisfiesConstraint(c.name, c.value)) 
-            {
-            	b.satisfiesConstraint(c.name, c.value);
-            	return false;
-            }
-        }
-        return true;
+        return constraints.satisfiesConstraints(b);        
     }
 
     public Set<String> getParameters()
     {
-        return parametermap.keySet();
-    }
+        return parametermap.getParameters();
+    }    
 
-    public void addConstraint(PictureUnitSpecConstraint c)
-    {
-        constraints.add(c);
-    }
-
-    public void addParameter(PictureUnitParameter p)
-    {
-        parametermap.put(p.src, p.dst);
-    }
-
-    public void addParameterDefault(PictureUnitParameterDefault p)
-    {
-        parameterdefault.put(p.name, p);
-    }
-
+    
     /**
      * Get motion unit parameter for BML parameter src
      */
     public String getParameter(String src)
     {
-        return parametermap.get(src);
+        return parametermap.getParameter(src);
     }
 
     /**
      * Get motion unit parameter for BML parameter src
      */
-    public Collection<PictureUnitParameterDefault> getParameterDefaults()
+    public Collection<SpecParameterDefault> getParameterDefaults()
     {
-        return parameterdefault.values();
+        return parameterdefaults.getParameterDefaults();
     }
 
     @Override
@@ -117,20 +98,18 @@ public class PictureUnitSpec extends XMLStructureAdapter
         while (tokenizer.atSTag())
         {
             String tag = tokenizer.getTagName();
-            if (tag.equals(PictureUnitSpecConstraints.xmlTag()))
+            if (tag.equals(SpecConstraints.xmlTag()))
             {
-                PictureUnitSpecConstraints pusc = new PictureUnitSpecConstraints(this);
+                SpecConstraints pusc = new SpecConstraints();
                 pusc.readXML(tokenizer);
             }
-            else if (tag.equals(PictureUnitParameterMap.xmlTag()))
+            else if (tag.equals(SpecParameterMap.xmlTag()))
             {
-                PictureUnitParameterMap map = new PictureUnitParameterMap(this);
-                map.readXML(tokenizer);
+                parametermap.readXML(tokenizer);
             }
-            else if (tag.equals(PictureUnitParameterDefaults.xmlTag()))
+            else if (tag.equals(SpecParameterDefaults.xmlTag()))
             {
-                PictureUnitParameterDefaults def = new PictureUnitParameterDefaults(this);
-                def.readXML(tokenizer);
+                parameterdefaults.readXML(tokenizer);
             }
             else if (tag.equals(PictureUnitAssembler.xmlTag()))
             {
