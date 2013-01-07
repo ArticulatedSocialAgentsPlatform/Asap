@@ -31,7 +31,7 @@ import java.io.IOException;
 
 
 /** Take care of its own loading from XML. */
-public class JFramePictureEmbodiment implements EmbodimentLoader, Embodiment, PictureEmbodiment
+public class JFramePictureEmbodiment implements EmbodimentLoader, PictureEmbodiment
 {
     private PictureDisplay display;
 

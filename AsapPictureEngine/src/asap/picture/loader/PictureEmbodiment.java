@@ -20,9 +20,10 @@
 package asap.picture.loader;
 
 import asap.picture.display.PictureDisplay;
+import hmi.environmentbase.Embodiment;
 
-/** This embodiment offers access to a PictureDisplay, which in turn allws one to load and display layered images on a canvas. */
-public interface PictureEmbodiment 
+/** This embodiment offers access to a PictureDisplay, which in turn allows one to load and display layered images on a canvas. */
+public interface PictureEmbodiment extends Embodiment
 {    
   PictureDisplay getPictureDisplay();
 }
