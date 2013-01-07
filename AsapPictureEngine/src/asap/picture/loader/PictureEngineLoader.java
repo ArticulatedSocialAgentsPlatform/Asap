@@ -34,13 +34,13 @@ import asap.picture.planunit.TimedPictureUnit;
 import hmi.environmentbase.EmbodimentLoader;
 import hmi.environmentbase.Environment;
 import hmi.environmentbase.Loader;
+import hmi.util.ArrayUtils;
 import hmi.util.Resources;
 import hmi.xml.XMLStructureAdapter;
 import hmi.xml.XMLTokenizer;
 
 import java.io.IOException;
 import java.util.HashMap;
-
 
 /**
 
@@ -60,16 +60,20 @@ public class PictureEngineLoader implements EngineLoader
     private AsapRealizerEmbodiment are = null;
 
     @Override
-    public void readXML(XMLTokenizer tokenizer, String loaderId, String vhId, String vhName, Environment[] environments, Loader ... requiredLoaders) 
-    	throws IOException
+    public void readXML(XMLTokenizer tokenizer, String loaderId, String vhId, String vhName, Environment[] environments,
+            Loader... requiredLoaders) throws IOException
     {
         id = loaderId;
-        for (Loader e : requiredLoaders)
+        for (EmbodimentLoader e : ArrayUtils.getClassesOfType(requiredLoaders, EmbodimentLoader.class))
         {
-            if (e instanceof EmbodimentLoader && ((EmbodimentLoader) e).getEmbodiment() 
-                    instanceof PictureEmbodiment) pe = (PictureEmbodiment) ((EmbodimentLoader) e).getEmbodiment();
-            if (e instanceof EmbodimentLoader && ((EmbodimentLoader) e).getEmbodiment() 
-                    instanceof AsapRealizerEmbodiment) are = (AsapRealizerEmbodiment) ((EmbodimentLoader) e).getEmbodiment();
+            if (e.getEmbodiment() instanceof PictureEmbodiment)
+            {
+                pe = (PictureEmbodiment) e.getEmbodiment();
+            }
+            if (e.getEmbodiment() instanceof AsapRealizerEmbodiment)
+            {
+                are = (AsapRealizerEmbodiment) e.getEmbodiment();
+            }
         }
         if (pe == null)
         {
@@ -121,11 +125,9 @@ public class PictureEngineLoader implements EngineLoader
     {
         if (pictureBinding == null) throw tokenizer.getXMLScanException("picturebinding is null, cannot build pictureplanner ");
         planManager = new PlanManager<TimedPictureUnit>();
-        PlanPlayer planPlayer = new SingleThreadedPlanPlayer<TimedPictureUnit>(are.getFeedbackManager(),
-                planManager);
+        PlanPlayer planPlayer = new SingleThreadedPlanPlayer<TimedPictureUnit>(are.getFeedbackManager(), planManager);
         player = new DefaultPlayer(planPlayer);
-        PicturePlanner planner = new PicturePlanner(are.getFeedbackManager(), pictureBinding,
-                planManager);
+        PicturePlanner planner = new PicturePlanner(are.getFeedbackManager(), pictureBinding, planManager);
         engine = new DefaultEngine<TimedPictureUnit>(planner, player, planManager);
         engine.setId(id);
 
