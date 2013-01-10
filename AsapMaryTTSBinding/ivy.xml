@@ -5,8 +5,8 @@
      <dependency org="Asap"   name="AsapBML"            rev="latest.${resolve.status}"   />
      <dependency org="HMI"   name="HmiUtil"            rev="latest.${resolve.status}"   />
       <dependency org="HMI"   name="HmiXml"             rev="latest.${resolve.status}"   />
-      <dependency org="HMI"   name="HmiTTS"             transitive="false" rev="latest.${resolve.status}"   />
-      <dependency org="HMI"   name="HmiTTSMary"             transitive="false" rev="latest.${resolve.status}"   />
+      <dependency org="HMI"   name="HmiTTS"             rev="latest.${resolve.status}"   />
+      <dependency org="HMI"   name="HmiTTSMary"             rev="latest.${resolve.status}"   />
 
 
 	  <dependency org="saiba"     name="saibabml"           rev="latest.release"    />
