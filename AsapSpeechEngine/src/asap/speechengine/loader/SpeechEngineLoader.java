@@ -168,7 +168,15 @@ public class SpeechEngineLoader implements EngineLoader
             log.debug("Reading Voice");
             attrMap = tokenizer.getAttributes();
             voicename = adapter.getOptionalAttribute("voicename", attrMap, "");
-            factory = Factory.DIRECT_TTS;
+            String factoryString = adapter.getOptionalAttribute("factory", attrMap, "WAV_TTS");
+            if (factoryString.equals("DIRECT_TTS"))
+            {
+                factory = Factory.DIRECT_TTS;
+            }
+            else if (factoryString.equals("WAV_TTS"))
+            {
+                factory = Factory.WAV_TTS;
+            }            
             tokenizer.takeSTag("Voice");
             tokenizer.takeETag("Voice");
         }
