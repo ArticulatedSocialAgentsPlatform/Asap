@@ -50,6 +50,9 @@
       <dependency org="Asap"   name="AsapSpeechEngine"     rev="latest.${resolve.status}"   />    
       <dependency org="Asap"   name="AsapTextEngine"     rev="latest.${resolve.status}"   />    
       <dependency org="Asap"   name="AsapEmitterEngine"     rev="latest.${resolve.status}"   />
+      <dependency org="Asap"      name="AsapSapi5TTSBinding"        rev="latest.{$resolve.status}"  />
+      <dependency org="Asap"      name="AsapMaryTTSBinding"        rev="latest.{$resolve.status}"  />
+
 
 
       <dependency org="logback" name="logback-classic"     rev="latest.release"  />   

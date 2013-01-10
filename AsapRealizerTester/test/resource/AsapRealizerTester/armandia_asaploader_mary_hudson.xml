@@ -100,8 +100,13 @@
 	<SpeechBinding basedir="" resources="Humanoids/shared/speechbinding/" filename="ikpspeechbinding.xml"/>
   </Loader>
 
- <Loader id="speechengine" loader="asap.speechengine.loader.SpeechEngineLoader" requiredloaders="facelipsync,jawlipsync"> 
-   <Voice voicetype="MARY" localmarydir="HmiResource/MARYTTS/resource/MARYTTS" factory="WAV_TTS"/>
+  <Loader id="ttsbinding" loader="asap.maryttsbinding.loader.MaryTTSBindingLoader">
+    <MaryTTS localmarydir="HmiResource/MARYTTS/resource/MARYTTS"/>
+    <PhonemeToVisemeMapping resources="Humanoids/shared/phoneme2viseme/" filename="sampade2ikp.xml"/>
+  </Loader>
+
+ <Loader id="speechengine" loader="asap.speechengine.loader.SpeechEngineLoader" requiredloaders="facelipsync,jawlipsync,ttsbinding">
+   <Voice factory="WAV_TTS"/>
   </Loader>
 
 

@@ -16,11 +16,12 @@
       <dependency org="logback" name="logback-core"        rev="latest.release"  />   
 
       <dependency org="lwjgl"   name="lwjgl"               rev="latest.release"  />
-
       <!-- for tests with SAPI -->
       <dependency org="HMI"      name="HmiTTSnative"        rev="latest.{$resolve.status}"  />
-      
+      <dependency org="Asap"      name="AsapSapi5TTSBinding"        rev="latest.{$resolve.status}"  />
+
       <!-- for tests with MaryTTS -->
+      <dependency org="Asap"      name="AsapMaryTTSBinding"        rev="latest.{$resolve.status}"  />
       <dependency org="slf4j"   name="log4j-over-slf4j"      rev="latest.release"  />   
       <dependency org="dfki"   name="mary-common"    rev="latest.release"  />   
       <dependency org="apache" name="commons-collections" rev="latest.release"  />   

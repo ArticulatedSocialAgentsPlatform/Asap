@@ -19,7 +19,8 @@
       <dependency org="Asap"   name="AsapTextEngine"     rev="latest.${resolve.status}"   />    
       <dependency org="Asap"   name="AsapPictureEngine"     rev="latest.${resolve.status}"   />    
       <dependency org="Asap"   name="AsapBinding"      rev="latest.${resolve.status}"   />    
-      <dependency org="Asap"   name="AsapEnvironment"     rev="latest.${resolve.status}"   />    
+      <dependency org="Asap"   name="AsapEnvironment"     rev="latest.${resolve.status}"   />
+            <dependency org="Asap"   name="AsapMaryTTSBinding"     rev="latest.${resolve.status}"   />
       
       <dependency org="HMI"      name="HmiAnimation"       rev="latest.${resolve.status}"  />
       <dependency org="HMI"      name="HmiTTS"             rev="latest.${resolve.status}"  />

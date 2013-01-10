@@ -23,8 +23,7 @@ import hmi.audioenvironment.AudioEnvironment;
 import hmi.environmentbase.EmbodimentLoader;
 import hmi.environmentbase.Environment;
 import hmi.environmentbase.Loader;
-import hmi.tts.util.XMLPhonemeToVisemeMapping;
-import hmi.util.Resources;
+import hmi.util.ArrayUtils;
 import hmi.xml.XMLStructureAdapter;
 import hmi.xml.XMLTokenizer;
 
@@ -42,14 +41,10 @@ import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.SwingUtilities;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
-import saiba.bml.core.SpeechBehaviour;
+import lombok.extern.slf4j.Slf4j;
 import asap.realizer.DefaultEngine;
 import asap.realizer.DefaultPlayer;
 import asap.realizer.Engine;
-import asap.realizer.Planner;
 import asap.realizer.Player;
 import asap.realizer.lipsync.LipSynchProvider;
 import asap.realizer.planunit.MultiThreadedPlanPlayer;
@@ -64,23 +59,16 @@ import asap.speechengine.TTSPlanner;
 import asap.speechengine.TimedTTSUnit;
 import asap.speechengine.TimedTTSUnitFactory;
 import asap.speechengine.WavTTSUnitFactory;
-import asap.speechengine.ttsbinding.MaryTTSBinding;
-import asap.speechengine.ttsbinding.SAPITTSBinding;
 import asap.speechengine.ttsbinding.TTSBinding;
+import asap.speechengine.ttsbinding.TTSBindingLoader;
 
 /**
  * Loads the a SpeechEngine
  * @author reidsma
  */
+@Slf4j
 public class SpeechEngineLoader implements EngineLoader
 {
-    private static Logger logger = LoggerFactory.getLogger(SpeechEngineLoader.class.getName());
-
-    private enum Voicetype
-    {
-        NOVOICE, SAPI5, MARY
-    };
-
     private enum Factory
     {
         DIRECT_TTS, WAV_TTS
@@ -90,11 +78,8 @@ public class SpeechEngineLoader implements EngineLoader
     {
     }
 
-    private XMLStructureAdapter adapter = new XMLStructureAdapter();
     private JComponentEmbodiment jce = null;
-    // private MixedAnimationEngineLoader ael = null;
     private AudioEnvironment aue = null;
-    // private FaceEngineLoader fel = null;
 
     private JComboBox<String> voiceList = null;
     private JPanel speechUIPanel = null;
@@ -104,12 +89,11 @@ public class SpeechEngineLoader implements EngineLoader
     private PlanManager<TimedTTSUnit> speechPlanManager = null;
     private Player speechPlayer = null;
     private PlanPlayer speechPlanPlayer = null;
-    private Planner<TimedTTSUnit> speechPlanner = null;
-    // private MorphVisemeBinding visemebinding = null;
-    private Voicetype voicetype = null;
+    private TTSPlanner speechPlanner = null;
     private String voicename = "";
     private Factory factory = null;
-    String marydir = "MARYTTS";
+    private TTSBinding ttsBinding;
+    private XMLStructureAdapter adapter = new XMLStructureAdapter();
 
     String id = "";
 
@@ -122,15 +106,32 @@ public class SpeechEngineLoader implements EngineLoader
             Loader... requiredLoaders) throws IOException
     {
         id = loaderId;
-        for (Loader e : requiredLoaders)
+
+        TTSBindingLoader ttsBL = ArrayUtils.getFirstClassOfType(requiredLoaders, TTSBindingLoader.class);        
+        if (ttsBL == null)
         {
-            if (e instanceof LipSynchProviderLoader) lipSyncProviders.add(((LipSynchProviderLoader) e).getLipSyncProvider());
-            // if (e instanceof FaceEngineLoader) fel = (FaceEngineLoader) e;
-            if (e instanceof EmbodimentLoader && ((EmbodimentLoader) e).getEmbodiment() instanceof JComponentEmbodiment) jce = (JComponentEmbodiment) ((EmbodimentLoader) e)
-                    .getEmbodiment();
-            if (e instanceof EmbodimentLoader && ((EmbodimentLoader) e).getEmbodiment() instanceof AsapRealizerEmbodiment) are = (AsapRealizerEmbodiment) ((EmbodimentLoader) e)
-                    .getEmbodiment();
+            throw tokenizer.getXMLScanException("Speechengineloader requires a ttsbinding.");
         }
+        ttsBinding = ttsBL.getTTSBinding();
+        
+        for (EmbodimentLoader el : ArrayUtils.getClassesOfType(requiredLoaders, EmbodimentLoader.class))
+        {
+            if (el.getEmbodiment() instanceof JComponentEmbodiment)
+            {
+                jce = (JComponentEmbodiment) el.getEmbodiment();
+            }
+            if (el.getEmbodiment() instanceof AsapRealizerEmbodiment)
+            {
+                are = (AsapRealizerEmbodiment) el.getEmbodiment();
+            }
+
+        }
+        
+        for (LipSynchProviderLoader el : ArrayUtils.getClassesOfType(requiredLoaders, LipSynchProviderLoader.class))
+        {
+            lipSyncProviders.add(el.getLipSyncProvider());
+        }
+        
         for (Environment e : environments)
         {
             if (e instanceof AudioEnvironment) aue = (AudioEnvironment) e;
@@ -143,11 +144,10 @@ public class SpeechEngineLoader implements EngineLoader
         {
             throw new RuntimeException("SpeechEngineLoader requires an EmbodimentLoader containing a AsapRealizerEmbodiment");
         }
-        logger.debug("Reading SpeechEngine");
+        log.debug("Reading SpeechEngine");
         while (!tokenizer.atETag("Loader"))
         {
-            logger.debug("Reading Section");
-
+            log.debug("Reading Section");
             readSection(tokenizer);
         }
         constructEngine(tokenizer);
@@ -165,62 +165,12 @@ public class SpeechEngineLoader implements EngineLoader
         HashMap<String, String> attrMap = null;
         if (tokenizer.atSTag("Voice"))
         {
-            logger.debug("Reading Voice");
+            log.debug("Reading Voice");
             attrMap = tokenizer.getAttributes();
-            voicename = "";
-            String type = adapter.getRequiredAttribute("voicetype", attrMap, tokenizer);
-            voicetype = Voicetype.NOVOICE;
+            voicename = adapter.getOptionalAttribute("voicename", attrMap, "");
             factory = Factory.DIRECT_TTS;
-            if (type.equals("SAPI5"))
-            {
-                voicetype = Voicetype.SAPI5;
-                voicename = adapter.getOptionalAttribute("voicename", attrMap, "");
-                String factoryString = adapter.getOptionalAttribute("factory", attrMap, "WAV_TTS");
-                if (factoryString.equals("DIRECT_TTS"))
-                {
-                    factory = Factory.DIRECT_TTS;
-                }
-                else if (factoryString.equals("WAV_TTS"))
-                {
-                    factory = Factory.WAV_TTS;
-                }
-
-            }
-            else if (type.equals("MARY"))
-            {
-                voicetype = Voicetype.MARY;
-                voicename = adapter.getOptionalAttribute("voicename", attrMap, "");
-                String factoryString = adapter.getOptionalAttribute("factory", attrMap, "WAV_TTS");
-                if (factoryString.equals("DIRECT_TTS"))
-                {
-                    factory = Factory.DIRECT_TTS;
-                }
-                else if (factoryString.equals("WAV_TTS"))
-                {
-                    factory = Factory.WAV_TTS;
-                }
-                String localMaryDir = adapter.getOptionalAttribute("localmarydir", attrMap);
-                marydir = adapter.getOptionalAttribute("marydir", attrMap);
-                if (marydir == null)
-                {
-                    if (localMaryDir == null)
-                    {
-                        marydir = System.getProperty("user.dir") + "/lib/MARYTTS";
-                    }
-                    else
-                    {
-                        String spr = System.getProperty("shared.project.root");
-                        if (spr == null)
-                        {
-                            throw tokenizer.getXMLScanException("the use of the localmarydir setting "
-                                    + "requires a shared.project.root system variable (often: -Dshared.project.root=\"../..\" "
-                                    + "but this may depend on your system setup).");
-                        }
-                        marydir = System.getProperty("shared.project.root") + "/" + localMaryDir;
-                    }
-                }
-            }
-            tokenizer.takeEmptyElement("Voice");
+            tokenizer.takeSTag("Voice");
+            tokenizer.takeETag("Voice");
         }
         else if (tokenizer.atSTag("SpeechUI"))
         {
@@ -242,52 +192,12 @@ public class SpeechEngineLoader implements EngineLoader
         speechPlanManager = new PlanManager<TimedTTSUnit>();
         speechPlanPlayer = new MultiThreadedPlanPlayer<TimedTTSUnit>(are.getFeedbackManager(), speechPlanManager);
         speechPlayer = new DefaultPlayer(speechPlanPlayer);
-        speechPlanner = null;
+        if(voicename!=null && !voicename.isEmpty())
+        {
+            ttsBinding.setVoice(voicename);
+        }
+        speechPlanner = getTTSPlanner(ttsBinding);
 
-        switch (voicetype)
-        {
-        case MARY:
-        {
-            TTSBinding ttsBin;
-            try
-            {
-                XMLPhonemeToVisemeMapping vm = new XMLPhonemeToVisemeMapping();
-                vm.readXML(new Resources("Humanoids/shared/phoneme2viseme/").getReader("sampade2ikp.xml"));
-                ttsBin = new MaryTTSBinding(marydir, vm);
-            }
-            catch (Exception e)
-            {
-                throw new RuntimeException(e);
-            }
-            if (voicename != null)
-            {
-                ttsBin.setVoice(voicename);
-            }
-            // ttsBin.speak(SpeechBehaviour.class, ""); // HACK HACK: speak a sentence to counter delays
-            speechPlanner = getTTSPlanner(ttsBin);
-            break;
-        }
-        case SAPI5:
-        {
-            TTSBinding ttsBin = new SAPITTSBinding();
-            if (voicename != null)
-            {
-                ttsBin.setVoice(voicename);
-            }
-            else
-            {
-                ttsBin.setVoice(ttsBin.getVoices()[0]);
-            }
-            ttsBin.speak(SpeechBehaviour.class, ""); // HACK HACK: speak a sentence to counter delays
-            speechPlanner = getTTSPlanner(ttsBin);
-            break;
-        }
-        default:
-        {
-            logger.warn("cannot initialize this voice, wrong type.");
-            return;
-        }
-        }
         engine = new DefaultEngine<TimedTTSUnit>(speechPlanner, speechPlayer, speechPlanManager);
 
         engine.setId(id);
@@ -298,26 +208,23 @@ public class SpeechEngineLoader implements EngineLoader
         // init ui?
         if (initUI)
         {
-            if (voicetype != Voicetype.NOVOICE)
+            final TTSPlanner ttsp = (TTSPlanner) speechPlanner;
+            SwingUtilities.invokeLater(new Runnable()
             {
-                final TTSPlanner ttsp = (TTSPlanner) speechPlanner;
-                SwingUtilities.invokeLater(new Runnable()
+                @Override
+                public void run()
                 {
-                    @Override
-                    public void run()
-                    {
-                        voiceList = new JComboBox<String>(ttsp.getVoices());
-                        voiceList.setEditable(false);
-                        voiceList.setSelectedItem(voicename);
-                        voiceList.addActionListener(new VoiceSelectionListener());
-                        speechUIPanel = new JPanel();
-                        speechUIPanel.add(new JLabel("Voice:"));
-                        speechUIPanel.add(Box.createRigidArea(new Dimension(5, 0)));
-                        speechUIPanel.add(voiceList);
-                        jce.addJComponent(speechUIPanel);
-                    }
-                });
-            }
+                    voiceList = new JComboBox<String>(ttsp.getVoices());
+                    voiceList.setEditable(false);
+                    voiceList.setSelectedItem(voicename);
+                    voiceList.addActionListener(new VoiceSelectionListener());
+                    speechUIPanel = new JPanel();
+                    speechUIPanel.add(new JLabel("Voice:"));
+                    speechUIPanel.add(Box.createRigidArea(new Dimension(5, 0)));
+                    speechUIPanel.add(voiceList);
+                    jce.addJComponent(speechUIPanel);
+                }
+            });
         }
 
     }
@@ -350,21 +257,8 @@ public class SpeechEngineLoader implements EngineLoader
         @Override
         public void actionPerformed(ActionEvent e)
         {
-            switch (voicetype)
-            {
-            case NOVOICE:
-                return;
-            case MARY:
-            case SAPI5:
-                if (speechPlanner instanceof TTSPlanner)
-                {
-                    ((TTSPlanner) speechPlanner).setSpeaker((String) voiceList.getSelectedItem());
-                }
-                break;
-            default:
-                System.err.println("cannot initialize this voice, wrong type");
-                return;
-            }
+            speechPlanner.setSpeaker((String) voiceList.getSelectedItem());
+
         }
     }
 
@@ -379,7 +273,7 @@ public class SpeechEngineLoader implements EngineLoader
         return speechPlayer;
     }
 
-    public Planner<TimedTTSUnit> getSpeechPlanner()
+    public TTSPlanner getSpeechPlanner()
     {
         return speechPlanner;
     }

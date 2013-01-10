@@ -8,23 +8,31 @@ import hmi.environmentbase.Environment;
 import hmi.environmentbase.Loader;
 import hmi.tts.TimingInfo;
 import hmi.tts.Visime;
+import hmi.util.OS;
 import hmi.xml.XMLTokenizer;
 
 import java.io.IOException;
 
+import org.junit.Assume;
+import org.junit.Before;
 import org.junit.Test;
 
+import saiba.bml.core.SpeechBehaviour;
 import asap.sapittsbinding.loader.SapiTTSBindingLoader;
 
-import saiba.bml.core.SpeechBehaviour;
-
 /**
- * Integration tests for the SapiTTSBindingLoader
+ * Integration tests for the SapiTTSBinding
  * @author hvanwelbergen
  *
  */
 public class SapiTTSBindingLoaderIntegrationTest
 {
+    @Before
+    public void setup()
+    {
+        Assume.assumeTrue(OS.equalsOS(OS.WINDOWS));   
+    }
+    
     @Test
     public void test() throws IOException, InterruptedException
     {
