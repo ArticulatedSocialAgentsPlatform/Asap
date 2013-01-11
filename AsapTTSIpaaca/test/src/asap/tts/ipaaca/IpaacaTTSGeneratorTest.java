@@ -17,7 +17,7 @@ public class IpaacaTTSGeneratorTest
     }
     private IpaacaTTSGenerator ttsGen = new IpaacaTTSGenerator(); 
     
-    @Ignore
+    //@Ignore
     @Test
     public void test() throws InterruptedException
     {

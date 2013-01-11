@@ -20,6 +20,7 @@ import ipaaca.LocalMessageIU;
 import ipaaca.OutputBuffer;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.EnumSet;
 import java.util.List;
 import java.util.UUID;
@@ -49,6 +50,8 @@ public class IpaacaTTSGenerator extends AbstractTTSGenerator
     private static final String FILENAME_KEY = "file";
     private static final String STATE_KEY = "state";
     private static final String PHONEMES_KEY = "phonems";
+    private static final String MARKS_KEY = "marks";
+    private static final String IGNOREXML_KEY ="ignore_xml";
 
     private static final String EXECUTE_TYPE = "tts.execute";
     private static final String PLAN_TYPE = "tts.plan";
@@ -102,6 +105,7 @@ public class IpaacaTTSGenerator extends AbstractTTSGenerator
         speakMessage.getPayload().put(CHARACTERVOICE_KEY, voice);
         speakMessage.getPayload().put(TYPE_KEY, executionType);
         speakMessage.getPayload().put(FILENAME_KEY, fileName);
+        speakMessage.getPayload().put(IGNOREXML_KEY,"false");
         if (speechText != null && !speechText.isEmpty())
         {
             speakMessage.getPayload().put(SPEECHTEXT_KEY, speechText);
@@ -139,21 +143,16 @@ public class IpaacaTTSGenerator extends AbstractTTSGenerator
         return plan(text, getUniqueFilename());
     }
 
-    private TimingInfo plan(String text, String fileName)
-    {
-        return plan(text, text, fileName);
-    }
-
-    private TimingInfo plan(String ttsText, String content, String fileName)
+    private TimingInfo plan(String ttsText, String fileName)
     {
         ImmutableMap<String, String> payload = requestMessage(PLAN_TYPE, fileName, ttsText);
         if (payload.containsKey(PHONEMES_KEY))
         {
-            return createTimingInfo(payload.get(PHONEMES_KEY), content);
+            return createTimingInfo(payload.get(PHONEMES_KEY), payload.get(MARKS_KEY));
         }
         else
         {
-            return createTimingInfo("", content);
+            return createTimingInfo("", "");
         }
     }
 
@@ -194,18 +193,56 @@ public class IpaacaTTSGenerator extends AbstractTTSGenerator
         }
         return new WordDescription(word, phonemes, visemes);
     }
+    
+    private List<Bookmark> createBookmarks(String marks, List<WordDescription> wd)
+    {
+        List<Bookmark> bmList = new ArrayList<Bookmark>();
+        String seperatedMarks = marks.replaceAll("\\]\\[",",");
+        seperatedMarks = seperatedMarks.replaceAll("><",",");
+        seperatedMarks = seperatedMarks.replaceAll("\\]<",",");
+        seperatedMarks = seperatedMarks.replaceAll(">\\[",",");
+        seperatedMarks = seperatedMarks.replaceAll(">|<|\\[|\\]","");
+        String split[]=seperatedMarks.split(",");
+        
+        int wordnr = 0;
+        for(int i=0;i<split.length;i++)
+        {
+            if(split[i].startsWith("("))
+            {
+                String bm[]=split[i].split("\\)\\(");
+                String name = bm[0].replaceAll("\\(","");
+                int time = (int)(Double.parseDouble(bm[1].replaceAll("\\)",""))*1000);
+                WordDescription word = null;
+                if(wordnr < wd.size())
+                {
+                    word = wd.get(wordnr);
+                }
+                bmList.add(new Bookmark(name,word, time));
+            }
+            else
+            {
+                wordnr++;
+            }
+        }
+        return bmList;
+    }
 
-    private TimingInfo createTimingInfo(String phonemes, String content)
+    private TimingInfo createTimingInfo(String phonemes, String marks)
     {
         List<WordDescription> wd = new ArrayList<>();
-        List<Bookmark> bms = new ArrayList<>();
         List<Visime> vis = new ArrayList<>();
-        System.out.println("createTimingInfo from " + phonemes);
+        System.out.println("createTimingInfo from phonemes " + phonemes);
+        System.out.println("createTimingInfo from marks " + marks);
 
         String phString = phonemes.replaceAll("\\[\\(0\\)\\(0\\)\\(0\\)\\]\\#", "");
         String words[] = phString.split(";");
-        String wordsInContent[] = content.split("\\s+");
-
+        
+        String wordsOnly = marks.replaceAll("\\[[^\\]]+\\]", "");
+        wordsOnly = wordsOnly.replaceAll("><",",");
+        wordsOnly = wordsOnly.replaceAll("<","");
+        wordsOnly = wordsOnly.replaceAll(">","");
+        String wordsInContent[] = wordsOnly.split(",");        
+        
         int i = 0;
         int offset = 0;
         for (String word : words)
@@ -216,7 +253,7 @@ public class IpaacaTTSGenerator extends AbstractTTSGenerator
             vis.addAll(w.getVisimes());
             i++;
         }
-        return new TimingInfo(wd, bms, vis);
+        return new TimingInfo(wd, createBookmarks(marks, wd), vis);
     }
 
     @Override
@@ -246,7 +283,7 @@ public class IpaacaTTSGenerator extends AbstractTTSGenerator
     @Override
     public TimingInfo speakBMLToFile(String text, String filename)
     {
-        return plan(BMLTextUtil.BMLToSSML(text), BMLTextUtil.stripSyncs(text), filename);
+        return plan(BMLTextUtil.BMLToSSML(text), filename);
     }
 
     @Override
