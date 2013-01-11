@@ -12,7 +12,7 @@ import org.powermock.modules.junit4.PowerMockRunner;
 import saiba.bml.core.SpeechBehaviour;
 import asap.realizer.pegboard.BMLBlockPeg;
 import asap.realizer.scheduler.BMLBlockManager;
-import asap.speechengine.ttsbinding.SAPITTSBinding;
+import asap.sapittsbinding.SAPITTSBinding;
 
 @RunWith(PowerMockRunner.class)
 @PrepareForTest(BMLBlockManager.class)

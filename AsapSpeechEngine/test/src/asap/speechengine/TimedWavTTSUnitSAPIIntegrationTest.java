@@ -1,5 +1,7 @@
 package asap.speechengine;
 
+import hmi.util.OS;
+
 import org.junit.After;
 import org.junit.Assume;
 import org.junit.Before;
@@ -9,10 +11,7 @@ import org.powermock.core.classloader.annotations.PrepareForTest;
 import org.powermock.modules.junit4.PowerMockRunner;
 
 import asap.realizer.scheduler.BMLBlockManager;
-import asap.speechengine.ttsbinding.SAPITTSBinding;
-
-
-import hmi.util.OS;
+import asap.sapittsbinding.SAPITTSBinding;
 
 @RunWith(PowerMockRunner.class)
 @PrepareForTest(BMLBlockManager.class)

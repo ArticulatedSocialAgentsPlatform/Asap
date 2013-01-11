@@ -22,6 +22,7 @@ import org.junit.runners.Parameterized.Parameters;
 
 import saiba.bml.core.SpeechBehaviour;
 import saiba.bml.feedback.BMLSyncPointProgressFeedback;
+import asap.maryttsbinding.MaryTTSBindingFactory;
 import asap.realizer.feedback.FeedbackManager;
 import asap.realizer.feedback.FeedbackManagerImpl;
 import asap.realizer.pegboard.BMLBlockPeg;
@@ -30,8 +31,7 @@ import asap.realizer.planunit.TimedPlanUnitPlayException;
 import asap.realizer.planunit.TimedPlanUnitState;
 import asap.realizer.scheduler.BMLBlockManager;
 import asap.realizerport.util.ListBMLFeedbackListener;
-import asap.speechengine.ttsbinding.MaryTTSBindingFactory;
-import asap.speechengine.ttsbinding.SAPITTSBindingFactory;
+import asap.sapittsbinding.SAPITTSBindingFactory;
 import asap.speechengine.ttsbinding.TTSBinding;
 import asap.speechengine.ttsbinding.TTSBindingFactory;
 

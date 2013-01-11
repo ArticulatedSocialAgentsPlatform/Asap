@@ -1,5 +1,7 @@
 package asap.speechengine;
 
+import hmi.tts.util.NullPhonemeToVisemeMapping;
+
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
@@ -7,11 +9,8 @@ import org.junit.runner.RunWith;
 import org.powermock.core.classloader.annotations.PrepareForTest;
 import org.powermock.modules.junit4.PowerMockRunner;
 
+import asap.maryttsbinding.MaryTTSBinding;
 import asap.realizer.scheduler.BMLBlockManager;
-import asap.speechengine.ttsbinding.MaryTTSBinding;
-
-
-import hmi.tts.util.NullPhonemeToVisemeMapping;
 
 @RunWith(PowerMockRunner.class)
 @PrepareForTest(BMLBlockManager.class)
