@@ -15,6 +15,7 @@ import java.util.HashMap;
 
 import lombok.Getter;
 import asap.maryttsbinding.MaryTTSBinding;
+import asap.speechengine.loader.PhonemeToVisemeMappingInfo;
 import asap.speechengine.ttsbinding.TTSBindingLoader;
 
 /**
@@ -69,42 +70,6 @@ public class MaryTTSBindingLoader implements TTSBindingLoader
         }
 
         private static final String XMLTAG = "MaryTTS";
-    }
-
-    private class PhonemeToVisemeMappingInfo extends XMLStructureAdapter
-    {
-        @Getter
-        private PhonemeToVisemeMapping mapping;
-
-        PhonemeToVisemeMappingInfo()
-        {
-            mapping = new NullPhonemeToVisemeMapping();
-        }
-
-        public void decodeAttributes(HashMap<String, String> attrMap, XMLTokenizer tokenizer)
-        {
-            String resources = getRequiredAttribute("resources", attrMap, tokenizer);
-            String filename = getRequiredAttribute("filename", attrMap, tokenizer);
-            XMLPhonemeToVisemeMapping xmlmapping = new XMLPhonemeToVisemeMapping();
-            try
-            {
-                xmlmapping.readXML(new Resources(resources).getReader(filename));
-            }
-            catch (IOException e)
-            {
-                XMLScanException ex = new XMLScanException(e.getMessage());
-                ex.initCause(e);
-                throw ex;
-            }
-            mapping = xmlmapping;
-        }
-
-        public String getXMLTag()
-        {
-            return XMLTAG;
-        }
-
-        private static final String XMLTAG = "PhonemeToVisemeMapping";
     }
 
     @Override

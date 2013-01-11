@@ -14,6 +14,7 @@ import ipaaca.AbstractIU;
 import ipaaca.HandlerFunctor;
 import ipaaca.IUEventHandler;
 import ipaaca.IUEventType;
+import ipaaca.Initializer;
 import ipaaca.InputBuffer;
 import ipaaca.LocalMessageIU;
 import ipaaca.OutputBuffer;
@@ -59,6 +60,11 @@ public class IpaacaTTSGenerator extends AbstractTTSGenerator
 
     private ConcurrentMap<String, BlockingQueue<ImmutableMap<String, String>>> replyQueues = new ConcurrentHashMap<>();
 
+    static
+    {
+        Initializer.initializeIpaacaRsb();
+    }
+    
     public IpaacaTTSGenerator()
     {
         this(new NullPhonemeToVisemeMapping());
