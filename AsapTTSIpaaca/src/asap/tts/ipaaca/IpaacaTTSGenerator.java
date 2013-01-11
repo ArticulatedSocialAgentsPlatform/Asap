@@ -34,7 +34,7 @@ import com.google.common.collect.ImmutableSet;
 /**
  * Sends speech commands through to an ipaaca TTS agent
  * @author hvanwelbergen
- *
+ * 
  */
 public class IpaacaTTSGenerator extends AbstractTTSGenerator
 {
@@ -64,7 +64,7 @@ public class IpaacaTTSGenerator extends AbstractTTSGenerator
     {
         Initializer.initializeIpaacaRsb();
     }
-    
+
     public IpaacaTTSGenerator()
     {
         this(new NullPhonemeToVisemeMapping());
@@ -162,23 +162,33 @@ public class IpaacaTTSGenerator extends AbstractTTSGenerator
         requestMessage(EXECUTE_TYPE, filename, null);
     }
 
-    private WordDescription createWordDescription(String wordPh, String word)
+    private WordDescription createWordDescription(String wordPh, String word, int offset)
     {
         List<Phoneme> phonemes = new ArrayList<>();
         List<Visime> visemes = new ArrayList<>();
         String phStr[] = wordPh.split("\\]\\[");
+
+        int prevEnd = offset;
         for (String ph : phStr)
         {
             ph = ph.replaceAll("\\[", "");
             ph = ph.replaceAll("\\]", "");
             String phCont[] = ph.split("\\)\\(");
             String phoneme = phCont[0].replaceAll("\\(", "");
-            double start = Double.parseDouble(phCont[1]);
-            double end = Double.parseDouble(phCont[2].replaceAll("\\)", ""));
+            int start = (int) (Double.parseDouble(phCont[1]) * 1000);
+            int end = (int) (Double.parseDouble(phCont[2].replaceAll("\\)", "")) * 1000);
             // hack to put phoneme string into a number
             int phonemeNr = PhonemeUtil.phonemeStringToInt(phoneme);
 
-            int duration = (int) ((end - start) * 1000);
+            // add pause
+            if (prevEnd < start)
+            {
+                int duration = start - prevEnd;
+                phonemes.add(new Phoneme(0, duration, false));
+                visemes.add(new Visime(0, duration, false));
+            }
+            int duration = end - start;
+            prevEnd = end;
             phonemes.add(new Phoneme(phonemeNr, duration, false));
             visemes.add(new Visime(visemeMapping.getVisemeForPhoneme(phonemeNr), duration, false));
         }
@@ -197,9 +207,11 @@ public class IpaacaTTSGenerator extends AbstractTTSGenerator
         String wordsInContent[] = content.split("\\s+");
 
         int i = 0;
+        int offset = 0;
         for (String word : words)
         {
-            WordDescription w = createWordDescription(word, wordsInContent[i]);
+            WordDescription w = createWordDescription(word, wordsInContent[i], offset);
+            offset += w.getDuration();
             wd.add(w);
             vis.addAll(w.getVisimes());
             i++;
@@ -210,7 +222,7 @@ public class IpaacaTTSGenerator extends AbstractTTSGenerator
     @Override
     public TimingInfo speak(String text)
     {
-        String file = getUniqueFilename();        
+        String file = getUniqueFilename();
         TimingInfo info = speakToFile(text, file);
         execute(file);
         return info;
@@ -228,7 +240,7 @@ public class IpaacaTTSGenerator extends AbstractTTSGenerator
     @Override
     public TimingInfo speakToFile(String text, String filename)
     {
-        return plan(text, filename);        
+        return plan(text, filename);
     }
 
     @Override

@@ -9,7 +9,6 @@ import java.io.IOException;
 
 import asap.ipaacattsbinding.IpaacaTTSBinding;
 import asap.speechengine.loader.PhonemeToVisemeMappingInfo;
-import asap.speechengine.ttsbinding.TTSBinding;
 import asap.speechengine.ttsbinding.TTSBindingLoader;
 
 /**
