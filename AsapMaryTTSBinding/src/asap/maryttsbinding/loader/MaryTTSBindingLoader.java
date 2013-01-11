@@ -37,18 +37,19 @@ public class MaryTTSBindingLoader implements TTSBindingLoader
     {
         @Getter
         private String marydir;
-        
-        public void decodeAttributes(HashMap<String,String> attrMap, XMLTokenizer tokenizer)
+
+        public MaryTTSInfo()
+        {
+            marydir = System.getProperty("user.dir") + "/lib/MARYTTS";
+        }
+
+        public void decodeAttributes(HashMap<String, String> attrMap, XMLTokenizer tokenizer)
         {
             String localMaryDir = getOptionalAttribute("localmarydir", attrMap);
             marydir = getOptionalAttribute("marydir", attrMap);
             if (marydir == null)
             {
-                if (localMaryDir == null)
-                {
-                    marydir = System.getProperty("user.dir") + "/lib/MARYTTS";
-                }
-                else
+                if (localMaryDir != null)
                 {
                     String spr = System.getProperty("shared.project.root");
                     if (spr == null)
@@ -61,11 +62,12 @@ public class MaryTTSBindingLoader implements TTSBindingLoader
                 }
             }
         }
-        
+
         public String getXMLTag()
         {
             return XMLTAG;
         }
+
         private static final String XMLTAG = "MaryTTS";
     }
 
@@ -73,16 +75,16 @@ public class MaryTTSBindingLoader implements TTSBindingLoader
     {
         @Getter
         private PhonemeToVisemeMapping mapping;
-        
+
         PhonemeToVisemeMappingInfo()
         {
-            mapping = new NullPhonemeToVisemeMapping(); 
+            mapping = new NullPhonemeToVisemeMapping();
         }
-        
-        public void decodeAttributes(HashMap<String,String> attrMap, XMLTokenizer tokenizer)
+
+        public void decodeAttributes(HashMap<String, String> attrMap, XMLTokenizer tokenizer)
         {
-            String resources = getRequiredAttribute("resources",attrMap, tokenizer);
-            String filename = getRequiredAttribute("filename",attrMap, tokenizer);
+            String resources = getRequiredAttribute("resources", attrMap, tokenizer);
+            String filename = getRequiredAttribute("filename", attrMap, tokenizer);
             XMLPhonemeToVisemeMapping xmlmapping = new XMLPhonemeToVisemeMapping();
             try
             {
@@ -94,13 +96,14 @@ public class MaryTTSBindingLoader implements TTSBindingLoader
                 ex.initCause(e);
                 throw ex;
             }
-            mapping = xmlmapping ;
+            mapping = xmlmapping;
         }
-        
+
         public String getXMLTag()
         {
             return XMLTAG;
         }
+
         private static final String XMLTAG = "PhonemeToVisemeMapping";
     }
 
@@ -109,9 +112,9 @@ public class MaryTTSBindingLoader implements TTSBindingLoader
             Loader... requiredLoaders) throws IOException
     {
         id = loaderId;
-        MaryTTSInfo maryTTS = null;
+        MaryTTSInfo maryTTS = new MaryTTSInfo();
         PhonemeToVisemeMappingInfo phoneToVisMapping = new PhonemeToVisemeMappingInfo();
-        
+
         while (tokenizer.atSTag())
         {
             String tag = tokenizer.getTagName();
@@ -129,12 +132,8 @@ public class MaryTTSBindingLoader implements TTSBindingLoader
                 throw new XMLScanException("Invalid tag " + tag);
             }
         }
-        
-        if (maryTTS==null)
-        {
-            throw new XMLScanException("MaryTTSBindingLoader requires a <MaryTTS> section");
-        }
-        binding = new MaryTTSBinding(maryTTS.getMarydir(), phoneToVisMapping.getMapping());        
+
+        binding = new MaryTTSBinding(maryTTS.getMarydir(), phoneToVisMapping.getMapping());
     }
 
     @Override
