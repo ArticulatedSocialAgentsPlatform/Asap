@@ -15,6 +15,7 @@ import java.util.HashMap;
 
 import lombok.Getter;
 import asap.maryttsbinding.MaryTTSBinding;
+import asap.speechengine.loader.PhonemeToVisemeMappingInfo;
 import asap.speechengine.ttsbinding.TTSBindingLoader;
 
 /**
@@ -36,9 +37,20 @@ public class MaryTTSBindingLoader implements TTSBindingLoader
     private class MaryTTSInfo extends XMLStructureAdapter
     {
         @Getter
+<<<<<<< HEAD
         private String marydir = System.getProperty("user.dir") + "/lib/MARYTTS";
         
         public void decodeAttributes(HashMap<String,String> attrMap, XMLTokenizer tokenizer)
+=======
+        private String marydir;
+
+        public MaryTTSInfo()
+        {
+            marydir = System.getProperty("user.dir") + "/lib/MARYTTS";
+        }
+
+        public void decodeAttributes(HashMap<String, String> attrMap, XMLTokenizer tokenizer)
+>>>>>>> 72143e891ca746528af7962343135da9f3b6ae73
         {
             String localMaryDir = getOptionalAttribute("localmarydir", attrMap);
             marydir = getOptionalAttribute("marydir", attrMap);
@@ -57,47 +69,13 @@ public class MaryTTSBindingLoader implements TTSBindingLoader
                 }
             }
         }
-        
-        public String getXMLTag()
-        {
-            return XMLTAG;
-        }
-        private static final String XMLTAG = "MaryTTS";
-    }
 
-    private class PhonemeToVisemeMappingInfo extends XMLStructureAdapter
-    {
-        @Getter
-        private PhonemeToVisemeMapping mapping;
-        
-        PhonemeToVisemeMappingInfo()
-        {
-            mapping = new NullPhonemeToVisemeMapping(); 
-        }
-        
-        public void decodeAttributes(HashMap<String,String> attrMap, XMLTokenizer tokenizer)
-        {
-            String resources = getRequiredAttribute("resources",attrMap, tokenizer);
-            String filename = getRequiredAttribute("filename",attrMap, tokenizer);
-            XMLPhonemeToVisemeMapping xmlmapping = new XMLPhonemeToVisemeMapping();
-            try
-            {
-                xmlmapping.readXML(new Resources(resources).getReader(filename));
-            }
-            catch (IOException e)
-            {
-                XMLScanException ex = new XMLScanException(e.getMessage());
-                ex.initCause(e);
-                throw ex;
-            }
-            mapping = xmlmapping ;
-        }
-        
         public String getXMLTag()
         {
             return XMLTAG;
         }
-        private static final String XMLTAG = "PhonemeToVisemeMapping";
+
+        private static final String XMLTAG = "MaryTTS";
     }
 
     @Override
@@ -107,7 +85,7 @@ public class MaryTTSBindingLoader implements TTSBindingLoader
         id = loaderId;
         MaryTTSInfo maryTTS = new MaryTTSInfo();
         PhonemeToVisemeMappingInfo phoneToVisMapping = new PhonemeToVisemeMappingInfo();
-        
+
         while (tokenizer.atSTag())
         {
             String tag = tokenizer.getTagName();
@@ -124,8 +102,14 @@ public class MaryTTSBindingLoader implements TTSBindingLoader
             default:
                 throw new XMLScanException("Invalid tag " + tag);
             }
+<<<<<<< HEAD
         }        
         binding = new MaryTTSBinding(maryTTS.getMarydir(), phoneToVisMapping.getMapping());        
+=======
+        }
+
+        binding = new MaryTTSBinding(maryTTS.getMarydir(), phoneToVisMapping.getMapping());
+>>>>>>> 72143e891ca746528af7962343135da9f3b6ae73
     }
 
     @Override

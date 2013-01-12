@@ -14,11 +14,13 @@ import ipaaca.AbstractIU;
 import ipaaca.HandlerFunctor;
 import ipaaca.IUEventHandler;
 import ipaaca.IUEventType;
+import ipaaca.Initializer;
 import ipaaca.InputBuffer;
 import ipaaca.LocalMessageIU;
 import ipaaca.OutputBuffer;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.EnumSet;
 import java.util.List;
 import java.util.UUID;
@@ -33,7 +35,7 @@ import com.google.common.collect.ImmutableSet;
 /**
  * Sends speech commands through to an ipaaca TTS agent
  * @author hvanwelbergen
- *
+ * 
  */
 public class IpaacaTTSGenerator extends AbstractTTSGenerator
 {
@@ -48,6 +50,8 @@ public class IpaacaTTSGenerator extends AbstractTTSGenerator
     private static final String FILENAME_KEY = "file";
     private static final String STATE_KEY = "state";
     private static final String PHONEMES_KEY = "phonems";
+    private static final String MARKS_KEY = "marks";
+    private static final String IGNOREXML_KEY ="ignore_xml";
 
     private static final String EXECUTE_TYPE = "tts.execute";
     private static final String PLAN_TYPE = "tts.plan";
@@ -58,6 +62,11 @@ public class IpaacaTTSGenerator extends AbstractTTSGenerator
     private final PhonemeToVisemeMapping visemeMapping;
 
     private ConcurrentMap<String, BlockingQueue<ImmutableMap<String, String>>> replyQueues = new ConcurrentHashMap<>();
+
+    static
+    {
+        Initializer.initializeIpaacaRsb();
+    }
 
     public IpaacaTTSGenerator()
     {
@@ -96,6 +105,7 @@ public class IpaacaTTSGenerator extends AbstractTTSGenerator
         speakMessage.getPayload().put(CHARACTERVOICE_KEY, voice);
         speakMessage.getPayload().put(TYPE_KEY, executionType);
         speakMessage.getPayload().put(FILENAME_KEY, fileName);
+        speakMessage.getPayload().put(IGNOREXML_KEY,"false");
         if (speechText != null && !speechText.isEmpty())
         {
             speakMessage.getPayload().put(SPEECHTEXT_KEY, speechText);
@@ -133,21 +143,16 @@ public class IpaacaTTSGenerator extends AbstractTTSGenerator
         return plan(text, getUniqueFilename());
     }
 
-    private TimingInfo plan(String text, String fileName)
-    {
-        return plan(text, text, fileName);
-    }
-
-    private TimingInfo plan(String ttsText, String content, String fileName)
+    private TimingInfo plan(String ttsText, String fileName)
     {
         ImmutableMap<String, String> payload = requestMessage(PLAN_TYPE, fileName, ttsText);
         if (payload.containsKey(PHONEMES_KEY))
         {
-            return createTimingInfo(payload.get(PHONEMES_KEY), content);
+            return createTimingInfo(payload.get(PHONEMES_KEY), payload.get(MARKS_KEY));
         }
         else
         {
-            return createTimingInfo("", content);
+            return createTimingInfo("", "");
         }
     }
 
@@ -156,55 +161,105 @@ public class IpaacaTTSGenerator extends AbstractTTSGenerator
         requestMessage(EXECUTE_TYPE, filename, null);
     }
 
-    private WordDescription createWordDescription(String wordPh, String word)
+    private WordDescription createWordDescription(String wordPh, String word, int offset)
     {
         List<Phoneme> phonemes = new ArrayList<>();
         List<Visime> visemes = new ArrayList<>();
         String phStr[] = wordPh.split("\\]\\[");
+
+        int prevEnd = offset;
         for (String ph : phStr)
         {
             ph = ph.replaceAll("\\[", "");
             ph = ph.replaceAll("\\]", "");
             String phCont[] = ph.split("\\)\\(");
             String phoneme = phCont[0].replaceAll("\\(", "");
-            double start = Double.parseDouble(phCont[1]);
-            double end = Double.parseDouble(phCont[2].replaceAll("\\)", ""));
+            int start = (int) (Double.parseDouble(phCont[1]) * 1000);
+            int end = (int) (Double.parseDouble(phCont[2].replaceAll("\\)", "")) * 1000);
             // hack to put phoneme string into a number
             int phonemeNr = PhonemeUtil.phonemeStringToInt(phoneme);
 
-            int duration = (int) ((end - start) * 1000);
+            // add pause
+            if (prevEnd < start)
+            {
+                int duration = start - prevEnd;
+                phonemes.add(new Phoneme(0, duration, false));
+                visemes.add(new Visime(0, duration, false));
+            }
+            int duration = end - start;
+            prevEnd = end;
             phonemes.add(new Phoneme(phonemeNr, duration, false));
             visemes.add(new Visime(visemeMapping.getVisemeForPhoneme(phonemeNr), duration, false));
         }
         return new WordDescription(word, phonemes, visemes);
     }
+    
+    private List<Bookmark> createBookmarks(String marks, List<WordDescription> wd)
+    {
+        List<Bookmark> bmList = new ArrayList<Bookmark>();
+        String seperatedMarks = marks.replaceAll("\\]\\[",",");
+        seperatedMarks = seperatedMarks.replaceAll("><",",");
+        seperatedMarks = seperatedMarks.replaceAll("\\]<",",");
+        seperatedMarks = seperatedMarks.replaceAll(">\\[",",");
+        seperatedMarks = seperatedMarks.replaceAll(">|<|\\[|\\]","");
+        String split[]=seperatedMarks.split(",");
+        
+        int wordnr = 0;
+        for(int i=0;i<split.length;i++)
+        {
+            if(split[i].startsWith("("))
+            {
+                String bm[]=split[i].split("\\)\\(");
+                String name = bm[0].replaceAll("\\(","");
+                int time = (int)(Double.parseDouble(bm[1].replaceAll("\\)",""))*1000);
+                WordDescription word = null;
+                if(wordnr < wd.size())
+                {
+                    word = wd.get(wordnr);
+                }
+                bmList.add(new Bookmark(name,word, time));
+            }
+            else
+            {
+                wordnr++;
+            }
+        }
+        return bmList;
+    }
 
-    private TimingInfo createTimingInfo(String phonemes, String content)
+    private TimingInfo createTimingInfo(String phonemes, String marks)
     {
         List<WordDescription> wd = new ArrayList<>();
-        List<Bookmark> bms = new ArrayList<>();
         List<Visime> vis = new ArrayList<>();
-        System.out.println("createTimingInfo from " + phonemes);
+        System.out.println("createTimingInfo from phonemes " + phonemes);
+        System.out.println("createTimingInfo from marks " + marks);
 
         String phString = phonemes.replaceAll("\\[\\(0\\)\\(0\\)\\(0\\)\\]\\#", "");
         String words[] = phString.split(";");
-        String wordsInContent[] = content.split("\\s+");
-
+        
+        String wordsOnly = marks.replaceAll("\\[[^\\]]+\\]", "");
+        wordsOnly = wordsOnly.replaceAll("><",",");
+        wordsOnly = wordsOnly.replaceAll("<","");
+        wordsOnly = wordsOnly.replaceAll(">","");
+        String wordsInContent[] = wordsOnly.split(",");        
+        
         int i = 0;
+        int offset = 0;
         for (String word : words)
         {
-            WordDescription w = createWordDescription(word, wordsInContent[i]);
+            WordDescription w = createWordDescription(word, wordsInContent[i], offset);
+            offset += w.getDuration();
             wd.add(w);
             vis.addAll(w.getVisimes());
             i++;
         }
-        return new TimingInfo(wd, bms, vis);
+        return new TimingInfo(wd, createBookmarks(marks, wd), vis);
     }
 
     @Override
     public TimingInfo speak(String text)
     {
-        String file = getUniqueFilename();        
+        String file = getUniqueFilename();
         TimingInfo info = speakToFile(text, file);
         execute(file);
         return info;
@@ -222,13 +277,13 @@ public class IpaacaTTSGenerator extends AbstractTTSGenerator
     @Override
     public TimingInfo speakToFile(String text, String filename)
     {
-        return plan(text, filename);        
+        return plan(text, filename);
     }
 
     @Override
     public TimingInfo speakBMLToFile(String text, String filename)
     {
-        return plan(BMLTextUtil.BMLToSSML(text), BMLTextUtil.stripSyncs(text), filename);
+        return plan(BMLTextUtil.BMLToSSML(text), filename);
     }
 
     @Override
