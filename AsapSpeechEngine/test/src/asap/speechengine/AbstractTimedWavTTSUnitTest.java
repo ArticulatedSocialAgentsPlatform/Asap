@@ -33,7 +33,7 @@ public abstract class AbstractTimedWavTTSUnitTest extends AbstractTTSUnitTest
 {
     protected TTSBinding ttsBinding;
     private ListBMLFeedbackListener feedbackListener = new ListBMLFeedbackListener.Builder().feedBackList(fbList).build();
-    protected static SoundManager soundManager = new LWJGLJoalSoundManager();
+    protected static final SoundManager soundManager = new LWJGLJoalSoundManager();
     
     @BeforeClass
     public static void beforeClass()
