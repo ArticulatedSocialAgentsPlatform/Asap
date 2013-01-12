@@ -30,7 +30,7 @@ public class MaryTTSBindingLoader implements TTSBindingLoader
         return id;
     }
 
-    private class MaryTTSInfo extends XMLStructureAdapter
+    private static class MaryTTSInfo extends XMLStructureAdapter
     {
         @Getter 
         private String marydir = System.getProperty("user.dir") + "/lib/MARYTTS";

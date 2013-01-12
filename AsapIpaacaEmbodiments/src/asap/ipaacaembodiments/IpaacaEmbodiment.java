@@ -128,14 +128,16 @@ public class IpaacaEmbodiment implements Embodiment
     {
         synchronized (availableJointsLock)
         {
-            if (!availableJoints.get().isEmpty()) return;
-            try
+            while (availableJoints.get().isEmpty())
             {
-                availableJointsLock.wait();
-            }
-            catch (InterruptedException e)
-            {
-                Thread.interrupted();
+                try
+                {
+                    availableJointsLock.wait();
+                }
+                catch (InterruptedException e)
+                {
+                    Thread.interrupted();
+                }
             }
         }
     }

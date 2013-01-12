@@ -24,9 +24,11 @@ import java.awt.Dimension;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.io.File;
+import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.FileReader;
 import java.io.IOException;
+import java.io.InputStreamReader;
 import java.net.JarURLConnection;
 import java.net.URL;
 import java.util.ArrayList;
@@ -58,6 +60,8 @@ import javax.swing.undo.UndoManager;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+
+import com.google.common.base.Charsets;
 
 import asap.realizerport.RealizerPort;
 
@@ -381,10 +385,10 @@ public class RealizerPortUI extends JPanel
                 if (f != null)
                 {
                     loadPath = f.getParent();
-                    FileReader r;
+                    InputStreamReader r;
                     try
                     {
-                        r = new FileReader(f);
+                        r = new InputStreamReader(new FileInputStream(f), Charsets.UTF_8);
                     }
                     catch (FileNotFoundException e1)
                     {

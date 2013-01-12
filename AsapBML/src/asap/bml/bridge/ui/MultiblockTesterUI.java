@@ -26,7 +26,8 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.io.BufferedReader;
 import java.io.File;
-import java.io.FileReader;
+import java.io.FileInputStream;
+import java.io.InputStreamReader;
 import java.util.ArrayList;
 import java.util.HashMap;
 
@@ -44,6 +45,8 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import asap.realizerport.RealizerPort;
+
+import com.google.common.base.Charsets;
 
 /**
  * A graphical UI to a RealizerBridge, allowing one to prepare a set of BML blocks with scheduling
@@ -166,7 +169,7 @@ public class MultiblockTesterUI extends JFrame
     {
         try
         {
-            XMLTokenizer tok = new XMLTokenizer(new FileReader(new File(specFileName)));
+            XMLTokenizer tok = new XMLTokenizer(new InputStreamReader(new FileInputStream(specFileName), Charsets.UTF_8));
             tok.takeSTag("elckerlycmultiblocktester");
             int i = 0;
             while (tok.atSTag("scriptlist"))
@@ -182,7 +185,7 @@ public class MultiblockTesterUI extends JFrame
 
                     StringBuffer contents = new StringBuffer();
                     BufferedReader reader = null;
-                    reader = new BufferedReader(new FileReader(new File(loadPath + "/" + filename)));
+                    reader = new BufferedReader(new InputStreamReader(new FileInputStream(loadPath + "/" + filename), Charsets.UTF_8));
                     String text = null;
                     while ((text = reader.readLine()) != null)
                     {
