@@ -60,7 +60,7 @@ public abstract class TimedTTSUnit extends TimedAbstractSpeechUnit
 
     private final Class<? extends Behaviour> behaviourClass;
 
-    protected TreeMap<Bookmark, TimePeg> pegs = new TreeMap<Bookmark, TimePeg>();
+    protected Map<Bookmark, TimePeg> pegs = new HashMap<Bookmark, TimePeg>();
 
     private static Logger logger = LoggerFactory.getLogger(TimedTTSUnit.class.getName());
 
