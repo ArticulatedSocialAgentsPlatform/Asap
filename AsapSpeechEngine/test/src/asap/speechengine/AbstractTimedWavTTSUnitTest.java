@@ -22,19 +22,18 @@ import asap.realizer.planunit.TimedPlanUnit;
 import asap.realizer.planunit.TimedPlanUnitPlayException;
 import asap.realizer.planunit.TimedPlanUnitState;
 import asap.realizerport.util.ListBMLFeedbackListener;
-import asap.realizertestutil.planunit.AbstractTimedPlanUnitTest;
 import asap.speechengine.ttsbinding.TTSBinding;
 
 
 /**
- * Unit tests for TimedWavTTSUnit.
+ * Generic integration tests for all TimedWavTTSUnits.
  * @author welberge
  */
-public abstract class AbstractTimedWavTTSUnitTest extends AbstractTimedPlanUnitTest
+public abstract class AbstractTimedWavTTSUnitTest extends AbstractTTSUnitTest
 {
     protected TTSBinding ttsBinding;
     private ListBMLFeedbackListener feedbackListener = new ListBMLFeedbackListener.Builder().feedBackList(fbList).build();
-    private static SoundManager soundManager = new LWJGLJoalSoundManager();
+    protected static SoundManager soundManager = new LWJGLJoalSoundManager();
     
     @BeforeClass
     public static void beforeClass()
@@ -63,17 +62,11 @@ public abstract class AbstractTimedWavTTSUnitTest extends AbstractTimedPlanUnitT
         }                
     }
     
-    @Override //behavior does not subside
-    public void testSubsiding()
-    {
-        
-    }
-    
     @Override
-    protected void assertSubsiding(TimedPlanUnit tpu)
+    protected TimedTTSUnit getTTSUnit(BMLBlockPeg bbPeg, String text, String id, String bmlId)
     {
-        assertEquals(TimedPlanUnitState.DONE, tpu.getState());
-    }
+        return new TimedWavTTSUnit(fbManager,soundManager, bbPeg, text, "voice1", bmlId, id, ttsBinding, SpeechBehaviour.class);
+    } 
     
     protected TimedWavTTSUnit setupPlanUnit(String text, FeedbackManager bfm, BMLBlockPeg bbPeg, String id, String bmlId, double startTime)
     {

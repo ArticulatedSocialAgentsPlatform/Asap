@@ -1,10 +1,14 @@
 package asap.speechengine;
 
-import net.jcip.annotations.GuardedBy;
+import hmi.tts.TTSCallback;
+import hmi.tts.TimingInfo;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import saiba.bml.core.Behaviour;
+import saiba.bml.core.SpeechBehaviour;
+import saiba.bml.feedback.BMLSyncPointProgressFeedback;
 import asap.realizer.feedback.FeedbackManager;
 import asap.realizer.feedback.NullFeedbackManager;
 import asap.realizer.pegboard.BMLBlockPeg;
@@ -12,13 +16,6 @@ import asap.realizer.planunit.ParameterException;
 import asap.realizer.planunit.ParameterNotFoundException;
 import asap.realizer.planunit.TimedPlanUnitPlayException;
 import asap.speechengine.ttsbinding.TTSBinding;
-
-
-import saiba.bml.core.Behaviour;
-import saiba.bml.core.SpeechBehaviour;
-import saiba.bml.feedback.BMLSyncPointProgressFeedback;
-import hmi.tts.TTSCallback;
-import hmi.tts.TimingInfo;
 
 /**
  * Used to speak directly through the TTS system
@@ -30,9 +27,6 @@ public class TimedDirectTTSUnit extends TimedTTSUnit
 {
     private double systemStartTime;
 
-    @GuardedBy("ttsBinding")
-    private boolean played = false;
-    
     private static Logger logger = LoggerFactory.getLogger(TimedDirectTTSUnit.class.getName()); 
     
     public TimedDirectTTSUnit(FeedbackManager bfm, BMLBlockPeg bbPeg, String text, String bmlId, String id, TTSBinding ttsBin,
@@ -50,24 +44,18 @@ public class TimedDirectTTSUnit extends TimedTTSUnit
     {
         this(NullFeedbackManager.getInstance(), bbPeg,text,bmlId,id,ttsBin);
     }
+    
     @Override
-    public void playUnit(double time) throws TimedPlanUnitPlayException
+    public void startUnit(double time)
     {
-        synchronized (ttsBinding)
-        {
-            if (!played)
-            {
-                logger.debug("playUnit {}", speechText);
-                sendStartProgress(time);
-                bmlStartTime = time;
-                systemStartTime = System.nanoTime() / 1E9;
-                ttsBinding.setCallback(new MyTTSCallback());
-                ttsBinding.speak(getBehaviourClass(), speechText);
-                played = true;
-            }
-        }
+        logger.debug("startUnit {}", speechText);
+        sendStartProgress(time);
+        bmlStartTime = time;
+        systemStartTime = System.nanoTime() / 1E9;
+        ttsBinding.setCallback(new MyTTSCallback());
+        ttsBinding.speak(getBehaviourClass(), speechText);        
     }
-
+    
     @Override
     protected TimingInfo getTiming()
     {
@@ -193,17 +181,13 @@ public class TimedDirectTTSUnit extends TimedTTSUnit
             synchronized (ttsBinding)
             {
                 logger.debug("StopUnit {}", speechText);
-                played = false;
             }
         }
     }
 
-    protected void resetUnit(double time)
+    @Override
+    protected void playUnit(double arg0) throws TimedPlanUnitPlayException
     {
-        synchronized (ttsBinding)
-        {
-            logger.debug("resetUnit {}", speechText);
-            played = false;
-        }
+        
     }
 }
