@@ -7,6 +7,8 @@ import java.net.Socket;
 import java.net.UnknownHostException;
 
 import lombok.extern.slf4j.Slf4j;
+
+import com.google.common.base.Charsets;
 import com.google.common.util.concurrent.AtomicDouble;
 
 /**
@@ -50,7 +52,7 @@ public class RemoteHeadInput implements EulerInput
         try
         {
             socket = new Socket(hostName, port);
-            in = new BufferedReader(new InputStreamReader(socket.getInputStream()));
+            in = new BufferedReader(new InputStreamReader(socket.getInputStream(), Charsets.UTF_8));
         }
         catch (UnknownHostException e)
         {

@@ -35,7 +35,7 @@ public class MaryXMLBaseBehaviourTest
         }
 
         public MaryXMLBaseBehaviour createBehavior(String bmlId, String bml) throws IOException, InstantiationException,
-                IllegalAccessException, IllegalArgumentException, InvocationTargetException, NoSuchMethodException, SecurityException
+                IllegalAccessException, InvocationTargetException, NoSuchMethodException 
         {
             return behClass.getConstructor(String.class, XMLTokenizer.class).newInstance(bmlId, new XMLTokenizer(bml));
         }
@@ -56,8 +56,8 @@ public class MaryXMLBaseBehaviourTest
     }
 
     @Before
-    public void setup() throws IOException, InstantiationException, IllegalAccessException, IllegalArgumentException,
-            InvocationTargetException, NoSuchMethodException, SecurityException
+    public void setup() throws IOException, InstantiationException, IllegalAccessException, 
+            InvocationTargetException, NoSuchMethodException
     {
         String str = "<maryxml xmlns=\"" + MaryXMLBaseBehaviour.NAMESPACE + "\" >" + "Hello world!" + "</maryxml>";
         beh = factory.createBehavior("bml1", str);

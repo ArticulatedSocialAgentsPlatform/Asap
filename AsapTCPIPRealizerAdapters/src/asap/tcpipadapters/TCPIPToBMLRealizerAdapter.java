@@ -5,6 +5,7 @@ import hmi.xml.XMLTokenizer;
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
+import java.io.OutputStreamWriter;
 import java.io.PrintWriter;
 import java.net.InetSocketAddress;
 import java.net.ServerSocket;
@@ -20,6 +21,8 @@ import lombok.extern.slf4j.Slf4j;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+
+import com.google.common.base.Charsets;
 
 import asap.realizerport.BMLFeedbackListener;
 import asap.realizerport.RealizerPort;
@@ -348,7 +351,7 @@ public final class TCPIPToBMLRealizerAdapter implements Runnable, BMLFeedbackLis
                         bmlconnected = true;
                         setServerState(ServerState.CONNECTING);
                         logger.debug("Incoming client; preparing reader");
-                        bmlReadReader = new BufferedReader(new InputStreamReader(bmlReadSocket.getInputStream()));
+                        bmlReadReader = new BufferedReader(new InputStreamReader(bmlReadSocket.getInputStream(),Charsets.UTF_8));
                         logger.debug("Client connected, starting lo listen for BML at port " + requestPort);
                     }
                     catch (SocketTimeoutException e)
@@ -531,8 +534,8 @@ public final class TCPIPToBMLRealizerAdapter implements Runnable, BMLFeedbackLis
         feedbackSendSocket = new Socket();
         try
         {
-            feedbackSendSocket.connect(feedbackSendSocketAddress, SOCKET_TIMEOUT);
-            feedbackSendWriter = new PrintWriter(feedbackSendSocket.getOutputStream(), true);
+            feedbackSendSocket.connect(feedbackSendSocketAddress, SOCKET_TIMEOUT);            
+            feedbackSendWriter = new PrintWriter(new OutputStreamWriter(feedbackSendSocket.getOutputStream(),Charsets.UTF_8), true);
         }
         catch (SocketTimeoutException e)
         {

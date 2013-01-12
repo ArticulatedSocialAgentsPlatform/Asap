@@ -6,6 +6,7 @@ import hmi.xml.XMLTokenizer;
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
+import java.io.OutputStreamWriter;
 import java.io.PrintWriter;
 import java.net.InetSocketAddress;
 import java.net.ServerSocket;
@@ -14,6 +15,8 @@ import java.net.SocketException;
 import java.net.SocketTimeoutException;
 import java.nio.channels.IllegalBlockingModeException;
 import java.util.concurrent.ConcurrentLinkedQueue;
+
+import com.google.common.base.Charsets;
 
 import lombok.extern.slf4j.Slf4j;
 import saiba.bml.feedback.BMLWarningFeedback;
@@ -275,7 +278,7 @@ public final class BMLRealizerToTCPIPAdapter implements RealizerPort, Runnable
                     feedbackReadSocket = feedbackReadServerSocket.accept();
                     feedbackconnected = true;
                     log.debug("Making BufferedReader");
-                    feedbackReadReader = new BufferedReader(new InputStreamReader(feedbackReadSocket.getInputStream()));
+                    feedbackReadReader = new BufferedReader(new InputStreamReader(feedbackReadSocket.getInputStream(), Charsets.UTF_8));
                 }
                 catch (SocketTimeoutException e)
                 {
@@ -491,7 +494,7 @@ public final class BMLRealizerToTCPIPAdapter implements RealizerPort, Runnable
             log.debug("Making socket");
             bmlSendSocket.connect(bmlSendSocketAddress, SOCKET_TIMEOUT);
             log.debug("Making bml writer");
-            bmlSendWriter = new PrintWriter(bmlSendSocket.getOutputStream(), true);
+            bmlSendWriter = new PrintWriter(new OutputStreamWriter(bmlSendSocket.getOutputStream(), Charsets.UTF_8),true);
         }
         catch (SocketTimeoutException e)
         {
