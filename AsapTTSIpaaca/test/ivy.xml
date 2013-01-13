@@ -1,5 +1,5 @@
 <ivy-module version="2.0">
-   <info organisation="HMI" module="HmiTTSMaryTest"/>
+   <info organisation="Asap" module="AsapTTSIpaacaTest"/>
    <dependencies> 
       <dependency org="junit"    name="junit-dep"         rev="latest.release" />
       <dependency org="HMI"      name="HmiTestUtil"   transitive="false" rev="latest.release"/>
