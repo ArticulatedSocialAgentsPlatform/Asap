@@ -60,7 +60,7 @@ public class MURMLKeyframeTMUTest extends AbstractTimedPlanUnitTest
     private MURMLGestureBehaviour mockBeh = mock(MURMLGestureBehaviour.class);
     
     
-    private final double RETRACTION_DURATION = 1;
+    private static final double RETRACTION_DURATION = 1;
     private static final float TIME_PRECISION = 0.001f;
     
     @SuppressWarnings("unchecked")

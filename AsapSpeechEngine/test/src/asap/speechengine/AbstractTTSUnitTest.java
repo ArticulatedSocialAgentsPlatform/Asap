@@ -48,7 +48,6 @@ public abstract class AbstractTTSUnitTest extends AbstractTimedPlanUnitTest
     private BMLBlockPeg bbPeg;
     private TimePeg startPeg;
     private BMLBlockManager mockBmlBlockManager = mock(BMLBlockManager.class);
-    protected FeedbackManager fbManager = new FeedbackManagerImpl(mockBmlBlockManager, "character1");
     private static final Logger LOGGER = LoggerFactory.getLogger(AbstractTTSUnitTest.class.getName());
     private static final double TIMING_PRECISION = 0.001;
 
