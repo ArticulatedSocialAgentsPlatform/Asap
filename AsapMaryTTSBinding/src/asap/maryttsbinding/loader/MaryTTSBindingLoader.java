@@ -32,9 +32,9 @@ public class MaryTTSBindingLoader implements TTSBindingLoader
 
     private static class MaryTTSInfo extends XMLStructureAdapter
     {
-        @Getter 
+        @Getter
         private String marydir = System.getProperty("user.dir") + "/lib/MARYTTS";
-        
+
         public MaryTTSInfo()
         {
             marydir = System.getProperty("user.dir") + "/lib/MARYTTS";
@@ -43,8 +43,8 @@ public class MaryTTSBindingLoader implements TTSBindingLoader
         public void decodeAttributes(HashMap<String, String> attrMap, XMLTokenizer tokenizer)
         {
             String localMaryDir = getOptionalAttribute("localmarydir", attrMap);
-            marydir = getOptionalAttribute("marydir", attrMap);
-            if (marydir == null)
+            String dir = getOptionalAttribute("marydir", attrMap);
+            if (dir == null)
             {
                 if (localMaryDir != null)
                 {
@@ -57,6 +57,10 @@ public class MaryTTSBindingLoader implements TTSBindingLoader
                     }
                     marydir = System.getProperty("shared.project.root") + "/" + localMaryDir;
                 }
+            }
+            else
+            {
+                marydir = dir;
             }
         }
 
@@ -92,8 +96,8 @@ public class MaryTTSBindingLoader implements TTSBindingLoader
             default:
                 throw new XMLScanException("Invalid tag " + tag);
             }
-        }        
-        binding = new MaryTTSBinding(maryTTS.getMarydir(), phoneToVisMapping.getMapping());        
+        }
+        binding = new MaryTTSBinding(maryTTS.getMarydir(), phoneToVisMapping.getMapping());
     }
 
     @Override
