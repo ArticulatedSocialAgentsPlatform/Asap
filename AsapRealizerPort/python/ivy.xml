@@ -1,5 +1,5 @@
 <ivy-module version="2.0">
-	<info organisation="Asap" module="AsapRealizerPortPython"/>
+	<info organisation="Asap" module="AsapRealizerPort"/>
 	<publications>
    <artifact type="py.zip" ext="py.zip"/>
    </publications>
