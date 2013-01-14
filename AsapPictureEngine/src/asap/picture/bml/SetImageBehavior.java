@@ -90,11 +90,11 @@ public class SetImageBehavior extends PictureBehaviour
     {
         if (name.equals("filePath"))
         {
-            return filePath.toString();
+            return filePath;
         }
         if (name.equals("fileName"))
         {
-            return fileName.toString();
+            return fileName;
         }
         return "" + getFloatParameterValue(name);
     }
