@@ -12,6 +12,7 @@ import static org.mockito.Mockito.mock;
 import java.util.List;
 
 import org.hamcrest.collection.IsIterableContainingInOrder;
+import org.junit.Before;
 import org.junit.Test;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -21,10 +22,12 @@ import asap.realizer.feedback.FeedbackManager;
 import asap.realizer.feedback.FeedbackManagerImpl;
 import asap.realizer.pegboard.BMLBlockPeg;
 import asap.realizer.pegboard.TimePeg;
+import asap.realizer.planunit.TimedPlanUnit;
 import asap.realizer.planunit.TimedPlanUnitPlayException;
 import asap.realizer.planunit.TimedPlanUnitState;
 import asap.realizer.scheduler.BMLBlockManager;
 import asap.realizerport.util.ListBMLFeedbackListener;
+import asap.realizertestutil.planunit.AbstractTimedPlanUnitTest;
 import asap.realizertestutil.util.FeedbackListUtils;
 import asap.testutil.bml.feedback.FeedbackAsserts;
 
@@ -33,7 +36,7 @@ import asap.testutil.bml.feedback.FeedbackAsserts;
  * @author welberge
  * 
  */
-public abstract class AbstractTTSUnitTest
+public abstract class AbstractTTSUnitTest extends AbstractTimedPlanUnitTest
 {
     private TimedTTSUnit ttsUnit;
 
@@ -45,11 +48,30 @@ public abstract class AbstractTTSUnitTest
     private BMLBlockPeg bbPeg;
     private TimePeg startPeg;
     private BMLBlockManager mockBmlBlockManager = mock(BMLBlockManager.class);
-    protected FeedbackManager fbManager = new FeedbackManagerImpl(mockBmlBlockManager, "character1");
     private static final Logger LOGGER = LoggerFactory.getLogger(AbstractTTSUnitTest.class.getName());
     private static final double TIMING_PRECISION = 0.001;
 
-    public void setup() throws SpeechUnitPlanningException
+    @Override //behavior does not subside
+    public void testSubsiding()
+    {
+        
+    }
+    
+    @Override
+    @Test
+    public void testSetStrokePeg() 
+    {
+        //XXX: remove from super?
+    }
+    
+    @Override
+    protected void assertSubsiding(TimedPlanUnit tpu)
+    {
+        assertEquals(TimedPlanUnitState.DONE, tpu.getState());
+    }
+    
+    @Before
+    public void setupTTSUnitTest() throws SpeechUnitPlanningException
     {
         bbPeg = new BMLBlockPeg("Peg1", BMLBLOCKSTART);
         startPeg = new TimePeg(bbPeg);
@@ -67,7 +89,7 @@ public abstract class AbstractTTSUnitTest
     }
 
     @Test
-    public void testSetup() throws SpeechUnitPlanningException
+    public void testSetup2() throws SpeechUnitPlanningException
     {
         initTTSUnit("Hello <sync id=\"s1\"/>world");
         assertThat(ttsUnit.getBookmarks(), hasSize(1));
@@ -118,5 +140,17 @@ public abstract class AbstractTTSUnitTest
 
         FeedbackAsserts.assertEqualSyncPointProgress(new BMLSyncPointProgressFeedback("bml1", "speech1", "end", 6 - BMLBLOCKSTART, 6),
                 feedbackList.get(2));
+    }
+    
+    @Test
+    public void testTTSUnitWithSyncAtSamePoint() throws TimedPlanUnitPlayException, SpeechUnitPlanningException, InterruptedException
+    {
+        initTTSUnit("Hello <sync id=\"s1\"/><sync id=\"s2\"/>world");
+        ttsUnit.setState(TimedPlanUnitState.LURKING);
+        ttsUnit.start(2);        
+        assertEquals(TimedPlanUnitState.IN_EXEC, ttsUnit.getState());
+        ttsUnit.play(6);
+        Thread.sleep(200);
+        assertThat(FeedbackListUtils.getSyncs(feedbackList), IsIterableContainingInOrder.contains("start", "s1", "s2", "end"));        
     }
 }

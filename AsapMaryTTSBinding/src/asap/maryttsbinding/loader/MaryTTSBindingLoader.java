@@ -2,10 +2,6 @@ package asap.maryttsbinding.loader;
 
 import hmi.environmentbase.Environment;
 import hmi.environmentbase.Loader;
-import hmi.tts.util.NullPhonemeToVisemeMapping;
-import hmi.tts.util.PhonemeToVisemeMapping;
-import hmi.tts.util.XMLPhonemeToVisemeMapping;
-import hmi.util.Resources;
 import hmi.xml.XMLScanException;
 import hmi.xml.XMLStructureAdapter;
 import hmi.xml.XMLTokenizer;
@@ -34,11 +30,11 @@ public class MaryTTSBindingLoader implements TTSBindingLoader
         return id;
     }
 
-    private class MaryTTSInfo extends XMLStructureAdapter
+    private static class MaryTTSInfo extends XMLStructureAdapter
     {
-        @Getter
-        private String marydir;
-
+        @Getter 
+        private String marydir = System.getProperty("user.dir") + "/lib/MARYTTS";
+        
         public MaryTTSInfo()
         {
             marydir = System.getProperty("user.dir") + "/lib/MARYTTS";
@@ -96,9 +92,8 @@ public class MaryTTSBindingLoader implements TTSBindingLoader
             default:
                 throw new XMLScanException("Invalid tag " + tag);
             }
-        }
-
-        binding = new MaryTTSBinding(maryTTS.getMarydir(), phoneToVisMapping.getMapping());
+        }        
+        binding = new MaryTTSBinding(maryTTS.getMarydir(), phoneToVisMapping.getMapping());        
     }
 
     @Override

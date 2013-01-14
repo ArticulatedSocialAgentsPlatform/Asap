@@ -6,5 +6,6 @@
       <dependency org="logback" name="logback-core"   rev="latest.release" />
       <dependency org="saiba" name="saibabml-test"       rev="latest.release"  />
       <dependency org="hamcrest" name="hamcrest-all"       rev="latest.release"  />
+	<dependency org="HMI" name="HmiTestUtil"      rev="latest.${resolve.status}"   />
    </dependencies>
 </ivy-module>

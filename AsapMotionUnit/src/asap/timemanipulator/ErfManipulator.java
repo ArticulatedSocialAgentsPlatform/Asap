@@ -23,6 +23,6 @@ public class ErfManipulator implements TimeManipulator
     public double manip(double t)
     {
         double x = t*N;
-        return 0.5 + Erf.erf(x-(N/2))*0.5;
+        return 0.5 + Erf.erf(x-(N/2.0))*0.5;
     }
 }

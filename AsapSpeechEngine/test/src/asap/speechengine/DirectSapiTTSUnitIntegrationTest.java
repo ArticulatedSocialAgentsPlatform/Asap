@@ -10,10 +10,18 @@ import org.powermock.core.classloader.annotations.PrepareForTest;
 import org.powermock.modules.junit4.PowerMockRunner;
 
 import saiba.bml.core.SpeechBehaviour;
+import asap.realizer.feedback.FeedbackManager;
 import asap.realizer.pegboard.BMLBlockPeg;
+import asap.realizer.planunit.TimedPlanUnit;
 import asap.realizer.scheduler.BMLBlockManager;
+import asap.realizertestutil.util.TimePegUtil;
 import asap.sapittsbinding.SAPITTSBinding;
 
+/**
+ * Integration tests for the sapi direct TTS.
+ * @author Herwin
+ *
+ */
 @RunWith(PowerMockRunner.class)
 @PrepareForTest(BMLBlockManager.class)
 public class DirectSapiTTSUnitIntegrationTest extends AbstractTTSUnitTest
@@ -23,8 +31,7 @@ public class DirectSapiTTSUnitIntegrationTest extends AbstractTTSUnitTest
     public void setup() throws SpeechUnitPlanningException
     {
         Assume.assumeTrue(OS.equalsOS(OS.WINDOWS));
-        sapiBinding = new SAPITTSBinding();      
-        super.setup();
+        sapiBinding = new SAPITTSBinding();
     }
     
     @After
@@ -40,4 +47,11 @@ public class DirectSapiTTSUnitIntegrationTest extends AbstractTTSUnitTest
     {
         return new TimedDirectTTSUnit(fbManager, bbPeg, text, bmlId, id, sapiBinding, SpeechBehaviour.class);
     }
+
+    protected TimedPlanUnit setupPlanUnit(FeedbackManager bfm, BMLBlockPeg bbPeg, String id, String bmlId, double startTime)
+    {
+        TimedDirectTTSUnit ttsU = new TimedDirectTTSUnit(bfm, bbPeg, "hello world", bmlId, id, sapiBinding, SpeechBehaviour.class);
+        ttsU.setTimePeg("start", TimePegUtil.createTimePeg(bbPeg, startTime));
+        return ttsU;
+    }    
 }

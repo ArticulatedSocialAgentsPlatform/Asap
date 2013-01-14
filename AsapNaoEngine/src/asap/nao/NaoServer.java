@@ -7,6 +7,8 @@ import java.io.InputStreamReader;
 import java.net.ServerSocket;
 import java.net.Socket;
 
+import com.google.common.base.Charsets;
+
 public class NaoServer implements Runnable
 {
 
@@ -39,7 +41,7 @@ public class NaoServer implements Runnable
             clientSocket = ssock.accept();
             while (true)
             {
-                inFromClient = new BufferedReader(new InputStreamReader(clientSocket.getInputStream()));
+                inFromClient = new BufferedReader(new InputStreamReader(clientSocket.getInputStream(), Charsets.UTF_8));
                 outToClient = new DataOutputStream(clientSocket.getOutputStream());
 
                 while (true)

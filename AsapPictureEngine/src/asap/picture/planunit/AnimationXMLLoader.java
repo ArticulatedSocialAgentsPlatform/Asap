@@ -47,7 +47,7 @@ public class AnimationXMLLoader {
     private static Logger logger = LoggerFactory.getLogger(AnimationXMLLoader.class.getName());
 
     // Simple helper class to link a string id to a time (double)
-    private class TimeStringTuple {
+    private static class TimeStringTuple {
 
         private double time;
         private String id;

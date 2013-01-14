@@ -6,7 +6,7 @@ import java.util.Map;
 import java.util.Vector;
 
 /**
- * This class implemets a single layer which can contain multiple images.
+ * This class implements a single layer which can contain multiple images.
  * The class will ensure that only one image (the most recently added) will be active at a time
  * @author Daniel
  * 
