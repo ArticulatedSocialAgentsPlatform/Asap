@@ -88,7 +88,6 @@ public class LMPWristPos extends LMPPos
             float m[] = Mat4f.getMat4f();
             vjBase.getPathTransformMatrix(aniPlayer.getVCurr(), m);
             Mat4f.transformPoint(m,pos);
-            System.out.println("pos: "+Vec3f.toString(pos));
             return pos;
         }
         else
