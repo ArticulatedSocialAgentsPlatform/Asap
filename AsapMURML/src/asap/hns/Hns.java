@@ -1,18 +1,19 @@
 package asap.hns;
 
+import hmi.math.Vec3f;
+import hmi.util.StringUtil;
+import hmi.xml.XMLScanException;
+import hmi.xml.XMLStructureAdapter;
+import hmi.xml.XMLTokenizer;
+
 import java.io.IOException;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Map.Entry;
 import java.util.Set;
 
+import lombok.Getter;
 import lombok.extern.slf4j.Slf4j;
-
-import hmi.math.Vec3f;
-import hmi.util.StringUtil;
-import hmi.xml.XMLScanException;
-import hmi.xml.XMLStructureAdapter;
-import hmi.xml.XMLTokenizer;
 
 /**
  * HNS file parser
@@ -23,7 +24,10 @@ public class Hns extends XMLStructureAdapter
 {
     private Map<String, String> settings = new HashMap<>(); // name->value map
     private Map<String, Map<String, Double>> symbols = new HashMap<>(); // className->(name->value)
-
+    
+    @Getter
+    private String baseJoint = "HumanoidRoot";
+    
     private static final String XMLTAG = "hns";
     private static final String HAND_REFERENCES = "handReferences";
     private static final String HAND_LOCATORS = "handLocators";
@@ -33,7 +37,7 @@ public class Hns extends XMLStructureAdapter
     private static final String HANDSHAPES = "handShapes";
     private static final String BASIC_HANDSHAPES = "basicHandShapes";
     private static final String SPECIFIC_HANDSHAPES = "specificHandShapes";
-
+    
     private static final float[] UP_VEC = Vec3f.getVec3f(0, 1, 0);
     private static final float[] DOWN_VEC = Vec3f.getVec3f(0, -1, 0);
     private static final float[] LEFT_VEC = Vec3f.getVec3f(1, 0, 0);
@@ -41,6 +45,7 @@ public class Hns extends XMLStructureAdapter
     private static final float[] A_VEC = Vec3f.getVec3f(0, 0, 1);
     private static final float[] T_VEC = Vec3f.getVec3f(0, 0, -1);
 
+    
     enum ExtendSymbols
     {
         Flat, Normal, Large
@@ -411,6 +416,11 @@ public class Hns extends XMLStructureAdapter
         {
             switch (tokenizer.getTagName())
             {
+            case BaseJoint.XMLTAG:
+                BaseJoint bj = new BaseJoint();
+                bj.readXML(tokenizer);
+                baseJoint = bj.getSid();
+                break;
             case Settings.XMLTAG:
                 Settings set = new Settings();
                 set.readXML(tokenizer);

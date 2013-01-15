@@ -25,6 +25,7 @@ public class HnsTest
     // @formatter:off
     private String hnsXML=
     "<hns>"+
+      "<basejoint sid=\"vl5\"/>"+
       "<symbols>"+
         "<symbol class=\"handReferences\" name=\"LocAboveHead\" value=\"60\"/>"+
         "<symbol class=\"handReferences\" name=\"LocHead\" value=\"54\"/>" +
@@ -54,7 +55,13 @@ public class HnsTest
     {
         hns.readXML(hnsXML);
     }
-
+    
+    @Test
+    public void getBaseJoint()
+    {
+        assertEquals("vl5", hns.getBaseJoint());
+    }
+    
     @Test
     public void testGetSpecificHandShapes()
     {
