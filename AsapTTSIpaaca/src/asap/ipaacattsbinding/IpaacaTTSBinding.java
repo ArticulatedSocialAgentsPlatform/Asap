@@ -1,9 +1,11 @@
 package asap.ipaacattsbinding;
 
-import saiba.bml.core.SpeechBehaviour;
 import hmi.tts.BMLTTSBridge;
 import hmi.tts.util.PhonemeToVisemeMapping;
+import saiba.bml.core.SpeechBehaviour;
+import asap.bml.ext.ssml.SSMLBehaviour;
 import asap.speechengine.ttsbinding.TTSBinding;
+import asap.tts.ipaaca.IpaacaSSMLTTSBridge;
 import asap.tts.ipaaca.IpaacaTTSGenerator;
 
 /**
@@ -20,7 +22,10 @@ public class IpaacaTTSBinding extends TTSBinding
         ipaacaTtsGenerator = new IpaacaTTSGenerator(ptv);
         ttsGenerator = ipaacaTtsGenerator;
         
-        ttsBridgeMap.put(SpeechBehaviour.class, new BMLTTSBridge(ipaacaTtsGenerator));        
+        ttsBridgeMap.put(SpeechBehaviour.class, new BMLTTSBridge(ipaacaTtsGenerator));
+        ttsBridgeMap.put(SSMLBehaviour.class, new IpaacaSSMLTTSBridge(ipaacaTtsGenerator));
+        
+        supportedBehaviours.add(SSMLBehaviour.class);
     }
     
     @Override
