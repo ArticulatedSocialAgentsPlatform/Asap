@@ -92,7 +92,7 @@ public class HnsTest
     public void testGetHandLocation()
     {
         assertTrue(hns.getHandLocation("LocAboveHead dummy dummy", location));
-        assertVec3fEquals(0,0,60,location,PRECISION);
+        assertVec3fEquals(0,60,0,location,PRECISION);
     }
     
     @Test
@@ -100,7 +100,7 @@ public class HnsTest
     {
         assertTrue(hns.getHandLocation("LocAboveHead LocCenterLeft LocFar", location));
         //values from C++ version
-        assertVec3fEquals(24.9453f,11.6322f,60f,location,PRECISION);
+        assertVec3fEquals(11.6322f,60f,24.9453f,location,PRECISION);
     }
     
     @Test
