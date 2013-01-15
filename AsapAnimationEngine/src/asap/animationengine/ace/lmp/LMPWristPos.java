@@ -2,6 +2,7 @@ package asap.animationengine.ace.lmp;
 
 import hmi.animation.Hanim;
 import hmi.animation.VJoint;
+import hmi.math.Mat4f;
 import hmi.math.Vec3f;
 import hmi.neurophysics.FittsLaw;
 
@@ -49,23 +50,25 @@ public class LMPWristPos extends LMPPos
     private String scope;
     private double rightArmStartSwivel;
     private double leftArmStartSwivel;
+    private final String baseJoint;
 
     public void resolveSynchs(BMLBlockPeg bbPeg, Behaviour b, List<TimePegAndConstraint> sac) throws BehaviourPlanningException
     {
         linkSynchs(sac);
         resolveTimePegs(bbPeg.getValue());
-    }    
-    
+    }
+
     public LMPWristPos(String scope, FeedbackManager bbf, BMLBlockPeg bmlBlockPeg, String bmlId, String id, PegBoard pegBoard,
-            GuidingSequence gSeq, AnimationPlayer aniPlayer)
+            GuidingSequence gSeq, String baseJoint, AnimationPlayer aniPlayer)
     {
         super(bbf, bmlBlockPeg, bmlId, id, pegBoard);
+        this.baseJoint = baseJoint;
         this.gSeq = gSeq;
         this.pegBoard = pegBoard;
         this.aniPlayer = aniPlayer;
-        this.ikBody = new IKBody(aniPlayer.getVNext()); //TODO: may also be on additive joint
+        this.ikBody = new IKBody(aniPlayer.getVNext()); // TODO: may also be on additive joint
         this.scope = scope;
-        
+
         if (scope.equals("left_arm"))
         {
             kinematicJoints = ImmutableSet.of(Hanim.l_shoulder, Hanim.l_elbow);
@@ -80,7 +83,13 @@ public class LMPWristPos extends LMPPos
     {
         if (spline != null)
         {
-            return spline.getPosition(t);            
+            VJoint vjBase = aniPlayer.getVCurr().getPartBySid(baseJoint);
+            float pos[] = spline.getPosition(t);
+            float m[] = Mat4f.getMat4f();
+            vjBase.getPathTransformMatrix(aniPlayer.getVCurr(), m);
+            Mat4f.transformPoint(m,pos);
+            System.out.println("pos: "+Vec3f.toString(pos));
+            return pos;
         }
         else
         {
@@ -143,9 +152,9 @@ public class LMPWristPos extends LMPPos
     @Override
     public void relaxUnit(double time)
     {
-        
+
     }
-    
+
     private void buildTrajectory()
     {
         spline = buildSpline(gSeq);
@@ -212,10 +221,10 @@ public class LMPWristPos extends LMPPos
 
             // complete curvilinear guiding strokes
             // cout << "completing curvilinear strokes..." << endl;
-            double sT = getStartTime();            
-            double prepDur = getTime("strokeStart")-getStartTime();            
+            double sT = getStartTime();
+            double prepDur = getTime("strokeStart") - getStartTime();
             _gSeq.getStroke(0).setEDt(prepDur);
-            
+
             for (int i = 0; i < _gSeq.size(); i++)
             {
                 if (_gSeq.getStroke(i) instanceof CurvedGStroke)
@@ -223,20 +232,19 @@ public class LMPWristPos extends LMPPos
                     CurvedGStroke cs = (CurvedGStroke) _gSeq.getStroke(i);
                     cs.formAt(_gSeq.getStartPosOfStroke(i), sT);
                 }
-                //sT = _gSeq.getStroke(i).getEndTime();
-                sT += _gSeq.getStroke(i).getEDt();                
+                // sT = _gSeq.getStroke(i).getEndTime();
+                sT += _gSeq.getStroke(i).getEDt();
             }
 
             // append guiding strokes
             // cout << "setting up trajectory constraints..." << endl;
             float[] p, v;
-            
-            //sT = _gSeq.getStartTPC().getTime();
+
+            // sT = _gSeq.getStartTPC().getTime();
             sT = getStartTime();
-            
-            //double prepDur = getPreparationDuration();
-            
-            
+
+            // double prepDur = getPreparationDuration();
+
             for (int i = 0; i < _gSeq.size(); i++)
             {
                 if (_gSeq.getStroke(i) instanceof LinearGStroke)
@@ -244,8 +252,8 @@ public class LMPWristPos extends LMPPos
                     // cout << "appending linear stroke for t=" << sT << "-"
                     // << _gSeq->getStroke(i)->eT << endl;
                     pv.add(_gSeq.getStroke(i).getEndPos());
-                    tv.add(_gSeq.getStroke(i).getEDt()+sT);
-                    sT+=_gSeq.getStroke(i).getEDt();
+                    tv.add(_gSeq.getStroke(i).getEDt() + sT);
+                    sT += _gSeq.getStroke(i).getEDt();
                 }
                 else if (_gSeq.getStroke(i) instanceof CurvedGStroke)
                 {
@@ -261,8 +269,8 @@ public class LMPWristPos extends LMPPos
 
                     // append stroke end point & velocity
                     pv.add(cs.getEndPos());
-                    tv.add(_gSeq.getStroke(i).getEDt()+sT);
-                    sT+=_gSeq.getStroke(i).getEDt();
+                    tv.add(_gSeq.getStroke(i).getEDt() + sT);
+                    sT += _gSeq.getStroke(i).getEDt();
                 }
                 else log.warn("Trajectory::build : unknown stroke type!");
             }
@@ -279,14 +287,14 @@ public class LMPWristPos extends LMPPos
             }
 
             _spline = new NUSSpline3(4);
-            System.out.println("Times: "+Joiner.on(",").join(tv));
+            System.out.println("Times: " + Joiner.on(",").join(tv));
             System.out.println("Points: ");
-            for(float []point:pv)
+            for (float[] point : pv)
             {
-                System.out.print(Vec3f.toString(point)+",");                
+                System.out.print(Vec3f.toString(point) + ",");
             }
             System.out.println("");
-            
+
             _spline.interpolate3(pv, tv, vv);
         }
 
@@ -352,39 +360,39 @@ public class LMPWristPos extends LMPPos
     protected void playUnit(double time) throws TimedPlanUnitPlayException
     {
         double swivel = 0;
-        if(time<getTime("strokeStart"))
+        if (time < getTime("strokeStart"))
         {
-            double relT = (time-getStartTime())/(getTime("strokeStart")-getStartTime());
-            if(scope.equals("left_arm"))
+            double relT = (time - getStartTime()) / (getTime("strokeStart") - getStartTime());
+            if (scope.equals("left_arm"))
             {
-                swivel = leftArmStartSwivel+(0-leftArmStartSwivel)*relT;
+                swivel = leftArmStartSwivel + (0 - leftArmStartSwivel) * relT;
             }
             else
             {
-                swivel = rightArmStartSwivel+(0-rightArmStartSwivel)*relT;
+                swivel = rightArmStartSwivel + (0 - rightArmStartSwivel) * relT;
             }
         }
-        
-        if(time<getTime("strokeEnd"))
+
+        if (time < getTime("strokeEnd"))
         {
-            float pos [] = getPosition(time);
-            if(scope.equals("left_arm"))
+            float pos[] = getPosition(time);
+            if (scope.equals("left_arm"))
             {
-                //ikBody.setSwivelLeftHand(swivel);
-                ikBody.setLeftHand(pos);                
+                // ikBody.setSwivelLeftHand(swivel);
+                ikBody.setLeftHand(pos);
             }
             else
-            {            
-                //ikBody.setSwivelRightHand(swivel);
-                ikBody.setRightHand(pos);                
+            {
+                // ikBody.setSwivelRightHand(swivel);
+                ikBody.setRightHand(pos);
             }
-        }        
+        }
     }
 
     @Override
     protected void stopUnit(double time) throws TimedPlanUnitPlayException
     {
-        
+
     }
 
     @Override
@@ -440,7 +448,7 @@ public class LMPWristPos extends LMPPos
         vj.getPathTranslation(aniPlayer.getVCurr(), wristCurr);
         return wristCurr;
     }
-    
+
     private String getWristJointSid()
     {
         String wristJoint = Hanim.l_wrist;
@@ -450,7 +458,7 @@ public class LMPWristPos extends LMPPos
         }
         return wristJoint;
     }
-    
+
     // get preparation duration, given current hand position
     private double getPreparationDuration()
     {
@@ -537,16 +545,14 @@ public class LMPWristPos extends LMPPos
         if (!isLurking()) return;
         resolveTimePegs(time);
 
-        //TODO: should do something like resolveTimePegs multiple times, updating the preparation 
-        //and retraction durations timing at each run.
-        
-        
+        // TODO: should do something like resolveTimePegs multiple times, updating the preparation
+        // and retraction durations timing at each run.
+
         // get first timing constraint and guiding stroke
-        //TPConstraint startTPC = gSeq.getStartTPC();
-        //GuidingStroke gstroke = gSeq.getStroke(0);
-        
-        
-        // TODO: implement this(?)        
+        // TPConstraint startTPC = gSeq.getStartTPC();
+        // GuidingStroke gstroke = gSeq.getStroke(0);
+
+        // TODO: implement this(?)
         // if (activateFlag)
         // {
         // gSeq->setStartPos(x);

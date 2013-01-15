@@ -6,6 +6,7 @@ import static org.hamcrest.number.OrderingComparison.greaterThanOrEqualTo;
 import static org.junit.Assert.assertEquals;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
+import hmi.animation.Hanim;
 import hmi.math.Vec3f;
 import hmi.testutil.animation.HanimBody;
 
@@ -53,7 +54,7 @@ public class LMPWristPosTest extends AbstractTimedPlanUnitTest
         gSeq.getStroke(1).setEDt(0.7);
         when(mockAniPlayer.getVCurr()).thenReturn(HanimBody.getLOA1HanimBody());
         when(mockAniPlayer.getVNext()).thenReturn(HanimBody.getLOA1HanimBody());
-        return new LMPWristPos("right_arm", bfm, bbPeg, bmlId, id, pegBoard, gSeq, mockAniPlayer);
+        return new LMPWristPos("right_arm", bfm, bbPeg, bmlId, id, pegBoard, gSeq, Hanim.HumanoidRoot, mockAniPlayer);
     }
     @Override
     protected LMPWristPos setupPlanUnit(FeedbackManager bfm, BMLBlockPeg bbPeg, String id, String bmlId, double startTime)

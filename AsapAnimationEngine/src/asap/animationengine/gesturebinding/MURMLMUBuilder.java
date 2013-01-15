@@ -736,7 +736,7 @@ public final class MURMLMUBuilder
                 trajectory.addGuidingStroke(new LinearGStroke(GStrokePhaseID.STP_PREP, ePos));
 
                 // create local motor program for anticipated stroke sequence
-                LMPWristPos wristMove = new LMPWristPos(scope, bbm, bmlBlockPeg, bmlId, id, pb, trajectory, aniPlayer);
+                LMPWristPos wristMove = new LMPWristPos(scope, bbm, bmlBlockPeg, bmlId, id, pb, trajectory, hns.getBaseJoint(), aniPlayer);
 
                 // //cout << "creating lmp from guiding sequence:" << endl; trajectory.writeTo(cout);
                 // //lmp->overshoot(mcLoc->getEndTPC().time);
@@ -832,7 +832,7 @@ public final class MURMLMUBuilder
         createPosLMP(scope, trajectory, mcp, tmu, bbm, bmlBlockPeg, bmlId, id, pb, aniPlayer);
     }
 
-    private static void createPosLMP(String scope, GuidingSequence traj, MotorControlProgram mp, TimedAnimationUnit lmp,
+    private void createPosLMP(String scope, GuidingSequence traj, MotorControlProgram mp, TimedAnimationUnit lmp,
             FeedbackManager bbf, BMLBlockPeg bmlBlockPeg, String bmlId, String id, PegBoard pegBoard, AnimationPlayer aniPlayer)
     {
         if (!traj.isEmpty() && mp != null)
@@ -840,7 +840,7 @@ public final class MURMLMUBuilder
             // -- create lmp for wrist trajectory
             // cout << "==== creating lmp from: "; traj.writeTo(cout); cout << endl;
 
-            LMPWristPos wristMove = new LMPWristPos(scope, bbf, bmlBlockPeg, bmlId, id, pegBoard, traj, aniPlayer);
+            LMPWristPos wristMove = new LMPWristPos(scope, bbf, bmlBlockPeg, bmlId, id, pegBoard, traj, hns.getBaseJoint(), aniPlayer);
 
             // TODO
             // -- set transformation for converting positions into base coordinates

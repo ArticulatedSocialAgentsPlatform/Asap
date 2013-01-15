@@ -157,7 +157,6 @@ public class Hns extends XMLStructureAdapter
      */
     public boolean getHandLocation(String value, float[] location)
     {
-        // FIXME: should be converted to the Asap coordinate system
         String vals[] = value.split("\\s+");
         String reference = vals[0];
         String locator = null;
@@ -214,18 +213,18 @@ public class Hns extends XMLStructureAdapter
         // optionally origin of cylindrical coords within this plane
         if (getSymbolValue(HAND_REFERENCES, reference) != null)
         {
-            location[2] = getSymbolValue(HAND_REFERENCES, reference).floatValue();
+            location[1] = getSymbolValue(HAND_REFERENCES, reference).floatValue();
         }
         if (getSymbolValue(HAND_LOCATORS, locator) != null)
         {
-            phi = getSymbolValue(HAND_LOCATORS, locator);
+            phi = getSymbolValue(HAND_LOCATORS, locator);            
         }
         if (getSymbolValue(HAND_DISTANCES, distance) != null)
         {
             r = getEllipticDistance(phi, getSymbolValue(HAND_DISTANCES, distance));
         }
-        location[0] = (float) (r * Math.cos(Math.toRadians(phi)));
-        location[1] = (float) (r * Math.sin(Math.toRadians(phi)));
+        location[2] = (float) (r * Math.cos(Math.toRadians(phi)));
+        location[0] = (float) (r * Math.sin(Math.toRadians(phi)));        
         return true;
     }
 
