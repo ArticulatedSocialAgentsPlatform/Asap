@@ -1,0 +1,52 @@
+
+    <property name="wordInsertionProbability" value="0.7"/>
+    <property name="languageWeight" value="11.5"/>
+
+    <!-- ******************************************************** -->
+    <!-- The Grammar  configuration                               -->
+    <!-- ******************************************************** -->
+    <component name="jsgfGrammar" type="edu.cmu.sphinx.jsgf.JSGFGrammar">
+        <property name="dictionary" value="dictionary"/>
+        <property name="grammarLocation" value="file:src/inpro/domains/pentomino/resources/"/>
+        <property name="grammarName" value="pento"/>
+        <property name="logMath" value="logMath"/>
+    </component>
+    
+    <component name="ngram" type="edu.cmu.sphinx.linguist.language.ngram.SimpleNGramModel">
+        <property name="dictionary" value="dictionary"/>
+        <property name="logMath" value="logMath"/>
+        <!-- dies lässt sich mit dem -lm switch in SimpleReco verbiegen -->
+        <property name="location" value="resource:/Cocolab_DE_8gau_13dCep_16k_40mel_130Hz_6800Hz/LM/inproCorpora_all.lm"/>
+        <property name="maxDepth" value="3"/>
+        <property name="unigramWeight" value=".7"/>
+    </component>
+    
+    <!-- this second ngram model can be used to blend multiple language models using interpolatedLM defined in sphinx.xml -->
+    <component name="ngram2" type="edu.cmu.sphinx.linguist.language.ngram.SimpleNGramModel">
+        <property name="dictionary" value="dictionary"/>
+        <property name="logMath" value="logMath"/>
+        <property name="location" value="resource:/Cocolab_DE_8gau_13dCep_16k_40mel_130Hz_6800Hz/LM/inproCorpora_all.lm"/>
+        <property name="maxDepth" value="3"/>
+        <property name="unigramWeight" value=".7"/>
+    </component>
+
+    <!-- ******************************************************** -->
+    <!-- The Dictionary configuration                            -->
+    <!-- ******************************************************** -->
+    <component name="dictionary" type="inpro.sphinx.linguist.dictionary.SyllableAwareFullDictionary"> 
+        <property name="dictionaryPath" value="resource:/Cocolab_DE_8gau_13dCep_16k_40mel_130Hz_6800Hz/dict/Cocolab_DE.lex"/>
+        <property name="fillerPath" value="resource:/Cocolab_DE_8gau_13dCep_16k_40mel_130Hz_6800Hz/dict/Cocolab_DE.filler"/>
+        <property name="addSilEndingPronunciation" value="false"/>
+        <property name="unitManager" value="unitManager"/>
+    </component>
+
+    <!-- ******************************************************** -->
+    <!-- The acoustic model and unit manager configuration        -->
+    <!-- ******************************************************** -->
+    <component name="sphinx3Loader" type="edu.cmu.sphinx.linguist.acoustic.tiedstate.Sphinx3Loader">
+        <property name="logMath" value="logMath"/>
+        <property name="unitManager" value="unitManager"/>
+		<property name="location" value="resource:/Cocolab_DE_8gau_13dCep_16k_40mel_130Hz_6800Hz"/>
+		<property name="modelDefinition" value="etc/Cocolab_DE.2000.mdef"/>
+		<property name="dataLocation" value="cd_cont_2000_8/"/>
+    </component>
