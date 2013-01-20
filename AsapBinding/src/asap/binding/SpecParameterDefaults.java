@@ -18,11 +18,14 @@
  ******************************************************************************/
 package asap.binding;
 
-import hmi.xml.*;
-import java.io.*;
+import hmi.xml.XMLScanException;
+import hmi.xml.XMLStructureAdapter;
+import hmi.xml.XMLTokenizer;
+
+import java.io.IOException;
+import java.util.ArrayList;
 import java.util.Collection;
-import java.util.HashMap;
-import java.util.Map;
+import java.util.List;
 
 /**
  * Holds default parameter values for a plan unit.
@@ -31,7 +34,7 @@ import java.util.Map;
  */
 public class SpecParameterDefaults extends XMLStructureAdapter
 {
-    private Map<String, SpecParameterDefault> parameterdefault = new HashMap<String, SpecParameterDefault>();
+    private List<SpecParameterDefault> paramdefaults = new ArrayList<>();
     
     @Override
     public void decodeContent(XMLTokenizer tokenizer) throws IOException
@@ -43,7 +46,7 @@ public class SpecParameterDefaults extends XMLStructureAdapter
             {
                 SpecParameterDefault mupc = new SpecParameterDefault();
                 mupc.readXML(tokenizer);
-                parameterdefault.put(mupc.name, mupc);
+                paramdefaults.add(mupc);
             }
             else
             {
@@ -57,7 +60,7 @@ public class SpecParameterDefaults extends XMLStructureAdapter
      */
     public Collection<SpecParameterDefault> getParameterDefaults()
     {
-        return parameterdefault.values();
+        return paramdefaults;
     }
     
     public static final String XMLTAG = "parameterdefaults";
