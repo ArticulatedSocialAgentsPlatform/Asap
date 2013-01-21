@@ -1,0 +1,28 @@
+<?xml version="1.0"?>
+<bml xmlns="http://www.bml-initiative.org/bml/bml-1.0" id="bml1">
+    
+        
+            <murml-gesture xmlns="http://www.techfak.uni-bielefeld.de/ags/soa/murml"><murml-description scope="hand"><parallel>
+                        <static scope="right_arm" slot="HandShape" value="ASLcsmall"/>
+                        <static scope="right_arm" slot="PalmOrientation" value="DirL"/>
+                        <static scope="right_arm" slot="ExtFingerOrientation" value="DirA"/>
+                        <dynamic scope="right_arm" slot="HandLocation">
+                            <dynamicElement scope="right_arm" type="linear">
+                                <value type="start" name="LocHip LocExtremePeripheryRight LocNear"/>
+                                <value type="end" name="LocStomach LocExtremePeripheryRight LocNear"/>
+                            </dynamicElement>
+                            <dynamicElement scope="right_arm" type="linear">
+                                <value type="start" name="LocHip LocExtremePeripheryRight LocNear"/>
+                                <value type="end" name="LocMouth LocCenterRight LocContact"/>
+                            </dynamicElement>
+                        </dynamic>
+                    </parallel></murml-description></murml-gesture>
+        
+        
+            <murml-gesture xmlns="http://www.techfak.uni-bielefeld.de/ags/soa/murml"><murml-description scope="head"><static slot="GazeDirection" value="1000 -500 0" scope="head"/></murml-description></murml-gesture>
+        
+        
+            <murml-gesture xmlns="http://www.techfak.uni-bielefeld.de/ags/soa/murml"><murml-description scope="head"><static slot="GazeDirection" value="100 0 0" scope="head"/></murml-description></murml-gesture>
+        
+    
+</bml>
