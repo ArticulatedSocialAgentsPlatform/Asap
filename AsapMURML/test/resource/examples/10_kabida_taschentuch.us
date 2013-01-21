@@ -1,0 +1,45 @@
+<?xml version="1.0" standalone="no"?>
+<!DOCTYPE definition SYSTEM "./utterances.dtd">
+
+<definition>
+    <utterance>
+        <behaviorspec>
+            <gesture id="taschentuch" scope="hand">
+                <timing onset="1.0" end="3.0"/>
+                <constraints>
+                    <parallel>
+                        <static scope="right_arm" slot="HandShape" value="ASLcsmall"/>
+                        <static scope="right_arm" slot="PalmOrientation" value="DirL"/>
+                        <static scope="right_arm" slot="ExtFingerOrientation" value="DirA"/>
+                        <dynamic scope="right_arm" slot="HandLocation">
+                            <dynamicElement scope="right_arm" type="linear">
+                                <value type="start" name="LocHip LocExtremePeripheryRight LocNear"/>
+                                <value type="end" name="LocStomach LocExtremePeripheryRight LocNear"/>
+                            </dynamicElement>
+                            <dynamicElement scope="right_arm" type="linear">
+                                <value type="start" name="LocHip LocExtremePeripheryRight LocNear"/>
+                                <value type="end" name="LocMouth LocCenterRight LocContact"/>
+                            </dynamicElement>
+                        </dynamic>
+                    </parallel>
+                </constraints>
+            </gesture>
+        </behaviorspec>
+        <behaviorspec id="gesture_part2">
+            <gesture id="taschentuch" scope="head">
+                <timing onset="0.5" end="1.5"/>
+                <constraints>
+                    <static slot="GazeDirection" value="1000 -500 0" scope="head"/>
+                </constraints>
+            </gesture>
+        </behaviorspec>
+        <behaviorspec id="gesture_part3">
+            <gesture id="taschentuch" scope="head">
+                <timing onset="1.5" end="3.0"/>
+                <constraints>
+                    <static slot="GazeDirection" value="100 0 0" scope="head"/>
+                </constraints>
+            </gesture>
+        </behaviorspec>
+    </utterance>
+</definition>

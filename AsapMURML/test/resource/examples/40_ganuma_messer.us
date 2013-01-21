@@ -1,0 +1,51 @@
+<?xml version="1.0" standalone="no"?>
+<!DOCTYPE definition SYSTEM "./utterances.dtd">
+
+<definition>
+    <utterance>
+        <behaviorspec id="gesture_part1">
+            <gesture id="messer" scope="hand">
+                <timing onset="1.0" end="3.0"/>
+                <constraints>
+                    <sequence>
+                        <dynamic scope="right_arm" slot="HandLocation">
+                            <dynamicElement scope="right_arm" type="linear" >
+                                <value type="start" name="LocHip LocPeripheryRight LocNorm"/>
+                                <value type="end" name="LocStomach LocRight LocNear"/>
+                            </dynamicElement>
+                        </dynamic>
+                        <parallel>
+                            <static scope="right_arm" slot="HandShape" value="ASLclarge"/>
+                            <dynamic scope="right_arm" slot="HandLocation">
+                                <dynamicElement scope="right_arm" type="linear" >
+                                    <value type="start" name="LocStomach LocRight LocNear"/>
+                                    <value type="end" name="LocHead LocPeripheryRight LocContact"/>
+                                </dynamicElement>
+                                <dynamicElement scope="right_arm" type="linear" >
+                                    <value type="start" name="LocHead LocPeripheryRight LocContact"/>
+                                    <value type="end" name="LocHead LocRight LocNorm"/>
+                                </dynamicElement>
+                            </dynamic>
+                        </parallel>
+                    </sequence>
+                </constraints>
+            </gesture>
+        </behaviorspec>
+        <behaviorspec id="gesture_part2">
+            <gesture id="messer" scope="hand">
+                <timing onset="2.0" end="3.0"/>
+                <constraints>
+                    <static slot="GazeDirection" value="50 -30 50" scope="head"/>
+                </constraints>
+            </gesture>
+        </behaviorspec>
+        <behaviorspec id="gesture_part3">
+            <gesture id="messer" scope="hand">
+                <timing onset="3.5" end="5.0"/>
+                <constraints>
+                    <static slot="GazeDirection" value="50 0 50" scope="head"/>
+                </constraints>
+            </gesture>
+        </behaviorspec>
+    </utterance>
+</definition>

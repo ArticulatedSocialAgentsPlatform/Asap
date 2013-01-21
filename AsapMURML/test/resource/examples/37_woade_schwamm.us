@@ -1,0 +1,56 @@
+<?xml version="1.0" standalone="no"?>
+<!DOCTYPE definition SYSTEM "./utterances.dtd">
+
+<definition>
+    <utterance>
+        <behaviorspec id="gesture_part1">
+            <gesture id="schwamm" scope="hand">
+                <timing onset="1.0" end="3.0"/>
+                <constraints>
+                    <parallel>
+                        <static scope="right_arm" slot="HandLocation" value="LocShoulder LocCCenterRight LocNorm"/>
+                        <static scope="right_arm" slot="ExtFingerOrientation" value="DirL"/>
+                        <static scope="right_arm" slot="PalmOrientation" value="DirT"/>
+                        <static scope="left_arm" slot="HandLocation" value="LocUpperChest LocCCenterLeft LocNorm"/>
+                        <static scope="left_arm" slot="ExtFingerOrientation" value="DirR"/>
+                        <static scope="left_arm" slot="PalmOrientation" value="DirT"/>
+                        <sequence>
+                            <parallel>
+                                <static scope="right_arm" slot="HandShape" value="ASLclarge"/>
+                                <static scope="left_arm" slot="HandShape" value="ASLclarge"/>
+                            </parallel>
+                            <parallel>
+                                <static scope="right_arm" slot="HandShape" value="ASLcsmall"/>
+                                <static scope="left_arm" slot="HandShape" value="ASLcsmall"/>
+                            </parallel>
+                            <parallel>
+                                <static scope="right_arm" slot="HandShape" value="ASLclarge"/>
+                                <static scope="left_arm" slot="HandShape" value="ASLclarge"/>
+                            </parallel>
+                            <parallel>
+                                <static scope="right_arm" slot="HandShape" value="ASLcsmall"/>
+                                <static scope="left_arm" slot="HandShape" value="ASLcsmall"/>
+                            </parallel>
+                        </sequence>
+                    </parallel>
+                </constraints>
+            </gesture>
+        </behaviorspec>
+        <behaviorspec id="gesture_part2">
+            <gesture id="schwamm" scope="head">
+                <timing onset="1.0" end="2.5"/>
+                <constraints>
+                    <static slot="GazeDirection" value="1000 0 0" scope="head"/>
+                </constraints>
+            </gesture>
+        </behaviorspec>
+        <behaviorspec id="gesture_part3">
+            <gesture id="parfuem" scope="head">
+                <timing onset="3.0" end="5.0"/>
+                <constraints>
+                    <static slot="GazeDirection" value="50 0 50" scope="head"/>
+                </constraints>
+            </gesture>
+        </behaviorspec>
+    </utterance>
+</definition>

@@ -1,0 +1,49 @@
+<?xml version="1.0" standalone="no"?>
+<!DOCTYPE definition SYSTEM "./utterances.dtd">
+
+<definition>
+    <utterance>
+        <behaviorspec id="gesture_part1">
+            <gesture id="krawatte" scope="hand">
+                <timing onset="1.0" end="3.0"/>
+                <constraints>
+                    <parallel>
+                        <static scope="right_arm" slot="PalmOrientation" value="DirT"/>
+                        <static scope="right_arm" slot="ExtFingerOrientation" value="DirUL"/>
+                        <static scope="right_arm" slot="HandShape" value="ASLcsmall"/>
+                        <static scope="left_arm" slot="PalmOrientation" value="DirT"/>
+                        <static scope="left_arm" slot="ExtFingerOrientation" value="DirUR"/>
+                        <static scope="left_arm" slot="HandShape" value="ASLcsmall"/>
+                        <static scope="left_arm" slot="HandLocation" value="LocUpperChest LocCCenterLeft LocNear"/>
+                        <dynamic scope="right_arm" slot="HandLocation">
+                            <dynamicElement scope="right_arm" type="linear" >
+                                <value type="start" name="LocHip LocPeripheryRight LocNorm"/>
+                                <value type="end" name="LocShoulder LocCenter LocNear"/>
+                            </dynamicElement>
+                            <dynamicElement scope="right_arm" type="linear" >
+                                <value type="start" name="LocShoulder LocCenter LocNear"/>
+                                <value type="end" name="LocShoulder LocCCenterRight LocNear"/>
+                            </dynamicElement>
+                            <dynamicElement scope="right_arm" type="linear" >
+                                <value type="start" name="LocShoulder LocCCenterRight LocNear"/>
+                                <value type="end" name="LocShoulder LocCenter LocNear"/>
+                            </dynamicElement>
+                            <dynamicElement scope="right_arm" type="linear" >
+                                <value type="start" name="LocShoulder LocCenter LocNear"/>
+                                <value type="end" name="LocShoulder LocCCenterRight LocNear"/>
+                            </dynamicElement>
+                            <dynamicElement scope="right_arm" type="linear" >
+                                <value type="start" name="LocShoulder LocCCenterRight LocNear"/>
+                                <value type="end" name="LocShoulder LocCenter LocNear"/>
+                            </dynamicElement>
+                            <dynamicElement scope="right_arm" type="linear" >
+                                <value type="start" name="LocShoulder LocCenter LocNear"/>
+                                <value type="end" name="LocShoulder LocCCenterRight LocNear"/>
+                            </dynamicElement>
+                        </dynamic>
+                    </parallel>
+                </constraints>
+            </gesture>
+        </behaviorspec>
+    </utterance>
+</definition>

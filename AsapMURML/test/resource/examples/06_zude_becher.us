@@ -1,0 +1,34 @@
+<?xml version="1.0" standalone="no"?>
+<!DOCTYPE definition SYSTEM "./utterances.dtd">
+
+<definition>
+    <utterance>
+        <behaviorspec>
+            <gesture id="becher" scope="hand">
+                <timing onset="1.0" end="4.0"/>
+                <constraints>
+                    <parallel>
+                        <symmetrical center="0 0 0 0 0 0" dominant="right_arm" scope="undef" symmetry="SymMS">
+                            <parallel>
+                                <static scope="right_arm" slot="HandShape" value="ASLclarge"/>
+                                <dynamic scope="right_arm" slot="PalmOrientation" value="DirL"/>
+                                <dynamic scope="right_arm" slot="ExtFingerOrientation" value="DirA"/>
+                                <dynamic scope="right_arm" slot="HandLocation">
+                                    <dynamicElement scope="right_arm" type="linear" >
+                                        <value type="start" name="LocHip LocCenterRight LocNear"/>
+                                        <value type="end" name="LocMouth LocCCenterRight LocNorm"/>
+                                    </dynamicElement>
+                                    <dynamicElement scope="right_arm" type="linear" >
+                                        <value type="start" name="LocMouth LocCCenterRight LocNorm"/>
+                                        <value type="end" name="LocHip LocCenterRight LocNear"/>
+                                    </dynamicElement>
+                                </dynamic>
+                            </parallel>
+                        </symmetrical>
+                        <static slot="GazeDirection" value="1000 0 1000" scope="head"/>
+                    </parallel>
+                </constraints>
+            </gesture>
+        </behaviorspec>
+    </utterance>
+</definition>

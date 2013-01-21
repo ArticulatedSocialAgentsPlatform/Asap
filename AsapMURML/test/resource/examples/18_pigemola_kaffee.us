@@ -1,0 +1,62 @@
+<?xml version="1.0" standalone="no"?>
+<!DOCTYPE definition SYSTEM "./utterances.dtd">
+
+<definition>
+    <utterance>
+        <behaviorspec id="gesture_part1">
+            <gesture id="kaffee" scope="hand">
+                <timing onset="1.0" end="3.0"/>
+                <constraints>
+                    <parallel>
+                        <static slot="GazeDirection" value="100 0 0" scope="head"/>
+                        <sequence>
+                            <parallel>
+                                <static scope="left_arm" slot="HandShape" value="ASLb"/>
+                                <static scope="left_arm" slot="PalmOrientation" value="DirU"/>
+                                <static scope="left_arm" slot="ExtFingerOrientation" value="DirR"/>
+                                <dynamic scope="left_arm" slot="HandLocation">
+                                    <dynamicElement scope="left_arm" type="linear" >
+                                        <value type="start" name="LocHip LocPeripheryLeft LocNorm"/>
+                                        <value type="end" name="LocNeck LocCenterLeft LocNear"/>
+                                    </dynamicElement>
+                                </dynamic>
+                            </parallel>
+                            <parallel>
+                                <static scope="left_arm" slot="HandLocation" value="LocNeck LocCenterLeft LocNear"/>
+                                <static scope="right_arm" slot="HandShape" value="ASLcsmall"/>
+                                <dynamic scope="right_arm" slot="PalmOrientation" value="DirAL"/>
+                                <dynamic scope="right_arm" slot="ExtFingerOrientation" value="DirA"/>
+                                <dynamic scope="right_arm" slot="HandLocation">
+                                    <dynamicElement scope="right_arm" type="linear" >
+                                        <value type="start" name="LocHip LocPeripheryRight LocNorm"/>
+                                        <value type="end" name="LocNeck LocCenterRight LocNear"/>
+                                    </dynamicElement>
+                                    <dynamicElement scope="right_arm" type="linear" >
+                                        <value type="start" name="LocNeck LocCenterRight LocNear"/>
+                                        <value type="end" name="LocMouth LocCenterRight LocNear"/>
+                                    </dynamicElement>
+                                </dynamic>
+                            </parallel>
+                        </sequence>
+                    </parallel>
+                </constraints>
+            </gesture>
+        </behaviorspec>
+        <behaviorspec id="gesture_part2">
+            <gesture id="kaffee" scope="hand">
+                <timing onset="2.9" end="3.0"/>
+                <constraints>
+                    <static slot="GazeDirection" value="1000 0 1000" scope="head"/>
+                </constraints>
+            </gesture>
+        </behaviorspec>
+        <behaviorspec id="gesture_part3">
+            <gesture id="kaffee" scope="hand">
+                <timing onset="3.5" end="4.0"/>
+                <constraints>
+                    <static slot="GazeDirection" value="50 0 50" scope="head"/>
+                </constraints>
+            </gesture>
+        </behaviorspec>
+    </utterance>
+</definition>

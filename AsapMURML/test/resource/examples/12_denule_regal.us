@@ -1,0 +1,45 @@
+<?xml version="1.0" standalone="no"?>
+<!DOCTYPE definition SYSTEM "./utterances.dtd">
+
+<definition>
+    <utterance>
+        <behaviorspec>
+            <gesture id="regal" scope="hand">
+                <timing onset="1.0" end="4.0"/>
+                <constraints>
+                    <symmetrical center="0 0 0 0 -25 0" dominant="right_arm" scope="undef" symmetry="Sym">
+                        <parallel>
+                            <static slot="GazeDirection" value="100 0 0" mode="pointTo" scope="hand"/>
+                            <static scope="right_arm" slot="HandShape" value="ASLb"/>
+                            <static scope="right_arm" slot="PalmOrientation" value="DirD"/>
+                            <static scope="right_arm" slot="ExtFingerOrientation" value="DirA"/>
+                            <static scope="left_arm" slot="HandShape" value="ASLb"/>
+                            <static scope="left_arm" slot="PalmOrientation" value="DirD"/>
+                            <static scope="left_arm" slot="ExtFingerOrientation" value="DirA"/>
+                            <sequence>
+                                <dynamic scope="right_arm" slot="HandLocation">
+                                    <dynamicElement scope="right_arm" type="linear" >
+                                        <value type="start" name="LocAboveHead LocPeripheryLeft LocFar"/>
+                                        <value type="end" name="LocAboveHead LocRight LocFar"/>
+                                    </dynamicElement>
+                                </dynamic>
+                                <dynamic scope="right_arm" slot="HandLocation">
+                                    <dynamicElement scope="right_arm" type="linear" >
+                                        <value type="start" name="LocUpperChest LocPeripheryLeft LocFar"/>
+                                        <value type="end" name="LocUpperChest LocRight LocFar"/>
+                                    </dynamicElement>
+                                </dynamic>
+                                <dynamic scope="right_arm" slot="HandLocation">
+                                    <dynamicElement scope="right_arm" type="linear" >
+                                        <value type="start" name="LocStomach LocPeripheryLeft LocFar"/>
+                                        <value type="end" name="LocStomach LocRight LocFar"/>
+                                    </dynamicElement>
+                                </dynamic>
+                            </sequence>
+                        </parallel>
+                    </symmetrical>
+                </constraints>
+            </gesture>
+        </behaviorspec>
+    </utterance>
+</definition>

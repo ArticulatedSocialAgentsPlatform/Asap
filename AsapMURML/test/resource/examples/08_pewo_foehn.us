@@ -1,0 +1,90 @@
+<?xml version="1.0" standalone="no"?>
+<!DOCTYPE definition SYSTEM "./utterances.dtd">
+
+<definition>
+    <utterance>
+        <behaviorspec id="gesture_part1">
+            <gesture id="foehn" scope="hand">
+                <timing onset="1.0" end="3.0"/>
+                <constraints>
+                    <parallel>
+                        <sequence>
+                            <parallel>
+                                <static slot="GazeDirection" value="1000 -500 0" scope="head"/>
+                                <static scope="right_arm" slot="HandLocation" value="LocAboveHead LocPeripheryRight LocNear"/>
+                                <static scope="right_arm" slot="ExtFingerOrientation" value="DirA"/>
+                                <static scope="right_arm" slot="HandShape" value="ASLcsmall"/>
+                                <static scope="right_arm" slot="PalmOrientation" value="DirL"/>
+                                <static scope="right_arm" slot="ExtFingerOrientation" value="DirAU"/>
+                            </parallel>
+                            <parallel>
+                                <static scope="right_arm" slot="HandLocation" value="LocAboveHead LocPeripheryRight LocNear"/>
+                                <static scope="right_arm" slot="ExtFingerOrientation" value="DirAU"/>
+                            </parallel>
+                            <parallel>
+                                <static scope="right_arm" slot="HandLocation" value="LocAboveHead LocPeripheryRight LocNear"/>
+                                <static scope="right_arm" slot="ExtFingerOrientation" value="DirA"/>
+                            </parallel>
+                            <parallel>
+                                <static scope="right_arm" slot="HandLocation" value="LocAboveHead LocPeripheryRight LocNear"/>
+                                <static scope="right_arm" slot="ExtFingerOrientation" value="DirAU"/>
+                            </parallel>
+                            <parallel>
+                                <static scope="right_arm" slot="HandLocation" value="LocAboveHead LocPeripheryRight LocNear"/>
+                                <static scope="right_arm" slot="ExtFingerOrientation" value="DirA"/>
+                            </parallel>
+                            <parallel>
+                                <static scope="right_arm" slot="HandLocation" value="LocAboveHead LocPeripheryRight LocNear"/>
+                                <static scope="right_arm" slot="ExtFingerOrientation" value="DirAU"/>
+                            </parallel>
+                            <parallel>
+                                <static scope="right_arm" slot="HandLocation" value="LocAboveHead LocPeripheryRight LocNear"/>
+                                <static scope="right_arm" slot="ExtFingerOrientation" value="DirA"/>
+                            </parallel>
+                            <parallel>
+                                <static scope="right_arm" slot="HandLocation" value="LocAboveHead LocPeripheryRight LocNear"/>
+                                <static scope="right_arm" slot="ExtFingerOrientation" value="DirAU"/>
+                            </parallel>
+                            <parallel>
+                                <static scope="right_arm" slot="HandLocation" value="LocAboveHead LocPeripheryRight LocNear"/>
+                                <static scope="right_arm" slot="ExtFingerOrientation" value="DirAU"/>
+                            </parallel>
+                            <parallel>
+                                <static scope="right_arm" slot="HandLocation" value="LocAboveHead LocPeripheryRight LocNear"/>
+                                <static scope="right_arm" slot="ExtFingerOrientation" value="DirA"/>
+                            </parallel>
+                            <parallel>
+                                <static scope="right_arm" slot="HandLocation" value="LocAboveHead LocPeripheryRight LocNear"/>
+                                <static scope="right_arm" slot="ExtFingerOrientation" value="DirAU"/>
+                            </parallel>
+                        </sequence>
+                    </parallel>
+                </constraints>
+            </gesture>
+        </behaviorspec>
+        <behaviorspec id="gesture_part2">
+            <gesture id="foehn" scope="head">
+                <timing onset="1.5" end="2.0"/>
+                <constraints>
+                    <static slot="GazeDirection" value="1000 0 0" scope="head"/>
+                </constraints>
+            </gesture>
+        </behaviorspec>
+        <behaviorspec id="gesture_part3">
+            <gesture id="foehn" scope="head">
+                <timing onset="2.0" end="2.5"/>
+                <constraints>
+                    <static slot="GazeDirection" value="1000 500 0" scope="head"/>
+                </constraints>
+            </gesture>
+        </behaviorspec>
+        <behaviorspec id="gesture_part4">
+            <gesture id="foehn" scope="head">
+                <timing onset="2.5" end="3.0"/>
+                <constraints>
+                    <static slot="GazeDirection" value="1000 0 0" scope="head"/>
+                </constraints>
+            </gesture>
+        </behaviorspec>
+    </utterance>
+</definition>
