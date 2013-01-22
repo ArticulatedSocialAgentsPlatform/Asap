@@ -650,6 +650,7 @@ public final class MURMLMUBuilder
         List<PostureConstraint> phaseVec = new ArrayList<>();
         SkeletonPose pose = hnsHandshapes.getHNSHandShape(staticElem.getValue());
         phaseVec.add(new PostureConstraint("strokeStart", pose));
+        pose = hnsHandshapes.getHNSHandShape(staticElem.getValue());                //make sure this is a copy!
         phaseVec.add(new PostureConstraint("strokeEnd", pose));
 
         // // get corresponding hand shape
@@ -1061,14 +1062,17 @@ public final class MURMLMUBuilder
             {
                 List<OrientConstraint> ocVec = new ArrayList<OrientConstraint>();
                 parseStaticElement(bbm, bmlBlockPeg, bmlId, id, aniPlayer, localPegBoard, mcp, staticElem, ocVec);
-                if (ocMap.containsKey(staticElem.getScope()))
+                if(ocVec.size()>0)  //if oc constraint, merge with other oc constraints
                 {
-                    List<OrientConstraint> ocCur = ocMap.get(staticElem.getScope());
-                    mergeStaticConstraints(ocCur, ocVec);
-                }
-                else
-                {
-                    ocMap.put(staticElem.getScope(), ocVec);
+                    if (ocMap.containsKey(staticElem.getScope()))
+                    {
+                        List<OrientConstraint> ocCur = ocMap.get(staticElem.getScope());
+                        mergeStaticConstraints(ocCur, ocVec);
+                    }
+                    else
+                    {
+                        ocMap.put(staticElem.getScope(), ocVec);
+                    }
                 }
             }
             for (Dynamic dynamicElem : par.getDynamics())

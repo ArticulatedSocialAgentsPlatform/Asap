@@ -92,7 +92,9 @@ public class HnsHandshape
         // parse basic hand shape and retrieve posture
         if (hns.getBasicHandShapes().contains(basicSymbol) || hns.getSpecificHandShapes().contains(basicSymbol))
         {
-            return poseMap.get(basicSymbol);
+            SkeletonPose p = poseMap.get(basicSymbol);
+            return p.untargettedDeepCopy();
+            
             // TODO: parse and handle stuff between ()'s
 
             // if (readPostureFile(basicSymbol, poseStr)) {
