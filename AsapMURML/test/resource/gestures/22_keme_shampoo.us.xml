@@ -1,0 +1,61 @@
+<?xml version="1.0"?>
+
+    
+        
+            <murml-description xmlns="http://www.techfak.uni-bielefeld.de/ags/soa/murml" scope="hand">
+  <symmetrical center="0 0 0 0 0 0" dominant="right_arm" scope="undef" symmetry="SymMS">
+                        <parallel>
+                            <static slot="GazeDirection" value="1000 0 0" scope="head"/>
+                            <static scope="right_arm" slot="HandShape" value="ASL5"/>
+                            <static scope="right_arm" slot="PalmOrientation" value="DirL"/>
+                            <static scope="right_arm" slot="ExtFingerOrientation" value="DirU"/>
+                            <sequence>
+                                <dynamic scope="right_arm" slot="HandLocation">
+                                    <dynamicElement scope="right_arm" type="linear">
+                                        <value type="start" name="LocHead LocPeripheryRight LocContact"/>
+                                        <value type="end" name="LocEyes LocPeripheryRight LocContact"/>
+                                    </dynamicElement>
+                                    <dynamicElement scope="right_arm" type="linear">
+                                        <value type="start" name="LocForeHead LocPeripheryRight LocContact"/>
+                                        <value type="end" name="LocHead LocPeripheryRight LocContact"/>
+                                    </dynamicElement>
+                                    <dynamicElement scope="right_arm" type="linear">
+                                        <value type="start" name="LocHead LocPeripheryRight LocContact"/>
+                                        <value type="end" name="LocEyes LocPeripheryRight LocContact"/>
+                                    </dynamicElement>
+                                    <dynamicElement scope="right_arm" type="linear">
+                                        <value type="start" name="LocForeHead LocPeripheryRight LocContact"/>
+                                        <value type="end" name="LocHead LocPeripheryRight LocContact"/>
+                                    </dynamicElement>
+                                    <dynamicElement scope="right_arm" type="linear">
+                                        <value type="start" name="LocHead LocPeripheryRight LocContact"/>
+                                        <value type="end" name="LocEyes LocPeripheryRight LocContact"/>
+                                    </dynamicElement>
+                                    <dynamicElement scope="right_arm" type="linear">
+                                        <value type="start" name="LocForeHead LocPeripheryRight LocContact"/>
+                                        <value type="end" name="LocHead LocPeripheryRight LocContact"/>
+                                    </dynamicElement>
+                                    <dynamicElement scope="right_arm" type="linear">
+                                        <value type="start" name="LocHead LocPeripheryRight LocContact"/>
+                                        <value type="end" name="LocEyes LocPeripheryRight LocContact"/>
+                                    </dynamicElement>
+                                    <dynamicElement scope="right_arm" type="linear">
+                                        <value type="start" name="LocForeHead LocPeripheryRight LocContact"/>
+                                        <value type="end" name="LocHead LocPeripheryRight LocContact"/>
+                                    </dynamicElement>
+                                    <dynamicElement scope="right_arm" type="linear">
+                                        <value type="start" name="LocHead LocPeripheryRight LocContact"/>
+                                        <value type="end" name="LocEyes LocPeripheryRight LocContact"/>
+                                    </dynamicElement>
+                                    <dynamicElement scope="right_arm" type="linear">
+                                        <value type="start" name="LocForeHead LocPeripheryRight LocContact"/>
+                                        <value type="end" name="LocHead LocPeripheryRight LocContact"/>
+                                    </dynamicElement>
+                                </dynamic>
+                            </sequence>
+                        </parallel>
+                    </symmetrical>
+</murml-description>
+        
+    
+

@@ -1,0 +1,61 @@
+<?xml version="1.0"?>
+
+    
+        
+            <murml-description xmlns="http://www.techfak.uni-bielefeld.de/ags/soa/murml" scope="hand">
+  <symmetrical center="0 0 0 0 0 0" dominant="right_arm" scope="undef" symmetry="SymMS">
+                        <sequence>
+                            <parallel scope="right_arm">
+                                <static scope="right_arm" slot="HandShape" value="ASLb"/>
+                                <static scope="right_arm" slot="PalmOrientation" value="DirDA"/>
+                                <static scope="right_arm" slot="ExtFingerOrientation" value="DirU"/>
+                                <static scope="right_arm" slot="HandLocation" value="LocHead LocRight LocNorm"/>
+                            </parallel>
+                            <parallel scope="right_arm">
+                                <static scope="right_arm" slot="HandShape" value="ASL5"/>
+                                <static scope="right_arm" slot="PalmOrientation" value="DirDA"/>
+                                <static scope="right_arm" slot="ExtFingerOrientation" value="DirU"/>
+                                <static scope="right_arm" slot="HandLocation" value="LocHead LocRight LocNorm"/>
+                            </parallel>
+                            <parallel scope="right_arm">
+                                <static scope="right_arm" slot="HandShape" value="ASLb"/>
+                                <static scope="right_arm" slot="PalmOrientation" value="DirDA"/>
+                                <static scope="right_arm" slot="ExtFingerOrientation" value="DirU"/>
+                                <static scope="right_arm" slot="HandLocation" value="LocHead LocRight LocNorm"/>
+                            </parallel>
+                            <parallel scope="right_arm">
+                                <static scope="right_arm" slot="HandShape" value="ASL5"/>
+                                <static scope="right_arm" slot="PalmOrientation" value="DirDA"/>
+                                <static scope="right_arm" slot="ExtFingerOrientation" value="DirU"/>
+                                <static scope="right_arm" slot="HandLocation" value="LocHead LocRight LocNorm"/>
+                            </parallel>
+                            <parallel scope="right_arm">
+                                <static scope="right_arm" slot="HandShape" value="ASLb"/>
+                                <static scope="right_arm" slot="PalmOrientation" value="DirDA"/>
+                                <static scope="right_arm" slot="ExtFingerOrientation" value="DirU"/>
+                                <static scope="right_arm" slot="HandLocation" value="LocHead LocRight LocNorm"/>
+                            </parallel>
+                            <parallel scope="right_arm">
+                                <static scope="right_arm" slot="HandShape" value="ASL5"/>
+                                <static scope="right_arm" slot="PalmOrientation" value="DirDA"/>
+                                <static scope="right_arm" slot="ExtFingerOrientation" value="DirU"/>
+                                <static scope="right_arm" slot="HandLocation" value="LocHead LocRight LocNorm"/>
+                            </parallel>
+                            <parallel scope="right_arm">
+                                <static scope="right_arm" slot="HandShape" value="ASLb"/>
+                                <static scope="right_arm" slot="PalmOrientation" value="DirDA"/>
+                                <static scope="right_arm" slot="ExtFingerOrientation" value="DirU"/>
+                                <static scope="right_arm" slot="HandLocation" value="LocHead LocRight LocNorm"/>
+                            </parallel>
+                            <parallel scope="right_arm">
+                                <static scope="right_arm" slot="HandShape" value="ASL5"/>
+                                <static scope="right_arm" slot="PalmOrientation" value="DirDA"/>
+                                <static scope="right_arm" slot="ExtFingerOrientation" value="DirU"/>
+                                <static scope="right_arm" slot="HandLocation" value="LocHead LocRight LocNorm"/>
+                            </parallel>
+                        </sequence>
+                    </symmetrical>
+</murml-description>
+        
+    
+

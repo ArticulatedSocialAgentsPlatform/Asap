@@ -1,0 +1,35 @@
+<?xml version="1.0"?>
+
+    
+        
+            <murml-description xmlns="http://www.techfak.uni-bielefeld.de/ags/soa/murml" scope="hand">
+  <parallel>
+                        <static slot="GazeDirection" value="100 0 0" scope="head"/>
+                        <static scope="left_arm" slot="HandShape" value="ASLb"/>
+                        <static scope="left_arm" slot="PalmOrientation" value="DirU"/>
+                        <static scope="left_arm" slot="ExtFingerOrientation" value="DirA"/>
+                        <static scope="left_arm" slot="HandLocation" value="LocStomach LocCenterLeft LocNorm"/>
+                        <static scope="right_arm" slot="HandShape" value="ASLclarge"/>
+                        <static scope="right_arm" slot="PalmOrientation" value="DirAL"/>
+                        <static scope="right_arm" slot="ExtFingerOrientation" value="DirA"/>
+                        <sequence>
+                            <dynamic scope="right_arm" slot="HandLocation">
+                                <dynamicElement scope="right_arm" type="linear">
+                                    <value type="start" name="LocHead LocCenterRight LocNorm"/>
+                                    <value type="end" name="LocStomach LocCenterLeft LocNorm"/>
+                                </dynamicElement>
+                                <dynamicElement scope="right_arm" type="linear">
+                                    <value type="start" name="LocStomach LocCenterLeft LocNorm"/>
+                                    <value type="end" name="LocHead LocCenterRight LocNorm"/>
+                                </dynamicElement>
+                                <dynamicElement scope="right_arm" type="linear">
+                                    <value type="start" name="LocHead LocCenterRight LocNorm"/>
+                                    <value type="end" name="LocStomach LocCenterLeft LocNorm"/>
+                                </dynamicElement>
+                            </dynamic>
+                        </sequence>
+                    </parallel>
+</murml-description>
+        
+    
+

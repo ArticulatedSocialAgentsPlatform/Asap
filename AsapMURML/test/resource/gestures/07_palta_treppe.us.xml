@@ -1,0 +1,62 @@
+<?xml version="1.0"?>
+
+    
+        
+            <murml-description xmlns="http://www.techfak.uni-bielefeld.de/ags/soa/murml" scope="hand">
+  <parallel>
+                        <static slot="GazeDirection" value="1000 -500 0" mode="pointTo" scope="head"/>
+                        <static scope="right_arm" slot="HandShape" value="ASLb"/>
+                        <static scope="right_arm" slot="PalmOrientation" value="DirD"/>
+                        <static scope="right_arm" slot="ExtFingerOrientation" value="DirA"/>
+                        <static scope="left_arm" slot="HandShape" value="ASLb"/>
+                        <static scope="left_arm" slot="PalmOrientation" value="DirD"/>
+                        <static scope="left_arm" slot="ExtFingerOrientation" value="DirA"/>
+                        <sequence>
+                            <parallel>
+                                <dynamic scope="right_arm" slot="HandLocation">
+                                    <dynamicElement scope="right_arm" type="linear">
+                                        <value type="start" name="LocHip LocCenterRight LocFar"/>
+                                        <value type="end" name="LocUpperChest LocCenterRight LocFar"/>
+                                    </dynamicElement>
+                                </dynamic>
+                                <dynamic scope="left_arm" slot="HandLocation">
+                                    <dynamicElement scope="left_arm" type="linear">
+                                        <value type="start" name="LocHip LocCenterLeft LocFar"/>
+                                        <value type="end" name="LocUpperChest LocCCenterRight LocFar"/>
+                                    </dynamicElement>
+                                </dynamic>
+                            </parallel>
+                            <parallel>
+                                <dynamic scope="right_arm" slot="HandLocation">
+                                    <dynamicElement scope="right_arm" type="linear">
+                                        <value type="start" name="LocUpperChest LocCenterRight LocFar"/>
+                                        <value type="end" name="LocMouth LocPeripheryRight LocFar"/>
+                                    </dynamicElement>
+                                </dynamic>
+                                <dynamic scope="left_arm" slot="HandLocation">
+                                    <dynamicElement scope="left_arm" type="linear">
+                                        <value type="start" name="LocUpperChest LocCCenterRight LocFar"/>
+                                        <value type="end" name="LocMouth LocCenterRight LocFar"/>
+                                    </dynamicElement>
+                                </dynamic>
+                            </parallel>
+                            <parallel>
+                                <dynamic scope="right_arm" slot="HandLocation">
+                                    <dynamicElement scope="right_arm" type="linear">
+                                        <value type="start" name="LocMouth LocPeripheryRight LocFar"/>
+                                        <value type="end" name="LocAboveHead LocRight LocFar"/>
+                                    </dynamicElement>
+                                </dynamic>
+                                <dynamic scope="left_arm" slot="HandLocation">
+                                    <dynamicElement scope="left_arm" type="linear">
+                                        <value type="start" name="LocMouth LocCenterRight LocFar"/>
+                                        <value type="end" name="LocAboveHead LocExtremePeripheryRight LocFar"/>
+                                    </dynamicElement>
+                                </dynamic>
+                            </parallel>
+                        </sequence>
+                    </parallel>
+</murml-description>
+        
+    
+

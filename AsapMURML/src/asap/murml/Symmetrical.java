@@ -16,20 +16,29 @@ public class Symmetrical extends MURMLElement implements MovementConstraint
 {
     @Getter
     private Dominant dominant;
-    
+
     @Getter
     private Symmetry symmetry;
-    
+
     @Getter
     private Parallel parallel;
+
+    @Getter
+    private Sequence sequence;
+
+    @Getter
+    private Dynamic dynamic;
+    
+    @Getter
+    private Static staticElem;
     
     @Override
     public void decodeAttributes(HashMap<String, String> attrMap, XMLTokenizer tokenizer)
     {
-        dominant = Dominant.valueOf(getRequiredAttribute("dominant", attrMap,tokenizer).toUpperCase());
-        symmetry = Symmetry.valueOf(getRequiredAttribute("symmetry", attrMap,tokenizer));        
+        dominant = Dominant.valueOf(getRequiredAttribute("dominant", attrMap, tokenizer).toUpperCase());
+        symmetry = Symmetry.valueOf(getRequiredAttribute("symmetry", attrMap, tokenizer));
     }
-    
+
     public void decodeContent(XMLTokenizer tokenizer) throws IOException
     {
         String tag = tokenizer.getTagName();
@@ -38,12 +47,27 @@ public class Symmetrical extends MURMLElement implements MovementConstraint
             parallel = new Parallel();
             parallel.readXML(tokenizer);
         }
+        else if (tag.equals(Sequence.xmlTag()))
+        {
+            sequence = new Sequence();
+            sequence.readXML(tokenizer);
+        }
+        else if (tag.equals(Static.xmlTag()))
+        {
+            staticElem = new Static();
+            staticElem.readXML(tokenizer);
+        }
+        else if (tag.equals(Dynamic.xmlTag()))
+        {
+            dynamic = new Dynamic();
+            dynamic.readXML(tokenizer);
+        }
         else
         {
-            throw new XMLScanException("Unkown tag "+tag+" in <symmetrical>");
+            throw new XMLScanException("Unkown tag " + tag + " in <symmetrical>");
         }
     }
-    
+
     static final String XMLTAG = "symmetrical";
 
     public static String xmlTag()

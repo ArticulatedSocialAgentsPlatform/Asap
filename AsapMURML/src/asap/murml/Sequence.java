@@ -44,8 +44,13 @@ public class Sequence extends MURMLElement implements MovementConstraint
                 s.readXML(tokenizer);
                 sequence.add(s);
                 break;
+            case Parallel.XMLTAG:
+                Parallel par = new Parallel();
+                par.readXML(tokenizer);
+                sequence.add(par);
+                break;
             default:
-                throw new XMLScanException("Unknown element " + tag + " in parallel");
+                throw new XMLScanException("Unknown element " + tag + " in sequence");
             }
         }
     }

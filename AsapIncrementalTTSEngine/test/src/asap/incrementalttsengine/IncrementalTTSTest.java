@@ -5,7 +5,6 @@ import inpro.audio.DispatchStream;
 import inpro.incremental.unit.IU;
 import inpro.incremental.unit.IU.IUUpdateListener;
 import inpro.incremental.unit.IU.Progress;
-import inpro.incremental.unit.SysSegmentIU;
 import inpro.synthesis.MaryAdapter;
 
 import org.junit.Test;
@@ -14,21 +13,29 @@ import done.inpro.system.carchase.HesitatingSynthesisIU;
 
 public class IncrementalTTSTest
 {
-    private static class MyUpdateListener implements IUUpdateListener
+    private static class MyWordUpdateListener implements IUUpdateListener
     {
         @Override
         public void update(IU updatedIU)
         {
-            System.out.println("update " + updatedIU.toString());
+            System.out.println("update " + updatedIU.toPayLoad());
             Progress newProgress = updatedIU.getProgress();
             System.out.println(newProgress.toString());
+            
+            for(IU we: updatedIU.groundedIn())
+            {
+                System.out.println("Phoneme: "+we.toPayLoad());
+                System.out.println("Start: "+we.startTime());
+                System.out.println("End: "+we.endTime());
+                System.out.println("progress: "+we.getProgress());
+            }
         }
     }
 
     @Test
     public void test() throws InterruptedException
     {
-        MaryAdapter.getInstance();
+        //MaryAdapter.getInstance();
         DispatchStream dispatcher = SimpleMonitor.setupDispatcher();
         /*
         TreeStructuredInstallmentIU installment = new TreeStructuredInstallmentIU(
@@ -38,9 +45,27 @@ public class IncrementalTTSTest
         for (IU word : installment.groundedIn())
         {
             word.updateOnGrinUpdates();
-            word.addUpdateListener(new MyUpdateListener());
+            word.addUpdateListener(new MyWordUpdateListener());            
         }        
         dispatcher.playStream(installment.getAudio(), true);        
+        
+        Thread.sleep(500);
+        
+        dispatcher.interruptPlayback();
+        
+        //interrupt (?)
+        for (IU word : installment.groundedIn())
+        {
+            word.revoke();
+            for(IU we: word.groundedIn())
+            {
+                we.revoke();
+                for(IU audio: we.groundedIn())
+                {
+                    audio.revoke();
+                }
+            }
+        }
         
         /*
         installment = new HesitatingSynthesisIU("Next sentence");

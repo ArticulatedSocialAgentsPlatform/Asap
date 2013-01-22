@@ -17,10 +17,16 @@ import lombok.Getter;
 public class Parallel extends MURMLElement implements MovementConstraint
 {
     @Getter
-    private List<Dynamic> dynamics = new ArrayList<Dynamic>();
+    private List<Dynamic> dynamics = new ArrayList<>();
+
+    @Getter
+    private List<Sequence> sequences = new ArrayList<>();
+
+    @Getter
+    private List<Static> statics = new ArrayList<>();
     
     @Getter
-    private List<Static> statics = new ArrayList<Static>();
+    private List<Symmetrical> symmetricals = new ArrayList<>();
 
     @Override
     public void decodeContent(XMLTokenizer tokenizer) throws IOException
@@ -39,6 +45,18 @@ public class Parallel extends MURMLElement implements MovementConstraint
                 Static s = new Static();
                 s.readXML(tokenizer);
                 statics.add(s);
+            }
+            else if (tag.equals(Sequence.xmlTag()))
+            {
+                Sequence s = new Sequence();
+                s.readXML(tokenizer);
+                sequences.add(s);
+            }
+            else if (tag.equals(Symmetrical.xmlTag()))
+            {
+                Symmetrical s = new Symmetrical();
+                s.readXML(tokenizer);
+                symmetricals.add(s);
             }
             else
             {

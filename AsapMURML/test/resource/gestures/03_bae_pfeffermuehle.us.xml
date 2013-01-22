@@ -1,0 +1,70 @@
+<?xml version="1.0"?>
+
+    
+        
+            <murml-description xmlns="http://www.techfak.uni-bielefeld.de/ags/soa/murml" scope="hand">
+  <parallel>
+                        <static slot="GazeDirection" value="100 0 0" mode="pointTo" scope="head"/>
+                        <sequence>
+                            <parallel>
+                                <static scope="left_arm" slot="HandShape" value="ASLclarge"/>
+                                <static scope="left_arm" slot="PalmOrientation" value="DirRD"/>
+                                <static scope="left_arm" slot="ExtFingerOrientation" value="DirA"/>
+                                <static scope="right_arm" slot="HandShape" value="ASLclarge"/>
+                                <static scope="right_arm" slot="PalmOrientation" value="DirLD"/>
+                                <static scope="right_arm" slot="ExtFingerOrientation" value="DirA"/>
+                                <dynamic scope="right_arm" slot="HandLocation">
+                                    <dynamicElement scope="right_arm" type="linear">
+                                        <value type="start" name="LocHip LocRight LocNear"/>
+                                        <value type="end" name="LocLowerChest LocCenterRight LocNear"/>
+                                    </dynamicElement>
+                                </dynamic>
+                                <dynamic scope="left_arm" slot="HandLocation">
+                                    <dynamicElement scope="left_arm" type="linear">
+                                        <value type="start" name="LocHip LocLeft LocNear"/>
+                                        <value type="end" name="LocStomach LocCenterLeft LocNear"/>
+                                    </dynamicElement>
+                                </dynamic>
+                            </parallel>
+                            <parallel>
+                                <static scope="left_arm" slot="HandLocation" value="LocStomach LocCenterLeft LocNear"/>
+                                <static scope="left_arm" slot="ExtFingerOrientation" value="DirAR"/>
+                                <static scope="right_arm" slot="HandLocation" value="LocLowerChest LocCenterRight LocNear"/>
+                                <static scope="right_arm" slot="ExtFingerOrientation" value="DirLU"/>
+                            </parallel>
+                            <parallel>
+                                <static scope="left_arm" slot="HandLocation" value="LocStomach LocCenterLeft LocNear"/>
+                                <static scope="left_arm" slot="ExtFingerOrientation" value="DirA"/>
+                                <static scope="right_arm" slot="HandLocation" value="LocLowerChest LocCenterRight LocNear"/>
+                                <static scope="right_arm" slot="ExtFingerOrientation" value="DirA"/>
+                            </parallel>
+                            <parallel>
+                                <static scope="left_arm" slot="HandLocation" value="LocStomach LocCenterLeft LocNear"/>
+                                <static scope="left_arm" slot="ExtFingerOrientation" value="DirAR"/>
+                                <static scope="right_arm" slot="HandLocation" value="LocLowerChest LocCenterRight LocNear"/>
+                                <static scope="right_arm" slot="ExtFingerOrientation" value="DirLU"/>
+                            </parallel>
+                            <parallel>
+                                <static scope="left_arm" slot="HandLocation" value="LocStomach LocCenterLeft LocNear"/>
+                                <static scope="left_arm" slot="ExtFingerOrientation" value="DirA"/>
+                                <static scope="right_arm" slot="HandLocation" value="LocLowerChest LocCenterRight LocNear"/>
+                                <static scope="right_arm" slot="ExtFingerOrientation" value="DirA"/>
+                            </parallel>
+                            <parallel>
+                                <static scope="left_arm" slot="HandLocation" value="LocStomach LocCenterLeft LocNear"/>
+                                <static scope="left_arm" slot="ExtFingerOrientation" value="DirAR"/>
+                                <static scope="right_arm" slot="HandLocation" value="LocLowerChest LocCenterRight LocNear"/>
+                                <static scope="right_arm" slot="ExtFingerOrientation" value="DirLU"/>
+                            </parallel>
+                            <parallel>
+                                <static scope="left_arm" slot="HandLocation" value="LocStomach LocCenterLeft LocNear"/>
+                                <static scope="left_arm" slot="ExtFingerOrientation" value="DirA"/>
+                                <static scope="right_arm" slot="HandLocation" value="LocLowerChest LocCenterRight LocNear"/>
+                                <static scope="right_arm" slot="ExtFingerOrientation" value="DirA"/>
+                            </parallel>
+                        </sequence>
+                    </parallel>
+</murml-description>
+        
+    
+
