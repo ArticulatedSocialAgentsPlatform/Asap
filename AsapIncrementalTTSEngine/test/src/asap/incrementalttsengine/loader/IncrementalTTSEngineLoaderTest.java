@@ -3,15 +3,12 @@ package asap.incrementalttsengine.loader;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
 import static org.mockito.Mockito.mock;
-import static org.mockito.Mockito.when;
-
-import java.io.IOException;
-
 import hmi.environmentbase.Environment;
 import hmi.environmentbase.Loader;
 import hmi.xml.XMLTokenizer;
 
-import org.junit.Before;
+import java.io.IOException;
+
 import org.junit.Test;
 
 import asap.incrementalspeechengine.loader.IncrementalTTSEngineLoader;
@@ -25,12 +22,6 @@ import asap.realizerembodiments.AsapRealizerEmbodiment;
 public class IncrementalTTSEngineLoaderTest
 {
     private AsapRealizerEmbodiment  mockAsapRealizerEmbodiment = mock(AsapRealizerEmbodiment.class);
-    
-    @Before
-    public void setup()
-    {
-        when(mockAsapRealizerEmbodiment.getEmbodiment()).thenReturn(mockAsapRealizerEmbodiment);
-    }
     
     @Test
     public void test() throws IOException

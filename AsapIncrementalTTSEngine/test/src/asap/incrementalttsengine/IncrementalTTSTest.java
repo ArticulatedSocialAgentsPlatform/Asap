@@ -1,17 +1,19 @@
 package asap.incrementalttsengine;
 
+import hmi.util.Resources;
 import inpro.apps.SimpleMonitor;
 import inpro.audio.DispatchStream;
 import inpro.incremental.unit.IU;
 import inpro.incremental.unit.IU.IUUpdateListener;
 import inpro.incremental.unit.IU.Progress;
+import inpro.synthesis.MaryAdapter;
 
 import org.junit.Ignore;
 import org.junit.Test;
 
 import done.inpro.system.carchase.HesitatingSynthesisIU;
 
-@Ignore
+//@Ignore
 public class IncrementalTTSTest
 {
     private static class MyWordUpdateListener implements IUUpdateListener
@@ -36,8 +38,8 @@ public class IncrementalTTSTest
     @Test
     public void test() throws InterruptedException
     {
-        //MaryAdapter.getInstance();
-        DispatchStream dispatcher = SimpleMonitor.setupDispatcher();
+        MaryAdapter.getInstance();
+        DispatchStream dispatcher = SimpleMonitor.setupDispatcher(new Resources("").getURL("sphinx-config.xml"));
         /*
         TreeStructuredInstallmentIU installment = new TreeStructuredInstallmentIU(
                 Collections.<String> singletonList("Hello world, this is a very long sentence."));
@@ -52,7 +54,7 @@ public class IncrementalTTSTest
         
         Thread.sleep(500);
         
-        dispatcher.interruptPlayback();
+        //dispatcher.interruptPlayback();
         
         //interrupt (?)
         for (IU word : installment.groundedIn())

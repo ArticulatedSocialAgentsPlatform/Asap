@@ -282,7 +282,7 @@ public class MixedAnimationEngineLoader implements EngineLoader
         pe.glueFeetToFloor();
 
         // add engine to realizer;
-        are.addEngine(engine);
+        
 
         // add player to playermanager
         mae.addAnimationPlayer(animationPlayer, mse.getNextVJoint(), mse.getAnimationVJoint());
