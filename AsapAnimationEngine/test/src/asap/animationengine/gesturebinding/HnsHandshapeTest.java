@@ -26,6 +26,11 @@ public class HnsHandshapeTest
     private SkeletonPose mockSkeletonPose2 = mock(SkeletonPose.class);
     private SkeletonPose mockSkeletonPose3 = mock(SkeletonPose.class);
     
+    
+    private SkeletonPose mockSkeletonPose1DeepCopy = mock(SkeletonPose.class);
+    private SkeletonPose mockSkeletonPose2DeepCopy = mock(SkeletonPose.class);
+    private SkeletonPose mockSkeletonPose3DeepCopy = mock(SkeletonPose.class);
+    
     @Before
     public void setup()
     {
@@ -33,13 +38,17 @@ public class HnsHandshapeTest
         when(mockSkeletonPose1.getId()).thenReturn("id1");
         when(mockSkeletonPose2.getId()).thenReturn("id2");
         when(mockSkeletonPose3.getId()).thenReturn("id3");
+        
+        when(mockSkeletonPose1.untargettedDeepCopy()).thenReturn(mockSkeletonPose1DeepCopy);
+        when(mockSkeletonPose2.untargettedDeepCopy()).thenReturn(mockSkeletonPose2DeepCopy);
+        when(mockSkeletonPose3.untargettedDeepCopy()).thenReturn(mockSkeletonPose3DeepCopy);
     }
     
     @Test
     public void test()
     {
         HnsHandshape s = new HnsHandshape(mockHns, ImmutableList.of(mockSkeletonPose1, mockSkeletonPose2, mockSkeletonPose3));
-        assertEquals(mockSkeletonPose2, s.getHNSHandShape("id2"));
+        assertEquals(mockSkeletonPose2DeepCopy, s.getHNSHandShape("id2"));
         assertNull(s.getHNSHandShape("unknown"));
     }
 }

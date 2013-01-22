@@ -5,12 +5,13 @@ import inpro.audio.DispatchStream;
 import inpro.incremental.unit.IU;
 import inpro.incremental.unit.IU.IUUpdateListener;
 import inpro.incremental.unit.IU.Progress;
-import inpro.synthesis.MaryAdapter;
 
+import org.junit.Ignore;
 import org.junit.Test;
 
 import done.inpro.system.carchase.HesitatingSynthesisIU;
 
+@Ignore
 public class IncrementalTTSTest
 {
     private static class MyWordUpdateListener implements IUUpdateListener

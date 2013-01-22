@@ -13,19 +13,23 @@ import com.google.common.collect.ImmutableList;
 
 import done.inpro.system.carchase.HesitatingSynthesisIU;
 
-
+/**
+ * Incrementally constructed and updated ttsunit
+ * @author hvanwelbergen
+ *
+ */
 public class IncrementalTTSUnit extends TimedAbstractPlanUnit
 {
     private HesitatingSynthesisIU synthesisIU;
     private DispatchStream dispatcher;
-    private final TimePeg startPeg;
-    private final TimePeg relaxPeg;
-    private final TimePeg endPeg;
+    private TimePeg startPeg;
+    private TimePeg relaxPeg;
+    private TimePeg endPeg;
     private double duration;
-    
+
     public IncrementalTTSUnit(FeedbackManager fbm, BMLBlockPeg bmlPeg, String bmlId, String behId, String text, DispatchStream dispatcher)
     {
-        super(fbm, bmlPeg, bmlId, behId);        
+        super(fbm, bmlPeg, bmlId, behId);
         synthesisIU = new HesitatingSynthesisIU(text);
         this.dispatcher = dispatcher;
         startPeg = new TimePeg(bmlPeg);
@@ -55,46 +59,70 @@ public class IncrementalTTSUnit extends TimedAbstractPlanUnit
     @Override
     public List<String> getAvailableSyncs()
     {
-        //TODO: add marks
-        return ImmutableList.of("start","relax","end");
+        // TODO: add marks
+        return ImmutableList.of("start", "relax", "end");
     }
 
     @Override
     public TimePeg getTimePeg(String syncId)
     {
-        // TODO Auto-generated method stub
+        if (syncId.equals("start"))
+        {
+            return startPeg;
+        }
+        else if (syncId.equals("end"))
+        {
+            return endPeg;
+        }
+        else if (syncId.equals("relax"))
+        {
+            return relaxPeg;
+        }
+
+        // TODO pegs for marks
         return null;
     }
 
     @Override
     public void setTimePeg(String syncId, TimePeg peg)
     {
-        // TODO Auto-generated method stub
-        
+        if (syncId.equals("start"))
+        {
+            startPeg = peg;
+        }
+        else if (syncId.equals("end"))
+        {
+            endPeg = peg;
+        }
+        else if (syncId.equals("relax"))
+        {
+            relaxPeg = peg;
+        }
+        // TODO: pegs for marks
     }
 
     @Override
     public boolean hasValidTiming()
     {
-        //TODO Auto-generated method stub
+        // TODO Auto-generated method stub
         return true;
     }
 
-    protected void startUnit(double time) 
+    protected void startUnit(double time)
     {
         dispatcher.playStream(synthesisIU.getAudio(), true);
     }
-    
+
     @Override
-    protected void playUnit(double time) 
+    protected void playUnit(double time)
     {
-                
+
     }
 
     @Override
-    protected void stopUnit(double time) 
+    protected void stopUnit(double time)
     {
-        dispatcher.interruptPlayback();        
+        dispatcher.interruptPlayback();
     }
-    
+
 }

@@ -131,7 +131,7 @@ public class AsapRealizerEmbodiment implements EmbodimentLoader, Embodiment
     }
 
     @Override
-    public Embodiment getEmbodiment()
+    public AsapRealizerEmbodiment getEmbodiment()
     {
         return this;
     }
