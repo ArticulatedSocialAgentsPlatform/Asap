@@ -16,7 +16,6 @@
                         <static scope="right_arm" slot="PalmOrientation" value="DirL"/>
                         <static scope="right_arm" slot="ExtFingerOrientation" value="DirA"/>
                         <static slot="GazeDirection" value="-1 0 0" scope="head"/>
-                        <parallel>
                             <dynamic scope="right_arm" slot="HandLocation">
                                 <dynamicElement scope="right_arm" type="linear" >
                                     <value name="LocHip LocCCenter LocNear" type="start"/>
@@ -40,7 +39,6 @@
                                 </dynamicElement>
                             </dynamic>
                             <static slot="GazeDirection" value="100 0 0" mode="pointTo" scope="head"/>
-                        </parallel>
                     </parallel>
                 </constraints>
             </gesture>
