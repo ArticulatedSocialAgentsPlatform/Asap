@@ -28,7 +28,10 @@ public class IncrementalTTSEngineLoaderTest
     {
         //@formatter:off
         String loaderStr =
-          "<Loader id=\"incrementaltts\" loader=\"asap.incrementalttsengine.loader.IncrementalTTSEngineLoader\"/>";
+          "<Loader id=\"incrementaltts\" loader=\"asap.incrementalttsengine.loader.IncrementalTTSEngineLoader\">"+
+          "<Dispatcher resources=\"\" filename=\"sphinx-config.xml\"/>"+
+          
+          "</Loader>";
         //@formatter:on
         XMLTokenizer tok = new XMLTokenizer(loaderStr);
         tok.takeSTag();

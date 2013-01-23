@@ -16,6 +16,11 @@ import org.junit.Test;
 
 import saiba.bml.core.SpeechBehaviour;
 
+/**
+ * Integration test for the MaryTTSBindingLoader
+ * @author hvanwelbergen
+ *
+ */
 public class MaryTTSBindingLoaderIntegrationTest
 {
     @Test
@@ -24,7 +29,7 @@ public class MaryTTSBindingLoaderIntegrationTest
         //@formatter:off
         String bindingXML=
         "<Loader id=\"l1\" loader=\"asap.maryttsbinding.loader.MaryTTSBindingLoader\">"+
-        "<MaryTTS localmarydir=\"HmiResource/MARYTTS/resource/MARYTTS\"/>" +
+        "<MaryTTS localdir=\"HmiResource/MARYTTS/resource/MARYTTS\"/>" +
         "<PhonemeToVisemeMapping resources=\"Humanoids/shared/phoneme2viseme/\" filename=\"sampade2ikp.xml\"/>"+
         "</Loader>";            
         //@formatter:on
