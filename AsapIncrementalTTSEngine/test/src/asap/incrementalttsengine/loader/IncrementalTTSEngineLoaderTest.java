@@ -17,12 +17,12 @@ import asap.realizerembodiments.AsapRealizerEmbodiment;
 /**
  * unit tests for the IncrementalTTSEngineLoader
  * @author hvanwelbergen
- *
+ * 
  */
 public class IncrementalTTSEngineLoaderTest
 {
-    private AsapRealizerEmbodiment  mockAsapRealizerEmbodiment = mock(AsapRealizerEmbodiment.class);
-    
+    private AsapRealizerEmbodiment mockAsapRealizerEmbodiment = mock(AsapRealizerEmbodiment.class);
+
     @Test
     public void test() throws IOException
     {
@@ -30,14 +30,16 @@ public class IncrementalTTSEngineLoaderTest
         String loaderStr =
           "<Loader id=\"incrementaltts\" loader=\"asap.incrementalttsengine.loader.IncrementalTTSEngineLoader\">"+
           "<Dispatcher resources=\"\" filename=\"sphinx-config.xml\"/>"+
-          
+          "<MaryTTSIncremental localdir=\"AsapResource/MARYTTSIncremental/resource/MARYTTSIncremental\"/>"+
           "</Loader>";
         //@formatter:on
         XMLTokenizer tok = new XMLTokenizer(loaderStr);
         tok.takeSTag();
         IncrementalTTSEngineLoader loader = new IncrementalTTSEngineLoader();
-        loader.readXML(tok, "ma1", "billie", "billie", new Environment[]{}, new Loader[]{mockAsapRealizerEmbodiment});
+        loader.readXML(tok, "ma1", "billie", "billie", new Environment[] {}, new Loader[] { mockAsapRealizerEmbodiment });
         assertEquals("ma1", loader.getId());
         assertNotNull(loader.getEngine());
+        assertEquals(System.getProperty("shared.project.root") + "/AsapResource/MARYTTSIncremental/resource/MARYTTSIncremental",
+                System.getProperty("mary.base"));
     }
 }

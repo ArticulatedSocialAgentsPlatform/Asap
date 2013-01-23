@@ -1,5 +1,6 @@
 package asap.incrementalspeechengine.loader;
 
+import hmi.environmentbase.ConfigDirLoader;
 import hmi.environmentbase.Environment;
 import hmi.environmentbase.Loader;
 import hmi.util.ArrayUtils;
@@ -83,6 +84,7 @@ public class IncrementalTTSEngineLoader implements EngineLoader
         }
 
         DispatcherInfo di = null;
+        ConfigDirLoader maryTTS = new ConfigDirLoader("MARYTTSIncremental","MaryTTSIncremental");
         while (tokenizer.atSTag())
         {
             String tag = tokenizer.getTagName();
@@ -92,6 +94,9 @@ public class IncrementalTTSEngineLoader implements EngineLoader
                 di = new DispatcherInfo();
                 di.readXML(tokenizer);
                 break;
+            case "MaryTTSIncremental":
+                maryTTS.readXML(tokenizer);                
+                break;
             default:
                 throw new XMLScanException("Invalid tag " + tag);
             }
@@ -100,7 +105,8 @@ public class IncrementalTTSEngineLoader implements EngineLoader
         {
             throw new RuntimeException("IncrementalTTSEngineLoader requires an Dispatcher specification");
         }
-
+        System.setProperty("mary.base",maryTTS.getConfigDir());
+        
         dispatcher = SimpleMonitor.setupDispatcher(new Resources(di.getResource()).getURL(di.getFilename()));
         PlanManager<IncrementalTTSUnit> planManager = new PlanManager<IncrementalTTSUnit>();
         IncrementalTTSPlanner planner = new IncrementalTTSPlanner(realizerEmbodiment.getFeedbackManager(), planManager, dispatcher);
