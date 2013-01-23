@@ -581,8 +581,7 @@ public class LMPWristRot extends LMP
     @Override
     protected void stopUnit(double time) throws TimedPlanUnitPlayException
     {
-        // TODO Auto-generated method stub
-
+        
     }
 
 }
