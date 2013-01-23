@@ -122,7 +122,7 @@ public class IncrementalTTSUnit extends TimedAbstractPlanUnit
     @Override
     protected void stopUnit(double time)
     {
-        dispatcher.interruptPlayback();
+        //dispatcher.interruptPlayback();
     }
 
 }

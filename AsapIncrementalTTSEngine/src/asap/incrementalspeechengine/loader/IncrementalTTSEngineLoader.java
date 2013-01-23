@@ -10,6 +10,7 @@ import hmi.xml.XMLStructureAdapter;
 import hmi.xml.XMLTokenizer;
 import inpro.apps.SimpleMonitor;
 import inpro.audio.DispatchStream;
+import inpro.synthesis.MaryAdapter;
 
 import java.io.IOException;
 import java.util.HashMap;
@@ -113,6 +114,7 @@ public class IncrementalTTSEngineLoader implements EngineLoader
         engine = new DefaultEngine<IncrementalTTSUnit>(planner, new DefaultPlayer(new SingleThreadedPlanPlayer<IncrementalTTSUnit>(
                 planManager)), planManager);
         engine.setId(id);
+        MaryAdapter.getInstance();
         realizerEmbodiment.addEngine(engine);
     }
 
