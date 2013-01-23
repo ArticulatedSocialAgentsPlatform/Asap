@@ -8,6 +8,7 @@ import asap.realizer.feedback.FeedbackManager;
 import asap.realizer.pegboard.BMLBlockPeg;
 import asap.realizer.pegboard.TimePeg;
 import asap.realizer.planunit.TimedAbstractPlanUnit;
+import asap.realizer.planunit.TimedPlanUnitPlayException;
 
 import com.google.common.collect.ImmutableList;
 
@@ -108,9 +109,11 @@ public class IncrementalTTSUnit extends TimedAbstractPlanUnit
         return true;
     }
 
-    protected void startUnit(double time)
+    protected void startUnit(double time) throws TimedPlanUnitPlayException
     {
         dispatcher.playStream(synthesisIU.getAudio(), true);
+        sendFeedback("start",time);
+        super.startUnit(time);
     }
 
     @Override
@@ -122,6 +125,7 @@ public class IncrementalTTSUnit extends TimedAbstractPlanUnit
     @Override
     protected void stopUnit(double time)
     {
+        sendFeedback("end",time);
         //dispatcher.interruptPlayback();
     }
 
