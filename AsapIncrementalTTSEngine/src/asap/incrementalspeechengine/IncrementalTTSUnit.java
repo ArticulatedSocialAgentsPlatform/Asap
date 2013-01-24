@@ -1,6 +1,9 @@
 package asap.incrementalspeechengine;
 
 import inpro.audio.DispatchStream;
+import inpro.incremental.unit.IU;
+import inpro.incremental.unit.IU.IUUpdateListener;
+import inpro.incremental.unit.IU.Progress;
 
 import java.util.List;
 
@@ -28,10 +31,35 @@ public class IncrementalTTSUnit extends TimedAbstractPlanUnit
     private TimePeg endPeg;
     private double duration;
 
+    private static class WordUpdateListener implements IUUpdateListener
+    {
+        @Override
+        public void update(IU updatedIU)
+        {
+            Progress newProgress = updatedIU.getProgress();            
+            for(IU we: updatedIU.groundedIn())
+            {
+                /*
+                System.out.println("Phoneme: "+we.toPayLoad());
+                System.out.println("Start: "+we.startTime());
+                System.out.println("End: "+we.endTime());
+                System.out.println("progress: "+we.getProgress());
+                */
+            }
+        }
+    }
+    
     public IncrementalTTSUnit(FeedbackManager fbm, BMLBlockPeg bmlPeg, String bmlId, String behId, String text, DispatchStream dispatcher)
     {
         super(fbm, bmlPeg, bmlId, behId);
         synthesisIU = new HesitatingSynthesisIU(text);
+        for (IU word : synthesisIU.groundedIn())
+        {
+            word.updateOnGrinUpdates();
+            word.addUpdateListener(new WordUpdateListener());            
+        }
+        
+        
         this.dispatcher = dispatcher;
         startPeg = new TimePeg(bmlPeg);
         endPeg = new TimePeg(bmlPeg);

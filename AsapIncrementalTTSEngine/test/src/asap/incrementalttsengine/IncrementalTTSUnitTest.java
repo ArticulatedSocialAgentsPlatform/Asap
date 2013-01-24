@@ -28,7 +28,7 @@ public class IncrementalTTSUnitTest extends AbstractTimedPlanUnitTest
     @Override
     protected TimedPlanUnit setupPlanUnit(FeedbackManager bfm, BMLBlockPeg bbPeg, String id, String bmlId, double startTime)
     {
-        System.setProperty("mary.base","../../asapresource/MARYTTSIncremental/resource/MARYTTSIncremental");
+        System.setProperty("mary.base",System.getProperty("shared.project.root")+"/asapresource/MARYTTSIncremental/resource/MARYTTSIncremental");
         IncrementalTTSUnit ttsUnit = new IncrementalTTSUnit(bfm, bbPeg, bmlId, id, "Hello world",
                 SimpleMonitor.setupDispatcher(new Resources("").getURL("sphinx-config.xml")));
         ttsUnit.getTimePeg("start").setGlobalValue(startTime);
