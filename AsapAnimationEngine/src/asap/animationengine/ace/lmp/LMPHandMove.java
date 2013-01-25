@@ -462,4 +462,22 @@ public class LMPHandMove extends LMP
 
     }
 
+    @Override
+    public double getPreparationDuration()
+    {
+        return TRANSITION_TIME;
+    }
+
+    @Override
+    public double getRetractionDuration()
+    {
+        return TRANSITION_TIME;
+    }
+
+    @Override
+    public double getStrokeDuration()
+    {
+        return DEFAULT_STROKEPHASE_DURATION;
+    }
+
 }

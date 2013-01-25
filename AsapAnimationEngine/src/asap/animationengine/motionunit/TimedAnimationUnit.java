@@ -23,5 +23,9 @@ public interface TimedAnimationUnit extends TimedPlanUnit
     void updateTiming(double time) throws TMUPlayException;    
     void setSubUnit(boolean subUnit);
     
-    void resolveSynchs(BMLBlockPeg bbPeg, Behaviour b, List<TimePegAndConstraint> sac)throws BehaviourPlanningException;    
+    void resolveSynchs(BMLBlockPeg bbPeg, Behaviour b, List<TimePegAndConstraint> sac)throws BehaviourPlanningException;
+    
+    double getPreparationDuration();
+    double getRetractionDuration();
+    double getStrokeDuration();
 }

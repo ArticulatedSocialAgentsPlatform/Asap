@@ -459,4 +459,22 @@ public class LMPPoRot extends LMP
         feedback("end", time);
     }
 
+    
+    @Override
+    public double getPreparationDuration()
+    {
+        return TRANSITION_TIME;
+    }
+
+    @Override
+    public double getRetractionDuration()
+    {
+        return TRANSITION_TIME;
+    }
+
+    @Override
+    public double getStrokeDuration()
+    {
+        return DEFAULT_STROKEPHASE_DURATION;
+    }
 }

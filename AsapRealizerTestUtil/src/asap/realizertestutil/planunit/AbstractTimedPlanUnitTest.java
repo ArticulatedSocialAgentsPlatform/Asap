@@ -214,7 +214,9 @@ public abstract class AbstractTimedPlanUnitTest
         relaxPeg.setGlobalValue(2);
         relaxPeg.setAbsoluteTime(true);
         tpu.setTimePeg(BMLGestureSync.RELAX.toString(), relaxPeg);
-        tpu.setTimePeg("end", TimePegUtil.createTimePeg(2.2));
+        TimePeg end = TimePegUtil.createTimePeg(2.2);
+        end.setAbsoluteTime(true);
+        tpu.setTimePeg("end", end);
         tpu.setState(TimedPlanUnitState.LURKING);
         tpu.start(0);
         tpu.play(2.1);

@@ -47,8 +47,8 @@ public class LMPWristRot extends LMP
     private final String joint;
 
     private static final float PRECISION = 0.001f;
-    private static final double TRANSITION_TIME = 0.4;
-    private static final double DEFAULT_STROKEPHASE_DURATION = 5;
+    public static final double TRANSITION_TIME = 0.4;
+    public static final double DEFAULT_STROKEPHASE_DURATION = 5;
 
     public void resolveSynchs(BMLBlockPeg bbPeg, Behaviour b, List<TimePegAndConstraint> sac) throws BehaviourPlanningException
     {
@@ -517,6 +517,7 @@ public class LMPWristRot extends LMP
     @Override
     protected void playUnit(double time) throws TimedPlanUnitPlayException
     {
+        System.out.println("play "+time);
         float q[] = getOrient(time);
         VJoint vjRoot = aniPlayer.getVNext().getPartBySid(Hanim.HumanoidRoot);
         VJoint vjWrist = aniPlayer.getVNext().getPartBySid(joint);
@@ -582,6 +583,25 @@ public class LMPWristRot extends LMP
     protected void stopUnit(double time) throws TimedPlanUnitPlayException
     {
         
+    }
+    
+    
+    @Override
+    public double getPreparationDuration()
+    {
+        return TRANSITION_TIME;
+    }
+
+    @Override
+    public double getRetractionDuration()
+    {
+        return TRANSITION_TIME;
+    }
+
+    @Override
+    public double getStrokeDuration()
+    {
+        return DEFAULT_STROKEPHASE_DURATION;
     }
 
 }

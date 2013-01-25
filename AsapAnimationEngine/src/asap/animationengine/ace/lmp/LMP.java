@@ -15,6 +15,11 @@ import asap.realizer.scheduler.TimePegAndConstraint;
 
 import com.google.common.collect.ImmutableMap;
 
+/**
+ * Local motor program skeleton implementation
+ * @author hvanwelbergen
+ *
+ */
 public abstract class LMP extends TimedAbstractPlanUnit implements TimedAnimationUnit
 {
     protected final PegBoard pegBoard;
@@ -95,14 +100,16 @@ public abstract class LMP extends TimedAbstractPlanUnit implements TimedAnimatio
         {
             for (String syncId : getAvailableSyncs())
             {
-
-                if (s.offset == 0)
+                if(s.syncId.equals(syncId))
                 {
-                    setTimePeg(syncId, s.peg);
-                }
-                else
-                {
-                    setTimePeg(syncId, new OffsetPeg(s.peg, -s.offset));
+                    if (s.offset == 0)
+                    {
+                        setTimePeg(syncId, s.peg);
+                    }
+                    else
+                    {
+                        setTimePeg(syncId, new OffsetPeg(s.peg, -s.offset));
+                    }
                 }
             }
         }

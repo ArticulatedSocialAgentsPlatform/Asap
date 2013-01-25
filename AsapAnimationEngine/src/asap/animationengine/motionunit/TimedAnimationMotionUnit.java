@@ -62,7 +62,7 @@ public class TimedAnimationMotionUnit extends TimedMotionUnit implements TimedAn
     {
         resolver.resolveSynchs(bbPeg, b, sac, this);
     }
-    
+
     /**
      * Constructor
      * @param bmlBlockPeg
@@ -86,7 +86,7 @@ public class TimedAnimationMotionUnit extends TimedMotionUnit implements TimedAn
     {
 
     }
-    
+
     protected void skipPegs(double time, String... pegs)
     {
         for (String peg : pegs)
@@ -95,14 +95,32 @@ public class TimedAnimationMotionUnit extends TimedMotionUnit implements TimedAn
             {
                 TimePeg tp = getTimePeg(peg);
                 TimePeg tpNew = tp;
-                if(pegBoard.getPegKeys(tp).size()>1)
+                if (pegBoard.getPegKeys(tp).size() > 1)
                 {
                     tpNew = new TimePeg(tp.getBmlBlockPeg());
                     pegBoard.addTimePeg(getBMLId(), getId(), peg, tpNew);
                 }
-                tpNew.setGlobalValue(time-0.01);
-                setTimePeg(peg, tpNew);                
+                tpNew.setGlobalValue(time - 0.01);
+                setTimePeg(peg, tpNew);
             }
         }
+    }
+
+    @Override
+    public double getPreparationDuration()
+    {
+        return 0;
+    }
+
+    @Override
+    public double getRetractionDuration()
+    {
+        return 0;
+    }
+
+    @Override
+    public double getStrokeDuration()
+    {
+        return getPreferedDuration() - getPreparationDuration() - getRetractionDuration();
     }
 }

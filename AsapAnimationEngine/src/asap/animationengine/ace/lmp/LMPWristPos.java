@@ -419,14 +419,7 @@ public class LMPWristPos extends LMPPos
 
     private void setInternalStrokeTiming(double time)
     {
-        double defaultStrokeDuration = 0;
-        GuidingStroke prevGstroke = gSeq.getStroke(0);
-
-        for (int i = 1; i < gSeq.size(); i++)
-        {
-            defaultStrokeDuration += gSeq.getStroke(i).getEDt();
-        }
-
+        double defaultStrokeDuration = getStrokeDuration();
         if (getTimePeg("strokeStart").getGlobalValue() == TimePeg.VALUE_UNKNOWN
                 && getTimePeg("strokeEnd").getGlobalValue() != TimePeg.VALUE_UNKNOWN)
         {
@@ -459,10 +452,25 @@ public class LMPWristPos extends LMPPos
     }
 
     // get preparation duration, given current hand position
-    private double getPreparationDuration()
+    public double getPreparationDuration()
     {
         GuidingStroke gstroke = gSeq.getStroke(0);
         return FittsLaw.getHandTrajectoryDuration(Vec3f.distanceBetweenPoints(gstroke.getEndPos(), getGlobalWristPosition()));
+    }
+    
+    public double getRetractionDuration()
+    {
+        return 0;
+    }
+    
+    public double getStrokeDuration()
+    {
+        double defaultStrokeDuration = 0;
+        for (int i = 1; i < gSeq.size(); i++)
+        {
+            defaultStrokeDuration += gSeq.getStroke(i).getEDt();
+        }
+        return defaultStrokeDuration;
     }
 
     private void resolveTimePegs(double time)
