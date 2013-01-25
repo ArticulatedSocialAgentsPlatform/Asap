@@ -55,13 +55,6 @@ public class MotorControlProgramTest extends AbstractTimedPlanUnitTest
     private AnimationPlayer mockAnimationPlayer = mock(AnimationPlayer.class);
     
     private static double TIMING_PRECISION = 0.001;
-    /*
-    private static final double LMP_STROKESTART_TIME = 2d;
-    private static final double LMP_STROKE_TIME = 2.5d;
-    private static final double LMP_STROKEEND_TIME = 3d;    
-    private static final double LMP_END_TIME = 4d;
-    private static final double LMP_START_TIME = 1d;
-    */
     private static final double LMP_PREPDUR = 0.4;
     private static final double LMP_STROKEDUR = 1;
     private static final double LMP_RETRACTIONDUR = 0.3;
@@ -93,7 +86,7 @@ public class MotorControlProgramTest extends AbstractTimedPlanUnitTest
         mcp.setTimePeg("start",  TimePegUtil.createTimePeg(bbPeg, startTime));
         try
         {
-            mcp.resolveSynchs();
+            mcp.resolveSynchs(bml1Peg);
         }
         catch (BehaviourPlanningException e)
         {

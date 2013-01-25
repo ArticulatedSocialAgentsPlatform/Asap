@@ -15,18 +15,15 @@ import java.util.Set;
 
 import lombok.Data;
 import lombok.extern.slf4j.Slf4j;
-import saiba.bml.core.Behaviour;
 import asap.animationengine.AnimationPlayer;
 import asap.animationengine.ace.GStrokePhaseID;
 import asap.animationengine.ace.OrientConstraint;
 import asap.motionunit.TMUPlayException;
-import asap.realizer.BehaviourPlanningException;
 import asap.realizer.feedback.FeedbackManager;
 import asap.realizer.pegboard.BMLBlockPeg;
 import asap.realizer.pegboard.PegBoard;
 import asap.realizer.pegboard.TimePeg;
 import asap.realizer.planunit.TimedPlanUnitPlayException;
-import asap.realizer.scheduler.TimePegAndConstraint;
 
 import com.google.common.collect.ImmutableSet;
 
@@ -49,12 +46,6 @@ public class LMPWristRot extends LMP
     private static final float PRECISION = 0.001f;
     public static final double TRANSITION_TIME = 0.4;
     public static final double DEFAULT_STROKEPHASE_DURATION = 5;
-
-    public void resolveSynchs(BMLBlockPeg bbPeg, Behaviour b, List<TimePegAndConstraint> sac) throws BehaviourPlanningException
-    {
-        linkSynchs(sac);
-        resolveTimePegs(bbPeg.getValue());
-    }
 
     @Data
     private static class OrientPos
@@ -91,6 +82,7 @@ public class LMPWristRot extends LMP
             log.warn("Invalid scope {}" + scope);
         }
         this.ocVec = new ArrayList<>(ocVec);
+        createOcVecTimePegs();
     }
 
     @Override
@@ -138,7 +130,6 @@ public class LMPWristRot extends LMP
                 log.info("-> corrected palm normal: {}", Vec3f.toString(p));
             }
 
-            // if (getKinematicJoints().iterator().next().equals(Hanim.r_wrist))
             if (getKinematicJoints().iterator().next().equals(Hanim.l_wrist))
             {
                 Vec3f.scale(-1, p);
@@ -209,7 +200,7 @@ public class LMPWristRot extends LMP
         return syncs;
     }
 
-    private void createMissingTimePegs()
+    private void createOcVecTimePegs()
     {
         for (OrientConstraint oc : ocVec)
         {
@@ -219,12 +210,11 @@ public class LMPWristRot extends LMP
                 constraintMap.put(oc, tp);
                 pegBoard.addTimePeg(getBMLId(), getId(), oc.getId(), tp);
             }
-        }
-        createPegWhenMissingOnPegBoard("start");
-        createPegWhenMissingOnPegBoard("end");
+        }        
     }
 
-    private void uniformlyDistributeStrokeConstraints(double earliestStart)
+    @Override
+    protected void setInternalStrokeTiming(double earliestStart)
     {
         List<OrientConstraint> tpSet = new ArrayList<>();
         for (OrientConstraint oc : ocVec)
@@ -305,59 +295,6 @@ public class LMPWristRot extends LMP
         {
             time -= avgDur;
             constraintMap.get(ocVec.get(j)).setGlobalValue(time);
-        }
-    }
-
-    private void resolveTimePegs(double time)
-    {
-        createMissingTimePegs();
-
-        // TODO: handle cases in which constraints that are not on the 'border' of the LMP are set in a better manner.
-
-        // resolve start
-        if (getStartTime() == TimePeg.VALUE_UNKNOWN && getTimePeg("strokeStart").getGlobalValue() != TimePeg.VALUE_UNKNOWN)
-        {
-            pegBoard.setPegTime(getBMLId(), getId(), "start", getTimePeg("strokeStart").getGlobalValue() - TRANSITION_TIME);
-        }
-        else if (getTimePeg("strokeStart").getGlobalValue() == TimePeg.VALUE_UNKNOWN && getStartTime() != TimePeg.VALUE_UNKNOWN)
-        {
-            pegBoard.setPegTime(getBMLId(), getId(), "strokeStart", getStartTime() + TRANSITION_TIME);
-        }
-        else if (noPegsSet())
-        {
-            pegBoard.getTimePeg(getBMLId(), getId(), "start").setValue(0, getBMLBlockPeg());
-            pegBoard.getTimePeg(getBMLId(), getId(), "strokeStart").setValue(TRANSITION_TIME, getBMLBlockPeg());
-        }
-
-        // resolve end
-        if (getEndTime() == TimePeg.VALUE_UNKNOWN)
-        {
-            if (getTimePeg("strokeEnd").getGlobalValue() != TimePeg.VALUE_UNKNOWN)
-            {
-                pegBoard.setPegTime(getBMLId(), getId(), "end", getTimePeg("strokeEnd").getGlobalValue() + TRANSITION_TIME);
-            }
-        }
-        else
-        {
-            if (getTimePeg("strokeEnd").getGlobalValue() == TimePeg.VALUE_UNKNOWN)
-            {
-                pegBoard.setPegTime(getBMLId(), getId(), "strokeEnd", getEndTime() - TRANSITION_TIME);
-            }
-        }
-
-        uniformlyDistributeStrokeConstraints(time);
-        if (getStartTime() == TimePeg.VALUE_UNKNOWN)
-        {
-            pegBoard.setPegTime(getBMLId(), getId(), "start", getTimePeg("strokeStart").getGlobalValue() - TRANSITION_TIME);
-        }
-        if (getEndTime() == TimePeg.VALUE_UNKNOWN)
-        {
-            pegBoard.setPegTime(getBMLId(), getId(), "end", getTimePeg("strokeEnd").getGlobalValue() + TRANSITION_TIME);
-        }
-
-        if (!isPlaying())
-        {
-            setTpMinimumTime(time);
         }
     }
 
@@ -517,7 +454,6 @@ public class LMPWristRot extends LMP
     @Override
     protected void playUnit(double time) throws TimedPlanUnitPlayException
     {
-        System.out.println("play "+time);
         float q[] = getOrient(time);
         VJoint vjRoot = aniPlayer.getVNext().getPartBySid(Hanim.HumanoidRoot);
         VJoint vjWrist = aniPlayer.getVNext().getPartBySid(joint);
@@ -566,6 +502,7 @@ public class LMPWristRot extends LMP
     @Override
     protected void startUnit(double time) throws TimedPlanUnitPlayException
     {
+        getTimePeg("start").setAbsoluteTime(true);  //don't mess with start anymore!
         resolveTimePegs(time);
         float cQuat[] = Quat4f.getQuat4f();
         VJoint root = aniPlayer.getVCurr().getPartBySid(Hanim.HumanoidRoot);

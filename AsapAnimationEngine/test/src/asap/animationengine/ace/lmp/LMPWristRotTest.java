@@ -23,6 +23,7 @@ import asap.motionunit.TMUPlayException;
 import asap.realizer.feedback.FeedbackManager;
 import asap.realizer.pegboard.BMLBlockPeg;
 import asap.realizer.pegboard.PegBoard;
+import asap.realizer.pegboard.TimePeg;
 import asap.realizer.planunit.TimedPlanUnitState;
 import asap.realizer.scheduler.BMLBlockManager;
 import asap.realizertestutil.planunit.AbstractTimedPlanUnitTest;
@@ -43,7 +44,7 @@ public class LMPWristRotTest extends AbstractTimedPlanUnitTest
     private double TIMING_PRECISION = 0.001;
     private AnimationPlayer mockAniPlayer = mock(AnimationPlayer.class);
 
-    private TimedAnimationUnit setupPlanUnit(FeedbackManager bfm, BMLBlockPeg bbPeg, String bmlId, String id)
+    private LMPWristRot setupPlanUnit(FeedbackManager bfm, BMLBlockPeg bbPeg, String bmlId, String id)
     {
         List<OrientConstraint> ocList = new ArrayList<>();
         ocList.add(new OrientConstraint("strokeStart"));
@@ -52,110 +53,117 @@ public class LMPWristRotTest extends AbstractTimedPlanUnitTest
         ocList.add(new OrientConstraint("strokeEnd"));
         when(mockAniPlayer.getVCurr()).thenReturn(HanimBody.getLOA1HanimBody());
         when(mockAniPlayer.getVNext()).thenReturn(HanimBody.getLOA1HanimBody());
-        return new LMPWristRot("right_arm", ocList, bfm, bbPeg, bmlId, id, pegBoard, mockAniPlayer);
+        
+        LMPWristRot wr = new LMPWristRot("right_arm", ocList, bfm, bbPeg, bmlId, id, pegBoard, mockAniPlayer);
+        initializeForUpdateTiming(wr);        
+        wr.setState(TimedPlanUnitState.IN_PREP);
+        return wr;
     }
 
     @Override
-    protected TimedAnimationUnit setupPlanUnit(FeedbackManager bfm, BMLBlockPeg bbPeg, String id, String bmlId, double startTime)
+    protected LMPWristRot setupPlanUnit(FeedbackManager bfm, BMLBlockPeg bbPeg, String id, String bmlId, double startTime)
     {
-        TimedAnimationUnit lmp = setupPlanUnit(bfm, bbPeg, bmlId, id);
-        lmp.setTimePeg("start", TimePegUtil.createTimePeg(bbPeg, startTime));
+        LMPWristRot lmp = setupPlanUnit(bfm, bbPeg, bmlId, id);
+        lmp.setTimePeg("start", TimePegUtil.createTimePeg(bbPeg, startTime));        
         return lmp;
+    }
+
+    private void initializeForUpdateTiming(TimedAnimationUnit tau)
+    {
+        tau.setState(TimedPlanUnitState.LURKING);
+        tau.setTimePeg("start", new TimePeg(BMLBlockPeg.GLOBALPEG));
+        tau.setTimePeg("end", new TimePeg(BMLBlockPeg.GLOBALPEG));
+        tau.getTimePeg("strokeStart").setGlobalValue(1);
+        tau.getTimePeg("strokeEnd").setGlobalValue(1 + tau.getStrokeDuration());
     }
 
     @Test
     public void testUpdateTimingNoConstraints() throws TMUPlayException
     {
-        TimedAnimationUnit tau = setupPlanUnit(fbManager, BMLBlockPeg.GLOBALPEG, "bml1", "beh1");
-        tau.setState(TimedPlanUnitState.LURKING);
+        LMPWristRot tau = setupPlanUnit(fbManager, BMLBlockPeg.GLOBALPEG, "bml1", "beh1");
+        initializeForUpdateTiming(tau);
+
         tau.updateTiming(0);
-        assertEquals(0, tau.getTime("start"), TIMING_PRECISION);
-        assertEquals(5 + 0.8, tau.getTime("end"), TIMING_PRECISION);
-        assertEquals(0.4, tau.getTime("strokeStart"), TIMING_PRECISION);
-        assertEquals(5 + 0.4, tau.getTime("strokeEnd"), TIMING_PRECISION);
-        assertEquals(0.4 + 5d / 3d, tau.getTime("stroke1"), TIMING_PRECISION);
-        assertEquals(0.4 + 5d / 3d + 5d / 3d, tau.getTime("stroke2"), TIMING_PRECISION);
+        assertEquals(1 - tau.getPreparationDuration(), tau.getTime("start"), TIMING_PRECISION);
+        assertEquals(1 + tau.getStrokeDuration() + tau.getRetractionDuration(), tau.getTime("end"), TIMING_PRECISION);
+        assertEquals(1, tau.getTime("strokeStart"), TIMING_PRECISION);
+        assertEquals(1 + tau.getStrokeDuration(), tau.getTime("strokeEnd"), TIMING_PRECISION);
+        assertEquals(1 + tau.getStrokeDuration() / 3d, tau.getTime("stroke1"), TIMING_PRECISION);
+        assertEquals(1 + 2 * tau.getStrokeDuration() / 3d, tau.getTime("stroke2"), TIMING_PRECISION);
     }
 
     @Test
     public void testUpdateTimingStrokeStartConstraint() throws TMUPlayException
     {
         TimedAnimationUnit tau = setupPlanUnit(fbManager, BMLBlockPeg.GLOBALPEG, "bml1", "beh1");
+        initializeForUpdateTiming(tau);
         tau.setTimePeg("strokeStart", TimePegUtil.createTimePeg(BMLBlockPeg.GLOBALPEG, 0.5f));
-        tau.setState(TimedPlanUnitState.LURKING);
+
         tau.updateTiming(0);
-        assertEquals(0.1, tau.getTime("start"), TIMING_PRECISION);
-        assertEquals(0.1 + 5 + 0.8, tau.getTime("end"), TIMING_PRECISION);
+        assertEquals(0.5 - tau.getPreparationDuration(), tau.getTime("start"), TIMING_PRECISION);
+        assertEquals(1 + tau.getStrokeDuration() + tau.getRetractionDuration(), tau.getTime("end"), TIMING_PRECISION);
         assertEquals(0.5, tau.getTime("strokeStart"), TIMING_PRECISION);
-        assertEquals(5 + 0.4 + 0.1, tau.getTime("strokeEnd"), TIMING_PRECISION);
-        assertEquals(0.4 + 0.1 + 5d / 3d, tau.getTime("stroke1"), TIMING_PRECISION);
-        assertEquals(0.4 + 0.1 + 5d / 3d + 5d / 3d, tau.getTime("stroke2"), TIMING_PRECISION);
+        assertEquals(1 + tau.getStrokeDuration(), tau.getTime("strokeEnd"), TIMING_PRECISION);
+        double strokeDur = 0.5 + tau.getStrokeDuration();
+        assertEquals(0.5 + strokeDur / 3d, tau.getTime("stroke1"), TIMING_PRECISION);
+        assertEquals(0.5 + 2 * strokeDur / 3d, tau.getTime("stroke2"), TIMING_PRECISION);
     }
 
     @Test
     public void testUpdateTimingStrokeStartAndEndConstraint() throws TMUPlayException
     {
         TimedAnimationUnit tau = setupPlanUnit(fbManager, BMLBlockPeg.GLOBALPEG, "bml1", "beh1");
+        initializeForUpdateTiming(tau);
         tau.setTimePeg("strokeStart", TimePegUtil.createTimePeg(BMLBlockPeg.GLOBALPEG, 0.5f));
         tau.setTimePeg("strokeEnd", TimePegUtil.createTimePeg(BMLBlockPeg.GLOBALPEG, 2.5f));
-        tau.setState(TimedPlanUnitState.LURKING);
         tau.updateTiming(0);
-        assertEquals(0.1, tau.getTime("start"), TIMING_PRECISION);
-        assertEquals(0.1 + 2 + 0.8, tau.getTime("end"), TIMING_PRECISION);
+
+        assertEquals(0.5 - tau.getPreparationDuration(), tau.getTime("start"), TIMING_PRECISION);
+        assertEquals(2.5 + tau.getRetractionDuration(), tau.getTime("end"), TIMING_PRECISION);
         assertEquals(0.5, tau.getTime("strokeStart"), TIMING_PRECISION);
         assertEquals(2.5, tau.getTime("strokeEnd"), TIMING_PRECISION);
-        assertEquals(0.4 + 0.1 + 2d / 3d, tau.getTime("stroke1"), TIMING_PRECISION);
-        assertEquals(0.4 + 0.1 + 2d / 3d + 2d / 3d, tau.getTime("stroke2"), TIMING_PRECISION);
+        assertEquals(0.5 + 2d / 3d, tau.getTime("stroke1"), TIMING_PRECISION);
+        assertEquals(0.5 + 2d / 3d + 2d / 3d, tau.getTime("stroke2"), TIMING_PRECISION);
     }
 
     @Test
     public void testUpdateTimingEndConstraint() throws TMUPlayException
     {
         TimedAnimationUnit tau = setupPlanUnit(fbManager, BMLBlockPeg.GLOBALPEG, "bml1", "beh1");
+        initializeForUpdateTiming(tau);
         tau.setTimePeg("end", TimePegUtil.createTimePeg(BMLBlockPeg.GLOBALPEG, 10f));
-        tau.setState(TimedPlanUnitState.LURKING);
         tau.updateTiming(0);
 
-        assertEquals(10, tau.getTime("end"), TIMING_PRECISION);
-        assertEquals(10 - 0.4 - 5, tau.getTime("strokeStart"), TIMING_PRECISION);
-        assertEquals(10 - 0.4 - 0.4 - 5, tau.getTime("start"), TIMING_PRECISION);
-        assertEquals(10 - 0.4, tau.getTime("strokeEnd"), TIMING_PRECISION);
-        assertEquals(10 - 0.4 - 5 + 5d / 3d, tau.getTime("stroke1"), TIMING_PRECISION);
-        assertEquals(10 - 0.4 - 5 + 5d / 3d + 5d / 3d, tau.getTime("stroke2"), TIMING_PRECISION);
-    }
-
-    @Test
-    public void testUpdateTimingEndConstraintFrontSkew() throws TMUPlayException
-    {
-        TimedAnimationUnit tau = setupPlanUnit(fbManager, BMLBlockPeg.GLOBALPEG, "bml1", "beh1");
-        tau.setTimePeg("end", TimePegUtil.createTimePeg(BMLBlockPeg.GLOBALPEG, 3f));
-        tau.setState(TimedPlanUnitState.LURKING);
-        tau.updateTiming(0);
-
-        assertEquals(3, tau.getTime("end"), TIMING_PRECISION);
-        assertEquals(0, tau.getTime("start"), TIMING_PRECISION);
+        assertEquals(1+tau.getStrokeDuration()+tau.getRetractionDuration(), tau.getTime("end"), TIMING_PRECISION);
+        assertEquals(1, tau.getTime("strokeStart"), TIMING_PRECISION);
+        assertEquals(1 - tau.getPreparationDuration(), tau.getTime("start"), TIMING_PRECISION);
+        assertEquals(1 + tau.getStrokeDuration(), tau.getTime("strokeEnd"), TIMING_PRECISION);
+        assertEquals(1 + tau.getStrokeDuration() / 3d, tau.getTime("stroke1"), TIMING_PRECISION);
+        assertEquals(1 + 2 * tau.getStrokeDuration() / 3d, tau.getTime("stroke2"), TIMING_PRECISION);
     }
 
     @Test
     public void testUpdateTimingStrokeStartConstraintSkew() throws TMUPlayException
     {
         TimedAnimationUnit tau = setupPlanUnit(fbManager, BMLBlockPeg.GLOBALPEG, "bml1", "beh1");
-        tau.setTimePeg("strokeStart", TimePegUtil.createTimePeg(BMLBlockPeg.GLOBALPEG, 0.3f));
-        tau.setState(TimedPlanUnitState.LURKING);
+        initializeForUpdateTiming(tau);
+        tau.setTimePeg("strokeStart", TimePegUtil.createTimePeg(BMLBlockPeg.GLOBALPEG, 0.3f));        
+        tau.setTimePeg("strokeEnd", TimePegUtil.createTimePeg(BMLBlockPeg.GLOBALPEG, 0.3f+tau.getStrokeDuration()));
         tau.updateTiming(0);
+        
         assertEquals(0, tau.getTime("start"), TIMING_PRECISION);
-        assertEquals(-0.1 + 5 + 0.8, tau.getTime("end"), TIMING_PRECISION);
         assertEquals(0.3, tau.getTime("strokeStart"), TIMING_PRECISION);
-        assertEquals(5 + 0.4 - 0.1, tau.getTime("strokeEnd"), TIMING_PRECISION);
-        assertEquals(0.4 - 0.1 + 5d / 3d, tau.getTime("stroke1"), TIMING_PRECISION);
-        assertEquals(0.4 - 0.1 + 5d / 3d + 5d / 3d, tau.getTime("stroke2"), TIMING_PRECISION);
+        assertEquals(0.3+tau.getStrokeDuration(), tau.getTime("strokeEnd"), TIMING_PRECISION);        
+        assertEquals(0.3+tau.getStrokeDuration()+tau.getRetractionDuration(), tau.getTime("end"), TIMING_PRECISION);
+        assertEquals(0.3 + tau.getStrokeDuration() / 3d, tau.getTime("stroke1"), TIMING_PRECISION);
+        assertEquals(0.3 + 2 * tau.getStrokeDuration() / 3d, tau.getTime("stroke2"), TIMING_PRECISION);
     }
-    
+
     @Test
     public void testAvailableSyncs() throws TMUPlayException
     {
         TimedAnimationUnit tau = setupPlanUnit(fbManager, BMLBlockPeg.GLOBALPEG, "bml1", "beh1");
         assertThat(tau.getAvailableSyncs(),
-                IsIterableContainingInAnyOrder.containsInAnyOrder("strokeStart", "stroke1", "stroke2", "strokeEnd"));
+                IsIterableContainingInAnyOrder.containsInAnyOrder("start","strokeStart", "stroke1", "stroke2", "strokeEnd","end"));
     }
 }

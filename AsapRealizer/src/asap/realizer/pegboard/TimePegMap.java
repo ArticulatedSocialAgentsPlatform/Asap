@@ -39,7 +39,7 @@ final class TimePegMap
         return pegMap.get(key);
     }
 
-    public synchronized ImmutableSet<TimePeg> get(final String bmlId, final String behaviorId)
+    private synchronized Collection<Entry<PegKey, TimePeg>> getEntries(final String bmlId, final String behaviorId)
     {
         Collection<Entry<PegKey, TimePeg>> entries = Collections2.filter(pegMap.entrySet(), new Predicate<Entry<PegKey, TimePeg>>()
         {
@@ -49,6 +49,26 @@ final class TimePegMap
                 return arg.getKey().bmlId.equals(bmlId) && arg.getKey().id.equals(behaviorId);
             }
         });
+        return entries;
+    }
+
+    public synchronized ImmutableSet<String> getSyncs(final String bmlId, final String behaviorId)
+    {
+        Collection<Entry<PegKey, TimePeg>> entries = getEntries(bmlId, behaviorId);
+        Collection<String> syncCol = Collections2.transform(entries, new Function<Entry<PegKey, TimePeg>, String>()
+        {
+            @Override
+            public String apply(Entry<PegKey, TimePeg> arg)
+            {
+                return arg.getKey().syncId;
+            }
+        });
+        return ImmutableSet.copyOf(syncCol);
+    }
+
+    public synchronized ImmutableSet<TimePeg> get(final String bmlId, final String behaviorId)
+    {
+        Collection<Entry<PegKey, TimePeg>> entries = getEntries(bmlId, behaviorId);
         Collection<TimePeg> pegCol = Collections2.transform(entries, new Function<Entry<PegKey, TimePeg>, TimePeg>()
         {
 
@@ -103,20 +123,20 @@ final class TimePegMap
             pks.remove(entry.getKey());
         }
     }
-    
+
     public synchronized void shiftCluster(BehaviorCluster bc, double shift)
     {
-        Set<TimePeg>pegsToShift = new HashSet<TimePeg>();
-        for(BehaviorKey bk:bc.getBehaviors())
+        Set<TimePeg> pegsToShift = new HashSet<TimePeg>();
+        for (BehaviorKey bk : bc.getBehaviors())
         {
-            pegsToShift.addAll(get(bk.getBmlId(),bk.getBehaviorId()));
+            pegsToShift.addAll(get(bk.getBmlId(), bk.getBehaviorId()));
         }
-        
-        for(TimePeg tp:pegsToShift)
+
+        for (TimePeg tp : pegsToShift)
         {
-            if(tp.getGlobalValue()!=TimePeg.VALUE_UNKNOWN)
+            if (tp.getGlobalValue() != TimePeg.VALUE_UNKNOWN)
             {
-                tp.setLocalValue(tp.getLocalValue()+shift);
+                tp.setLocalValue(tp.getLocalValue() + shift);
             }
         }
     }

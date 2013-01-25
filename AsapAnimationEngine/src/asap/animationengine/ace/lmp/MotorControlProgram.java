@@ -14,9 +14,7 @@ import asap.motionunit.TMUPlayException;
 import asap.realizer.BehaviourPlanningException;
 import asap.realizer.feedback.FeedbackManager;
 import asap.realizer.feedback.NullFeedbackManager;
-import asap.realizer.pegboard.AfterPeg;
 import asap.realizer.pegboard.BMLBlockPeg;
-import asap.realizer.pegboard.BeforePeg;
 import asap.realizer.pegboard.OffsetPeg;
 import asap.realizer.pegboard.PegBoard;
 import asap.realizer.pegboard.PegKey;
@@ -26,11 +24,8 @@ import asap.realizer.planunit.TimedPlanUnitPlayException;
 import asap.realizer.planunit.TimedPlanUnitState;
 import asap.realizer.scheduler.TimePegAndConstraint;
 
-import com.google.common.base.Function;
-import com.google.common.collect.Collections2;
 import com.google.common.collect.ImmutableMap;
 import com.google.common.collect.ImmutableSet;
-import com.google.common.primitives.Doubles;
 
 /**
  * MURML motor program
@@ -176,12 +171,12 @@ public class MotorControlProgram extends TimedAbstractPlanUnit implements TimedA
         }
     }
 
-    public void resolveSynchs() throws BehaviourPlanningException
+    public void resolveSynchs(BMLBlockPeg bbPeg) throws BehaviourPlanningException
     {
-        resolveSynchs(new ArrayList<TimePegAndConstraint>());
+        resolveSynchs(bbPeg, new ArrayList<TimePegAndConstraint>());
     }
     
-    public void resolveSynchs(List<TimePegAndConstraint> sacs) throws BehaviourPlanningException
+    public void resolveSynchs(BMLBlockPeg bbPeg, List<TimePegAndConstraint> sacs) throws BehaviourPlanningException
     {
         linkSynchs(sacs);
         checkAndSetMissingTimePeg("start", TimePeg.VALUE_UNKNOWN);
@@ -218,24 +213,20 @@ public class MotorControlProgram extends TimedAbstractPlanUnit implements TimedA
         getTimePeg("ready").setGlobalValue(getTime("strokeStart"));
         getTimePeg("relax").setGlobalValue(getTime("strokeEnd"));
 
-        // FIXME: this never happens...
         for (TimedAnimationUnit lmp : lmpQueue)
         {
-            if (lmp.getTimePeg("start") == null)
+            if(lmp instanceof LMP)
             {
-                lmp.setTimePeg("start", new AfterPeg(getTimePeg("start"), 0));
+                ((LMP)lmp).resolveInternal(getId(), bbPeg);
             }
-            if (lmp.getTimePeg("end") == null)
-            {
-                lmp.setTimePeg("end", new BeforePeg(getTimePeg("end"), 0));
-            }
+            //lmp.resolveSynchs()
         }
     }
     
     @Override
     public void resolveSynchs(BMLBlockPeg bbPeg, Behaviour b, List<TimePegAndConstraint> sacs) throws BehaviourPlanningException
     {
-        resolveSynchs(sacs);
+        resolveSynchs(bbPeg, sacs);
     }
 
     public MotorControlProgram(FeedbackManager fbm, BMLBlockPeg bmlPeg, String bmlId, String behId, PegBoard globalPegBoard,

@@ -12,18 +12,15 @@ import java.util.Set;
 
 import lombok.Setter;
 import lombok.extern.slf4j.Slf4j;
-import saiba.bml.core.Behaviour;
 import asap.animationengine.AnimationPlayer;
 import asap.animationengine.ace.PoConstraint;
 import asap.math.splines.TCBSplineN;
 import asap.motionunit.TMUPlayException;
-import asap.realizer.BehaviourPlanningException;
 import asap.realizer.feedback.FeedbackManager;
 import asap.realizer.pegboard.BMLBlockPeg;
 import asap.realizer.pegboard.PegBoard;
 import asap.realizer.pegboard.TimePeg;
 import asap.realizer.planunit.TimedPlanUnitPlayException;
-import asap.realizer.scheduler.TimePegAndConstraint;
 
 import com.google.common.collect.ImmutableSet;
 
@@ -81,6 +78,7 @@ public class LMPPoRot extends LMP
             joint = null;
             log.warn("Invalid scope {}" + scope);
         }
+        createMissingTimePegs();
     }
 
     @Override
@@ -143,12 +141,10 @@ public class LMPPoRot extends LMP
                 constraintMap.put(oc, tp);
                 pegBoard.addTimePeg(getBMLId(), getId(), oc.getId(), tp);
             }
-        }
-        createPegWhenMissingOnPegBoard("start");
-        createPegWhenMissingOnPegBoard("end");
+        }        
     }
 
-    private void uniformlyDistributeStrokeConstraints(double earliestStart)
+    protected void setInternalStrokeTiming(double earliestStart)
     {
         List<PoConstraint> tpSet = new ArrayList<>();
         for (PoConstraint oc : poVec)
@@ -232,53 +228,7 @@ public class LMPPoRot extends LMP
         }
     }
 
-    private void resolveTimePegs(double time)
-    {
-        createMissingTimePegs();
-
-        // TODO: handle cases in which constraints that are not on the 'border' of the LMP are set in a better manner.
-
-        // resolve start
-        if (getStartTime() == TimePeg.VALUE_UNKNOWN && getTimePeg("strokeStart").getGlobalValue() != TimePeg.VALUE_UNKNOWN)
-        {
-            pegBoard.setPegTime(getBMLId(), getId(), "start", getTimePeg("strokeStart").getGlobalValue() - TRANSITION_TIME);
-        }
-        else if (getTimePeg("strokeStart").getGlobalValue() == TimePeg.VALUE_UNKNOWN && getStartTime() != TimePeg.VALUE_UNKNOWN)
-        {
-            pegBoard.setPegTime(getBMLId(), getId(), "strokeStart", getStartTime() + TRANSITION_TIME);
-        }
-        else if (noPegsSet())
-        {
-            pegBoard.getTimePeg(getBMLId(), getId(), "start").setValue(0, getBMLBlockPeg());
-            pegBoard.getTimePeg(getBMLId(), getId(), "strokeStart").setValue(TRANSITION_TIME, getBMLBlockPeg());
-        }
-
-        // resolve end
-        if (getEndTime() == TimePeg.VALUE_UNKNOWN)
-        {
-            if (getTimePeg("strokeEnd").getGlobalValue() != TimePeg.VALUE_UNKNOWN)
-            {
-                pegBoard.setPegTime(getBMLId(), getId(), "end", getTimePeg("strokeEnd").getGlobalValue() + TRANSITION_TIME);
-            }
-        }
-        else
-        {
-            if (getTimePeg("strokeEnd").getGlobalValue() == TimePeg.VALUE_UNKNOWN)
-            {
-                pegBoard.setPegTime(getBMLId(), getId(), "strokeEnd", getEndTime() - TRANSITION_TIME);
-            }
-        }
-
-        uniformlyDistributeStrokeConstraints(time);
-        if (getStartTime() == TimePeg.VALUE_UNKNOWN)
-        {
-            pegBoard.setPegTime(getBMLId(), getId(), "start", getTimePeg("strokeStart").getGlobalValue() - TRANSITION_TIME);
-        }
-        if (getEndTime() == TimePeg.VALUE_UNKNOWN)
-        {
-            pegBoard.setPegTime(getBMLId(), getId(), "end", getTimePeg("strokeEnd").getGlobalValue() + TRANSITION_TIME);
-        }
-    }
+    
 
     @Override
     public void updateTiming(double time) throws TMUPlayException
@@ -288,13 +238,6 @@ public class LMPPoRot extends LMP
             return;
         }        
         resolveTimePegs(time);
-    }
-
-    @Override
-    public void resolveSynchs(BMLBlockPeg bbPeg, Behaviour b, List<TimePegAndConstraint> sac) throws BehaviourPlanningException
-    {
-        linkSynchs(sac);
-        resolveTimePegs(bbPeg.getValue());
     }
 
     private PoConstraint findOrientConstraint(String syncId)

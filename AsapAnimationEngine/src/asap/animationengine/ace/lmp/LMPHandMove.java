@@ -12,7 +12,6 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
-import saiba.bml.core.Behaviour;
 import asap.animationengine.AnimationPlayer;
 import asap.animationengine.ace.PostureConstraint;
 import asap.motionunit.MUPlayException;
@@ -21,13 +20,11 @@ import asap.motionunit.keyframe.Interpolator;
 import asap.motionunit.keyframe.KeyFrame;
 import asap.motionunit.keyframe.KeyFrameMotionUnit;
 import asap.motionunit.keyframe.LinearQuatFloatInterpolator;
-import asap.realizer.BehaviourPlanningException;
 import asap.realizer.feedback.FeedbackManager;
 import asap.realizer.pegboard.BMLBlockPeg;
 import asap.realizer.pegboard.PegBoard;
 import asap.realizer.pegboard.TimePeg;
 import asap.realizer.planunit.TimedPlanUnitPlayException;
-import asap.realizer.scheduler.TimePegAndConstraint;
 
 import com.google.common.collect.ImmutableSet;
 
@@ -148,6 +145,7 @@ public class LMPHandMove extends LMP
         }
         jointIds.removeAll(removeIds);
         kinematicJoints = ImmutableSet.copyOf(jointIds);
+        createMissingTimePegs();
     }
 
     private void constructKeyFrames(double startTime)
@@ -209,7 +207,8 @@ public class LMPHandMove extends LMP
         createPegWhenMissingOnPegBoard("ready");
     }
 
-    private void uniformlyDistributeStrokeConstraints(double earliestStart)
+    @Override
+    protected void setInternalStrokeTiming(double earliestStart)
     {
         List<PostureConstraint> tpSet = new ArrayList<>();
         for (PostureConstraint oc : pcVec)
@@ -293,69 +292,6 @@ public class LMPHandMove extends LMP
         }
     }
 
-    private void resolveTimePegs(double time)
-    {
-        createMissingTimePegs();
-
-        // TODO: handle cases in which constraints that are not on the 'border' of the LMP are set in a better manner.
-
-        // resolve start
-        if (getStartTime() == TimePeg.VALUE_UNKNOWN && getTimePeg("strokeStart").getGlobalValue() != TimePeg.VALUE_UNKNOWN)
-        {
-            pegBoard.setPegTime(getBMLId(), getId(), "start", getTimePeg("strokeStart").getGlobalValue() - TRANSITION_TIME);
-        }
-        else if (getTimePeg("strokeStart").getGlobalValue() == TimePeg.VALUE_UNKNOWN && getStartTime() != TimePeg.VALUE_UNKNOWN)
-        {
-            pegBoard.setPegTime(getBMLId(), getId(), "strokeStart", getStartTime() + TRANSITION_TIME);
-        }
-        else if (noPegsSet())
-        {
-            pegBoard.getTimePeg(getBMLId(), getId(), "start").setValue(0, getBMLBlockPeg());
-            pegBoard.getTimePeg(getBMLId(), getId(), "strokeStart").setValue(TRANSITION_TIME, getBMLBlockPeg());
-        }
-
-        // resolve end
-        if (getEndTime() == TimePeg.VALUE_UNKNOWN)
-        {
-            if (getTimePeg("strokeEnd").getGlobalValue() != TimePeg.VALUE_UNKNOWN)
-            {
-                pegBoard.setPegTime(getBMLId(), getId(), "end", getTimePeg("strokeEnd").getGlobalValue() + TRANSITION_TIME);
-            }
-        }
-        else
-        {
-            if (getTimePeg("strokeEnd").getGlobalValue() == TimePeg.VALUE_UNKNOWN)
-            {
-                pegBoard.setPegTime(getBMLId(), getId(), "strokeEnd", getEndTime() - TRANSITION_TIME);
-            }
-        }
-
-        uniformlyDistributeStrokeConstraints(time);
-        if (getStartTime() == TimePeg.VALUE_UNKNOWN)
-        {
-            pegBoard.setPegTime(getBMLId(), getId(), "start", getTimePeg("strokeStart").getGlobalValue() - TRANSITION_TIME);
-        }
-        if (getEndTime() == TimePeg.VALUE_UNKNOWN)
-        {
-            pegBoard.setPegTime(getBMLId(), getId(), "end", getTimePeg("strokeEnd").getGlobalValue() + TRANSITION_TIME);
-        }
-
-        if (pegBoard.getTimePeg(getBMLId(), getId(), "relax").getGlobalValue() == TimePeg.VALUE_UNKNOWN)
-        {
-            pegBoard.setPegTime(getBMLId(), getId(), "relax", getTimePeg("strokeEnd").getGlobalValue());
-        }
-
-        if (pegBoard.getTimePeg(getBMLId(), getId(), "ready").getGlobalValue() == TimePeg.VALUE_UNKNOWN)
-        {
-            pegBoard.setPegTime(getBMLId(), getId(), "ready", getTimePeg("strokeStart").getGlobalValue());
-        }
-
-        if (!isPlaying())
-        {
-            setTpMinimumTime(time);
-        }
-    }
-
     @Override
     public Set<String> getKinematicJoints()
     {
@@ -395,13 +331,6 @@ public class LMPHandMove extends LMP
             constraintMap.put(findOrientConstraint(syncId), peg);
         }
         super.setTimePeg(syncId, peg);
-    }
-
-    @Override
-    public void resolveSynchs(BMLBlockPeg bbPeg, Behaviour b, List<TimePegAndConstraint> sac) throws BehaviourPlanningException
-    {
-        linkSynchs(sac);
-        resolveTimePegs(bbPeg.getValue());
     }
 
     @Override
@@ -458,8 +387,7 @@ public class LMPHandMove extends LMP
     @Override
     protected void stopUnit(double time) throws TimedPlanUnitPlayException
     {
-        // TODO Auto-generated method stub
-
+        
     }
 
     @Override

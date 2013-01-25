@@ -11,7 +11,6 @@ import java.util.List;
 import java.util.Set;
 
 import lombok.extern.slf4j.Slf4j;
-import saiba.bml.core.Behaviour;
 import asap.animationengine.AnimationPlayer;
 import asap.animationengine.ace.CurvedGStroke;
 import asap.animationengine.ace.GuidingSequence;
@@ -22,13 +21,11 @@ import asap.animationengine.procanimation.IKBody;
 import asap.math.splines.NUSSpline3;
 import asap.math.splines.SparseVelocityDef;
 import asap.motionunit.TMUPlayException;
-import asap.realizer.BehaviourPlanningException;
 import asap.realizer.feedback.FeedbackManager;
 import asap.realizer.pegboard.BMLBlockPeg;
 import asap.realizer.pegboard.PegBoard;
 import asap.realizer.pegboard.TimePeg;
 import asap.realizer.planunit.TimedPlanUnitPlayException;
-import asap.realizer.scheduler.TimePegAndConstraint;
 
 import com.google.common.base.Joiner;
 import com.google.common.collect.ImmutableSet;
@@ -52,12 +49,6 @@ public class LMPWristPos extends LMPPos
     private double leftArmStartSwivel;
     private final String baseJoint;
 
-    public void resolveSynchs(BMLBlockPeg bbPeg, Behaviour b, List<TimePegAndConstraint> sac) throws BehaviourPlanningException
-    {
-        linkSynchs(sac);
-        resolveTimePegs(bbPeg.getValue());
-    }
-
     public LMPWristPos(String scope, FeedbackManager bbf, BMLBlockPeg bmlBlockPeg, String bmlId, String id, PegBoard pegBoard,
             GuidingSequence gSeq, String baseJoint, AnimationPlayer aniPlayer)
     {
@@ -77,6 +68,7 @@ public class LMPWristPos extends LMPPos
         {
             kinematicJoints = ImmutableSet.of(Hanim.r_shoulder, Hanim.r_elbow);
         }
+        createMissingTimePegs();
     }
 
     public float[] getPosition(double t)
@@ -417,7 +409,7 @@ public class LMPWristPos extends LMPPos
         createPegWhenMissingOnPegBoard("end");
     }
 
-    private void setInternalStrokeTiming(double time)
+    protected void setInternalStrokeTiming(double time)
     {
         double defaultStrokeDuration = getStrokeDuration();
         if (getTimePeg("strokeStart").getGlobalValue() == TimePeg.VALUE_UNKNOWN
@@ -473,78 +465,7 @@ public class LMPWristPos extends LMPPos
         return defaultStrokeDuration;
     }
 
-    private void resolveTimePegs(double time)
-    {
-        createMissingTimePegs();
-
-        // resolve start
-        if (getStartTime() == TimePeg.VALUE_UNKNOWN && getTimePeg("strokeStart").getGlobalValue() != TimePeg.VALUE_UNKNOWN)
-        {
-            pegBoard.setPegTime(getBMLId(), getId(), "start", getTimePeg("strokeStart").getGlobalValue() - getPreparationDuration());
-        }
-        else if (getTimePeg("strokeStart").getGlobalValue() == TimePeg.VALUE_UNKNOWN && getStartTime() != TimePeg.VALUE_UNKNOWN)
-        {
-            pegBoard.setPegTime(getBMLId(), getId(), "strokeStart", getStartTime() + getPreparationDuration());
-        }
-        else if (noPegsSet())
-        {
-            pegBoard.getTimePeg(getBMLId(), getId(), "start").setValue(0, getBMLBlockPeg());
-            pegBoard.getTimePeg(getBMLId(), getId(), "strokeStart").setValue(getPreparationDuration(), getBMLBlockPeg());
-        }
-
-        // resolve end
-        if (getEndTime() == TimePeg.VALUE_UNKNOWN)
-        {
-            if (getTimePeg("strokeEnd").getGlobalValue() != TimePeg.VALUE_UNKNOWN)
-            {
-                pegBoard.setPegTime(getBMLId(), getId(), "end", getTimePeg("strokeEnd").getGlobalValue() + getPreparationDuration());
-            }
-        }
-        else
-        {
-            if (getTimePeg("strokeEnd").getGlobalValue() == TimePeg.VALUE_UNKNOWN)
-            {
-                pegBoard.setPegTime(getBMLId(), getId(), "strokeEnd", getEndTime() - getPreparationDuration());
-            }
-        }
-
-        setInternalStrokeTiming(time);
-        if (getStartTime() == TimePeg.VALUE_UNKNOWN)
-        {
-            pegBoard.setPegTime(getBMLId(), getId(), "start", getTimePeg("strokeStart").getGlobalValue() - getPreparationDuration());
-        }
-        if (getEndTime() == TimePeg.VALUE_UNKNOWN)
-        {
-            pegBoard.setPegTime(getBMLId(), getId(), "end", getTimePeg("strokeEnd").getGlobalValue() + getPreparationDuration());
-        }
-
-        /*
-         * conventions:
-         * missing ready => ready = start
-         * missing relax => relax = end
-         * missing stroke => stroke = strokeStart
-         */
-
-        if (getTimePeg("stroke").getGlobalValue() == TimePeg.VALUE_UNKNOWN)
-        {
-            pegBoard.setPegTime(getBMLId(), getId(), "stroke", getTimePeg("strokeStart").getGlobalValue());
-        }
-
-        if (getTimePeg("relax").getGlobalValue() == TimePeg.VALUE_UNKNOWN)
-        {
-            pegBoard.setPegTime(getBMLId(), getId(), "relax", getTime("strokeEnd"));
-        }
-
-        if (getTimePeg("ready").getGlobalValue() == TimePeg.VALUE_UNKNOWN)
-        {
-            pegBoard.setPegTime(getBMLId(), getId(), "ready", getStartTime());
-        }
-
-        if (!isPlaying())
-        {
-            setTpMinimumTime(time);
-        }
-    }
+    
 
     @Override
     public void updateTiming(double time) throws TMUPlayException

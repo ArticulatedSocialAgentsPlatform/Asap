@@ -11,7 +11,7 @@ import org.junit.Test;
  */
 public class SpecConstraintsTest
 {
-    private static final int READ_TIMEOUT = 200;
+    private static final int READ_TIMEOUT = 300;
     
     @Test(timeout=READ_TIMEOUT,expected=XMLScanException.class)   
     public void testInvalidInnerElement()

@@ -151,6 +151,11 @@ public final class PegBoard
         pegs.put(new PegKey(bmlId, id, syncId), p);
     }
 
+    public ImmutableSet<String> getSyncs(String bmlId, String behaviorId)
+    {
+        return pegs.getSyncs(bmlId, behaviorId);
+    }
+    
     public ImmutableSet<TimePeg> getTimePegs(String bmlId, String behaviorId)
     {
         return pegs.get(bmlId, behaviorId);
