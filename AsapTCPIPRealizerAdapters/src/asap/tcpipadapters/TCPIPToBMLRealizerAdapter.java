@@ -544,17 +544,17 @@ public final class TCPIPToBMLRealizerAdapter implements Runnable, BMLFeedbackLis
         }
         catch (IllegalBlockingModeException e)
         {
-            bmlReader.dropClient(e.getMessage());
+            bmlReader.dropClient("IllegalBlockingModeException; "+e.getMessage()+"\n"+ e.getStackTrace());
             return;
         }
         catch (IllegalArgumentException e)
         {
-            bmlReader.dropClient(e.getMessage());
+            bmlReader.dropClient("IllegalArgumentException: "+e.getMessage()+"\n"+ e.getStackTrace());
             return;
         }
         catch (IOException e)
         {
-            bmlReader.dropClient(e.getMessage());
+            bmlReader.dropClient("IOException: "+e.getMessage()+"\n"+ e.getStackTrace());
             return;
         }
         logger.debug("Feedback sender connected");
