@@ -17,7 +17,6 @@ import hmi.math.Quat4f;
 import hmi.testutil.animation.HanimBody;
 import hmi.testutil.math.Quat4fTestUtil;
 
-import java.util.List;
 import java.util.Set;
 
 import org.hamcrest.collection.IsIterableContainingInAnyOrder;
@@ -26,8 +25,11 @@ import org.junit.Test;
 
 import asap.animationengine.AnimationPlayer;
 import asap.animationengine.ace.GuidingSequence;
+import asap.animationengine.ace.lmp.LMPHandMove;
+import asap.animationengine.ace.lmp.LMPParallel;
 import asap.animationengine.ace.lmp.LMPPoRot;
 import asap.animationengine.ace.lmp.LMPWristPos;
+import asap.animationengine.ace.lmp.LMPWristRot;
 import asap.animationengine.ace.lmp.MotorControlProgram;
 import asap.animationengine.keyframe.MURMLKeyframeMU;
 import asap.animationengine.motionunit.AnimationUnit;
@@ -293,10 +295,9 @@ public class MURMLMUBuilderTest
         assertThat(tau.getKinematicJoints(), IsIterableContainingInAnyOrder.containsInAnyOrder(Hanim.l_shoulder, Hanim.l_elbow));
 
         @SuppressWarnings("unchecked")
-        List<TimedAnimationUnit> lmps = field("lmpQueue").ofType(List.class).in(tau).get();
-        assertEquals(1, lmps.size());
-        assertThat(lmps.get(0), instanceOf(LMPWristPos.class));
-        LMPWristPos pos = (LMPWristPos) lmps.get(0);
+        TimedAnimationUnit lmp = field("lmp").ofType(TimedAnimationUnit.class).in(tau).get();
+        assertThat(lmp, instanceOf(LMPWristPos.class));
+        LMPWristPos pos = (LMPWristPos) lmp;
         assertThat(pos.getKinematicJoints(), IsIterableContainingInAnyOrder.containsInAnyOrder(Hanim.l_shoulder, Hanim.l_elbow));
         GuidingSequence gSeq = field("gSeq").ofType(GuidingSequence.class).in(pos).get();
         assertEquals(5, gSeq.size());
@@ -330,10 +331,9 @@ public class MURMLMUBuilderTest
         assertThat(tau.getKinematicJoints(), IsIterableContainingInAnyOrder.containsInAnyOrder(Hanim.l_shoulder, Hanim.l_elbow));
 
         @SuppressWarnings("unchecked")
-        List<TimedAnimationUnit> lmps = field("lmpQueue").ofType(List.class).in(tau).get();
-        assertEquals(1, lmps.size());
-        assertThat(lmps.get(0), instanceOf(LMPWristPos.class));
-        LMPWristPos pos = (LMPWristPos) lmps.get(0);
+        TimedAnimationUnit lmp = field("lmp").ofType(TimedAnimationUnit.class).in(tau).get();
+        assertThat(lmp, instanceOf(LMPWristPos.class));
+        LMPWristPos pos = (LMPWristPos) lmp;
         assertThat(pos.getKinematicJoints(), IsIterableContainingInAnyOrder.containsInAnyOrder(Hanim.l_shoulder, Hanim.l_elbow));
         GuidingSequence gSeq = field("gSeq").ofType(GuidingSequence.class).in(pos).get();
         assertEquals(4, gSeq.size());
@@ -364,9 +364,9 @@ public class MURMLMUBuilderTest
         assertThat(tau.getKinematicJoints(), IsIterableContainingInAnyOrder.containsInAnyOrder(Hanim.r_wrist));
 
         @SuppressWarnings("unchecked")
-        List<TimedAnimationUnit> lmps = field("lmpQueue").ofType(List.class).in(tau).get();
-        assertEquals(1, lmps.size());
-    }
+        TimedAnimationUnit lmp = field("lmp").ofType(TimedAnimationUnit.class).in(tau).get();
+        assertThat(lmp, instanceOf(LMPWristRot.class));
+    } 
 
     @Test
     public void setupTMURelativeDynamicPalmOrientation() throws TMUSetupException
@@ -389,9 +389,8 @@ public class MURMLMUBuilderTest
         assertThat(tau.getKinematicJoints(), IsIterableContainingInAnyOrder.containsInAnyOrder(Hanim.r_wrist));
 
         @SuppressWarnings("unchecked")
-        List<TimedAnimationUnit> lmps = field("lmpQueue").ofType(List.class).in(tau).get();
-        assertEquals(1, lmps.size());
-        assertThat(lmps.get(0), instanceOf(LMPPoRot.class));
+        TimedAnimationUnit lmp = field("lmp").ofType(TimedAnimationUnit.class).in(tau).get();
+        assertThat(lmp, instanceOf(LMPPoRot.class));
     }
 
     @Test
@@ -410,8 +409,8 @@ public class MURMLMUBuilderTest
         assertThat(tau.getKinematicJoints(), IsIterableContainingInAnyOrder.containsInAnyOrder(Hanim.r_wrist));
 
         @SuppressWarnings("unchecked")
-        List<TimedAnimationUnit> lmps = field("lmpQueue").ofType(List.class).in(tau).get();
-        assertEquals(1, lmps.size());
+        TimedAnimationUnit lmp = field("lmp").ofType(TimedAnimationUnit.class).in(tau).get();
+        assertThat(lmp, instanceOf(LMPWristRot.class));
     }
 
     @Test
@@ -430,9 +429,8 @@ public class MURMLMUBuilderTest
         assertThat(tau.getKinematicJoints(), IsIterableContainingInAnyOrder.containsInAnyOrder(Hanim.r_wrist));
 
         @SuppressWarnings("unchecked")
-        List<TimedAnimationUnit> lmps = field("lmpQueue").ofType(List.class).in(tau).get();
-        assertEquals(1, lmps.size());
-        assertThat(lmps.get(0), instanceOf(LMPPoRot.class));
+        TimedAnimationUnit lmp = field("lmp").ofType(TimedAnimationUnit.class).in(tau).get();
+        assertThat(lmp, instanceOf(LMPPoRot.class));
     }
 
     @Test
@@ -454,8 +452,8 @@ public class MURMLMUBuilderTest
         assertThat(tau.getKinematicJoints(), IsIterableContainingInAnyOrder.containsInAnyOrder(Hanim.r_wrist));
 
         @SuppressWarnings("unchecked")
-        List<TimedAnimationUnit> lmps = field("lmpQueue").ofType(List.class).in(tau).get();
-        assertEquals(1, lmps.size());
+        TimedAnimationUnit lmp = field("lmp").ofType(TimedAnimationUnit.class).in(tau).get();
+        assertThat(lmp, instanceOf(LMPParallel.class));
     }
 
     @Test
@@ -483,8 +481,8 @@ public class MURMLMUBuilderTest
         assertThat(tau.getKinematicJoints(), IsIterableContainingInAnyOrder.containsInAnyOrder(Hanim.r_elbow, Hanim.r_shoulder));
 
         @SuppressWarnings("unchecked")
-        List<TimedAnimationUnit> lmps = field("lmpQueue").ofType(List.class).in(tau).get();
-        assertEquals(1, lmps.size());
+        TimedAnimationUnit lmp = field("lmp").ofType(TimedAnimationUnit.class).in(tau).get();
+        assertThat(lmp, instanceOf(LMPWristPos.class));
     }
 
     @Test
@@ -501,10 +499,8 @@ public class MURMLMUBuilderTest
 
         assertThat(tau, instanceOf(MotorControlProgram.class));
         @SuppressWarnings("unchecked")
-        List<TimedAnimationUnit> lmps = field("lmpQueue").ofType(List.class).in(tau).get();
-
-        assertEquals(1, lmps.size());
-
+        TimedAnimationUnit lmp = field("lmp").ofType(TimedAnimationUnit.class).in(tau).get();
+        assertThat(lmp, instanceOf(LMPHandMove.class));
         assertThat(tau.getKinematicJoints(), IsIterableContainingInAnyOrder.containsInAnyOrder(Hanim.LEFTHAND_JOINTS));
     }
 

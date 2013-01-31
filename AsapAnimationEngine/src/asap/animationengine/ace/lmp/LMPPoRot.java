@@ -15,7 +15,6 @@ import lombok.extern.slf4j.Slf4j;
 import asap.animationengine.AnimationPlayer;
 import asap.animationengine.ace.PoConstraint;
 import asap.math.splines.TCBSplineN;
-import asap.motionunit.TMUPlayException;
 import asap.realizer.feedback.FeedbackManager;
 import asap.realizer.pegboard.BMLBlockPeg;
 import asap.realizer.pegboard.PegBoard;
@@ -229,16 +228,6 @@ public class LMPPoRot extends LMP
     }
 
     
-
-    @Override
-    public void updateTiming(double time) throws TMUPlayException
-    {
-        if (!isLurking())
-        {
-            return;
-        }        
-        resolveTimePegs(time);
-    }
 
     private PoConstraint findOrientConstraint(String syncId)
     {

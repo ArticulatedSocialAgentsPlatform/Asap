@@ -20,7 +20,6 @@ import asap.animationengine.ace.TPConstraint;
 import asap.animationengine.procanimation.IKBody;
 import asap.math.splines.NUSSpline3;
 import asap.math.splines.SparseVelocityDef;
-import asap.motionunit.TMUPlayException;
 import asap.realizer.feedback.FeedbackManager;
 import asap.realizer.pegboard.BMLBlockPeg;
 import asap.realizer.pegboard.PegBoard;
@@ -467,39 +466,39 @@ public class LMPWristPos extends LMPPos
 
     
 
-    @Override
-    public void updateTiming(double time) throws TMUPlayException
-    {
-        if (!isLurking()) return;
-        resolveTimePegs(time);
-
-        // TODO: should do something like resolveTimePegs multiple times, updating the preparation
-        // and retraction durations timing at each run.
-
-        // get first timing constraint and guiding stroke
-        // TPConstraint startTPC = gSeq.getStartTPC();
-        // GuidingStroke gstroke = gSeq.getStroke(0);
-
-        // TODO: implement this(?)
-        // if (activateFlag)
-        // {
-        // gSeq->setStartPos(x);
-        // gSeq->setStartTPC(t);
-        // //gstroke->sDt = dt;
-        //
-        // // complete, start execution, and set lmp state
-        // refine();
-        // updateState(t);
-        // //cout << "LMP_WristPos::" << getName() << " defined?: " << isDefined(t) << endl;
-        // }
-        // else
-        // // skip a single-segmented, goal-directed movement if -at the time of activation!-
-        // // the target position is already reached = estimated duration is nearly zero
-        // if ( t > gSeq->getStartTPC().time && duration < 0.1 && gSeq->size() == 1 ) {
-        // //cout << getName() << "::switching to finish since no movement required!" << endl;
-        // setState( LMP_Finish );
-        // // remove overshooting (if present)
-        // removeSuccessor( lmpOVS );
-        // }
-    }
+//    @Override
+//    public void updateTiming(double time) throws TMUPlayException
+//    {
+//        if (!isLurking()) return;
+//        resolveTimePegs(time);
+//
+//        // TODO: should do something like resolveTimePegs multiple times, updating the preparation
+//        // and retraction durations timing at each run.
+//
+//        // get first timing constraint and guiding stroke
+//        // TPConstraint startTPC = gSeq.getStartTPC();
+//        // GuidingStroke gstroke = gSeq.getStroke(0);
+//
+//        // TODO: implement this(?)
+//        // if (activateFlag)
+//        // {
+//        // gSeq->setStartPos(x);
+//        // gSeq->setStartTPC(t);
+//        // //gstroke->sDt = dt;
+//        //
+//        // // complete, start execution, and set lmp state
+//        // refine();
+//        // updateState(t);
+//        // //cout << "LMP_WristPos::" << getName() << " defined?: " << isDefined(t) << endl;
+//        // }
+//        // else
+//        // // skip a single-segmented, goal-directed movement if -at the time of activation!-
+//        // // the target position is already reached = estimated duration is nearly zero
+//        // if ( t > gSeq->getStartTPC().time && duration < 0.1 && gSeq->size() == 1 ) {
+//        // //cout << getName() << "::switching to finish since no movement required!" << endl;
+//        // setState( LMP_Finish );
+//        // // remove overshooting (if present)
+//        // removeSuccessor( lmpOVS );
+//        // }
+//    }
 }

@@ -1,16 +1,16 @@
 package asap.animationengine.ace.lmp;
 
 import static org.hamcrest.MatcherAssert.assertThat;
+import static org.hamcrest.collection.IsIterableContainingInAnyOrder.containsInAnyOrder;
 import static org.junit.Assert.assertEquals;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
-
 import hmi.testutil.animation.HanimBody;
 
 import java.util.ArrayList;
 import java.util.List;
 
-import static org.hamcrest.collection.IsIterableContainingInAnyOrder.containsInAnyOrder;
+import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.powermock.core.classloader.annotations.PowerMockIgnore;
@@ -47,6 +47,12 @@ public class LMPPoRotTest extends AbstractTimedPlanUnitTest
     private double TIMING_PRECISION = 0.001;
     private AnimationPlayer mockAniPlayer = mock(AnimationPlayer.class);
     
+    @Before
+    public void setup()
+    {
+        pegBoard.addBMLBlockPeg(new BMLBlockPeg("bml1",0));
+    }
+    
     private LMPPoRot setupPlanUnit(FeedbackManager bfm, BMLBlockPeg bbPeg, String id, String bmlId)
     {
         List<PoConstraint> ocList = new ArrayList<>();
@@ -81,7 +87,7 @@ public class LMPPoRotTest extends AbstractTimedPlanUnitTest
     @Test
     public void testUpdateTimingNoConstraints() throws TMUPlayException
     {
-        TimedAnimationUnit tau = setupPlanUnit(fbManager, BMLBlockPeg.GLOBALPEG, "bml1", "beh1");
+        TimedAnimationUnit tau = setupPlanUnit(fbManager, BMLBlockPeg.GLOBALPEG, "beh1", "bml1");
         initializeForUpdateTiming(tau);
         tau.updateTiming(0);
         
@@ -96,7 +102,7 @@ public class LMPPoRotTest extends AbstractTimedPlanUnitTest
     @Test
     public void testUpdateTimingStrokeStartConstraint() throws TMUPlayException
     {
-        TimedAnimationUnit tau = setupPlanUnit(fbManager, BMLBlockPeg.GLOBALPEG, "bml1", "beh1");
+        TimedAnimationUnit tau = setupPlanUnit(fbManager, BMLBlockPeg.GLOBALPEG, "beh1", "bml1");
         initializeForUpdateTiming(tau);
         tau.setTimePeg("strokeStart",TimePegUtil.createTimePeg(BMLBlockPeg.GLOBALPEG, 0.5f));        
         tau.updateTiming(0);
@@ -113,7 +119,7 @@ public class LMPPoRotTest extends AbstractTimedPlanUnitTest
     @Test
     public void testUpdateTimingStrokeStartAndEndConstraint() throws TMUPlayException
     {
-        TimedAnimationUnit tau = setupPlanUnit(fbManager, BMLBlockPeg.GLOBALPEG, "bml1", "beh1");
+        TimedAnimationUnit tau = setupPlanUnit(fbManager, BMLBlockPeg.GLOBALPEG, "beh1","bml1");
         initializeForUpdateTiming(tau);
         tau.setTimePeg("strokeStart",TimePegUtil.createTimePeg(BMLBlockPeg.GLOBALPEG, 0.5f));
         tau.setTimePeg("strokeEnd",TimePegUtil.createTimePeg(BMLBlockPeg.GLOBALPEG, 2.5f));        
@@ -129,7 +135,7 @@ public class LMPPoRotTest extends AbstractTimedPlanUnitTest
     @Test
     public void testUpdateTimingEndConstraint() throws TMUPlayException
     {
-        TimedAnimationUnit tau = setupPlanUnit(fbManager, BMLBlockPeg.GLOBALPEG, "bml1", "beh1");
+        TimedAnimationUnit tau = setupPlanUnit(fbManager, BMLBlockPeg.GLOBALPEG, "beh1", "bml1");
         initializeForUpdateTiming(tau);
         tau.setTimePeg("end",TimePegUtil.createTimePeg(BMLBlockPeg.GLOBALPEG, 10f));        
         tau.updateTiming(0);
@@ -146,7 +152,7 @@ public class LMPPoRotTest extends AbstractTimedPlanUnitTest
     @Test
     public void testAvailableSyncs() throws TMUPlayException
     {
-        TimedAnimationUnit tau = setupPlanUnit(fbManager, BMLBlockPeg.GLOBALPEG, "bml1", "beh1");
+        TimedAnimationUnit tau = setupPlanUnit(fbManager, BMLBlockPeg.GLOBALPEG, "beh1", "bml1");
         assertThat(tau.getAvailableSyncs(),containsInAnyOrder("start", "strokeStart", "stroke1", "stroke2", "strokeEnd", "end"));
     }
 

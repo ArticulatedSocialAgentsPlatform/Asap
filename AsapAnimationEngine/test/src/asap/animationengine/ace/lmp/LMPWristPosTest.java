@@ -1,8 +1,6 @@
 package asap.animationengine.ace.lmp;
 
 import static org.hamcrest.MatcherAssert.assertThat;
-import static org.hamcrest.number.OrderingComparison.greaterThan;
-import static org.hamcrest.number.OrderingComparison.greaterThanOrEqualTo;
 import static org.junit.Assert.assertEquals;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
@@ -11,6 +9,7 @@ import hmi.math.Vec3f;
 import hmi.testutil.animation.HanimBody;
 
 import org.hamcrest.collection.IsIterableContainingInAnyOrder;
+import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.powermock.core.classloader.annotations.PowerMockIgnore;
@@ -47,6 +46,12 @@ public class LMPWristPosTest extends AbstractTimedPlanUnitTest
     private double TIMING_PRECISION = 0.001;
     private AnimationPlayer mockAniPlayer = mock(AnimationPlayer.class);
 
+    @Before
+    public void setup()
+    {
+        pegBoard.addBMLBlockPeg(new BMLBlockPeg("bml1",0));
+    }
+    
     private LMPWristPos setupPlanUnit(FeedbackManager bfm, BMLBlockPeg bbPeg, String bmlId, String id)
     {
         GuidingSequence gSeq = new GuidingSequence();

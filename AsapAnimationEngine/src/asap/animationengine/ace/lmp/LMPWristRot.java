@@ -18,7 +18,6 @@ import lombok.extern.slf4j.Slf4j;
 import asap.animationengine.AnimationPlayer;
 import asap.animationengine.ace.GStrokePhaseID;
 import asap.animationengine.ace.OrientConstraint;
-import asap.motionunit.TMUPlayException;
 import asap.realizer.feedback.FeedbackManager;
 import asap.realizer.pegboard.BMLBlockPeg;
 import asap.realizer.pegboard.PegBoard;
@@ -36,7 +35,7 @@ import com.google.common.collect.ImmutableSet;
 public class LMPWristRot extends LMP
 {
     private ImmutableSet<String> kinematicJoints;
-    private List<OrientConstraint> ocVec;
+    private final List<OrientConstraint> ocVec;
     private Map<OrientConstraint, TimePeg> constraintMap = new HashMap<>();
     private List<OrientPos> orientVec = new ArrayList<>();
 
@@ -298,12 +297,7 @@ public class LMPWristRot extends LMP
         }
     }
 
-    @Override
-    public void updateTiming(double time) throws TMUPlayException
-    {
-        if (!isLurking()) return;
-        resolveTimePegs(time);
-    }
+    
 
     private OrientConstraint findOrientConstraint(String syncId)
     {

@@ -10,6 +10,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import org.hamcrest.collection.IsIterableContainingInAnyOrder;
+import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.powermock.core.classloader.annotations.PowerMockIgnore;
@@ -44,6 +45,12 @@ public class LMPWristRotTest extends AbstractTimedPlanUnitTest
     private double TIMING_PRECISION = 0.001;
     private AnimationPlayer mockAniPlayer = mock(AnimationPlayer.class);
 
+    @Before
+    public void setup()
+    {
+        pegBoard.addBMLBlockPeg(new BMLBlockPeg("bml1",0));
+    }
+    
     private LMPWristRot setupPlanUnit(FeedbackManager bfm, BMLBlockPeg bbPeg, String bmlId, String id)
     {
         List<OrientConstraint> ocList = new ArrayList<>();

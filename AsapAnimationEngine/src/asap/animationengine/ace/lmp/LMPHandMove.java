@@ -15,7 +15,6 @@ import java.util.Set;
 import asap.animationengine.AnimationPlayer;
 import asap.animationengine.ace.PostureConstraint;
 import asap.motionunit.MUPlayException;
-import asap.motionunit.TMUPlayException;
 import asap.motionunit.keyframe.Interpolator;
 import asap.motionunit.keyframe.KeyFrame;
 import asap.motionunit.keyframe.KeyFrameMotionUnit;
@@ -302,13 +301,6 @@ public class LMPHandMove extends LMP
     public Set<String> getPhysicalJoints()
     {
         return ImmutableSet.of();
-    }
-
-    @Override
-    public void updateTiming(double time) throws TMUPlayException
-    {
-        if (!isLurking()) return;
-        resolveTimePegs(time);
     }
 
     private PostureConstraint findOrientConstraint(String syncId)

@@ -203,8 +203,8 @@ public abstract class TimedAbstractPlanUnit implements TimedPlanUnit
         }
         else
         {
-            setState(TimedPlanUnitState.IN_EXEC);
             startUnit(time);
+            setState(TimedPlanUnitState.IN_EXEC);            
         }
         logger.debug("started planunit {}:{}", bmlBlockId, id);
     }
