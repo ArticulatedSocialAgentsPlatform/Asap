@@ -7,7 +7,6 @@ import static org.hamcrest.collection.IsCollectionWithSize.hasSize;
 import static org.hamcrest.number.OrderingComparison.greaterThan;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
-import static org.mockito.Mockito.mock;
 
 import java.util.List;
 
@@ -18,14 +17,11 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import saiba.bml.feedback.BMLSyncPointProgressFeedback;
-import asap.realizer.feedback.FeedbackManager;
-import asap.realizer.feedback.FeedbackManagerImpl;
 import asap.realizer.pegboard.BMLBlockPeg;
 import asap.realizer.pegboard.TimePeg;
 import asap.realizer.planunit.TimedPlanUnit;
 import asap.realizer.planunit.TimedPlanUnitPlayException;
 import asap.realizer.planunit.TimedPlanUnitState;
-import asap.realizer.scheduler.BMLBlockManager;
 import asap.realizerport.util.ListBMLFeedbackListener;
 import asap.realizertestutil.planunit.AbstractTimedPlanUnitTest;
 import asap.realizertestutil.util.FeedbackListUtils;
@@ -47,7 +43,6 @@ public abstract class AbstractTTSUnitTest extends AbstractTimedPlanUnitTest
     private final static double BMLBLOCKSTART = 0.3;
     private BMLBlockPeg bbPeg;
     private TimePeg startPeg;
-    private BMLBlockManager mockBmlBlockManager = mock(BMLBlockManager.class);
     private static final Logger LOGGER = LoggerFactory.getLogger(AbstractTTSUnitTest.class.getName());
     private static final double TIMING_PRECISION = 0.001;
 

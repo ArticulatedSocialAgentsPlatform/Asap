@@ -5,6 +5,7 @@ import hmi.environmentbase.Environment;
 import hmi.environmentbase.Loader;
 import hmi.tts.util.NullPhonemeToVisemeMapping;
 import hmi.tts.util.PhonemeToVisemeMapping;
+import hmi.tts.util.PhonemeToVisemeMappingInfo;
 import hmi.util.ArrayUtils;
 import hmi.util.Resources;
 import hmi.xml.XMLScanException;
@@ -15,6 +16,8 @@ import inpro.audio.DispatchStream;
 import inpro.synthesis.MaryAdapter;
 
 import java.io.IOException;
+import java.util.ArrayList;
+import java.util.Collection;
 import java.util.HashMap;
 
 import lombok.Getter;
@@ -24,10 +27,12 @@ import asap.incrementalspeechengine.IncrementalTTSUnit;
 import asap.realizer.DefaultEngine;
 import asap.realizer.DefaultPlayer;
 import asap.realizer.Engine;
+import asap.realizer.lipsync.LipSynchProvider;
 import asap.realizer.planunit.PlanManager;
 import asap.realizer.planunit.SingleThreadedPlanPlayer;
 import asap.realizerembodiments.AsapRealizerEmbodiment;
 import asap.realizerembodiments.EngineLoader;
+import asap.realizerembodiments.LipSynchProviderLoader;
 
 /**
  * Loads the IncrementalTTSEngine from XML
@@ -41,6 +46,9 @@ public class IncrementalTTSEngineLoader implements EngineLoader
     private String id;
     private DispatchStream dispatcher;
     private PhonemeToVisemeMapping visemeMapping = new NullPhonemeToVisemeMapping();
+    private Collection<LipSynchProvider> lipSynchers = new ArrayList<LipSynchProvider>();
+    
+    
     @Override
     public Engine getEngine()
     {
@@ -85,14 +93,27 @@ public class IncrementalTTSEngineLoader implements EngineLoader
         {
             throw new RuntimeException("IncrementalTTSEngineLoader requires an EmbodimentLoader containing a AsapRealizerEmbodiment");
         }
+        
+
+        for (LipSynchProviderLoader el : ArrayUtils.getClassesOfType(requiredLoaders, LipSynchProviderLoader.class))
+        {
+            lipSynchers.add(el.getLipSyncProvider());
+        }
 
         DispatcherInfo di = null;
         ConfigDirLoader maryTTS = new ConfigDirLoader("MARYTTSIncremental","MaryTTSIncremental");
+        
+        
         while (tokenizer.atSTag())
         {
             String tag = tokenizer.getTagName();
             switch (tag)
             {
+            case PhonemeToVisemeMappingInfo.XMLTAG:
+                PhonemeToVisemeMappingInfo info = new PhonemeToVisemeMappingInfo();
+                info.readXML(tokenizer);
+                visemeMapping = info.getMapping();
+                break;                
             case DispatcherInfo.XMLTAG:
                 di = new DispatcherInfo();
                 di.readXML(tokenizer);
@@ -112,7 +133,7 @@ public class IncrementalTTSEngineLoader implements EngineLoader
         
         dispatcher = SimpleMonitor.setupDispatcher(new Resources(di.getResource()).getURL(di.getFilename()));
         PlanManager<IncrementalTTSUnit> planManager = new PlanManager<IncrementalTTSUnit>();
-        IncrementalTTSPlanner planner = new IncrementalTTSPlanner(realizerEmbodiment.getFeedbackManager(), planManager, dispatcher);
+        IncrementalTTSPlanner planner = new IncrementalTTSPlanner(realizerEmbodiment.getFeedbackManager(), planManager, dispatcher, visemeMapping,lipSynchers);
         engine = new DefaultEngine<IncrementalTTSUnit>(planner, new DefaultPlayer(new SingleThreadedPlanPlayer<IncrementalTTSUnit>(
                 planManager)), planManager);
         engine.setId(id);

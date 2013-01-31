@@ -1,8 +1,10 @@
 package asap.incrementalspeechengine;
 
+import hmi.tts.util.PhonemeToVisemeMapping;
 import inpro.audio.DispatchStream;
 
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.List;
 
 import saiba.bml.core.Behaviour;
@@ -11,6 +13,7 @@ import asap.realizer.AbstractPlanner;
 import asap.realizer.BehaviourPlanningException;
 import asap.realizer.SyncAndTimePeg;
 import asap.realizer.feedback.FeedbackManager;
+import asap.realizer.lipsync.LipSynchProvider;
 import asap.realizer.pegboard.BMLBlockPeg;
 import asap.realizer.planunit.PlanManager;
 import asap.realizer.scheduler.LinearStretchResolver;
@@ -22,24 +25,29 @@ import com.google.common.collect.ImmutableList;
 /**
  * Planner for the IncrementalTTSEngine
  * @author hvanwelbergen
- *
+ * 
  */
 public class IncrementalTTSPlanner extends AbstractPlanner<IncrementalTTSUnit>
 {
     private DispatchStream dispatcher;
     private UniModalResolver resolver = new LinearStretchResolver();
-    
+    private final PhonemeToVisemeMapping visemeMapping;
+    private Collection<LipSynchProvider> lipSynchers;
+
+    public IncrementalTTSPlanner(FeedbackManager fbm, PlanManager<IncrementalTTSUnit> planManager, DispatchStream dispatcher,
+            PhonemeToVisemeMapping vm, Collection<LipSynchProvider>ls)
+    {
+        super(fbm, planManager);
+        this.dispatcher = dispatcher;
+        this.visemeMapping = vm;
+        this.lipSynchers = ImmutableList.copyOf(ls);
+    }
+
     private IncrementalTTSUnit createTTSUnit(BMLBlockPeg bbPeg, Behaviour b)
     {
         SpeechBehaviour bSpeech = (SpeechBehaviour) b;
         IncrementalTTSUnit ttsUnit = new IncrementalTTSUnit(fbManager, bbPeg, b.getBmlId(), b.id, bSpeech.getContent(), dispatcher);
         return ttsUnit;
-    }
-    
-    public IncrementalTTSPlanner(FeedbackManager fbm, PlanManager<IncrementalTTSUnit> planManager,  DispatchStream dispatcher)
-    {
-        super(fbm, planManager);
-        this.dispatcher = dispatcher;
     }
 
     @Override
@@ -50,17 +58,22 @@ public class IncrementalTTSPlanner extends AbstractPlanner<IncrementalTTSUnit>
         {
             bs = createTTSUnit(bbPeg, b);
         }
-        
+
         ArrayList<SyncAndTimePeg> satp = new ArrayList<SyncAndTimePeg>();
         satp.add(new SyncAndTimePeg(b.getBmlId(), b.id, "start", bs.getTimePeg("start")));
         satp.add(new SyncAndTimePeg(b.getBmlId(), b.id, "relax", bs.getTimePeg("relax")));
         satp.add(new SyncAndTimePeg(b.getBmlId(), b.id, "end", bs.getTimePeg("end")));
-        
-        //link bookmarks
-        //add bookmark pegs to satp
-        //link lipsync pegs
-        
+
+        // link bookmarks
+        // add bookmark pegs to satp
+
+        for (LipSynchProvider ls : lipSynchers)
+        {
+            // ls.addLipSyncMovement(bbPeg, b, bs, bs.visimes);
+        }
+
         planManager.addPlanUnit(bs);
+
         return satp;
     }
 

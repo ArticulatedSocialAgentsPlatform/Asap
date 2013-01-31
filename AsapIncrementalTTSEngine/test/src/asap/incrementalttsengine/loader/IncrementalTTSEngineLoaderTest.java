@@ -13,6 +13,7 @@ import java.io.IOException;
 import org.junit.Test;
 
 import asap.incrementalspeechengine.loader.IncrementalTTSEngineLoader;
+import asap.realizer.lipsync.LipSynchProvider;
 import asap.realizerembodiments.AsapRealizerEmbodiment;
 import asap.realizerembodiments.LipSynchProviderLoader;
 
@@ -32,7 +33,7 @@ public class IncrementalTTSEngineLoaderTest
         String loaderStr =
           "<Loader id=\"incrementaltts\" loader=\"asap.incrementalttsengine.loader.IncrementalTTSEngineLoader\">"+
           "<Dispatcher resources=\"\" filename=\"sphinx-config.xml\"/>"+
-          "<MaryTTSIncremental localdir=\"AsapResource/MARYTTSIncremental/resource/MARYTTSIncremental\"/>"+
+          "<MaryTTSIncremental localdir=\"asapresource/MARYTTSIncremental/resource/MARYTTSIncremental\"/>"+
           "</Loader>";
         //@formatter:on
         XMLTokenizer tok = new XMLTokenizer(loaderStr);
@@ -41,7 +42,7 @@ public class IncrementalTTSEngineLoaderTest
         loader.readXML(tok, "ma1", "billie", "billie", new Environment[] {}, new Loader[] { mockAsapRealizerEmbodiment });
         assertEquals("ma1", loader.getId());
         assertNotNull(loader.getEngine());
-        assertEquals(System.getProperty("shared.project.root") + "/AsapResource/MARYTTSIncremental/resource/MARYTTSIncremental",
+        assertEquals(System.getProperty("shared.project.root") + "/asapresource/MARYTTSIncremental/resource/MARYTTSIncremental",
                 System.getProperty("mary.base"));
     }
     
@@ -50,14 +51,15 @@ public class IncrementalTTSEngineLoaderTest
     public void testWithLipSync() throws IOException
     {
         LipSynchProviderLoader mockLipsync = mock(LipSynchProviderLoader.class);
+        LipSynchProvider mockLipSyncProvider = mock(LipSynchProvider.class);
         when(mockLipsync.getId()).thenReturn("facelipsync");
-        
+        when(mockLipsync.getLipSyncProvider()).thenReturn(mockLipSyncProvider);
         //@formatter:off
         String loaderStr =
           "<Loader id=\"incrementaltts\" loader=\"asap.incrementalttsengine.loader.IncrementalTTSEngineLoader\" requiredloaders=\"facelipsync\">"+
           "<Dispatcher resources=\"\" filename=\"sphinx-config.xml\"/>"+
           "<PhonemeToVisemeMapping resources=\"Humanoids/shared/phoneme2viseme/\" filename=\"sampade2ikp.xml\"/>"+
-          "<MaryTTSIncremental localdir=\"AsapResource/MARYTTSIncremental/resource/MARYTTSIncremental\"/>"+
+          "<MaryTTSIncremental localdir=\"asapresource/MARYTTSIncremental/resource/MARYTTSIncremental\"/>"+
           "</Loader>";
         //@formatter:on
         XMLTokenizer tok = new XMLTokenizer(loaderStr);
@@ -66,7 +68,7 @@ public class IncrementalTTSEngineLoaderTest
         loader.readXML(tok, "ma1", "billie", "billie", new Environment[] {}, new Loader[] { mockAsapRealizerEmbodiment,mockLipsync});
         assertEquals("ma1", loader.getId());
         assertNotNull(loader.getEngine());
-        assertEquals(System.getProperty("shared.project.root") + "/AsapResource/MARYTTSIncremental/resource/MARYTTSIncremental",
+        assertEquals(System.getProperty("shared.project.root") + "/asapresource/MARYTTSIncremental/resource/MARYTTSIncremental",
                 System.getProperty("mary.base"));
     }
 }
