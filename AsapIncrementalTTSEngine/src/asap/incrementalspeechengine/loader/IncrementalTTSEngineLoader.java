@@ -3,6 +3,8 @@ package asap.incrementalspeechengine.loader;
 import hmi.environmentbase.ConfigDirLoader;
 import hmi.environmentbase.Environment;
 import hmi.environmentbase.Loader;
+import hmi.tts.util.NullPhonemeToVisemeMapping;
+import hmi.tts.util.PhonemeToVisemeMapping;
 import hmi.util.ArrayUtils;
 import hmi.util.Resources;
 import hmi.xml.XMLScanException;
@@ -38,7 +40,7 @@ public class IncrementalTTSEngineLoader implements EngineLoader
     private Engine engine;
     private String id;
     private DispatchStream dispatcher;
-
+    private PhonemeToVisemeMapping visemeMapping = new NullPhonemeToVisemeMapping();
     @Override
     public Engine getEngine()
     {

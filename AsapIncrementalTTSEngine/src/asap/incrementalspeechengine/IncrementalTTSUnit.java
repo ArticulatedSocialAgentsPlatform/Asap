@@ -133,7 +133,6 @@ public class IncrementalTTSUnit extends TimedAbstractPlanUnit
     @Override
     public boolean hasValidTiming()
     {
-        // TODO Auto-generated method stub
         return true;
     }
 

@@ -3,13 +3,13 @@ package asap.maryttsbinding.loader;
 import hmi.environmentbase.ConfigDirLoader;
 import hmi.environmentbase.Environment;
 import hmi.environmentbase.Loader;
+import hmi.tts.util.PhonemeToVisemeMappingInfo;
 import hmi.xml.XMLScanException;
 import hmi.xml.XMLTokenizer;
 
 import java.io.IOException;
 
 import asap.maryttsbinding.MaryTTSBinding;
-import asap.speechengine.loader.PhonemeToVisemeMappingInfo;
 import asap.speechengine.ttsbinding.TTSBindingLoader;
 
 /**

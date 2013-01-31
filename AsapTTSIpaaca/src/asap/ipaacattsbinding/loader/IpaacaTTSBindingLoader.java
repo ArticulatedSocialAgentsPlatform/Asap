@@ -2,13 +2,13 @@ package asap.ipaacattsbinding.loader;
 
 import hmi.environmentbase.Environment;
 import hmi.environmentbase.Loader;
+import hmi.tts.util.PhonemeToVisemeMappingInfo;
 import hmi.xml.XMLScanException;
 import hmi.xml.XMLTokenizer;
 
 import java.io.IOException;
 
 import asap.ipaacattsbinding.IpaacaTTSBinding;
-import asap.speechengine.loader.PhonemeToVisemeMappingInfo;
 import asap.speechengine.ttsbinding.TTSBindingLoader;
 
 /**
