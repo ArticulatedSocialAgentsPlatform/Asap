@@ -2,9 +2,9 @@ package asap.incrementalspeechengine;
 
 import inpro.audio.DispatchStream;
 import inpro.incremental.unit.IU;
-import inpro.incremental.unit.SysSegmentIU;
 import inpro.incremental.unit.IU.IUUpdateListener;
 import inpro.incremental.unit.IU.Progress;
+import inpro.incremental.unit.SysSegmentIU;
 
 import java.util.List;
 
@@ -13,7 +13,6 @@ import asap.realizer.pegboard.BMLBlockPeg;
 import asap.realizer.pegboard.TimePeg;
 import asap.realizer.planunit.ParameterException;
 import asap.realizer.planunit.PlanUnitFloatParameterNotFoundException;
-import asap.realizer.planunit.PlanUnitParameterNotFoundException;
 import asap.realizer.planunit.TimedAbstractPlanUnit;
 import asap.realizer.planunit.TimedPlanUnitPlayException;
 
@@ -24,7 +23,7 @@ import done.inpro.system.carchase.HesitatingSynthesisIU;
 /**
  * Incrementally constructed and updated ttsunit
  * @author hvanwelbergen
- *
+ * 
  */
 public class IncrementalTTSUnit extends TimedAbstractPlanUnit
 {
@@ -35,53 +34,84 @@ public class IncrementalTTSUnit extends TimedAbstractPlanUnit
     private TimePeg endPeg;
     private double duration;
     private float stretch = 1;
+    private float pitchShiftInCent = 0;
 
     private static class WordUpdateListener implements IUUpdateListener
     {
         @Override
         public void update(IU updatedIU)
         {
-            Progress newProgress = updatedIU.getProgress();            
-            for(IU we: updatedIU.groundedIn())
+            Progress newProgress = updatedIU.getProgress();
+            for (IU we : updatedIU.groundedIn())
             {
                 /*
-                System.out.println("Phoneme: "+we.toPayLoad());
-                System.out.println("Start: "+we.startTime());
-                System.out.println("End: "+we.endTime());
-                System.out.println("progress: "+we.getProgress());
-                */
+                 * System.out.println("Phoneme: "+we.toPayLoad());
+                 * System.out.println("Start: "+we.startTime());
+                 * System.out.println("End: "+we.endTime());
+                 * System.out.println("progress: "+we.getProgress());
+                 */
             }
         }
     }
-   
+
     private void stretch(float value)
     {
-        for (SysSegmentIU seg : synthesisIU.getSegments()) 
+        stretch = value;
+        for (SysSegmentIU seg : synthesisIU.getSegments())
         {
-            if(!seg.isCompleted())
+            if (!seg.isCompleted())
             {
                 seg.stretchFromOriginal(value);
             }
         }
     }
-    
-    @Override
-    public void setParameterValue(String paramId, String value) throws ParameterException
+
+    private void setPitch(float value)
     {
-        super.setParameterValue(paramId, value);
+        pitchShiftInCent = value;
+        for (SysSegmentIU seg : synthesisIU.getSegments())
+        {
+            if (!seg.isCompleted())
+            {
+                seg.pitchShiftInCent = value;
+            }
+        }
     }
 
-   
+    @Override
+    public float getFloatParameterValue(String paramId) throws ParameterException
+    {
+        if (paramId.equals("stretch"))
+        {
+            return stretch;
+        }
+        else if (paramId.equals("pitch"))
+        {
+            return pitchShiftInCent;
+        }
+        else
+        {
+            return super.getFloatParameterValue(paramId);
+        }
+    }
+
     @Override
     public void setFloatParameterValue(String paramId, float value) throws ParameterException
     {
-        if(paramId.equals("stretch"))
+        if (paramId.equals("stretch"))
         {
             stretch(value);
         }
-        super.setFloatParameterValue(paramId, value);
+        else if (paramId.equals("pitch"))
+        {
+            setPitch(value);
+        }
+        else
+        {
+            super.setFloatParameterValue(paramId, value);
+        }
     }
-    
+
     public IncrementalTTSUnit(FeedbackManager fbm, BMLBlockPeg bmlPeg, String bmlId, String behId, String text, DispatchStream dispatcher)
     {
         super(fbm, bmlPeg, bmlId, behId);
@@ -89,10 +119,9 @@ public class IncrementalTTSUnit extends TimedAbstractPlanUnit
         for (IU word : synthesisIU.groundedIn())
         {
             word.updateOnGrinUpdates();
-            word.addUpdateListener(new WordUpdateListener());            
+            word.addUpdateListener(new WordUpdateListener());
         }
-        
-        
+
         this.dispatcher = dispatcher;
         startPeg = new TimePeg(bmlPeg);
         endPeg = new TimePeg(bmlPeg);
@@ -172,7 +201,7 @@ public class IncrementalTTSUnit extends TimedAbstractPlanUnit
     protected void startUnit(double time) throws TimedPlanUnitPlayException
     {
         dispatcher.playStream(synthesisIU.getAudio(), true);
-        sendFeedback("start",time);
+        sendFeedback("start", time);
         super.startUnit(time);
     }
 
@@ -185,8 +214,8 @@ public class IncrementalTTSUnit extends TimedAbstractPlanUnit
     @Override
     protected void stopUnit(double time)
     {
-        sendFeedback("end",time);
-        //dispatcher.interruptPlayback();
+        sendFeedback("end", time);
+        // dispatcher.interruptPlayback();
     }
 
 }
