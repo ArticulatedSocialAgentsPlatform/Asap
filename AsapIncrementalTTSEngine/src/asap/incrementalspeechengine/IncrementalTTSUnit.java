@@ -2,6 +2,7 @@ package asap.incrementalspeechengine;
 
 import inpro.audio.DispatchStream;
 import inpro.incremental.unit.IU;
+import inpro.incremental.unit.SysSegmentIU;
 import inpro.incremental.unit.IU.IUUpdateListener;
 import inpro.incremental.unit.IU.Progress;
 
@@ -10,6 +11,9 @@ import java.util.List;
 import asap.realizer.feedback.FeedbackManager;
 import asap.realizer.pegboard.BMLBlockPeg;
 import asap.realizer.pegboard.TimePeg;
+import asap.realizer.planunit.ParameterException;
+import asap.realizer.planunit.PlanUnitFloatParameterNotFoundException;
+import asap.realizer.planunit.PlanUnitParameterNotFoundException;
 import asap.realizer.planunit.TimedAbstractPlanUnit;
 import asap.realizer.planunit.TimedPlanUnitPlayException;
 
@@ -30,6 +34,7 @@ public class IncrementalTTSUnit extends TimedAbstractPlanUnit
     private TimePeg relaxPeg;
     private TimePeg endPeg;
     private double duration;
+    private float stretch = 1;
 
     private static class WordUpdateListener implements IUUpdateListener
     {
@@ -47,6 +52,34 @@ public class IncrementalTTSUnit extends TimedAbstractPlanUnit
                 */
             }
         }
+    }
+   
+    private void stretch(float value)
+    {
+        for (SysSegmentIU seg : synthesisIU.getSegments()) 
+        {
+            if(!seg.isCompleted())
+            {
+                seg.stretchFromOriginal(value);
+            }
+        }
+    }
+    
+    @Override
+    public void setParameterValue(String paramId, String value) throws ParameterException
+    {
+        super.setParameterValue(paramId, value);
+    }
+
+   
+    @Override
+    public void setFloatParameterValue(String paramId, float value) throws ParameterException
+    {
+        if(paramId.equals("stretch"))
+        {
+            stretch(value);
+        }
+        super.setFloatParameterValue(paramId, value);
     }
     
     public IncrementalTTSUnit(FeedbackManager fbm, BMLBlockPeg bmlPeg, String bmlId, String behId, String text, DispatchStream dispatcher)

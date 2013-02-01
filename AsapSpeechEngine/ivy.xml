@@ -13,7 +13,7 @@
       <dependency org="Asap"   name="AsapAudioEngine"       transitive="false" rev="latest.${resolve.status}"   />
 	  <dependency org="Asap"   name="AsapBML"       transitive="false" rev="latest.${resolve.status}"   />
       <dependency org="HMI"   name="HmiAudioEnvironment"     transitive="false" rev="latest.${resolve.status}"   />
-      <dependency org="HMI"     name="HmiTTS"           transitive="false" rev="latest.${resolve.status}"  />
+      <dependency org="HMI"     name="HmiTTS"           rev="latest.${resolve.status}"  />
       
 	  <dependency org="saiba"     name="saibabml"           rev="latest.release"    />
 	  <dependency org="jcip"    name="jcip-annotations"      rev="latest.release"  />

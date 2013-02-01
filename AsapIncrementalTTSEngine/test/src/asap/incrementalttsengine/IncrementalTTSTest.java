@@ -6,6 +6,7 @@ import inpro.audio.DispatchStream;
 import inpro.incremental.unit.IU;
 import inpro.incremental.unit.IU.IUUpdateListener;
 import inpro.incremental.unit.IU.Progress;
+import inpro.incremental.unit.SysSegmentIU;
 import inpro.synthesis.MaryAdapter;
 
 import org.junit.Ignore;
@@ -50,45 +51,43 @@ public class IncrementalTTSTest
         
         Thread.sleep(8000);
         
-//        
-//        
-//        
-//        for (IU word : installment.groundedIn())
-//        {
-//            word.updateOnGrinUpdates();
-//            word.addUpdateListener(new MyWordUpdateListener());            
-//        }        
-//        dispatcher.playStream(installment.getAudio(), true);        
-//        
-//        Thread.sleep(500);
-//        
-//        //dispatcher.interruptPlayback();
-//        
-//        //interrupt (?)
-//        for (IU word : installment.groundedIn())
-//        {
-//            word.revoke();
-//            for(IU we: word.groundedIn())
-//            {
-//                we.revoke();
-//                for(IU audio: we.groundedIn())
-//                {
-//                    audio.revoke();
-//                }
-//            }
-//        }
-//        
-//        /*
-//        installment = new HesitatingSynthesisIU("Next sentence");
-//        dispatcher.playStream(installment.getAudio(), true);
-//        */
-//        
-//        /*
-//        for (SysSegmentIU seg : installment.getSegments()) {
-//            seg.stretch(2);
-//        }
-//        */
-//        Thread.sleep(12000);
+        
+        
+        
+        for (IU word : installment.groundedIn())
+        {
+            word.updateOnGrinUpdates();
+            word.addUpdateListener(new MyWordUpdateListener());            
+        }        
+        dispatcher.playStream(installment.getAudio(), true);        
+        
+        Thread.sleep(500);
+        
+        //dispatcher.interruptPlayback();
+        
+        //interrupt (?)
+        for (IU word : installment.groundedIn())
+        {
+            word.revoke();
+            for(IU we: word.groundedIn())
+            {
+                we.revoke();
+                for(IU audio: we.groundedIn())
+                {
+                    audio.revoke();
+                }
+            }
+        }
+        
+        /*
+        installment = new HesitatingSynthesisIU("Next sentence");
+        dispatcher.playStream(installment.getAudio(), true);
+        */
+        
+        for (SysSegmentIU seg : installment.getSegments()) {
+            seg.stretch(2);
+        }
+        Thread.sleep(12000);
         
         //How to get phoneme timing?        
     }
