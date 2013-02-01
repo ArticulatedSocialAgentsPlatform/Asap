@@ -1,18 +1,23 @@
 package asap.incrementalspeechengine;
 
+import hmi.tts.Visime;
+import hmi.tts.util.PhonemeToVisemeMapping;
 import inpro.audio.DispatchStream;
 import inpro.incremental.unit.IU;
 import inpro.incremental.unit.IU.IUUpdateListener;
-import inpro.incremental.unit.IU.Progress;
 import inpro.incremental.unit.SysSegmentIU;
 
+import java.util.ArrayList;
+import java.util.Collection;
 import java.util.List;
 
+import saiba.bml.core.SpeechBehaviour;
+
 import asap.realizer.feedback.FeedbackManager;
+import asap.realizer.lipsync.LipSynchProvider;
 import asap.realizer.pegboard.BMLBlockPeg;
 import asap.realizer.pegboard.TimePeg;
 import asap.realizer.planunit.ParameterException;
-import asap.realizer.planunit.PlanUnitFloatParameterNotFoundException;
 import asap.realizer.planunit.TimedAbstractPlanUnit;
 import asap.realizer.planunit.TimedPlanUnitPlayException;
 
@@ -35,22 +40,81 @@ public class IncrementalTTSUnit extends TimedAbstractPlanUnit
     private double duration;
     private float stretch = 1;
     private float pitchShiftInCent = 0;
+    private ImmutableList<LipSynchProvider> lsProviders;
+    private final PhonemeToVisemeMapping visemeMapping;
+    
 
-    private static class WordUpdateListener implements IUUpdateListener
+    public IncrementalTTSUnit(FeedbackManager fbm, BMLBlockPeg bmlPeg, String bmlId, String behId, String text, DispatchStream dispatcher,
+            Collection<LipSynchProvider> lsProviders, PhonemeToVisemeMapping visemeMapping)
+    {
+        super(fbm, bmlPeg, bmlId, behId);        
+        this.lsProviders = ImmutableList.copyOf(lsProviders);
+        synthesisIU = new HesitatingSynthesisIU(text);
+        
+        WordUpdateListener wul = new WordUpdateListener();
+        for (IU word : synthesisIU.groundedIn())
+        {
+            word.updateOnGrinUpdates();
+            for (IU we : word.groundedIn())
+            {
+                System.out.println("Phoneme: " + we.toPayLoad());
+                System.out.println("Start: " + we.startTime());
+                System.out.println("End: " + we.endTime());
+                System.out.println("progress: " + we.getProgress());
+            }
+            word.addUpdateListener(wul);
+        }
+        this.visemeMapping = visemeMapping;
+        this.dispatcher = dispatcher;
+        startPeg = new TimePeg(bmlPeg);
+        endPeg = new TimePeg(bmlPeg);
+        relaxPeg = new TimePeg(bmlPeg);
+        duration = synthesisIU.duration();
+    }
+
+    private void updateLipSyncUnit(IU phIU)
+    {
+       
+        for(LipSynchProvider lsp:lsProviders)
+        {
+            //lsp.setLipSyncMovement(this.getBMLBlockPeg(), behavior, this, visemes);
+        }
+    }
+    
+    private void updateLipSync()
+    {
+        for (IU word :synthesisIU.groundedIn())
+        {
+            if(word.isUpcoming() || word.isOngoing())
+            {
+                for (IU ph :word.groundedIn())
+                {
+                    if(ph.isUpcoming())
+                    {
+                        updateLipSyncUnit(ph);
+                        return;
+                    }
+                }
+            }
+        }
+    }
+
+    private class WordUpdateListener implements IUUpdateListener
     {
         @Override
         public void update(IU updatedIU)
         {
-            Progress newProgress = updatedIU.getProgress();
-            for (IU we : updatedIU.groundedIn())
-            {
-                /*
-                 * System.out.println("Phoneme: "+we.toPayLoad());
-                 * System.out.println("Start: "+we.startTime());
-                 * System.out.println("End: "+we.endTime());
-                 * System.out.println("progress: "+we.getProgress());
-                 */
-            }
+            updateLipSync();
+//            for (IU word :synthesisIU.groundedIn())
+//            {
+//                for (IU we :word.groundedIn())
+//                {
+//                    System.out.println("Phoneme: " + we.toPayLoad());
+//                    System.out.println("Start: " + we.startTime());
+//                    System.out.println("End: " + we.endTime());
+//                    System.out.println("progress: " + we.getProgress());
+//                }
+//            }
         }
     }
 
@@ -59,7 +123,7 @@ public class IncrementalTTSUnit extends TimedAbstractPlanUnit
         stretch = value;
         for (SysSegmentIU seg : synthesisIU.getSegments())
         {
-            if (!seg.isCompleted())
+            if (!seg.isCompleted() && !seg.isOngoing())
             {
                 seg.stretchFromOriginal(value);
             }
@@ -71,7 +135,7 @@ public class IncrementalTTSUnit extends TimedAbstractPlanUnit
         pitchShiftInCent = value;
         for (SysSegmentIU seg : synthesisIU.getSegments())
         {
-            if (!seg.isCompleted())
+            if (!seg.isCompleted() && !seg.isOngoing())
             {
                 seg.pitchShiftInCent = value;
             }
@@ -110,23 +174,6 @@ public class IncrementalTTSUnit extends TimedAbstractPlanUnit
         {
             super.setFloatParameterValue(paramId, value);
         }
-    }
-
-    public IncrementalTTSUnit(FeedbackManager fbm, BMLBlockPeg bmlPeg, String bmlId, String behId, String text, DispatchStream dispatcher)
-    {
-        super(fbm, bmlPeg, bmlId, behId);
-        synthesisIU = new HesitatingSynthesisIU(text);
-        for (IU word : synthesisIU.groundedIn())
-        {
-            word.updateOnGrinUpdates();
-            word.addUpdateListener(new WordUpdateListener());
-        }
-
-        this.dispatcher = dispatcher;
-        startPeg = new TimePeg(bmlPeg);
-        endPeg = new TimePeg(bmlPeg);
-        relaxPeg = new TimePeg(bmlPeg);
-        duration = synthesisIU.duration();
     }
 
     @Override
@@ -175,6 +222,12 @@ public class IncrementalTTSUnit extends TimedAbstractPlanUnit
     }
 
     @Override
+    public double getPreferedDuration()
+    {
+        return duration;
+    }
+
+    @Override
     public void setTimePeg(String syncId, TimePeg peg)
     {
         if (syncId.equals("start"))
@@ -200,6 +253,7 @@ public class IncrementalTTSUnit extends TimedAbstractPlanUnit
 
     protected void startUnit(double time) throws TimedPlanUnitPlayException
     {
+        updateLipSync();
         dispatcher.playStream(synthesisIU.getAudio(), true);
         sendFeedback("start", time);
         super.startUnit(time);

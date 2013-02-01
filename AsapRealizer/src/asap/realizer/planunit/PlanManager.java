@@ -48,7 +48,8 @@ public final class PlanManager<T extends TimedPlanUnit>
         }
         return l;
     }
-
+    
+    
     /**
      * Get an immutable copy of the list of planunits, filtered by bmlId
      */
@@ -160,24 +161,21 @@ public final class PlanManager<T extends TimedPlanUnit>
     }
 
     /**
-     * Gets the first planunit corresponding with id:bmlId (there could be more if they are
-     * subPlanUnits Should always be called inside a synchronized(planUnits) block
+     * Get an immutable copy of the list of planunits, filtered by bmlId and behaviour id
      */
-    private List<T> getPlanUnits(String bmlId, String id)
+    public Collection<T> getPlanUnits(final String bmlId, final String id)
     {
-        List<T> puList = new ArrayList<T>();
-        synchronized (planUnits)
+        return Collections2.filter(getPlanUnits(), new Predicate<T>()
         {
-            for (T pu : planUnits)
+            @Override
+            public boolean apply(T arg)
             {
-                if (pu.getId().equals(id) && pu.getBMLId().equals(bmlId))
-                {
-                    puList.add(pu);
-                }
+                return arg.getBMLId().equals(bmlId)&&arg.getId().equals(id);
             }
-        }
-        return puList;
+        });
     }
+
+
     
     private T getMainPlanUnit(String bmlId, String id)
     {

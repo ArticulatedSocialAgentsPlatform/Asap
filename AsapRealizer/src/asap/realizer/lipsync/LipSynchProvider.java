@@ -14,5 +14,8 @@ import asap.realizer.planunit.TimedPlanUnit;
  */
 public interface LipSynchProvider
 {
+    /**
+     * Adds the lipsync movement for a full (speech) behaviour 
+     */
     void addLipSyncMovement(BMLBlockPeg bbPeg, Behaviour beh, TimedPlanUnit speechUnit, List<Visime> visemes);
 }

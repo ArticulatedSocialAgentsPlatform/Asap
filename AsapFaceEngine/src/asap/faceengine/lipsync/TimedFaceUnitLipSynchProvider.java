@@ -1,6 +1,5 @@
 package asap.faceengine.lipsync;
 
-import saiba.bml.core.Behaviour;
 import hmi.faceanimation.FaceController;
 import hmi.tts.Visime;
 
@@ -9,8 +8,10 @@ import java.util.HashMap;
 import java.util.List;
 
 import lombok.extern.slf4j.Slf4j;
+import saiba.bml.core.Behaviour;
 import asap.faceengine.faceunit.TimedFaceUnit;
 import asap.faceengine.viseme.VisemeBinding;
+import asap.realizer.lipsync.IncrementalLipsyncProvider;
 import asap.realizer.lipsync.LipSynchProvider;
 import asap.realizer.pegboard.BMLBlockPeg;
 import asap.realizer.pegboard.OffsetPeg;
@@ -89,4 +90,6 @@ public class TimedFaceUnitLipSynchProvider implements LipSynchProvider
             log.debug("adding face movement at {}-{}", plannedFU.getStartTime(), plannedFU.getEndTime());
         }        
     }
+
+    
 }

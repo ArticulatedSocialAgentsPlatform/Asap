@@ -47,8 +47,7 @@ public class IncrementalTTSEngineLoader implements EngineLoader
     private DispatchStream dispatcher;
     private PhonemeToVisemeMapping visemeMapping = new NullPhonemeToVisemeMapping();
     private Collection<LipSynchProvider> lipSynchers = new ArrayList<LipSynchProvider>();
-    
-    
+
     @Override
     public Engine getEngine()
     {
@@ -93,7 +92,6 @@ public class IncrementalTTSEngineLoader implements EngineLoader
         {
             throw new RuntimeException("IncrementalTTSEngineLoader requires an EmbodimentLoader containing a AsapRealizerEmbodiment");
         }
-        
 
         for (LipSynchProviderLoader el : ArrayUtils.getClassesOfType(requiredLoaders, LipSynchProviderLoader.class))
         {
@@ -101,9 +99,8 @@ public class IncrementalTTSEngineLoader implements EngineLoader
         }
 
         DispatcherInfo di = null;
-        ConfigDirLoader maryTTS = new ConfigDirLoader("MARYTTSIncremental","MaryTTSIncremental");
-        
-        
+        ConfigDirLoader maryTTS = new ConfigDirLoader("MARYTTSIncremental", "MaryTTSIncremental");
+
         while (tokenizer.atSTag())
         {
             String tag = tokenizer.getTagName();
@@ -113,13 +110,13 @@ public class IncrementalTTSEngineLoader implements EngineLoader
                 PhonemeToVisemeMappingInfo info = new PhonemeToVisemeMappingInfo();
                 info.readXML(tokenizer);
                 visemeMapping = info.getMapping();
-                break;                
+                break;
             case DispatcherInfo.XMLTAG:
                 di = new DispatcherInfo();
                 di.readXML(tokenizer);
                 break;
             case "MaryTTSIncremental":
-                maryTTS.readXML(tokenizer);                
+                maryTTS.readXML(tokenizer);
                 break;
             default:
                 throw new XMLScanException("Invalid tag " + tag);
@@ -129,11 +126,12 @@ public class IncrementalTTSEngineLoader implements EngineLoader
         {
             throw new RuntimeException("IncrementalTTSEngineLoader requires an Dispatcher specification");
         }
-        System.setProperty("mary.base",maryTTS.getConfigDir());
-        
+        System.setProperty("mary.base", maryTTS.getConfigDir());
+
         dispatcher = SimpleMonitor.setupDispatcher(new Resources(di.getResource()).getURL(di.getFilename()));
         PlanManager<IncrementalTTSUnit> planManager = new PlanManager<IncrementalTTSUnit>();
-        IncrementalTTSPlanner planner = new IncrementalTTSPlanner(realizerEmbodiment.getFeedbackManager(), planManager, dispatcher, visemeMapping,lipSynchers);
+        IncrementalTTSPlanner planner = new IncrementalTTSPlanner(realizerEmbodiment.getFeedbackManager(), planManager, dispatcher,
+                visemeMapping, lipSynchers);
         engine = new DefaultEngine<IncrementalTTSUnit>(planner, new DefaultPlayer(new SingleThreadedPlanPlayer<IncrementalTTSUnit>(
                 planManager)), planManager);
         engine.setId(id);

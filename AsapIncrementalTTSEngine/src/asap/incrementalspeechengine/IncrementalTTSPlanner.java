@@ -32,7 +32,8 @@ public class IncrementalTTSPlanner extends AbstractPlanner<IncrementalTTSUnit>
     private DispatchStream dispatcher;
     private UniModalResolver resolver = new LinearStretchResolver();
     private final PhonemeToVisemeMapping visemeMapping;
-    private Collection<LipSynchProvider> lipSynchers;
+    private final Collection<LipSynchProvider> lipSynchers;
+    
 
     public IncrementalTTSPlanner(FeedbackManager fbm, PlanManager<IncrementalTTSUnit> planManager, DispatchStream dispatcher,
             PhonemeToVisemeMapping vm, Collection<LipSynchProvider>ls)
@@ -46,7 +47,7 @@ public class IncrementalTTSPlanner extends AbstractPlanner<IncrementalTTSUnit>
     private IncrementalTTSUnit createTTSUnit(BMLBlockPeg bbPeg, Behaviour b)
     {
         SpeechBehaviour bSpeech = (SpeechBehaviour) b;
-        IncrementalTTSUnit ttsUnit = new IncrementalTTSUnit(fbManager, bbPeg, b.getBmlId(), b.id, bSpeech.getContent(), dispatcher);
+        IncrementalTTSUnit ttsUnit = new IncrementalTTSUnit(fbManager, bbPeg, b.getBmlId(), b.id, bSpeech.getContent(), dispatcher,lipSynchers,visemeMapping);
         return ttsUnit;
     }
 
@@ -66,11 +67,7 @@ public class IncrementalTTSPlanner extends AbstractPlanner<IncrementalTTSUnit>
 
         // link bookmarks
         // add bookmark pegs to satp
-
-        for (LipSynchProvider ls : lipSynchers)
-        {
-            // ls.addLipSyncMovement(bbPeg, b, bs, bs.visimes);
-        }
+        // ls.addLipSyncMovement(bbPeg, b, bs, bs.visimes);
 
         planManager.addPlanUnit(bs);
 
