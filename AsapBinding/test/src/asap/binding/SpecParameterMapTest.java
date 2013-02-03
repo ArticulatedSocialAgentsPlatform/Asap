@@ -12,7 +12,7 @@ import org.junit.Test;
 public class SpecParameterMapTest
 {
     
-    private static final int READ_TIMEOUT = 200;
+    private static final int READ_TIMEOUT = 400;
     
     @Test(timeout=READ_TIMEOUT,expected=XMLScanException.class)   
     public void testInvalidInnerElement()
