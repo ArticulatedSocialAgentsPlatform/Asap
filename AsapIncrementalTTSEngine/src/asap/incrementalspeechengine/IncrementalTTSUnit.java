@@ -2,6 +2,7 @@ package asap.incrementalspeechengine;
 
 import hmi.tts.Visime;
 import hmi.tts.util.PhonemeToVisemeMapping;
+import hmi.tts.util.PhonemeUtil;
 import inpro.audio.DispatchStream;
 import inpro.incremental.unit.IU;
 import inpro.incremental.unit.IU.IUUpdateListener;
@@ -77,7 +78,7 @@ public class IncrementalTTSUnit extends TimedAbstractPlanUnit
        
         for(IncrementalLipSynchProvider lsp:lsProviders)
         {
-            int number = 0;
+            int number = visemeMapping.getVisemeForPhoneme(PhonemeUtil.phonemeStringToInt(phIU.toPayLoad()));
             Visime viseme = new Visime(number, (int)(1000*(phIU.endTime()-phIU.startTime())), false);
             lsp.setLipSyncUnit(getBMLBlockPeg(), behavior, phIU.startTime()+getStartTime(), viseme, phIU);
         }
@@ -85,6 +86,7 @@ public class IncrementalTTSUnit extends TimedAbstractPlanUnit
     
     private void updateLipSync()
     {
+        int visCount = visemeLookAhead;
         for (IU word :synthesisIU.groundedIn())
         {
             if(word.isUpcoming() || word.isOngoing())
@@ -94,7 +96,8 @@ public class IncrementalTTSUnit extends TimedAbstractPlanUnit
                     if(ph.isUpcoming())
                     {
                         updateLipSyncUnit(ph);
-                        return;
+                        visCount--;
+                        if(visCount == 0)return;
                     }
                 }
             }

@@ -67,8 +67,7 @@ public class IncrementalTTSPlanner extends AbstractPlanner<IncrementalTTSUnit>
 
         // link bookmarks
         // add bookmark pegs to satp
-        // ls.addLipSyncMovement(bbPeg, b, bs, bs.visimes);
-
+        
         planManager.addPlanUnit(bs);
 
         return satp;
