@@ -6,23 +6,25 @@ import hmi.xml.XMLTokenizer;
 
 import java.io.IOException;
 
-import asap.faceengine.lipsync.TimedFaceUnitLipSynchProvider;
+import asap.faceengine.lipsync.TimedFaceUnitIncrementalLipSynchProvider;
 import asap.faceengine.viseme.VisemeBinding;
-import asap.realizer.lipsync.LipSynchProvider;
-import asap.realizerembodiments.LipSynchProviderLoader;
+import asap.realizer.lipsync.IncrementalLipSynchProvider;
+import asap.realizerembodiments.IncrementalLipSynchProviderLoader;
 
 /**
- * Loads a TimedFaceUnitLipSynchProvider
+ * Loader for TimeFaceUnitIncrementalLipSyncProvider
  * @author hvanwelbergen
  */
-public class TimedFaceUnitLipSynchProviderLoader implements LipSynchProviderLoader
+public class TimeFaceUnitIncrementalLipSyncProviderLoader implements IncrementalLipSynchProviderLoader
 {
+    private IncrementalLipSynchProvider lipSyncProvider;
     private String id;
-    private LipSynchProvider lipSyncProvider;
     
-    public void setId(String newId)
+    
+    @Override
+    public IncrementalLipSynchProvider getLipSyncProvider()
     {
-        id = newId;
+        return lipSyncProvider;
     }
 
     @Override
@@ -35,8 +37,8 @@ public class TimedFaceUnitLipSynchProviderLoader implements LipSynchProviderLoad
     public void readXML(XMLTokenizer tokenizer, String loaderId, String vhId, String vhName, Environment[] environments,
             Loader... requiredLoaders) throws IOException
     {
-        setId(loaderId);
-
+        this.id = loaderId;
+        
         FaceEngineLoader fal = null;
         for (Loader e : requiredLoaders)
         {
@@ -47,24 +49,19 @@ public class TimedFaceUnitLipSynchProviderLoader implements LipSynchProviderLoad
             throw tokenizer.getXMLScanException("TimedFaceUnitLipSynchProviderLoader requires FaceEngineLoader.");
         }
         VisemeBinding visBinding = VisemeBindingLoader.load(tokenizer, fal.getFACSConverter());
-
+        
         if (visBinding == null)
         {
-            throw tokenizer.getXMLScanException("TimedFaceUnitLipSynchProvider requires a visimebinding.");
+            throw tokenizer.getXMLScanException("TimedFaceUnitIncrementalLipSynchProvider requires a visimebinding.");
         }
 
-        lipSyncProvider = new TimedFaceUnitLipSynchProvider(visBinding, fal.getFaceController(), fal.getPlanManager());
+        lipSyncProvider = new TimedFaceUnitIncrementalLipSynchProvider(visBinding, fal.getFaceController(), fal.getPlanManager());
+        
     }
 
     @Override
     public void unload()
     {
-
-    }
-
-    @Override
-    public LipSynchProvider getLipSyncProvider()
-    {
-        return lipSyncProvider;
+                
     }
 }

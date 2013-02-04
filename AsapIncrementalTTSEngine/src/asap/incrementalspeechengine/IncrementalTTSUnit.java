@@ -7,14 +7,12 @@ import inpro.incremental.unit.IU;
 import inpro.incremental.unit.IU.IUUpdateListener;
 import inpro.incremental.unit.SysSegmentIU;
 
-import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
 
-import saiba.bml.core.SpeechBehaviour;
-
+import saiba.bml.core.Behaviour;
 import asap.realizer.feedback.FeedbackManager;
-import asap.realizer.lipsync.LipSynchProvider;
+import asap.realizer.lipsync.IncrementalLipSynchProvider;
 import asap.realizer.pegboard.BMLBlockPeg;
 import asap.realizer.pegboard.TimePeg;
 import asap.realizer.planunit.ParameterException;
@@ -40,12 +38,13 @@ public class IncrementalTTSUnit extends TimedAbstractPlanUnit
     private double duration;
     private float stretch = 1;
     private float pitchShiftInCent = 0;
-    private ImmutableList<LipSynchProvider> lsProviders;
+    private ImmutableList<IncrementalLipSynchProvider> lsProviders;
     private final PhonemeToVisemeMapping visemeMapping;
+    private final int visemeLookAhead = 2;
+    private final Behaviour behavior;
     
-
     public IncrementalTTSUnit(FeedbackManager fbm, BMLBlockPeg bmlPeg, String bmlId, String behId, String text, DispatchStream dispatcher,
-            Collection<LipSynchProvider> lsProviders, PhonemeToVisemeMapping visemeMapping)
+            Collection<IncrementalLipSynchProvider> lsProviders, PhonemeToVisemeMapping visemeMapping, Behaviour beh)
     {
         super(fbm, bmlPeg, bmlId, behId);        
         this.lsProviders = ImmutableList.copyOf(lsProviders);
@@ -70,14 +69,17 @@ public class IncrementalTTSUnit extends TimedAbstractPlanUnit
         endPeg = new TimePeg(bmlPeg);
         relaxPeg = new TimePeg(bmlPeg);
         duration = synthesisIU.duration();
+        behavior = beh;
     }
 
     private void updateLipSyncUnit(IU phIU)
     {
        
-        for(LipSynchProvider lsp:lsProviders)
+        for(IncrementalLipSynchProvider lsp:lsProviders)
         {
-            //lsp.setLipSyncMovement(this.getBMLBlockPeg(), behavior, this, visemes);
+            int number = 0;
+            Visime viseme = new Visime(number, (int)(1000*(phIU.endTime()-phIU.startTime())), false);
+            lsp.setLipSyncUnit(getBMLBlockPeg(), behavior, phIU.startTime()+getStartTime(), viseme, phIU);
         }
     }
     

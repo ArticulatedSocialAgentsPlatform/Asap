@@ -27,12 +27,12 @@ import asap.incrementalspeechengine.IncrementalTTSUnit;
 import asap.realizer.DefaultEngine;
 import asap.realizer.DefaultPlayer;
 import asap.realizer.Engine;
-import asap.realizer.lipsync.LipSynchProvider;
+import asap.realizer.lipsync.IncrementalLipSynchProvider;
 import asap.realizer.planunit.PlanManager;
 import asap.realizer.planunit.SingleThreadedPlanPlayer;
 import asap.realizerembodiments.AsapRealizerEmbodiment;
 import asap.realizerembodiments.EngineLoader;
-import asap.realizerembodiments.LipSynchProviderLoader;
+import asap.realizerembodiments.IncrementalLipSynchProviderLoader;
 
 /**
  * Loads the IncrementalTTSEngine from XML
@@ -46,7 +46,7 @@ public class IncrementalTTSEngineLoader implements EngineLoader
     private String id;
     private DispatchStream dispatcher;
     private PhonemeToVisemeMapping visemeMapping = new NullPhonemeToVisemeMapping();
-    private Collection<LipSynchProvider> lipSynchers = new ArrayList<LipSynchProvider>();
+    private Collection<IncrementalLipSynchProvider> lipSynchers = new ArrayList<IncrementalLipSynchProvider>();
 
     @Override
     public Engine getEngine()
@@ -93,7 +93,7 @@ public class IncrementalTTSEngineLoader implements EngineLoader
             throw new RuntimeException("IncrementalTTSEngineLoader requires an EmbodimentLoader containing a AsapRealizerEmbodiment");
         }
 
-        for (LipSynchProviderLoader el : ArrayUtils.getClassesOfType(requiredLoaders, LipSynchProviderLoader.class))
+        for (IncrementalLipSynchProviderLoader el : ArrayUtils.getClassesOfType(requiredLoaders, IncrementalLipSynchProviderLoader.class))
         {
             lipSynchers.add(el.getLipSyncProvider());
         }

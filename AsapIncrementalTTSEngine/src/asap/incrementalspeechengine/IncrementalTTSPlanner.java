@@ -13,7 +13,7 @@ import asap.realizer.AbstractPlanner;
 import asap.realizer.BehaviourPlanningException;
 import asap.realizer.SyncAndTimePeg;
 import asap.realizer.feedback.FeedbackManager;
-import asap.realizer.lipsync.LipSynchProvider;
+import asap.realizer.lipsync.IncrementalLipSynchProvider;
 import asap.realizer.pegboard.BMLBlockPeg;
 import asap.realizer.planunit.PlanManager;
 import asap.realizer.scheduler.LinearStretchResolver;
@@ -32,11 +32,10 @@ public class IncrementalTTSPlanner extends AbstractPlanner<IncrementalTTSUnit>
     private DispatchStream dispatcher;
     private UniModalResolver resolver = new LinearStretchResolver();
     private final PhonemeToVisemeMapping visemeMapping;
-    private final Collection<LipSynchProvider> lipSynchers;
-    
+    private final Collection<IncrementalLipSynchProvider> lipSynchers;
 
     public IncrementalTTSPlanner(FeedbackManager fbm, PlanManager<IncrementalTTSUnit> planManager, DispatchStream dispatcher,
-            PhonemeToVisemeMapping vm, Collection<LipSynchProvider>ls)
+            PhonemeToVisemeMapping vm, Collection<IncrementalLipSynchProvider> ls)
     {
         super(fbm, planManager);
         this.dispatcher = dispatcher;
@@ -47,7 +46,8 @@ public class IncrementalTTSPlanner extends AbstractPlanner<IncrementalTTSUnit>
     private IncrementalTTSUnit createTTSUnit(BMLBlockPeg bbPeg, Behaviour b)
     {
         SpeechBehaviour bSpeech = (SpeechBehaviour) b;
-        IncrementalTTSUnit ttsUnit = new IncrementalTTSUnit(fbManager, bbPeg, b.getBmlId(), b.id, bSpeech.getContent(), dispatcher,lipSynchers,visemeMapping);
+        IncrementalTTSUnit ttsUnit = new IncrementalTTSUnit(fbManager, bbPeg, b.getBmlId(), b.id, bSpeech.getContent(), dispatcher,
+                lipSynchers, visemeMapping, b);
         return ttsUnit;
     }
 

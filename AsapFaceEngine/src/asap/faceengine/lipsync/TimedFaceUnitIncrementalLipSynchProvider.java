@@ -10,7 +10,7 @@ import java.util.Map;
 import saiba.bml.core.Behaviour;
 import asap.faceengine.faceunit.TimedFaceUnit;
 import asap.faceengine.viseme.VisemeBinding;
-import asap.realizer.lipsync.IncrementalLipsyncProvider;
+import asap.realizer.lipsync.IncrementalLipSynchProvider;
 import asap.realizer.pegboard.BMLBlockPeg;
 import asap.realizer.pegboard.TimePeg;
 import asap.realizer.planunit.PlanManager;
@@ -20,7 +20,7 @@ import asap.realizer.planunit.PlanManager;
  * @author hvanwelbergen
  *
  */
-public class TimedFaceUnitIncrementalLipSynchProvider implements IncrementalLipsyncProvider 
+public class TimedFaceUnitIncrementalLipSynchProvider implements IncrementalLipSynchProvider 
 {
     private final VisemeBinding visimeBinding;
     private final FaceController faceController;
@@ -64,6 +64,8 @@ public class TimedFaceUnitIncrementalLipSynchProvider implements IncrementalLips
             tfu.setSubUnit(true);
             facePlanManager.addPlanUnit(tfu);
         }
+        
+        //TODO: setup crude co-articulation mechanism from TimedFaceUnitLipSynchProvider
         TimedFaceUnit tfuPrevious = getPrevious(tfu, beh.getBmlId(), beh.id);
         
         tfu.getTimePeg("start").setGlobalValue(start);

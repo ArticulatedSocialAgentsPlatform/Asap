@@ -11,7 +11,6 @@ import lombok.extern.slf4j.Slf4j;
 import saiba.bml.core.Behaviour;
 import asap.faceengine.faceunit.TimedFaceUnit;
 import asap.faceengine.viseme.VisemeBinding;
-import asap.realizer.lipsync.IncrementalLipsyncProvider;
 import asap.realizer.lipsync.LipSynchProvider;
 import asap.realizer.pegboard.BMLBlockPeg;
 import asap.realizer.pegboard.OffsetPeg;
