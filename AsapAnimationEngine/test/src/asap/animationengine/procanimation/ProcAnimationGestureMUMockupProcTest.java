@@ -21,6 +21,7 @@ import org.junit.Test;
 
 import asap.animationengine.AnimationPlayer;
 import asap.animationengine.motionunit.AnimationUnit;
+import asap.animationengine.motionunit.MUSetupException;
 import asap.animationengine.motionunit.TimedAnimationMotionUnit;
 import asap.animationengine.restpose.RestPose;
 import asap.motionunit.MUPlayException;
@@ -51,7 +52,7 @@ public class ProcAnimationGestureMUMockupProcTest
     
     @SuppressWarnings("unchecked")
     @Before
-    public void setup()
+    public void setup() throws MUSetupException
     {
         vCurr = HanimBody.getLOA1HanimBody();
         VJoint vNext = HanimBody.getLOA1HanimBody();
@@ -136,7 +137,7 @@ public class ProcAnimationGestureMUMockupProcTest
     }
     
     @Test
-    public void testCopy() throws MUPlayException
+    public void testCopy() throws MUPlayException, MUSetupException
     {
         ProcAnimationGestureMU mu = pag.copy(mockAnimationPlayer);
         assertEquals(0.2,mu.getKeyPosition(BMLGestureSync.STROKE_START.getId()).time,TIMING_PRECISION);

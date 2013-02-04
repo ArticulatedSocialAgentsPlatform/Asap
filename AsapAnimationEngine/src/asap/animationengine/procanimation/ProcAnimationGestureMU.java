@@ -17,6 +17,7 @@ import saiba.bml.BMLGestureSync;
 import asap.animationengine.AnimationPlayer;
 import asap.animationengine.MovementTimingUtils;
 import asap.animationengine.motionunit.AnimationUnit;
+import asap.animationengine.motionunit.MUSetupException;
 import asap.animationengine.transitions.SlerpTransitionToPoseMU;
 import asap.motionunit.MUPlayException;
 import asap.realizer.feedback.FeedbackManager;
@@ -152,7 +153,7 @@ public class ProcAnimationGestureMU implements GestureUnit
         }
     }
 
-    public void setGestureUnit(ProcAnimationMU pa)
+    public void setGestureUnit(ProcAnimationMU pa) throws MUSetupException
     {
         gestureUnit = pa;
         for (KeyPosition kp : gestureUnit.getKeyPositions())
@@ -172,7 +173,7 @@ public class ProcAnimationGestureMU implements GestureUnit
         copyProc = gestureUnit.copy(copyJoint);
     }
 
-    public void setAnimationPlayer(AnimationPlayer ap)
+    public void setAnimationPlayer(AnimationPlayer ap) throws MUSetupException
     {
         vStart = ap.getVCurr();
         vNext = ap.getVNext();
@@ -181,7 +182,7 @@ public class ProcAnimationGestureMU implements GestureUnit
         copyProc = gestureUnit.copy(copyJoint);
         aniPlayer = ap;
     }
-    
+
     public void setVNext(VJoint vj)
     {
         vNext = vj;
@@ -297,6 +298,10 @@ public class ProcAnimationGestureMU implements GestureUnit
             {
                 throw new InvalidParameterException(name, value, e);
             }
+            catch (MUSetupException e)
+            {
+                throw new InvalidParameterException(name, value, e);
+            }
         }
         else if (StringUtil.isNumeric(value))
         {
@@ -378,7 +383,7 @@ public class ProcAnimationGestureMU implements GestureUnit
     }
 
     @Override
-    public ProcAnimationGestureMU copy(AnimationPlayer p)
+    public ProcAnimationGestureMU copy(AnimationPlayer p) throws MUSetupException
     {
         ProcAnimationGestureMU copy = new ProcAnimationGestureMU();
         copy.setAnimationPlayer(p);

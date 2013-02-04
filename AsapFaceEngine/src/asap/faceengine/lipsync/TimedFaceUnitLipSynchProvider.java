@@ -61,7 +61,7 @@ public class TimedFaceUnitLipSynchProvider implements LipSynchProvider
             {
                 endTimes.put(tfu, peak); // extend previous tfu to the peak of this
             }
-                                     // one!
+            // one!
             tfu = visimeBinding.getVisemeUnit(bbPeg, beh, vis.getNumber(), faceController);
 
             startTimes.put(tfu, start);

@@ -48,6 +48,7 @@ import org.nfunk.jep.Variable;
 import asap.animationengine.AnimationPlayer;
 import asap.animationengine.keyframe.KeyframeMU;
 import asap.animationengine.motionunit.AnimationUnit;
+import asap.animationengine.motionunit.MUSetupException;
 import asap.animationengine.motionunit.TimedAnimationMotionUnit;
 import asap.motionunit.MUPlayException;
 import asap.realizer.feedback.FeedbackManager;
@@ -229,7 +230,7 @@ public class ProcAnimationMU extends XMLStructureAdapter implements AnimationUni
     /**
      * Creates a copy of this ProcAnimation. The copy is not linked to an ikbody
      */
-    public ProcAnimationMU deepCopy()
+    public ProcAnimationMU deepCopy() throws MUSetupException
     {
         ProcAnimationMU copy = new ProcAnimationMU();
         copy.replacementGroup = replacementGroup;
@@ -259,7 +260,16 @@ public class ProcAnimationMU extends XMLStructureAdapter implements AnimationUni
         HashMap<String, Rotation> rots = new HashMap<String, Rotation>();
         for (Rotation r : rotations.values())
         {
-            rots.put(r.getTarget(), r.deepCopy());
+            try
+            {
+                rots.put(r.getTarget(), r.deepCopy());
+            }
+            catch (ParseException e1)
+            {
+                MUSetupException e = new MUSetupException(e1.getMessage(), this);
+                e.initCause(e1);
+                throw e;
+            }
         }
         copy.setRotations(rots);
 
@@ -294,7 +304,7 @@ public class ProcAnimationMU extends XMLStructureAdapter implements AnimationUni
     /**
      * Sets to ani, copies over all of ani's properties
      */
-    public void set(ProcAnimationMU ani)
+    public void set(ProcAnimationMU ani) throws MUSetupException
     {
         id = ani.id;
 
@@ -315,7 +325,16 @@ public class ProcAnimationMU extends XMLStructureAdapter implements AnimationUni
         HashMap<String, Rotation> rots = new HashMap<String, Rotation>();
         for (Rotation r : ani.rotations.values())
         {
-            rots.put(r.getTarget(), r.deepCopy());
+            try
+            {
+                rots.put(r.getTarget(), r.deepCopy());
+            }
+            catch (ParseException e1)
+            {
+                MUSetupException e = new MUSetupException(e1.getMessage(), this);
+                e.initCause(e1);
+                throw e;
+            }
         }
         setRotations(rots);
 
@@ -1226,7 +1245,7 @@ public class ProcAnimationMU extends XMLStructureAdapter implements AnimationUni
     }
 
     @Override
-    public ProcAnimationMU copy(AnimationPlayer p)
+    public synchronized ProcAnimationMU copy(AnimationPlayer p) throws MUSetupException
     {
         return copy(p.getVNext(), p.getvAdditive());
     }
@@ -1251,7 +1270,8 @@ public class ProcAnimationMU extends XMLStructureAdapter implements AnimationUni
         switch (blending)
         {
         case ADDITIVE:
-            vj = vAdditive;break;
+            vj = vAdditive;
+            break;
         default:
             vj = vNext;
         }
@@ -1274,14 +1294,14 @@ public class ProcAnimationMU extends XMLStructureAdapter implements AnimationUni
     /**
      * Creates a copy of this ProcAnimation and links is to VJoint v
      */
-    public ProcAnimationMU copy(VJoint vNext, VJoint vAdditive)
+    public ProcAnimationMU copy(VJoint vNext, VJoint vAdditive) throws MUSetupException
     {
         ProcAnimationMU copy = deepCopy();
         copy.setup2(vNext, vAdditive);
         return copy;
     }
 
-    public ProcAnimationMU copy(VJoint vNext)
+    public ProcAnimationMU copy(VJoint vNext) throws MUSetupException
     {
         return copy(vNext, vNext);
     }

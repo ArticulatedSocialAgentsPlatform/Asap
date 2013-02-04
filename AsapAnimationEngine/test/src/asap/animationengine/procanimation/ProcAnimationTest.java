@@ -14,6 +14,7 @@ import org.junit.Before;
 import org.junit.Test;
 
 import asap.animationengine.motionunit.AnimationUnit;
+import asap.animationengine.motionunit.MUSetupException;
 import asap.motionunit.MUPlayException;
 import asap.realizer.planunit.ParameterException;
 /**
@@ -72,7 +73,7 @@ public class ProcAnimationTest
     }
     
     @Test
-    public void testJointsAfterCopy() throws MUPlayException, ParameterException
+    public void testJointsAfterCopy() throws MUPlayException, ParameterException, MUSetupException
     {
         procAnimation.setParameterValue("joints", "r_shoulder r_elbow");
         
@@ -147,7 +148,7 @@ public class ProcAnimationTest
     }
     
     @Test
-    public void testSkeletonInterpolatorSet()
+    public void testSkeletonInterpolatorSet() throws MUSetupException
     {
         ProcAnimationMU puCopy = new ProcAnimationMU();
         puCopy.setup(new ArrayList<Parameter>(), ikBody);
@@ -168,7 +169,7 @@ public class ProcAnimationTest
     }
     
     @Test
-    public void testCopy() throws MUPlayException
+    public void testCopy() throws MUPlayException, MUSetupException
     {
         VJoint humanCopy = HanimBody.getLOA1HanimBody();
         AnimationUnit puCopy = procAnimation.copy(humanCopy);

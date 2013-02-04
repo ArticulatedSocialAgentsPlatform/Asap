@@ -70,12 +70,12 @@ public class IncrementalTTSUnit extends TimedAbstractPlanUnit
         endPeg = new TimePeg(bmlPeg);
         relaxPeg = new TimePeg(bmlPeg);
         duration = synthesisIU.duration();
-        behavior = beh;
+        behavior = beh;                
     }
 
     private void updateLipSyncUnit(IU phIU)
     {
-       
+        
         for(IncrementalLipSynchProvider lsp:lsProviders)
         {
             int number = visemeMapping.getVisemeForPhoneme(PhonemeUtil.phonemeStringToInt(phIU.toPayLoad()));

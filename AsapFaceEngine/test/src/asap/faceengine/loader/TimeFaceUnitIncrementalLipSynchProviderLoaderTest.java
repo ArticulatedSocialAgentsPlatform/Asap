@@ -14,11 +14,11 @@ import org.junit.Test;
 import asap.realizerembodiments.AsapRealizerEmbodiment;
 
 /**
- * Unit test for the TimeFaceUnitIncrementalLipSyncProviderLoader
+ * Unit test for the TimeFaceUnitIncrementalLipSynchProviderLoader
  * @author hvanwelbergen
  *
  */
-public class TimeFaceUnitIncrementalLipSyncProviderLoaderTest
+public class TimeFaceUnitIncrementalLipSynchProviderLoaderTest
 {
     private FaceEngineLoader mockFaceAnimationEngineLoader = mock(FaceEngineLoader.class);
     private AsapRealizerEmbodiment mockAsapRealizerEmbodiment = mock(AsapRealizerEmbodiment.class);
@@ -26,7 +26,7 @@ public class TimeFaceUnitIncrementalLipSyncProviderLoaderTest
     @Test
     public void test() throws IOException
     {
-        TimeFaceUnitIncrementalLipSyncProviderLoader loader = new TimeFaceUnitIncrementalLipSyncProviderLoader();
+        TimeFaceUnitIncrementalLipSynchProviderLoader loader = new TimeFaceUnitIncrementalLipSynchProviderLoader();
         String str = "<Loader id=\"l1\">"
                 + "<MorphVisemeBinding resources=\"Humanoids/armandia/facebinding/\" filename=\"ikpvisemebinding.xml\"/></Loader>";
         XMLTokenizer tok = new XMLTokenizer(str);

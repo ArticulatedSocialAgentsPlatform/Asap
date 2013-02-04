@@ -16,6 +16,7 @@ import org.junit.Test;
 import saiba.bml.BMLGestureSync;
 import asap.animationengine.AnimationPlayer;
 import asap.animationengine.motionunit.AnimationUnit;
+import asap.animationengine.motionunit.MUSetupException;
 import asap.animationengine.restpose.RestPose;
 import asap.animationengine.restpose.SkeletonPoseRestPose;
 import asap.motionunit.MUPlayException;
@@ -35,7 +36,7 @@ public class ProcAnimationGestureMUKeyframesTest
     private static final float ROTATION_PRECISION = 0.01f;
 
     @Before
-    public void setup()
+    public void setup() throws MUSetupException
     {
         vCurr = HanimBody.getLOA1HanimBody();
         vNext = HanimBody.getLOA1HanimBody();

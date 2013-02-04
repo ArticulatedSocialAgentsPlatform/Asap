@@ -32,7 +32,7 @@ import com.google.common.collect.ImmutableList;
  * @author Herwin
  * 
  */
-public class TimedFaceUnitLipSyncProviderTest
+public class TimedFaceUnitLipSynchProviderTest
 {
     private PlanManager<TimedFaceUnit> faceManager = new PlanManager<TimedFaceUnit>();
     private VisemeBinding visemeBinding;

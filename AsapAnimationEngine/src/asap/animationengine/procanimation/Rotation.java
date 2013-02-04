@@ -45,33 +45,34 @@ public class Rotation extends XMLStructureAdapter
     private XJep parser;
     private boolean local = true;
 
-    
-    public void mirror() 
+    public void mirror()
     {
-        if(target.startsWith("l_"))
+        if (target.startsWith("l_"))
         {
-            target = target.replace("l_", "r_");                       
+            target = target.replace("l_", "r_");
         }
-        else if(target.startsWith("r_"))
+        else if (target.startsWith("r_"))
         {
             target = target.replace("r_", "l_");
         }
         try
         {
-            setRotation(1,"-("+rotFormula[1]+")");
-        } catch (ParseException e)
+            setRotation(1, "-(" + rotFormula[1] + ")");
+        }
+        catch (ParseException e)
         {
             throw new IllegalArgumentException(e);
         }
         try
         {
-            setRotation(2,"-("+rotFormula[2]+")");
-        } catch (ParseException e)
+            setRotation(2, "-(" + rotFormula[2] + ")");
+        }
+        catch (ParseException e)
         {
             throw new IllegalArgumentException(e);
-        }        
+        }
     }
-    
+
     /**
      * Creates a new Rotation with null target
      * 
@@ -111,7 +112,8 @@ public class Rotation extends XMLStructureAdapter
             try
             {
                 setRotation(i, eff.rotFormula[i]);
-            } catch (ParseException e)
+            }
+            catch (ParseException e)
             {
                 throw new IllegalArgumentException(e);
             }
@@ -182,7 +184,8 @@ public class Rotation extends XMLStructureAdapter
             try
             {
                 goal[i] = ((Double) parser.evaluate(node[i])).floatValue();
-            } catch (ParseException e)
+            }
+            catch (ParseException e)
             {
                 return false;
             }
@@ -202,7 +205,8 @@ public class Rotation extends XMLStructureAdapter
             try
             {
                 return ((Double) parser.evaluate(node[i])).floatValue();
-            } catch (ParseException e)
+            }
+            catch (ParseException e)
             {
                 throw new IllegalArgumentException(e);
             }
@@ -267,18 +271,13 @@ public class Rotation extends XMLStructureAdapter
      * @return A clone of the Rotation. The clone is still linked to the same
      *         joint
      */
-    public Rotation deepCopy()
+    public Rotation deepCopy() throws ParseException
     {
         Rotation copy = new Rotation(parser, "" + target);
-        try
-        {
-            copy.setRotation(0, "" + getRotationFormula(0));
-            copy.setRotation(1, "" + getRotationFormula(1));
-            copy.setRotation(2, "" + getRotationFormula(2));
-        } catch (ParseException e)
-        {
-            e.printStackTrace();
-        }
+
+        copy.setRotation(0, "" + getRotationFormula(0));
+        copy.setRotation(1, "" + getRotationFormula(1));
+        copy.setRotation(2, "" + getRotationFormula(2));
 
         copy.setJoint(joint); // WARNING: No deepcopy used
         copy.target = target;
@@ -301,10 +300,12 @@ public class Rotation extends XMLStructureAdapter
         if (attrName.equals("target"))
         {
             target = attrValue;
-        } else if (attrName.equals("local"))
+        }
+        else if (attrName.equals("local"))
         {
             local = Boolean.parseBoolean(attrValue);
-        } else if (attrName.equals("rotation"))
+        }
+        else if (attrName.equals("rotation"))
         {
             String str = attrValue;
             rotFormula = str.split(";");
@@ -313,7 +314,8 @@ public class Rotation extends XMLStructureAdapter
                 setRotation(0, rotFormula[0]);
                 setRotation(1, rotFormula[1]);
                 setRotation(2, rotFormula[2]);
-            } catch (ParseException ex)
+            }
+            catch (ParseException ex)
             {
                 throw new IllegalArgumentException(ex);
             }
@@ -322,15 +324,13 @@ public class Rotation extends XMLStructureAdapter
     }
 
     @Override
-    public boolean decodeAttribute(String attrName, String attrValue,
-            XMLTokenizer tokenizer)
+    public boolean decodeAttribute(String attrName, String attrValue, XMLTokenizer tokenizer)
     {
         return decodeAttribute(attrName, attrValue);
     }
 
     @Override
-    public void decodeContent(XMLTokenizer tokenizer)
-            throws java.io.IOException
+    public void decodeContent(XMLTokenizer tokenizer) throws java.io.IOException
     {
     }
 
@@ -345,8 +345,7 @@ public class Rotation extends XMLStructureAdapter
     {
         if (rotFormula[0] != null)
         {
-            String str = rotFormula[0] + ";" + rotFormula[1] + ";"
-                    + rotFormula[2];
+            String str = rotFormula[0] + ";" + rotFormula[1] + ";" + rotFormula[2];
             appendAttribute(buf, "rotation", str);
         }
         appendAttribute(buf, "target", target);

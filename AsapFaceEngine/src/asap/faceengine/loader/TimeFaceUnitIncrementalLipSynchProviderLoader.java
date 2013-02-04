@@ -12,10 +12,10 @@ import asap.realizer.lipsync.IncrementalLipSynchProvider;
 import asap.realizerembodiments.IncrementalLipSynchProviderLoader;
 
 /**
- * Loader for TimeFaceUnitIncrementalLipSyncProvider
+ * Loader for TimeFaceUnitIncrementalLipSynchProvider
  * @author hvanwelbergen
  */
-public class TimeFaceUnitIncrementalLipSyncProviderLoader implements IncrementalLipSynchProviderLoader
+public class TimeFaceUnitIncrementalLipSynchProviderLoader implements IncrementalLipSynchProviderLoader
 {
     private IncrementalLipSynchProvider lipSyncProvider;
     private String id;

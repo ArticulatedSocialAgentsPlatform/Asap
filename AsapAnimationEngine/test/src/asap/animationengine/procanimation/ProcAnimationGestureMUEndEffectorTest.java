@@ -15,6 +15,7 @@ import org.junit.Test;
 
 import saiba.bml.BMLGestureSync;
 import asap.animationengine.AnimationPlayer;
+import asap.animationengine.motionunit.MUSetupException;
 import asap.animationengine.restpose.RestPose;
 import asap.animationengine.restpose.SkeletonPoseRestPose;
 import asap.motionunit.MUPlayException;
@@ -36,7 +37,7 @@ public class ProcAnimationGestureMUEndEffectorTest
     private ProcAnimationGestureMU pag;
 
     @Before
-    public void setup() throws MUPlayException
+    public void setup() throws MUPlayException, MUSetupException
     {
         vCurr = HanimBody.getLOA1HanimBody();
         vCurr.getPart(Hanim.l_elbow).setTranslation(Vec3f.getVec3f(0, -0.5f, 0));

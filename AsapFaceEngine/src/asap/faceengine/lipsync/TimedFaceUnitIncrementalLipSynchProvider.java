@@ -14,6 +14,7 @@ import asap.realizer.lipsync.IncrementalLipSynchProvider;
 import asap.realizer.pegboard.BMLBlockPeg;
 import asap.realizer.pegboard.TimePeg;
 import asap.realizer.planunit.PlanManager;
+import asap.realizer.planunit.TimedPlanUnitState;
 
 /**
  * Provides incremental lipsync using TimedFaceUnits.
@@ -60,15 +61,17 @@ public class TimedFaceUnitIncrementalLipSynchProvider implements IncrementalLipS
             tfu = visimeBinding.getVisemeUnit(bbPeg, beh, vis.getNumber(), faceController);
             tfu.setTimePeg("start", new TimePeg(bbPeg));
             tfu.setTimePeg("end", new TimePeg(bbPeg));
-            tfuMap.put(identifier, tfu);
             tfu.setSubUnit(true);
+            tfu.setState(TimedPlanUnitState.LURKING);
             facePlanManager.addPlanUnit(tfu);
+            tfuMap.put(identifier, tfu);        
+            
         }
         
         //TODO: setup crude co-articulation mechanism from TimedFaceUnitLipSynchProvider
         TimedFaceUnit tfuPrevious = getPrevious(tfu, beh.getBmlId(), beh.id);
         
         tfu.getTimePeg("start").setGlobalValue(start);
-        tfu.getTimePeg("end").setGlobalValue(start+vis.getDuration());        
+        tfu.getTimePeg("end").setGlobalValue(start+(double)vis.getDuration()/1000d);                
     }
 }
