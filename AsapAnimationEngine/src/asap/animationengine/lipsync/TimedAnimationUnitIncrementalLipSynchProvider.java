@@ -32,7 +32,8 @@ public class TimedAnimationUnitIncrementalLipSynchProvider implements Incrementa
     private final AnimationPlayer animationPlayer;
     private final PlanManager<TimedAnimationUnit> animationPlanManager;
     private Map<Object, TimedAnimationMotionUnit> tmuMap = new HashMap<>();
-
+    private Map<TimedAnimationMotionUnit, Visime> tmuToVisimeMap = new HashMap<>();
+    
     public TimedAnimationUnitIncrementalLipSynchProvider(SpeechBinding sb, AnimationPlayer ap,
             PlanManager<TimedAnimationUnit> animationPlanManager, PegBoard pegBoard)
     {
@@ -71,9 +72,20 @@ public class TimedAnimationUnitIncrementalLipSynchProvider implements Incrementa
             tmuMap.put(identifier, tmu);
         }
 
-        // TODO: setup crude co-articulation mechanism from TimedAnimationUnitLipSynchProvider
-
-        tmu.getTimePeg("start").setGlobalValue(start);
+        TimedAnimationUnit tmuPrevious = animationPlanManager.getFirstBefore(beh.getBmlId(), beh.id, start);
+        
+        if(tmuPrevious!=null)
+        {
+            Visime prevVis = tmuToVisimeMap.get(tmuPrevious);
+            double prevDuration = (double)prevVis.getDuration()/1000d;
+            tmu.getTimePeg("start").setGlobalValue(start - prevDuration * 0.5);
+            tmuPrevious.getTimePeg("end").setGlobalValue(start + (double)vis.getDuration()/1000d * 0.5);
+        }
+        else
+        {
+            tmu.getTimePeg("start").setGlobalValue(start);
+        }
+        tmuToVisimeMap.put(tmu,vis);
         tmu.getTimePeg("end").setGlobalValue(start + (double) vis.getDuration() / 1000d);
     }
 }

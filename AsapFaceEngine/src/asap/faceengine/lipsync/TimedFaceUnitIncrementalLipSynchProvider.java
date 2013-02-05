@@ -3,7 +3,6 @@ package asap.faceengine.lipsync;
 import hmi.faceanimation.FaceController;
 import hmi.tts.Visime;
 
-import java.util.Collection;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -37,23 +36,6 @@ public class TimedFaceUnitIncrementalLipSynchProvider implements IncrementalLipS
         this.facePlanManager = facePlanManager;
     }
 
-    private TimedFaceUnit getPrevious(String bmlId, String id, double startTime)
-    {
-        Collection<TimedFaceUnit> tfus = facePlanManager.getPlanUnits(bmlId, id);
-        TimedFaceUnit tfuPrevious = null;
-        for (TimedFaceUnit tfu : tfus)
-        {
-            if (tfu.getStartTime() < startTime  && tfu.getStartTime() != TimePeg.VALUE_UNKNOWN)
-            {
-                if (tfuPrevious == null || tfu.getStartTime() > tfuPrevious.getStartTime())
-                {
-                    tfuPrevious = tfu;
-                }
-            }
-        }
-        return tfuPrevious;
-    }
-
     @Override
     public void setLipSyncUnit(BMLBlockPeg bbPeg, Behaviour beh, double start, Visime vis, Object identifier)
     {
@@ -68,7 +50,7 @@ public class TimedFaceUnitIncrementalLipSynchProvider implements IncrementalLipS
             facePlanManager.addPlanUnit(tfu);
             tfuMap.put(identifier, tfu);            
         }
-        TimedFaceUnit tfuPrevious = getPrevious(beh.getBmlId(), beh.id, start);
+        TimedFaceUnit tfuPrevious = facePlanManager.getFirstBefore(beh.getBmlId(), beh.id, start);
         
         if (tfuPrevious != null)
         {

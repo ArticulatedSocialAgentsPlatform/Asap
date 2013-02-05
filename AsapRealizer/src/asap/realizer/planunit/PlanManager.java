@@ -48,8 +48,30 @@ public final class PlanManager<T extends TimedPlanUnit>
         }
         return l;
     }
-    
-    
+
+    /**
+     * Get the first planunit with bmlId and id that starts before startTime, null if none
+     */
+    public T getFirstBefore(String bmlId, String id, double startTime)
+    {
+        synchronized (planUnits)
+        {
+            Collection<T> tpus = this.getPlanUnits(bmlId, id);
+            T tPrev = null;
+            for (T tpu : tpus)
+            {
+                if (tpu.getStartTime() < startTime && tpu.getStartTime() != TimePeg.VALUE_UNKNOWN)
+                {
+                    if (tPrev == null || tpu.getStartTime() > tPrev.getStartTime())
+                    {
+                        tPrev = tpu;
+                    }
+                }
+            }
+            return tPrev;
+        }
+    }
+
     /**
      * Get an immutable copy of the list of planunits, filtered by bmlId
      */
@@ -130,7 +152,7 @@ public final class PlanManager<T extends TimedPlanUnit>
     {
         try
         {
-            logger.debug("Interrupting " + pu.getBMLId() + ":" + pu.getId()+" "+time);
+            logger.debug("Interrupting " + pu.getBMLId() + ":" + pu.getId() + " " + time);
             pu.interrupt(time);
         }
         catch (TimedPlanUnitPlayException e)
@@ -170,13 +192,11 @@ public final class PlanManager<T extends TimedPlanUnit>
             @Override
             public boolean apply(T arg)
             {
-                return arg.getBMLId().equals(bmlId)&&arg.getId().equals(id);
+                return arg.getBMLId().equals(bmlId) && arg.getId().equals(id);
             }
         });
     }
 
-
-    
     private T getMainPlanUnit(String bmlId, String id)
     {
         synchronized (planUnits)
@@ -196,7 +216,7 @@ public final class PlanManager<T extends TimedPlanUnit>
     {
         synchronized (planUnits)
         {
-            for (T pu: getPlanUnits(bmlId, id))
+            for (T pu : getPlanUnits(bmlId, id))
             {
                 interruptPlanUnit(pu, globalTime);
             }
@@ -217,7 +237,7 @@ public final class PlanManager<T extends TimedPlanUnit>
             for (T pu : getPlanUnits(bmlId, id))
             {
                 planUnitsToInterrupt.add(pu);
-                planUnits.remove(pu);                
+                planUnits.remove(pu);
             }
         }
 
@@ -288,7 +308,7 @@ public final class PlanManager<T extends TimedPlanUnit>
                     finishedUnits.add(pu);
                 }
             }
-            planUnits.removeAll(finishedUnits);            
+            planUnits.removeAll(finishedUnits);
         }
 
     }
@@ -388,7 +408,7 @@ public final class PlanManager<T extends TimedPlanUnit>
         synchronized (planUnits)
         {
             T pu = getMainPlanUnit(bmlId, behId);
-            if (pu == null ) return TimePeg.VALUE_UNKNOWN;
+            if (pu == null) return TimePeg.VALUE_UNKNOWN;
             return pu.getEndTime();
         }
     }
