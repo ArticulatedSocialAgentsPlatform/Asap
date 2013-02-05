@@ -11,6 +11,7 @@ import inpro.incremental.unit.SysSegmentIU;
 import java.util.Collection;
 import java.util.List;
 
+import lombok.extern.slf4j.Slf4j;
 import saiba.bml.core.Behaviour;
 import asap.realizer.feedback.FeedbackManager;
 import asap.realizer.lipsync.IncrementalLipSynchProvider;
@@ -29,6 +30,7 @@ import done.inpro.system.carchase.HesitatingSynthesisIU;
  * @author hvanwelbergen
  * 
  */
+@Slf4j
 public class IncrementalTTSUnit extends TimedAbstractPlanUnit
 {
     private HesitatingSynthesisIU synthesisIU;
@@ -36,13 +38,14 @@ public class IncrementalTTSUnit extends TimedAbstractPlanUnit
     private TimePeg startPeg;
     private TimePeg relaxPeg;
     private TimePeg endPeg;
-    private double duration;
     private float stretch = 1;
     private float pitchShiftInCent = 0;
     private ImmutableList<IncrementalLipSynchProvider> lsProviders;
     private final PhonemeToVisemeMapping visemeMapping;
     private final int visemeLookAhead = 2;
     private final Behaviour behavior;
+    private final boolean hasRelax;
+    private IU lastWord;
 
     public IncrementalTTSUnit(FeedbackManager fbm, BMLBlockPeg bmlPeg, String bmlId, String behId, String text, DispatchStream dispatcher,
             Collection<IncrementalLipSynchProvider> lsProviders, PhonemeToVisemeMapping visemeMapping, Behaviour beh)
@@ -53,22 +56,28 @@ public class IncrementalTTSUnit extends TimedAbstractPlanUnit
         if (generateFiller != null && generateFiller.trim().equals("true"))
         {
             text = text + " <hes>";
+            hasRelax = true;
+        }
+        else
+        {
+            hasRelax = false;
         }
 
         synthesisIU = new HesitatingSynthesisIU(text);
 
         WordUpdateListener wul = new WordUpdateListener();
+        lastWord = null;
         for (IU word : synthesisIU.groundedIn())
         {
             word.updateOnGrinUpdates();
             word.addUpdateListener(wul);
+            lastWord = word;
         }
         this.visemeMapping = visemeMapping;
         this.dispatcher = dispatcher;
         startPeg = new TimePeg(bmlPeg);
         endPeg = new TimePeg(bmlPeg);
         relaxPeg = new TimePeg(bmlPeg);
-        duration = synthesisIU.duration();
         behavior = beh;
     }
 
@@ -110,12 +119,28 @@ public class IncrementalTTSUnit extends TimedAbstractPlanUnit
         }
     }
 
+    private void updateEnd()
+    {
+        log.debug("end time: {} global: {} start: {}", new Object[] { lastWord.endTime(), getStartTime() + lastWord.endTime(),
+                getStartTime() });
+        endPeg.setGlobalValue(getStartTime() + lastWord.endTime());
+        log.debug("start: {}", getStartTime());
+    }
+
     private class WordUpdateListener implements IUUpdateListener
     {
         @Override
         public void update(IU updatedIU)
         {
-            updateRelax(updatedIU);
+            updateEnd();
+            if (hasRelax)
+            {
+                updateRelax(updatedIU);
+            }
+            else
+            {
+                relaxPeg.setGlobalValue(getEndTime());
+            }
             updateLipSync();
         }
     }
@@ -123,10 +148,12 @@ public class IncrementalTTSUnit extends TimedAbstractPlanUnit
     private void stretch(float value)
     {
         stretch = value;
+        log.debug("set stretch {}", value);
         for (SysSegmentIU seg : synthesisIU.getSegments())
         {
             if (!seg.isCompleted() && !seg.isOngoing())
             {
+                log.debug("setting segment stretch {}", value);
                 seg.stretchFromOriginal(value);
             }
         }
@@ -226,7 +253,7 @@ public class IncrementalTTSUnit extends TimedAbstractPlanUnit
     @Override
     public double getPreferedDuration()
     {
-        return duration;
+        return lastWord.endTime();
     }
 
     @Override
@@ -255,18 +282,21 @@ public class IncrementalTTSUnit extends TimedAbstractPlanUnit
 
     protected void startUnit(double time) throws TimedPlanUnitPlayException
     {
-        updateLipSync();        
-        dispatcher.playStream(synthesisIU.getAudio(), true);
+        endPeg.setGlobalValue(time + lastWord.endTime());
+        relaxPeg.setGlobalValue(getEndTime());
+        updateLipSync();
         sendFeedback("start", time);
+        dispatcher.playStream(synthesisIU.getAudio(), true);
         super.startUnit(time);
     }
 
     @Override
     protected void relaxUnit(double time)
     {
+        log.debug("incremental speech relax {}", time);
         sendFeedback("relax", time);
     }
-    
+
     @Override
     protected void playUnit(double time)
     {
@@ -276,8 +306,8 @@ public class IncrementalTTSUnit extends TimedAbstractPlanUnit
     @Override
     protected void stopUnit(double time)
     {
+        log.debug("incremental speech end {}", time);
         sendFeedback("end", time);
-        // dispatcher.interruptPlayback();
     }
 
 }

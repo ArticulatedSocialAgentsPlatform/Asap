@@ -31,7 +31,7 @@ import com.google.common.collect.ImmutableList;
 public class IncrementalTTSPlanner extends AbstractPlanner<IncrementalTTSUnit>
 {
     private DispatchStream dispatcher;
-    private UniModalResolver resolver = new LinearStretchResolver();
+    private UniModalResolver resolver = new LinearStretchResolver(false);
     private final PhonemeToVisemeMapping visemeMapping;
     private final Collection<IncrementalLipSynchProvider> lipSynchers;
 

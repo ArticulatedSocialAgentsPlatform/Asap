@@ -19,6 +19,18 @@ import asap.realizer.planunit.TimedPlanUnit;
  */
 public class LinearStretchResolver implements UniModalResolver
 {
+    private final boolean resolveEndAsOffset;
+    
+    public LinearStretchResolver()
+    {
+        this(true);
+    }
+    
+    public LinearStretchResolver(boolean resolveEndAsOffset)
+    {
+        this.resolveEndAsOffset = resolveEndAsOffset;
+    }
+    
     // link synchpoints in sac to tmu
     private void linkSynchs(TimedPlanUnit tmu, List<TimePegAndConstraint> sacs)
     {
@@ -292,7 +304,7 @@ public class LinearStretchResolver implements UniModalResolver
             // resolve end if unknown and not a persistent behavior
             sacEnd = sortedSac.get(sortedSac.size() - 1);
             // System.out.println(sacEnd.id);
-            if (!sacEnd.syncId.equals("end") && pu.getPreferedDuration() > 0)
+            if (!sacEnd.syncId.equals("end") && pu.getPreferedDuration() > 0 && resolveEndAsOffset)
             {
                 double keyPrev;
                 try
