@@ -55,13 +55,6 @@ public class IncrementalTTSUnit extends TimedAbstractPlanUnit
         for (IU word : synthesisIU.groundedIn())
         {
             word.updateOnGrinUpdates();
-            for (IU we : word.groundedIn())
-            {
-                System.out.println("Phoneme: " + we.toPayLoad());
-                System.out.println("Start: " + we.startTime());
-                System.out.println("End: " + we.endTime());
-                System.out.println("progress: " + we.getProgress());
-            }
             word.addUpdateListener(wul);
         }
         this.visemeMapping = visemeMapping;
@@ -110,16 +103,6 @@ public class IncrementalTTSUnit extends TimedAbstractPlanUnit
         public void update(IU updatedIU)
         {
             updateLipSync();
-//            for (IU word :synthesisIU.groundedIn())
-//            {
-//                for (IU we :word.groundedIn())
-//                {
-//                    System.out.println("Phoneme: " + we.toPayLoad());
-//                    System.out.println("Start: " + we.startTime());
-//                    System.out.println("End: " + we.endTime());
-//                    System.out.println("progress: " + we.getProgress());
-//                }
-//            }
         }
     }
 

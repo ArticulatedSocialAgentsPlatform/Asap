@@ -92,11 +92,6 @@ public class TimedAnimationUnitIncrementalLipSynchProvider implements Incrementa
         if (tmuPrevious != null)
         {
             Visime prevVis = tmuToVisimeMap.get(tmuPrevious);
-            if (prevVis == null)
-            {
-                System.out.println("tmuClass: " + tmu.getMotionUnit().getClass());
-                System.out.println("tmuPrevious: " + ((TimedAnimationMotionUnit) tmuPrevious).getMotionUnit().getClass());
-            }
             double prevDuration = (double) prevVis.getDuration() / 1000d;
             tmu.getTimePeg("start").setGlobalValue(start - prevDuration * 0.5);
             tmuPrevious.getTimePeg("end").setGlobalValue(start + (double) vis.getDuration() / 1000d * 0.5);
