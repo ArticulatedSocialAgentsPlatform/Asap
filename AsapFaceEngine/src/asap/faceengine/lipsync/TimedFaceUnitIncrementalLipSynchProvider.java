@@ -36,8 +36,24 @@ public class TimedFaceUnitIncrementalLipSynchProvider implements IncrementalLipS
         this.facePlanManager = facePlanManager;
     }
 
+    private TimedFaceUnit getPrevious(double start, TimedFaceUnit tfuCur)
+    {
+        TimedFaceUnit previous = null;
+        for (TimedFaceUnit tfu : tfuToVisimeMap.keySet())
+        {
+            if (tfu.getStartTime() != TimePeg.VALUE_UNKNOWN && tfu.getStartTime() < start && tfu != tfuCur)
+            {
+                if (previous == null || tfu.getStartTime() > previous.getStartTime())
+                {
+                    previous = tfu;
+                }
+            }
+        }
+        return previous;
+    }
+
     @Override
-    public void setLipSyncUnit(BMLBlockPeg bbPeg, Behaviour beh, double start, Visime vis, Object identifier)
+    public synchronized void setLipSyncUnit(BMLBlockPeg bbPeg, Behaviour beh, double start, Visime vis, Object identifier)
     {
         TimedFaceUnit tfu = tfuMap.get(identifier);
         if (tfu == null)
@@ -46,24 +62,24 @@ public class TimedFaceUnitIncrementalLipSynchProvider implements IncrementalLipS
             tfu.setTimePeg("start", new TimePeg(bbPeg));
             tfu.setTimePeg("end", new TimePeg(bbPeg));
             tfu.setSubUnit(true);
-            tfu.setState(TimedPlanUnitState.LURKING);
             facePlanManager.addPlanUnit(tfu);
-            tfuMap.put(identifier, tfu);            
+            tfuMap.put(identifier, tfu);
         }
-        TimedFaceUnit tfuPrevious = facePlanManager.getFirstBefore(beh.getBmlId(), beh.id, start);
-        
+        TimedFaceUnit tfuPrevious = getPrevious(start, tfu);
+
         if (tfuPrevious != null)
         {
             Visime prevVis = tfuToVisimeMap.get(tfuPrevious);
-            double prevDuration = (double)prevVis.getDuration()/1000d;
+            double prevDuration = (double) prevVis.getDuration() / 1000d;
             tfu.getTimePeg("start").setGlobalValue(start - prevDuration * 0.5);
-            tfuPrevious.getTimePeg("end").setGlobalValue(start + (double)vis.getDuration()/1000d * 0.5);
+            tfuPrevious.getTimePeg("end").setGlobalValue(start + (double) vis.getDuration() / 1000d * 0.5);
         }
         else
         {
             tfu.getTimePeg("start").setGlobalValue(start);
         }
-        tfuToVisimeMap.put(tfu,vis);
+        tfuToVisimeMap.put(tfu, vis);
         tfu.getTimePeg("end").setGlobalValue(start + (double) vis.getDuration() / 1000d);
+        tfu.setState(TimedPlanUnitState.LURKING);        
     }
 }

@@ -50,29 +50,6 @@ public final class PlanManager<T extends TimedPlanUnit>
     }
 
     /**
-     * Get the first planunit with bmlId and id that starts before startTime, null if none
-     */
-    public T getFirstBefore(String bmlId, String id, double startTime)
-    {
-        synchronized (planUnits)
-        {
-            Collection<T> tpus = this.getPlanUnits(bmlId, id);
-            T tPrev = null;
-            for (T tpu : tpus)
-            {
-                if (tpu.getStartTime() < startTime && tpu.getStartTime() != TimePeg.VALUE_UNKNOWN)
-                {
-                    if (tPrev == null || tpu.getStartTime() > tPrev.getStartTime())
-                    {
-                        tPrev = tpu;
-                    }
-                }
-            }
-            return tPrev;
-        }
-    }
-
-    /**
      * Get an immutable copy of the list of planunits, filtered by bmlId
      */
     public Collection<T> getPlanUnits(final String bmlId)
