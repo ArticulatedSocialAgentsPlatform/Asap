@@ -23,9 +23,8 @@ public class IncrementalTTSTest
         public void update(IU updatedIU)
         {
             System.out.println("update " + updatedIU.toPayLoad());
-            Progress newProgress = updatedIU.getProgress();
-            System.out.println(newProgress.toString());
-            
+            System.out.println("start " + updatedIU.startTime());            
+            /*
             for(IU we: updatedIU.groundedIn())
             {
                 System.out.println("Phoneme: "+we.toPayLoad());
@@ -33,9 +32,43 @@ public class IncrementalTTSTest
                 System.out.println("End: "+we.endTime());
                 System.out.println("progress: "+we.getProgress());
             }
+            */
         }
     }
 
+    @Test
+    public void testHesitationContinuation() throws InterruptedException
+    {
+        MaryAdapter.getInstance();
+        DispatchStream dispatcher = SimpleMonitor.setupDispatcher(new Resources("").getURL("sphinx-config.xml"));
+        HesitatingSynthesisIU installment = new HesitatingSynthesisIU("Hello world bla bla bla <hes>");
+        
+        HesitatingSynthesisIU installmentCont = new HesitatingSynthesisIU("continuation.");
+        
+        for (IU word : installment.groundedIn())
+        {
+            word.updateOnGrinUpdates();
+            word.addUpdateListener(new MyWordUpdateListener());            
+        }        
+        dispatcher.playStream(installment.getAudio(), true);
+        
+        /*
+        //Thread.sleep(2000);
+        if(installment.isCompleted())
+        {
+            dispatcher.playStream(installmentCont.getAudio(), true);
+        }
+        else
+        {
+            installment.appendContinuation(installmentCont.getWords());
+        }
+        */
+        Thread.sleep(8000);
+        
+        //wordIU: <hes>, start is relax time
+    }
+    
+    @Ignore
     @Test
     public void test() throws InterruptedException
     {
@@ -46,7 +79,7 @@ public class IncrementalTTSTest
                 Collections.<String> singletonList("Hello world, this is a very long sentence."));
         */
         //HesitatingSynthesisIU installment = new HesitatingSynthesisIU("Hello world, this is a very long sentence <hes>");
-        HesitatingSynthesisIU installment = new HesitatingSynthesisIU("Hello this is a basic BML test for the realizer bridge!");
+        HesitatingSynthesisIU installment = new HesitatingSynthesisIU("Hello this is a basic BML test for the realizer bridge");
         dispatcher.playStream(installment.getAudio(), true);
         
         Thread.sleep(8000);

@@ -43,14 +43,20 @@ public class IncrementalTTSUnit extends TimedAbstractPlanUnit
     private final PhonemeToVisemeMapping visemeMapping;
     private final int visemeLookAhead = 2;
     private final Behaviour behavior;
-    
+
     public IncrementalTTSUnit(FeedbackManager fbm, BMLBlockPeg bmlPeg, String bmlId, String behId, String text, DispatchStream dispatcher,
             Collection<IncrementalLipSynchProvider> lsProviders, PhonemeToVisemeMapping visemeMapping, Behaviour beh)
     {
-        super(fbm, bmlPeg, bmlId, behId);        
+        super(fbm, bmlPeg, bmlId, behId);
         this.lsProviders = ImmutableList.copyOf(lsProviders);
+        String generateFiller = beh.getStringParameterValue("http://www.asap-project.org/bmlis:generatefiller");
+        if (generateFiller != null && generateFiller.trim().equals("true"))
+        {
+            text = text + " <hes>";
+        }
+
         synthesisIU = new HesitatingSynthesisIU(text);
-        
+
         WordUpdateListener wul = new WordUpdateListener();
         for (IU word : synthesisIU.groundedIn())
         {
@@ -63,37 +69,44 @@ public class IncrementalTTSUnit extends TimedAbstractPlanUnit
         endPeg = new TimePeg(bmlPeg);
         relaxPeg = new TimePeg(bmlPeg);
         duration = synthesisIU.duration();
-        behavior = beh;                
+        behavior = beh;
     }
 
     private void updateLipSyncUnit(IU phIU)
     {
-        
-        for(IncrementalLipSynchProvider lsp:lsProviders)
+        for (IncrementalLipSynchProvider lsp : lsProviders)
         {
             int number = visemeMapping.getVisemeForPhoneme(PhonemeUtil.phonemeStringToInt(phIU.toPayLoad()));
-            Visime viseme = new Visime(number, (int)(1000*(phIU.endTime()-phIU.startTime())), false);
-            lsp.setLipSyncUnit(getBMLBlockPeg(), behavior, phIU.startTime()+getStartTime(), viseme, phIU);
+            Visime viseme = new Visime(number, (int) (1000 * (phIU.endTime() - phIU.startTime())), false);
+            lsp.setLipSyncUnit(getBMLBlockPeg(), behavior, phIU.startTime() + getStartTime(), viseme, phIU);
         }
     }
-    
+
     private void updateLipSync()
     {
         int visCount = visemeLookAhead;
-        for (IU word :synthesisIU.groundedIn())
+        for (IU word : synthesisIU.groundedIn())
         {
-            if(word.isUpcoming() || word.isOngoing())
+            if (word.isUpcoming() || word.isOngoing())
             {
-                for (IU ph :word.groundedIn())
+                for (IU ph : word.groundedIn())
                 {
-                    if(ph.isUpcoming())
+                    if (ph.isUpcoming())
                     {
                         updateLipSyncUnit(ph);
                         visCount--;
-                        if(visCount == 0)return;
+                        if (visCount == 0) return;
                     }
                 }
             }
+        }
+    }
+
+    private void updateRelax(IU iu)
+    {
+        if (iu.toPayLoad().equals("<hes>"))
+        {
+            relaxPeg.setGlobalValue(iu.startTime() + getStartTime());
         }
     }
 
@@ -102,6 +115,7 @@ public class IncrementalTTSUnit extends TimedAbstractPlanUnit
         @Override
         public void update(IU updatedIU)
         {
+            updateRelax(updatedIU);
             updateLipSync();
         }
     }
@@ -241,12 +255,18 @@ public class IncrementalTTSUnit extends TimedAbstractPlanUnit
 
     protected void startUnit(double time) throws TimedPlanUnitPlayException
     {
-        updateLipSync();
+        updateLipSync();        
         dispatcher.playStream(synthesisIU.getAudio(), true);
         sendFeedback("start", time);
         super.startUnit(time);
     }
 
+    @Override
+    protected void relaxUnit(double time)
+    {
+        sendFeedback("relax", time);
+    }
+    
     @Override
     protected void playUnit(double time)
     {

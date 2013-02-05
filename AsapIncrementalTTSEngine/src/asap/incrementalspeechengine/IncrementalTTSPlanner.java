@@ -7,6 +7,7 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
 
+import saiba.bml.BMLInfo;
 import saiba.bml.core.Behaviour;
 import saiba.bml.core.SpeechBehaviour;
 import asap.realizer.AbstractPlanner;
@@ -41,6 +42,9 @@ public class IncrementalTTSPlanner extends AbstractPlanner<IncrementalTTSUnit>
         this.dispatcher = dispatcher;
         this.visemeMapping = vm;
         this.lipSynchers = ImmutableList.copyOf(ls);
+        
+        BMLInfo.addCustomStringAttribute(SpeechBehaviour.class, "http://www.asap-project.org/bmlis","generatefiller");
+
     }
 
     private IncrementalTTSUnit createTTSUnit(BMLBlockPeg bbPeg, Behaviour b)
