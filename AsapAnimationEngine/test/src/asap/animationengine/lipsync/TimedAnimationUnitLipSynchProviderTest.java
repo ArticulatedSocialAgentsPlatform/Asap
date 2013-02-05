@@ -43,6 +43,8 @@ public class TimedAnimationUnitLipSynchProviderTest
     private BMLBlockPeg bbPeg = BMLBlockPeg.GLOBALPEG;
     private static final double TIMING_PRECISION = 0.0001;
     private SpeechBehaviour speechBehavior;
+    private SpeechBinding speechBinding;
+    private TimedAnimationUnitLipSynchProvider provider;
 
     @Before
     public void setup() throws IOException
@@ -58,13 +60,9 @@ public class TimedAnimationUnitLipSynchProviderTest
         when(mockSpeechUnit.getTimePeg("end")).thenReturn(endPeg);
         VJoint vNext = HanimBody.getLOA1HanimBody();
         when(mockAnimationPlayer.getVNext()).thenReturn(vNext);
-    }
 
-    @Test
-    public void test() throws IOException
-    {
-        SpeechBinding speechBinding = new SpeechBinding(new Resources(""));
-        String str = "<speechbinding>" + "<VisimeSpec visime=\"0\">" + "<parameterdefaults>" + "<parameterdefault name=\"a\" value=\"0\"/>"
+        speechBinding = new SpeechBinding(new Resources(""));
+        str = "<speechbinding>" + "<VisimeSpec visime=\"0\">" + "<parameterdefaults>" + "<parameterdefault name=\"a\" value=\"0\"/>"
                 + "</parameterdefaults>"
                 + "<MotionUnit type=\"ProcAnimation\" file=\"Humanoids/shared/procanimation/speech/speakjaw.xml\"/>" + "</VisimeSpec>"
                 + "<VisimeSpec visime=\"1\">" + "<parameterdefaults>" + "<parameterdefault name=\"a\" value=\"1\"/>"
@@ -72,10 +70,14 @@ public class TimedAnimationUnitLipSynchProviderTest
                 + "<MotionUnit type=\"ProcAnimation\" file=\"Humanoids/shared/procanimation/speech/speakjaw.xml\"/>" + "</VisimeSpec>"
                 + "</speechbinding>";
         speechBinding.readXML(str);
+        provider = new TimedAnimationUnitLipSynchProvider(speechBinding, mockAnimationPlayer, animationPlanManager, pegBoard);
 
-        TimedAnimationUnitLipSynchProvider prov = new TimedAnimationUnitLipSynchProvider(speechBinding, mockAnimationPlayer,
-                animationPlanManager, pegBoard);
-        prov.addLipSyncMovement(bbPeg, speechBehavior, mockSpeechUnit,
+    }
+
+    @Test
+    public void test() throws IOException
+    {
+        provider.addLipSyncMovement(bbPeg, speechBehavior, mockSpeechUnit,
                 ImmutableList.of(new Visime(1, 5000, false), new Visime(2, 5000, false)));
 
         List<TimedAnimationUnit> animationUnits = animationPlanManager.getPlanUnits();
@@ -87,5 +89,25 @@ public class TimedAnimationUnitLipSynchProviderTest
             assertThat("FaceUnit with 0 duration found at index " + animationUnits.indexOf(mu) + "Face Unit list: " + animationUnits,
                     mu.getEndTime() - mu.getStartTime(), greaterThan(0d));
         }
+        assertEquals("bml1", animationUnits.get(0).getBMLId());
+        assertEquals("s1", animationUnits.get(0).getId());
+    }
+
+    @Test
+    public void testCoArticulation() throws IOException
+    {
+        provider.addLipSyncMovement(bbPeg, speechBehavior, mockSpeechUnit, ImmutableList.of(new Visime(1, 1000, false), new Visime(2, 500,
+                false), new Visime(2, 750, false), new Visime(1, 250, false)));
+        List<TimedAnimationUnit> animationUnits = animationPlanManager.getPlanUnits();
+        
+        assertEquals(0, animationUnits.get(0).getStartTime(), TIMING_PRECISION);
+        assertEquals(2.5, animationUnits.get(3).getEndTime(), TIMING_PRECISION);
+        
+        assertEquals(1.25, animationUnits.get(0).getEndTime(), TIMING_PRECISION);
+        assertEquals(0.5, animationUnits.get(1).getStartTime(), TIMING_PRECISION);
+        assertEquals(1.875, animationUnits.get(1).getEndTime(), TIMING_PRECISION);
+        assertEquals(1.25, animationUnits.get(2).getStartTime(), TIMING_PRECISION);
+        assertEquals(2.375, animationUnits.get(2).getEndTime(), TIMING_PRECISION);
+        assertEquals(1.875, animationUnits.get(3).getStartTime(), TIMING_PRECISION);      
     }
 }

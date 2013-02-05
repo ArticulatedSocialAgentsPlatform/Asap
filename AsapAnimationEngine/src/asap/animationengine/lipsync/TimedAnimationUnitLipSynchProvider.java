@@ -52,19 +52,7 @@ public class TimedAnimationUnitLipSynchProvider implements LipSynchProvider
         HashMap<TimedAnimationMotionUnit, Double> startTimes = new HashMap<TimedAnimationMotionUnit, Double>();
         HashMap<TimedAnimationMotionUnit, Double> endTimes = new HashMap<TimedAnimationMotionUnit, Double>();
 
-        TimedAnimationMotionUnit tmu = null;
-        try
-        {
-            tmu = speechBinding.getMotionUnit(0, bbPeg, beh.getBmlId(), beh.id, animationPlayer, pegBoard);
-            tmu.resolveGestureKeyPositions();
-            startTimes.put(tmu, Double.valueOf(0d));
-            endTimes.put(tmu, Double.valueOf(0d));
-            tmus.add(tmu);
-        }
-        catch (MUSetupException e)
-        {
-            log.warn("Exception planning first timedmotionunit for speechbehavior {}", e, beh);
-        }
+        TimedAnimationMotionUnit tmu = null;        
 
         for (Visime vis : visemes)
         {
@@ -74,7 +62,10 @@ public class TimedAnimationUnitLipSynchProvider implements LipSynchProvider
             double start = totalDuration / 1000d - prevDuration / 2000;
             double peak = totalDuration / 1000d + vis.getDuration() / 2000d;
             double end = totalDuration / 1000d + vis.getDuration() / 1000d;
-            if (tmu != null) endTimes.put(tmu, peak); // extend previous tfu to the peak of this one!
+            if (tmu != null)
+            {
+                endTimes.put(tmu, peak); // extend previous tfu to the peak of this one!
+            }
             try
             {
                 tmu = speechBinding.getMotionUnit(vis.getNumber(), bbPeg, beh.getBmlId(), beh.id, animationPlayer, pegBoard);
@@ -107,9 +98,9 @@ public class TimedAnimationUnitLipSynchProvider implements LipSynchProvider
         {
             TimePeg startPeg = new OffsetPeg(bs.getTimePeg("start"), startTimes.get(plannedFU));
 
-            plannedFU.setTimePeg(plannedFU.getKeyPosition("start"), startPeg);
+            plannedFU.setTimePeg("start", startPeg);
             TimePeg endPeg = new OffsetPeg(bs.getTimePeg("start"), endTimes.get(plannedFU));
-            plannedFU.setTimePeg(plannedFU.getKeyPosition("end"), endPeg);
+            plannedFU.setTimePeg("end", endPeg);
             log.debug("adding jaw movement at {}-{}", plannedFU.getStartTime(), plannedFU.getEndTime());
         }
     }
