@@ -1,5 +1,6 @@
 package asap.hns;
 
+import hmi.math.Mat4f;
 import hmi.math.Vec3f;
 import hmi.util.StringUtil;
 import hmi.xml.XMLScanException;
@@ -24,10 +25,10 @@ public class Hns extends XMLStructureAdapter
 {
     private Map<String, String> settings = new HashMap<>(); // name->value map
     private Map<String, Map<String, Double>> symbols = new HashMap<>(); // className->(name->value)
-    
+
     @Getter
     private String baseJoint = "HumanoidRoot";
-    
+
     private static final String XMLTAG = "hns";
     private static final String HAND_REFERENCES = "handReferences";
     private static final String HAND_LOCATORS = "handLocators";
@@ -37,7 +38,7 @@ public class Hns extends XMLStructureAdapter
     private static final String HANDSHAPES = "handShapes";
     private static final String BASIC_HANDSHAPES = "basicHandShapes";
     private static final String SPECIFIC_HANDSHAPES = "specificHandShapes";
-    
+
     private static final float[] UP_VEC = Vec3f.getVec3f(0, 1, 0);
     private static final float[] DOWN_VEC = Vec3f.getVec3f(0, -1, 0);
     private static final float[] LEFT_VEC = Vec3f.getVec3f(1, 0, 0);
@@ -45,7 +46,6 @@ public class Hns extends XMLStructureAdapter
     private static final float[] A_VEC = Vec3f.getVec3f(0, 0, 1);
     private static final float[] T_VEC = Vec3f.getVec3f(0, 0, -1);
 
-    
     enum ExtendSymbols
     {
         Flat, Normal, Large
@@ -60,17 +60,22 @@ public class Hns extends XMLStructureAdapter
     {
         Round, FunnelS, FunnelE
     }
-    
+
+    enum SymmetrySymbol
+    {
+        Sym, SymMS, SymMT, SymMF, SymMST, SymMSF, SymMTF, SymMSTF
+    }
+
     public Set<String> getBasicHandShapes()
     {
         return symbols.get(BASIC_HANDSHAPES).keySet();
     }
-    
+
     public Set<String> getSpecificHandShapes()
     {
         return symbols.get(SPECIFIC_HANDSHAPES).keySet();
     }
-    
+
     public Set<String> getHandShapes()
     {
         return symbols.get(HANDSHAPES).keySet();
@@ -151,6 +156,111 @@ public class Hns extends XMLStructureAdapter
         return false;
     }
 
+    public void getSymmetryTransform(SymmetrySymbol sym, float mLoc[], float mDir[])
+    {
+        switch (sym)
+        {
+        case Sym:
+            Mat4f.setIdentity(mLoc);
+            Mat4f.setIdentity(mDir);
+            break;
+        case SymMS:
+            // @formatter:off
+            Mat4f.set(mLoc,-1,0,0,0,
+                            0,1,0,0,
+                            0,0,1,0,
+                            0,0,0,1
+                    );
+            Mat4f.set(mDir, mLoc);
+            // @formatter:on
+            break;
+        case SymMT:
+            // @formatter:off
+            Mat4f.set(mLoc, 1,0,0,0,
+                            0,-1,0,0,
+                            0,0,1,0,
+                            0,0,0,1
+                    );
+            Mat4f.set(mDir,-1,0,0,0,
+                            0,-1,0,0,
+                            0,0,1,0,
+                            0,0,0,1
+            );
+            // @formatter:on
+            break;
+        case SymMF:
+            // @formatter:off
+            Mat4f.set(mLoc, 1,0,0,0,
+                            0,1,0,0,
+                            0,0,-1,0,
+                            0,0,0,1
+                    );
+            Mat4f.set(mDir,-1,0,0,0,
+                            0,1,0,0,
+                            0,0,-1,0,
+                            0,0,0,1
+            );
+            // @formatter:on
+            break;
+        case SymMST:
+         // @formatter:off
+            Mat4f.set(mLoc, -1,0,0,0,
+                            0,-1,0,0,
+                            0,0,1,0,
+                            0,0,0,1
+                    );
+            Mat4f.set(mDir,-1,0,0,0,
+                            0,-1,0,0,
+                            0,0,1,0,
+                            0,0,0,1
+            );
+            // @formatter:on
+            break;
+        case SymMSF:
+            // @formatter:off
+            Mat4f.set(mLoc, -1,0,0,0,
+                            0,1,0,0,
+                            0,0,-1,0,
+                            0,0,0,1
+                    );
+            Mat4f.set(mDir,-1,0,0,0,
+                            0,1,0,0,
+                            0,0,-1,0,
+                            0,0,0,1
+            );
+            // @formatter:on
+            break;
+        case SymMTF:
+            // @formatter:off
+            Mat4f.set(mLoc, 1,0,0,0,
+                            0,-1,0,0,
+                            0,0,-1,0,
+                            0,0,0,1
+                    );
+            Mat4f.set(mDir,-1,0,0,0,
+                            0,-1,0,0,
+                            0,0,-1,0,
+                            0,0,0,1
+            );
+            // @formatter:on
+            break;
+        case SymMSTF:
+         // @formatter:off
+            Mat4f.set(mLoc, -1,0,0,0,
+                            0,-1,0,0,
+                            0,0,-1,0,
+                            0,0,0,1
+                    );
+            Mat4f.set(mDir,-1,0,0,0,
+                            0,-1,0,0,
+                            0,0,-1,0,
+                            0,0,0,1
+            );
+            // @formatter:on
+            break;
+        }
+    }
+
     /**
      * Translate hand location symbol in figure root coords
      * @return false, if a syntax error occurred, true otherwise.
@@ -199,7 +309,7 @@ public class Hns extends XMLStructureAdapter
             {
                 log.warn("invalid distance symbol {}, assuming LocNorm", distance);
                 distance = "LocNorm";
-            }            
+            }
         }
         else
         {
@@ -217,14 +327,14 @@ public class Hns extends XMLStructureAdapter
         }
         if (getSymbolValue(HAND_LOCATORS, locator) != null)
         {
-            phi = getSymbolValue(HAND_LOCATORS, locator);            
+            phi = getSymbolValue(HAND_LOCATORS, locator);
         }
         if (getSymbolValue(HAND_DISTANCES, distance) != null)
         {
             r = getEllipticDistance(phi, getSymbolValue(HAND_DISTANCES, distance));
         }
         location[2] = (float) (r * Math.cos(Math.toRadians(phi)));
-        location[0] = (float) (r * Math.sin(Math.toRadians(phi)));        
+        location[0] = (float) (r * Math.sin(Math.toRadians(phi)));
         return true;
     }
 
@@ -441,11 +551,6 @@ public class Hns extends XMLStructureAdapter
                         map.put(entry2.getKey(), entry2.getValue());
                     }
                 }
-                break;
-            case SymbolMatrices.XMLTAG:
-                SymbolMatrices symMat = new SymbolMatrices();
-                symMat.readXML(tokenizer);
-                // TODO: actually do something with the symbolMatrices?
                 break;
             default:
                 throw new XMLScanException("Invalid tag " + tokenizer.getTagName() + " in <hns>");
