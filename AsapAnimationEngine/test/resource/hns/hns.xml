@@ -213,31 +213,4 @@
 
     <symbol class="offset" name="ellipticDistance" value="100"/>
 </symbols>
-
-<symbolMatrices>    
-    <symbol class="symmetry" name="sym1" value="1 0 0 0 0 1 0 0 0 0 1 0 0 0 0 1"/>     
-    <symbol class="symmetry" name="sym2" value="1 0 0 0 0 1 0 0 0 0 1 0 0 0 0 1"/>
-    
-    <symbol class="symmetry" name="symMS1" value="1.0 0 0 0 0 -1 0 0 0 0 1 0 0 0 0 1"/>     
-    <symbol class="symmetry" name="symMS2" value="1.0 0 0 0 0 -1 0 0 0 0 1 0 0 0 0 1"/>
-    
-    <symbol class="symmetry" name="symMT1" value="1 0 0 0  0 1 0 0  0 0 -1 0  0 0 0 1"/>
-    <symbol class="symmetry" name="symMT2" value="1 0 0 0  0 1 0 0  0 0 -1 0  0 0 0 1"/>
-    
-    <symbol class="symmetry" name="symMF1" value="-1 0 0 0 0 1 0 0 0 0 1 0 0 0 0 1"/>
-    <symbol class="symmetry" name="symMF2" value="-1 0 0 0 0 -1 0 0 0 0 1 0 0 0 0 1"/>
-    
-    <symbol class="symmetry" name="symMST1" value="1 0 0 0 0 -1 0 0 0 0 -1 0 0 0 0 1"/>
-    <symbol class="symmetry" name="symMST2" value="1 0 0 0 0 -1 0 0 0 0 -1 0 0 0 0 1"/>
-    
-    <symbol class="symmetry" name="symMSF1" value="-1 0 0 0 0 -1 0 0 0 0 1 0 0 0 0 1"/>
-    <symbol class="symmetry" name="symMSF2" value="-1 0 0 0 0 -1 0 0 0 0 1 0 0 0 0 1"/>
-    
-    <symbol class="symmetry" name="symMTF1" value="-1 0 0 0 0 1 0 0 0 0 -1 0 0 0 0 1"/>
-    <symbol class="symmetry" name="symMTF2" value="-1 0 0 0 0 -1 0 0 0 0 -1 0 0 0 0 1"/>
-    
-    <symbol class="symmetry" name="symMSTF1" value="-1 0 0 0 0 -1 0 0 0 0 -1 0 0 0 0 1"/>
-    <symbol class="symmetry" name="symMSTF2" value="-1 0 0 0 0 -1 0 0 0 0 -1 0 0 0 0 1"/>
-</symbolMatrices>
-
 </hns>
