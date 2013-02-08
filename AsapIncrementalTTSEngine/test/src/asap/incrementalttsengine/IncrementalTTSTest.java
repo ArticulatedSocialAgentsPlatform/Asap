@@ -36,6 +36,24 @@ public class IncrementalTTSTest
         }
     }
 
+
+    @Test
+    public void testMultipleSentences() throws InterruptedException
+    {
+        MaryAdapter.getInstance();
+        DispatchStream dispatcher = SimpleMonitor.setupDispatcher(new Resources("").getURL("sphinx-config.xml"));
+        HesitatingSynthesisIU installment = new HesitatingSynthesisIU("Hello world bla bla bla.");
+        System.out.println("Duration: "+installment.duration());
+        
+        HesitatingSynthesisIU installmentCont = new HesitatingSynthesisIU("This is a much much much longer continuation.");
+        installment.appendContinuation(installmentCont.getWords());               
+        System.out.println("Duration: "+installment.duration());
+        
+        dispatcher.playStream(installment.getAudio(), true);
+        Thread.sleep(8000);
+    }
+    
+    @Ignore
     @Test
     public void testHesitationContinuation() throws InterruptedException
     {

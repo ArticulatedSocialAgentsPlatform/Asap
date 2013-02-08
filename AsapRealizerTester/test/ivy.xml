@@ -1,5 +1,5 @@
 <ivy-module version="2.0">
-   <info organisation="HMI" module="HmiEnvironmentTest"/>
+   <info organisation="Asap" module="AsapRealizerTesterTest"/>
    <dependencies >
       <dependency org="junit" name="junit-dep"  rev="latest.release" />
    </dependencies>
