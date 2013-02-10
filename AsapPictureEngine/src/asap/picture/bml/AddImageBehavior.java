@@ -18,6 +18,7 @@
  ******************************************************************************/
 package asap.picture.bml;
 
+import hmi.xml.XMLFormatting;
 import hmi.xml.XMLTokenizer;
 
 import java.io.IOException;
@@ -33,11 +34,11 @@ public class AddImageBehavior extends PictureBehaviour
     private float layer;
 
     @Override
-    public boolean satisfiesConstraint(String n, String value)
+    public boolean satisfiesConstraint(String name, String value)
     {
-        if (n.equals("filePath")) return true;
-        if (n.equals("fileName")) return true;
-        return false;
+        if (name.equals("filePath")) return true;
+        if (name.equals("fileName")) return true;
+        return super.satisfiesConstraint(name, value);
     }
 
     public AddImageBehavior(String bmlId, XMLTokenizer tokenizer) throws IOException
@@ -47,12 +48,12 @@ public class AddImageBehavior extends PictureBehaviour
     }
 
     @Override
-    public StringBuilder appendAttributeString(StringBuilder buf)
+    public StringBuilder appendAttributeString(StringBuilder buf, XMLFormatting fmt)
     {
         appendAttribute(buf, "filePath", filePath.toString());
         appendAttribute(buf, "fileName", fileName.toString());
         appendAttribute(buf, "layer", layer);
-        return super.appendAttributeString(buf);
+        return super.appendAttributeString(buf, fmt);
     }
 
     @Override
@@ -99,7 +100,7 @@ public class AddImageBehavior extends PictureBehaviour
         {
             return fileName.toString();
         }
-        return "" + getFloatParameterValue(name);
+        return super.getStringParameterValue(name);
     }
 
     @Override
@@ -109,12 +110,16 @@ public class AddImageBehavior extends PictureBehaviour
         {
             return layer;
         }
-        return 0;
+        return super.getFloatParameterValue(name);
     }
 
     @Override
     public boolean specifiesParameter(String name)
     {
-        return (name.equals("filePath") || name.equals("fileName") || name.equals("layer"));
+        if (name.equals("filePath") || name.equals("fileName") || name.equals("layer"))
+        {
+            return true;
+        }
+        return super.specifiesParameter(name);
     }
 }

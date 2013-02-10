@@ -18,6 +18,7 @@
  ******************************************************************************/
 package asap.picture.bml;
 
+import hmi.xml.XMLFormatting;
 import hmi.xml.XMLTokenizer;
 
 import java.io.IOException;
@@ -32,11 +33,11 @@ public class SetImageBehavior extends PictureBehaviour
     private String fileName;
 
     @Override
-    public boolean satisfiesConstraint(String n, String value)
+    public boolean satisfiesConstraint(String name, String value)
     {
-        if (n.equals("filePath")) return true;
-        if (n.equals("fileName")) return true;
-        return false;
+        if (name.equals("filePath")) return true;
+        if (name.equals("fileName")) return true;
+        return super.satisfiesConstraint(name, value);
     }
 
     public SetImageBehavior(String bmlId, XMLTokenizer tokenizer) throws IOException
@@ -46,11 +47,11 @@ public class SetImageBehavior extends PictureBehaviour
     }
 
     @Override
-    public StringBuilder appendAttributeString(StringBuilder buf)
+    public StringBuilder appendAttributeString(StringBuilder buf, XMLFormatting fmt)
     {
         appendAttribute(buf, "filePath", filePath.toString());
         appendAttribute(buf, "fileName", fileName.toString());
-        return super.appendAttributeString(buf);
+        return super.appendAttributeString(buf, fmt);
     }
 
     @Override
@@ -96,18 +97,22 @@ public class SetImageBehavior extends PictureBehaviour
         {
             return fileName;
         }
-        return "" + getFloatParameterValue(name);
+        return super.getStringParameterValue(name);
     }
 
     @Override
     public boolean specifiesParameter(String name)
     {
-        return (name.equals("filePath") || name.equals("fileName"));
+        if (name.equals("filePath") || name.equals("fileName"))
+        {
+            return true;
+        }
+        return super.specifiesParameter(name);
     }
 
     @Override
     public float getFloatParameterValue(String name)
     {
-        return 0;
+        return super.getFloatParameterValue(name);
     }
 }
