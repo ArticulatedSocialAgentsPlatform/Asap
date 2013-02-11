@@ -1,5 +1,7 @@
 package asap.incrementalttsengine;
 
+import java.util.Arrays;
+
 import hmi.util.Resources;
 import inpro.apps.SimpleMonitor;
 import inpro.audio.DispatchStream;
@@ -14,7 +16,7 @@ import org.junit.Test;
 
 import done.inpro.system.carchase.HesitatingSynthesisIU;
 
-@Ignore
+//@Ignore
 public class IncrementalTTSTest
 {
     private static class MyWordUpdateListener implements IUUpdateListener
@@ -45,7 +47,8 @@ public class IncrementalTTSTest
         HesitatingSynthesisIU installment = new HesitatingSynthesisIU("Hello world bla bla bla.");
         System.out.println("Duration: "+installment.duration());
         
-        HesitatingSynthesisIU installmentCont = new HesitatingSynthesisIU("This is a much much much longer continuation.");
+        HesitatingSynthesisIU installmentCont = new HesitatingSynthesisIU("This is.");
+        installmentCont.getWords().get(0).shiftBy(installment.duration());
         installment.appendContinuation(installmentCont.getWords());               
         System.out.println("Duration: "+installment.duration());
         
@@ -57,6 +60,7 @@ public class IncrementalTTSTest
     @Test
     public void testHesitationContinuation() throws InterruptedException
     {
+        
         MaryAdapter.getInstance();
         DispatchStream dispatcher = SimpleMonitor.setupDispatcher(new Resources("").getURL("sphinx-config.xml"));
         HesitatingSynthesisIU installment = new HesitatingSynthesisIU("Hello world bla bla bla <hes>");

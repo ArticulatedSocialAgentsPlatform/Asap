@@ -7,6 +7,7 @@ import inpro.audio.DispatchStream;
 import inpro.incremental.unit.IU;
 import inpro.incremental.unit.IU.IUUpdateListener;
 import inpro.incremental.unit.SysSegmentIU;
+import inpro.incremental.unit.WordIU;
 
 import java.util.Collection;
 import java.util.List;
@@ -63,7 +64,7 @@ public class IncrementalTTSUnit extends TimedAbstractPlanUnit
             hasRelax = false;
         }
 
-        synthesisIU = new HesitatingSynthesisIU(text);
+        synthesisIU = createHesitatingSynthesisIU(text);
 
         WordUpdateListener wul = new WordUpdateListener();
         lastWord = null;
@@ -73,12 +74,45 @@ public class IncrementalTTSUnit extends TimedAbstractPlanUnit
             word.addUpdateListener(wul);
             lastWord = word;
         }
+
         this.visemeMapping = visemeMapping;
         this.dispatcher = dispatcher;
         startPeg = new TimePeg(bmlPeg);
         endPeg = new TimePeg(bmlPeg);
         relaxPeg = new TimePeg(bmlPeg);
         behavior = beh;
+    }
+
+    private HesitatingSynthesisIU createHesitatingSynthesisIU(String text)
+    {
+        int pointIndex = text.indexOf('.');
+        if (pointIndex == -1)
+        {
+            return new HesitatingSynthesisIU(text);
+        }
+
+        HesitatingSynthesisIU iu = null;
+        int prevIndex = 0;
+        while (pointIndex != -1)
+        {
+            String currentText = text.substring(prevIndex, pointIndex + 1);
+            if (iu == null)
+            {
+                iu = new HesitatingSynthesisIU(currentText);
+            }
+            else if (currentText.trim().length() > 0)
+            {
+                HesitatingSynthesisIU iuCont = new HesitatingSynthesisIU(currentText);
+                for (WordIU wiu : iuCont.getWords())
+                {
+                    wiu.shiftBy(iu.duration());
+                }
+                iu.appendContinuation(iuCont.getWords());
+            }
+            prevIndex = pointIndex + 1;
+            pointIndex = text.indexOf('.', prevIndex);
+        }
+        return iu;
     }
 
     private void updateLipSyncUnit(IU phIU)
@@ -182,6 +216,11 @@ public class IncrementalTTSUnit extends TimedAbstractPlanUnit
         {
             return pitchShiftInCent;
         }
+        else if (paramId.equals("volume"))
+        {
+            // TODO: implement this
+            return 0;
+        }
         else
         {
             return super.getFloatParameterValue(paramId);
@@ -198,6 +237,10 @@ public class IncrementalTTSUnit extends TimedAbstractPlanUnit
         else if (paramId.equals("pitch"))
         {
             setPitch(value);
+        }
+        else if (paramId.equals("volume"))
+        {
+            // TODO: implement this
         }
         else
         {

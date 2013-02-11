@@ -44,7 +44,6 @@ public class IncrementalTTSPlanner extends AbstractPlanner<IncrementalTTSUnit>
         this.lipSynchers = ImmutableList.copyOf(ls);
         
         BMLInfo.addCustomStringAttribute(SpeechBehaviour.class, "http://www.asap-project.org/bmlis","generatefiller");
-
     }
 
     private IncrementalTTSUnit createTTSUnit(BMLBlockPeg bbPeg, Behaviour b)
