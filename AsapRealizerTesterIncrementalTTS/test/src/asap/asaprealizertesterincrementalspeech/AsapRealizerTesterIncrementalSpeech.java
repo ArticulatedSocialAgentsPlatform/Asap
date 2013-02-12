@@ -21,6 +21,7 @@ import org.junit.After;
 import org.junit.AfterClass;
 import org.junit.Before;
 import org.junit.BeforeClass;
+import org.junit.Ignore;
 
 import asap.bml.ext.bmlt.BMLTInfo;
 import asap.environment.AsapEnvironment;
@@ -156,5 +157,37 @@ public class AsapRealizerTesterIncrementalSpeech extends AbstractASAPRealizerTes
         mainUI.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
         WindowEvent wev = new WindowEvent(mainUI, WindowEvent.WINDOW_CLOSING);
         Toolkit.getDefaultToolkit().getSystemEventQueue().postEvent(wev);
+    }
+    
+    //has interruption
+    @Ignore 
+    @Override
+    public void testPreplan()
+    {
+        
+    }
+    
+    //has interruption
+    @Ignore 
+    @Override
+    public void testInterruptBehaviour2()
+    {
+        
+    }
+    
+    //has interruption
+    @Ignore 
+    @Override
+    public void testInterruptBehaviour()
+    {
+        
+    }
+    
+  //has interruption
+    @Ignore 
+    @Override
+    public void testInterruptBehaviourRestart()
+    {
+        
     }
 }
