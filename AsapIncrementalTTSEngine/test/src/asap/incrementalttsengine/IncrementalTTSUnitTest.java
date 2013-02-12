@@ -1,5 +1,6 @@
 package asap.incrementalttsengine;
-
+import static org.hamcrest.MatcherAssert.assertThat;
+import static org.junit.Assert.assertEquals;
 import static org.mockito.Mockito.mock;
 import hmi.tts.util.NullPhonemeToVisemeMapping;
 import hmi.util.Resources;
@@ -9,6 +10,7 @@ import inpro.audio.DispatchStream;
 import java.io.IOException;
 import java.util.ArrayList;
 
+import org.hamcrest.collection.IsIterableContainingInOrder;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
@@ -22,12 +24,13 @@ import asap.incrementalspeechengine.IncrementalTTSUnit;
 import asap.realizer.feedback.FeedbackManager;
 import asap.realizer.lipsync.IncrementalLipSynchProvider;
 import asap.realizer.pegboard.BMLBlockPeg;
-import asap.realizer.planunit.TimedPlanUnit;
 import asap.realizer.planunit.TimedPlanUnitPlayException;
 import asap.realizer.planunit.TimedPlanUnitState;
 import asap.realizer.scheduler.BMLBlockManager;
+import asap.realizerport.util.ListBMLFeedbackListener;
 import asap.realizertestutil.planunit.AbstractTimedPlanUnitTest;
-
+import static org.hamcrest.number.OrderingComparison.greaterThan;
+import static org.hamcrest.number.OrderingComparison.lessThan;
 /**
  * Testcases for the IncrementalTTSUnit
  * @author hvanwelbergen
@@ -41,7 +44,7 @@ public class IncrementalTTSUnitTest extends AbstractTimedPlanUnitTest
 {
     private SpeechBehaviour mockSpeechBehaviour = mock(SpeechBehaviour.class);
     private DispatchStream dispatcher;
-
+    private static final double TIMING_PRECISION = 0.0001;
     @Before
     public void setup()
     {
@@ -65,30 +68,63 @@ public class IncrementalTTSUnitTest extends AbstractTimedPlanUnitTest
     }
 
     @Test
-    public void testMultipleSentences() throws TimedPlanUnitPlayException, InterruptedException
+    public void testMultipleSentences() throws TimedPlanUnitPlayException
     {
         IncrementalTTSUnit ttsUnit = setupPlanUnit(fbManager, BMLBlockPeg.GLOBALPEG, "beh1", "bml1", 0, "Sentence one. Sentence two.");
         ttsUnit.setState(TimedPlanUnitState.LURKING);
         ttsUnit.start(0);
         ttsUnit.play(0);
-        Thread.sleep(4000);
+        while(dispatcher.isSpeaking());
     }
 
     @Test
-    public void testMultipleSentences2() throws TimedPlanUnitPlayException, InterruptedException
+    public void testStartRelaxEndFeedback() throws TimedPlanUnitPlayException, InterruptedException
     {
-        String text = "Elckerlyc is a BML compliant behavior realizer for generating multimodal verbal and nonverbal behavior for Virtual Humans (VHs). " +
-        		"It is designed specifically for continuous (as opposed to turn-based) interaction with tight temporal coordination between the behavior " +
-        		"of a VH and its interaction partners. Animation in Elckerlyc is generated using a mix between the precise temporal and " +
-        		"spatial control offered by procedural motion and the naturalness of physical simulation.";
-        IncrementalTTSUnit ttsUnit = setupPlanUnit(fbManager, BMLBlockPeg.GLOBALPEG, "beh1", "bml1", 0, text);
+        IncrementalTTSUnit ttsUnit = setupPlanUnit(fbManager, BMLBlockPeg.GLOBALPEG, "beh1", "bml1", 0, "Hello world.");
+        fbManager.addFeedbackListener(new ListBMLFeedbackListener.Builder().feedBackList(fbList).build());
         ttsUnit.setState(TimedPlanUnitState.LURKING);
         ttsUnit.start(0);
         ttsUnit.play(0);
-        while(dispatcher.isSpeaking())
-        {
-            System.out.println(ttsUnit.getEndTime());
-        }
+        ttsUnit.stop(10);
+        assertEquals("start", fbList.get(0).getSyncId());
+        assertEquals("relax", fbList.get(1).getSyncId());
+        assertEquals("end", fbList.get(2).getSyncId());
+    }
+    
+    @Test
+    public void testHasSync() throws TimedPlanUnitPlayException
+    {
+        IncrementalTTSUnit ttsUnit = setupPlanUnit(fbManager, BMLBlockPeg.GLOBALPEG, "beh1", "bml1", 0, "Hello <sync id=\"s1\"/> world.");
+        assertThat(ttsUnit.getAvailableSyncs(),IsIterableContainingInOrder.contains("start","s1","relax","end"));
+    }
+    
+    @Test
+    public void testSyncTiming() throws TimedPlanUnitPlayException
+    {
+        IncrementalTTSUnit ttsUnit = setupPlanUnit(fbManager, BMLBlockPeg.GLOBALPEG, "beh1", "bml1", 0, 
+                "<sync id=\"startS\"/>Hello <sync id=\"s1\"/> world.<sync id=\"endS\"/>");
+        ttsUnit.setState(TimedPlanUnitState.LURKING);
+        ttsUnit.start(0);
+        assertEquals(ttsUnit.getStartTime(), ttsUnit.getTime("startS"),TIMING_PRECISION);
+        assertThat(ttsUnit.getTime("s1"), greaterThan(ttsUnit.getStartTime()));
+        assertThat(ttsUnit.getTime("s1"), lessThan(ttsUnit.getEndTime()));
+        assertEquals(ttsUnit.getEndTime(), ttsUnit.getTime("endS"),TIMING_PRECISION);
+    }
+    
+    @Test
+    public void testSyncFeedback() throws TimedPlanUnitPlayException
+    {
+        IncrementalTTSUnit ttsUnit = setupPlanUnit(fbManager, BMLBlockPeg.GLOBALPEG, "beh1", "bml1", 0, "Hello <sync id=\"s1\"/> world.");
+        fbManager.addFeedbackListener(new ListBMLFeedbackListener.Builder().feedBackList(fbList).build());
+        ttsUnit.setState(TimedPlanUnitState.LURKING);
+        ttsUnit.start(0);
+        ttsUnit.play(0);
+        while(dispatcher.isSpeaking());
+        ttsUnit.stop(10);        
+        assertEquals("start", fbList.get(0).getSyncId());
+        assertEquals("s1", fbList.get(1).getSyncId());
+        assertEquals("relax", fbList.get(2).getSyncId());
+        assertEquals("end", fbList.get(3).getSyncId());
     }
 
     @After

@@ -8,9 +8,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
+import lombok.extern.slf4j.Slf4j;
 import saiba.bml.feedback.BMLSyncPointProgressFeedback;
 import asap.realizer.feedback.FeedbackManager;
 import asap.realizer.feedback.NullFeedbackManager;
@@ -25,6 +23,7 @@ import asap.realizer.planunit.TimedPlanUnitPlayException;
  * through a text output channel. The TimedTextSpeechUnit allows time warping on all its segments.
  * @author Herwin
  */
+@Slf4j
 public class TimedSpeechTextUnit extends TimedAbstractTextUnit
 {
     private final String[] words;
@@ -43,10 +42,8 @@ public class TimedSpeechTextUnit extends TimedAbstractTextUnit
                                                                         // TimePeg
 
     private static final double SPEECH_RATE = 2;
-    private ArrayList<String> progressHandled = new ArrayList<String>();
-    private ArrayList<String> syncs = new ArrayList<String>();
-
-    private Logger logger = LoggerFactory.getLogger(TimedSpeechTextUnit.class.getName());
+    private List<String> progressHandled = new ArrayList<>();
+    private List<String> syncs = new ArrayList<>();
 
     /**
      * @return the syncs
@@ -89,11 +86,11 @@ public class TimedSpeechTextUnit extends TimedAbstractTextUnit
         if (syncs.contains(sync))
         {
             pegs.put(sync, sp);
-            logger.debug("Adding sync {}", sync);
+            log.debug("Adding sync {}", sync);
         }
         else
         {
-            logger.warn("Can't set TimePeg for sync {}, only setting " + syncs + "is allowed", sync);
+            log.warn("Can't set TimePeg for sync {}, only setting " + syncs + "is allowed", sync);
         }
         
         if (sync.equals("start"))
@@ -118,7 +115,7 @@ public class TimedSpeechTextUnit extends TimedAbstractTextUnit
         syncs.add("start");
         syncMap.put("start", 0);
 
-        logger.debug("text: {}", text);
+        log.debug("text: {}", text);
 
         String textNoSync = BMLTextUtil.stripSyncs(text);
         words = textNoSync.split(" ");
@@ -137,7 +134,7 @@ public class TimedSpeechTextUnit extends TimedAbstractTextUnit
         syncs.add("end");
         syncMap.put("end", words.length);
 
-        logger.debug("speechText: {}", speechText);
+        log.debug("speechText: {}", speechText);
     }
 
     @Override
@@ -155,7 +152,7 @@ public class TimedSpeechTextUnit extends TimedAbstractTextUnit
             TimePeg p = pegs.get(sync);
             if (p != null && p.getGlobalValue() != TimePeg.VALUE_UNKNOWN)
             {
-                logger.debug("Checking time of {}: {}", sync, p.getGlobalValue());
+                log.debug("Checking time of {}: {}", sync, p.getGlobalValue());
 
                 if (p.getGlobalValue() < prevTime)
                 {

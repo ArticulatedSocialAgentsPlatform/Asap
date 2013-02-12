@@ -1,16 +1,22 @@
 package asap.incrementalspeechengine;
 
 import hmi.tts.Visime;
+import hmi.tts.util.BMLTextUtil;
 import hmi.tts.util.PhonemeToVisemeMapping;
 import hmi.tts.util.PhonemeUtil;
+import hmi.tts.util.SyncAndOffset;
 import inpro.audio.DispatchStream;
 import inpro.incremental.unit.IU;
 import inpro.incremental.unit.IU.IUUpdateListener;
 import inpro.incremental.unit.SysSegmentIU;
 import inpro.incremental.unit.WordIU;
 
+import java.util.ArrayList;
 import java.util.Collection;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
+import java.util.Map.Entry;
 
 import lombok.extern.slf4j.Slf4j;
 import saiba.bml.core.Behaviour;
@@ -21,6 +27,7 @@ import asap.realizer.pegboard.TimePeg;
 import asap.realizer.planunit.ParameterException;
 import asap.realizer.planunit.TimedAbstractPlanUnit;
 import asap.realizer.planunit.TimedPlanUnitPlayException;
+import asap.realizer.planunit.TimedPlanUnitState;
 
 import com.google.common.collect.ImmutableList;
 
@@ -47,24 +54,35 @@ public class IncrementalTTSUnit extends TimedAbstractPlanUnit
     private final Behaviour behavior;
     private final boolean hasRelax;
     private IU lastWord;
+    private List<String> syncs = new ArrayList<>();
+    private List<String> progressHandled = new ArrayList<>();
+    
+    //nr of the word after the sync => SyncId
+    private final Map<Integer, String> syncMap = new HashMap<Integer,String>(); 
+
+    //syncName => TimePeg
+    private Map<String, TimePeg> pegs = new HashMap<String, TimePeg>();
 
     public IncrementalTTSUnit(FeedbackManager fbm, BMLBlockPeg bmlPeg, String bmlId, String behId, String text, DispatchStream dispatcher,
             Collection<IncrementalLipSynchProvider> lsProviders, PhonemeToVisemeMapping visemeMapping, Behaviour beh)
     {
         super(fbm, bmlPeg, bmlId, behId);
         this.lsProviders = ImmutableList.copyOf(lsProviders);
+        
+        String textNoSync = BMLTextUtil.stripSyncs(text);
+        setupSyncs(textNoSync,text);
+        
         String generateFiller = beh.getStringParameterValue("http://www.asap-project.org/bmlis:generatefiller");
         if (generateFiller != null && generateFiller.trim().equals("true"))
         {
-            text = text + " <hes>";
+            textNoSync = textNoSync + " <hes>";
             hasRelax = true;
         }
         else
         {
             hasRelax = false;
         }
-
-        synthesisIU = createHesitatingSynthesisIU(text);
+        synthesisIU = createHesitatingSynthesisIU(textNoSync);
 
         WordUpdateListener wul = new WordUpdateListener();
         lastWord = null;
@@ -80,9 +98,25 @@ public class IncrementalTTSUnit extends TimedAbstractPlanUnit
         startPeg = new TimePeg(bmlPeg);
         endPeg = new TimePeg(bmlPeg);
         relaxPeg = new TimePeg(bmlPeg);
+        for(String sync:syncs)
+        {
+            pegs.put(sync, new TimePeg(bmlPeg));
+        }
         behavior = beh;
     }
 
+    private void setupSyncs(String textNoSync, String text)
+    {
+        String words[] = textNoSync.split(" ");
+        List<SyncAndOffset>syncAndOffsets = BMLTextUtil.getSyncAndOffsetList(text, words.length);
+
+        for (SyncAndOffset s : syncAndOffsets)
+        {
+            syncs.add(s.getSync());
+            syncMap.put(s.getOffset(), s.getSync());
+        }
+    }
+    
     private HesitatingSynthesisIU createHesitatingSynthesisIU(String text)
     {
         int pointIndex = text.indexOf('.');
@@ -122,6 +156,27 @@ public class IncrementalTTSUnit extends TimedAbstractPlanUnit
             int number = visemeMapping.getVisemeForPhoneme(PhonemeUtil.phonemeStringToInt(phIU.toPayLoad()));
             Visime viseme = new Visime(number, (int) (1000 * (phIU.endTime() - phIU.startTime())), false);
             lsp.setLipSyncUnit(getBMLBlockPeg(), behavior, phIU.startTime() + getStartTime(), viseme, phIU);
+        }
+    }
+    
+    private void updateFeedback()
+    {
+        int i = 0;
+        for (IU word : synthesisIU.groundedIn())
+        {
+            if(word.isOngoing()||word.isCompleted())
+            {
+                if(syncMap.containsKey(i))
+                {
+                    String sync = syncMap.get(i);
+                    if(!progressHandled.contains(sync))
+                    {
+                        progressHandled.add(sync);
+                        feedback(sync, getStartTime()+word.startTime());
+                    }
+                }
+            }
+            i++;
         }
     }
 
@@ -176,6 +231,7 @@ public class IncrementalTTSUnit extends TimedAbstractPlanUnit
                 relaxPeg.setGlobalValue(getEndTime());
             }
             updateLipSync();
+            updateFeedback();
         }
     }
 
@@ -269,8 +325,7 @@ public class IncrementalTTSUnit extends TimedAbstractPlanUnit
     @Override
     public List<String> getAvailableSyncs()
     {
-        // TODO: add marks
-        return ImmutableList.of("start", "relax", "end");
+        return new ImmutableList.Builder<String>().add("start").addAll(syncs).add("relax").add("end").build();        
     }
 
     @Override
@@ -288,9 +343,7 @@ public class IncrementalTTSUnit extends TimedAbstractPlanUnit
         {
             return relaxPeg;
         }
-
-        // TODO pegs for marks
-        return null;
+        return pegs.get(syncId);
     }
 
     @Override
@@ -314,7 +367,7 @@ public class IncrementalTTSUnit extends TimedAbstractPlanUnit
         {
             relaxPeg = peg;
         }
-        // TODO: pegs for marks
+        pegs.put(syncId, peg);
     }
 
     @Override
@@ -323,13 +376,30 @@ public class IncrementalTTSUnit extends TimedAbstractPlanUnit
         return true;
     }
 
+    private void updateSyncTiming()
+    {
+        for(Entry<Integer,String> entry: syncMap.entrySet())
+        {
+            if(entry.getKey()<synthesisIU.getWords().size())
+            {
+                WordIU wordAfter = synthesisIU.getWords().get(entry.getKey());
+                pegs.get(entry.getValue()).setGlobalValue(getStartTime()+wordAfter.startTime());
+            }
+            else
+            {
+                pegs.get(entry.getValue()).setGlobalValue(getEndTime());
+            }
+        }
+    }
+    
     protected void startUnit(double time) throws TimedPlanUnitPlayException
     {
         endPeg.setGlobalValue(time + lastWord.endTime());
         relaxPeg.setGlobalValue(getEndTime());
+        updateSyncTiming();
         updateLipSync();
         sendFeedback("start", time);
-        dispatcher.playStream(synthesisIU.getAudio(), true);
+        dispatcher.playStream(synthesisIU.getAudio(), true);        
         super.startUnit(time);
     }
 
@@ -350,6 +420,14 @@ public class IncrementalTTSUnit extends TimedAbstractPlanUnit
     protected void stopUnit(double time)
     {
         log.debug("incremental speech end {}", time);
+        if(getState()==TimedPlanUnitState.IN_EXEC)
+        {
+           if(time>this.getRelaxTime())
+           {
+               sendFeedback("relax",time);
+           }
+        }
+        //TODO: send feedback for syncs
         sendFeedback("end", time);
     }
 
