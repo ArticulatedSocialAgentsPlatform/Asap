@@ -164,8 +164,6 @@ public abstract class LMP extends TimedAbstractPlanUnit implements TimedAnimatio
     
     protected void resolveTimePegs(double time)
     {
-        
-        
         if(!getTimePeg("start").isAbsoluteTime())
         {
             pegBoard.setPegTime(getBMLId(), getId(), "start", getTimePeg("strokeStart").getGlobalValue() - getPreparationDuration());

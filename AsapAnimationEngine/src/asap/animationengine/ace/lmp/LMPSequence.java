@@ -67,7 +67,7 @@ public class LMPSequence extends LMP
     @Override
     public double getRetractionDuration()
     {
-        return 0;
+        return lmpQueue.get(lmpQueue.size()-1).getRetractionDuration();
     }
 
     @Override
