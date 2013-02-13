@@ -78,7 +78,7 @@ public class LMPWristPos extends LMPPos
             float pos[] = spline.getPosition(t);
             float m[] = Mat4f.getMat4f();
             vjBase.getPathTransformMatrix(aniPlayer.getVCurr(), m);
-            Mat4f.transformPoint(m,pos);
+            Mat4f.transformPoint(m, pos);
             return pos;
         }
         else
@@ -365,7 +365,16 @@ public class LMPWristPos extends LMPPos
 
         if (time < getTime("strokeEnd"))
         {
-            float pos[] = getPosition(time);
+            double t = time;
+            if (t > getTime("strokeStart"))
+            {
+                double strokeDuration = getTime("strokeEnd") - getTime("strokeStart");
+                double relDur = getStrokeDuration() / strokeDuration;
+                double relT = time - getTime("strokeStart");
+                t = getTime("strokeStart") + relT * relDur;
+            }
+
+            float pos[] = getPosition(t);
             if (scope.equals("left_arm"))
             {
                 // ikBody.setSwivelLeftHand(swivel);
@@ -448,12 +457,12 @@ public class LMPWristPos extends LMPPos
         GuidingStroke gstroke = gSeq.getStroke(0);
         return FittsLaw.getHandTrajectoryDuration(Vec3f.distanceBetweenPoints(gstroke.getEndPos(), getGlobalWristPosition()));
     }
-    
+
     public double getRetractionDuration()
     {
         return 0;
     }
-    
+
     public double getStrokeDuration()
     {
         double defaultStrokeDuration = 0;
@@ -464,41 +473,39 @@ public class LMPWristPos extends LMPPos
         return defaultStrokeDuration;
     }
 
-    
-
-//    @Override
-//    public void updateTiming(double time) throws TMUPlayException
-//    {
-//        if (!isLurking()) return;
-//        resolveTimePegs(time);
-//
-//        // TODO: should do something like resolveTimePegs multiple times, updating the preparation
-//        // and retraction durations timing at each run.
-//
-//        // get first timing constraint and guiding stroke
-//        // TPConstraint startTPC = gSeq.getStartTPC();
-//        // GuidingStroke gstroke = gSeq.getStroke(0);
-//
-//        // TODO: implement this(?)
-//        // if (activateFlag)
-//        // {
-//        // gSeq->setStartPos(x);
-//        // gSeq->setStartTPC(t);
-//        // //gstroke->sDt = dt;
-//        //
-//        // // complete, start execution, and set lmp state
-//        // refine();
-//        // updateState(t);
-//        // //cout << "LMP_WristPos::" << getName() << " defined?: " << isDefined(t) << endl;
-//        // }
-//        // else
-//        // // skip a single-segmented, goal-directed movement if -at the time of activation!-
-//        // // the target position is already reached = estimated duration is nearly zero
-//        // if ( t > gSeq->getStartTPC().time && duration < 0.1 && gSeq->size() == 1 ) {
-//        // //cout << getName() << "::switching to finish since no movement required!" << endl;
-//        // setState( LMP_Finish );
-//        // // remove overshooting (if present)
-//        // removeSuccessor( lmpOVS );
-//        // }
-//    }
+    // @Override
+    // public void updateTiming(double time) throws TMUPlayException
+    // {
+    // if (!isLurking()) return;
+    // resolveTimePegs(time);
+    //
+    // // TODO: should do something like resolveTimePegs multiple times, updating the preparation
+    // // and retraction durations timing at each run.
+    //
+    // // get first timing constraint and guiding stroke
+    // // TPConstraint startTPC = gSeq.getStartTPC();
+    // // GuidingStroke gstroke = gSeq.getStroke(0);
+    //
+    // // TODO: implement this(?)
+    // // if (activateFlag)
+    // // {
+    // // gSeq->setStartPos(x);
+    // // gSeq->setStartTPC(t);
+    // // //gstroke->sDt = dt;
+    // //
+    // // // complete, start execution, and set lmp state
+    // // refine();
+    // // updateState(t);
+    // // //cout << "LMP_WristPos::" << getName() << " defined?: " << isDefined(t) << endl;
+    // // }
+    // // else
+    // // // skip a single-segmented, goal-directed movement if -at the time of activation!-
+    // // // the target position is already reached = estimated duration is nearly zero
+    // // if ( t > gSeq->getStartTPC().time && duration < 0.1 && gSeq->size() == 1 ) {
+    // // //cout << getName() << "::switching to finish since no movement required!" << endl;
+    // // setState( LMP_Finish );
+    // // // remove overshooting (if present)
+    // // removeSuccessor( lmpOVS );
+    // // }
+    // }
 }

@@ -141,9 +141,26 @@ public class LMPParallel extends LMP
     public double getStrokeDuration()
     {
         double duration = 0;
+        boolean setByHandMove = false;
+        
         for (TimedAnimationUnit lmp : lmpQueue)
         {
-            if (lmp.getStrokeDuration() > duration)
+            if(lmp instanceof LMPWristPos)
+            {
+                if(setByHandMove)
+                {
+                    if (lmp.getStrokeDuration() > duration)
+                    {
+                        duration = lmp.getStrokeDuration();
+                    }
+                }
+                else
+                {
+                    duration = lmp.getStrokeDuration();
+                }
+                setByHandMove = true;
+            }
+            else if (lmp.getStrokeDuration() > duration && !setByHandMove)
             {
                 duration = lmp.getStrokeDuration();
             }
