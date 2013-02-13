@@ -32,6 +32,8 @@ public abstract class LMP extends TimedAbstractPlanUnit implements TimedAnimatio
         super(fbm, bmlPeg, bmlId, behId, true);
         this.pegBoard = pegBoard;
         createPegWhenMissingOnPegBoard("start");
+        createPegWhenMissingOnPegBoard("strokeStart");
+        createPegWhenMissingOnPegBoard("strokeEnd");
         createPegWhenMissingOnPegBoard("end");
     }
 

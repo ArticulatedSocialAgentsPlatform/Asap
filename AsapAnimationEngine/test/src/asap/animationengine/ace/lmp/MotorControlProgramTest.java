@@ -12,8 +12,6 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
-import lombok.Setter;
-
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -50,75 +48,7 @@ import asap.realizertestutil.util.TimePegUtil;
 public class MotorControlProgramTest extends AbstractTimedPlanUnitTest
 {
     private PegBoard pegBoard = new PegBoard();
-    private PegBoard localPegboard = new PegBoard();
-
-    private static class LMPStub extends LMP
-    {
-        @Setter
-        private double prepDuration;
-
-        public LMPStub(FeedbackManager fbm, BMLBlockPeg bmlPeg, String bmlId, String behId, PegBoard pegBoard)
-        {
-            super(fbm, bmlPeg, bmlId, behId, pegBoard);
-            setTimePeg("strokeStart", new TimePeg(bmlPeg));
-            setTimePeg("strokeEnd", new TimePeg(bmlPeg));            
-            prepDuration = LMP_PREPDUR;
-        }
-
-        @Override
-        public Set<String> getKinematicJoints()
-        {
-            return new HashSet<String>();
-        }
-
-        @Override
-        public Set<String> getPhysicalJoints()
-        {
-            return new HashSet<String>();
-        }
-
-        @Override
-        public double getPreparationDuration()
-        {
-            return prepDuration;
-        }
-
-        @Override
-        public double getRetractionDuration()
-        {
-            return LMP_RETRACTIONDUR;
-        }
-
-        @Override
-        public double getStrokeDuration()
-        {
-            return LMP_STROKEDUR;
-        }
-
-        @Override
-        public boolean hasValidTiming()
-        {
-            return true;
-        }
-
-        @Override
-        protected void setInternalStrokeTiming(double time)
-        {
-
-        }
-
-        @Override
-        protected void playUnit(double time) throws TimedPlanUnitPlayException
-        {
-
-        }
-
-        @Override
-        protected void stopUnit(double time) throws TimedPlanUnitPlayException
-        {
-
-        }
-    }
+    private PegBoard localPegboard = new PegBoard();    
 
     private AnimationPlayer mockAnimationPlayer = mock(AnimationPlayer.class);
 
@@ -128,7 +58,8 @@ public class MotorControlProgramTest extends AbstractTimedPlanUnitTest
     private static final double LMP_RETRACTIONDUR = 0.3;
 
     private BMLBlockPeg bml1Peg = new BMLBlockPeg("bml1", 0);
-    private LMPStub stubTimedAnimationUnit = new LMPStub(fbManager, bml1Peg, "bml1", "beh1_internal", pegBoard);
+    private StubLMP stubTimedAnimationUnit = new StubLMP(fbManager, bml1Peg, "bml1", "beh1_internal", pegBoard, new HashSet<String>()
+            , new HashSet<String>(), LMP_PREPDUR, LMP_RETRACTIONDUR, LMP_STROKEDUR);
 
     @SuppressWarnings("unchecked")
     @Before

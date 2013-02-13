@@ -25,6 +25,8 @@ import java.util.List;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import com.google.common.primitives.Floats;
+
 import asap.picture.PicturePlanner;
 import asap.picture.display.PictureDisplay;
 import asap.realizer.feedback.FeedbackManager;
@@ -99,9 +101,10 @@ public class AddImagePU implements PictureUnit
         }
         else
         {
-            if (StringUtil.isNumeric(value))
+            Float f = Floats.tryParse(value);
+            if (f!=null)
             {
-                setFloatParameterValue(name, Float.parseFloat(value));
+                setFloatParameterValue(name, f);
             }
             else
             {
