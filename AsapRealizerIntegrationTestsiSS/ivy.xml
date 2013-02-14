@@ -46,7 +46,7 @@
       <dependency org="Asap"   name="AsapRealizerIntegrationTests"     transitive="false" rev="latest.${resolve.status}"   />
      
 
-
+       <dependency org="inpro"   name="inpro_iss"     rev="latest.${resolve.status}"   />
       <dependency org="logback" name="logback-classic"     rev="latest.release"  />   
       <dependency org="logback" name="logback-core"        rev="latest.release"  />   
       

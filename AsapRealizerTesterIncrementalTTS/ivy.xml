@@ -81,5 +81,6 @@
       <dependency org="reflections"   name="reflections"         rev="latest.release"  />
       <dependency org="Asap"   name="MARYTTSIncremental"     rev="latest.${resolve.status}"   />
       <dependency org="Asap"   name="AsapIncrementalTTSResources"     rev="latest.${resolve.status}"   />
+      <dependency org="inpro"   name="inpro_iss"     rev="latest.${resolve.status}"   />
    </dependencies>
 </ivy-module>
