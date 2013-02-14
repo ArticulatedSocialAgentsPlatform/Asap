@@ -15,6 +15,7 @@ import inpro.audio.DispatchStream;
 import java.io.IOException;
 import java.util.ArrayList;
 
+import org.junit.After;
 import org.junit.AfterClass;
 import org.junit.Before;
 import org.junit.BeforeClass;
@@ -64,6 +65,7 @@ public class ScheduleriSSIntegrationTest extends SchedulerIntegrationTestCases
     private BMLBlockManager bbm = new BMLBlockManager();
     private FeedbackManager bfm = new FeedbackManagerImpl(bbm, "character1");
     private static final SoundManager soundManager = new LWJGLJoalSoundManager();    
+    private static DispatchStream dispatcher = SimpleMonitor.setupDispatcher(new Resources("").getURL("sphinx-config.xml"));
     
     @BeforeClass
     public static void oneTimeSetUp()
@@ -75,17 +77,17 @@ public class ScheduleriSSIntegrationTest extends SchedulerIntegrationTestCases
     }
 
     @AfterClass
-    public static void oneTimeCleanup()
+    public static void oneTimeCleanup() throws IOException
     {
         Odejava.close();
         soundManager.shutdown();
+        dispatcher.close();
     }
+    
     
     @Before
     public void before() throws IOException
     {
-        //Engine speechEngine = sv.createEngine(bfm, bbm);
-        DispatchStream dispatcher = SimpleMonitor.setupDispatcher(new Resources("").getURL("sphinx-config.xml"));
         PlanManager<IncrementalTTSUnit> planManager = new PlanManager<IncrementalTTSUnit>();
         IncrementalTTSPlanner planner = new IncrementalTTSPlanner(bfm, planManager, dispatcher,
                 new NullPhonemeToVisemeMapping(), new ArrayList<IncrementalLipSynchProvider>());
