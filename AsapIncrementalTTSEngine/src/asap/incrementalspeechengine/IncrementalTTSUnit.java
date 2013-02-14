@@ -131,9 +131,31 @@ public class IncrementalTTSUnit extends TimedAbstractPlanUnit
         return super.getRelativeTime(syncId);
     }
 
+    private int getSeperatorIndexIfFoundAndSmaller(String text, int startIndex, char seperator, int currentValue)
+    {
+        int index = text.indexOf(seperator, startIndex);
+        if (index != -1 && index < currentValue)
+        {
+            return index;
+        }
+        return currentValue;
+    }
+
+    private int getNextSentenceSeparatorIndex(String text, int startIndex)
+    {
+        int currentIndex = getSeperatorIndexIfFoundAndSmaller(text, startIndex, '.', Integer.MAX_VALUE);
+        currentIndex = getSeperatorIndexIfFoundAndSmaller(text, startIndex, '!', currentIndex);
+        currentIndex = getSeperatorIndexIfFoundAndSmaller(text, startIndex, '?', currentIndex);
+        if (currentIndex == Integer.MAX_VALUE)
+        {
+            return -1;
+        }
+        return currentIndex;
+    }
+
     private HesitatingSynthesisIU createHesitatingSynthesisIU(String text)
     {
-        int pointIndex = text.indexOf('.');
+        int pointIndex = getNextSentenceSeparatorIndex(text,0);
         if (pointIndex == -1)
         {
             return new HesitatingSynthesisIU(text);
@@ -158,7 +180,7 @@ public class IncrementalTTSUnit extends TimedAbstractPlanUnit
                 iu.appendContinuation(iuCont.getWords());
             }
             prevIndex = pointIndex + 1;
-            pointIndex = text.indexOf('.', prevIndex);
+            pointIndex = getNextSentenceSeparatorIndex(text, prevIndex);
         }
         return iu;
     }
