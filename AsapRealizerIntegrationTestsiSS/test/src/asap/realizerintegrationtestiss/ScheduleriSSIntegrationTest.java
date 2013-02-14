@@ -15,7 +15,6 @@ import inpro.audio.DispatchStream;
 import java.io.IOException;
 import java.util.ArrayList;
 
-import org.junit.After;
 import org.junit.AfterClass;
 import org.junit.Before;
 import org.junit.BeforeClass;
@@ -64,9 +63,9 @@ public class ScheduleriSSIntegrationTest extends SchedulerIntegrationTestCases
 {
     private BMLBlockManager bbm = new BMLBlockManager();
     private FeedbackManager bfm = new FeedbackManagerImpl(bbm, "character1");
-    private static final SoundManager soundManager = new LWJGLJoalSoundManager();    
+    private static final SoundManager soundManager = new LWJGLJoalSoundManager();
     private static DispatchStream dispatcher = SimpleMonitor.setupDispatcher(new Resources("").getURL("sphinx-config.xml"));
-    
+
     @BeforeClass
     public static void oneTimeSetUp()
     {
@@ -83,26 +82,22 @@ public class ScheduleriSSIntegrationTest extends SchedulerIntegrationTestCases
         soundManager.shutdown();
         dispatcher.close();
     }
-    
-    
+
     @Before
     public void before() throws IOException
     {
         PlanManager<IncrementalTTSUnit> planManager = new PlanManager<IncrementalTTSUnit>();
-        IncrementalTTSPlanner planner = new IncrementalTTSPlanner(bfm, planManager, dispatcher,
-                new NullPhonemeToVisemeMapping(), new ArrayList<IncrementalLipSynchProvider>());
-        Engine speechEngine = new DefaultEngine<IncrementalTTSUnit>(planner, new DefaultPlayer(new SingleThreadedPlanPlayer<IncrementalTTSUnit>(
-                planManager)), planManager);
-        
-        
-        
+        IncrementalTTSPlanner planner = new IncrementalTTSPlanner(bfm, planManager, dispatcher, new NullPhonemeToVisemeMapping(),
+                new ArrayList<IncrementalLipSynchProvider>());
+        Engine speechEngine = new DefaultEngine<IncrementalTTSUnit>(planner, new DefaultPlayer(
+                new SingleThreadedPlanPlayer<IncrementalTTSUnit>(planManager)), planManager);
+
         VJoint human = HanimBody.getLOA1HanimBody();
 
         ArrayList<MixedSystem> m = new ArrayList<MixedSystem>();
         float g[] = { 0, 0, 0 };
         OdeHumanoid p = new OdeHumanoid("phuman", null, null);
         m.add(new MixedSystem(g, p));
-        
 
         Resources gres = new Resources("");
         GestureBinding gestureBinding = new GestureBinding(gres, bfm);
@@ -118,10 +113,10 @@ public class ScheduleriSSIntegrationTest extends SchedulerIntegrationTestCases
                 new DefaultTimedPlanUnitPlayer(), pegBoard);
         AnimationPlayer aPlayer = new AnimationPlayer(human, human, human, m, 0.001f, animationPlanPlayer);
         pose.setAnimationPlayer(aPlayer);
-        
+
         Hns hns = new Hns();
         hns.readXML(gres.getReader("Humanoids/shared/hns/hns.xml"));
-        HnsHandshape HnsHandshape = new HnsHandshape(hns,"Humanoids/shared/handshapes");
+        HnsHandshape HnsHandshape = new HnsHandshape(hns, "Humanoids/shared/handshapes");
         AnimationPlanner ap = new AnimationPlanner(bfm, aPlayer, gestureBinding, hns, HnsHandshape, animationPlanManager, pegBoard);
         Engine animationEngine = new DefaultEngine<TimedAnimationUnit>(ap, aPlayer, animationPlanManager);
 
@@ -146,8 +141,8 @@ public class ScheduleriSSIntegrationTest extends SchedulerIntegrationTestCases
         BMLParser parser = new BMLParser(new ImmutableSet.Builder<Class<? extends BMLBehaviorAttributeExtension>>().add(
                 BMLTBMLBehaviorAttributes.class).build());
 
-        realizer = new AsapRealizer("avatar1", parser, bfm, clock, bbm, pegBoard, animationEngine, speechEngine,
-                auEngine, waitEngine, pvpcEngine);
+        realizer = new AsapRealizer("avatar1", parser, bfm, clock, bbm, pegBoard, animationEngine, speechEngine, auEngine, waitEngine,
+                pvpcEngine);
 
         setupRealizer();
     }

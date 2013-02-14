@@ -143,7 +143,7 @@ public class SchedulerIntegrationTestCases
         assertEquals(1, nod1Start.getGlobalValue(), PEGBOARD_PRECISION);
     }
 
-    @Test(timeout = SCHEDULE_TIMEOUT)
+    @Test//(timeout = SCHEDULE_TIMEOUT)
     public void timepegTestSpeechSyncTimed()
     {
         readXML("testspeech_synctimed.xml");
@@ -156,7 +156,7 @@ public class SchedulerIntegrationTestCases
         pegBoard.getTimePeg("bml1", "speech1", "start").setGlobalValue(15);
         invBeh = speechEngine.getInvalidBehaviours();
         assertTrue(invBeh.size() == 0);
-        assertTrue(pegBoard.getPegTime("bml1", "speech1", "start") == 15);
+        assertEquals(15, pegBoard.getPegTime("bml1", "speech1", "start"), PEGBOARD_PRECISION);
     }
 
     @Ignore

@@ -64,13 +64,11 @@ public class IncrementalTTSPlanner extends AbstractPlanner<IncrementalTTSUnit>
         }
 
         ArrayList<SyncAndTimePeg> satp = new ArrayList<SyncAndTimePeg>();
-        satp.add(new SyncAndTimePeg(b.getBmlId(), b.id, "start", bs.getTimePeg("start")));
-        satp.add(new SyncAndTimePeg(b.getBmlId(), b.id, "relax", bs.getTimePeg("relax")));
-        satp.add(new SyncAndTimePeg(b.getBmlId(), b.id, "end", bs.getTimePeg("end")));
-
-        // link bookmarks
-        // add bookmark pegs to satp
         
+        for (String sync:bs.getAvailableSyncs())
+        {
+            satp.add(new SyncAndTimePeg(b.getBmlId(), b.id, sync, bs.getTimePeg(sync)));
+        }
         planManager.addPlanUnit(bs);
 
         return satp;
