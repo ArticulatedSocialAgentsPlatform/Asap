@@ -21,6 +21,7 @@ import org.powermock.modules.junit4.PowerMockRunner;
 
 import saiba.bml.core.SpeechBehaviour;
 import asap.incrementalspeechengine.IncrementalTTSUnit;
+import asap.realizer.SyncPointNotFoundException;
 import asap.realizer.feedback.FeedbackManager;
 import asap.realizer.lipsync.IncrementalLipSynchProvider;
 import asap.realizer.pegboard.BMLBlockPeg;
@@ -36,7 +37,6 @@ import static org.hamcrest.number.OrderingComparison.lessThan;
  * @author hvanwelbergen
  * 
  */
-
 @RunWith(PowerMockRunner.class)
 @PrepareForTest({ BMLBlockManager.class })
 @PowerMockIgnore({ "javax.management.*", "ch.qos.logback.*", "org.slf4j.*" })
@@ -127,6 +127,19 @@ public class IncrementalTTSUnitTest extends AbstractTimedPlanUnitTest
         assertEquals("end", fbList.get(3).getSyncId());
     }
 
+    @Test
+    public void testSyncRelativeTiming() throws TimedPlanUnitPlayException, SyncPointNotFoundException
+    {
+        IncrementalTTSUnit ttsUnit = setupPlanUnit(fbManager, BMLBlockPeg.GLOBALPEG, "beh1", "bml1", 0, 
+                "<sync id=\"startS\"/>Hello <sync id=\"s1\"/> world.<sync id=\"endS\"/>");
+        assertEquals(0, ttsUnit.getRelativeTime("startS"), TIMING_PRECISION);
+        assertEquals(0, ttsUnit.getRelativeTime("start"), TIMING_PRECISION);
+        assertThat(ttsUnit.getRelativeTime("s1"), greaterThan(0d));
+        assertThat(ttsUnit.getRelativeTime("s1"), lessThan(1d));
+        assertEquals(1, ttsUnit.getRelativeTime("endS"), TIMING_PRECISION);
+        assertEquals(1, ttsUnit.getRelativeTime("end"), TIMING_PRECISION);
+    }
+    
     @After
     public void tearDown() throws IOException
     {

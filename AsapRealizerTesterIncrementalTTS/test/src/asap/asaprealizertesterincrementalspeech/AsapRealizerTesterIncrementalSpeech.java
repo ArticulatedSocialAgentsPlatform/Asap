@@ -188,13 +188,4 @@ public class AsapRealizerTesterIncrementalSpeech extends AbstractASAPRealizerTes
     {
         
     }
-    
-    
-    //why is this broken??
-    @Ignore 
-    @Override
-    public void testChunkConflictResolution()
-    {
-        
-    }
 }

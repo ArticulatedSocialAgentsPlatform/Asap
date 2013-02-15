@@ -130,6 +130,10 @@ public class IncrementalTTSUnit extends TimedAbstractPlanUnit
         if (syncMap.inverse().containsKey(syncId))
         {
             int i = syncMap.inverse().get(syncId);
+            if(i>=synthesisIU.groundedIn().size())
+            {
+                return 1;
+            }
             return synthesisIU.groundedIn().get(i).startTime() / getPreferedDuration();
         }
         return super.getRelativeTime(syncId);
