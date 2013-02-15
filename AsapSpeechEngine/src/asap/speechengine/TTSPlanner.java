@@ -101,7 +101,11 @@ public class TTSPlanner extends AbstractPlanner<TimedTTSUnit>
         {
             SpeechBehaviour bSpeech = (SpeechBehaviour) b;
 
-            String voice = bSpeech.getStringParameterValue(BMLTBehaviour.BMLTNAMESPACE + ":" + "voice");
+            String voice = null;
+            if(bSpeech.specifiesParameter(BMLTBehaviour.BMLTNAMESPACE + ":" + "voice"))
+            {
+                voice = bSpeech.getStringParameterValue(BMLTBehaviour.BMLTNAMESPACE + ":" + "voice");
+            }
             
             // TODO: ultimately, this may be the characterId from the behavior -- but remember that characterId may be empty
             String voiceId = "voice1";

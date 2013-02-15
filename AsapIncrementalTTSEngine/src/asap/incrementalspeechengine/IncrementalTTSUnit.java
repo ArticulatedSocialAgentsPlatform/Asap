@@ -75,7 +75,11 @@ public class IncrementalTTSUnit extends TimedAbstractPlanUnit
         String textNoSync = BMLTextUtil.stripSyncs(text);
         setupSyncs(textNoSync, text);
 
-        String generateFiller = beh.getStringParameterValue("http://www.asap-project.org/bmlis:generatefiller");
+        String generateFiller = null;
+        if (beh.specifiesParameter("http://www.asap-project.org/bmlis:generatefiller"))
+        {
+            generateFiller = beh.getStringParameterValue("http://www.asap-project.org/bmlis:generatefiller");
+        }
         if (generateFiller != null && generateFiller.trim().equals("true"))
         {
             textNoSync = textNoSync + " <hes>";
