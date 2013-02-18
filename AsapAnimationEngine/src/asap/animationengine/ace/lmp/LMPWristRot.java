@@ -129,7 +129,7 @@ public class LMPWristRot extends LMP
                 log.info("-> corrected palm normal: {}", Vec3f.toString(p));
             }
 
-            if (getKinematicJoints().iterator().next().equals(Hanim.l_wrist))
+            if (joint.equals(Hanim.l_wrist))
             {
                 Vec3f.scale(-1, p);
             }
@@ -158,28 +158,33 @@ public class LMPWristRot extends LMP
             float q[] = Quat4f.getQuat4f();
             Quat4f.setFromVectors(q, dOld, d);
             Mat3f.setFromQuatScale(m1, q, 1);
-            Mat3f.mul(m1, m, m1);
+            Mat3f.mul(m1, m);
             return m1;
         }
 
         else if (!Vec3f.epsilonEquals(oc.getP(), Vec3f.getZero(), PRECISION))
         // -- only palm orientation given
         {
+            System.out.println("Palm only!");
+            
             // get transformation pOld -> p
             float p[] = Vec3f.getVec3f(oc.getP());
-            // if (getKinematicJoints().iterator().next().equals(Hanim.r_wrist))
-            if (getKinematicJoints().iterator().next().equals(Hanim.l_wrist))
+            if (joint.equals(Hanim.l_wrist))
             {
                 Vec3f.scale(-1, p);
             }
             Vec3f.normalize(p);
             Vec3f.normalize(pOld);
+            
+            System.out.println("p: "+ Vec3f.toString(p));
+            System.out.println("pOld: "+ Vec3f.toString(pOld));
+            
             float m1[] = Mat3f.getMat3f();
             // M.makeRotate(pOld,p);
             float q[] = Quat4f.getQuat4f();
             Quat4f.setFromVectors(q, pOld, p);
             Mat3f.setFromQuatScale(m1, q, 1);
-            Mat3f.mul(m1, m, m1);
+            Mat3f.mul(m1, m);
             return m1;
         }
         return Mat3f.getIdentity();
@@ -449,15 +454,30 @@ public class LMPWristRot extends LMP
     protected void playUnit(double time) throws TimedPlanUnitPlayException
     {
         float q[] = getOrient(time);
-        VJoint vjRoot = aniPlayer.getVNext().getPartBySid(Hanim.HumanoidRoot);
-        VJoint vjWrist = aniPlayer.getVNext().getPartBySid(joint);
-        vjWrist.setPathRotation(q, vjRoot);
+        VJoint vjRoot = aniPlayer.getVCurr().getPartBySid(Hanim.HumanoidRoot);
+        VJoint vjWristCurr = aniPlayer.getVCurr().getPartBySid(joint);
+        
+        float qw[]=Quat4f.getQuat4f();                
+        float qp[]=Quat4f.getQuat4f();
+        float q2[]=Quat4f.getQuat4f();
+        Quat4f.set(qw, q);
+        VJoint par = vjWristCurr.getParent();
+        par.getPathRotation(vjRoot, qp);
+        Quat4f.inverse(qp);
+        Quat4f.mul(q2, qp, qw);
+        /*
+        System.out.println("qp: "+Quat4f.toString(qp));
+        System.out.println("qw: "+Quat4f.toString(qw));
+        */
+        VJoint vjWrist = aniPlayer.getVNext().getPartBySid(joint);        
+        vjWrist.setRotation(q2);        
     }
 
     // Prepares a sequence of quaternions for interpolating
     // the assigned set of extended finger orientations.
     private void refine(float[] cQuat, float[] c)
     {
+        System.out.println("refine");
         float[] startRot = getNextWristRot(c, ocVec.get(0));
         float[] startQuat = Quat4f.getQuat4f();
         Quat4f.setFromMat3f(startQuat, startRot);
@@ -475,6 +495,8 @@ public class LMPWristRot extends LMP
 
         for (int i = 1; i < ocVec.size(); i++)
         {
+            System.out.println("setup "+i);
+            
             // append shortest transformation that rotates dir onto ocVec.dir
             rot = getNextWristRot(rot, ocVec.get(i));
             float[] q = Quat4f.getQuat4f();
