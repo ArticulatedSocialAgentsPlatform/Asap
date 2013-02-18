@@ -81,8 +81,10 @@ public class BMLBandTSchedulingHandler implements SchedulingHandler
 
         predictedStart = Math.max(scheduler.predictEndTime(appendAfter), scheduler.predictSubsidingTime(chunkAfter));
         scheduler.addBMLBlock(bbm);
-
-        scheduler.planningFinished(bb.id, predictedStart, scheduler.predictEndTime(bb.id));
+        bmlBlockPeg.setValue(predictedStart);
+        
+        scheduler.planningFinished(bb.id, predictedStart, scheduler.predictEndTime(bb.id));        
+        
         if (bmltAttr.isPrePlanned())
         {
             log.debug("Preplanning {}.", bb.id);

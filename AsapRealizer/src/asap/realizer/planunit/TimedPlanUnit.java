@@ -1,9 +1,8 @@
 package asap.realizer.planunit;
 
-import saiba.bml.feedback.BMLSyncPointProgressFeedback;
-
 import java.util.List;
 
+import saiba.bml.feedback.BMLSyncPointProgressFeedback;
 import asap.realizer.SyncPointNotFoundException;
 import asap.realizer.pegboard.BMLBlockPeg;
 import asap.realizer.pegboard.TimePeg;
@@ -11,23 +10,23 @@ import asap.realizer.pegboard.TimePeg;
 /**
  * Units of the Unimodal Plan normally used in an Engine.
  * The timing of PlanUnits is linked to TimePegs on the PegBoard.
- * PlanUnits have a state (e.g. pending, lurking, executing, subsiding) 
+ * PlanUnits have a state (e.g. pending, lurking, executing, subsiding)
  * and can be executed at a global time moment getStartTime() &lt t &lt getEndime()
- * They send BMLSyncPointProgressFeedback feedback on their progress to listeners registered to such feedback.  
+ * They send BMLSyncPointProgressFeedback feedback on their progress to listeners registered to such feedback.
  * @author hvanwelbergen
  */
 public interface TimedPlanUnit
 {
     /**
      * Priority of the TimedPlanUnit. It is up to the Player to make execution decisions based upon this value.
-     * For example, a Player may decide to drop the TimedPlanUnit with the lowest priority if two TimedPlanUnit conflict. 
-     * The priority should be interpreted as the current priority of the TimedPlanUnit and 
+     * For example, a Player may decide to drop the TimedPlanUnit with the lowest priority if two TimedPlanUnit conflict.
+     * The priority should be interpreted as the current priority of the TimedPlanUnit and
      * might change over time (e.g. the priority of TimedPlanUnits may drop in their subsiding phase).
      */
     int getPriority();
-    
+
     void setPriority(int priority);
-    
+
     /**
      * Get the BML block to which this PlanUnit belongs
      */
@@ -85,11 +84,16 @@ public interface TimedPlanUnit
      * @param time
      */
     void interrupt(double time) throws TimedPlanUnitPlayException;
-    
+
     /**
      * Plays the unit at global time time. Is allowed to be a blocking call.
      */
     void play(double time) throws TimedPlanUnitPlayException;
+
+    /**
+     * Triggers bottom-up updates to the timing of the planunit
+     */
+    void updateTiming(double time) throws TimedPlanUnitPlayException;
 
     /**
      * Get the PlanUnit replacement group (=typically the BML behavior) Used to
@@ -109,7 +113,7 @@ public interface TimedPlanUnit
      * known (yet)
      */
     double getEndTime();
-    
+
     /**
      * Get the timing of the relax phase TimePeg.VALUEUNKNOWN if not
      * known (yet)
@@ -156,7 +160,7 @@ public interface TimedPlanUnit
      * State is done?
      */
     boolean isDone();
-    
+
     /**
      * State is pending?
      */
@@ -184,12 +188,12 @@ public interface TimedPlanUnit
      * In PlanUnitState.SUBSIDING
      */
     boolean isSubsiding();
-    
+
     /**
      * In PlanUnitState.IN_PREP
      */
     boolean isInPrep();
-    
+
     /**
      * Checks if the timing of this plan unit is 'valid' (e.g. stuff like start
      * is earlier than end, but also planunit specific stuff like
@@ -208,16 +212,15 @@ public interface TimedPlanUnit
      * Sets a parameter value
      */
     void setFloatParameterValue(String paramId, float value) throws ParameterException;
-    
+
     /**
-     * Gets a float parameter value  
+     * Gets a float parameter value
      */
     float getFloatParameterValue(String paramId) throws ParameterException;
-    
+
     /**
-     * Gets a float parameter value  
+     * Gets a float parameter value
      */
     String getParameterValue(String paramId) throws ParameterException;
 
-    
 }

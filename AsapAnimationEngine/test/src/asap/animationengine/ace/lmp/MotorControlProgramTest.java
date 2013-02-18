@@ -24,7 +24,6 @@ import saiba.bml.parser.Constraint;
 import asap.animationengine.AnimationPlayer;
 import asap.animationengine.ace.OrientConstraint;
 import asap.bml.ext.murml.MURMLGestureBehaviour;
-import asap.motionunit.TMUPlayException;
 import asap.realizer.BehaviourPlanningException;
 import asap.realizer.feedback.FeedbackManager;
 import asap.realizer.pegboard.BMLBlockPeg;
@@ -100,7 +99,7 @@ public class MotorControlProgramTest extends AbstractTimedPlanUnitTest
     }
 
     @Test
-    public void testUpdateTimingShorterPreparation() throws TMUPlayException, BehaviourPlanningException
+    public void testUpdateTimingShorterPreparation() throws BehaviourPlanningException, TimedPlanUnitPlayException
     {
         MotorControlProgram mcp = setupPlanUnit(fbManager, bml1Peg, "bml1", "beh1");
         mcp.setState(TimedPlanUnitState.LURKING);

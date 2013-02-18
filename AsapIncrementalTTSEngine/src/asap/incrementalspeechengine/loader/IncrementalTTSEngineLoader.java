@@ -22,6 +22,7 @@ import java.util.HashMap;
 
 import lombok.Getter;
 import lombok.extern.slf4j.Slf4j;
+import asap.incrementalspeechengine.HesitatingSynthesisIUManager;
 import asap.incrementalspeechengine.IncrementalTTSPlanner;
 import asap.incrementalspeechengine.IncrementalTTSUnit;
 import asap.realizer.DefaultEngine;
@@ -130,8 +131,8 @@ public class IncrementalTTSEngineLoader implements EngineLoader
 
         dispatcher = SimpleMonitor.setupDispatcher(new Resources(di.getResource()).getURL(di.getFilename()));
         PlanManager<IncrementalTTSUnit> planManager = new PlanManager<IncrementalTTSUnit>();
-        IncrementalTTSPlanner planner = new IncrementalTTSPlanner(realizerEmbodiment.getFeedbackManager(), planManager, dispatcher,
-                visemeMapping, lipSynchers);
+        IncrementalTTSPlanner planner = new IncrementalTTSPlanner(realizerEmbodiment.getFeedbackManager(), planManager,
+                new HesitatingSynthesisIUManager(dispatcher), visemeMapping, lipSynchers);
         engine = new DefaultEngine<IncrementalTTSUnit>(planner, new DefaultPlayer(new SingleThreadedPlanPlayer<IncrementalTTSUnit>(
                 planManager)), planManager);
         engine.setId(id);

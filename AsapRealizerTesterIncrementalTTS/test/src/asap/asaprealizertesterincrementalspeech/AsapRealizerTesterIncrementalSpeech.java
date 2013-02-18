@@ -22,6 +22,9 @@ import org.junit.AfterClass;
 import org.junit.Before;
 import org.junit.BeforeClass;
 import org.junit.Ignore;
+import org.junit.Test;
+
+import bml.bmlinfo.DefaultSyncPoints;
 
 import asap.bml.ext.bmlt.BMLTInfo;
 import asap.environment.AsapEnvironment;
@@ -91,8 +94,8 @@ public class AsapRealizerTesterIncrementalSpeech extends AbstractASAPRealizerTes
             // vHuman = staticEnvironment.loadVirtualHuman("blueguy", "Humanoids/blueguy",
             // "blueguy_asaploader_mary_hudson.xml", "blueguy - test avatar");
             // vHuman = staticEnvironment.loadVirtualHuman("Humanoids/armandia", "vhloadermaryttsasaprealizertester.xml", "TestAvatar");
-            vHuman = staticEnvironment.loadVirtualHuman("armandia", "AsapRealizerTester", "armandia_asaploader_mary_hudson_incremental.xml",
-                    "TestAvatar");
+            vHuman = staticEnvironment.loadVirtualHuman("armandia", "AsapRealizerTester",
+                    "armandia_asaploader_mary_hudson_incremental.xml", "TestAvatar");
         }
         catch (IOException ex)
         {
@@ -118,14 +121,14 @@ public class AsapRealizerTesterIncrementalSpeech extends AbstractASAPRealizerTes
         realizerHandler.performBML("<bml xmlns=\"http://www.bml-initiative.org/bml/bml-1.0\" "
                 + "id=\"replacesetup\" composition=\"REPLACE\"/>");
         realizerHandler.waitForBMLEndFeedback("replacesetup");
-        realizerHandler.clearFeedbackLists();        
+        realizerHandler.clearFeedbackLists();
     }
 
     @After
     public void teardownEnvironment() throws InterruptedException
     {
-        //realizerHandler.performBML("<bml xmlns=\"http://www.bml-initiative.org/bml/bml-1.0\" " + "id=\"cleanup\" composition=\"REPLACE\"/>");
-        //realizerHandler.waitForBMLEndFeedback("cleanup");
+        // realizerHandler.performBML("<bml xmlns=\"http://www.bml-initiative.org/bml/bml-1.0\" " + "id=\"cleanup\" composition=\"REPLACE\"/>");
+        // realizerHandler.waitForBMLEndFeedback("cleanup");
     }
 
     @AfterClass
@@ -156,36 +159,67 @@ public class AsapRealizerTesterIncrementalSpeech extends AbstractASAPRealizerTes
         WindowEvent wev = new WindowEvent(mainUI, WindowEvent.WINDOW_CLOSING);
         Toolkit.getDefaultToolkit().getSystemEventQueue().postEvent(wev);
     }
-    
-    //has interruption
-    @Ignore 
+
+    // has interruption
+    @Ignore
     @Override
     public void testPreplan()
     {
-        
+
     }
-    
-    //has interruption
-    @Ignore 
+
+    // has interruption
+    @Ignore
     @Override
     public void testInterruptBehaviour2()
     {
-        
+
     }
-    
-    //has interruption
-    @Ignore 
+
+    // has interruption
+    @Ignore
     @Override
     public void testInterruptBehaviour()
     {
-        
+
     }
-    
-    //has interruption
-    @Ignore 
+
+    // has interruption
+    @Ignore
     @Override
     public void testInterruptBehaviourRestart()
     {
+
+    }
+
+    @Test
+    public void testHesitatedSpeech() throws IOException
+    {
         
+    }
+    
+    @Test
+    public void testChunkSpeech() throws IOException
+    {
+
+        String bmlString1 = readTestFile("asap/chunkspeech/firstchunk.xml");
+        String bmlString2 = readTestFile("asap/chunkspeech/secondchunk.xml");
+
+        realizerHandler.performBML(bmlString1);
+        realizerHandler.performBML(bmlString2);
+
+        realizerHandler.waitForBMLEndFeedback("bml1");
+        realizerHandler.waitForBMLEndFeedback("bml2");
+        realizerHandler.assertNoExceptions();
+        realizerHandler.assertNoWarnings();
+        realizerHandler.assertBlockStartAndStopFeedbacks("bml1", "bml2");
+        realizerHandler.assertNoDuplicateFeedbacks();
+        
+        /*
+        realizerHandler.assertSyncsInOrder("bml1", "g1", DefaultSyncPoints.getDefaultSyncPoints("gesture"));
+        realizerHandler.assertSyncsInOrder("bml2", "g1", DefaultSyncPoints.getDefaultSyncPoints("gesture"));
+        realizerHandler.assertLinkedSyncs("bml1", "g1", "relax", "bml2", "g1", "start");
+        */
+
     }
 }

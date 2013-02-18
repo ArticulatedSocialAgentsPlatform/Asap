@@ -23,6 +23,7 @@ import org.junit.Test;
 
 import saiba.bml.core.SpeechBehaviour;
 import saiba.bml.parser.Constraint;
+import asap.incrementalspeechengine.HesitatingSynthesisIUManager;
 import asap.incrementalspeechengine.IncrementalTTSPlanner;
 import asap.incrementalspeechengine.IncrementalTTSUnit;
 import asap.realizer.BehaviourPlanningException;
@@ -39,7 +40,7 @@ import asap.realizertestutil.PlannerTests;
 /**
  * unit tests for the IncrementalTTSPlanner
  * @author hvanwelbergen
- *
+ * 
  */
 public class IncrementalTTSPlannerTest
 {
@@ -48,19 +49,21 @@ public class IncrementalTTSPlannerTest
     private static final String BMLID = "bml1";
     private IncrementalTTSPlanner incTTSPlanner;
     private static DispatchStream dispatcher = SimpleMonitor.setupDispatcher(new Resources("").getURL("sphinx-config.xml"));
-    private BMLBlockPeg bbPeg = new BMLBlockPeg(BMLID,0.3);
+    private BMLBlockPeg bbPeg = new BMLBlockPeg(BMLID, 0.3);
     private static final double TIME_PRECISION = 0.0001;
-    
+
     @AfterClass
     public static void oneTimeCleanup() throws IOException
     {
         dispatcher.close();
     }
-    
+
     private SpeechBehaviour createSpeechBehaviour() throws IOException
     {
-        return new SpeechBehaviour(BMLID, new XMLTokenizer(
-                "<speech xmlns=\"http://www.bml-initiative.org/bml/bml-1.0\" id=\"speech1\"><text>Hello <sync id=\"s1\"/> world.</text></speech>"));
+        return new SpeechBehaviour(
+                BMLID,
+                new XMLTokenizer(
+                        "<speech xmlns=\"http://www.bml-initiative.org/bml/bml-1.0\" id=\"speech1\"><text>Hello <sync id=\"s1\"/> world.</text></speech>"));
     }
 
     @Before
@@ -68,8 +71,8 @@ public class IncrementalTTSPlannerTest
     {
         System.setProperty("mary.base", System.getProperty("shared.project.root")
                 + "/asapresource/MARYTTSIncremental/resource/MARYTTSIncremental");
-        incTTSPlanner = new IncrementalTTSPlanner(mockBmlFeedbackManager, new PlanManager<IncrementalTTSUnit>(), dispatcher, new NullPhonemeToVisemeMapping(),
-                new HashSet<IncrementalLipSynchProvider>());
+        incTTSPlanner = new IncrementalTTSPlanner(mockBmlFeedbackManager, new PlanManager<IncrementalTTSUnit>(),
+                new HesitatingSynthesisIUManager(dispatcher), new NullPhonemeToVisemeMapping(), new HashSet<IncrementalLipSynchProvider>());
         plannerTests = new PlannerTests<IncrementalTTSUnit>(incTTSPlanner, bbPeg);
     }
 
@@ -84,13 +87,13 @@ public class IncrementalTTSPlannerTest
     {
         plannerTests.testResolveNonExistingSync(createSpeechBehaviour());
     }
-    
+
     @Test
     public void testResolveStartOffset() throws IOException, BehaviourPlanningException
     {
         plannerTests.testResolveStartOffset(createSpeechBehaviour());
     }
-    
+
     @Test
     public void testResolveUnknownStartAndEnd() throws BehaviourPlanningException, IOException
     {
@@ -106,15 +109,15 @@ public class IncrementalTTSPlannerTest
 
         IncrementalTTSUnit pu = incTTSPlanner.resolveSynchs(bbPeg, beh, sacs);
         assertEquals(0.3, startPeg.getGlobalValue(), TIME_PRECISION);
-        
+
         incTTSPlanner.addBehaviour(bbPeg, beh, sacs, pu);
-        assertEquals(0.3, pu.getStartTime(),TIME_PRECISION);
-        assertThat(pu.getEndTime(),greaterThan(pu.getStartTime()));
-        assertThat(s1Peg.getGlobalValue(),greaterThan(pu.getStartTime()));
-        assertThat(s1Peg.getGlobalValue(),lessThan(pu.getEndTime()));        
-        assertThat(endPeg, not(startPeg.getLink()));        
+        assertEquals(0.3, pu.getStartTime(), TIME_PRECISION);
+        assertThat(pu.getEndTime(), greaterThan(pu.getStartTime()));
+        assertThat(s1Peg.getGlobalValue(), greaterThan(pu.getStartTime()));
+        assertThat(s1Peg.getGlobalValue(), lessThan(pu.getEndTime()));
+        assertThat(endPeg, not(startPeg.getLink()));
     }
-    
+
     @Test
     public void testSatp() throws IOException, BehaviourPlanningException
     {

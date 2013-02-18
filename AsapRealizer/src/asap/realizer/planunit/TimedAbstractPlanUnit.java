@@ -118,7 +118,13 @@ public abstract class TimedAbstractPlanUnit implements TimedPlanUnit
     {
         return null;
     }
-
+    
+    @Override
+    public void updateTiming(double time) throws TimedPlanUnitPlayException
+    {
+        
+    }
+    
     @Override
     public final void play(double time) throws TimedPlanUnitPlayException
     {

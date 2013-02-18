@@ -10,7 +10,6 @@ import saiba.bml.core.Behaviour;
 import saiba.bml.core.GestureBehaviour;
 import asap.animationengine.AnimationPlayer;
 import asap.animationengine.motionunit.TimedAnimationUnit;
-import asap.motionunit.TMUPlayException;
 import asap.realizer.BehaviourPlanningException;
 import asap.realizer.feedback.FeedbackManager;
 import asap.realizer.feedback.NullFeedbackManager;
@@ -339,7 +338,7 @@ public class MotorControlProgram extends TimedAbstractPlanUnit implements TimedA
     }
 
     @Override
-    public void updateTiming(double time) throws TMUPlayException
+    public void updateTiming(double time) throws TimedPlanUnitPlayException
     {
         lmp.updateTiming(time);
     }

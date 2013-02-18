@@ -26,7 +26,6 @@ import java.awt.event.ActionListener;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
-import java.io.FileReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.net.JarURLConnection;
@@ -61,9 +60,11 @@ import javax.swing.undo.UndoManager;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import com.google.common.base.Charsets;
-
 import asap.realizerport.RealizerPort;
+
+import com.google.common.base.Charsets;
+import com.google.common.base.Splitter;
+import com.google.common.collect.Iterables;
 
 /**
  * A graphical UI to a RealizerPort, allowing for a few simple interactions with it such as
@@ -306,7 +307,12 @@ public class RealizerPortUI extends JPanel
     {
         realizerBridge.performBML("<bml xmlns=\"http://www.bml-initiative.org/bml/bml-1.0\" "
                 + "id=\"clear\" composition=\"REPLACE\"></bml>");
-        realizerBridge.performBML(bmlInput.getText());
+        
+        String bmls[] = Iterables.toArray(Splitter.on("</bml>").trimResults().omitEmptyStrings().split(bmlInput.getText()), String.class);
+        for(String bml:bmls)
+        {
+            realizerBridge.performBML(bml+"</bml>");
+        }
     }
 
     public void loadDemoScript(String scriptName)

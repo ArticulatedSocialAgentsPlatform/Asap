@@ -5,6 +5,8 @@ import java.util.Collection;
 import java.util.List;
 import java.util.Set;
 
+import lombok.extern.slf4j.Slf4j;
+
 import saiba.bml.feedback.BMLWarningFeedback;
 
 import net.jcip.annotations.ThreadSafe;
@@ -22,6 +24,7 @@ import asap.realizerport.BMLFeedbackListener;
  * @param <T> 
  */
 @ThreadSafe
+@Slf4j
 public final class SingleThreadedPlanPlayer<T extends TimedPlanUnit> implements PlanPlayer
 {
     private final PlanManager<T> planManager;
@@ -141,6 +144,18 @@ public final class SingleThreadedPlanPlayer<T extends TimedPlanUnit> implements 
 
         for (T pu : planManager.getPlanUnits())
         {
+            if (t < pu.getStartTime())
+            {
+                try
+                {
+                    pu.updateTiming(t);
+                }
+                catch (TimedPlanUnitPlayException e)
+                {
+                    log.warn("Exception when updating timing: ",e);
+                }                
+            }
+            
             if (t >= pu.getStartTime() && (pu.isPlaying() || pu.isLurking()))
             {
                 if (updatePlayingPU(pu, t))

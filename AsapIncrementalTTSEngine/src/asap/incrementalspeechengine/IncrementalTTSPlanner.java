@@ -1,7 +1,6 @@
 package asap.incrementalspeechengine;
 
 import hmi.tts.util.PhonemeToVisemeMapping;
-import inpro.audio.DispatchStream;
 
 import java.util.ArrayList;
 import java.util.Collection;
@@ -30,16 +29,17 @@ import com.google.common.collect.ImmutableList;
  */
 public class IncrementalTTSPlanner extends AbstractPlanner<IncrementalTTSUnit>
 {
-    private DispatchStream dispatcher;
     private UniModalResolver resolver = new LinearStretchResolver(false);
     private final PhonemeToVisemeMapping visemeMapping;
     private final Collection<IncrementalLipSynchProvider> lipSynchers;
-
-    public IncrementalTTSPlanner(FeedbackManager fbm, PlanManager<IncrementalTTSUnit> planManager, DispatchStream dispatcher,
+    private final HesitatingSynthesisIUManager iuManager;
+    
+    public IncrementalTTSPlanner(FeedbackManager fbm, PlanManager<IncrementalTTSUnit> planManager, HesitatingSynthesisIUManager iuManager,
             PhonemeToVisemeMapping vm, Collection<IncrementalLipSynchProvider> ls)
     {
         super(fbm, planManager);
-        this.dispatcher = dispatcher;
+         
+        this.iuManager = iuManager;
         this.visemeMapping = vm;
         this.lipSynchers = ImmutableList.copyOf(ls);
         
@@ -49,7 +49,7 @@ public class IncrementalTTSPlanner extends AbstractPlanner<IncrementalTTSUnit>
     private IncrementalTTSUnit createTTSUnit(BMLBlockPeg bbPeg, Behaviour b)
     {
         SpeechBehaviour bSpeech = (SpeechBehaviour) b;
-        IncrementalTTSUnit ttsUnit = new IncrementalTTSUnit(fbManager, bbPeg, b.getBmlId(), b.id, bSpeech.getContent(), dispatcher,
+        IncrementalTTSUnit ttsUnit = new IncrementalTTSUnit(fbManager, bbPeg, b.getBmlId(), b.id, bSpeech.getContent(), iuManager,
                 lipSynchers, visemeMapping, b);
         return ttsUnit;
     }

@@ -6,7 +6,6 @@ import java.util.Set;
 
 import lombok.extern.slf4j.Slf4j;
 import asap.animationengine.motionunit.TimedAnimationUnit;
-import asap.motionunit.TMUPlayException;
 import asap.realizer.feedback.FeedbackManager;
 import asap.realizer.pegboard.AfterPeg;
 import asap.realizer.pegboard.BMLBlockPeg;
@@ -91,7 +90,7 @@ public class LMPParallel extends LMP
     
 
     @Override
-    public void updateTiming(double time) throws TMUPlayException
+    public void updateTiming(double time) throws TimedPlanUnitPlayException
     {
         if (lmpQueue.size() == 0)
         {

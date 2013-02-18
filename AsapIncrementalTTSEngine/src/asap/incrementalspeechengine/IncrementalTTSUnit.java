@@ -5,7 +5,6 @@ import hmi.tts.util.BMLTextUtil;
 import hmi.tts.util.PhonemeToVisemeMapping;
 import hmi.tts.util.PhonemeUtil;
 import hmi.tts.util.SyncAndOffset;
-import inpro.audio.DispatchStream;
 import inpro.incremental.unit.IU;
 import inpro.incremental.unit.IU.IUUpdateListener;
 import inpro.incremental.unit.SysSegmentIU;
@@ -45,7 +44,6 @@ import done.inpro.system.carchase.HesitatingSynthesisIU;
 public class IncrementalTTSUnit extends TimedAbstractPlanUnit
 {
     private HesitatingSynthesisIU synthesisIU;
-    private DispatchStream dispatcher;
     private TimePeg startPeg;
     private TimePeg relaxPeg;
     private TimePeg endPeg;
@@ -59,14 +57,17 @@ public class IncrementalTTSUnit extends TimedAbstractPlanUnit
     private IU lastWord;
     private List<String> syncs = new ArrayList<>();
     private List<String> progressHandled = new ArrayList<>();
-
+    private final HesitatingSynthesisIUManager iuManager;
+    private volatile boolean isScheduled = false;
+    private static final double SETUP_OFFSET = 0.5d;
+    
     // nr of the word after the sync => SyncId
     private final BiMap<Integer, String> syncMap = HashBiMap.create();
 
     // syncName => TimePeg
     private Map<String, TimePeg> pegs = new HashMap<String, TimePeg>();
 
-    public IncrementalTTSUnit(FeedbackManager fbm, BMLBlockPeg bmlPeg, String bmlId, String behId, String text, DispatchStream dispatcher,
+    public IncrementalTTSUnit(FeedbackManager fbm, BMLBlockPeg bmlPeg, String bmlId, String behId, String text, HesitatingSynthesisIUManager iuManager,
             Collection<IncrementalLipSynchProvider> lsProviders, PhonemeToVisemeMapping visemeMapping, Behaviour beh)
     {
         super(fbm, bmlPeg, bmlId, behId);
@@ -80,9 +81,18 @@ public class IncrementalTTSUnit extends TimedAbstractPlanUnit
         {
             generateFiller = beh.getStringParameterValue("http://www.asap-project.org/bmlis:generatefiller");
         }
+        
+        textNoSync = textNoSync.trim();
         if (generateFiller != null && generateFiller.trim().equals("true"))
         {
-            textNoSync = textNoSync + " <hes>";
+            if(textNoSync.endsWith("."))
+            {
+                textNoSync = textNoSync.substring(0,textNoSync.length()-1)+" <hes>";
+            }
+            else
+            {
+                textNoSync = textNoSync + " <hes>";
+            }
             hasRelax = true;
         }
         else
@@ -101,7 +111,7 @@ public class IncrementalTTSUnit extends TimedAbstractPlanUnit
         }
 
         this.visemeMapping = visemeMapping;
-        this.dispatcher = dispatcher;
+        this.iuManager = iuManager;
         startPeg = new TimePeg(bmlPeg);
         endPeg = new TimePeg(bmlPeg);
         relaxPeg = new TimePeg(bmlPeg);
@@ -441,7 +451,17 @@ public class IncrementalTTSUnit extends TimedAbstractPlanUnit
             }
         }
     }
-
+    
+    
+    @Override
+    public void updateTiming(double time)
+    {
+        if(!isScheduled && time>getStartTime()-0.5d)
+        {
+            isScheduled = iuManager.appendIU(synthesisIU, this);
+        }
+    }
+    
     protected void startUnit(double time) throws TimedPlanUnitPlayException
     {
         endPeg.setGlobalValue(time + lastWord.endTime());
@@ -449,7 +469,8 @@ public class IncrementalTTSUnit extends TimedAbstractPlanUnit
         updateSyncTiming();
         updateLipSync();
         sendFeedback("start", time);
-        dispatcher.playStream(synthesisIU.getAudio(), true);
+        iuManager.playIU(synthesisIU, this);
+        isScheduled = true; 
         super.startUnit(time);
     }
 

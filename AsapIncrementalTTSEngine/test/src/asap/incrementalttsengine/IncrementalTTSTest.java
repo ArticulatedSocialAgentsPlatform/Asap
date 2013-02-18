@@ -1,13 +1,10 @@
 package asap.incrementalttsengine;
 
-import java.util.Arrays;
-
 import hmi.util.Resources;
 import inpro.apps.SimpleMonitor;
 import inpro.audio.DispatchStream;
 import inpro.incremental.unit.IU;
 import inpro.incremental.unit.IU.IUUpdateListener;
-import inpro.incremental.unit.IU.Progress;
 import inpro.incremental.unit.SysSegmentIU;
 import inpro.synthesis.MaryAdapter;
 

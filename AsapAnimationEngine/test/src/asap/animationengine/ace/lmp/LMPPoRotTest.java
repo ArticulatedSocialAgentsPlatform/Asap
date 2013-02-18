@@ -26,6 +26,7 @@ import asap.realizer.feedback.FeedbackManager;
 import asap.realizer.pegboard.BMLBlockPeg;
 import asap.realizer.pegboard.PegBoard;
 import asap.realizer.pegboard.TimePeg;
+import asap.realizer.planunit.TimedPlanUnitPlayException;
 import asap.realizer.planunit.TimedPlanUnitState;
 import asap.realizer.scheduler.BMLBlockManager;
 import asap.realizertestutil.planunit.AbstractTimedPlanUnitTest;
@@ -85,7 +86,7 @@ public class LMPPoRotTest extends AbstractTimedPlanUnitTest
     }
     
     @Test
-    public void testUpdateTimingNoConstraints() throws TMUPlayException
+    public void testUpdateTimingNoConstraints() throws TimedPlanUnitPlayException 
     {
         TimedAnimationUnit tau = setupPlanUnit(fbManager, BMLBlockPeg.GLOBALPEG, "beh1", "bml1");
         initializeForUpdateTiming(tau);
@@ -100,7 +101,7 @@ public class LMPPoRotTest extends AbstractTimedPlanUnitTest
     }
     
     @Test
-    public void testUpdateTimingStrokeStartConstraint() throws TMUPlayException
+    public void testUpdateTimingStrokeStartConstraint() throws TimedPlanUnitPlayException
     {
         TimedAnimationUnit tau = setupPlanUnit(fbManager, BMLBlockPeg.GLOBALPEG, "beh1", "bml1");
         initializeForUpdateTiming(tau);
@@ -117,7 +118,7 @@ public class LMPPoRotTest extends AbstractTimedPlanUnitTest
     }
     
     @Test
-    public void testUpdateTimingStrokeStartAndEndConstraint() throws TMUPlayException
+    public void testUpdateTimingStrokeStartAndEndConstraint() throws TimedPlanUnitPlayException
     {
         TimedAnimationUnit tau = setupPlanUnit(fbManager, BMLBlockPeg.GLOBALPEG, "beh1","bml1");
         initializeForUpdateTiming(tau);
@@ -133,7 +134,7 @@ public class LMPPoRotTest extends AbstractTimedPlanUnitTest
     }
     
     @Test
-    public void testUpdateTimingEndConstraint() throws TMUPlayException
+    public void testUpdateTimingEndConstraint() throws TimedPlanUnitPlayException
     {
         TimedAnimationUnit tau = setupPlanUnit(fbManager, BMLBlockPeg.GLOBALPEG, "beh1", "bml1");
         initializeForUpdateTiming(tau);

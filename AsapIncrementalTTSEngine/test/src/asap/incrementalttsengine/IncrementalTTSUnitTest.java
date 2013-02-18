@@ -20,6 +20,7 @@ import org.powermock.core.classloader.annotations.PrepareForTest;
 import org.powermock.modules.junit4.PowerMockRunner;
 
 import saiba.bml.core.SpeechBehaviour;
+import asap.incrementalspeechengine.HesitatingSynthesisIUManager;
 import asap.incrementalspeechengine.IncrementalTTSUnit;
 import asap.realizer.SyncPointNotFoundException;
 import asap.realizer.feedback.FeedbackManager;
@@ -55,7 +56,7 @@ public class IncrementalTTSUnitTest extends AbstractTimedPlanUnitTest
 
     private IncrementalTTSUnit setupPlanUnit(FeedbackManager bfm, BMLBlockPeg bbPeg, String id, String bmlId, double startTime, String text)
     {
-        IncrementalTTSUnit ttsUnit = new IncrementalTTSUnit(bfm, bbPeg, bmlId, id, text, dispatcher,
+        IncrementalTTSUnit ttsUnit = new IncrementalTTSUnit(bfm, bbPeg, bmlId, id, text, new HesitatingSynthesisIUManager(dispatcher),
                 new ArrayList<IncrementalLipSynchProvider>(), new NullPhonemeToVisemeMapping(), mockSpeechBehaviour);
         ttsUnit.getTimePeg("start").setGlobalValue(startTime);
         return ttsUnit;

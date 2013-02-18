@@ -254,6 +254,18 @@ public class MultiThreadedPlanPlayer<T extends TimedPlanUnit>  implements PlanPl
                             planUnitsRemove.add(su);
                         }
                     }
+                    else if(time<su.getStartTime() )
+                    {
+                        try
+                        {
+                            su.updateTiming(time);
+                        }
+                        catch (TimedPlanUnitPlayException e)
+                        {
+                            logger.debug("TimedPlanUnitPlayException in updateTiming!");
+                            suException(su, e.getLocalizedMessage(), time);
+                        }
+                    }
                 }
                 planManager.removePlanUnits(planUnitsRemove, time);
                 planManager.removeFinishedPlanUnits();                

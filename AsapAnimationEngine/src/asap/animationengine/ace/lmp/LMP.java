@@ -5,7 +5,6 @@ import java.util.List;
 
 import saiba.bml.core.Behaviour;
 import asap.animationengine.motionunit.TimedAnimationUnit;
-import asap.motionunit.TMUPlayException;
 import asap.realizer.BehaviourPlanningException;
 import asap.realizer.feedback.FeedbackManager;
 import asap.realizer.pegboard.BMLBlockPeg;
@@ -13,6 +12,7 @@ import asap.realizer.pegboard.PegBoard;
 import asap.realizer.pegboard.PegKey;
 import asap.realizer.pegboard.TimePeg;
 import asap.realizer.planunit.TimedAbstractPlanUnit;
+import asap.realizer.planunit.TimedPlanUnitPlayException;
 import asap.realizer.scheduler.TimePegAndConstraint;
 
 import com.google.common.collect.ImmutableMap;
@@ -69,7 +69,7 @@ public abstract class LMP extends TimedAbstractPlanUnit implements TimedAnimatio
     }
     
     @Override
-    public void updateTiming(double time) throws TMUPlayException
+    public void updateTiming(double time) throws TimedPlanUnitPlayException
     {
         if (!isLurking()) return;
         resolveTimePegs(time);

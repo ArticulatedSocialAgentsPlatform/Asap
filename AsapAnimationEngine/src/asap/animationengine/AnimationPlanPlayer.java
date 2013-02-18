@@ -9,7 +9,6 @@ import java.util.Set;
 import lombok.extern.slf4j.Slf4j;
 import asap.animationengine.motionunit.TimedAnimationUnit;
 import asap.animationengine.restpose.RestPose;
-import asap.motionunit.TMUPlayException;
 import asap.realizer.feedback.FeedbackManager;
 import asap.realizer.feedback.NullFeedbackManager;
 import asap.realizer.pegboard.PegBoard;
@@ -18,6 +17,7 @@ import asap.realizer.planunit.PlanPlayer;
 import asap.realizer.planunit.PlanUnitPriorityComparator;
 import asap.realizer.planunit.SingleThreadedPlanPlayer;
 import asap.realizer.planunit.TimedPlanUnit;
+import asap.realizer.planunit.TimedPlanUnitPlayException;
 import asap.realizer.planunit.TimedPlanUnitPlayer;
 import asap.realizer.planunit.TimedPlanUnitState;
 import asap.realizerport.BMLFeedbackListener;
@@ -79,7 +79,7 @@ public class AnimationPlanPlayer implements PlanPlayer
                     {
                         tmu.updateTiming(t);
                     }
-                    catch (TMUPlayException e)
+                    catch (TimedPlanUnitPlayException e)
                     {
                         tuUpdateFailed.add(tmu);
                         log.warn("updateTiming failure, TimedMotionUnit dropped", e);
@@ -234,7 +234,7 @@ public class AnimationPlanPlayer implements PlanPlayer
             {
                 tmu.updateTiming(0);
             }
-            catch (TMUPlayException e)
+            catch (TimedPlanUnitPlayException e)
             {
                 log.warn("Failure in updating the timing of TimedAnimationUnit {}, TimedAnimationUnit removed", tmu);
                 failedBehaviors.add(tmu);
