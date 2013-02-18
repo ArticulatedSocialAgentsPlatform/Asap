@@ -80,6 +80,34 @@ public class LMPSequenceTest
     }
     
     @Test
+    public void testResolveThree()
+    {
+        LMP tmu1 = createStub("bml1", "beh1-1", 1, 2, 3);
+        LMP tmu2 = createStub("bml1", "beh1-2", 2, 1, 2);
+        LMP tmu3 = createStub("bml1", "beh1-3", 2, 7, 2);
+        LMPSequence seq = new LMPSequence(fbm, BMLBlockPeg.GLOBALPEG, "bml1", "beh1", pegBoard,
+                new ImmutableList.Builder<TimedAnimationUnit>().add(tmu1, tmu2, tmu3).build());
+        seq.setTimePeg("strokeStart", TimePegUtil.createTimePeg(3));
+        seq.setTimePeg("strokeEnd", TimePegUtil.createTimePeg(3+seq.getStrokeDuration()));
+        seq.resolveTimePegs(0);
+        
+        assertEquals(2, seq.getStartTime(), TIME_PRECISION);
+        assertEquals(3, seq.getTime("strokeStart"), TIME_PRECISION);
+        assertEquals(14, seq.getTime("strokeEnd"), TIME_PRECISION);
+        assertEquals(21, seq.getTime("end"), TIME_PRECISION);
+        
+        assertEquals(2, tmu1.getTime("start"), TIME_PRECISION);
+        assertEquals(3, tmu1.getTime("strokeStart"), TIME_PRECISION);
+        assertEquals(6, tmu1.getTime("strokeEnd"), TIME_PRECISION);
+        assertEquals(6, tmu2.getTime("start"), TIME_PRECISION);
+        assertEquals(8, tmu2.getTime("strokeStart"), TIME_PRECISION);
+        assertEquals(10, tmu2.getTime("strokeEnd"), TIME_PRECISION);
+        assertEquals(10, tmu3.getTime("start"), TIME_PRECISION);
+        assertEquals(12, tmu3.getTime("strokeStart"), TIME_PRECISION);
+        assertEquals(14, tmu3.getTime("strokeEnd"), TIME_PRECISION);
+    }
+    
+    @Test
     public void testDurationsTwo()
     {
         LMP tmu1 = createStub("bml1", "beh1-1", 1, 2, 3);

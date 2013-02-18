@@ -23,11 +23,14 @@ import org.hamcrest.collection.IsIterableContainingInAnyOrder;
 import org.junit.Before;
 import org.junit.Test;
 
+import com.google.common.collect.ObjectArrays;
+
 import asap.animationengine.AnimationPlayer;
 import asap.animationengine.ace.GuidingSequence;
 import asap.animationengine.ace.lmp.LMPHandMove;
 import asap.animationengine.ace.lmp.LMPParallel;
 import asap.animationengine.ace.lmp.LMPPoRot;
+import asap.animationengine.ace.lmp.LMPSequence;
 import asap.animationengine.ace.lmp.LMPWristPos;
 import asap.animationengine.ace.lmp.LMPWristRot;
 import asap.animationengine.ace.lmp.MotorControlProgram;
@@ -294,7 +297,6 @@ public class MURMLMUBuilderTest
         assertThat(tau, instanceOf(MotorControlProgram.class));
         assertThat(tau.getKinematicJoints(), IsIterableContainingInAnyOrder.containsInAnyOrder(Hanim.l_shoulder, Hanim.l_elbow));
 
-        @SuppressWarnings("unchecked")
         TimedAnimationUnit lmp = field("lmp").ofType(TimedAnimationUnit.class).in(tau).get();
         assertThat(lmp, instanceOf(LMPWristPos.class));
         LMPWristPos pos = (LMPWristPos) lmp;
@@ -330,7 +332,6 @@ public class MURMLMUBuilderTest
         assertThat(tau, instanceOf(MotorControlProgram.class));
         assertThat(tau.getKinematicJoints(), IsIterableContainingInAnyOrder.containsInAnyOrder(Hanim.l_shoulder, Hanim.l_elbow));
 
-        @SuppressWarnings("unchecked")
         TimedAnimationUnit lmp = field("lmp").ofType(TimedAnimationUnit.class).in(tau).get();
         assertThat(lmp, instanceOf(LMPWristPos.class));
         LMPWristPos pos = (LMPWristPos) lmp;
@@ -363,10 +364,9 @@ public class MURMLMUBuilderTest
         assertThat(tau, instanceOf(MotorControlProgram.class));
         assertThat(tau.getKinematicJoints(), IsIterableContainingInAnyOrder.containsInAnyOrder(Hanim.r_wrist));
 
-        @SuppressWarnings("unchecked")
         TimedAnimationUnit lmp = field("lmp").ofType(TimedAnimationUnit.class).in(tau).get();
         assertThat(lmp, instanceOf(LMPWristRot.class));
-    } 
+    }
 
     @Test
     public void setupTMURelativeDynamicPalmOrientation() throws TMUSetupException
@@ -388,7 +388,6 @@ public class MURMLMUBuilderTest
         assertThat(tau, instanceOf(MotorControlProgram.class));
         assertThat(tau.getKinematicJoints(), IsIterableContainingInAnyOrder.containsInAnyOrder(Hanim.r_wrist));
 
-        @SuppressWarnings("unchecked")
         TimedAnimationUnit lmp = field("lmp").ofType(TimedAnimationUnit.class).in(tau).get();
         assertThat(lmp, instanceOf(LMPPoRot.class));
     }
@@ -408,7 +407,6 @@ public class MURMLMUBuilderTest
         assertThat(tau, instanceOf(MotorControlProgram.class));
         assertThat(tau.getKinematicJoints(), IsIterableContainingInAnyOrder.containsInAnyOrder(Hanim.r_wrist));
 
-        @SuppressWarnings("unchecked")
         TimedAnimationUnit lmp = field("lmp").ofType(TimedAnimationUnit.class).in(tau).get();
         assertThat(lmp, instanceOf(LMPWristRot.class));
     }
@@ -428,7 +426,6 @@ public class MURMLMUBuilderTest
         assertThat(tau, instanceOf(MotorControlProgram.class));
         assertThat(tau.getKinematicJoints(), IsIterableContainingInAnyOrder.containsInAnyOrder(Hanim.r_wrist));
 
-        @SuppressWarnings("unchecked")
         TimedAnimationUnit lmp = field("lmp").ofType(TimedAnimationUnit.class).in(tau).get();
         assertThat(lmp, instanceOf(LMPPoRot.class));
     }
@@ -451,7 +448,6 @@ public class MURMLMUBuilderTest
         assertThat(tau, instanceOf(MotorControlProgram.class));
         assertThat(tau.getKinematicJoints(), IsIterableContainingInAnyOrder.containsInAnyOrder(Hanim.r_wrist));
 
-        @SuppressWarnings("unchecked")
         TimedAnimationUnit lmp = field("lmp").ofType(TimedAnimationUnit.class).in(tau).get();
         assertThat(lmp, instanceOf(LMPParallel.class));
     }
@@ -480,7 +476,6 @@ public class MURMLMUBuilderTest
         assertThat(tau, instanceOf(MotorControlProgram.class));
         assertThat(tau.getKinematicJoints(), IsIterableContainingInAnyOrder.containsInAnyOrder(Hanim.r_elbow, Hanim.r_shoulder));
 
-        @SuppressWarnings("unchecked")
         TimedAnimationUnit lmp = field("lmp").ofType(TimedAnimationUnit.class).in(tau).get();
         assertThat(lmp, instanceOf(LMPWristPos.class));
     }
@@ -498,7 +493,7 @@ public class MURMLMUBuilderTest
                 BMLBlockPeg.GLOBALPEG, "bml1", "gesture1", pb, mockAnimationPlayer);
 
         assertThat(tau, instanceOf(MotorControlProgram.class));
-        @SuppressWarnings("unchecked")
+
         TimedAnimationUnit lmp = field("lmp").ofType(TimedAnimationUnit.class).in(tau).get();
         assertThat(lmp, instanceOf(LMPHandMove.class));
         assertThat(tau.getKinematicJoints(), IsIterableContainingInAnyOrder.containsInAnyOrder(Hanim.LEFTHAND_JOINTS));
@@ -507,7 +502,7 @@ public class MURMLMUBuilderTest
     @Test
     public void setupParallelHandshapeAndPalmOrientation() throws TMUSetupException
     {
-      //@formatter:off
+        //@formatter:off
         String murmlString = 
         "<murml-description xmlns=\"http://www.techfak.uni-bielefeld.de/ags/soa/murml\" scope=\"hand\">"+
         "<parallel>"+
@@ -516,7 +511,35 @@ public class MURMLMUBuilderTest
         "</parallel>"+
         "</murml-description>";
         //@formatter:on
+
         TimedAnimationUnit tau = murmlMuBuilder.setupTMU(murmlString, new FeedbackManagerImpl(new BMLBlockManager(), ""),
-                BMLBlockPeg.GLOBALPEG, "bml1", "gesture1", pb, mockAnimationPlayer);        
+                BMLBlockPeg.GLOBALPEG, "bml1", "gesture1", pb, mockAnimationPlayer);
+
+        TimedAnimationUnit lmp = field("lmp").ofType(TimedAnimationUnit.class).in(tau).get();
+        assertThat(lmp, instanceOf(LMPParallel.class));
+        assertThat(tau.getKinematicJoints(),
+                IsIterableContainingInAnyOrder.containsInAnyOrder(ObjectArrays.concat(Hanim.l_wrist, Hanim.LEFTHAND_JOINTS)));
+    }
+
+    @Test
+    public void setupSequentialHandshapeAndPalmOrientation() throws TMUSetupException
+    {
+        //@formatter:off
+        String murmlString = 
+        "<murml-description xmlns=\"http://www.techfak.uni-bielefeld.de/ags/soa/murml\" scope=\"hand\">"+
+        "<sequence>"+
+          "<static scope=\"left_arm\" slot=\"HandShape\" value=\"ASL5\"/>"+
+          "<static scope=\"left_arm\" slot=\"PalmOrientation\" value=\"DirR\"/>"+
+        "</sequence>"+
+        "</murml-description>";
+        //@formatter:on
+
+        TimedAnimationUnit tau = murmlMuBuilder.setupTMU(murmlString, new FeedbackManagerImpl(new BMLBlockManager(), ""),
+                BMLBlockPeg.GLOBALPEG, "bml1", "gesture1", pb, mockAnimationPlayer);
+        assertThat(tau.getKinematicJoints(),
+                IsIterableContainingInAnyOrder.containsInAnyOrder(ObjectArrays.concat(Hanim.l_wrist, Hanim.LEFTHAND_JOINTS)));
+
+        TimedAnimationUnit lmp = field("lmp").ofType(TimedAnimationUnit.class).in(tau).get();
+        assertThat(lmp, instanceOf(LMPSequence.class));
     }
 }

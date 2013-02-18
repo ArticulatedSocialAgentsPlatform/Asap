@@ -27,6 +27,7 @@ import asap.animationengine.ace.lmp.LMP;
 import asap.animationengine.ace.lmp.LMPHandMove;
 import asap.animationengine.ace.lmp.LMPParallel;
 import asap.animationengine.ace.lmp.LMPPoRot;
+import asap.animationengine.ace.lmp.LMPSequence;
 import asap.animationengine.ace.lmp.LMPWristPos;
 import asap.animationengine.ace.lmp.LMPWristRot;
 import asap.animationengine.ace.lmp.MotorControlProgram;
@@ -46,9 +47,11 @@ import asap.murml.Frame;
 import asap.murml.JointValue;
 import asap.murml.Keyframing;
 import asap.murml.MURMLDescription;
+import asap.murml.MovementConstraint;
 import asap.murml.Parallel;
 import asap.murml.Phase;
 import asap.murml.Posture;
+import asap.murml.Sequence;
 import asap.murml.Slot;
 import asap.murml.Static;
 import asap.realizer.feedback.FeedbackManager;
@@ -1111,6 +1114,11 @@ public final class MURMLMUBuilder
                     }
                 }
             }
+            
+            for (Sequence seq: par.getSequences())
+            {
+                //TODO
+            }
 
             for (Entry<String, List<OrientConstraint>> entry : ocMap.entrySet())
             {
@@ -1120,7 +1128,52 @@ public final class MURMLMUBuilder
         }
         else if (murmlDescription.getSequence() != null)
         {
-
+            List<TimedAnimationUnit> lmps = new ArrayList<>();
+            Sequence seq = murmlDescription.getSequence();
+            
+            for (MovementConstraint mc: seq.getSequence())
+            {
+                if(mc instanceof Static)
+                {
+                    Static staticElem = (Static)mc;
+                    List<OrientConstraint> ocVec = new ArrayList<OrientConstraint>();
+                    LMP lmpx = parseStaticElement(bbm, bmlBlockPeg, bmlId, id, aniPlayer, localPegBoard, staticElem, ocVec);
+                    if (lmpx != null)
+                    {
+                        lmps.add(lmpx);
+                    }
+                    else
+                    {
+                        lmps.add(createAndAppendLMPWrist(staticElem.getScope(), bbm, bmlBlockPeg, bmlId, id, localPegBoard, aniPlayer, ocVec));
+                    }
+                }
+                if(mc instanceof Dynamic)
+                {
+                    Dynamic dynamicElem = (Dynamic)mc;
+                    if (dynamicElem.getKeyframing() != null)
+                    {
+                        // TODO
+                    }
+                    else
+                    {
+                        List<OrientConstraint> ocVec = new ArrayList<OrientConstraint>();
+                        LMP lmpx = parseProceduralDynamic(bbm, bmlBlockPeg, bmlId, id, aniPlayer, localPegBoard, dynamicElem, ocVec);
+                        if (lmpx != null)
+                        {
+                            lmps.add(lmpx);
+                        }
+                        else
+                        {
+                            lmps.add(createAndAppendLMPWrist(dynamicElem.getScope(), bbm, bmlBlockPeg, bmlId, id, localPegBoard, aniPlayer, ocVec));
+                        }                    
+                    }
+                }
+                if(mc instanceof Dynamic)
+                {
+                    //TODO
+                }
+            }
+            lmp = new LMPSequence(bbm, bmlBlockPeg, bmlId, id+"_lmpseq" +UUID.randomUUID().toString().replaceAll("-", ""), localPegBoard, lmps);            
         }
         if (lmp != null)
         {

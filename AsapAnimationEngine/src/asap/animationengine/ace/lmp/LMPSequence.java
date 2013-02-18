@@ -10,6 +10,7 @@ import asap.realizer.pegboard.BMLBlockPeg;
 import asap.realizer.pegboard.PegBoard;
 import asap.realizer.pegboard.TimePeg;
 import asap.realizer.planunit.TimedPlanUnitPlayException;
+import asap.realizer.planunit.TimedPlanUnitState;
 
 import com.google.common.collect.ImmutableList;
 
@@ -21,18 +22,12 @@ import com.google.common.collect.ImmutableList;
 public class LMPSequence extends LMP
 {
     private List<TimedAnimationUnit> lmpQueue;
-    private TimePeg startPeg;
-    private TimePeg strokeStartPeg;
-    private TimePeg strokeEndPeg;
-
+    
     public LMPSequence(FeedbackManager fbm, BMLBlockPeg bbPeg, String bmlId, String behId, PegBoard pegBoard,
             List<TimedAnimationUnit> lmpList)
     {
         super(fbm, bbPeg, bmlId, behId, pegBoard);
-        lmpQueue = ImmutableList.copyOf(lmpList);
-        startPeg = new TimePeg(bbPeg);
-        strokeStartPeg = new TimePeg(bbPeg);
-        strokeEndPeg = new TimePeg(bbPeg);
+        lmpQueue = ImmutableList.copyOf(lmpList);    
     }
 
     @Override
@@ -47,6 +42,19 @@ public class LMPSequence extends LMP
         return kinJoints;
     }
 
+    @Override
+    public void setState(TimedPlanUnitState newState)
+    {
+        if (newState.equals(TimedPlanUnitState.LURKING))
+        {
+            for (TimedAnimationUnit tmu : lmpQueue)
+            {
+                tmu.setState(newState);
+            }
+        }
+        super.setState(newState);
+    }
+    
     @Override
     public Set<String> getPhysicalJoints()
     {
@@ -93,17 +101,22 @@ public class LMPSequence extends LMP
         return true;
     }
 
-    @Override
-    protected void setInternalStrokeTiming(double time)
-    {
-        // TODO Auto-generated method stub
-
-    }
-
+    
     @Override
     protected void playUnit(double time) throws TimedPlanUnitPlayException
     {
-        sendFeedback("start", time);
+        for (TimedAnimationUnit tmu : lmpQueue)
+        {
+            if (time > tmu.getStartTime() && time<tmu.getTime("strokeEnd"))
+            {
+                if (!tmu.isPlaying())
+                {
+                    tmu.start(time);
+                }
+                //tmu.updateTiming(time);
+                tmu.play(time);
+            }
+        }
     }
 
     @Override
@@ -121,8 +134,13 @@ public class LMPSequence extends LMP
         lmp.setTimePeg("end", new TimePeg(bmlBlockPeg));
     }
 
-    protected void resolveInternal()
+    @Override
+    protected void setInternalStrokeTiming(double time)
     {
+        TimePeg startPeg = pegBoard.getTimePeg(getBMLId(), getId(),"start");
+        TimePeg strokeStartPeg = pegBoard.getTimePeg(getBMLId(), getId(),"strokeStart");
+        TimePeg strokeEndPeg = pegBoard.getTimePeg(getBMLId(), getId(),"strokeEnd");
+        
         lmpQueue.get(0).setTimePeg("start", startPeg);
         lmpQueue.get(0).setTimePeg("strokeStart", strokeStartPeg);
         lmpQueue.get(lmpQueue.size() - 1).setTimePeg("strokeEnd", strokeEndPeg);
@@ -147,10 +165,10 @@ public class LMPSequence extends LMP
         for (int i = 0; i < lmpQueue.size() - 1; i++)
         {
             TimePeg strokeEnd = lmpQueue.get(i).getTimePeg("strokeEnd");
-            strokeEnd.setGlobalValue(strokeStartPeg.getGlobalValue()+lmpQueue.get(i).getStrokeDuration()*stretch);
+            strokeEnd.setGlobalValue(currentStrokeStart.getGlobalValue()+lmpQueue.get(i).getStrokeDuration()*stretch);
             currentStrokeStart = lmpQueue.get(i+1).getTimePeg("strokeStart");
             
-            //XXX: the preparation duration can (and should) dynamically change here
+            //XXX: the preparation duration can (and should) dynamically change here            
             currentStrokeStart.setGlobalValue(strokeEnd.getGlobalValue()+lmpQueue.get(i+1).getPreparationDuration()*stretch);
         }
     }
