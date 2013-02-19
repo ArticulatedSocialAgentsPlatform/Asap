@@ -55,7 +55,7 @@ public class ParameterValueChangePlanner extends AbstractPlanner<TimedParameterV
         ParameterValueInfo paramValInfo;
         String[] target = b.getStringParameterValue("target").split(":");
 
-        if (b.getStringParameterValue("initialValue") == null)
+        if (!b.specifiesParameter("initialValue"))
         {
             paramValInfo = new ParameterValueInfo(target[0], target[1], b.getStringParameterValue("paramId"),
                     b.getFloatParameterValue("targetValue"));

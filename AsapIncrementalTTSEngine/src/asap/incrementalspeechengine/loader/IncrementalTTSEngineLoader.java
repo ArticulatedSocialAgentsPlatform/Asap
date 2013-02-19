@@ -108,8 +108,7 @@ public class IncrementalTTSEngineLoader implements EngineLoader
                 String voicename = this.getOptionalAttribute("voicename",attrMap);
                 if(language!=null)
                 {
-                    System.setProperty("inpro.tts.language", language);
-                    
+                    System.setProperty("inpro.tts.language", language);                    
                 }
                 if(voicename!=null)
                 {
