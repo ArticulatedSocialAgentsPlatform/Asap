@@ -59,7 +59,6 @@ public class IncrementalTTSUnit extends TimedAbstractPlanUnit
     private List<String> progressHandled = new ArrayList<>();
     private final HesitatingSynthesisIUManager iuManager;
     private volatile boolean isScheduled = false;
-    private static final double SETUP_OFFSET = 0.5d;
     
     // nr of the word after the sync => SyncId
     private final BiMap<Integer, String> syncMap = HashBiMap.create();

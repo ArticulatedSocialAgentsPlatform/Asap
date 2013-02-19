@@ -100,7 +100,24 @@ public class IncrementalTTSEngineLoader implements EngineLoader
         }
 
         DispatcherInfo di = null;
-        ConfigDirLoader maryTTS = new ConfigDirLoader("MARYTTSIncremental", "MaryTTSIncremental");
+        ConfigDirLoader maryTTS = new ConfigDirLoader("MARYTTSIncremental", "MaryTTSIncremental")
+        {
+            public void decodeAttributes(HashMap<String, String> attrMap, XMLTokenizer tokenizer)
+            {
+                String language = this.getOptionalAttribute("language",attrMap);
+                String voicename = this.getOptionalAttribute("voicename",attrMap);
+                if(language!=null)
+                {
+                    System.setProperty("inpro.tts.language", language);
+                    
+                }
+                if(voicename!=null)
+                {
+                    System.setProperty("inpro.tts.voice", voicename);
+                }
+                super.decodeAttributes(attrMap, tokenizer);
+            }
+        };
 
         while (tokenizer.atSTag())
         {

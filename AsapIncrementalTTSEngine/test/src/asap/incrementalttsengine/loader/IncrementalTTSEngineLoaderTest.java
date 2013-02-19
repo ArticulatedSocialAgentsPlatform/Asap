@@ -33,7 +33,8 @@ public class IncrementalTTSEngineLoaderTest
         String loaderStr =
           "<Loader id=\"incrementaltts\" loader=\"asap.incrementalttsengine.loader.IncrementalTTSEngineLoader\">"+
           "<Dispatcher resources=\"\" filename=\"sphinx-config.xml\"/>"+
-          "<MaryTTSIncremental localdir=\"asapresource/MARYTTSIncremental/resource/MARYTTSIncremental\"/>"+
+          "<MaryTTSIncremental language=\"en_GB\" voicename=\"dfki-prudence-hsmm\" " +
+          "localdir=\"asapresource/MARYTTSIncremental/resource/MARYTTSIncremental\"/>"+
           "</Loader>";
         //@formatter:on
         XMLTokenizer tok = new XMLTokenizer(loaderStr);
@@ -44,6 +45,8 @@ public class IncrementalTTSEngineLoaderTest
         assertNotNull(loader.getEngine());
         assertEquals(System.getProperty("shared.project.root") + "/asapresource/MARYTTSIncremental/resource/MARYTTSIncremental",
                 System.getProperty("mary.base"));
+        assertEquals("dfki-prudence-hsmm",System.getProperty("inpro.tts.voice"));
+        assertEquals("en_GB",System.getProperty("inpro.tts.language"));
     }
     
     
