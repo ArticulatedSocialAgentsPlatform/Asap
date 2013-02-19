@@ -456,9 +456,9 @@ public class IncrementalTTSUnit extends TimedAbstractPlanUnit
     @Override
     public void updateTiming(double time)
     {
-        if(!isScheduled && time>getStartTime()-0.5d)
+        if(!isScheduled && time>getStartTime()-1d)
         {
-            isScheduled = iuManager.appendIU(synthesisIU, this);
+            isScheduled = iuManager.justInTimeAppendIU(synthesisIU, this);
         }
     }
     

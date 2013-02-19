@@ -23,7 +23,7 @@ public class IncrementalTTSTest
         {
             System.out.println("update " + updatedIU.toPayLoad());
             System.out.println("start " + updatedIU.startTime());            
-            /*
+            
             for(IU we: updatedIU.groundedIn())
             {
                 System.out.println("Phoneme: "+we.toPayLoad());
@@ -31,7 +31,7 @@ public class IncrementalTTSTest
                 System.out.println("End: "+we.endTime());
                 System.out.println("progress: "+we.getProgress());
             }
-            */
+            
         }
     }
 
@@ -53,7 +53,7 @@ public class IncrementalTTSTest
         Thread.sleep(8000);
     }
     
-    @Ignore
+    //@Ignore
     @Test
     public void testHesitationContinuation() throws InterruptedException
     {

@@ -1,9 +1,15 @@
 package asap.incrementalspeechengine;
 
-import done.inpro.system.carchase.HesitatingSynthesisIU;
 import inpro.audio.DispatchStream;
+import inpro.incremental.unit.IU;
 import inpro.incremental.unit.WordIU;
+import done.inpro.system.carchase.HesitatingSynthesisIU;
 
+/**
+ * Manages the construction and concatenation of HesitatingSynthesisIUs
+ * @author hvanwelbergen
+ * 
+ */
 public class HesitatingSynthesisIUManager
 {
     private final DispatchStream dispatcher;
@@ -16,29 +22,61 @@ public class HesitatingSynthesisIUManager
         this.dispatcher = dispatcher;
     }
 
-    public boolean appendIU(HesitatingSynthesisIU synthesisIU, IncrementalTTSUnit ttsCandidate)
+    private int getRemainingPhonemes(WordIU word)
+    {
+        int i = 0;
+        for (IU phonemeIU : word.groundedIn())
+        {
+            if (phonemeIU.isCompleted())
+            {
+                i++;
+            }
+        }
+        return word.groundedIn().size() - i;
+    }
+
+    /**
+     * Appends synthesisIU to the currentIU if currentIU is ongoing, but finishes or relaxes within two phonemes AND
+     * synthesisIU is supposed to start at either the relax time or the end time of the currentIU.
+     */
+    public boolean justInTimeAppendIU(HesitatingSynthesisIU synthesisIU, IncrementalTTSUnit ttsCandidate)
     {
         if (currentIU == null || currentIU.isCompleted())
         {
             return false;
         }
+        double timeDiffRelax = Math.abs(ttsCandidate.getStartTime() - currentTTSUnit.getRelaxTime());
+        double timeDiffEnd = Math.abs(ttsCandidate.getStartTime() - currentTTSUnit.getEndTime());
         
-        double timeDiff = ttsCandidate.getStartTime() - currentTTSUnit.getRelaxTime(); 
-        System.out.println("timeDif: "+timeDiff);
-        if (timeDiff < MERGE_TIME)
+        WordIU lastWord = currentIU.getWords().get(currentIU.getWords().size() - 1);
+        
+        boolean merge = false;
+        if (lastWord.toPayLoad().equals("<hes>")&& timeDiffRelax < MERGE_TIME)
         {
-            System.out.println("Merging!");
-            currentIU.appendContinuation(synthesisIU.getWords());
-            currentTTSUnit = ttsCandidate;
-            return true;
+            lastWord = currentIU.getWords().get(currentIU.getWords().size() - 2);
+            merge = true;
+        }
+        else if(timeDiffEnd < MERGE_TIME && !lastWord.toPayLoad().equals("<hes>"))
+        {
+            merge = true;
+        }
+
+        if (merge)
+        {
+            if (getRemainingPhonemes(lastWord) <= 2)
+            {
+                currentIU.appendContinuation(synthesisIU.getWords());
+                currentTTSUnit = ttsCandidate;
+                return true;
+            }
         }
         return false;
     }
 
     public void playIU(HesitatingSynthesisIU synthesisIU, IncrementalTTSUnit ttsUnit)
     {
-        if (currentTTSUnit==ttsUnit) return;//already added with appendIU
-        
+        if (currentTTSUnit == ttsUnit) return;// already added with appendIU
+
         currentTTSUnit = ttsUnit;
         if (currentIU == null || currentIU.isCompleted())
         {
