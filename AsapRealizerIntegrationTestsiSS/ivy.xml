@@ -44,11 +44,6 @@
       <dependency org="Asap"   name="AsapIncrementalTTSEngine"     rev="latest.${resolve.status}"   />    
       <dependency org="Asap"   name="AsapEmitterEngine"     rev="latest.${resolve.status}"   />
       <dependency org="Asap"   name="AsapRealizerIntegrationTests"     transitive="false" rev="latest.${resolve.status}"   />
-     
-
-       <dependency org="inpro"   name="inpro_iss"     rev="latest.${resolve.status}"   />
-       <dependency org="cmu"   name="sphinx"     rev="latest.${resolve.status}"   />
-       <dependency org="nist"   name="jrtp"     rev="latest.${resolve.status}"   />
 
       <dependency org="logback" name="logback-classic"     rev="latest.release"  />   
       <dependency org="logback" name="logback-core"        rev="latest.release"  />   
