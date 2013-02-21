@@ -17,6 +17,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 
+import org.hamcrest.collection.IsIterableContainingInOrder;
 import org.junit.Before;
 import org.junit.Test;
 
@@ -179,7 +180,7 @@ public class BMLTParserTest
     {
         readXML("bmlt/testspeechinterrupt.xml");
         assertEquals(3, bmltExt.getInterruptList().size());
-        assertThat(bmltExt.getInterruptList(), hasItems("bml1", "bml2", "bml3"));
+        assertThat(bmltExt.getInterruptList(), IsIterableContainingInOrder.contains("bml1", "bml2", "bml3"));
     }
 
     @Test(timeout = PARSE_TIMEOUT)

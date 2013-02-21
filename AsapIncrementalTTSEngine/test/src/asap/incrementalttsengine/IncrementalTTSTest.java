@@ -52,7 +52,7 @@ public class IncrementalTTSTest
         Thread.sleep(20000);
     }
 
-    @Ignore
+    //@Ignore
     @Test
     public void testMultipleSentencesQuality() throws InterruptedException
     {
@@ -94,7 +94,7 @@ public class IncrementalTTSTest
         }
         Thread.sleep(20000);
 
-        String str = "Morgen um 10 ist das treffen mit deinem Bruder und um zwei Uhr gehst du Einkaufen und abends ab acht ist der Stammtisch in der Kneippe.";
+        String str = "Morgen um 10 ist das treffen mit deinem Bruder und um zwei Uhr gehst du Einkaufen und abends ab acht ist der Stammtisch in der Kneipe.";
         HesitatingSynthesisIU installment = new HesitatingSynthesisIU(str);
         dispatcher.playStream(installment.getAudio());
         Thread.sleep(20000);

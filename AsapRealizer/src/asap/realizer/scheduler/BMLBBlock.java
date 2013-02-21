@@ -3,8 +3,11 @@ package asap.realizer.scheduler;
 
 import java.util.Collections;
 import java.util.HashSet;
+import java.util.List;
+import java.util.ArrayList;
 import java.util.Set;
 import java.util.concurrent.CopyOnWriteArraySet;
+import java.util.concurrent.CopyOnWriteArrayList;
 
 import lombok.extern.slf4j.Slf4j;
 
@@ -25,27 +28,27 @@ import com.google.common.collect.ImmutableMap;
 public class BMLBBlock extends AbstractBMLBlock
 {
     private final Set<String> appendSet = new CopyOnWriteArraySet<String>();
-    private final Set<String> onStartSet = new CopyOnWriteArraySet<String>();
+    private final List<String> onStartList = new CopyOnWriteArrayList<String>();
     private final Set<String> chunkAfterSet = new CopyOnWriteArraySet<String>();
     private final PegBoard pegBoard;
 
-    public BMLBBlock(String id, BMLScheduler s, PegBoard pb, Set<String> appendAfter, Set<String> onStart, Set<String> chunkAfter)
+    public BMLBBlock(String id, BMLScheduler s, PegBoard pb, Set<String> appendAfter, List<String> onStart, Set<String> chunkAfter)
     {
         super(id, s);
         pegBoard = pb;
         appendSet.addAll(appendAfter);
-        onStartSet.addAll(onStart);
+        onStartList.addAll(onStart);
         chunkAfterSet.addAll(chunkAfter);
     }
 
-    public Set<String> getOnStartSet()
+    public List<String> getOnStartSet()
     {
-        return Collections.unmodifiableSet(onStartSet);
+        return Collections.unmodifiableList(onStartList);
     }
 
     public BMLBBlock(String id, BMLScheduler s, PegBoard pb)
     {
-        this(id, s, pb, new HashSet<String>(), new HashSet<String>(), new HashSet<String>());
+        this(id, s, pb, new HashSet<String>(), new ArrayList<String>(), new HashSet<String>());
     }
 
     // assumes that for all behaviors in the cluster, their start is resolved and listed on the PegBoard

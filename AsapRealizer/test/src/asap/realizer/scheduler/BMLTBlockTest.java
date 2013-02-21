@@ -6,7 +6,7 @@ import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
-import java.util.HashSet;
+import java.util.ArrayList;
 
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -52,7 +52,7 @@ public class BMLTBlockTest
     @Test
     public void testNoUpdateWhenAppending()
     {
-        BMLTBlock block = new BMLTBlock(BLOCKID, mockScheduler, Sets.newHashSet("bml2"), new HashSet<String>());
+        BMLTBlock block = new BMLTBlock(BLOCKID, mockScheduler, Sets.newHashSet("bml2"), new ArrayList<String>());
         block.setState(TimedPlanUnitState.LURKING);        
         block.update(ImmutableMap.of("bml2", TimedPlanUnitState.IN_EXEC));
         verify(mockScheduler, times(0)).startBlock(BLOCKID);

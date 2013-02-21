@@ -491,7 +491,7 @@ public final class BMLScheduler
     {
         if (!bmlBlocksManager.getBMLBlocks().contains(bmlId))
         {
-            logger.warn("Attempting to stop non existing bml block {}", bmlId);
+            logger.debug("Attempting to stop non existing bml block {}", bmlId);
             return;
         }
 

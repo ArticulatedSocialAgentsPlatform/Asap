@@ -1,8 +1,10 @@
 package asap.realizer.scheduler;
 
 
+import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashSet;
+import java.util.List;
 import java.util.Set;
 import java.util.concurrent.CopyOnWriteArraySet;
 
@@ -38,7 +40,7 @@ public class BMLTBlock extends AbstractBMLBlock
         return Collections.unmodifiableSet(onStartSet);
     }
 
-    public BMLTBlock(String id, BMLScheduler s, Set<String> appendAfter, Set<String> onStart)
+    public BMLTBlock(String id, BMLScheduler s, Set<String> appendAfter, List<String> onStart)
     {
         super(id,s);
         appendSet.addAll(appendAfter);
@@ -47,7 +49,7 @@ public class BMLTBlock extends AbstractBMLBlock
 
     public BMLTBlock(String id, BMLScheduler s)
     {
-        this(id, s, new HashSet<String>(), new HashSet<String>());
+        this(id, s, new HashSet<String>(), new ArrayList<String>());
     }
 
     @Override
