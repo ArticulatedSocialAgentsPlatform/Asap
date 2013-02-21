@@ -14,7 +14,7 @@ import java.io.IOException;
 import org.junit.Before;
 import org.junit.Test;
 
-import asap.bml.ext.bmlb.BMLBBMLBehaviorAttributes;
+import asap.bml.ext.bmla.BMLABMLBehaviorAttributes;
 import asap.bml.ext.murml.MURMLFaceBehaviour;
 
 /**
@@ -42,7 +42,7 @@ public class BMLBParserTest
     {
         BMLInfo.supportedExtensions.add(MURMLFaceBehaviour.class);
         parser.clear();
-        block = new BehaviourBlock(new BMLBBMLBehaviorAttributes());        
+        block = new BehaviourBlock(new BMLABMLBehaviorAttributes());        
         block.readXML(res.getReader(file));
         //bmltExt = block.getBMLBehaviorAttributeExtension(BMLBBMLBehaviorAttributes.class);
         parser.addBehaviourBlock(block);

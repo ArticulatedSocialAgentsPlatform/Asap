@@ -84,7 +84,6 @@ public class BMLTBMLBehaviorAttributes implements BMLBehaviorAttributeExtension
             StringUtil.splitToCollection(interrupt, ",", interruptList);
         }
         prePlan = bb.getOptionalBooleanAttribute("http://hmi.ewi.utwente.nl/bmlt:preplan", attrMap, false);
-        allowExternalRefs = bb.getOptionalBooleanAttribute("http://hmi.ewi.utwente.nl/bmlt:allowexternalrefs", attrMap, false);
         StringUtil.splitToCollection(bb.getOptionalAttribute("http://hmi.ewi.utwente.nl/bmlt:onStart", attrMap, ""), ",", onStartList);
     }
 

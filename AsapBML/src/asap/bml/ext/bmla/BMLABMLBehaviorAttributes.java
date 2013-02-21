@@ -1,4 +1,7 @@
-package asap.bml.ext.bmlb;
+package asap.bml.ext.bmla;
+
+import hmi.util.StringUtil;
+import hmi.xml.XMLTokenizer;
 
 import java.util.Collections;
 import java.util.HashMap;
@@ -9,20 +12,27 @@ import saiba.bml.core.BMLBehaviorAttributeExtension;
 import saiba.bml.core.BMLBlockComposition;
 import saiba.bml.core.BehaviourBlock;
 import saiba.bml.core.CoreComposition;
-import hmi.util.StringUtil;
-import hmi.xml.XMLScanException;
-import hmi.xml.XMLTokenizer;
 
 /**
  * Attributes added to the &ltbml&gt tag by bmlb
  * @author hvanwelbergen
  */
-public class BMLBBMLBehaviorAttributes implements BMLBehaviorAttributeExtension
+public class BMLABMLBehaviorAttributes implements BMLBehaviorAttributeExtension
 {
     private Set<String> chunkAfterList = new HashSet<String>();
+    private Set<String> appendAfterList = new HashSet<String>();
     private Set<String> prependBeforeList = new HashSet<String>();
     private Set<String> chunkBeforeList = new HashSet<String>();
 
+    /**
+     * Gets an unmodifiable view of the appendAfterList, that is the list of bml blocks after which this
+     * block is to be concatenated
+     */
+    public Set<String> getAppendAfterList()
+    {
+        return Collections.unmodifiableSet(appendAfterList);
+    }
+    
     /**
      * Gets an unmodifiable view of the chunkAfterList, that is the list of bml blocks after which this
      * block is to be chunked
@@ -51,43 +61,18 @@ public class BMLBBMLBehaviorAttributes implements BMLBehaviorAttributeExtension
         return Collections.unmodifiableSet(chunkBeforeList);
     }
 
-    private void getParameterList(String str, Set<String> parameterList)
-    {
-        String params[] = str.split("\\(");
-        if (params.length != 2 || !params[1].trim().endsWith(")")) throw new XMLScanException("Error scanning scheduling attribute " + str);
-        String parameterStr = params[1].trim();
-        parameterStr = parameterStr.substring(0, parameterStr.length() - 1);
-        StringUtil.splitToCollection(parameterStr, ",", parameterList);
-    }
-
     @Override
-    public void decodeAttributes(BehaviourBlock behavior, HashMap<String, String> attrMap, XMLTokenizer tokenizer)
+    public void decodeAttributes(BehaviourBlock bb, HashMap<String, String> attrMap, XMLTokenizer tokenizer)
     {
-
+        StringUtil.splitToCollection(bb.getOptionalAttribute("http://www.asap-project.org/bmla:chunkAfter", attrMap, ""),",",chunkAfterList);        
+        StringUtil.splitToCollection(bb.getOptionalAttribute("http://www.asap-project.org/bmla:chunkBefore", attrMap, ""),",",chunkBeforeList);
+        StringUtil.splitToCollection(bb.getOptionalAttribute("http://www.asap-project.org/bmla:appendAfter", attrMap, ""),",",appendAfterList);        
+        StringUtil.splitToCollection(bb.getOptionalAttribute("http://www.asap-project.org/bmla:prependBefore", attrMap, ""),",",prependBeforeList);
     }
 
     @Override
     public BMLBlockComposition handleComposition(String sm)
     {
-        if (sm.startsWith("CHUNK-AFTER"))
-        {
-            getParameterList(sm, chunkAfterList);
-            return BMLBComposition.CHUNK_AFTER;
-        }
-        else if (sm.equals("PREPEND"))
-        {
-            return BMLBComposition.PREPEND;
-        }
-        else if (sm.startsWith("PREPEND-BEFORE"))
-        {
-            getParameterList(sm, prependBeforeList);
-            return BMLBComposition.PREPEND_BEFORE;
-        }
-        else if (sm.startsWith("CHUNK-BEFORE"))
-        {
-            getParameterList(sm, chunkBeforeList);
-            return BMLBComposition.CHUNK_BEFORE;
-        }
-        return CoreComposition.UNKNOWN;
-    }
+        return CoreComposition.UNKNOWN; 
+    }    
 }

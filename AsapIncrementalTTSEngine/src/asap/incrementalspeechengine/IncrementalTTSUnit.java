@@ -59,15 +59,16 @@ public class IncrementalTTSUnit extends TimedAbstractPlanUnit
     private List<String> progressHandled = new ArrayList<>();
     private final HesitatingSynthesisIUManager iuManager;
     private volatile boolean isScheduled = false;
-    
+
     // nr of the word after the sync => SyncId
     private final BiMap<Integer, String> syncMap = HashBiMap.create();
 
     // syncName => TimePeg
     private Map<String, TimePeg> pegs = new HashMap<String, TimePeg>();
 
-    public IncrementalTTSUnit(FeedbackManager fbm, BMLBlockPeg bmlPeg, String bmlId, String behId, String text, HesitatingSynthesisIUManager iuManager,
-            Collection<IncrementalLipSynchProvider> lsProviders, PhonemeToVisemeMapping visemeMapping, Behaviour beh)
+    public IncrementalTTSUnit(FeedbackManager fbm, BMLBlockPeg bmlPeg, String bmlId, String behId, String text,
+            HesitatingSynthesisIUManager iuManager, Collection<IncrementalLipSynchProvider> lsProviders,
+            PhonemeToVisemeMapping visemeMapping, Behaviour beh)
     {
         super(fbm, bmlPeg, bmlId, behId);
         this.lsProviders = ImmutableList.copyOf(lsProviders);
@@ -80,13 +81,13 @@ public class IncrementalTTSUnit extends TimedAbstractPlanUnit
         {
             generateFiller = beh.getStringParameterValue("http://www.asap-project.org/bmlis:generatefiller");
         }
-        
+
         textNoSync = textNoSync.trim();
         if (generateFiller != null && generateFiller.trim().equals("true"))
         {
-            if(textNoSync.endsWith("."))
+            if (textNoSync.endsWith("."))
             {
-                textNoSync = textNoSync.substring(0,textNoSync.length()-1)+" <hes>";
+                textNoSync = textNoSync.substring(0, textNoSync.length() - 1) + " <hes>";
             }
             else
             {
@@ -139,11 +140,14 @@ public class IncrementalTTSUnit extends TimedAbstractPlanUnit
         if (syncMap.inverse().containsKey(syncId))
         {
             int i = syncMap.inverse().get(syncId);
-            if(i>=synthesisIU.groundedIn().size())
+            synchronized (synthesisIU)
             {
-                return 1;
+                if (i >= synthesisIU.groundedIn().size())
+                {
+                    return 1;
+                }
+                return synthesisIU.groundedIn().get(i).startTime() / getPreferedDuration();
             }
-            return synthesisIU.groundedIn().get(i).startTime() / getPreferedDuration();
         }
         return super.getRelativeTime(syncId);
     }
@@ -172,7 +176,7 @@ public class IncrementalTTSUnit extends TimedAbstractPlanUnit
 
     private HesitatingSynthesisIU createHesitatingSynthesisIU(String text)
     {
-        int pointIndex = getNextSentenceSeparatorIndex(text,0);
+        int pointIndex = getNextSentenceSeparatorIndex(text, 0);
         if (pointIndex == -1)
         {
             return new HesitatingSynthesisIU(text);
@@ -215,38 +219,44 @@ public class IncrementalTTSUnit extends TimedAbstractPlanUnit
     private void updateFeedback()
     {
         int i = 0;
-        for (IU word : synthesisIU.groundedIn())
+        synchronized (synthesisIU)
         {
-            if (word.isOngoing() || word.isCompleted())
+            for (IU word : synthesisIU.groundedIn())
             {
-                if (syncMap.containsKey(i))
+                if (word.isOngoing() || word.isCompleted())
                 {
-                    String sync = syncMap.get(i);
-                    if (!progressHandled.contains(sync))
+                    if (syncMap.containsKey(i))
                     {
-                        progressHandled.add(sync);
-                        feedback(sync, getStartTime() + word.startTime());
+                        String sync = syncMap.get(i);
+                        if (!progressHandled.contains(sync))
+                        {
+                            progressHandled.add(sync);
+                            feedback(sync, getStartTime() + word.startTime());
+                        }
                     }
                 }
+                i++;
             }
-            i++;
         }
     }
 
     private void updateLipSync()
     {
         int visCount = visemeLookAhead;
-        for (IU word : synthesisIU.groundedIn())
+        synchronized (synthesisIU)
         {
-            if (word.isUpcoming() || word.isOngoing())
+            for (IU word : synthesisIU.groundedIn())
             {
-                for (IU ph : word.groundedIn())
+                if (word.isUpcoming() || word.isOngoing())
                 {
-                    if (ph.isUpcoming())
+                    for (IU ph : word.groundedIn())
                     {
-                        updateLipSyncUnit(ph);
-                        visCount--;
-                        if (visCount == 0) return;
+                        if (ph.isUpcoming())
+                        {
+                            updateLipSyncUnit(ph);
+                            visCount--;
+                            if (visCount == 0) return;
+                        }
                     }
                 }
             }
@@ -292,12 +302,15 @@ public class IncrementalTTSUnit extends TimedAbstractPlanUnit
     {
         stretch = value;
         log.debug("set stretch {}", value);
-        for (SysSegmentIU seg : synthesisIU.getSegments())
+        synchronized (synthesisIU)
         {
-            if (!seg.isCompleted() && !seg.isOngoing())
+            for (SysSegmentIU seg : synthesisIU.getSegments())
             {
-                log.debug("setting segment stretch {}", value);
-                seg.stretchFromOriginal(value);
+                if (!seg.isCompleted() && !seg.isOngoing())
+                {
+                    log.debug("setting segment stretch {}", value);
+                    seg.stretchFromOriginal(value);
+                }
             }
         }
     }
@@ -305,11 +318,14 @@ public class IncrementalTTSUnit extends TimedAbstractPlanUnit
     private void setPitch(float value)
     {
         pitchShiftInCent = value;
-        for (SysSegmentIU seg : synthesisIU.getSegments())
+        synchronized (synthesisIU)
         {
-            if (!seg.isCompleted() && !seg.isOngoing())
+            for (SysSegmentIU seg : synthesisIU.getSegments())
             {
-                seg.pitchShiftInCent = value;
+                if (!seg.isCompleted() && !seg.isOngoing())
+                {
+                    seg.pitchShiftInCent = value;
+                }
             }
         }
     }
@@ -450,17 +466,19 @@ public class IncrementalTTSUnit extends TimedAbstractPlanUnit
             }
         }
     }
-    
-    
+
     @Override
     public void updateTiming(double time)
     {
-        if(!isScheduled && time>getStartTime()-1d)
+        if (!isScheduled && time > getStartTime() - 1d)
         {
-            isScheduled = iuManager.justInTimeAppendIU(synthesisIU, this);
+            synchronized (synthesisIU)
+            {
+                isScheduled = iuManager.justInTimeAppendIU(synthesisIU, this);
+            }
         }
     }
-    
+
     protected void startUnit(double time) throws TimedPlanUnitPlayException
     {
         endPeg.setGlobalValue(time + lastWord.endTime());
@@ -468,8 +486,11 @@ public class IncrementalTTSUnit extends TimedAbstractPlanUnit
         updateSyncTiming();
         updateLipSync();
         sendFeedback("start", time);
-        iuManager.playIU(synthesisIU, this);
-        isScheduled = true; 
+        synchronized (synthesisIU)
+        {
+            iuManager.playIU(synthesisIU, this);
+        }
+        isScheduled = true;
         super.startUnit(time);
     }
 

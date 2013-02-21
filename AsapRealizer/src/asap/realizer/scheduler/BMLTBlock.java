@@ -46,7 +46,7 @@ public class BMLTBlock extends AbstractBMLBlock
         appendSet.addAll(appendAfter);
         onStartSet.addAll(onStart);
     }
-
+    
     public BMLTBlock(String id, BMLScheduler s)
     {
         this(id, s, new HashSet<String>(), new ArrayList<String>());

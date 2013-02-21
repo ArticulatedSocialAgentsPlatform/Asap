@@ -145,7 +145,12 @@ public final class BMLBlockManager
             block.update(m);
         }
     }
-
+    
+    public BMLBlock getBMLBlock(String bmlId)
+    {
+        return BMLBlocks.get(bmlId);
+    }
+    
     public synchronized void clear()
     {
         finishedBMLBlocks.clear();

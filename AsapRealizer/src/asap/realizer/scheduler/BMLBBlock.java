@@ -40,6 +40,16 @@ public class BMLBBlock extends AbstractBMLBlock
         onStartList.addAll(onStart);
         chunkAfterSet.addAll(chunkAfter);
     }
+    
+    public void addChunkTarget(String bmlId)
+    {
+        chunkAfterSet.add(bmlId);
+    }
+    
+    public void addAppendTarget(String bmlId)
+    {
+        appendSet.add(bmlId);
+    }
 
     public List<String> getOnStartSet()
     {

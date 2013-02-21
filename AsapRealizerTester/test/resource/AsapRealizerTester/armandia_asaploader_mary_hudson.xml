@@ -1,7 +1,7 @@
 <AsapVirtualHuman>
   <Loader id="realizer" loader="asap.realizerembodiments.AsapRealizerEmbodiment">
     <BMLParser>
-      <BMLAttributeExtension class="asap.bml.ext.bmlb.BMLBBMLBehaviorAttributes"/>
+      <BMLAttributeExtension class="asap.bml.ext.bmla.BMLABMLBehaviorAttributes"/>
       <BMLAttributeExtension class="asap.bml.ext.bmlt.BMLTBMLBehaviorAttributes"/>
     </BMLParser>
     <BMLScheduler>
