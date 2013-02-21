@@ -20,14 +20,35 @@ import hmi.xml.XMLTokenizer;
 public class BMLBBMLBehaviorAttributes implements BMLBehaviorAttributeExtension
 {
     private Set<String> chunkAfterList = new HashSet<String>();
-    
+    private Set<String> prependBeforeList = new HashSet<String>();
+    private Set<String> chunkBeforeList = new HashSet<String>();
+
     /**
      * Gets an unmodifiable view of the chunkAfterList, that is the list of bml blocks after which this
      * block is to be chunked
-     */          
+     */
     public Set<String> getChunkAfterList()
     {
         return Collections.unmodifiableSet(chunkAfterList);
+    }
+
+    /**
+     * Gets an unmodifiable view of the prependBeforeList, that is the list of bml blocks before which this
+     * block is to be prepended
+     */
+    public Set<String> getPrependBeforeList()
+    {
+        return Collections.unmodifiableSet(prependBeforeList);
+    }
+    
+    
+    /**
+     * Gets an unmodifiable view of the chunkBeforeList, that is the list of bml blocks before which this
+     * block is to be chunked
+     */
+    public Set<String> getChunkBeforeList()
+    {
+        return Collections.unmodifiableSet(chunkBeforeList);
     }
 
     private void getParameterList(String str, Set<String> parameterList)
@@ -38,11 +59,11 @@ public class BMLBBMLBehaviorAttributes implements BMLBehaviorAttributeExtension
         parameterStr = parameterStr.substring(0, parameterStr.length() - 1);
         StringUtil.splitToCollection(parameterStr, ",", parameterList);
     }
-    
+
     @Override
     public void decodeAttributes(BehaviourBlock behavior, HashMap<String, String> attrMap, XMLTokenizer tokenizer)
     {
-        
+
     }
 
     @Override
@@ -52,7 +73,21 @@ public class BMLBBMLBehaviorAttributes implements BMLBehaviorAttributeExtension
         {
             getParameterList(sm, chunkAfterList);
             return BMLBComposition.CHUNK_AFTER;
-        }        
+        }
+        else if (sm.equals("PREPEND"))
+        {
+            return BMLBComposition.PREPEND;
+        }
+        else if (sm.startsWith("PREPEND-BEFORE"))
+        {
+            getParameterList(sm, prependBeforeList);
+            return BMLBComposition.PREPEND_BEFORE;
+        }
+        else if (sm.startsWith("CHUNK-BEFORE"))
+        {
+            getParameterList(sm, chunkBeforeList);
+            return BMLBComposition.CHUNK_BEFORE;
+        }
         return CoreComposition.UNKNOWN;
-    }   
+    }
 }

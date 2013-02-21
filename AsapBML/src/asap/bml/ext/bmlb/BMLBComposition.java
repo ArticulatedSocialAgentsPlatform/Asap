@@ -9,7 +9,7 @@ import saiba.bml.core.BMLBlockComposition;
  */
 public enum BMLBComposition implements BMLBlockComposition
 {
-    UNKNOWN, REPLACE, MERGE, APPEND, APPEND_AFTER, CHUNK_AFTER;
+    UNKNOWN, REPLACE, MERGE, APPEND, APPEND_AFTER, CHUNK_AFTER, PREPEND, PREPEND_BEFORE, CHUNK_BEFORE;
     
     @Override
     public String getNameStart()
@@ -17,6 +17,9 @@ public enum BMLBComposition implements BMLBlockComposition
         switch(this)
         {
         case CHUNK_AFTER: return "CHUNK-AFTER";
+        case CHUNK_BEFORE: return "CHUNK-BEFORE";
+        case PREPEND_BEFORE: return "PREPEND-BEFORE";
+        case PREPEND: return "PREPEND";
         default: return toBMLTSchedulingMechanism().getNameStart();
         }        
     }
