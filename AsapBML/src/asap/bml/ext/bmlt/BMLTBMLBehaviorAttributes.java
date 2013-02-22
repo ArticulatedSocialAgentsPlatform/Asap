@@ -28,8 +28,6 @@ public class BMLTBMLBehaviorAttributes implements BMLBehaviorAttributeExtension
 
     private boolean prePlan;
 
-    private boolean allowExternalRefs = false;
-
     private Set<String> appendList = new HashSet<String>();
 
     /**
@@ -47,11 +45,6 @@ public class BMLTBMLBehaviorAttributes implements BMLBehaviorAttributeExtension
     public List<String> getOnStartList()
     {
         return Collections.unmodifiableList(onStartList);
-    }
-
-    public boolean allowExternalRefs()
-    {
-        return allowExternalRefs;
     }
 
     public boolean isPrePlanned()
