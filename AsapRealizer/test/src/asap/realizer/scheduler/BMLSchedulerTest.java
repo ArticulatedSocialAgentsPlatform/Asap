@@ -335,7 +335,7 @@ public class BMLSchedulerTest
 
     private String createEmptyBML(String bmlId, String extraAttributes)
     {
-        return "<bml xmlns=\"http://www.bml-initiative.org/bml/bml-1.0\" " + "xmlns:bmlt=\"http://hmi.ewi.utwente.nl/bmlt\" id=\"" + bmlId
+        return "<bml xmlns=\"http://www.bml-initiative.org/bml/bml-1.0\" " + "xmlns:bmla=\"http://www.asap-project.org/bmla\" id=\"" + bmlId
                 + "\" " + extraAttributes + "/>";
     }
 
@@ -804,13 +804,13 @@ public class BMLSchedulerTest
     @Test
     public void testAppendPreplanAndActivate()
     {
-        parseBML(createNonEmptyBML("bml1", "bmlt:preplan=\"true\""));
+        parseBML(createNonEmptyBML("bml1", "bmla:preplan=\"true\""));
         scheduler.schedule();
 
-        parseBML(createNonEmptyBML("bml3", "bmlt:preplan=\"true\""));
+        parseBML(createNonEmptyBML("bml3", "bmla:preplan=\"true\""));
         scheduler.schedule();
 
-        parseBML(createNonEmptyBML("bml2", "bmlt:preplan=\"true\" composition=\"APPEND-AFTER(bml1)\" onStart=\"bml3\""));
+        parseBML(createNonEmptyBML("bml2", "bmla:preplan=\"true\" composition=\"APPEND-AFTER(bml1)\" onStart=\"bml3\""));
         scheduler.schedule();
 
         assertEquals(0, getBMLIdsFromStartFeedback(blockProgressFeedbackList).size());
@@ -819,7 +819,7 @@ public class BMLSchedulerTest
     @Test
     public void testAppendAfterPrePlanned()
     {
-        parseBML(createNonEmptyBML("bml1", "bmlt:preplan=\"true\""));
+        parseBML(createNonEmptyBML("bml1", "bmla:preplan=\"true\""));
         scheduler.schedule();
 
         parseBML(createNonEmptyBML("bml2", "composition=\"APPEND-AFTER(bml1)\""));
@@ -827,7 +827,7 @@ public class BMLSchedulerTest
 
         assertEquals(0, getBMLIdsFromStartFeedback(blockProgressFeedbackList).size());
 
-        parseBML(createEmptyBML("bml3", "bmlt:onStart=\"bml1\""));
+        parseBML(createEmptyBML("bml3", "bmla:onStart=\"bml1\""));
         scheduler.schedule();
 
         assertEquals(2, getBMLIdsFromStartFeedback(blockProgressFeedbackList).size());
