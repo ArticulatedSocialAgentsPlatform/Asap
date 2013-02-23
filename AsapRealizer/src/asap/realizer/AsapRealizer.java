@@ -39,9 +39,9 @@ import asap.realizer.anticipator.Anticipator;
 import asap.realizer.feedback.FeedbackManager;
 import asap.realizer.pegboard.PegBoard;
 import asap.realizer.planunit.ParameterException;
+import asap.realizer.scheduler.BMLASchedulingHandler;
 import asap.realizer.scheduler.BMLBlockManager;
 import asap.realizer.scheduler.BMLScheduler;
-import asap.realizer.scheduler.BMLTSchedulingHandler;
 import asap.realizer.scheduler.SortedSmartBodySchedulingStrategy;
 import asap.realizerport.BMLFeedbackListener;
 
@@ -121,7 +121,7 @@ public class AsapRealizer
     public AsapRealizer(String characterId, BMLParser p, FeedbackManager fbm, Clock c, BMLBlockManager bbm, PegBoard pb,
             Engine... engines)
     {
-        this(p, fbm, c, new BMLScheduler(characterId, p, fbm, c, new BMLTSchedulingHandler(new SortedSmartBodySchedulingStrategy(pb)), bbm,
+        this(p, fbm, c, new BMLScheduler(characterId, p, fbm, c, new BMLASchedulingHandler(new SortedSmartBodySchedulingStrategy(pb),pb), bbm,
                 pb), engines);
     }
 

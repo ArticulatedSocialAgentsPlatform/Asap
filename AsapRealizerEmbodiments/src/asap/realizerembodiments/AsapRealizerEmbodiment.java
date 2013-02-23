@@ -42,16 +42,16 @@ import org.slf4j.LoggerFactory;
 import saiba.bml.core.BMLBehaviorAttributeExtension;
 import saiba.bml.core.Behaviour;
 import saiba.bml.parser.BMLParser;
-import asap.bml.ext.bmlt.BMLTBMLBehaviorAttributes;
+import asap.bml.ext.bmla.BMLABMLBehaviorAttributes;
 import asap.realizer.AsapRealizer;
 import asap.realizer.Engine;
 import asap.realizer.bridge.MultiThreadedElckerlycRealizerBridge;
 import asap.realizer.feedback.FeedbackManager;
 import asap.realizer.feedback.FeedbackManagerImpl;
 import asap.realizer.pegboard.PegBoard;
+import asap.realizer.scheduler.BMLASchedulingHandler;
 import asap.realizer.scheduler.BMLBlockManager;
 import asap.realizer.scheduler.BMLScheduler;
-import asap.realizer.scheduler.BMLTSchedulingHandler;
 import asap.realizer.scheduler.SortedSmartBodySchedulingStrategy;
 import asap.realizerembodiments.impl.BMLParserAssembler;
 import asap.realizerembodiments.impl.BMLSchedulerAssembler;
@@ -193,7 +193,7 @@ public class AsapRealizerEmbodiment implements EmbodimentLoader, Embodiment
     protected BMLParser readParserSection() throws IOException
     {
         BMLParser parser = new BMLParser(new ImmutableSet.Builder<Class<? extends BMLBehaviorAttributeExtension>>().add(
-                BMLTBMLBehaviorAttributes.class).build());
+                BMLABMLBehaviorAttributes.class).build());
         if (theTokenizer.atSTag("BMLParser"))
         {
             BMLParserAssembler assembler = new BMLParserAssembler();
@@ -218,8 +218,8 @@ public class AsapRealizerEmbodiment implements EmbodimentLoader, Embodiment
         }
         else
         {
-            scheduler = new BMLScheduler(name, parser, feedbackManager, theSchedulingClock, new BMLTSchedulingHandler(
-                    new SortedSmartBodySchedulingStrategy(pegBoard)), bmlBlockManager, pegBoard);
+            scheduler = new BMLScheduler(name, parser, feedbackManager, theSchedulingClock, new BMLASchedulingHandler(
+                    new SortedSmartBodySchedulingStrategy(pegBoard), pegBoard), bmlBlockManager, pegBoard);
         }
         return scheduler;
     }

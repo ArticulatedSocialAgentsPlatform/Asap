@@ -1,4 +1,4 @@
-package asap.bml.ext.bmlt;
+package asap.bml.ext.bmla;
 
 import saiba.bml.core.BMLBlockComposition;
 import saiba.bml.core.CoreComposition;
@@ -7,7 +7,7 @@ import saiba.bml.core.CoreComposition;
  * APPEND_AFTER: start when a selected set of previously sent behavior is finished<br> 
  * @author welberge
  */
-public enum BMLTSchedulingMechanism implements BMLBlockComposition
+public enum BMLASchedulingMechanism implements BMLBlockComposition
 {
     UNKNOWN, REPLACE, MERGE, APPEND, APPEND_AFTER;
     
@@ -33,9 +33,9 @@ public enum BMLTSchedulingMechanism implements BMLBlockComposition
         }
     }
     
-    public static BMLTSchedulingMechanism parse(String input)
+    public static BMLASchedulingMechanism parse(String input)
     {
-        for(BMLTSchedulingMechanism mech: BMLTSchedulingMechanism.values())
+        for(BMLASchedulingMechanism mech: BMLASchedulingMechanism.values())
         {
             if(mech.getNameStart().equals(input))
             {

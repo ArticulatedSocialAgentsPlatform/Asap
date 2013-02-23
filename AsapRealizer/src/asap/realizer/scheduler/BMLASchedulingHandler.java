@@ -8,8 +8,7 @@ import java.util.Set;
 
 import lombok.extern.slf4j.Slf4j;
 import asap.bml.ext.bmla.BMLABMLBehaviorAttributes;
-import asap.bml.ext.bmlt.BMLTBMLBehaviorAttributes;
-import asap.bml.ext.bmlt.BMLTSchedulingMechanism;
+import asap.bml.ext.bmla.BMLASchedulingMechanism;
 import asap.realizer.pegboard.BMLBlockPeg;
 import asap.realizer.pegboard.PegBoard;
 import asap.realizer.planunit.TimedPlanUnitState;
@@ -20,12 +19,12 @@ import asap.realizer.planunit.TimedPlanUnitState;
  * 
  */
 @Slf4j
-public class BMLBandTSchedulingHandler implements SchedulingHandler
+public class BMLASchedulingHandler implements SchedulingHandler
 {
     private final SchedulingStrategy strategy;
     private final PegBoard pegBoard;
 
-    public BMLBandTSchedulingHandler(SchedulingStrategy strategy, PegBoard pb)
+    public BMLASchedulingHandler(SchedulingStrategy strategy, PegBoard pb)
     {
         this.strategy = strategy;
         this.pegBoard = pb;
@@ -72,18 +71,17 @@ public class BMLBandTSchedulingHandler implements SchedulingHandler
     @Override
     public void schedule(BehaviourBlock bb, BMLScheduler scheduler)
     {
-        BMLABMLBehaviorAttributes bmlbAttr = bb.getBMLBehaviorAttributeExtension(BMLABMLBehaviorAttributes.class);
-        BMLTBMLBehaviorAttributes bmltAttr = bb.getBMLBehaviorAttributeExtension(BMLTBMLBehaviorAttributes.class);
-
+        BMLABMLBehaviorAttributes bmlaAttr = bb.getBMLBehaviorAttributeExtension(BMLABMLBehaviorAttributes.class);
+        
         Set<String> appendAfter = new HashSet<String>();
         Set<String> chunkAfter = new HashSet<String>();
-        for (String bmlId : bmltAttr.getInterruptList())
+        for (String bmlId : bmlaAttr.getInterruptList())
         {
             log.debug("interrupting {}", bmlId);
             scheduler.interruptBlock(bmlId);
         }
 
-        switch (BMLTSchedulingMechanism.parse(bb.getSchedulingMechanism().getNameStart()))
+        switch (BMLASchedulingMechanism.parse(bb.getSchedulingMechanism().getNameStart()))
         {
         case REPLACE:
             scheduler.reset();
@@ -98,14 +96,14 @@ public class BMLBandTSchedulingHandler implements SchedulingHandler
             appendAfter.addAll(scheduler.getBMLBlocks());
             break;
         case APPEND_AFTER:
-            appendAfter.addAll(bmltAttr.getAppendList());
+            appendAfter.addAll(bmlaAttr.getAppendAfterList());
             appendAfter.retainAll(scheduler.getBMLBlocks());
             break;
         }
-        appendAfter.addAll(bmlbAttr.getAppendAfterList());
-        chunkAfter.addAll(bmlbAttr.getChunkAfterList());
+        appendAfter.addAll(bmlaAttr.getAppendAfterList());
+        chunkAfter.addAll(bmlaAttr.getChunkAfterList());
 
-        for (String chunkBefore : bmlbAttr.getChunkBeforeList())
+        for (String chunkBefore : bmlaAttr.getChunkBeforeList())
         {
             if (!addBMLBlockChunkAfterTarget(chunkBefore, bb.getBmlId(), scheduler.getBMLBlockManager()))
             {
@@ -114,7 +112,7 @@ public class BMLBandTSchedulingHandler implements SchedulingHandler
                 return;
             }
         }
-        for (String prependBefore : bmlbAttr.getPrependBeforeList())
+        for (String prependBefore : bmlaAttr.getPrependBeforeList())
         {
             if(!addBMLBlockAppendAfterTarget(prependBefore, bb.getBmlId(), scheduler.getBMLBlockManager()))
             {
@@ -128,7 +126,7 @@ public class BMLBandTSchedulingHandler implements SchedulingHandler
         scheduler.planningStart(bb.id, predictedStart);
 
         // logger.debug("Scheduling started at: {}",schedulingClock.getTime());
-        BMLBBlock bbm = new BMLBBlock(bb.id, scheduler, pegBoard, appendAfter, bmltAttr.getOnStartList(), chunkAfter);
+        BMLBBlock bbm = new BMLBBlock(bb.id, scheduler, pegBoard, appendAfter, bmlaAttr.getOnStartList(), chunkAfter);
         BMLBlockPeg bmlBlockPeg = new BMLBlockPeg(bb.id, predictedStart);
         scheduler.addBMLBlockPeg(bmlBlockPeg);
 
@@ -142,14 +140,14 @@ public class BMLBandTSchedulingHandler implements SchedulingHandler
 
         scheduler.planningFinished(bb.id, predictedStart, scheduler.predictEndTime(bb.id));
 
-        if (bmltAttr.isPrePlanned())
+        if (bmlaAttr.isPrePlanned())
         {
             log.debug("Preplanning {}.", bb.id);
             bbm.setState(TimedPlanUnitState.PENDING);
         }
         else
         {
-            switch (BMLTSchedulingMechanism.parse(bb.getSchedulingMechanism().getNameStart()))
+            switch (BMLASchedulingMechanism.parse(bb.getSchedulingMechanism().getNameStart()))
             {
             case REPLACE:
             case UNKNOWN:

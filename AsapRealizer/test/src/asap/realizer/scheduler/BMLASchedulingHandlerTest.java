@@ -22,7 +22,6 @@ import org.powermock.modules.junit4.PowerMockRunner;
 
 import saiba.bml.core.BehaviourBlock;
 import asap.bml.ext.bmla.BMLABMLBehaviorAttributes;
-import asap.bml.ext.bmlt.BMLTBMLBehaviorAttributes;
 import asap.realizer.pegboard.BMLBlockPeg;
 import asap.realizer.pegboard.PegBoard;
 import asap.realizer.planunit.TimedPlanUnitState;
@@ -35,7 +34,7 @@ import com.google.common.collect.ImmutableSet;
  */
 @RunWith(PowerMockRunner.class)
 @PrepareForTest({ BMLScheduler.class, BMLBlockManager.class })
-public class BMLBandTSchedulingHandlerTest
+public class BMLASchedulingHandlerTest
 {
     private BMLScheduler mockScheduler = mock(BMLScheduler.class);
     private BMLBlockManager mockBMLBlockManager = mock(BMLBlockManager.class);
@@ -43,7 +42,7 @@ public class BMLBandTSchedulingHandlerTest
     private BMLBBlock mockBML2 = mock(BMLBBlock.class);
     private BMLBBlock mockBML3 = mock(BMLBBlock.class);
     private PegBoard pegBoard = new PegBoard();
-    private BMLBandTSchedulingHandler handler = new BMLBandTSchedulingHandler(new SmartBodySchedulingStrategy(new PegBoard()), pegBoard);
+    private BMLASchedulingHandler handler = new BMLASchedulingHandler(new SmartBodySchedulingStrategy(new PegBoard()), pegBoard);
     private static final double TIMING_PRECISION = 0.0001;
 
     @Before
@@ -66,7 +65,7 @@ public class BMLBandTSchedulingHandlerTest
 
     private BehaviourBlock createBehaviourBlock(String id, String content)
     {
-        BehaviourBlock bb = new BehaviourBlock(new BMLABMLBehaviorAttributes(), new BMLTBMLBehaviorAttributes());
+        BehaviourBlock bb = new BehaviourBlock(new BMLABMLBehaviorAttributes(), new BMLABMLBehaviorAttributes());
         bb.readXML("<bml xmlns=\"http://www.bml-initiative.org/bml/bml-1.0\" id=\"" + id + "\"" + content + "/>");
         return bb;
     }

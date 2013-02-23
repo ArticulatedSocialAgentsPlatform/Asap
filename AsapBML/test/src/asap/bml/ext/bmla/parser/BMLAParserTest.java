@@ -1,4 +1,4 @@
-package asap.bml.ext.bmlt.parser;
+package asap.bml.ext.bmla.parser;
 
 import static asap.bml.parser.ParserTestUtil.assertEqualConstraints;
 import static org.hamcrest.MatcherAssert.assertThat;
@@ -6,6 +6,10 @@ import static org.hamcrest.Matchers.hasItem;
 import static org.hamcrest.Matchers.hasItems;
 import static org.hamcrest.Matchers.instanceOf;
 import static org.junit.Assert.assertEquals;
+import saiba.bml.BMLInfo;
+import saiba.bml.core.Behaviour;
+import saiba.bml.core.BehaviourBlock;
+import saiba.bml.parser.BMLParser;
 import hmi.util.Resources;
 
 import java.io.IOException;
@@ -16,67 +20,83 @@ import org.hamcrest.collection.IsIterableContainingInOrder;
 import org.junit.Before;
 import org.junit.Test;
 
-import saiba.bml.BMLInfo;
-import saiba.bml.core.Behaviour;
-import saiba.bml.core.BehaviourBlock;
-import saiba.bml.parser.BMLParser;
+import asap.bml.ext.bmla.BMLABMLBehaviorAttributes;
+import asap.bml.ext.bmla.BMLASchedulingMechanism;
 import asap.bml.ext.bmlt.BMLTAudioFileBehaviour;
-import asap.bml.ext.bmlt.BMLTBMLBehaviorAttributes;
 import asap.bml.ext.bmlt.BMLTInfo;
-import asap.bml.ext.bmlt.BMLTSchedulingMechanism;
 import asap.bml.ext.maryxml.MaryXMLBehaviour;
+import asap.bml.ext.murml.MURMLFaceBehaviour;
 import asap.bml.parser.ExpectedConstraint;
 import asap.bml.parser.ExpectedSync;
 
 /**
- * Testcases for BMLT specific parsing
+ * Unit test cases for a BML parser that can parse BMLB
  * @author hvanwelbergen
- * 
+ *
  */
-public class BMLTParserTest
+public class BMLAParserTest
 {
     private static final int PARSE_TIMEOUT = 300;
     private BMLParser parser;
-    private Resources res = new Resources("bmltest");
+    private Resources res = new Resources("bmltest");    
     private BehaviourBlock block;
-    private BMLTBMLBehaviorAttributes bmltExt;
-
+    private BMLABMLBehaviorAttributes bmltExt;
+    
     static
     {
         BMLTInfo.init();
     }
-
+    
+    @Before
+    public void setup()
+    {
+        BMLInfo.addDescriptionExtension(MURMLFaceBehaviour.xmlTag(), MURMLFaceBehaviour.class);
+        BMLInfo.supportedExtensions.add(MURMLFaceBehaviour.class);    
+        BMLInfo.supportedExtensions.add(MaryXMLBehaviour.class);        
+        parser = new BMLParser();
+    }
+    
     private void readXML(String file) throws IOException
     {
+        BMLInfo.supportedExtensions.add(MURMLFaceBehaviour.class);
         BMLInfo.supportedExtensions.add(MaryXMLBehaviour.class);
         parser.clear();
-        block = new BehaviourBlock(new BMLTBMLBehaviorAttributes());
+        block = new BehaviourBlock(new BMLABMLBehaviorAttributes());        
         block.readXML(res.getReader(file));
-        bmltExt = block.getBMLBehaviorAttributeExtension(BMLTBMLBehaviorAttributes.class);
+        bmltExt = block.getBMLBehaviorAttributeExtension(BMLABMLBehaviorAttributes.class);
         parser.addBehaviourBlock(block);
     }
-
+    
+    @Test(timeout = PARSE_TIMEOUT)
+    public void testMurmlFaceDesc()throws IOException
+    {
+        readXML("runtime/murml/murmlfacekeyframedescription.xml");
+        Behaviour b = block.behaviours.get(0);
+        assertEquals("face1", b.id);
+        assertThat(b, instanceOf(MURMLFaceBehaviour.class));
+    }
+    
     @Test(timeout = PARSE_TIMEOUT)
     public void testSpeechNoAppend() throws IOException
     {
         readXML("empty.xml");
-        assertEquals(0, bmltExt.getAppendList().size());
+        assertEquals(0, bmltExt.getAppendAfterList().size());
     }
 
     @Test(timeout = PARSE_TIMEOUT)
     public void testSpeechNoAppendAfter() throws IOException
     {
         readXML("bmlt/emptyappendafter.xml");
-        assertEquals(0, bmltExt.getAppendList().size());
+        assertEquals(0, bmltExt.getAppendAfterList().size());
     }
 
     @Test(timeout = PARSE_TIMEOUT)
     public void testAppendAfter() throws IOException
     {
         readXML("bmlt/testspeechappendafter.xml");
-        assertEquals(BMLTSchedulingMechanism.APPEND_AFTER, block.getSchedulingMechanism());
-        assertEquals(3, bmltExt.getAppendList().size());
-        assertThat(bmltExt.getAppendList(), hasItems("bml1", "bml2", "bml3"));
+        assertEquals(BMLASchedulingMechanism.APPEND_AFTER, block.getSchedulingMechanism());
+        assertEquals(3, bmltExt.getAppendAfterList().size());
+        assertThat(bmltExt.getAppendAfterList(), hasItems("bml1", "bml2", "bml3"));
     }
 
     @Test(timeout = PARSE_TIMEOUT)
@@ -97,13 +117,6 @@ public class BMLTParserTest
         expectedConstraints.add(expected2);
 
         assertEqualConstraints(expectedConstraints, parser.getConstraints());
-    }
-
-    @Before
-    public void setup()
-    {
-        BMLInfo.supportedExtensions.add(MaryXMLBehaviour.class);
-        parser = new BMLParser();
     }
 
     @Test(timeout = PARSE_TIMEOUT)

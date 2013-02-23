@@ -18,14 +18,10 @@
  ******************************************************************************/
 package asap.picture.planunit;
 
-import hmi.util.StringUtil;
-
 import java.util.List;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-
-import com.google.common.primitives.Floats;
 
 import asap.picture.PicturePlanner;
 import asap.picture.display.PictureDisplay;
@@ -36,6 +32,8 @@ import asap.realizer.planunit.KeyPosition;
 import asap.realizer.planunit.KeyPositionManager;
 import asap.realizer.planunit.KeyPositionManagerImpl;
 import asap.realizer.planunit.ParameterException;
+
+import com.google.common.primitives.Floats;
 
 public class AddImagePU implements PictureUnit
 {
