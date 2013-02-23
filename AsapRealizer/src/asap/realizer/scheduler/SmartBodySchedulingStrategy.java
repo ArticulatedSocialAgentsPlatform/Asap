@@ -89,7 +89,6 @@ public class SmartBodySchedulingStrategy implements SchedulingStrategy
 
         for (Behaviour b : bb.behaviours)
         {
-            BMLABMLBehaviorAttributes bmltAttr = bb.getBMLBehaviorAttributeExtension(BMLABMLBehaviorAttributes.class);
             scheduleBehaviour(mechanism, bb.id, bmlBlockPeg, scheduler, scheduleTime, scheduledBehaviors, syncMap, b);
         }
 
@@ -245,7 +244,6 @@ public class SmartBodySchedulingStrategy implements SchedulingStrategy
                         }
                         if (!s.getBmlId().equals(bmlId))
                         {
-
                             isStaticOrAnticipator = true;
                             TimePeg sp = pegBoard.getTimePeg(s.getBmlId(), s.getBehaviourId(), s.getName());
                             syncList.add(new TimePegAndConstraint(ci.syncId, sp, c, ci.offset - s.offset));
