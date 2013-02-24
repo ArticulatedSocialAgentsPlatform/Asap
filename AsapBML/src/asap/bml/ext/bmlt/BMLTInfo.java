@@ -6,6 +6,8 @@ import saiba.bml.core.GazeBehaviour;
 import saiba.bml.core.SpeechBehaviour;
 
 import asap.bml.ext.bmla.BMLAInterruptBehaviour;
+import asap.bml.ext.bmla.BMLAActivateBehaviour;
+import asap.bml.ext.bmla.BMLAParameterValueChangeBehaviour;
 import asap.bml.ext.maryxml.MaryAllophonesBehaviour;
 import asap.bml.ext.maryxml.MaryWordsBehaviour;
 import asap.bml.ext.maryxml.MaryXMLBehaviour;
@@ -33,8 +35,8 @@ public final class BMLTInfo
             .put(BMLTAudioFileBehaviour.xmlTag(), BMLTAudioFileBehaviour.class)
             .put(BMLTFaceMorphBehaviour.xmlTag(), BMLTFaceMorphBehaviour.class)
             .put(BMLAInterruptBehaviour.xmlTag(), BMLAInterruptBehaviour.class)
-            .put(BMLTActivateBehaviour.xmlTag(), BMLTActivateBehaviour.class)
-            .put(BMLTParameterValueChangeBehaviour.xmlTag(), BMLTParameterValueChangeBehaviour.class)            
+            .put(BMLAActivateBehaviour.xmlTag(), BMLAActivateBehaviour.class)
+            .put(BMLAParameterValueChangeBehaviour.xmlTag(), BMLAParameterValueChangeBehaviour.class)            
             .build();
     // /Description levels that can be parsed
     private static final ImmutableMap<String, Class<? extends Behaviour>> DESCRIPTION_EXTENSIONS = 

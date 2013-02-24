@@ -5,7 +5,7 @@ import saiba.bml.core.Behaviour;
 import java.util.ArrayList;
 import java.util.List;
 
-import asap.bml.ext.bmlt.BMLTParameterValueChangeBehaviour;
+import asap.bml.ext.bmla.BMLAParameterValueChangeBehaviour;
 import asap.realizer.AbstractPlanner;
 import asap.realizer.BehaviourPlanningException;
 import asap.realizer.SyncAndTimePeg;
@@ -177,7 +177,7 @@ public class ParameterValueChangePlanner extends AbstractPlanner<TimedParameterV
     public List<Class<? extends Behaviour>> getSupportedBehaviours()
     {
         List<Class<? extends Behaviour>> list = new ArrayList<Class<? extends Behaviour>>();
-        list.add(BMLTParameterValueChangeBehaviour.class);
+        list.add(BMLAParameterValueChangeBehaviour.class);
         return list;
     }
 

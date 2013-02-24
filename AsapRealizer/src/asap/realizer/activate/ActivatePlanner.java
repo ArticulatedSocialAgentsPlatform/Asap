@@ -5,7 +5,7 @@ import saiba.bml.core.Behaviour;
 import java.util.ArrayList;
 import java.util.List;
 
-import asap.bml.ext.bmlt.BMLTActivateBehaviour;
+import asap.bml.ext.bmla.BMLAActivateBehaviour;
 import asap.realizer.AbstractPlanner;
 import asap.realizer.BehaviourPlanningException;
 import asap.realizer.SyncAndTimePeg;
@@ -48,11 +48,11 @@ public class ActivatePlanner extends AbstractPlanner<TimedActivateUnit>
     public List<SyncAndTimePeg> addBehaviour(BMLBlockPeg bbPeg, Behaviour b, List<TimePegAndConstraint> sac,
             TimedActivateUnit au) throws BehaviourPlanningException
     {
-        if (!(b instanceof BMLTActivateBehaviour))
+        if (!(b instanceof BMLAActivateBehaviour))
         {
             throw new BehaviourPlanningException(b, "Behaviour is not a BMLTActivateBehaviour");
         }
-        BMLTActivateBehaviour ab = (BMLTActivateBehaviour) b;
+        BMLAActivateBehaviour ab = (BMLAActivateBehaviour) b;
 
         if (au == null)
         {
@@ -111,7 +111,7 @@ public class ActivatePlanner extends AbstractPlanner<TimedActivateUnit>
     public List<Class<? extends Behaviour>> getSupportedBehaviours()
     {
         List<Class<? extends Behaviour>> list = new ArrayList<Class<? extends Behaviour>>();
-        list.add(BMLTActivateBehaviour.class);
+        list.add(BMLAActivateBehaviour.class);
         return list;
     }
 

@@ -13,8 +13,8 @@ import saiba.bml.feedback.BMLBlockPredictionFeedback;
 import saiba.bml.feedback.BMLFeedback;
 import saiba.bml.feedback.BMLFeedbackParser;
 import saiba.bml.feedback.BMLPredictionFeedback;
+import asap.bml.ext.bmla.BMLAParameterValueChangeBehaviour;
 import asap.bml.ext.bmlt.BMLTAudioFileBehaviour;
-import asap.bml.ext.bmlt.BMLTParameterValueChangeBehaviour;
 import asap.realizerport.BMLFeedbackListener;
 import bml.bmlinfo.DefaultSyncPoints;
 import bml.realizertest.AbstractBML1RealizerTest;
@@ -94,10 +94,10 @@ public abstract class AbstractASAPRealizerTest extends AbstractBML1RealizerTest 
     }
     
     @Test
-    public void testParameterValueChangeWithTightMerge() throws IOException, InterruptedException
+    public void testParameterValueChangeFromExternalBlock() throws IOException, InterruptedException
     {
-        String bmlString1 = readTestFile("bmlt/tightmerge/speechandnod.xml");
-        String bmlString2 = readTestFile("bmlt/tightmerge/volumechange.xml");
+        String bmlString1 = readTestFile("asap/parametervaluechange/speechandnod.xml");
+        String bmlString2 = readTestFile("asap/parametervaluechange/volumechange.xml");
         realizerHandler.performBML(bmlString1);
         waitForBMLSchedulingFinishedFeedback("bml1");
         realizerHandler.performBML(bmlString2);
@@ -109,7 +109,7 @@ public abstract class AbstractASAPRealizerTest extends AbstractBML1RealizerTest 
 
         realizerHandler.assertSyncsInOrder("bml1", "speech1", "start", "s1", "end");
         realizerHandler.assertSyncsInOrder("bml1", "speech2", DefaultSyncPoints.getDefaultSyncPoints("speech"));
-        realizerHandler.assertSyncsInOrder("bml2", "pvc1", BMLTParameterValueChangeBehaviour.getDefaultSyncPoints().toArray(new String[0]));
+        realizerHandler.assertSyncsInOrder("bml2", "pvc1", BMLAParameterValueChangeBehaviour.getDefaultSyncPoints().toArray(new String[0]));
 
         realizerHandler.assertLinkedSyncs("bml1", "speech1", "start", "bml2", "pvc1", "start");
         realizerHandler.assertLinkedSyncs("bml1", "speech1", "end", "bml2", "pvc1", "end");
@@ -138,7 +138,7 @@ public abstract class AbstractASAPRealizerTest extends AbstractBML1RealizerTest 
     @Test
     public void testParameterValueChange() throws InterruptedException, IOException
     {
-        String bmlString1 = readTestFile("bmlt/parametervaluechange.xml");
+        String bmlString1 = readTestFile("asap/parametervaluechange.xml");
         realizerHandler.performBML(bmlString1);
 
         realizerHandler.waitForBMLEndFeedback("bml1");
@@ -148,7 +148,7 @@ public abstract class AbstractASAPRealizerTest extends AbstractBML1RealizerTest 
 
         realizerHandler.assertSyncsInOrder("bml1", "speech1", DefaultSyncPoints.getDefaultSyncPoints("speech"));
         realizerHandler.assertSyncsInOrder("bml1", "speech2", DefaultSyncPoints.getDefaultSyncPoints("speech"));
-        realizerHandler.assertSyncsInOrder("bml1", "pvc1", BMLTParameterValueChangeBehaviour.getDefaultSyncPoints().toArray(new String[0]));
+        realizerHandler.assertSyncsInOrder("bml1", "pvc1", BMLAParameterValueChangeBehaviour.getDefaultSyncPoints().toArray(new String[0]));
         realizerHandler.assertLinkedSyncs("bml1", "speech1", "end", "bml1", "pvc1", "end");
     }
 

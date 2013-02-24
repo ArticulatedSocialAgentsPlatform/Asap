@@ -1,4 +1,4 @@
-package asap.bml.ext.bmlt;
+package asap.bml.ext.bmla;
 
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.junit.Assert.assertEquals;
@@ -21,7 +21,7 @@ import asap.bml.ext.bmla.BMLAInterruptBehaviour;
  * Unit test cases for interruptbehaviour parsing
  * @author welberge
  */
-public class BMLTInterruptBehaviourTest extends AbstractBehaviourTest
+public class BMLAInterruptBehaviourTest extends AbstractBehaviourTest
 {
     @Override
     protected Behaviour createBehaviour(String bmlId, String extraAttributeString) throws IOException

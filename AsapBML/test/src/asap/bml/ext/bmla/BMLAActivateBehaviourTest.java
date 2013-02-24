@@ -1,4 +1,4 @@
-package asap.bml.ext.bmlt;
+package asap.bml.ext.bmla;
 
 import static org.junit.Assert.assertEquals;
 import hmi.xml.XMLFormatting;
@@ -7,6 +7,8 @@ import hmi.xml.XMLTokenizer;
 import java.io.IOException;
 
 import org.junit.Test;
+
+import asap.bml.ext.bmlt.BMLTInfo;
 
 import saiba.bml.core.AbstractBehaviourTest;
 import saiba.bml.core.Behaviour;
@@ -18,7 +20,7 @@ import saiba.utils.TestUtil;
  * @author welberge
  *
  */
-public class BMLTActivateBehaviourTest extends AbstractBehaviourTest
+public class BMLAActivateBehaviourTest extends AbstractBehaviourTest
 {
     static
     {
@@ -28,22 +30,22 @@ public class BMLTActivateBehaviourTest extends AbstractBehaviourTest
     @Override
     protected Behaviour createBehaviour(String bmlId, String extraAttributeString) throws IOException
     {
-        String str = "<bmlt:activate xmlns:bmlt=\"http://hmi.ewi.utwente.nl/bmlt\" "+TestUtil.getDefNS()+"id=\"a1\" target=\"bmltarget\""+ 
+        String str = "<bmla:activate xmlns:bmla=\""+BMLAInfo.BMLA_NAMESPACE+"\" "+TestUtil.getDefNS()+"id=\"a1\" target=\"bmltarget\""+ 
                 extraAttributeString+"/>";        
-                return new BMLTActivateBehaviour(bmlId, new XMLTokenizer(str));
+                return new BMLAActivateBehaviour(bmlId, new XMLTokenizer(str));
     }
 
     @Override
     protected Behaviour parseBehaviour(String bmlId, String bmlString) throws IOException
     {
-        return new BMLTActivateBehaviour(bmlId,new XMLTokenizer(bmlString));
+        return new BMLAActivateBehaviour(bmlId,new XMLTokenizer(bmlString));
     }
     
     @Test
     public void testReadXML() throws IOException
     {
-        String bmlString = "<bmlt:activate xmlns:bmlt=\"http://hmi.ewi.utwente.nl/bmlt\" id=\"a1\" start=\"nod1:end\" target=\"bml1\"/>";
-        BMLTActivateBehaviour beh = new BMLTActivateBehaviour("bmla", new XMLTokenizer(bmlString));
+        String bmlString = "<bmla:activate xmlns:bmla=\""+BMLAInfo.BMLA_NAMESPACE+"\" id=\"a1\" start=\"nod1:end\" target=\"bml1\"/>";
+        BMLAActivateBehaviour beh = new BMLAActivateBehaviour("bmla", new XMLTokenizer(bmlString));
         assertEquals("bmla",beh.getBmlId());
         assertEquals("a1",beh.id);
         assertEquals("bml1",beh.getTarget());
@@ -56,11 +58,11 @@ public class BMLTActivateBehaviourTest extends AbstractBehaviourTest
     public void testActivateInBML() throws IOException
     {
         String bmlString = "<bml xmlns=\"http://www.bml-initiative.org/bml/bml-1.0\" id=\"bml1\">"+
-                            "<bmlt:activate xmlns:bmlt=\"http://hmi.ewi.utwente.nl/bmlt\" id=\"a1\" start=\"nod1:end\" target=\"bml1\"/>"+
+                            "<bmla:activate xmlns:bmla=\""+BMLAInfo.BMLA_NAMESPACE+"\" id=\"a1\" start=\"nod1:end\" target=\"bml1\"/>"+
                            "</bml>";
         BehaviourBlock bb = new BehaviourBlock(new XMLTokenizer(bmlString));
         assertEquals(1,bb.behaviours.size());
-        BMLTActivateBehaviour beh = (BMLTActivateBehaviour)bb.behaviours.get(0);
+        BMLAActivateBehaviour beh = (BMLAActivateBehaviour)bb.behaviours.get(0);
         assertEquals("bml1",beh.getBmlId());
         assertEquals("bml1",beh.getTarget());        
     }
@@ -68,11 +70,11 @@ public class BMLTActivateBehaviourTest extends AbstractBehaviourTest
     @Test
     public void testWriteXML() throws IOException
     {
-        String bmlString = "<bmlt:activate xmlns:bmlt=\"http://hmi.ewi.utwente.nl/bmlt\" id=\"a1\" start=\"nod1:end\" target=\"bml1\"/>";
-        BMLTActivateBehaviour behIn = new BMLTActivateBehaviour("bmla", new XMLTokenizer(bmlString));
+        String bmlString = "<bmla:activate xmlns:bmla=\""+BMLAInfo.BMLA_NAMESPACE+"\" id=\"a1\" start=\"nod1:end\" target=\"bml1\"/>";
+        BMLAActivateBehaviour behIn = new BMLAActivateBehaviour("bmla", new XMLTokenizer(bmlString));
         StringBuilder buf = new StringBuilder();        
-        behIn.appendXML(buf, new XMLFormatting(), "bmlt", "http://hmi.ewi.utwente.nl/bmlt");
-        BMLTActivateBehaviour behOut = new BMLTActivateBehaviour("bmla", new XMLTokenizer(buf.toString()));
+        behIn.appendXML(buf, new XMLFormatting(), "bmla", BMLAInfo.BMLA_NAMESPACE);
+        BMLAActivateBehaviour behOut = new BMLAActivateBehaviour("bmla", new XMLTokenizer(buf.toString()));
         
         assertEquals("bmla",behOut.getBmlId());
         assertEquals("a1",behOut.id);

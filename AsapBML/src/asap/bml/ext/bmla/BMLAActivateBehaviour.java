@@ -1,7 +1,5 @@
-package asap.bml.ext.bmlt;
+package asap.bml.ext.bmla;
 
-import saiba.bml.core.Behaviour;
-import saiba.bml.parser.SyncPoint;
 import hmi.xml.XMLFormatting;
 import hmi.xml.XMLTokenizer;
 
@@ -9,17 +7,20 @@ import java.io.IOException;
 import java.util.HashMap;
 import java.util.List;
 
+import saiba.bml.core.Behaviour;
+import saiba.bml.parser.SyncPoint;
+
 import com.google.common.collect.ImmutableList;
 
 /**
  * BMLT Interrupt behavior. Specifies the activation of a target preplanned BML block
  * @author welberge
  */
-public class BMLTActivateBehaviour extends Behaviour
+public class BMLAActivateBehaviour extends Behaviour
 {
     private String target;
     
-    public BMLTActivateBehaviour(String bmlId,XMLTokenizer tokenizer) throws IOException
+    public BMLAActivateBehaviour(String bmlId,XMLTokenizer tokenizer) throws IOException
     {
         super(bmlId);
         readXML(tokenizer);
@@ -28,7 +29,7 @@ public class BMLTActivateBehaviour extends Behaviour
     @Override
     public String getNamespace()
     {
-        return BMLTBehaviour.BMLTNAMESPACE;
+        return BMLAInfo.BMLA_NAMESPACE;
     }
 
     public String getTarget()
