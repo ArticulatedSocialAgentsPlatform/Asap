@@ -102,7 +102,7 @@ public class BMLAParserTest
     @Test(timeout = PARSE_TIMEOUT)
     public void testParameterValueChange() throws IOException
     {
-        readXML("bmlt/parametervaluechange.xml");
+        readXML("asap/parametervaluechange.xml");
         List<ExpectedConstraint> expectedConstraints = new ArrayList<ExpectedConstraint>();
 
         ExpectedConstraint expected1 = new ExpectedConstraint();

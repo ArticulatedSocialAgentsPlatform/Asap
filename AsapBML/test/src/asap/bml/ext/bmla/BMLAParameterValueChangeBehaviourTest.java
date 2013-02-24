@@ -1,4 +1,4 @@
-package asap.bml.ext.bmlt;
+package asap.bml.ext.bmla;
 
 import static org.junit.Assert.assertEquals;
 import hmi.xml.XMLFormatting;
@@ -7,6 +7,8 @@ import hmi.xml.XMLTokenizer;
 import java.io.IOException;
 
 import org.junit.Test;
+
+import asap.bml.ext.bmla.BMLAParameterValueChangeBehaviour;
 
 import saiba.bml.core.AbstractBehaviourTest;
 import saiba.bml.core.Behaviour;
@@ -17,31 +19,31 @@ import saiba.utils.TestUtil;
  * @author welberge
  * 
  */
-public class BMLTParameterValueChangeBehaviourTest extends AbstractBehaviourTest
+public class BMLAParameterValueChangeBehaviourTest extends AbstractBehaviourTest
 {
     @Override
     protected Behaviour createBehaviour(String bmlId, String extraAttributeString) throws IOException
     {
-        String str = "<bmlt:parametervaluechange xmlns:bmlt=\"http://hmi.ewi.utwente.nl/bmlt\" id=\"a1\" "+TestUtil.getDefNS()
+        String str = "<bmla:parametervaluechange xmlns:bmla=\""+BMLAInfo.BMLA_NAMESPACE+"\" id=\"a1\" "+TestUtil.getDefNS()
                 +"paramId=\"volume\" target=\"bmlx1:behx\" "
                 + extraAttributeString+">"
-                + "<bmlt:trajectory type=\"linear\" targetValue=\"100\" initialValue=\"0\"/>" + "</bmlt:parametervaluechange>";        
-                return new BMLTParameterValueChangeBehaviour(bmlId, new XMLTokenizer(str));
+                + "<bmla:trajectory type=\"linear\" targetValue=\"100\" initialValue=\"0\"/>" + "</bmlt:parametervaluechange>";        
+                return new BMLAParameterValueChangeBehaviour(bmlId, new XMLTokenizer(str));
     }
 
     @Override
     protected Behaviour parseBehaviour(String bmlId, String bmlString) throws IOException
     {
-        return new BMLTParameterValueChangeBehaviour(bmlId, new XMLTokenizer(bmlString));
+        return new BMLAParameterValueChangeBehaviour(bmlId, new XMLTokenizer(bmlString));
     }
     
     @Test
     public void testReadXML() throws IOException
     {
-        String bmlString = "<bmlt:parametervaluechange xmlns:bmlt=\"http://hmi.ewi.utwente.nl/bmlt\" id=\"a1\" start=\"nod1:end\" "
+        String bmlString = "<bmla:parametervaluechange xmlns:bmla=\""+BMLAInfo.BMLA_NAMESPACE+"\" id=\"a1\" start=\"nod1:end\" "
                 + "paramId=\"volume\" target=\"bml1:speech1\">"
-                + "<bmlt:trajectory type=\"linear\" targetValue=\"100\" initialValue=\"0\"/>" + "</bmlt:parametervaluechange>";
-        BMLTParameterValueChangeBehaviour beh = new BMLTParameterValueChangeBehaviour("bmla", new XMLTokenizer(bmlString));
+                + "<bmla:trajectory type=\"linear\" targetValue=\"100\" initialValue=\"0\"/>" + "</bmlt:parametervaluechange>";
+        BMLAParameterValueChangeBehaviour beh = new BMLAParameterValueChangeBehaviour("bmla", new XMLTokenizer(bmlString));
         assertEquals("bmla", beh.getBmlId());
         assertEquals("a1", beh.id);
 
@@ -56,14 +58,14 @@ public class BMLTParameterValueChangeBehaviourTest extends AbstractBehaviourTest
     @Test
     public void testWriteXML() throws IOException
     {
-        String bmlString = "<bmlt:parametervaluechange xmlns:bmlt=\"http://hmi.ewi.utwente.nl/bmlt\" id=\"a1\" start=\"nod1:end\" "
+        String bmlString = "<bmla:parametervaluechange xmlns:bmla=\""+BMLAInfo.BMLA_NAMESPACE+"\" id=\"a1\" start=\"nod1:end\" "
                 + "paramId=\"volume\" target=\"bml1:speech1\">"
-                + "<bmlt:trajectory type=\"linear\" targetValue=\"100\" initialValue=\"0\"/>" + "</bmlt:parametervaluechange>";
-        BMLTParameterValueChangeBehaviour behIn = new BMLTParameterValueChangeBehaviour("bmla", new XMLTokenizer(bmlString));
+                + "<bmla:trajectory type=\"linear\" targetValue=\"100\" initialValue=\"0\"/>" + "</bmlt:parametervaluechange>";
+        BMLAParameterValueChangeBehaviour behIn = new BMLAParameterValueChangeBehaviour("bmla", new XMLTokenizer(bmlString));
 
         StringBuilder buf = new StringBuilder();
         behIn.appendXML(buf, new XMLFormatting(), "bmlt", "http://hmi.ewi.utwente.nl/bmlt");
-        BMLTParameterValueChangeBehaviour behOut = new BMLTParameterValueChangeBehaviour("bmla", new XMLTokenizer(buf.toString()));
+        BMLAParameterValueChangeBehaviour behOut = new BMLAParameterValueChangeBehaviour("bmla", new XMLTokenizer(buf.toString()));
 
         assertEquals("bmla", behOut.getBmlId());
         assertEquals("a1", behOut.id);

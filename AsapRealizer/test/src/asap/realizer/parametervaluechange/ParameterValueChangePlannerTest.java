@@ -11,7 +11,8 @@ import java.util.ArrayList;
 import java.util.List;
 
 import saiba.bml.parser.Constraint;
-import asap.bml.ext.bmlt.BMLTParameterValueChangeBehaviour;
+import asap.bml.ext.bmla.BMLAInfo;
+import asap.bml.ext.bmla.BMLAParameterValueChangeBehaviour;
 import asap.realizertestutil.PlannerTests;
 import hmi.xml.XMLTokenizer;
 
@@ -60,16 +61,16 @@ public class ParameterValueChangePlannerTest
     private PlannerTests<TimedParameterValueChangeUnit> plannerTests;
     
     
-    private BMLTParameterValueChangeBehaviour createBehavior(String paramId, String target, float initialValue, float targetValue,
+    private BMLAParameterValueChangeBehaviour createBehavior(String paramId, String target, float initialValue, float targetValue,
             String type, String other) throws IOException
     {
-        String str = "<parametervaluechange xmlns=\"http://hmi.ewi.utwente.nl/bmlt\" paramId=\"" + paramId + "\"" + " target=\"" + target
+        String str = "<parametervaluechange xmlns=\""+BMLAInfo.BMLA_NAMESPACE+"\" paramId=\"" + paramId + "\"" + " target=\"" + target
                 + "\" " +other+ " id=\"paramchange1\">" + "<trajectory  initialValue=\"" + initialValue + "\"" + " targetValue=\"" + targetValue
                 + "\"" + " type=\"" + type + "\"/>" + "</parametervaluechange>";
-        return new BMLTParameterValueChangeBehaviour("bml1", new XMLTokenizer(str));
+        return new BMLAParameterValueChangeBehaviour("bml1", new XMLTokenizer(str));
     }
 
-    private BMLTParameterValueChangeBehaviour createBehavior(String paramId, String target, float initialValue, float targetValue,
+    private BMLAParameterValueChangeBehaviour createBehavior(String paramId, String target, float initialValue, float targetValue,
             String type) throws IOException
     {
         return createBehavior(paramId, target, initialValue, targetValue,type,"");
@@ -104,7 +105,7 @@ public class ParameterValueChangePlannerTest
     public void testResolve() throws BehaviourPlanningException, SyncPointNotFoundException, TimedPlanUnitPlayException,
             ParameterException, BehaviorNotFoundException, IOException
     {
-        BMLTParameterValueChangeBehaviour beh = createBehavior("param1", "bml1:beh1", 0, 100, "linear");
+        BMLAParameterValueChangeBehaviour beh = createBehavior("param1", "bml1:beh1", 0, 100, "linear");
         ArrayList<TimePegAndConstraint> sac = new ArrayList<TimePegAndConstraint>();
         sac.add(new TimePegAndConstraint("start", createTimePeg(1), new Constraint(), 0));
         sac.add(new TimePegAndConstraint("end", createTimePeg(2), new Constraint(), 0));
@@ -125,7 +126,7 @@ public class ParameterValueChangePlannerTest
     public void testResolveInvalidType() throws BehaviourPlanningException, SyncPointNotFoundException, TimedPlanUnitPlayException,
             ParameterException, BehaviorNotFoundException, IOException
     {
-        BMLTParameterValueChangeBehaviour beh = createBehavior("param1", "bml1:beh1", 0, 100, "invalidtraj");
+        BMLAParameterValueChangeBehaviour beh = createBehavior("param1", "bml1:beh1", 0, 100, "invalidtraj");
         ArrayList<TimePegAndConstraint> sac = new ArrayList<TimePegAndConstraint>();
 
         sac.add(new TimePegAndConstraint("start", createTimePeg(1), new Constraint(), 0));
@@ -136,7 +137,7 @@ public class ParameterValueChangePlannerTest
     public void testResolveInvalidSyncs() throws BehaviourPlanningException, SyncPointNotFoundException, TimedPlanUnitPlayException,
             PlanUnitFloatParameterNotFoundException, BehaviorNotFoundException, IOException
     {
-        BMLTParameterValueChangeBehaviour beh = createBehavior("param1", "bml1:beh1", 0, 100, "invalidtraj");
+        BMLAParameterValueChangeBehaviour beh = createBehavior("param1", "bml1:beh1", 0, 100, "invalidtraj");
         ArrayList<TimePegAndConstraint> sac = new ArrayList<TimePegAndConstraint>();
         sac.add(new TimePegAndConstraint("ready", createTimePeg(1), new Constraint(), 0));
         pvcp.resolveSynchs(BMLBlockPeg.GLOBALPEG, beh, sac);
@@ -145,7 +146,7 @@ public class ParameterValueChangePlannerTest
     @Test
     public void testAdd() throws BehaviourPlanningException, IOException
     {
-        BMLTParameterValueChangeBehaviour beh = createBehavior("param1", "bml1:beh1", 0, 100, "linear");
+        BMLAParameterValueChangeBehaviour beh = createBehavior("param1", "bml1:beh1", 0, 100, "linear");
         ArrayList<TimePegAndConstraint> sac = new ArrayList<TimePegAndConstraint>();
 
         TimePeg tpStart = createTimePeg(1);

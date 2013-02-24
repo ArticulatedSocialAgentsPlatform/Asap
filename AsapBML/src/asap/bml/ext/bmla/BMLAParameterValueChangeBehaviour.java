@@ -1,4 +1,4 @@
-package asap.bml.ext.bmlt;
+package asap.bml.ext.bmla;
 
 import saiba.bml.core.Behaviour;
 import saiba.bml.parser.SyncPoint;
@@ -9,20 +9,19 @@ import java.io.IOException;
 import java.util.HashMap;
 import java.util.List;
 
+
 import com.google.common.collect.ImmutableList;
 
 /**
  * BMLT behavior that provides changes in parameters of ongoing other behaviors. 
  * @author welberge
  */
-public class BMLTParameterValueChangeBehaviour extends Behaviour
+public class BMLAParameterValueChangeBehaviour extends Behaviour
 {
-    private static final String BMLTNAMESPACE = "http://hmi.ewi.utwente.nl/bmlt";
-
     @Override
     public String getNamespace()
     {
-        return BMLTNAMESPACE;
+        return BMLAInfo.BMLA_NAMESPACE;
     }
     
     private static final List<String> DEFAULT_SYNCS = ImmutableList.of("start","end");    
@@ -33,7 +32,7 @@ public class BMLTParameterValueChangeBehaviour extends Behaviour
 
     public String target;
     public String paramId;
-    private BMLTTrajectory trajectory = new BMLTTrajectory();
+    private BMLATrajectory trajectory = new BMLATrajectory();
     
     @Override
     public float getFloatParameterValue(String name)
@@ -84,13 +83,13 @@ public class BMLTParameterValueChangeBehaviour extends Behaviour
         return super.satisfiesConstraint(n, value);
     }
 
-    public BMLTParameterValueChangeBehaviour(String bmlId,XMLTokenizer tokenizer) throws IOException
+    public BMLAParameterValueChangeBehaviour(String bmlId,XMLTokenizer tokenizer) throws IOException
     {
         super(bmlId);
         readXML(tokenizer);
     }
 
-    public BMLTParameterValueChangeBehaviour(String bmlId)
+    public BMLAParameterValueChangeBehaviour(String bmlId)
     {
         super(bmlId);
     }
@@ -137,7 +136,7 @@ public class BMLTParameterValueChangeBehaviour extends Behaviour
         while (tokenizer.atSTag())
         {
             String tag = tokenizer.getTagName();
-            if (tag.equals(BMLTTrajectory.xmlTag()))
+            if (tag.equals(BMLATrajectory.xmlTag()))
             {
                 trajectory.readXML(tokenizer);                
             }

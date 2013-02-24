@@ -311,7 +311,7 @@ public class SchedulerIntegrationTestCases
     @Test(timeout = SCHEDULE_TIMEOUT)
     public void testParameterValueChange()
     {
-        readXML("bmlt/parametervaluechange.xml");
+        readXML("asap/parametervaluechange.xml");
         assertNoWarnings();
         assertEquals(pegBoard.getRelativePegTime("bml1", "bml1", "speech1", "start"), 0, PEGBOARD_PRECISION);
         assertEquals(pegBoard.getRelativePegTime("bml1", "bml1", "pvc1", "start"), 0, PEGBOARD_PRECISION);

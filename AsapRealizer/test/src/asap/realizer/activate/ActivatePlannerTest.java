@@ -12,7 +12,8 @@ import org.junit.Before;
 import org.junit.Test;
 
 import saiba.bml.parser.Constraint;
-import asap.bml.ext.bmlt.BMLTActivateBehaviour;
+import asap.bml.ext.bmla.BMLAActivateBehaviour;
+import asap.bml.ext.bmla.BMLAInfo;
 import asap.realizer.BehaviourPlanningException;
 import asap.realizer.SyncAndTimePeg;
 import asap.realizer.feedback.FeedbackManager;
@@ -42,14 +43,14 @@ public class ActivatePlannerTest
         plannerTests = new PlannerTests<TimedActivateUnit>(activatePlanner,new BMLBlockPeg(BMLID,0.3));
     }
 
-    private BMLTActivateBehaviour createActivateBehaviour(String bml) throws IOException
+    private BMLAActivateBehaviour createActivateBehaviour(String bml) throws IOException
     {
-        return new BMLTActivateBehaviour(BMLID, new XMLTokenizer(bml));
+        return new BMLAActivateBehaviour(BMLID, new XMLTokenizer(bml));
     }
 
-    private BMLTActivateBehaviour createInterruptBehaviour() throws IOException
+    private BMLAActivateBehaviour createInterruptBehaviour() throws IOException
     {
-        return createActivateBehaviour("<activate xmlns=\"http://hmi.ewi.utwente.nl/bmlt\" target=\"bml3\" id=\"i1\"/>");
+        return createActivateBehaviour("<activate xmlns=\""+BMLAInfo.BMLA_NAMESPACE+"\" target=\"bml3\" id=\"i1\"/>");
     }
     
     @Test
@@ -73,8 +74,8 @@ public class ActivatePlannerTest
     @Test
     public void testResolve() throws BehaviourPlanningException, IOException
     {
-        BMLTActivateBehaviour ipb = createActivateBehaviour(
-                "<activate xmlns=\"http://hmi.ewi.utwente.nl/bmlt\" target=\"bml3\" id=\"a1\"/>");
+        BMLAActivateBehaviour ipb = createActivateBehaviour(
+                "<activate xmlns=\""+BMLAInfo.BMLA_NAMESPACE+"\" target=\"bml3\" id=\"a1\"/>");
         ArrayList<TimePegAndConstraint> sac = new ArrayList<TimePegAndConstraint>();
         TimePeg tp = new TimePeg(BMLBlockPeg.GLOBALPEG);
         sac.add(new TimePegAndConstraint("start", tp, new Constraint(), 0));
@@ -86,8 +87,8 @@ public class ActivatePlannerTest
     @Test(expected = BehaviourPlanningException.class)
     public void testResolveWithUnknownSyncAndStart() throws IOException, BehaviourPlanningException
     {
-        BMLTActivateBehaviour ipb = createActivateBehaviour(
-                "<activate xmlns=\"http://hmi.ewi.utwente.nl/bmlt\" target=\"bml3\" id=\"i1\"/>");
+        BMLAActivateBehaviour ipb = createActivateBehaviour(
+                "<activate xmlns=\""+BMLAInfo.BMLA_NAMESPACE+"\" target=\"bml3\" id=\"i1\"/>");
         ArrayList<TimePegAndConstraint> sac = new ArrayList<TimePegAndConstraint>();
         TimePeg tp = new TimePeg(BMLBlockPeg.GLOBALPEG);
         sac.add(new TimePegAndConstraint("unknown", tp, new Constraint(), 0));
@@ -98,8 +99,8 @@ public class ActivatePlannerTest
     @Test
     public void testAdd() throws BehaviourPlanningException, IOException
     {
-        BMLTActivateBehaviour ipb = createActivateBehaviour(
-                "<activate xmlns=\"http://hmi.ewi.utwente.nl/bmlt\" target=\"bml3\" id=\"i1\"/>");
+        BMLAActivateBehaviour ipb = createActivateBehaviour(
+                "<activate xmlns=\""+BMLAInfo.BMLA_NAMESPACE+"\" target=\"bml3\" id=\"i1\"/>");
         ArrayList<TimePegAndConstraint> sac = new ArrayList<TimePegAndConstraint>();
         TimePeg tp = new TimePeg(BMLBlockPeg.GLOBALPEG);
 

@@ -1,4 +1,4 @@
-package asap.bml.ext.bmlt;
+package asap.bml.ext.bmla;
 
 import hmi.xml.XMLStructureAdapter;
 import hmi.xml.XMLTokenizer;
@@ -10,14 +10,12 @@ import java.util.HashMap;
  * @author welberge
  *
  */
-public class BMLTTrajectory extends XMLStructureAdapter
+public class BMLATrajectory extends XMLStructureAdapter
 {
-    private static final String BMLTNAMESPACE = "http://hmi.ewi.utwente.nl/bmlt";
-
     @Override
     public String getNamespace()
     {
-        return BMLTNAMESPACE;
+        return BMLAInfo.BMLA_NAMESPACE;
     }
 
     public String type = "";
