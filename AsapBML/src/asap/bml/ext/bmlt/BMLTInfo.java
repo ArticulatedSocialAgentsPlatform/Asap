@@ -5,6 +5,7 @@ import saiba.bml.core.Behaviour;
 import saiba.bml.core.GazeBehaviour;
 import saiba.bml.core.SpeechBehaviour;
 
+import asap.bml.ext.bmla.BMLAInterruptBehaviour;
 import asap.bml.ext.maryxml.MaryAllophonesBehaviour;
 import asap.bml.ext.maryxml.MaryWordsBehaviour;
 import asap.bml.ext.maryxml.MaryXMLBehaviour;
@@ -31,7 +32,7 @@ public final class BMLTInfo
             .put(BMLTKeyframeBehaviour.xmlTag(), BMLTKeyframeBehaviour.class)
             .put(BMLTAudioFileBehaviour.xmlTag(), BMLTAudioFileBehaviour.class)
             .put(BMLTFaceMorphBehaviour.xmlTag(), BMLTFaceMorphBehaviour.class)
-            .put(BMLTInterruptBehaviour.xmlTag(), BMLTInterruptBehaviour.class)
+            .put(BMLAInterruptBehaviour.xmlTag(), BMLAInterruptBehaviour.class)
             .put(BMLTActivateBehaviour.xmlTag(), BMLTActivateBehaviour.class)
             .put(BMLTParameterValueChangeBehaviour.xmlTag(), BMLTParameterValueChangeBehaviour.class)            
             .build();

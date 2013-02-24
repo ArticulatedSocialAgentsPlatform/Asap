@@ -14,6 +14,8 @@ import org.junit.Test;
 import saiba.bml.core.AbstractBehaviourTest;
 import saiba.bml.core.Behaviour;
 import saiba.utils.TestUtil;
+import asap.bml.ext.bmla.BMLAInfo;
+import asap.bml.ext.bmla.BMLAInterruptBehaviour;
 
 /**
  * Unit test cases for interruptbehaviour parsing
@@ -24,22 +26,22 @@ public class BMLTInterruptBehaviourTest extends AbstractBehaviourTest
     @Override
     protected Behaviour createBehaviour(String bmlId, String extraAttributeString) throws IOException
     {
-        String str = "<bmlt:interrupt xmlns:bmlt=\"http://hmi.ewi.utwente.nl/bmlt\" " + TestUtil.getDefNS()
+        String str = "<bmla:interrupt xmlns:bmla=\""+BMLAInfo.BMLA_NAMESPACE+"\" " + TestUtil.getDefNS()
                 + "id=\"interrupt0\" target=\"bmltarget\"" + extraAttributeString + "/>";
-        return new BMLTInterruptBehaviour(bmlId, new XMLTokenizer(str));
+        return new BMLAInterruptBehaviour(bmlId, new XMLTokenizer(str));
     }
 
     @Override
     protected Behaviour parseBehaviour(String bmlId, String bmlString) throws IOException
     {
-        return new BMLTInterruptBehaviour(bmlId, new XMLTokenizer(bmlString));
+        return new BMLAInterruptBehaviour(bmlId, new XMLTokenizer(bmlString));
     }
 
     @Test
     public void testInterrupt() throws IOException
     {
-        String interruptBML = "<bmlt:interrupt xmlns:bmlt=\"http://hmi.ewi.utwente.nl/bmlt\" id=\"interrupt0\" target=\"bml0\"/>";
-        BMLTInterruptBehaviour bmi = new BMLTInterruptBehaviour("bml1", new XMLTokenizer(interruptBML));
+        String interruptBML = "<bmla:interrupt xmlns:bmla=\""+BMLAInfo.BMLA_NAMESPACE+"\" id=\"interrupt0\" target=\"bml0\"/>";
+        BMLAInterruptBehaviour bmi = new BMLAInterruptBehaviour("bml1", new XMLTokenizer(interruptBML));
         assertEquals("bml0", bmi.getTarget());
         assertEquals("bml1", bmi.getBmlId());
         assertEquals("interrupt0", bmi.id);
@@ -50,9 +52,9 @@ public class BMLTInterruptBehaviourTest extends AbstractBehaviourTest
     @Test
     public void testInterruptInclude() throws IOException
     {
-        String interruptBML = "<bmlt:interrupt xmlns:bmlt=\"http://hmi.ewi.utwente.nl/bmlt\" id=\"interrupt0\" target=\"bml0\" "
+        String interruptBML = "<bmla:interrupt xmlns:bmla=\""+BMLAInfo.BMLA_NAMESPACE+"\" id=\"interrupt0\" target=\"bml0\" "
                 + "include=\"beh1,beh2\"/>";
-        BMLTInterruptBehaviour bmi = new BMLTInterruptBehaviour("bml1", new XMLTokenizer(interruptBML));
+        BMLAInterruptBehaviour bmi = new BMLAInterruptBehaviour("bml1", new XMLTokenizer(interruptBML));
         assertThat(bmi.getInclude(), IsIterableContainingInAnyOrder.containsInAnyOrder("beh1", "beh2"));
         assertThat(bmi.getExclude(), Matchers.<String> empty());
     }
@@ -60,9 +62,9 @@ public class BMLTInterruptBehaviourTest extends AbstractBehaviourTest
     @Test
     public void testInterruptExclude() throws IOException
     {
-        String interruptBML = "<bmlt:interrupt xmlns:bmlt=\"http://hmi.ewi.utwente.nl/bmlt\" id=\"interrupt0\" target=\"bml0\" "
+        String interruptBML = "<bmla:interrupt xmlns:bmla=\""+BMLAInfo.BMLA_NAMESPACE+"\" id=\"interrupt0\" target=\"bml0\" "
                 + "exclude=\"beh1,beh2\"/>";
-        BMLTInterruptBehaviour bmi = new BMLTInterruptBehaviour("bml1", new XMLTokenizer(interruptBML));
+        BMLAInterruptBehaviour bmi = new BMLAInterruptBehaviour("bml1", new XMLTokenizer(interruptBML));
         assertThat(bmi.getExclude(), IsIterableContainingInAnyOrder.containsInAnyOrder("beh1", "beh2"));
         assertThat(bmi.getInclude(), Matchers.<String> empty());
     }
@@ -70,9 +72,9 @@ public class BMLTInterruptBehaviourTest extends AbstractBehaviourTest
     @Test
     public void testInterruptExcludeAndInclude() throws IOException
     {
-        String interruptBML = "<bmlt:interrupt xmlns:bmlt=\"http://hmi.ewi.utwente.nl/bmlt\" id=\"interrupt0\" target=\"bml0\" "
+        String interruptBML = "<bmla:interrupt xmlns:bmla=\""+BMLAInfo.BMLA_NAMESPACE+"\" id=\"interrupt0\" target=\"bml0\" "
                 + "exclude=\"beh1,beh2\" include=\"beh3\"/>";
-        BMLTInterruptBehaviour bmi = new BMLTInterruptBehaviour("bml1", new XMLTokenizer(interruptBML));
+        BMLAInterruptBehaviour bmi = new BMLAInterruptBehaviour("bml1", new XMLTokenizer(interruptBML));
         assertThat(bmi.getExclude(), IsIterableContainingInAnyOrder.containsInAnyOrder("beh1", "beh2"));
         assertThat(bmi.getInclude(), IsIterableContainingInAnyOrder.containsInAnyOrder("beh3"));
     }
@@ -80,12 +82,12 @@ public class BMLTInterruptBehaviourTest extends AbstractBehaviourTest
     @Test
     public void testWriteXML() throws IOException
     {
-        String interruptBML = "<bmlt:interrupt xmlns:bmlt=\"http://hmi.ewi.utwente.nl/bmlt\" id=\"interrupt0\" target=\"bml0\" "
+        String interruptBML = "<bmla:interrupt xmlns:bmla=\""+BMLAInfo.BMLA_NAMESPACE+"\" id=\"interrupt0\" target=\"bml0\" "
                 + "exclude=\"beh1,beh2\" include=\"beh3\"/>";
-        BMLTInterruptBehaviour bmIn = new BMLTInterruptBehaviour("bml1", new XMLTokenizer(interruptBML));
+        BMLAInterruptBehaviour bmIn = new BMLAInterruptBehaviour("bml1", new XMLTokenizer(interruptBML));
         StringBuilder buf = new StringBuilder();
-        bmIn.appendXML(buf, new XMLFormatting(), "bmlt", "http://hmi.ewi.utwente.nl/bmlt");
-        BMLTInterruptBehaviour behOut = new BMLTInterruptBehaviour("bml1", new XMLTokenizer(buf.toString()));
+        bmIn.appendXML(buf, new XMLFormatting(), "bmla", BMLAInfo.BMLA_NAMESPACE);
+        BMLAInterruptBehaviour behOut = new BMLAInterruptBehaviour("bml1", new XMLTokenizer(buf.toString()));
 
         assertEquals("bml0", behOut.getTarget());
         assertEquals("bml1", behOut.getBmlId());

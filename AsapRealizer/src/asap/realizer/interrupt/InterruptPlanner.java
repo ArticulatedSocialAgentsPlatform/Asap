@@ -5,7 +5,7 @@ import saiba.bml.core.Behaviour;
 import java.util.ArrayList;
 import java.util.List;
 
-import asap.bml.ext.bmlt.BMLTInterruptBehaviour;
+import asap.bml.ext.bmla.BMLAInterruptBehaviour;
 import asap.realizer.AbstractPlanner;
 import asap.realizer.BehaviourPlanningException;
 import asap.realizer.SyncAndTimePeg;
@@ -50,11 +50,11 @@ public class InterruptPlanner extends AbstractPlanner<TimedInterruptUnit>
     public List<SyncAndTimePeg> addBehaviour(BMLBlockPeg bbPeg, Behaviour b, List<TimePegAndConstraint> sac,
             TimedInterruptUnit iu) throws BehaviourPlanningException
     {
-        if (!(b instanceof BMLTInterruptBehaviour))
+        if (!(b instanceof BMLAInterruptBehaviour))
         {
             throw new BehaviourPlanningException(b, "Behaviour is not a BMLTInterruptBehaviour");
         }
-        BMLTInterruptBehaviour ib = (BMLTInterruptBehaviour) b;
+        BMLAInterruptBehaviour ib = (BMLAInterruptBehaviour) b;
 
         if (iu == null)
         {
@@ -115,7 +115,7 @@ public class InterruptPlanner extends AbstractPlanner<TimedInterruptUnit>
     public List<Class<? extends Behaviour>> getSupportedBehaviours()
     {
         List<Class<? extends Behaviour>> list = new ArrayList<Class<? extends Behaviour>>();
-        list.add(BMLTInterruptBehaviour.class);
+        list.add(BMLAInterruptBehaviour.class);
         return list;
     }
 

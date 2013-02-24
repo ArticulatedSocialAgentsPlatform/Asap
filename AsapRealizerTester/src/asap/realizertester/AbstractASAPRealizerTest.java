@@ -223,8 +223,8 @@ public abstract class AbstractASAPRealizerTest extends AbstractBML1RealizerTest 
     @Test
     public void testInterruptBehaviour() throws InterruptedException, IOException
     {
-        String bmlString1 = readTestFile("bmlt/interrupt/testlongspeechandnod.xml");
-        String bmlString2 = readTestFile("bmlt/interrupt/testspeechinterrupt.xml");
+        String bmlString1 = readTestFile("asap/interrupt/testlongspeechandnod.xml");
+        String bmlString2 = readTestFile("asap/interrupt/testspeechinterrupt.xml");
         realizerHandler.performBML(bmlString1);
         realizerHandler.waitForBMLStartFeedback("bml1");
         realizerHandler.performBML(bmlString2);
@@ -243,9 +243,9 @@ public abstract class AbstractASAPRealizerTest extends AbstractBML1RealizerTest 
     @Test
     public void testInterruptBehaviour2() throws InterruptedException, IOException
     {
-        String bmlString1 = readTestFile("bmlt/interruptbehavior/testlongspeechandnod.xml");
-        String bmlString2 = readTestFile("bmlt/interruptbehavior/testspeechinterrupt.xml");
-        String bmlString3 = readTestFile("bmlt/interruptbehavior/testinterruptionspeech.xml");
+        String bmlString1 = readTestFile("asap/interruptbehavior/testlongspeechandnod.xml");
+        String bmlString2 = readTestFile("asap/interruptbehavior/testspeechinterrupt.xml");
+        String bmlString3 = readTestFile("asap/interruptbehavior/testinterruptionspeech.xml");
 
         realizerHandler.performBML(bmlString1);
         realizerHandler.performBML(bmlString3);
@@ -264,9 +264,9 @@ public abstract class AbstractASAPRealizerTest extends AbstractBML1RealizerTest 
     @Test
     public void testInterruptBehaviourRestart() throws InterruptedException, IOException
     {
-        String bmlString1 = readTestFile("bmlt/interruptbehavior/testlongspeechandnod.xml");
-        String bmlString2 = readTestFile("bmlt/interruptbehavior/testspeechinterrupt.xml");
-        String bmlString3 = readTestFile("bmlt/interruptbehavior/testinterruptionspeech.xml");
+        String bmlString1 = readTestFile("asap/interruptbehavior/testlongspeechandnod.xml");
+        String bmlString2 = readTestFile("asap/interruptbehavior/testspeechinterrupt.xml");
+        String bmlString3 = readTestFile("asap/interruptbehavior/testinterruptionspeech.xml");
         String bmlString4 = "<bml xmlns=\"http://www.bml-initiative.org/bml/bml-1.0\" " + "id=\"bmlrep\" composition=\"REPLACE\"/>";
 
         realizerHandler.performBML(bmlString1);

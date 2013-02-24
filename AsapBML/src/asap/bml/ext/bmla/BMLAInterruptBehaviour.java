@@ -16,10 +16,8 @@
  * You should have received a copy of the GNU General Public License
  * along with Elckerlyc.  If not, see http://www.gnu.org/licenses/.
  ******************************************************************************/
-package asap.bml.ext.bmlt;
+package asap.bml.ext.bmla;
 
-import saiba.bml.core.Behaviour;
-import saiba.bml.parser.SyncPoint;
 import hmi.xml.XMLFormatting;
 import hmi.xml.XMLTokenizer;
 
@@ -29,16 +27,19 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
+import saiba.bml.core.Behaviour;
+import saiba.bml.parser.SyncPoint;
+
 import com.google.common.base.Joiner;
 import com.google.common.collect.ImmutableList;
 import com.google.common.collect.ImmutableSet;
 import com.google.common.collect.Sets;
 
 /**
- * BMLT Interrupt behavior. Specifies the interruption of a target BML block
+ * BMLA Interrupt behavior. Specifies the interruption of a target BML block
  * @author welberge
  */
-public class BMLTInterruptBehaviour extends Behaviour
+public class BMLAInterruptBehaviour extends Behaviour
 {
     private String target = "";
     private Set<String>include = new HashSet<String>();
@@ -54,7 +55,7 @@ public class BMLTInterruptBehaviour extends Behaviour
     @Override
     public String getNamespace()
     {
-        return BMLTBehaviour.BMLTNAMESPACE;
+        return BMLAInfo.BMLA_NAMESPACE;
     }
 
     public String getTarget()
@@ -81,7 +82,7 @@ public class BMLTInterruptBehaviour extends Behaviour
         return ImmutableSet.copyOf(exclude);
     }
     
-    public BMLTInterruptBehaviour(String bmlId,XMLTokenizer tokenizer) throws IOException
+    public BMLAInterruptBehaviour(String bmlId,XMLTokenizer tokenizer) throws IOException
     {
         super(bmlId);
         readXML(tokenizer);

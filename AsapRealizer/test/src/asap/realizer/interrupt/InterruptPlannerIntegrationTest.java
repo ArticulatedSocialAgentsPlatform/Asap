@@ -16,7 +16,8 @@ import org.powermock.core.classloader.annotations.PrepareForTest;
 import org.powermock.modules.junit4.PowerMockRunner;
 
 import saiba.bml.parser.Constraint;
-import asap.bml.ext.bmlt.BMLTInterruptBehaviour;
+import asap.bml.ext.bmla.BMLAInfo;
+import asap.bml.ext.bmla.BMLAInterruptBehaviour;
 import asap.realizer.BehaviourPlanningException;
 import asap.realizer.DefaultPlayer;
 import asap.realizer.Player;
@@ -47,9 +48,9 @@ public class InterruptPlannerIntegrationTest
     private PlanManager<TimedInterruptUnit> planManager = new PlanManager<TimedInterruptUnit>();
     private Player player;
     
-    private BMLTInterruptBehaviour createInteruptBehaviour(String bmlId, String bml) throws IOException
+    private BMLAInterruptBehaviour createInteruptBehaviour(String bmlId, String bml) throws IOException
     {
-        return new BMLTInterruptBehaviour(bmlId, new XMLTokenizer(bml));
+        return new BMLAInterruptBehaviour(bmlId, new XMLTokenizer(bml));
     }
 
     @Before
@@ -62,8 +63,8 @@ public class InterruptPlannerIntegrationTest
     @Test
     public void testPlay() throws BehaviourPlanningException, IOException
     {
-        BMLTInterruptBehaviour ipb = createInteruptBehaviour("bml1",
-                "<interrupt xmlns=\"http://hmi.ewi.utwente.nl/bmlt\" target=\"bml3\" id=\"i1\"/>");
+        BMLAInterruptBehaviour ipb = createInteruptBehaviour("bml1",
+                "<interrupt xmlns=\""+BMLAInfo.BMLA_NAMESPACE+"\" target=\"bml3\" id=\"i1\"/>");
         ArrayList<TimePegAndConstraint> sac = new ArrayList<TimePegAndConstraint>();
         TimePeg tp = new TimePeg(BMLBlockPeg.GLOBALPEG);
 
