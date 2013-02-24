@@ -55,7 +55,6 @@ import asap.animationengine.restpose.SkeletonPoseRestPose;
 import asap.audioengine.AudioPlanner;
 import asap.audioengine.TimedAbstractAudioUnit;
 import asap.bml.ext.bmla.BMLABMLBehaviorAttributes;
-import asap.bml.ext.bmlt.BMLTBMLBehaviorAttributes;
 import asap.hns.Hns;
 import asap.maryttsbinding.MaryTTSBindingFactory;
 import asap.realizer.AsapRealizer;

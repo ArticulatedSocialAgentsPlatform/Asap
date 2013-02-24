@@ -33,7 +33,7 @@ import asap.animationengine.restpose.RestPose;
 import asap.animationengine.restpose.SkeletonPoseRestPose;
 import asap.audioengine.AudioPlanner;
 import asap.audioengine.TimedAbstractAudioUnit;
-import asap.bml.ext.bmlt.BMLTBMLBehaviorAttributes;
+import asap.bml.ext.bmla.BMLABMLBehaviorAttributes;
 import asap.hns.Hns;
 import asap.incrementalspeechengine.HesitatingSynthesisIUManager;
 import asap.incrementalspeechengine.IncrementalTTSPlanner;
@@ -140,7 +140,7 @@ public class ScheduleriSSIntegrationTest extends SchedulerIntegrationTestCases
         Engine pvpcEngine = new DefaultEngine<TimedParameterValueChangeUnit>(pvcp, pvcpPlayer, pvcpPlanManager);
 
         BMLParser parser = new BMLParser(new ImmutableSet.Builder<Class<? extends BMLBehaviorAttributeExtension>>().add(
-                BMLTBMLBehaviorAttributes.class).build());
+                BMLABMLBehaviorAttributes.class).build());
 
         realizer = new AsapRealizer("avatar1", parser, bfm, clock, bbm, pegBoard, animationEngine, speechEngine, auEngine, waitEngine,
                 pvpcEngine);
