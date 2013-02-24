@@ -172,8 +172,8 @@ public class PersistentFixtureAsapRealizerTest extends AbstractASAPRealizerTest
     public void testTemporaryInvalidTimingInAppend() throws InterruptedException, IOException
     {
         String bmlString1 = "<bml xmlns=\"http://www.bml-initiative.org/bml/bml-1.0\" "
-                + "id=\"bml1\" xmlns:bmlt=\"http://hmi.ewi.utwente.nl/bmlt\" "
-                + "bmlt:preplan=\"true\"><speech id=\"sp1\"><text>Hello</text></speech></bml>";
+                + "id=\"bml1\" xmlns:bmla=\"http://www.asap-project.org/bmla\" "
+                + "bmla:preplan=\"true\"><speech id=\"sp1\"><text>Hello</text></speech></bml>";
         String bmlString2 = "<bml xmlns=\"http://www.bml-initiative.org/bml/bml-1.0\" " + "id=\"bml2\" composition=\"APPEND\">"
                 + "<wait id=\"w1\" start=\"0\" end=\"anticipators:dummyanticipator:dummy1\"/></bml>";
         String bmlString3 = "<bml xmlns=\"http://www.bml-initiative.org/bml/bml-1.0\" " + "id=\"bml3\" composition=\"APPEND\">"
@@ -183,7 +183,7 @@ public class PersistentFixtureAsapRealizerTest extends AbstractASAPRealizerTest
         String bmlString5 = "<bml xmlns=\"http://www.bml-initiative.org/bml/bml-1.0\" " + "id=\"bml5\" composition=\"APPEND\">"
                 + "<speech id=\"sp1\"><text>Hello hello hello hello hello hello </text></speech></bml>";
         String bmlString6 = "<bml xmlns=\"http://www.bml-initiative.org/bml/bml-1.0\" "
-                + "id=\"bml6\" xmlns:bmlt=\"http://hmi.ewi.utwente.nl/bmlt\" bmlt:onStart=\"bml1\"></bml>";
+                + "id=\"bml6\" xmlns:bmla=\"http://www.asap-project.org/bmla\" bmla:onStart=\"bml1\"></bml>";
         realizerHandler.performBML(bmlString1);
         realizerHandler.performBML(bmlString2);
         realizerHandler.performBML(bmlString3);
@@ -203,14 +203,6 @@ public class PersistentFixtureAsapRealizerTest extends AbstractASAPRealizerTest
         realizerHandler.assertNoDuplicateFeedbacks();
         realizerHandler.assertNoExceptions();
         realizerHandler.assertNoWarnings();
-    }
-
-    @After
-    public void teardownEnvironment() throws InterruptedException
-    {
-        realizerHandler
-                .performBML("<bml xmlns=\"http://www.bml-initiative.org/bml/bml-1.0\" " + "id=\"cleanup\" composition=\"REPLACE\"/>");
-        realizerHandler.waitForBMLEndFeedback("cleanup");
     }
 
     @AfterClass

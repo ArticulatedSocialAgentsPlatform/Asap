@@ -118,8 +118,8 @@ public abstract class AbstractASAPRealizerTest extends AbstractBML1RealizerTest 
     @Test
     public void testActivate() throws IOException, InterruptedException
     {
-        String bmlString1 = readTestFile("bmlt/activate/testpreplannedspeech1.xml");
-        String bmlString2 = readTestFile("bmlt/activate/testactivate.xml");
+        String bmlString1 = readTestFile("asap/activate/testpreplannedspeech1.xml");
+        String bmlString2 = readTestFile("asap/activate/testactivate.xml");
         realizerHandler.performBML(bmlString1);
         waitForBMLSchedulingFinishedFeedback("bml1");
 
@@ -156,9 +156,9 @@ public abstract class AbstractASAPRealizerTest extends AbstractBML1RealizerTest 
     public void testPreplan() throws InterruptedException, IOException
     {
         final double DELAY = 3;
-        String bmlString1 = readTestFile("bmlt/preplan/testspeech1.xml");
-        String bmlString2 = readTestFile("bmlt/preplan/testspeechinterrupt.xml");
-        String bmlString3 = readTestFile("bmlt/preplan/testnod.xml");
+        String bmlString1 = readTestFile("asap/preplan/testspeech1.xml");
+        String bmlString2 = readTestFile("asap/preplan/testspeechinterrupt.xml");
+        String bmlString3 = readTestFile("asap/preplan/testnod.xml");
 
         realizerHandler.performBML(bmlString1);
         realizerHandler.performBML(bmlString2);
@@ -176,10 +176,10 @@ public abstract class AbstractASAPRealizerTest extends AbstractBML1RealizerTest 
     @Test
     public void testAppendAfter() throws InterruptedException, IOException
     {
-        String bmlString1 = readTestFile("bmlt/appendafter/testspeech1.xml");
-        String bmlString2 = readTestFile("bmlt/appendafter/testspeech2.xml");
-        String bmlString3 = readTestFile("bmlt/appendafter/testspeech3.xml");
-        String bmlString4 = readTestFile("bmlt/appendafter/testnodappendafter.xml");
+        String bmlString1 = readTestFile("asap/appendafter/testspeech1.xml");
+        String bmlString2 = readTestFile("asap/appendafter/testspeech2.xml");
+        String bmlString3 = readTestFile("asap/appendafter/testspeech3.xml");
+        String bmlString4 = readTestFile("asap/appendafter/testnodappendafter.xml");
 
         realizerHandler.performBML(bmlString1);        
         realizerHandler.performBML(bmlString2);
@@ -205,8 +205,8 @@ public abstract class AbstractASAPRealizerTest extends AbstractBML1RealizerTest 
     @Test
     public void testInterrupt() throws InterruptedException, IOException
     {
-        String bmlString1 = readTestFile("bmlt/interruptblock/testlongspeechandnod.xml");
-        String bmlString2 = readTestFile("bmlt/interruptblock/testinterruptbml1.xml");
+        String bmlString1 = readTestFile("asap/interruptblock/testlongspeechandnod.xml");
+        String bmlString2 = readTestFile("asap/interruptblock/testinterruptbml1.xml");
         realizerHandler.performBML(bmlString1);
         realizerHandler.performBML(bmlString2);
 
