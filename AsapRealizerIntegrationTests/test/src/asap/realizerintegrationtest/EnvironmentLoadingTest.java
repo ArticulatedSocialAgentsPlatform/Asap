@@ -29,7 +29,7 @@ public class EnvironmentLoadingTest
     {
         BMLSchedulerAssembler asm = new BMLSchedulerAssembler("id1", new BMLParser(), NullFeedbackManager.getInstance(), bbm, mockClock,
                 pegBoard);
-        String str = "<BMLScheduler>" + "<SchedulingHandler class=\"asap.realizer.scheduler.BMLBandTSchedulingHandler\" "
+        String str = "<BMLScheduler>" + "<SchedulingHandler class=\"asap.realizer.scheduler.BMLASchedulingHandler\" "
                 + "schedulingStrategy=\"asap.realizer.scheduler.SortedSmartBodySchedulingStrategy\"/>" + "</BMLScheduler>";
         asm.readXML(new XMLTokenizer(str));
     }
