@@ -115,14 +115,14 @@ public class BreathingEmitter extends Emitter implements Runnable
         lastbreath = System.currentTimeMillis();
         scheduling = "composition=\"APPEND-AFTER(breathbml" + breathcount + ")\"";
         String bml = "<bml xmlns=\"http://www.bml-initiative.org/bml/bml-1.0\" " + "id=\"breathbml" + (breathcount + 1) + "\" "
-                + scheduling + " xmlns:bmlt=\"http://hmi.ewi.utwente.nl/bmlt\">" + "<gesture id=\"b1\" lexeme=\"breathe\" start=\"0\" "
+                + scheduling + " xmlns:bmla=\"http://www.asap-project.org/bmla\">" + "<gesture id=\"b1\" lexeme=\"breathe\" start=\"0\" "
                 + "ready=\"0\" stroke=\"" + (currentwaitingtime / 4) + "\" relax=\"" + (2 * currentwaitingtime / 3) + "\" end=\""
                 + currentwaitingtime + "\" "
                 // + "amount=\"1\""
                 + " />";
         if (breathcount > 1)
         {
-            bml += "<bmlt:interrupt id=\"interruptPrevBreath\" target=\"breathbml" + breathcount + "\">" + "</bmlt:interrupt>";
+            bml += "<bmla:interrupt id=\"interruptPrevBreath\" target=\"breathbml" + breathcount + "\">" + "</bmla:interrupt>";
         }
         realizerBridge.performBML(bml + "</bml>");
 

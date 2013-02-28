@@ -128,12 +128,12 @@ public class BlinkEmitter extends Emitter implements Runnable
         String interrupter = "";
         if(blinkcount>1)
         {
-            interrupter = " bmlt:interrupt=\"blinkbml"+blinkcount+"\" ";
+            interrupter = " bmla:interrupt=\"blinkbml"+blinkcount+"\" ";
         }
         
         String bml = "<bml xmlns=\"http://www.bml-initiative.org/bml/bml-1.0\" " + "id=\"blinkbml" + (blinkcount + 1) + "\" " + scheduling +interrupter
-                + "xmlns:bmlt=\"http://hmi.ewi.utwente.nl/bmlt\"><faceLexeme id=\"b1\"  lexeme=\"BLINK\" start=\"0\" end=\"0.15\" "
-                + "amount=\"1\" attackPeak=\"0.03\" relax=\"0.12\"/>";
+                + "xmlns:bmla=\"http://www.asap-project.org/bmla\"><faceLexeme id=\"b1\"  lexeme=\"BLINK\" start=\"0\" end=\"0.15\" "
+                + "amount=\"1\" attackPeak=\"0.03\" relax=\"0.12\"/>";        
         realizerBridge.performBML(bml + "</bml>");
 
         /*
