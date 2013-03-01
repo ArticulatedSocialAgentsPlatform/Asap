@@ -18,17 +18,88 @@
  * along with Elckerlyc.  If not, see http://www.gnu.org/licenses/.
  ******************************************************************************/
 package asap.realizerembodiments;
+
 import hmi.environmentbase.Embodiment;
 
+import java.lang.reflect.InvocationTargetException;
+
 import javax.swing.JComponent;
+import javax.swing.SwingUtilities;
 
-
+import lombok.Getter;
+import lombok.Setter;
+import lombok.extern.slf4j.Slf4j;
 
 /**
 */
-public interface JComponentEmbodiment extends Embodiment
+@Slf4j
+public class JComponentEmbodiment implements Embodiment
 {
-  void addJComponent(JComponent jc);
-  void removeJComponent(JComponent jc);
 
+    private JComponent thePanel = null;
+    protected volatile boolean shutdown = false;
+
+    public void setMasterComponent(JComponent newPanel)
+    {
+        thePanel = newPanel;
+    }
+
+    public void addJComponent(final JComponent jc)
+    {
+        try
+        {
+            SwingUtilities.invokeAndWait(new Runnable()
+            {
+
+                @Override
+                public void run()
+                {
+                    thePanel.add(jc);
+                    thePanel.revalidate();
+                    thePanel.repaint();
+                }
+            });
+        }
+        catch (InvocationTargetException e)
+        {
+            log.warn("Exception in adding new JComponent", e);
+        }
+        catch (InterruptedException e)
+        {
+            log.warn("Exception in addJComponent initialization", e);
+            Thread.interrupted();
+        }
+    }
+
+    public void removeJComponent(final JComponent jc)
+    {
+        try
+        {
+            SwingUtilities.invokeAndWait(new Runnable()
+            {
+
+                @Override
+                public void run()
+                {
+                    thePanel.remove(jc);
+                    thePanel.revalidate();
+                    thePanel.repaint();
+                }
+
+            });
+        }
+        catch (InvocationTargetException e)
+        {
+            log.warn("Exception in adding new JComponent", e);
+        }
+        catch (InterruptedException e)
+        {
+            log.warn("Exception in addJComponent initialization", e);
+            Thread.interrupted();
+        }
+    }
+
+    @Getter
+    @Setter
+    private String id = "jcomponentenvironment";
 }

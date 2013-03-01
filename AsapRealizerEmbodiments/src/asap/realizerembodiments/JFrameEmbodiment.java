@@ -19,6 +19,7 @@
  ******************************************************************************/
 package asap.realizerembodiments;
 
+import hmi.environmentbase.EmbodimentLoader;
 import hmi.environmentbase.Environment;
 import hmi.environmentbase.Loader;
 import hmi.util.ArrayUtils;
@@ -48,7 +49,7 @@ import asap.bml.bridge.ui.FeedbackPanel;
 import asap.bml.bridge.ui.RealizerPortUI;
 
 /** This "embodiment" allows a VH to create Swing GUI components. */
-public class JFrameEmbodiment implements JComponentEmbodiment, JComponentEmbodimentLoader
+public class JFrameEmbodiment implements EmbodimentLoader
 {
     private Logger logger = LoggerFactory.getLogger(JFrameEmbodiment.class.getName());
 
@@ -62,6 +63,8 @@ public class JFrameEmbodiment implements JComponentEmbodiment, JComponentEmbodim
 
     private JFrame theUI = null;
     private JPanel contentPanel;
+    
+    private JComponentEmbodiment jcEmbodiment = new JComponentEmbodiment();
 
     public JFrameEmbodiment()
     {
@@ -74,6 +77,7 @@ public class JFrameEmbodiment implements JComponentEmbodiment, JComponentEmbodim
                 public void run()
                 {
                     contentPanel = new JPanel();
+                    jcEmbodiment.setMasterComponent(contentPanel);
                 }
             });
         }
@@ -285,7 +289,7 @@ public class JFrameEmbodiment implements JComponentEmbodiment, JComponentEmbodim
     @Override
     public JComponentEmbodiment getEmbodiment()
     {
-        return this;
+        return jcEmbodiment;
     }
 
     /**
