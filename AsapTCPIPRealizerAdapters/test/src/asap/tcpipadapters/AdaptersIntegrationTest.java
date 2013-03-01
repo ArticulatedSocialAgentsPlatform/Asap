@@ -36,7 +36,7 @@ public class AdaptersIntegrationTest
         String bmlString = "<bml id=\"bml1\"></bml>";
         bmlToTCPIP.connect(new ServerInfo("localhost",6500,6501));
         bmlToTCPIP.performBML(bmlString);        
-        Thread.sleep(500);
+        Thread.sleep(1000);
         verify(mockRealizerPort).performBML(bmlString);        
     }
     
@@ -46,9 +46,9 @@ public class AdaptersIntegrationTest
         bmlToTCPIP.connect(new ServerInfo("localhost",6500,6501));
         bmlToTCPIP.addListeners(mockFeedbackListener);
         String fbString = "<blockProgress id=\"bml1:end\" globalTime=\"15\" characterId=\"doctor\"></blockProgress>";
-        Thread.sleep(500);        
+        Thread.sleep(1000);        
         tcpIpToBML.feedback(fbString);
-        Thread.sleep(500);
+        Thread.sleep(1000);
         verify(mockFeedbackListener).feedback(fbString);
     }
 }
