@@ -23,6 +23,7 @@ import hmi.environmentbase.Embodiment;
 import hmi.environmentbase.EmbodimentLoader;
 import hmi.environmentbase.Environment;
 import hmi.environmentbase.Loader;
+import hmi.jcomponentenvironment.JComponentEmbodiment;
 import hmi.textembodiments.TextEmbodiment;
 import hmi.xml.XMLTokenizer;
 
@@ -30,8 +31,6 @@ import java.io.IOException;
 
 import javax.swing.JLabel;
 import javax.swing.SwingUtilities;
-
-import asap.realizerembodiments.JComponentEmbodiment;
 
 /** Take care of its own loading from XML. */
 public class JLabelTextEmbodiment implements TextEmbodiment, EmbodimentLoader

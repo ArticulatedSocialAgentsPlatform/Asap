@@ -2,6 +2,7 @@ package asap.tcpipadapters.loader;
 
 import hmi.environmentbase.Environment;
 import hmi.environmentbase.Loader;
+import hmi.jcomponentenvironment.JComponentEmbodimentLoader;
 import hmi.util.ArrayUtils;
 import hmi.util.CollectionUtils;
 import hmi.xml.XMLScanException;
@@ -10,7 +11,6 @@ import hmi.xml.XMLTokenizer;
 import java.io.IOException;
 
 import asap.realizerembodiments.AsapRealizerEmbodiment;
-import asap.realizerembodiments.JComponentEmbodimentLoader;
 import asap.tcpipadapters.ui.BridgeServerUI;
 
 /**

@@ -30,6 +30,7 @@ import hmi.faceanimationui.converters.EmotionConverterFrame;
 import hmi.faceanimationui.converters.FACSConverterFrame;
 import hmi.faceanimationui.converters.MPEG4ControllerFrame;
 import hmi.faceembodiments.FaceEmbodiment;
+import hmi.jcomponentenvironment.JComponentEmbodiment;
 import hmi.util.Resources;
 import hmi.xml.XMLStructureAdapter;
 import hmi.xml.XMLTokenizer;
@@ -50,7 +51,6 @@ import asap.realizer.Player;
 import asap.realizer.planunit.PlanManager;
 import asap.realizerembodiments.AsapRealizerEmbodiment;
 import asap.realizerembodiments.EngineLoader;
-import asap.realizerembodiments.JComponentEmbodiment;
 
 /**
 

@@ -14,6 +14,7 @@
       <dependency org="HMI"   name="HmiEnvironmentBase"       transitive="false" rev="latest.${resolve.status}"   />
       <dependency org="HMI"   name="HmiTextEmbodiments"       transitive="false" rev="latest.${resolve.status}"   />
        <dependency org="jcip"    name="jcip-annotations"      rev="latest.release"  />
+      <dependency org="HMI"   name="HmiJComponentEnvironment"             rev="latest.${resolve.status}"   />
       
 	  <dependency org="lombok"  name="lombok"      rev="latest.release"  />
       <dependency org="google"  name="guava"                 rev="latest.release"  />

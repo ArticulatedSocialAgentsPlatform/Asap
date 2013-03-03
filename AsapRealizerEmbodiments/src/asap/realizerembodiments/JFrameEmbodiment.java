@@ -22,6 +22,7 @@ package asap.realizerembodiments;
 import hmi.environmentbase.EmbodimentLoader;
 import hmi.environmentbase.Environment;
 import hmi.environmentbase.Loader;
+import hmi.jcomponentenvironment.JComponentEmbodiment;
 import hmi.util.ArrayUtils;
 import hmi.xml.XMLStructureAdapter;
 import hmi.xml.XMLTokenizer;

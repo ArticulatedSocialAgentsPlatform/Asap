@@ -1,11 +1,13 @@
 package asap.tcpipadapters.loader;
 
-import static org.powermock.api.mockito.PowerMockito.mock;
-import static org.powermock.api.mockito.PowerMockito.when;
 import static org.mockito.Matchers.any;
 import static org.mockito.Mockito.verify;
+import static org.powermock.api.mockito.PowerMockito.mock;
+import static org.powermock.api.mockito.PowerMockito.when;
 import hmi.environmentbase.Environment;
 import hmi.environmentbase.Loader;
+import hmi.jcomponentenvironment.JComponentEmbodiment;
+import hmi.jcomponentenvironment.JComponentEmbodimentLoader;
 import hmi.xml.XMLTokenizer;
 
 import java.io.IOException;
@@ -20,8 +22,6 @@ import org.powermock.core.classloader.annotations.PrepareForTest;
 import org.powermock.modules.junit4.PowerMockRunner;
 
 import asap.realizerembodiments.AsapRealizerEmbodiment;
-import asap.realizerembodiments.JComponentEmbodiment;
-import asap.realizerembodiments.JComponentEmbodimentLoader;
 import asap.realizerembodiments.PipeLoader;
 import asap.tcpipadapters.TCPIPToBMLRealizerAdapter;
 
