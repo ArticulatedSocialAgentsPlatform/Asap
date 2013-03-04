@@ -32,6 +32,7 @@
       <dependency org="HMI"      name="HmiXml"             rev="latest.${resolve.status}"  />
       <dependency org="HMI"      name="HmiUtil"            rev="latest.${resolve.status}"  />
       <dependency org="HMI"      name="HmiTTSnative"       rev="latest.${resolve.status}"  />
+      <dependency org="HMI"   name="HmiJComponentEnvironment"             rev="latest.${resolve.status}"   />
 
       <dependency org="HMI"   name="HmiEnvironmentBase"     rev="latest.${resolve.status}"   />    
 
