@@ -1025,6 +1025,7 @@ public final class MURMLMUBuilder
         ocVec.addAll(ocNewList);
     }
 
+    
     public TimedAnimationUnit setupTMU(MURMLDescription murmlDescription, FeedbackManager bbm, BMLBlockPeg bmlBlockPeg, String bmlId,
             String id, PegBoard pb, AnimationPlayer aniPlayer) throws TMUSetupException
     {
@@ -1061,33 +1062,113 @@ public final class MURMLMUBuilder
         }
         else if (murmlDescription.getParallel() != null)
         {
-            Parallel par = murmlDescription.getParallel();
-            Map<String, List<OrientConstraint>> ocMap = new HashMap<>(); // scope->ocVec map
+            lmp = parseParallel(murmlDescription.getParallel(), bbm, bmlBlockPeg, bmlId, id, aniPlayer, localPegBoard);
+        }
+        else if (murmlDescription.getSequence() != null)
+        {
+            lmp = parseSequence(murmlDescription.getSequence(), bbm, bmlBlockPeg, bmlId, id, aniPlayer, localPegBoard);            
+        }
+        if (lmp != null)
+        {
+            return new MotorControlProgram(bbm, bmlBlockPeg, bmlId, id, pb, localPegBoard, aniPlayer, lmp);
+        }
+        else
+        {
+            throw new TMUSetupException("No LMP specified in MURML ", null);
+        }
+    }
 
-            List<TimedAnimationUnit> lmps = new ArrayList<>();
-            for (Static staticElem : par.getStatics())
+    private LMP parseParallel(Parallel par, FeedbackManager bbm, BMLBlockPeg bmlBlockPeg, String bmlId, String id,
+            AnimationPlayer aniPlayer, PegBoard localPegBoard) throws TMUSetupException
+    {
+        Map<String, List<OrientConstraint>> ocMap = new HashMap<>(); // scope->ocVec map
+
+        List<TimedAnimationUnit> lmps = new ArrayList<>();
+        for (Static staticElem : par.getStatics())
+        {
+            List<OrientConstraint> ocVec = new ArrayList<OrientConstraint>();
+            LMP lmpx = parseStaticElement(bbm, bmlBlockPeg, bmlId, id, aniPlayer, localPegBoard, staticElem, ocVec);
+            if (lmpx != null)
+            {
+                lmps.add(lmpx);
+            }
+            if (ocVec.size() > 0) // if oc constraint, merge with other oc constraints
+            {
+                if (ocMap.containsKey(staticElem.getScope()))
+                {
+                    List<OrientConstraint> ocCur = ocMap.get(staticElem.getScope());
+                    mergeStaticConstraints(ocCur, ocVec);
+                }
+                else
+                {
+                    ocMap.put(staticElem.getScope(), ocVec);
+                }
+            }
+        }
+        for (Dynamic dynamicElem : par.getDynamics())
+        {
+            if (dynamicElem.getKeyframing() != null)
+            {
+                // TODO
+            }
+            else
             {
                 List<OrientConstraint> ocVec = new ArrayList<OrientConstraint>();
-                LMP lmpx = parseStaticElement(bbm, bmlBlockPeg, bmlId, id, aniPlayer, localPegBoard, staticElem, ocVec);
+                LMP lmpx = parseProceduralDynamic(bbm, bmlBlockPeg, bmlId, id, aniPlayer, localPegBoard, dynamicElem, ocVec);
                 if (lmpx != null)
                 {
                     lmps.add(lmpx);
                 }
                 if (ocVec.size() > 0) // if oc constraint, merge with other oc constraints
                 {
-                    if (ocMap.containsKey(staticElem.getScope()))
+                    if (ocMap.containsKey(dynamicElem.getScope()))
                     {
-                        List<OrientConstraint> ocCur = ocMap.get(staticElem.getScope());
-                        mergeStaticConstraints(ocCur, ocVec);
+                        List<OrientConstraint> ocCur = ocMap.get(dynamicElem.getScope());
+                        mergeDynamicConstraints(ocCur, ocVec);
                     }
                     else
                     {
-                        ocMap.put(staticElem.getScope(), ocVec);
+                        ocMap.put(dynamicElem.getScope(), ocVec);
                     }
                 }
             }
-            for (Dynamic dynamicElem : par.getDynamics())
+        }        
+        for (Sequence seq: par.getSequences())
+        {
+            lmps.add(parseSequence(seq, bbm, bmlBlockPeg, bmlId, id, aniPlayer, localPegBoard));
+        }
+
+        for (Entry<String, List<OrientConstraint>> entry : ocMap.entrySet())
+        {
+            lmps.add(createAndAppendLMPWrist(entry.getKey(), bbm, bmlBlockPeg, bmlId, id, localPegBoard, aniPlayer, entry.getValue()));
+        }
+        return new LMPParallel(bbm, bmlBlockPeg, bmlId, id+"_lmppar"+ UUID.randomUUID().toString().replaceAll("-", ""), localPegBoard, lmps);        
+    }
+
+    private LMP parseSequence(Sequence seq, FeedbackManager bbm, BMLBlockPeg bmlBlockPeg, String bmlId, String id,
+            AnimationPlayer aniPlayer, PegBoard localPegBoard) throws TMUSetupException
+    {
+        List<TimedAnimationUnit> lmps = new ArrayList<>();         
+        
+        for (MovementConstraint mc: seq.getSequence())
+        {
+            if(mc instanceof Static)
             {
+                Static staticElem = (Static)mc;
+                List<OrientConstraint> ocVec = new ArrayList<OrientConstraint>();
+                LMP lmpx = parseStaticElement(bbm, bmlBlockPeg, bmlId, id, aniPlayer, localPegBoard, staticElem, ocVec);
+                if (lmpx != null)
+                {
+                    lmps.add(lmpx);
+                }
+                else
+                {
+                    lmps.add(createAndAppendLMPWrist(staticElem.getScope(), bbm, bmlBlockPeg, bmlId, id, localPegBoard, aniPlayer, ocVec));
+                }
+            }
+            if(mc instanceof Dynamic)
+            {
+                Dynamic dynamicElem = (Dynamic)mc;
                 if (dynamicElem.getKeyframing() != null)
                 {
                     // TODO
@@ -1100,91 +1181,21 @@ public final class MURMLMUBuilder
                     {
                         lmps.add(lmpx);
                     }
-                    if (ocVec.size() > 0) // if oc constraint, merge with other oc constraints
-                    {
-                        if (ocMap.containsKey(dynamicElem.getScope()))
-                        {
-                            List<OrientConstraint> ocCur = ocMap.get(dynamicElem.getScope());
-                            mergeDynamicConstraints(ocCur, ocVec);
-                        }
-                        else
-                        {
-                            ocMap.put(dynamicElem.getScope(), ocVec);
-                        }
-                    }
-                }
-            }
-            
-            for (Sequence seq: par.getSequences())
-            {
-                //TODO
-            }
-
-            for (Entry<String, List<OrientConstraint>> entry : ocMap.entrySet())
-            {
-                lmps.add(createAndAppendLMPWrist(entry.getKey(), bbm, bmlBlockPeg, bmlId, id, localPegBoard, aniPlayer, entry.getValue()));
-            }
-            lmp = new LMPParallel(bbm, bmlBlockPeg, bmlId, id+"_lmppar"+ UUID.randomUUID().toString().replaceAll("-", ""), localPegBoard, lmps);
-        }
-        else if (murmlDescription.getSequence() != null)
-        {
-            List<TimedAnimationUnit> lmps = new ArrayList<>();
-            Sequence seq = murmlDescription.getSequence();
-            
-            for (MovementConstraint mc: seq.getSequence())
-            {
-                if(mc instanceof Static)
-                {
-                    Static staticElem = (Static)mc;
-                    List<OrientConstraint> ocVec = new ArrayList<OrientConstraint>();
-                    LMP lmpx = parseStaticElement(bbm, bmlBlockPeg, bmlId, id, aniPlayer, localPegBoard, staticElem, ocVec);
-                    if (lmpx != null)
-                    {
-                        lmps.add(lmpx);
-                    }
                     else
                     {
-                        lmps.add(createAndAppendLMPWrist(staticElem.getScope(), bbm, bmlBlockPeg, bmlId, id, localPegBoard, aniPlayer, ocVec));
-                    }
-                }
-                if(mc instanceof Dynamic)
-                {
-                    Dynamic dynamicElem = (Dynamic)mc;
-                    if (dynamicElem.getKeyframing() != null)
-                    {
-                        // TODO
-                    }
-                    else
-                    {
-                        List<OrientConstraint> ocVec = new ArrayList<OrientConstraint>();
-                        LMP lmpx = parseProceduralDynamic(bbm, bmlBlockPeg, bmlId, id, aniPlayer, localPegBoard, dynamicElem, ocVec);
-                        if (lmpx != null)
-                        {
-                            lmps.add(lmpx);
-                        }
-                        else
-                        {
-                            lmps.add(createAndAppendLMPWrist(dynamicElem.getScope(), bbm, bmlBlockPeg, bmlId, id, localPegBoard, aniPlayer, ocVec));
-                        }                    
-                    }
-                }
-                if(mc instanceof Dynamic)
-                {
-                    //TODO
+                        lmps.add(createAndAppendLMPWrist(dynamicElem.getScope(), bbm, bmlBlockPeg, bmlId, id, localPegBoard, aniPlayer, ocVec));
+                    }                    
                 }
             }
-            lmp = new LMPSequence(bbm, bmlBlockPeg, bmlId, id+"_lmpseq" +UUID.randomUUID().toString().replaceAll("-", ""), localPegBoard, lmps);            
+            if(mc instanceof Parallel)
+            {
+                lmps.add(parseParallel((Parallel)mc, bbm, bmlBlockPeg, bmlId, id, aniPlayer, localPegBoard));
+            }
         }
-        if (lmp != null)
-        {
-            return new MotorControlProgram(bbm, bmlBlockPeg, bmlId, id, pb, localPegBoard, aniPlayer, lmp);
-        }
-        else
-        {
-            throw new TMUSetupException("No LMP specified in MURML ", null);
-        }
+        return new LMPSequence(bbm, bmlBlockPeg, bmlId, id+"_lmpseq" +UUID.randomUUID().toString().replaceAll("-", ""), localPegBoard, lmps);        
     }
 
+    
     private LMP parseStaticElement(FeedbackManager bbm, BMLBlockPeg bmlBlockPeg, String bmlId, String id, AnimationPlayer aniPlayer,
             PegBoard localPegBoard, Static staticElem, List<OrientConstraint> ocVec)
     {

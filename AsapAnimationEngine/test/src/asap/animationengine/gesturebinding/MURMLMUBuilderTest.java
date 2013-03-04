@@ -542,4 +542,78 @@ public class MURMLMUBuilderTest
         TimedAnimationUnit lmp = field("lmp").ofType(TimedAnimationUnit.class).in(tau).get();
         assertThat(lmp, instanceOf(LMPSequence.class));
     }
+    
+    
+    @Test
+    public void testParallelInSequence() throws TMUSetupException
+    {
+        //@formatter:off
+        String murmlString = 
+        "<murml-description xmlns=\"http://www.techfak.uni-bielefeld.de/ags/soa/murml\" scope=\"hand\">"+
+        "<sequence>"+
+          "<static scope=\"left_arm\" slot=\"HandShape\" value=\"ASL5\"/>"+
+          "<parallel>"+
+              "<static scope=\"left_arm\" slot=\"PalmOrientation\" value=\"DirR\"/>"+
+              "  <dynamic slot=\"HandLocation\" scope=\"right_arm\">"+
+              "    <dynamicElement type=\"curve\">"+
+              "      <value type=\"start\"  name=\"LocShoulder LocCenterLeft LocFar\"/>"+
+              "      <value type=\"end\"    name=\"LocShoulder LocCenterLeft LocNorm\"/>"+
+              "      <value type=\"normal\" name=\"DirU\"/>"+
+              "      <value type=\"shape\"  name=\"LeftC\"/>"+
+              "      <value type=\"extension\" name=\"0.6\"/>"+
+              "    </dynamicElement>"+
+              "  </dynamic>"+
+          "</parallel>"+
+        "</sequence>"+
+        "</murml-description>";
+        //@formatter:on
+        
+        TimedAnimationUnit tau = murmlMuBuilder.setupTMU(murmlString, new FeedbackManagerImpl(new BMLBlockManager(), ""),
+                BMLBlockPeg.GLOBALPEG, "bml1", "gesture1", pb, mockAnimationPlayer);
+        String strs[] = ObjectArrays.concat(Hanim.l_wrist, Hanim.LEFTHAND_JOINTS);
+        strs = ObjectArrays.concat(Hanim.r_elbow, strs);
+        strs = ObjectArrays.concat(Hanim.r_shoulder, strs);
+        assertThat(tau.getKinematicJoints(),
+                IsIterableContainingInAnyOrder.containsInAnyOrder(strs));
+
+        TimedAnimationUnit lmp = field("lmp").ofType(TimedAnimationUnit.class).in(tau).get();
+        assertThat(lmp, instanceOf(LMPSequence.class));
+    }
+    
+    
+    @Test
+    public void testSequenceInParallel() throws TMUSetupException
+    {
+      //@formatter:off
+        String murmlString = 
+        "<murml-description xmlns=\"http://www.techfak.uni-bielefeld.de/ags/soa/murml\" scope=\"hand\">"+
+        "<parallel>"+
+          "<static scope=\"left_arm\" slot=\"HandShape\" value=\"ASL5\"/>"+
+          "<sequence>"+
+              "<static scope=\"left_arm\" slot=\"PalmOrientation\" value=\"DirR\"/>"+
+              "  <dynamic slot=\"HandLocation\" scope=\"right_arm\">"+
+              "    <dynamicElement type=\"curve\">"+
+              "      <value type=\"start\"  name=\"LocShoulder LocCenterLeft LocFar\"/>"+
+              "      <value type=\"end\"    name=\"LocShoulder LocCenterLeft LocNorm\"/>"+
+              "      <value type=\"normal\" name=\"DirU\"/>"+
+              "      <value type=\"shape\"  name=\"LeftC\"/>"+
+              "      <value type=\"extension\" name=\"0.6\"/>"+
+              "    </dynamicElement>"+
+              "  </dynamic>"+
+          "</sequence>"+
+        "</parallel>"+
+        "</murml-description>";
+        //@formatter:on
+        
+        TimedAnimationUnit tau = murmlMuBuilder.setupTMU(murmlString, new FeedbackManagerImpl(new BMLBlockManager(), ""),
+                BMLBlockPeg.GLOBALPEG, "bml1", "gesture1", pb, mockAnimationPlayer);
+        String strs[] = ObjectArrays.concat(Hanim.l_wrist, Hanim.LEFTHAND_JOINTS);
+        strs = ObjectArrays.concat(Hanim.r_elbow, strs);
+        strs = ObjectArrays.concat(Hanim.r_shoulder, strs);
+        assertThat(tau.getKinematicJoints(),
+                IsIterableContainingInAnyOrder.containsInAnyOrder(strs));
+
+        TimedAnimationUnit lmp = field("lmp").ofType(TimedAnimationUnit.class).in(tau).get();
+        assertThat(lmp, instanceOf(LMPParallel.class));
+    }
 }
