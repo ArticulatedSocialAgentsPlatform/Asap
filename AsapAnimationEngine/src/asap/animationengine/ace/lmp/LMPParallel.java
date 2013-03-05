@@ -233,16 +233,20 @@ public class LMPParallel extends LMP
             }
             lmp.setTimePeg("end", endPeg);
         }
-        
-        
         super.resolveTimePegs(0);
+        for(TimedAnimationUnit lmp:lmpQueue)
+        {
+            if(lmp instanceof LMP)
+            {
+                ((LMP)lmp).resolveTimePegs(time);
+            }
+        }
     }
 
     @Override
     protected void setInternalStrokeTiming(double time)
     {
         // TODO Auto-generated method stub
-
     }
 
     @Override
