@@ -68,7 +68,7 @@ public class LMPSequenceTest
     }
     
     @Test
-    public void testResolveTwo()
+    public void testResolveTwoWithSkewing()
     {
         LMP tmu1 = createStub("bml1", "beh1-1", 1, 2, 3);
         LMP tmu2 = createStub("bml1", "beh1-2", 2, 1, 2);
@@ -152,5 +152,57 @@ public class LMPSequenceTest
         seq.play(7);
         assertEquals(TimedPlanUnitState.IN_EXEC, tmu1.getState());
         assertEquals(TimedPlanUnitState.IN_EXEC, tmu2.getState());
+    }
+    
+    @Test
+    public void testDurationsWithParallelInSequence()
+    {
+        LMP tmu1 = createStub("bml1", "beh1-1", 1, 2, 3);
+        LMP tmu2a = createStub("bml1", "beh1-2a", 2, 1, 2);
+        LMP tmu2b = createStub("bml1", "beh1-2b", 1, 2, 3);
+        LMPParallel par = new LMPParallel(fbm, BMLBlockPeg.GLOBALPEG, "bml1", "beh1-par", pegBoard,
+                new ImmutableList.Builder<TimedAnimationUnit>().add(tmu2a).add(tmu2b).build());
+        LMPSequence seq = new LMPSequence(fbm, BMLBlockPeg.GLOBALPEG, "bml1", "beh1", pegBoard,
+                new ImmutableList.Builder<TimedAnimationUnit>().add(tmu1, par).build());
+        
+        assertEquals(8,seq.getStrokeDuration(), TIME_PRECISION);
+        assertEquals(1,seq.getPreparationDuration(), TIME_PRECISION);
+        assertEquals(2,seq.getRetractionDuration(), TIME_PRECISION);        
+    }
+    
+    
+    @Test
+    public void testResolveWithParallelInSequence()
+    {
+        LMP tmu1 = createStub("bml1", "beh1-1", 1, 2, 3);
+        LMP tmu2a = createStub("bml1", "beh1-2a", 2, 1, 2);
+        LMP tmu2b = createStub("bml1", "beh1-2b", 1, 2, 3);
+        LMPParallel par = new LMPParallel(fbm, BMLBlockPeg.GLOBALPEG, "bml1", "beh1-par", pegBoard,
+                new ImmutableList.Builder<TimedAnimationUnit>().add(tmu2a).add(tmu2b).build());
+        LMPSequence seq = new LMPSequence(fbm, BMLBlockPeg.GLOBALPEG, "bml1", "beh1", pegBoard,
+                new ImmutableList.Builder<TimedAnimationUnit>().add(tmu1, par).build());
+        
+        seq.setTimePeg("strokeStart", TimePegUtil.createTimePeg(3));
+        seq.setTimePeg("strokeEnd", TimePegUtil.createTimePeg(3+seq.getStrokeDuration()));
+        seq.resolveTimePegs(0);
+        
+        assertEquals(2, seq.getStartTime(), TIME_PRECISION);
+        assertEquals(3, seq.getTime("strokeStart"), TIME_PRECISION);
+        assertEquals(11, seq.getTime("strokeEnd"), TIME_PRECISION);
+        assertEquals(13, seq.getTime("end"), TIME_PRECISION);
+        
+        assertEquals(2, tmu1.getTime("start"), TIME_PRECISION);
+        assertEquals(3, tmu1.getTime("strokeStart"), TIME_PRECISION);
+        assertEquals(6, tmu1.getTime("strokeEnd"), TIME_PRECISION);
+        assertEquals(6, par.getTime("start"), TIME_PRECISION);
+        assertEquals(8, par.getTime("strokeStart"), TIME_PRECISION);
+        assertEquals(11, par.getTime("strokeEnd"), TIME_PRECISION);
+        
+        assertEquals(6, tmu2a.getStartTime(), TIME_PRECISION);
+        assertEquals(8, tmu2a.getTime("strokeStart"), TIME_PRECISION);
+        assertEquals(11, tmu2a.getTime("strokeEnd"), TIME_PRECISION);
+        assertEquals(7, tmu2b.getStartTime(), TIME_PRECISION);
+        assertEquals(8, tmu2b.getTime("strokeStart"), TIME_PRECISION);
+        assertEquals(11, tmu2b.getTime("strokeEnd"), TIME_PRECISION);
     }
 }

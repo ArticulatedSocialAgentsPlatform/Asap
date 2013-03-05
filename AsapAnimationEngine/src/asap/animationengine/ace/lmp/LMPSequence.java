@@ -172,4 +172,17 @@ public class LMPSequence extends LMP
             currentStrokeStart.setGlobalValue(strokeEnd.getGlobalValue()+lmpQueue.get(i+1).getPreparationDuration()*stretch);
         }
     }
+    
+    @Override
+    protected void resolveTimePegs(double time)
+    {
+        super.resolveTimePegs(time);
+        for(TimedAnimationUnit lmp:lmpQueue)
+        {
+            if(lmp instanceof LMP)
+            {
+                ((LMP)lmp).resolveTimePegs(time);
+            }
+        }
+    }
 }
