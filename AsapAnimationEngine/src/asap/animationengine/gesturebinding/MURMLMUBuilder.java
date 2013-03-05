@@ -476,6 +476,10 @@ public final class MURMLMUBuilder
         return null;
     }
 
+    private String createLMPId(String id)
+    {
+        return id+"_lmp"+UUID.randomUUID().toString().replaceAll("-", "");
+    }
     private LMPWristRot createWristRotLMP(String scope, List<OrientConstraint> ocVec, FeedbackManager bbm, BMLBlockPeg bmlBlockPeg,
             String bmlId, String id, PegBoard pb, AnimationPlayer aniPlayer)
     {
@@ -483,8 +487,7 @@ public final class MURMLMUBuilder
         {
             return null;
         }
-        LMPWristRot lmp = new LMPWristRot(scope, ocVec, bbm, bmlBlockPeg, bmlId, id + "_lmp"
-                + UUID.randomUUID().toString().replaceAll("-", ""), pb, aniPlayer);
+        LMPWristRot lmp = new LMPWristRot(scope, ocVec, bbm, bmlBlockPeg, bmlId, createLMPId(id), pb, aniPlayer);
 
         // if ( retrMode == RTRCT_NO )
         // {
@@ -574,8 +577,7 @@ public final class MURMLMUBuilder
         // }
         //
         // -- create lmp and append to motor program
-        LMPPoRot lmp = new LMPPoRot(scope, poVec, bbm, bmlBlockPeg, bmlId, id + "_lmp" + UUID.randomUUID().toString().replaceAll("-", ""),
-                pb, aniPlayer);
+        LMPPoRot lmp = new LMPPoRot(scope, poVec, bbm, bmlBlockPeg, bmlId, createLMPId(id),pb, aniPlayer);
         lmp.setPoConstraint(poVec);
         return lmp;
     }
@@ -711,7 +713,7 @@ public final class MURMLMUBuilder
         // else
         // phaseVec.back().second = GuidingStroke::STP_FINISH;
         //
-        return new LMPHandMove(scope, phaseVec, bbm, bmlBlockPeg, bmlId, id, pb, aniPlayer);
+        return new LMPHandMove(scope, phaseVec, bbm, bmlBlockPeg, bmlId, createLMPId(id), pb, aniPlayer);
     }
 
     public LMP getStaticHandLocationElementTMU(String scope, Static staticElem, FeedbackManager bbm, BMLBlockPeg bmlBlockPeg, String bmlId,
@@ -733,7 +735,7 @@ public final class MURMLMUBuilder
                 trajectory.addGuidingStroke(new LinearGStroke(GStrokePhaseID.STP_PREP, ePos));
 
                 // create local motor program for anticipated stroke sequence
-                LMPWristPos wristMove = new LMPWristPos(scope, bbm, bmlBlockPeg, bmlId, id, pb, trajectory, hns.getBaseJoint(), aniPlayer);
+                LMPWristPos wristMove = new LMPWristPos(scope, bbm, bmlBlockPeg, bmlId, createLMPId(id), pb, trajectory, hns.getBaseJoint(), aniPlayer);
 
                 // //cout << "creating lmp from guiding sequence:" << endl; trajectory.writeTo(cout);
                 // //lmp->overshoot(mcLoc->getEndTPC().time);
@@ -837,7 +839,7 @@ public final class MURMLMUBuilder
             // -- create lmp for wrist trajectory
             // cout << "==== creating lmp from: "; traj.writeTo(cout); cout << endl;
 
-            LMPWristPos wristMove = new LMPWristPos(scope, bbf, bmlBlockPeg, bmlId, id, pegBoard, traj, hns.getBaseJoint(), aniPlayer);
+            LMPWristPos wristMove = new LMPWristPos(scope, bbf, bmlBlockPeg, bmlId, createLMPId(id), pegBoard, traj, hns.getBaseJoint(), aniPlayer);
 
             // TODO
             // -- set transformation for converting positions into base coordinates

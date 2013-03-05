@@ -257,6 +257,5 @@ public class MotorControlProgramTest extends AbstractTimedPlanUnitTest
         assertEquals(3, mcp.getTime("strokeEnd"), TIMING_PRECISION);
         assertEquals(3, mcp.getTime("relax"), TIMING_PRECISION);
         assertEquals(10 - 2, mcp.getEndTime(), TIMING_PRECISION);
-    }
-
+    }    
 }
