@@ -61,6 +61,10 @@ public class LMPSequenceTest
         assertEquals(2, seq.getTime("strokeStart"), TIME_PRECISION);
         assertEquals(4, seq.getTime("strokeEnd"), TIME_PRECISION);
         assertEquals(6, seq.getTime("end"), TIME_PRECISION);
+        
+        assertEquals(1, tmu1.getStartTime(), TIME_PRECISION);
+        assertEquals(2, tmu1.getTime("strokeStart"), TIME_PRECISION);
+        assertEquals(4, tmu1.getTime("strokeEnd"), TIME_PRECISION);        
     }
     
     @Test
@@ -77,6 +81,14 @@ public class LMPSequenceTest
         assertEquals(3, seq.getTime("strokeStart"), TIME_PRECISION);
         assertEquals(5, seq.getTime("strokeEnd"), TIME_PRECISION);
         assertEquals(6, seq.getTime("end"), TIME_PRECISION);
+        
+        assertEquals(2, tmu1.getStartTime(), TIME_PRECISION);
+        assertEquals(3, tmu1.getTime("strokeStart"), TIME_PRECISION);
+        assertEquals(3+6d/7d, tmu1.getTime("strokeEnd"), TIME_PRECISION);
+        
+        assertEquals(3+6d/7d, tmu2.getStartTime(), TIME_PRECISION);
+        assertEquals(3+10d/7d, tmu2.getTime("strokeStart"), TIME_PRECISION);
+        assertEquals(5, tmu2.getTime("strokeEnd"), TIME_PRECISION);
     }
     
     @Test
@@ -117,5 +129,28 @@ public class LMPSequenceTest
         assertEquals(7,seq.getStrokeDuration(), TIME_PRECISION);
         assertEquals(1,seq.getPreparationDuration(), TIME_PRECISION);
         assertEquals(1,seq.getRetractionDuration(), TIME_PRECISION);
+    }
+    
+    @Test
+    public void testPlaybackTwo() throws TimedPlanUnitPlayException
+    {
+        LMP tmu1 = createStub("bml1", "beh1-1", 1, 2, 3);
+        LMP tmu2 = createStub("bml1", "beh1-2", 2, 1, 2);
+        LMPSequence seq = new LMPSequence(fbm, BMLBlockPeg.GLOBALPEG, "bml1", "beh1", pegBoard,
+                new ImmutableList.Builder<TimedAnimationUnit>().add(tmu1, tmu2).build());
+        
+        seq.setTimePeg("strokeStart", TimePegUtil.createTimePeg(3));
+        seq.setTimePeg("strokeEnd", TimePegUtil.createTimePeg(3+seq.getStrokeDuration()));
+        seq.resolveTimePegs(0);
+        
+        seq.setState(TimedPlanUnitState.LURKING);
+        seq.start(2);
+        seq.play(3);
+        assertEquals(TimedPlanUnitState.IN_EXEC, tmu1.getState());
+        assertEquals(TimedPlanUnitState.LURKING, tmu2.getState());
+        
+        seq.play(7);
+        assertEquals(TimedPlanUnitState.IN_EXEC, tmu1.getState());
+        assertEquals(TimedPlanUnitState.IN_EXEC, tmu2.getState());
     }
 }
