@@ -954,7 +954,7 @@ public final class MURMLMUBuilder
             double p = kf.getEaseturningpoint();
             return new MURMLKeyframeMU(targets, interp, new EaseInEaseOutManipulator(scale, p), keyFrames, nrOfDofs,
                     kf.isInsertStartframe());
-        }
+        }       
         return null;
     }
 

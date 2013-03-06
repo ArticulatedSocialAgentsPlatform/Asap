@@ -28,8 +28,10 @@ import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.ConcurrentMap;
 import java.util.concurrent.LinkedBlockingQueue;
 
+import com.google.common.base.Splitter;
 import com.google.common.collect.ImmutableMap;
 import com.google.common.collect.ImmutableSet;
+import com.google.common.collect.Iterables;
 
 /**
  * Sends speech commands through to an ipaaca TTS agent
@@ -233,14 +235,21 @@ public class IpaacaTTSGenerator extends AbstractTTSGenerator
         System.out.println("createTimingInfo from phonemes " + phonemes);
         System.out.println("createTimingInfo from marks " + marks);
 
-        String phString = phonemes.replaceAll("\\[\\(0\\)\\(0\\)\\(0\\)\\]\\#", "");
-        String words[] = phString.split(";");
+        String phString = phonemes.split("#")[1].trim();
+        
+        String words[] = Iterables.toArray(Splitter.on(";").omitEmptyStrings().split(phString), String.class);
         
         String wordsOnly = marks.replaceAll("\\[[^\\]]+\\]", "");
         wordsOnly = wordsOnly.replaceAll("><",",");
         wordsOnly = wordsOnly.replaceAll("<","");
         wordsOnly = wordsOnly.replaceAll(">","");
-        String wordsInContent[] = wordsOnly.split(",");        
+        String wordsInContent[] = Iterables.toArray(Splitter.on(",").omitEmptyStrings().split(wordsOnly),String.class);
+        
+        
+        if(wordsInContent.length==0)
+        {
+            wordsInContent = new String[words.length];
+        }
         
         int i = 0;
         int offset = 0;
