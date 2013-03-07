@@ -18,7 +18,18 @@ public class Frame extends MURMLElement
 
     @Getter
     private Posture posture;
-
+    
+    public Frame()
+    {
+        
+    }
+    
+    public Frame(double ftime, Posture p)
+    {
+        this.ftime = ftime;
+        this.posture = p;
+    }
+    
     @Override
     public void decodeAttributes(HashMap<String, String> attrMap, XMLTokenizer tokenizer)
     {
