@@ -46,7 +46,7 @@ import asap.realizertestutil.util.TimePegUtil;
 @PrepareForTest({ BMLBlockManager.class })
 public class MotorControlProgramTest extends AbstractTimedPlanUnitTest
 {
-    private PegBoard pegBoard = new PegBoard();
+    private PegBoard globalPegBoard = new PegBoard();
     private PegBoard localPegboard = new PegBoard();    
 
     private AnimationPlayer mockAnimationPlayer = mock(AnimationPlayer.class);
@@ -57,14 +57,14 @@ public class MotorControlProgramTest extends AbstractTimedPlanUnitTest
     private static final double LMP_RETRACTIONDUR = 0.3;
 
     private BMLBlockPeg bml1Peg = new BMLBlockPeg("bml1", 0);
-    private StubLMP stubTimedAnimationUnit = new StubLMP(fbManager, bml1Peg, "bml1", "beh1_internal", pegBoard, new HashSet<String>()
+    private StubLMP stubTimedAnimationUnit = new StubLMP(fbManager, bml1Peg, "bml1", "beh1_internal", localPegboard, new HashSet<String>()
             , new HashSet<String>(), LMP_PREPDUR, LMP_RETRACTIONDUR, LMP_STROKEDUR);
 
     @SuppressWarnings("unchecked")
     @Before
     public void setup()
     {
-        pegBoard.addBMLBlockPeg(bml1Peg);
+        globalPegBoard.addBMLBlockPeg(bml1Peg);
 
         when(
                 mockAnimationPlayer.createTransitionToRest(any(FeedbackManager.class), any(Set.class), any(TimePeg.class),
@@ -74,7 +74,7 @@ public class MotorControlProgramTest extends AbstractTimedPlanUnitTest
 
     private MotorControlProgram setupPlanUnit(FeedbackManager bfm, BMLBlockPeg bbPeg, String bmlId, String id, LMP lmp)
     {
-        return new MotorControlProgram(bfm, bbPeg, bmlId, id, pegBoard, localPegboard, mockAnimationPlayer, lmp);
+        return new MotorControlProgram(bfm, bbPeg, bmlId, id, globalPegBoard, localPegboard, mockAnimationPlayer, lmp);
     }
 
     private MotorControlProgram setupPlanUnit(FeedbackManager bfm, BMLBlockPeg bbPeg, String bmlId, String id)
