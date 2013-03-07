@@ -44,6 +44,7 @@ public class MURMLKeyframeTMU extends TimedAnimationMotionUnit
             case "strokeStart":
             case "stroke":
                 readyPeg = sac.peg;
+                break;
             case "strokeEnd":
             case "relax":
                 relaxPeg = sac.peg;
@@ -86,7 +87,6 @@ public class MURMLKeyframeTMU extends TimedAnimationMotionUnit
         double readyDuration = 0;
         if(mu.getKeyPositions().size()>2)
         {
-            //readyDuration = mu.getKeyPositions().get(1).time;
             readyDuration = mu.getPreparationDuration();
         }
         
