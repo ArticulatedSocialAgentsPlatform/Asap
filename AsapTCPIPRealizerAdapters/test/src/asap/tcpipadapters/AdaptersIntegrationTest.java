@@ -4,6 +4,7 @@ import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.verify;
 
 import org.junit.After;
+import org.junit.Before;
 import org.junit.Test;
 
 import asap.realizerport.BMLFeedbackListener;
@@ -30,25 +31,30 @@ public class AdaptersIntegrationTest
         while(tcpIpToBML.isConnectedToClient()){}
     }
     
+    @Before
+    public void before()
+    {
+        bmlToTCPIP.connect(new ServerInfo("localhost",6500,6501));
+        while(!bmlToTCPIP.isConnected());
+    }
+    
     @Test
     public void testPerformBML() throws InterruptedException
     {
         String bmlString = "<bml id=\"bml1\"></bml>";
-        bmlToTCPIP.connect(new ServerInfo("localhost",6500,6501));
         bmlToTCPIP.performBML(bmlString);        
-        Thread.sleep(1000);
+        Thread.sleep(500);
         verify(mockRealizerPort).performBML(bmlString);        
     }
     
     @Test
     public void testFeedback() throws InterruptedException
     {
-        bmlToTCPIP.connect(new ServerInfo("localhost",6500,6501));
         bmlToTCPIP.addListeners(mockFeedbackListener);
         String fbString = "<blockProgress id=\"bml1:end\" globalTime=\"15\" characterId=\"doctor\"></blockProgress>";
-        Thread.sleep(1000);        
+        Thread.sleep(500);        
         tcpIpToBML.feedback(fbString);
-        Thread.sleep(1000);
+        Thread.sleep(500);
         verify(mockFeedbackListener).feedback(fbString);
     }
 }

@@ -56,14 +56,14 @@ public class FACSFU implements FaceUnit
     private FaceController faceController;
     private FACSConverter facsConverter;
 
-    //initialized here for efficiency
+    // initialized here for efficiency
     private MPEG4Configuration mpeg4Config = new MPEG4Configuration();
-    
+
     public FACSFU()
     {
         KeyPosition start = new KeyPosition("start", 0d, 1d);
         KeyPosition attackPeak = new KeyPosition("attackPeak", 0.1d, 1d);
-        KeyPosition relax = new KeyPosition("relax", 0.9d, 1d);        
+        KeyPosition relax = new KeyPosition("relax", 0.9d, 1d);
         KeyPosition end = new KeyPosition("end", 1d, 1d);
         addKeyPosition(start);
         addKeyPosition(attackPeak);
@@ -75,27 +75,29 @@ public class FACSFU implements FaceUnit
     {
         faceController = fc;
     }
+
     public void setFACSConverter(FACSConverter fc)
     {
         facsConverter = fc;
     }
+
     @Override
     public void startUnit(double t)
     {
-        
+
     }
+
     @Override
     public void setFloatParameterValue(String name, float value) throws ParameterException
     {
-        if (name.equals("intensity"))
-            intensity = value;
+        if (name.equals("intensity")) intensity = value;
         else throw new ParameterNotFoundException(name);
     }
 
     @Override
     public void setParameterValue(String name, String value) throws ParameterException
     {
-        if(StringUtil.isNumeric(value))
+        if (StringUtil.isNumeric(value))
         {
             setFloatParameterValue(name, Float.parseFloat(value));
         }
@@ -108,7 +110,7 @@ public class FACSFU implements FaceUnit
     @Override
     public String getParameterValue(String name) throws ParameterException
     {
-        return ""+getFloatParameterValue(name);        
+        return "" + getFloatParameterValue(name);
     }
 
     @Override
@@ -157,18 +159,15 @@ public class FACSFU implements FaceUnit
         }
         else if (t > relax && t < 1)
         {
-            newAppliedWeight = intensity
-                    * (float) (1 - ((t - relax) / (1 - relax)));
+            newAppliedWeight = intensity * (float) (1 - ((t - relax) / (1 - relax)));
         }
 
-             
         facsConverter.convert(facsConfig, mpeg4Config);
-            mpeg4Config.multiply(newAppliedWeight);
-            faceController.addMPEG4Configuration(mpeg4Config);
-        
+        mpeg4Config.multiply(newAppliedWeight);
+        faceController.addMPEG4Configuration(mpeg4Config);
+
     }
 
-   
     /**
      * Creates the TimedFaceUnit corresponding to this face unit
      * @param bmlId
@@ -179,7 +178,7 @@ public class FACSFU implements FaceUnit
      * @return the TFU
      */
     @Override
-    public TimedFaceUnit createTFU(FeedbackManager bfm,BMLBlockPeg bbPeg, String bmlId, String id)
+    public TimedFaceUnit createTFU(FeedbackManager bfm, BMLBlockPeg bbPeg, String bmlId, String id)
     {
         return new TimedFaceUnit(bfm, bbPeg, bmlId, id, this);
     }
@@ -207,7 +206,7 @@ public class FACSFU implements FaceUnit
         FACSFU result = new FACSFU();
         result.setFaceController(fc);
         result.setFACSConverter(fconv);
-        result.intensity=intensity;
+        result.intensity = intensity;
         result.setConfig(facsConfig);
         for (KeyPosition keypos : getKeyPositions())
         {
