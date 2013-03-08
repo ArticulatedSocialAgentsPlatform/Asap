@@ -160,8 +160,8 @@ public class FACSFU implements FaceUnit
         else if (t > relax && t < 1)
         {
             newAppliedWeight = intensity * (float) (1 - ((t - relax) / (1 - relax)));
-        }
-
+        }        
+        
         facsConverter.convert(facsConfig, mpeg4Config);
         mpeg4Config.multiply(newAppliedWeight);
         faceController.addMPEG4Configuration(mpeg4Config);

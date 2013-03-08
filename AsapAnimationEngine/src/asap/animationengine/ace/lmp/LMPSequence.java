@@ -23,6 +23,8 @@ public class LMPSequence extends LMP
 {
     private List<TimedAnimationUnit> lmpQueue;
     
+    private static final double MINIMUM_PREPARATION_TIME = 0.2;
+    
     public LMPSequence(FeedbackManager fbm, BMLBlockPeg bbPeg, String bmlId, String behId, PegBoard pegBoard,
             List<TimedAnimationUnit> lmpList)
     {
@@ -164,12 +166,21 @@ public class LMPSequence extends LMP
         TimePeg currentStrokeStart = strokeStartPeg;  
         for (int i = 0; i < lmpQueue.size() - 1; i++)
         {
+            double durNeeded = lmpQueue.get(i).getStrokeDuration()+lmpQueue.get(i+1).getPreparationDuration();
+            durNeeded *= stretch;
+            double durPrep = lmpQueue.get(i+1).getPreparationDuration()*stretch;
+            if(durPrep<MINIMUM_PREPARATION_TIME)
+            {
+                durPrep = MINIMUM_PREPARATION_TIME;
+            }
+            durNeeded-=durPrep;            
+            
             TimePeg strokeEnd = lmpQueue.get(i).getTimePeg("strokeEnd");
-            strokeEnd.setGlobalValue(currentStrokeStart.getGlobalValue()+lmpQueue.get(i).getStrokeDuration()*stretch);
+            strokeEnd.setGlobalValue(currentStrokeStart.getGlobalValue()+durNeeded);
             currentStrokeStart = lmpQueue.get(i+1).getTimePeg("strokeStart");
             
             //XXX: the preparation duration can (and should) dynamically change here            
-            currentStrokeStart.setGlobalValue(strokeEnd.getGlobalValue()+lmpQueue.get(i+1).getPreparationDuration()*stretch);
+            currentStrokeStart.setGlobalValue(strokeEnd.getGlobalValue()+durPrep);
         }
     }
     

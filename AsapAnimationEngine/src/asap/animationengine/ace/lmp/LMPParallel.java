@@ -144,7 +144,7 @@ public class LMPParallel extends LMP
         
         for (TimedAnimationUnit lmp : lmpQueue)
         {
-            if(lmp instanceof LMPWristPos)
+            if(lmp instanceof LMP && ((LMP)lmp).hasFixedStrokeDuration())
             {
                 if(setByHandMove)
                 {

@@ -12,22 +12,28 @@ import asap.realizer.planunit.TimedPlanUnitPlayException;
 /**
  * LMP testing stub
  * @author hvanwelbergen
- *
+ * 
  */
 public class StubLMP extends LMP
 {
     private final Set<String> kinematicJoints;
     private final Set<String> physicalJoints;
-    
+
     @Setter
     private double prepDuration;
-    
+
     private final double retrDuration;
     private final double strokeDuration;
-    
-    public StubLMP(FeedbackManager fbm, BMLBlockPeg bmlPeg, String bmlId, String behId, PegBoard pegBoard,
-            Set<String> kinematicJoints, Set<String> physicalJoints, double prepDuration, double retrDuration, 
-            double strokeDuration)
+    private final boolean hasFixedStrokeDuration;
+
+    public StubLMP(FeedbackManager fbm, BMLBlockPeg bmlPeg, String bmlId, String behId, PegBoard pegBoard, Set<String> kinematicJoints,
+            Set<String> physicalJoints, double prepDuration, double retrDuration, double strokeDuration)
+    {
+        this(fbm, bmlPeg, bmlId, behId, pegBoard, kinematicJoints, physicalJoints, prepDuration, retrDuration, strokeDuration, false);
+    }
+
+    public StubLMP(FeedbackManager fbm, BMLBlockPeg bmlPeg, String bmlId, String behId, PegBoard pegBoard, Set<String> kinematicJoints,
+            Set<String> physicalJoints, double prepDuration, double retrDuration, double strokeDuration, boolean hasFixedStrokeDuration)
     {
         super(fbm, bmlPeg, bmlId, behId, pegBoard);
         this.kinematicJoints = kinematicJoints;
@@ -35,8 +41,15 @@ public class StubLMP extends LMP
         this.prepDuration = prepDuration;
         this.retrDuration = retrDuration;
         this.strokeDuration = strokeDuration;
+        this.hasFixedStrokeDuration = hasFixedStrokeDuration;
     }
-    
+
+    @Override
+    public boolean hasFixedStrokeDuration()
+    {
+        return hasFixedStrokeDuration;
+    }
+
     @Override
     public Set<String> getKinematicJoints()
     {
@@ -76,18 +89,18 @@ public class StubLMP extends LMP
     @Override
     protected void setInternalStrokeTiming(double time)
     {
-                
+
     }
 
     @Override
     protected void playUnit(double time) throws TimedPlanUnitPlayException
     {
-                
+
     }
 
     @Override
     protected void stopUnit(double time) throws TimedPlanUnitPlayException
     {
-                
+
     }
 }

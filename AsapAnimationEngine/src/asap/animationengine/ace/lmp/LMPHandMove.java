@@ -79,6 +79,7 @@ public class LMPHandMove extends LMP
             return DEFAULT_STROKEPHASE_DURATION + TRANSITION_TIME * 2;
         }
 
+                
         @Override
         public void applyKeyFrame(KeyFrame kf)
         {

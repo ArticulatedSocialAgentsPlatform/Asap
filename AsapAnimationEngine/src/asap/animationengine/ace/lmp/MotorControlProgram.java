@@ -156,7 +156,6 @@ public class MotorControlProgram extends TimedAbstractPlanUnit implements TimedA
         {
             for (String sync : lmp.getAvailableSyncs())
             {
-                //if (mcpSync.equals(sync) && !mcpSync.equals("start") && !mcpSync.equals("end"))
                 if (mcpSync.equals(sync) && !mcpSync.equals("end"))
                 {
                     lmp.setTimePeg(sync, localPegBoard.getTimePeg(getBMLId(), getId(), sync));
@@ -340,6 +339,7 @@ public class MotorControlProgram extends TimedAbstractPlanUnit implements TimedA
     @Override
     public void updateTiming(double time) throws TimedPlanUnitPlayException
     {
+        if(true) {return;}
         if (!isLurking()) return;
         if(!getTimePeg("start").isAbsoluteTime() && globalPegBoard.getPegKeys(globalPegBoard.getTimePeg(getBMLId(), getId(), "start")).size()==1)
         {
