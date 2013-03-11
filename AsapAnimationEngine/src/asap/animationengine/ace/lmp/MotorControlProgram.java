@@ -339,7 +339,6 @@ public class MotorControlProgram extends TimedAbstractPlanUnit implements TimedA
     @Override
     public void updateTiming(double time) throws TimedPlanUnitPlayException
     {
-        if(true) {return;}
         if (!isLurking()) return;
         if(!getTimePeg("start").isAbsoluteTime() && globalPegBoard.getPegKeys(globalPegBoard.getTimePeg(getBMLId(), getId(), "start")).size()==1)
         {
