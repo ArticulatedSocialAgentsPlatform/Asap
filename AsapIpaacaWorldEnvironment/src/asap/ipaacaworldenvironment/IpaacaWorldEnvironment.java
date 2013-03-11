@@ -1,6 +1,7 @@
 package asap.ipaacaworldenvironment;
 
 import hmi.animation.VJoint;
+import hmi.environmentbase.Environment;
 import hmi.util.ClockListener;
 import hmi.worldobjectenvironment.WorldObject;
 import hmi.worldobjectenvironment.WorldObjectManager;
@@ -15,6 +16,8 @@ import ipaaca.OutputBuffer;
 
 import java.util.EnumSet;
 
+import lombok.Getter;
+import lombok.Setter;
 import lombok.extern.slf4j.Slf4j;
 
 import com.google.common.base.Splitter;
@@ -28,7 +31,7 @@ import com.google.common.primitives.Floats;
  * 
  */
 @Slf4j
-public class IpaacaWorldEnvironment implements ClockListener
+public class IpaacaWorldEnvironment implements ClockListener, Environment
 {
     private final WorldObjectManager woManager;
     private final OutputBuffer outBuffer;
@@ -39,6 +42,11 @@ public class IpaacaWorldEnvironment implements ClockListener
     private final String DATA_KEY = "data";
     private final String REPORT_CMD = "report";
     private final String REPORTING_CMD = "reporting";
+    private volatile boolean shutdown = false;
+
+    @Getter
+    @Setter
+    private String id = "";
 
     static
     {
@@ -86,28 +94,28 @@ public class IpaacaWorldEnvironment implements ClockListener
         {
             if (iu.getPayload().get(COMMAND_KEY).equals(REPORTING_CMD))
             {
-                String data = iu.getPayload().get(DATA_KEY);                
+                String data = iu.getPayload().get(DATA_KEY);
                 if (data.length() > 2)
                 {
                     String elems[] = Iterables.toArray(
                             Splitter.on(")(").trimResults().omitEmptyStrings().split(data.substring(1, data.length() - 1)), String.class);
-                    for (String elem:elems)
+                    for (String elem : elems)
                     {
-                        String s[]=elem.split("\\s+");
-                        if(s.length>=4)
+                        String s[] = elem.split("\\s+");
+                        if (s.length >= 4)
                         {
-                            String name = elem.substring(0,elem.indexOf(s[s.length-3])).trim();
-                            float x = Floats.tryParse(s[s.length-3]);
-                            float y = Floats.tryParse(s[s.length-2]);
-                            float z = Floats.tryParse(s[s.length-1]);
-                            setWorldObject(name, new float[]{x,y,z});
+                            String name = elem.substring(0, elem.indexOf(s[s.length - 3])).trim();
+                            float x = Floats.tryParse(s[s.length - 3]);
+                            float y = Floats.tryParse(s[s.length - 2]);
+                            float z = Floats.tryParse(s[s.length - 1]);
+                            setWorldObject(name, new float[] { x, y, z });
                         }
                     }
                 }
             }
             else
             {
-                log.warn("Invalid command {}.", iu.getPayload().get(COMMAND_KEY));
+                //log.warn("Invalid command {}.", iu.getPayload().get(COMMAND_KEY));
             }
         }
     }
@@ -123,4 +131,19 @@ public class IpaacaWorldEnvironment implements ClockListener
     {
         getReport();
     }
+
+    @Override
+    public boolean isShutdown()
+    {
+        return shutdown;
+    }
+
+    @Override
+    public void requestShutdown()
+    {
+        outBuffer.close();
+        inBuffer.close();
+        shutdown = true;
+    }
+
 }
