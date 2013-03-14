@@ -77,9 +77,11 @@ public abstract class LMP extends TimedAbstractPlanUnit implements TimedAnimatio
     @Override
     public void updateTiming(double time) throws TimedPlanUnitPlayException
     {
-        if (!isLurking()) return;
-        resolveTimePegs(time);
-        updateStartTime();
+        if (isLurking())
+        {
+            updateStartTime();
+        }
+        resolveTimePegs(time);        
     }
 
     protected void createPegWhenMissingOnPegBoard(String syncId)
@@ -180,15 +182,18 @@ public abstract class LMP extends TimedAbstractPlanUnit implements TimedAnimatio
     {
         Set<PegKey> pkStart = pegBoard.getPegKeys(getTimePeg("start"));
         
-        if (!getTimePeg("start").isAbsoluteTime() && pkStart.size()-countInternalSyncs(pkStart,0) == 0)
+        if(isLurking()||isInPrep())
         {
-            pegBoard.setPegTime(getBMLId(), getId(), "start", getTimePeg("strokeStart").getGlobalValue() - getPreparationDuration());
+            if (!getTimePeg("start").isAbsoluteTime() && pkStart.size()-countInternalSyncs(pkStart,0) == 0)
+            {
+                pegBoard.setPegTime(getBMLId(), getId(), "start", getTimePeg("strokeStart").getGlobalValue() - getPreparationDuration());
+            }
         }
         pegBoard.setPegTime(getBMLId(), getId(), "end", getTimePeg("strokeEnd").getGlobalValue() + getRetractionDuration());
 
         setInternalStrokeTiming(time);
 
-        if (!isPlaying())
+        if (!isPlaying()&&!isDone())
         {
             setTpMinimumTime(time);
         }
