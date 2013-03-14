@@ -8,6 +8,7 @@ import asap.animationengine.motionunit.TimedAnimationUnit;
 import asap.realizer.feedback.FeedbackManager;
 import asap.realizer.pegboard.BMLBlockPeg;
 import asap.realizer.pegboard.PegBoard;
+import asap.realizer.pegboard.PegKey;
 import asap.realizer.pegboard.TimePeg;
 import asap.realizer.planunit.TimedPlanUnitPlayException;
 import asap.realizer.planunit.TimedPlanUnitState;
@@ -44,6 +45,19 @@ public class LMPSequence extends LMP
         return kinJoints;
     }
 
+    protected int countInternalSyncs(Set<PegKey> pks, int currentCount)
+    {
+        currentCount = super.countInternalSyncs(pks, currentCount);
+        for(TimedAnimationUnit tmu:lmpQueue)
+        {
+            if(tmu instanceof LMP)
+            {
+                currentCount = ((LMP)tmu).countInternalSyncs(pks,currentCount);
+            }
+        }
+        return currentCount;
+    }
+    
     @Override
     public void setState(TimedPlanUnitState newState)
     {
@@ -103,6 +117,16 @@ public class LMPSequence extends LMP
         return true;
     }
 
+    @Override
+    public void updateTiming(double time) throws TimedPlanUnitPlayException
+    {
+        Set<PegKey> pkStrokeEnd = pegBoard.getPegKeys(getTimePeg("strokeEnd"));
+        if (!getTimePeg("strokeEnd").isAbsoluteTime() && pkStrokeEnd.size()-countInternalSyncs(pkStrokeEnd,0) == 0)
+        {
+            getTimePeg("strokeEnd").setGlobalValue(getTime("strokeStart")+getStrokeDuration());
+        }
+        super.updateTiming(time);
+    }
     
     @Override
     protected void playUnit(double time) throws TimedPlanUnitPlayException
@@ -177,9 +201,7 @@ public class LMPSequence extends LMP
             
             TimePeg strokeEnd = lmpQueue.get(i).getTimePeg("strokeEnd");
             strokeEnd.setGlobalValue(currentStrokeStart.getGlobalValue()+durNeeded);
-            currentStrokeStart = lmpQueue.get(i+1).getTimePeg("strokeStart");
-            
-            //XXX: the preparation duration can (and should) dynamically change here            
+            currentStrokeStart = lmpQueue.get(i+1).getTimePeg("strokeStart");            
             currentStrokeStart.setGlobalValue(strokeEnd.getGlobalValue()+durPrep);
         }
     }

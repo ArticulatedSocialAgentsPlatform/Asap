@@ -2,6 +2,7 @@ package asap.animationengine.ace.lmp;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Set;
 
 import saiba.bml.core.Behaviour;
 import asap.animationengine.motionunit.TimedAnimationUnit;
@@ -21,7 +22,7 @@ import com.google.common.collect.ImmutableSet;
 /**
  * Local motor program skeleton implementation
  * @author hvanwelbergen
- *
+ * 
  */
 public abstract class LMP extends TimedAbstractPlanUnit implements TimedAnimationUnit
 {
@@ -41,7 +42,7 @@ public abstract class LMP extends TimedAbstractPlanUnit implements TimedAnimatio
     {
         return false;
     }
-    
+
     @Override
     public List<String> getAvailableSyncs()
     {
@@ -72,15 +73,15 @@ public abstract class LMP extends TimedAbstractPlanUnit implements TimedAnimatio
             startPeg.setLocalValue(localStart);
         }
     }
-    
+
     @Override
     public void updateTiming(double time) throws TimedPlanUnitPlayException
     {
         if (!isLurking()) return;
         resolveTimePegs(time);
         updateStartTime();
-    }    
-    
+    }
+
     protected void createPegWhenMissingOnPegBoard(String syncId)
     {
         if (pegBoard.getTimePeg(getBMLId(), getId(), syncId) == null)
@@ -128,8 +129,6 @@ public abstract class LMP extends TimedAbstractPlanUnit implements TimedAnimatio
         pegBoard.addTimePeg(getBMLId(), getId(), syncId, peg);
     }
 
-    
-
     protected boolean noPegsSet()
     {
         for (TimePeg tp : pegBoard.getTimePegs(getBMLId(), getId()))
@@ -160,16 +159,28 @@ public abstract class LMP extends TimedAbstractPlanUnit implements TimedAnimatio
     @Override
     public void resolveSynchs(BMLBlockPeg bbPeg, Behaviour b, List<TimePegAndConstraint> sac) throws BehaviourPlanningException
     {
-        
-    }        
-    
-   
-    
+
+    }
+
     protected abstract void setInternalStrokeTiming(double time);
-    
+
+    protected int countInternalSyncs(Set<PegKey> pks, int currentCount)
+    {
+        for (PegKey pk : pks)
+        {
+            if (pk.getBmlId().equals(getBMLId()) && pk.getId().equals(getId()) && getAvailableSyncs().contains(pk.getSyncId()))
+            {
+                currentCount++;
+            }
+        }
+        return currentCount;
+    }
+
     protected void resolveTimePegs(double time)
     {
-        if(!getTimePeg("start").isAbsoluteTime() && pegBoard.getPegKeys(getTimePeg("start")).size()==1)
+        Set<PegKey> pkStart = pegBoard.getPegKeys(getTimePeg("start"));
+        
+        if (!getTimePeg("start").isAbsoluteTime() && pkStart.size()-countInternalSyncs(pkStart,0) == 0)
         {
             pegBoard.setPegTime(getBMLId(), getId(), "start", getTimePeg("strokeStart").getGlobalValue() - getPreparationDuration());
         }
@@ -182,6 +193,5 @@ public abstract class LMP extends TimedAbstractPlanUnit implements TimedAnimatio
             setTpMinimumTime(time);
         }
     }
-    
-    
+
 }

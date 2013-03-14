@@ -11,6 +11,7 @@ import asap.realizer.pegboard.AfterPeg;
 import asap.realizer.pegboard.BMLBlockPeg;
 import asap.realizer.pegboard.BeforePeg;
 import asap.realizer.pegboard.PegBoard;
+import asap.realizer.pegboard.PegKey;
 import asap.realizer.pegboard.TimePeg;
 import asap.realizer.planunit.TimedPlanUnitPlayException;
 import asap.realizer.planunit.TimedPlanUnitState;
@@ -58,6 +59,19 @@ public class LMPParallel extends LMP
         return ImmutableSet.copyOf(kinJoints);
     }
 
+    protected int countInternalSyncs(Set<PegKey> pks, int currentCount)
+    {
+        currentCount = super.countInternalSyncs(pks, currentCount);
+        for(TimedAnimationUnit tmu:lmpQueue)
+        {
+            if(tmu instanceof LMP)
+            {
+                currentCount = ((LMP)tmu).countInternalSyncs(pks,currentCount);
+            }
+        }
+        return currentCount;
+    }
+    
     @Override
     public Set<String> getPhysicalJoints()
     {
