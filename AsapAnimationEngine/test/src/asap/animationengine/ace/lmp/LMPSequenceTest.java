@@ -329,4 +329,45 @@ public class LMPSequenceTest
         assertEquals(13, tmu3.getTime("strokeStart"), TIME_PRECISION);
         assertEquals(15, tmu3.getTime("strokeEnd"), TIME_PRECISION);
     }
+    
+    
+    @Test
+    public void testUpdateStrokeTimingWhileRunningInStroke() throws TimedPlanUnitPlayException
+    {
+        StubLMP tmu1 = createStub("bml1", "beh1-1", 1, 2, 3);
+        StubLMP tmu2 = createStub("bml1", "beh1-2", 2, 1, 2);
+        StubLMP tmu3 = createStub("bml1", "beh1-3", 2, 7, 2);
+        LMPSequence seq = new LMPSequence(fbm, BMLBlockPeg.GLOBALPEG, "bml1", "beh1", pegBoard,
+                new ImmutableList.Builder<TimedAnimationUnit>().add(tmu1, tmu2, tmu3).build());
+        seq.setTimePeg("strokeStart", TimePegUtil.createTimePeg(3));
+        seq.setTimePeg("strokeEnd", TimePegUtil.createTimePeg(3+seq.getStrokeDuration()));
+        seq.setState(TimedPlanUnitState.LURKING);
+        seq.resolveTimePegs(0);
+        seq.start(2);
+        seq.play(2);
+        
+        
+        tmu1.setStrokeDuration(4);
+        tmu2.setStrokeDuration(3);
+        tmu3.setStrokeDuration(3);
+        seq.play(6.9);
+        seq.updateTiming(7);
+        
+        assertEquals(2, seq.getStartTime(), TIME_PRECISION);
+        assertEquals(3, seq.getTime("strokeStart"), TIME_PRECISION);
+        assertEquals(16, seq.getTime("strokeEnd"), TIME_PRECISION);
+        assertEquals(23, seq.getTime("end"), TIME_PRECISION);
+        
+        assertEquals(2, tmu1.getTime("start"), TIME_PRECISION);
+        assertEquals(3, tmu1.getTime("strokeStart"), TIME_PRECISION);
+        assertEquals(6, tmu1.getTime("strokeEnd"), TIME_PRECISION);
+        
+        assertEquals(6, tmu2.getTime("start"), TIME_PRECISION);        
+        assertEquals(8, tmu2.getTime("strokeStart"), TIME_PRECISION);
+        assertEquals(11, tmu2.getTime("strokeEnd"), TIME_PRECISION);
+        
+        assertEquals(11, tmu3.getTime("start"), TIME_PRECISION);
+        assertEquals(13, tmu3.getTime("strokeStart"), TIME_PRECISION);
+        assertEquals(16, tmu3.getTime("strokeEnd"), TIME_PRECISION);
+    }
 }

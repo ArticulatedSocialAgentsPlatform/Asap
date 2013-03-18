@@ -104,6 +104,11 @@ public class LMPSequence extends LMP
                 duration += tmu.getPreparationDuration();
                 duration += tmu.getStrokeDuration();
             }
+            else if(tmu.getTime("strokeStart")>time || tmu.getTime("strokeStart") == TimePeg.VALUE_UNKNOWN)
+            {
+                duration += tmu.getStrokeDuration();
+                duration += tmu.getTime("strokeStart")-tmu.getStartTime();
+            }
             else
             {
                 duration += tmu.getTime("strokeEnd") - tmu.getStartTime();

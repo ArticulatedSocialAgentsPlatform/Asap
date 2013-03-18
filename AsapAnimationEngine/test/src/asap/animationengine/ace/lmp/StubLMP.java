@@ -22,8 +22,12 @@ public class StubLMP extends LMP
     @Setter
     private double prepDuration;
 
-    private final double retrDuration;
-    private final double strokeDuration;
+    @Setter
+    private double retrDuration;
+    
+    @Setter
+    private double strokeDuration;
+    
     private final boolean hasFixedStrokeDuration;
 
     public StubLMP(FeedbackManager fbm, BMLBlockPeg bmlPeg, String bmlId, String behId, PegBoard pegBoard, Set<String> kinematicJoints,
