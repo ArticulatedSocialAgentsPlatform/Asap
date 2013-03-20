@@ -8,6 +8,7 @@ import saiba.bml.core.Behaviour;
 import asap.animationengine.motionunit.TimedAnimationUnit;
 import asap.realizer.BehaviourPlanningException;
 import asap.realizer.feedback.FeedbackManager;
+import asap.realizer.pegboard.AfterPeg;
 import asap.realizer.pegboard.BMLBlockPeg;
 import asap.realizer.pegboard.PegBoard;
 import asap.realizer.pegboard.PegKey;
@@ -66,8 +67,19 @@ public abstract class LMP extends TimedAbstractPlanUnit implements TimedAnimatio
         TimePeg startPeg = getTimePeg("start");
         TimePeg strokeStartPeg = getTimePeg("strokeStart");
         ImmutableSet<PegKey> keys = pegBoard.getPegKeys(startPeg);
-        if (keys.size() == 1)
+        if (keys.size()-countInternalSyncs(keys,0) == 0)
         {
+            double localStart = pegBoard.getRelativePegTime(getBMLId(), strokeStartPeg) - prepDuration;
+            if (localStart < 0) localStart = 0;
+            startPeg.setLocalValue(localStart);
+        }
+        else if(startPeg instanceof AfterPeg)
+        {
+            double intendedStart = strokeStartPeg.getGlobalValue()-prepDuration;
+            if(intendedStart<startPeg.getLink().getGlobalValue())
+            {
+                intendedStart = startPeg.getLink().getGlobalValue();
+            }
             double localStart = pegBoard.getRelativePegTime(getBMLId(), strokeStartPeg) - prepDuration;
             if (localStart < 0) localStart = 0;
             startPeg.setLocalValue(localStart);

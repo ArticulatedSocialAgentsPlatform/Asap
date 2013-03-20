@@ -9,6 +9,7 @@
       <dependency org="HMI"     name="HmiFaceEmbodiments"            rev="latest.${resolve.status}"    />
       <dependency org="HMI"     name="HmiAnimation"            rev="latest.${resolve.status}"    />
       <dependency org="HMI"     name="HmiAnimationEmbodiments"  rev="latest.${resolve.status}"    />
+      <dependency org="HMI"     name="HmiWorldObjectEnvironment"  rev="latest.${resolve.status}"    />
 
       <dependency org="google"  name="guava"             rev="latest.release"    />
       <dependency org="lombok"  name="lombok"            rev="latest.release"    />

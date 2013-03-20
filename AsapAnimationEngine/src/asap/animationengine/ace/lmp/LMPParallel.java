@@ -112,14 +112,15 @@ public class LMPParallel extends LMP
             return;
         }
 
-        if (isLurking())
+        for (TimedAnimationUnit lmp : lmpQueue)
         {
-            for (TimedAnimationUnit lmp : lmpQueue)
-            {
-                lmp.updateTiming(time);
-            }
+            lmp.updateTiming(time);            
         }
-        updateStartTime();
+        
+        if(isLurking())
+        {
+            updateStartTime();
+        }
     }
 
     @Override
@@ -268,7 +269,7 @@ public class LMPParallel extends LMP
     {
         for (TimedAnimationUnit tmu : lmpQueue)
         {
-            if (time > tmu.getStartTime())
+            if (time >= tmu.getStartTime())
             {
                 if (!tmu.isPlaying())
                 {

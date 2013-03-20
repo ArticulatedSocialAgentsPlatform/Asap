@@ -6,6 +6,7 @@ import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
 
+import org.junit.Before;
 import org.junit.Test;
 
 import asap.animationengine.motionunit.TimedAnimationUnit;
@@ -40,12 +41,18 @@ public class LMPParallelTest
                 new HashSet<String>(), prepDur, retrDur, strokeDur,hasFixedStrokeDur);
     }
     
-    private LMP createStub(String bmlId, String id, double prepDur, double retrDur, double strokeDur)
+    private StubLMP createStub(String bmlId, String id, double prepDur, double retrDur, double strokeDur)
     {
         return new StubLMP(NullFeedbackManager.getInstance(), BMLBlockPeg.GLOBALPEG, bmlId, id, pegBoard, new HashSet<String>(),
                 new HashSet<String>(), prepDur, retrDur, strokeDur);
     }
 
+    @Before
+    public void setup()
+    {
+        pegBoard.addBMLBlockPeg(new BMLBlockPeg("bml1",0));
+    }
+    
     @Test
     public void testEmpty() throws TimedPlanUnitPlayException
     {
@@ -85,6 +92,9 @@ public class LMPParallelTest
         assertEquals(3, par.getTime("strokeStart"), TIME_PRECISION);
         assertEquals(5, par.getTime("strokeEnd"), TIME_PRECISION);
         assertEquals(7, par.getTime("end"), TIME_PRECISION);
+        
+        assertEquals(2, tmu1.getStartTime(), TIME_PRECISION);
+        assertEquals(1, tmu2.getStartTime(), TIME_PRECISION); 
     }
     
     @Test
@@ -249,5 +259,55 @@ public class LMPParallelTest
                 new ImmutableList.Builder<TimedAnimationUnit>().add(tmu1).add(seq).build());
         
         assertEquals(3, par.getStrokeDuration(), TIME_PRECISION);
+    }
+    
+    @Test
+    public void testUpdateTiming() throws TimedPlanUnitPlayException
+    {
+        StubLMP tmu1 = createStub("bml1", "beh1-1", 1, 2, 3);
+        StubLMP tmu2 = createStub("bml1", "beh1-2", 2, 1, 2);
+        LMPParallel par = new LMPParallel(fbm, BMLBlockPeg.GLOBALPEG, "bml1", "beh1", pegBoard,
+                new ImmutableList.Builder<TimedAnimationUnit>().add(tmu1, tmu2).build());
+        par.setTimePeg("strokeStart", TimePegUtil.createTimePeg(3));
+        par.setTimePeg("strokeEnd", TimePegUtil.createTimePeg(5));
+        par.resolveTimePegs(0);
+        par.setState(TimedPlanUnitState.LURKING);
+        
+        tmu2.setPrepDuration(0.5);
+        par.updateTiming(0);
+        assertEquals(2, par.getStartTime(), TIME_PRECISION);
+        assertEquals(3, par.getTime("strokeStart"), TIME_PRECISION);
+        assertEquals(5, par.getTime("strokeEnd"), TIME_PRECISION);
+        assertEquals(7, par.getTime("end"), TIME_PRECISION);
+        
+        assertEquals(2, tmu1.getStartTime(), TIME_PRECISION);
+        assertEquals(2.5, tmu2.getStartTime(), TIME_PRECISION);        
+    }
+    
+    @Test
+    public void testUpdateTimingWhileRunning() throws TimedPlanUnitPlayException
+    {
+        StubLMP tmu1 = createStub("bml1", "beh1-1", 1, 2, 3);
+        StubLMP tmu2 = createStub("bml1", "beh1-2", 2, 1, 2);
+        LMPParallel par = new LMPParallel(fbm, BMLBlockPeg.GLOBALPEG, "bml1", "beh1", pegBoard,
+                new ImmutableList.Builder<TimedAnimationUnit>().add(tmu1, tmu2).build());
+        par.setTimePeg("strokeStart", TimePegUtil.createTimePeg(3));
+        par.setTimePeg("strokeEnd", TimePegUtil.createTimePeg(5));
+        par.resolveTimePegs(0);     
+        par.setState(TimedPlanUnitState.LURKING);
+        
+        par.start(1);
+        par.play(1);
+        tmu1.setPrepDuration(0.5);
+        tmu2.setPrepDuration(0.5);
+        par.updateTiming(1);
+        
+        assertEquals(1, par.getStartTime(), TIME_PRECISION);
+        assertEquals(3, par.getTime("strokeStart"), TIME_PRECISION);
+        assertEquals(5, par.getTime("strokeEnd"), TIME_PRECISION);
+        assertEquals(7, par.getTime("end"), TIME_PRECISION);
+        
+        assertEquals(2.5, tmu1.getStartTime(), TIME_PRECISION);
+        assertEquals(1, tmu2.getStartTime(), TIME_PRECISION);
     }
 }
