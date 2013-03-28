@@ -85,6 +85,12 @@ public class LMPSequence extends LMP
     @Override
     public double getPreparationDuration()
     {
+        double startTime = lmpQueue.get(0).getStartTime();
+        double strokeStartTime = lmpQueue.get(0).getTime("strokeStart"); 
+        if(startTime!=TimePeg.VALUE_UNKNOWN && strokeStartTime!=TimePeg.VALUE_UNKNOWN && isPlaying())
+        {
+            return strokeStartTime-startTime;
+        }        
         return lmpQueue.get(0).getPreparationDuration();
     }
 
