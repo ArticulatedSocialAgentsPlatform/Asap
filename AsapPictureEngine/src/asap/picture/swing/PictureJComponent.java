@@ -17,11 +17,11 @@ import org.slf4j.LoggerFactory;
 import asap.picture.display.PictureDisplay;
 
 /**
- * Connects a parent JComponent to an imagepanel that handles the picturedisplay 
+ * Connects a parent JComponent to an imagepanel that handles the picturedisplay
  * @author hvanwelbergen
- *
+ * 
  */
-public class PictureJComponent implements PictureDisplay 
+public class PictureJComponent implements PictureDisplay
 {
     private ImagePanel content;
     private HashMap<String, Image> cachedImages = new HashMap<String, Image>();
@@ -31,15 +31,20 @@ public class PictureJComponent implements PictureDisplay
     /**
      * Pre-load an image from the given resource and cache it for future access
      */
-    public void preloadImage(String imageId, String resourcePath, String fileName) {
+    public void preloadImage(String imageId, String resourcePath, String fileName)
+    {
         Image image = cachedImages.get(imageId);
-        if (image == null) {
+        if (image == null)
+        {
             ImageIcon imageIcon = (new SwingResources(resourcePath)).getImageIcon(fileName);
 
-            //getImageIcon returns null if image is not found, so we must check to see if the image has loaded correctly
-            if (imageIcon == null) {
+            // getImageIcon returns null if image is not found, so we must check to see if the image has loaded correctly
+            if (imageIcon == null)
+            {
                 logger.warn("Error while reading image file from: " + resourcePath + fileName);
-            } else {
+            }
+            else
+            {
                 image = imageIcon.getImage();
                 cachedImages.put(imageId, image);
             }
@@ -53,22 +58,26 @@ public class PictureJComponent implements PictureDisplay
         parent.add(content, BorderLayout.CENTER);
         layers = new TreeMap<Float, ImageLayer>();
     }
-    
+
     @Override
-    public void setImage(String puId, String imageId, float z) {
+    public void setImage(String puId, String imageId, float z)
+    {
         layers.clear();
         addImage(puId, imageId, z);
     }
 
     @Override
-    public void removeImage(String id, float z) {
+    public void removeImage(String id, float z)
+    {
         ImageLayer layer = getImageLayer(z);
-        if (layer == null) {
+        if (layer == null)
+        {
             logger.warn("No image to remove at layer {}", z);
             return;
         }
         int layersize = layer.removeImage(id);
-        if (layersize == 0) {
+        if (layersize == 0)
+        {
             layers.remove(new Float(z));
         }
 
@@ -76,13 +85,17 @@ public class PictureJComponent implements PictureDisplay
     }
 
     @Override
-    public void addImage(String id, String imageId, float z) {
+    public void addImage(String id, String imageId, float z)
+    {
         logger.debug("Adding image: {}  on layer: {}", imageId, z);
         ImageLayer layer = getImageLayer(z);
         Image img = cachedImages.get(imageId);
-        if (img == null) {
+        if (img == null)
+        {
             logger.warn("Image with id {} not available in cache", imageId);
-        } else {
+        }
+        else
+        {
             layer.addImage(id, img);
             layers.put(new Float(z), layer);
         }
@@ -90,13 +103,17 @@ public class PictureJComponent implements PictureDisplay
     }
 
     @Override
-    public void replaceImage(String id, String imageId, float z) {
+    public void replaceImage(String id, String imageId, float z)
+    {
         logger.debug("Replacing image: {} on layer: {}", imageId, z);
         ImageLayer layer = getImageLayer(z);
         Image img = cachedImages.get(imageId);
-        if (img == null) {
+        if (img == null)
+        {
             logger.warn("Image with id {} not available in cache", imageId);
-        } else {
+        }
+        else
+        {
             layer.replaceImage(id, img);
             layers.put(new Float(z), layer);
         }
@@ -106,14 +123,18 @@ public class PictureJComponent implements PictureDisplay
     /**
      * Get the ImageLayer object at layer z. This will create a new layer if it
      * does not currently exist
-     *
+     * 
      * @param z the layer
      * @return the ImageLayer object at layer z
      */
-    private ImageLayer getImageLayer(float z) {
-        if (layers.containsKey(z)) {
+    private ImageLayer getImageLayer(float z)
+    {
+        if (layers.containsKey(z))
+        {
             return layers.get(z);
-        } else {
+        }
+        else
+        {
             return new ImageLayer();
         }
     }
@@ -121,12 +142,17 @@ public class PictureJComponent implements PictureDisplay
     /**
      * Function constructs a list of images and passes it to the display
      */
-    private void redrawPicture() {
-        //create a copy of the treemap containing all the images, 
-        //because it will throw a concurrent modification error otherwise..
+    private void redrawPicture()
+    {
+        // create a copy of the treemap containing all the images,
+        // because it will throw a concurrent modification error otherwise..
         Vector<Image> images = new Vector<Image>();
-        for (ImageLayer layer : (new TreeMap<Float, ImageLayer>(layers)).values()) {
-            images.add(layer.getActiveImage());
+        for (ImageLayer layer : (new TreeMap<Float, ImageLayer>(layers)).values())
+        {
+            if(layer.getActiveImage()!=null)
+            {
+                images.add(layer.getActiveImage());
+            }
         }
         content.drawPicture(images);
     }

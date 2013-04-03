@@ -66,6 +66,7 @@ public class ImageLayer
      */
     public Image getActiveImage()
     {
+        if(imageIndex.size()==0) return null;
         return imageStore.get(imageIndex.lastElement());
     }
 }

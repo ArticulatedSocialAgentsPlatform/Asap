@@ -11,8 +11,8 @@ public class ImagePanel extends JComponent
 {
     private static final long serialVersionUID = 1L;
 
-    private static final int WIDTH = 800;
-    private static final int HEIGHT = 600;
+    private static final int WIDTH = 1200;
+    private static final int HEIGHT = 800;
 
     private Collection<Image> images;
 
