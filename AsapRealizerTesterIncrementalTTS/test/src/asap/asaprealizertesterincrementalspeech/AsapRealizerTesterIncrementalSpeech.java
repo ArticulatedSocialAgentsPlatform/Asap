@@ -107,6 +107,7 @@ public class AsapRealizerTesterIncrementalSpeech extends AbstractASAPRealizerTes
         VJoint boxJoint = hre.getObjectRootJoint("bluebox");
         boxJoint.setTranslation(-0.25f, 1.45f, 0.3f);
         we.getWorldObjectManager().addWorldObject("bluebox", new WorldObject(boxJoint));
+        
         logger.debug("Finished setup");
     }
 
@@ -199,9 +200,8 @@ public class AsapRealizerTesterIncrementalSpeech extends AbstractASAPRealizerTes
     }
     
     @Test
-    public void testChunkSpeech() throws IOException
+    public void testChunkSpeech() throws IOException, InterruptedException
     {
-
         String bmlString1 = readTestFile("asap/chunkspeech/firstchunk.xml");
         String bmlString2 = readTestFile("asap/chunkspeech/secondchunk.xml");
 
@@ -215,11 +215,12 @@ public class AsapRealizerTesterIncrementalSpeech extends AbstractASAPRealizerTes
         realizerHandler.assertBlockStartAndStopFeedbacks("bml1", "bml2");
         realizerHandler.assertNoDuplicateFeedbacks();
         
-        /*
-        realizerHandler.assertSyncsInOrder("bml1", "g1", DefaultSyncPoints.getDefaultSyncPoints("gesture"));
-        realizerHandler.assertSyncsInOrder("bml2", "g1", DefaultSyncPoints.getDefaultSyncPoints("gesture"));
-        realizerHandler.assertLinkedSyncs("bml1", "g1", "relax", "bml2", "g1", "start");
-        */
-
+        realizerHandler.assertLinkedSyncs("bml1", "speech1", "relax", "bml2", "speech1", "start");
+    }
+    
+    @Test
+    public void testSpeechRetime() throws IOException
+    {
+        
     }
 }

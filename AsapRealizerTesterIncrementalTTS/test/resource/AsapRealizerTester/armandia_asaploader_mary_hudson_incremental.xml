@@ -1,11 +1,10 @@
 <AsapVirtualHuman>
   <Loader id="realizer" loader="asap.realizerembodiments.AsapRealizerEmbodiment">
     <BMLParser>
-      <BMLAttributeExtension class="asap.bml.ext.bmla.BMLABMLBehaviorAttributes"/>
-      <BMLAttributeExtension class="asap.bml.ext.bmlt.BMLTBMLBehaviorAttributes"/>
+      <BMLAttributeExtension class="asap.bml.ext.bmla.BMLABMLBehaviorAttributes"/>      
     </BMLParser>
     <BMLScheduler>
-      <SchedulingHandler class="asap.realizer.scheduler.BMLBandTSchedulingHandler" schedulingStrategy="asap.realizer.scheduler.SortedSmartBodySchedulingStrategy"/>
+      <SchedulingHandler class="asap.realizer.scheduler.BMLASchedulingHandler" schedulingStrategy="asap.realizer.scheduler.SortedSmartBodySchedulingStrategy"/>
     </BMLScheduler>
   </Loader>
 

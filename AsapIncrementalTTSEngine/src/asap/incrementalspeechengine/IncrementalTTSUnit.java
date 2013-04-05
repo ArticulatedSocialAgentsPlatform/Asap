@@ -7,11 +7,13 @@ import hmi.tts.util.PhonemeUtil;
 import hmi.tts.util.SyncAndOffset;
 import inpro.incremental.unit.IU;
 import inpro.incremental.unit.IU.IUUpdateListener;
+import inpro.incremental.unit.SegmentIU;
 import inpro.incremental.unit.SysSegmentIU;
 import inpro.incremental.unit.WordIU;
 
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -54,7 +56,7 @@ public class IncrementalTTSUnit extends TimedAbstractPlanUnit
     private final int visemeLookAhead = 2;
     private final Behaviour behavior;
     private final boolean hasRelax;
-    private IU lastWord;
+    private IU lastWord;    
     private List<String> syncs = new ArrayList<>();
     private List<String> progressHandled = new ArrayList<>();
     private final HesitatingSynthesisIUManager iuManager;
@@ -109,6 +111,8 @@ public class IncrementalTTSUnit extends TimedAbstractPlanUnit
             word.addUpdateListener(wul);
             lastWord = word;
         }
+        
+       
 
         this.visemeMapping = visemeMapping;
         this.iuManager = iuManager;
@@ -120,6 +124,65 @@ public class IncrementalTTSUnit extends TimedAbstractPlanUnit
             pegs.put(sync, new TimePeg(bmlPeg));
         }
         behavior = beh;
+    }
+
+    private double getDefaultWordsDuration(int j1, int j2)
+    {
+        double duration = 0;
+        for(int j=j1;j<j2;j++)
+        {
+            WordIU word = synthesisIU.getWords().get(j);
+            for(SegmentIU seg:word.getSegments())
+            {
+                SysSegmentIU sseg = (SysSegmentIU)seg;
+                duration += sseg.originalDuration();
+            }
+        }
+        return duration;
+    }
+    
+    private void stretchWords(int j1, int j2, double stretch)
+    {
+        for(int j=j1;j<j2;j++)
+        {
+            WordIU word = synthesisIU.getWords().get(j);
+            for(SegmentIU seg:word.getSegments())
+            {
+                SysSegmentIU sseg = (SysSegmentIU)seg;
+                sseg.stretch(stretch);
+            }
+        }
+    }
+    
+    public void applyTimeConstraints()
+    {
+        List<Integer> syncOffsets = new ArrayList<>(syncMap.keySet());
+        Collections.sort(syncOffsets);
+        
+        //apply sync constraints
+        int prevIndex = 0;
+        
+        double prevTime = startPeg.getGlobalValue();
+        for (int i : syncOffsets)
+        {
+            String sync = syncMap.get(i);
+            TimePeg tp = getTimePeg(sync);
+            if(tp!=null && tp.getGlobalValue()!=TimePeg.VALUE_UNKNOWN)
+            {
+                double defDuration = getDefaultWordsDuration(prevIndex,i);
+                double duration = tp.getGlobalValue()-prevTime;
+                
+                stretchWords(prevIndex,i, duration/defDuration);
+                prevTime = tp.getGlobalValue();
+                prevIndex = i;
+            }
+        }
+        
+        //TODO: apply relax constraint
+        
+        double defDuration = getDefaultWordsDuration(prevIndex,synthesisIU.getWords().size());
+        double duration = getEndTime()-prevTime;
+        stretchWords(prevIndex,synthesisIU.getWords().size(), duration/defDuration);        
     }
 
     private void setupSyncs(String textNoSync, String text)
@@ -263,12 +326,16 @@ public class IncrementalTTSUnit extends TimedAbstractPlanUnit
         }
     }
 
-    private void updateRelax(IU iu)
+    private void updateRelax()
     {
-        if (iu.toPayLoad().equals("<hes>"))
+        if (hasRelax)
         {
-            relaxPeg.setGlobalValue(iu.startTime() + getStartTime());
+            relaxPeg.setGlobalValue(getStartTime() + lastWord.startTime());
         }
+        else
+        {
+            relaxPeg.setGlobalValue(getEndTime());
+        }       
     }
 
     private void updateEnd()
@@ -285,14 +352,8 @@ public class IncrementalTTSUnit extends TimedAbstractPlanUnit
         public void update(IU updatedIU)
         {
             updateEnd();
-            if (hasRelax)
-            {
-                updateRelax(updatedIU);
-            }
-            else
-            {
-                relaxPeg.setGlobalValue(getEndTime());
-            }
+            updateRelax();
+            updateSyncTiming();
             updateLipSync();
             updateFeedback();
         }

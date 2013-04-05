@@ -26,11 +26,13 @@ import asap.realizer.SyncPointNotFoundException;
 import asap.realizer.feedback.FeedbackManager;
 import asap.realizer.lipsync.IncrementalLipSynchProvider;
 import asap.realizer.pegboard.BMLBlockPeg;
+import asap.realizer.planunit.ParameterException;
 import asap.realizer.planunit.TimedPlanUnitPlayException;
 import asap.realizer.planunit.TimedPlanUnitState;
 import asap.realizer.scheduler.BMLBlockManager;
 import asap.realizerport.util.ListBMLFeedbackListener;
 import asap.realizertestutil.planunit.AbstractTimedPlanUnitTest;
+import asap.realizertestutil.util.TimePegUtil;
 import static org.hamcrest.number.OrderingComparison.greaterThan;
 import static org.hamcrest.number.OrderingComparison.lessThan;
 /**
@@ -46,6 +48,7 @@ public class IncrementalTTSUnitTest extends AbstractTimedPlanUnitTest
     private SpeechBehaviour mockSpeechBehaviour = mock(SpeechBehaviour.class);
     private DispatchStream dispatcher;
     private static final double TIMING_PRECISION = 0.0001;
+    private static final double SPEECH_RETIMING_PRECISION = 0.01;
     @Before
     public void setup()
     {
@@ -110,6 +113,38 @@ public class IncrementalTTSUnitTest extends AbstractTimedPlanUnitTest
         assertThat(ttsUnit.getTime("s1"), greaterThan(ttsUnit.getStartTime()));
         assertThat(ttsUnit.getTime("s1"), lessThan(ttsUnit.getEndTime()));
         assertEquals(ttsUnit.getEndTime(), ttsUnit.getTime("endS"),TIMING_PRECISION);
+    }
+    
+    @Test
+    public void testSyncTimingUpdate() throws ParameterException, TimedPlanUnitPlayException, InterruptedException
+    {
+        IncrementalTTSUnit ttsUnit = setupPlanUnit(fbManager, BMLBlockPeg.GLOBALPEG, "beh1", "bml1", 0, 
+                "<sync id=\"startS\"/>Hello <sync id=\"s1\"/> world.<sync id=\"endS\"/>");
+        ttsUnit.setState(TimedPlanUnitState.LURKING);
+        ttsUnit.start(0);
+        double t1 = ttsUnit.getTime("s1");
+        ttsUnit.setFloatParameterValue("stretch",2);
+        Thread.sleep(500);
+        assertThat(ttsUnit.getTime("s1"), greaterThan(t1));
+    }
+    
+    @Test
+    public void testApplyTimeConstraints() throws TimedPlanUnitPlayException, InterruptedException 
+    {
+        IncrementalTTSUnit ttsUnit = setupPlanUnit(fbManager, BMLBlockPeg.GLOBALPEG, "beh1", "bml1", 0, 
+                "Hello <sync id=\"s1\"/> world.");
+        fbManager.addFeedbackListener(new ListBMLFeedbackListener.Builder().feedBackList(fbList).build());
+        ttsUnit.setTimePeg("start", TimePegUtil.createAbsoluteTimePeg(0));
+        ttsUnit.setTimePeg("s1", TimePegUtil.createAbsoluteTimePeg(1));
+        ttsUnit.setTimePeg("end", TimePegUtil.createAbsoluteTimePeg(1.25));
+        ttsUnit.applyTimeConstraints();
+        ttsUnit.setState(TimedPlanUnitState.LURKING);
+        ttsUnit.start(0);
+        ttsUnit.play(0);
+        while(dispatcher.isSpeaking());
+        ttsUnit.stop(10);
+        assertEquals("s1", fbList.get(1).getSyncId());
+        assertEquals(1, fbList.get(1).getTime(), SPEECH_RETIMING_PRECISION);
     }
     
     @Test
