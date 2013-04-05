@@ -70,7 +70,7 @@ public class IncrementalTTSPlanner extends AbstractPlanner<IncrementalTTSUnit>
             satp.add(new SyncAndTimePeg(b.getBmlId(), b.id, sync, bs.getTimePeg(sync)));
         }
         planManager.addPlanUnit(bs);
-
+        bs.applyTimeConstraints();
         return satp;
     }
 
@@ -80,6 +80,7 @@ public class IncrementalTTSPlanner extends AbstractPlanner<IncrementalTTSUnit>
     {
         IncrementalTTSUnit ttsUnit = createTTSUnit(bbPeg, b);
         resolver.resolveSynchs(bbPeg, b, sac, ttsUnit);
+        ttsUnit.applyTimeConstraints();
         return ttsUnit;
     }
 

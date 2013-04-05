@@ -181,8 +181,11 @@ public class IncrementalTTSUnit extends TimedAbstractPlanUnit
         //TODO: apply relax constraint
         
         double defDuration = getDefaultWordsDuration(prevIndex,synthesisIU.getWords().size());
-        double duration = getEndTime()-prevTime;
-        stretchWords(prevIndex,synthesisIU.getWords().size(), duration/defDuration);        
+        if(getEndTime()!= TimePeg.VALUE_UNKNOWN)
+        {
+            double duration = getEndTime()-prevTime;
+            stretchWords(prevIndex,synthesisIU.getWords().size(), duration/defDuration);
+        }
     }
 
     private void setupSyncs(String textNoSync, String text)

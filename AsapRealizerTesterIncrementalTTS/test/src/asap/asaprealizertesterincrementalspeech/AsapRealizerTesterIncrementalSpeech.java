@@ -221,6 +221,14 @@ public class AsapRealizerTesterIncrementalSpeech extends AbstractASAPRealizerTes
     @Test
     public void testSpeechRetime() throws IOException
     {
-        
+        String bmlString = readTestFile("bmlis/speech_retime.xml");
+        realizerHandler.performBML(bmlString);
+        realizerHandler.waitForBMLEndFeedback("bml1");
+        realizerHandler.assertNoExceptions();
+        realizerHandler.assertNoWarnings();
+        realizerHandler.assertNoDuplicateFeedbacks();
+        realizerHandler.assertRelativeSyncTime("bml1", "speech1", "start", 0.5);
+        realizerHandler.assertRelativeSyncTime("bml1", "speech1", "s1", 1);
+        realizerHandler.assertRelativeSyncTime("bml1", "speech1", "end", 2);
     }
 }
