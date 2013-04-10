@@ -82,13 +82,11 @@ public class AsapRealizerTesterIncrementalSpeech extends AbstractASAPRealizerTes
         mainUI.add(canvas);
         mainUI.setVisible(true);
 
-        hre.startRenderClock();
-        ope.startPhysicsClock();
-
+        
         // add worldobject "camera" that we can use to look at user :)
         VJoint camera = hre.getCameraTarget();
         we.getWorldObjectManager().addWorldObject("camera", new WorldObject(camera));
-
+        
         try
         {
             // vHuman = staticEnvironment.loadVirtualHuman("blueguy", "Humanoids/blueguy",
@@ -106,7 +104,10 @@ public class AsapRealizerTesterIncrementalSpeech extends AbstractASAPRealizerTes
                 0.2f, 1, 1 }, new float[] { 0.2f, 0.2f, 1, 0 }, new float[] { 0.2f, 0.2f, 1, 1 });
         VJoint boxJoint = hre.getObjectRootJoint("bluebox");
         boxJoint.setTranslation(-0.25f, 1.45f, 0.3f);
-        we.getWorldObjectManager().addWorldObject("bluebox", new WorldObject(boxJoint));
+        we.getWorldObjectManager().addWorldObject("bluebox", new WorldObject(boxJoint));       
+        
+        ope.startPhysicsClock();
+        hre.startRenderClock();        
         
         logger.debug("Finished setup");
     }

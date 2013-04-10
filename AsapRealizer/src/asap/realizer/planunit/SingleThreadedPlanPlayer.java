@@ -175,7 +175,7 @@ public final class SingleThreadedPlanPlayer<T extends TimedPlanUnit> implements 
         {
             tpuPlayer.stopUnit(tmuR, t);
         }
-        planManager.removeFinishedPlanUnits();
+        planManager.removeFinishedPlanUnits();        
     }
     
     

@@ -104,13 +104,13 @@ public class IncrementalTTSEngineLoader implements EngineLoader
         {
             public void decodeAttributes(HashMap<String, String> attrMap, XMLTokenizer tokenizer)
             {
-                String language = this.getOptionalAttribute("language",attrMap);
-                String voicename = this.getOptionalAttribute("voicename",attrMap);
-                if(language!=null)
+                String language = this.getOptionalAttribute("language", attrMap);
+                String voicename = this.getOptionalAttribute("voicename", attrMap);
+                if (language != null)
                 {
-                    System.setProperty("inpro.tts.language", language);                    
+                    System.setProperty("inpro.tts.language", language);
                 }
-                if(voicename!=null)
+                if (voicename != null)
                 {
                     System.setProperty("inpro.tts.voice", voicename);
                 }
@@ -150,7 +150,7 @@ public class IncrementalTTSEngineLoader implements EngineLoader
         IncrementalTTSPlanner planner = new IncrementalTTSPlanner(realizerEmbodiment.getFeedbackManager(), planManager,
                 new HesitatingSynthesisIUManager(dispatcher), visemeMapping, lipSynchers);
         engine = new DefaultEngine<IncrementalTTSUnit>(planner, new DefaultPlayer(new SingleThreadedPlanPlayer<IncrementalTTSUnit>(
-                planManager)), planManager);
+                realizerEmbodiment.getFeedbackManager(), planManager)), planManager);
         engine.setId(id);
         MaryAdapter.getInstance();
         realizerEmbodiment.addEngine(engine);
