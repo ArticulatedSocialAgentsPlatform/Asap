@@ -65,7 +65,7 @@ public interface Engine
      * Get the (predicted) end time of a planned BML block
      */
     double getBlockEndTime(String bmlId);
-
+    
     /**
      * Get the (predicted) start time of the subsiding phase of a planned BML block
      */

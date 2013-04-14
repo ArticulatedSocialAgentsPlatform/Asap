@@ -11,6 +11,8 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
+import com.google.common.collect.ImmutableSet;
+
 import saiba.bml.core.BMLBehaviorAttributeExtension;
 import saiba.bml.core.BMLBlockComposition;
 import saiba.bml.core.BehaviourBlock;
@@ -29,7 +31,7 @@ public class BMLABMLBehaviorAttributes implements BMLBehaviorAttributeExtension
     private List<String> interruptList = new ArrayList<String>();
     private List<String> onStartList = new ArrayList<String>();
     private boolean prePlan;
-    
+
     /**
      * @return an unmodifiable view of the onStartList, that is the list of bml blocks that this
      *         block should activate
@@ -43,7 +45,7 @@ public class BMLABMLBehaviorAttributes implements BMLBehaviorAttributeExtension
     {
         return prePlan;
     }
-    
+
     /**
      * Gets an unmodifiable view of the appendAfterList, that is the list of bml blocks after which this
      * block is to be concatenated
@@ -52,7 +54,7 @@ public class BMLABMLBehaviorAttributes implements BMLBehaviorAttributeExtension
     {
         return Collections.unmodifiableSet(appendAfterList);
     }
-    
+
     /**
      * Gets an unmodifiable view of the chunkAfterList, that is the list of bml blocks after which this
      * block is to be chunked
@@ -70,8 +72,7 @@ public class BMLABMLBehaviorAttributes implements BMLBehaviorAttributeExtension
     {
         return Collections.unmodifiableSet(prependBeforeList);
     }
-    
-    
+
     /**
      * Gets an unmodifiable view of the chunkBeforeList, that is the list of bml blocks before which this
      * block is to be chunked
@@ -84,11 +85,15 @@ public class BMLABMLBehaviorAttributes implements BMLBehaviorAttributeExtension
     @Override
     public void decodeAttributes(BehaviourBlock bb, HashMap<String, String> attrMap, XMLTokenizer tokenizer)
     {
-        StringUtil.splitToCollection(bb.getOptionalAttribute("http://www.asap-project.org/bmla:chunkAfter", attrMap, ""),",",chunkAfterList);        
-        StringUtil.splitToCollection(bb.getOptionalAttribute("http://www.asap-project.org/bmla:chunkBefore", attrMap, ""),",",chunkBeforeList);
-        StringUtil.splitToCollection(bb.getOptionalAttribute("http://www.asap-project.org/bmla:appendAfter", attrMap, ""),",",appendAfterList);        
-        StringUtil.splitToCollection(bb.getOptionalAttribute("http://www.asap-project.org/bmla:prependBefore", attrMap, ""),",",prependBeforeList);
-        
+        StringUtil.splitToCollection(bb.getOptionalAttribute("http://www.asap-project.org/bmla:chunkAfter", attrMap, ""), ",",
+                chunkAfterList);
+        StringUtil.splitToCollection(bb.getOptionalAttribute("http://www.asap-project.org/bmla:chunkBefore", attrMap, ""), ",",
+                chunkBeforeList);
+        StringUtil.splitToCollection(bb.getOptionalAttribute("http://www.asap-project.org/bmla:appendAfter", attrMap, ""), ",",
+                appendAfterList);
+        StringUtil.splitToCollection(bb.getOptionalAttribute("http://www.asap-project.org/bmla:prependBefore", attrMap, ""), ",",
+                prependBeforeList);
+
         String interrupt = bb.getOptionalAttribute("http://www.asap-project.org/bmla:interrupt", attrMap, null);
         if (interrupt != null)
         {
@@ -97,7 +102,7 @@ public class BMLABMLBehaviorAttributes implements BMLBehaviorAttributeExtension
         prePlan = bb.getOptionalBooleanAttribute("http://www.asap-project.org/bmla:preplan", attrMap, false);
         StringUtil.splitToCollection(bb.getOptionalAttribute("http://www.asap-project.org/bmla:onStart", attrMap, ""), ",", onStartList);
     }
-    
+
     /**
      * @return the an unmodifiable view of the interruptList
      */
@@ -114,7 +119,7 @@ public class BMLABMLBehaviorAttributes implements BMLBehaviorAttributeExtension
         parameterStr = parameterStr.substring(0, parameterStr.length() - 1);
         StringUtil.splitToCollection(parameterStr, ",", parameterList);
     }
-    
+
     @Override
     public BMLBlockComposition handleComposition(String sm)
     {
@@ -124,5 +129,12 @@ public class BMLABMLBehaviorAttributes implements BMLBehaviorAttributeExtension
             return BMLASchedulingMechanism.APPEND_AFTER;
         }
         return CoreComposition.UNKNOWN;
-    }   
+    }
+
+    @Override
+    public Set<String> getOtherBlockDependencies()
+    {
+        return new ImmutableSet.Builder<String>().addAll(chunkAfterList).addAll(appendAfterList).addAll(prependBeforeList)
+                .addAll(chunkBeforeList).addAll(interruptList).addAll(onStartList).build();
+    }
 }

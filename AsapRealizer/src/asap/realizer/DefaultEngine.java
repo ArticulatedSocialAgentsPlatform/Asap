@@ -32,7 +32,6 @@ public class DefaultEngine<T extends TimedPlanUnit> implements Engine
     
     public void setBMLBlockState(String bmlId, TimedPlanUnitState state)
     {
-        // planManager.setBMLBlockState(bmlId, state);
         player.setBMLBlockState(bmlId, state);
     }
 
@@ -155,7 +154,7 @@ public class DefaultEngine<T extends TimedPlanUnit> implements Engine
     {
         return planManager.getParameterValue(bmlId, behId, paramId);
     }
-
+    
     @Override
     public double getBlockEndTime(String bmlId)
     {

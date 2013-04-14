@@ -31,6 +31,7 @@ import asap.realizer.planunit.TimedPlanUnitState;
 public class BMLBlockManagerTest
 {
     private BMLScheduler mockScheduler = mock(BMLScheduler.class);
+    private BMLBlockManager bbm = new BMLBlockManager();
     
     @Before
     public void setup()
@@ -46,7 +47,6 @@ public class BMLBlockManagerTest
     @Test
     public void testGetBMLBlocks()
     {
-        BMLBlockManager bbm = new BMLBlockManager();
         BMLTBlock bb1 = new BMLTBlock("bml1",mockScheduler);
         BMLTBlock bb2 = new BMLTBlock("bml2",mockScheduler);
         bbm.addBMLBlock(bb1);
@@ -59,7 +59,6 @@ public class BMLBlockManagerTest
     @Test
     public void testSetState()
     {
-        BMLBlockManager bbm = new BMLBlockManager();
         BMLTBlock bb1 = new BMLTBlock("bml1",mockScheduler);
         bbm.addBMLBlock(bb1);
         bbm.startBlock("bml1");
@@ -69,7 +68,6 @@ public class BMLBlockManagerTest
     @Test
     public void testActivate()
     {
-        BMLBlockManager bbm = new BMLBlockManager();
         BMLTBlock bb1 = new BMLTBlock("bml1",mockScheduler);
         bb1.setState(TimedPlanUnitState.PENDING);
         bbm.addBMLBlock(bb1);
@@ -80,7 +78,6 @@ public class BMLBlockManagerTest
     @Test
     public void testActivateRunning()
     {
-        BMLBlockManager bbm = new BMLBlockManager();
         BMLTBlock bb1 = new BMLTBlock("bml1",mockScheduler);
         bbm.addBMLBlock(bb1);
         bbm.startBlock("bml1");
@@ -92,7 +89,6 @@ public class BMLBlockManagerTest
     @Test
     public void testRemove()
     {
-        BMLBlockManager bbm = new BMLBlockManager();
         BMLTBlock bb1 = new BMLTBlock("bml1",mockScheduler);
         BMLTBlock bb2 = new BMLTBlock("bml2",mockScheduler);
         bbm.addBMLBlock(bb1);
@@ -105,7 +101,6 @@ public class BMLBlockManagerTest
     @Test
     public void testProgress()
     {
-        BMLBlockManager bbm = new BMLBlockManager();
         bbm.syncProgress(new BMLSyncPointProgressFeedback("bml1", "beh1", "start", 0, 0));
         bbm.syncProgress(new BMLSyncPointProgressFeedback("bml1", "beh1", "stroke", 1, 1));
         bbm.syncProgress(new BMLSyncPointProgressFeedback("bml2", "beh2", "start", 2, 2));

@@ -348,7 +348,6 @@ public final class BMLScheduler
 
     public void blockStartFeedback(String bmlId)
     {
-        //BMLBlockProgress psf = new BMLPerformanceStartFeedback(bmlId, schedulingClock.getTime(), predictEndTime(bmlId));
         BMLBlockProgressFeedback psf = new BMLBlockProgressFeedback(bmlId, "start", schedulingClock.getMediaSeconds());
         fbManager.blockProgress(psf);
     }
@@ -373,6 +372,11 @@ public final class BMLScheduler
         pegBoard.removeBehaviour(bmlId, behaviourId);
     }
 
+    public double getStartTime(String bmlId)
+    {
+        return pegBoard.getBMLBlockTime(bmlId);
+    }
+    
     public double getEndTime(String bmlId, String behId)
     {
         for (Engine e : getEngines())

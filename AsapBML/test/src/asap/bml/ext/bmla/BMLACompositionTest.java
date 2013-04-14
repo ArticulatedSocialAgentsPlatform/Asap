@@ -52,4 +52,13 @@ public class BMLACompositionTest
         block.readXML(bmlString);
         assertThat(bbmlbExt.getChunkBeforeList(), hasItems("bml2", "bml3"));
     }
+    
+    @Test
+    public void testDependencies()
+    {
+        String bmlString = "<bml xmlns=\"http://www.bml-initiative.org/bml/bml-1.0\" id=\"bml1\" xmlns:bmla=\"http://www.asap-project.org/bmla\" " +
+                "bmla:chunkBefore=\"bml2,bml3\" bmla:prependBefore=\"bml4\" bmla:onStart=\"bml5\" bmla:appendAfter=\"bml6\" bmla:chunkAfter=\"bml7\"/>";
+        block.readXML(bmlString);
+        assertThat(bbmlbExt.getOtherBlockDependencies(), hasItems("bml2", "bml3", "bml4","bml5","bml6","bml7"));
+    }
 }

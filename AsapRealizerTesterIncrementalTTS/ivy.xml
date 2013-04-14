@@ -24,13 +24,11 @@
       <dependency org="Asap"   name="AsapEnvironment"     rev="latest.${resolve.status}"   />
 
       <dependency org="HMI"      name="HmiAnimation"       rev="latest.${resolve.status}"  />
-      <dependency org="HMI"      name="HmiTTS"             rev="latest.${resolve.status}"  />
       <dependency org="HMI"      name="HmiNeurophysics"    rev="latest.${resolve.status}"  />
       <dependency org="HMI"      name="HmiGraphics"        transitive="false" rev="latest.${resolve.status}"  />
       <dependency org="HMI"      name="HmiFaceGraphics"    transitive="false" rev="latest.${resolve.status}"  />
       <dependency org="HMI"      name="HmiXml"             rev="latest.${resolve.status}"  />
       <dependency org="HMI"      name="HmiUtil"            rev="latest.${resolve.status}"  />
-      <dependency org="HMI"      name="HmiTTSnative"       rev="latest.${resolve.status}"  />
       <dependency org="HMI"   name="HmiJComponentEnvironment"             rev="latest.${resolve.status}"   />
       
       <dependency org="HMI"   name="HmiEnvironmentBase"     rev="latest.${resolve.status}"   />    
@@ -50,13 +48,9 @@
       <dependency org="HMI"   name="HmiFaceAnimation"     rev="latest.${resolve.status}"   />    
       <dependency org="HMI"   name="HmiAudioEnvironment"     rev="latest.${resolve.status}"   />    
       <dependency org="HMI"   name="HmiWorldObjectEnvironment"     rev="latest.${resolve.status}"   />    
-
       <dependency org="HMI"      name="HmiTestUtil" transitive="false" rev="latest.${resolve.status}"/>
        
-      <!--
-      <dependency org="Asap"   name="AsapEmitterEngine"     rev="latest.${resolve.status}"   /> 	  
-	  -->
-	  
+      
       
       <dependency org="odejava"  name="odejava"            rev="latest.release"  />   
       <dependency org="JogAmp" name="jogl" rev="latest.beta"  />  

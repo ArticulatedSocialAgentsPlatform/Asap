@@ -134,6 +134,19 @@ public final class PegBoard
         BMLBlockPeg bp = bmlBlockPegs.get(bmlId);
         if (bp != null) bp.setValue(time);
     }
+    
+    /**
+     * Gets the time for a BMLBlock on the board, returns TimePeg.VALUE_UNKNOWN if the block doesn't exist.
+     */
+    public double getBMLBlockTime(String bmlId)
+    {
+        BMLBlockPeg bp = bmlBlockPegs.get(bmlId);
+        if (bp != null) 
+        {
+            return bp.getValue();
+        }
+        return TimePeg.VALUE_UNKNOWN;
+    }
 
     public void addTimePegs(List<SyncAndTimePeg> satps)
     {

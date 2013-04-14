@@ -1,16 +1,15 @@
 package asap.realizer.scheduler;
 
 
+import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashSet;
 import java.util.List;
-import java.util.ArrayList;
 import java.util.Set;
-import java.util.concurrent.CopyOnWriteArraySet;
 import java.util.concurrent.CopyOnWriteArrayList;
+import java.util.concurrent.CopyOnWriteArraySet;
 
 import lombok.extern.slf4j.Slf4j;
-
 import asap.realizer.pegboard.BehaviorCluster;
 import asap.realizer.pegboard.BehaviorKey;
 import asap.realizer.pegboard.PegBoard;
@@ -54,6 +53,16 @@ public class BMLBBlock extends AbstractBMLBlock
     public List<String> getOnStartSet()
     {
         return Collections.unmodifiableList(onStartList);
+    }
+    
+    public Set<String> getAppendSet()
+    {
+        return Collections.unmodifiableSet(appendSet);
+    }
+    
+    public Set<String> getChunkAfterSet()
+    {
+        return Collections.unmodifiableSet(chunkAfterSet);
     }
 
     public BMLBBlock(String id, BMLScheduler s, PegBoard pb)
