@@ -115,10 +115,7 @@ public class PersistentFixtureAsapRealizerTest extends AbstractASAPRealizerTest
 
         java.awt.Component canvas = hre.getAWTComponent(); // after init, get canvas and add to window
         mainUI.add(canvas);
-        mainUI.setVisible(true);
-
-        hre.startRenderClock();
-        ope.startPhysicsClock();
+        mainUI.setVisible(true);        
 
         // add worldobject "camera" that we can use to look at user :)
         VJoint camera = hre.getCameraTarget();
@@ -142,6 +139,9 @@ public class PersistentFixtureAsapRealizerTest extends AbstractASAPRealizerTest
         VJoint boxJoint = hre.getObjectRootJoint("bluebox");
         boxJoint.setTranslation(-0.25f, 1.45f, 0.3f);
         we.getWorldObjectManager().addWorldObject("bluebox", new WorldObject(boxJoint));
+        
+        hre.startRenderClock();
+        ope.startPhysicsClock();
         logger.debug("Finished setup");
     }
 

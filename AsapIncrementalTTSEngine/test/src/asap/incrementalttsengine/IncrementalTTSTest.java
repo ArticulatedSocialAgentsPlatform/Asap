@@ -52,7 +52,23 @@ public class IncrementalTTSTest
         Thread.sleep(20000);
     }
 
-    //@Ignore
+    @Test
+    public void testSentences() throws InterruptedException
+    {
+        MaryAdapter.getInstance();
+        DispatchStream dispatcher = SimpleMonitor.setupDispatcher(new Resources("").getURL("sphinx-config.xml"));
+
+        HesitatingSynthesisIU installment = new HesitatingSynthesisIU("Welcome ladies and gentleman.");
+        for (IU word : installment.groundedIn())
+        {
+            word.updateOnGrinUpdates();
+            word.addUpdateListener(new MyWordUpdateListener());
+        }
+        dispatcher.playStream(installment.getAudio());
+        Thread.sleep(20000);
+    }
+    
+    @Ignore
     @Test
     public void testMultipleSentencesQuality() throws InterruptedException
     {
@@ -118,7 +134,7 @@ public class IncrementalTTSTest
         Thread.sleep(8000);
     }
 
-    // @Ignore
+    @Ignore
     @Test
     public void testHesitationContinuation() throws InterruptedException
     {

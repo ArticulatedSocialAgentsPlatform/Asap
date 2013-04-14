@@ -61,7 +61,8 @@ public class IncrementalTTSUnit extends TimedAbstractPlanUnit
     private List<String> progressHandled = new ArrayList<>();
     private final HesitatingSynthesisIUManager iuManager;
     private volatile boolean isScheduled = false;
-
+    
+    
     // nr of the word after the sync => SyncId
     private final BiMap<Integer, String> syncMap = HashBiMap.create();
 
@@ -568,7 +569,7 @@ public class IncrementalTTSUnit extends TimedAbstractPlanUnit
     @Override
     protected void playUnit(double time)
     {
-
+                
     }
 
     @Override
