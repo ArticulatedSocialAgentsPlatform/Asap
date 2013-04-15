@@ -24,8 +24,6 @@ import org.junit.BeforeClass;
 import org.junit.Ignore;
 import org.junit.Test;
 
-import bml.bmlinfo.DefaultSyncPoints;
-
 import asap.bml.ext.bmlt.BMLTInfo;
 import asap.environment.AsapEnvironment;
 import asap.environment.AsapVirtualHuman;
@@ -197,7 +195,16 @@ public class AsapRealizerTesterIncrementalSpeech extends AbstractASAPRealizerTes
     @Test
     public void testHesitatedSpeech() throws IOException
     {
+        String bmlString = readTestFile("bmlis/filler.xml");
+        realizerHandler.performBML(bmlString);
+        realizerHandler.waitForBMLEndFeedback("bml1");
         
+        realizerHandler.assertNoExceptions();
+        realizerHandler.assertNoWarnings();
+        realizerHandler.assertNoDuplicateFeedbacks();
+        
+        realizerHandler.assertRelativeSyncTime("bml1", "speech1", "start", 0);
+        realizerHandler.assertSyncAfterSync("bml1", "speech1", "end", "bml1", "speech1", "relax");        
     }
     
     @Test
