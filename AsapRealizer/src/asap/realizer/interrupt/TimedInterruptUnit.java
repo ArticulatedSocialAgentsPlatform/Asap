@@ -77,7 +77,7 @@ public class TimedInterruptUnit extends TimedAbstractPlanUnit
             logger.debug("Interrupting behavior {}:{}",target,beh);
             scheduler.interruptBehavior(target,beh);            
         }
-        sendFeedback("start",time);        
+        feedback("start",time);        
     }
     
     @Override
@@ -90,7 +90,7 @@ public class TimedInterruptUnit extends TimedAbstractPlanUnit
     protected void stopUnit(double time) throws TimedPlanUnitPlayException
     {
         logger.debug("stopping interrupt unit {} {}",getBMLId(),getId());        
-        sendFeedback("end",time);        
+        feedback("end",time);        
     }
 
     @Override

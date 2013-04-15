@@ -79,13 +79,7 @@ public abstract class TimedAbstractPlanUnit implements TimedPlanUnit
 
     protected abstract void stopUnit(double time) throws TimedPlanUnitPlayException;
 
-    protected void sendFeedback(String syncId, double time)
-    {
-        String bmlId = getBMLId();
-        String behaviorId = getId();
-        double bmlBlockTime = time - bmlBlockPeg.getValue();
-        feedback(new BMLSyncPointProgressFeedback(bmlId, behaviorId, syncId, bmlBlockTime, time));
-    }
+    
 
     /**
      * Starts the PlanUnit, is only called once at start

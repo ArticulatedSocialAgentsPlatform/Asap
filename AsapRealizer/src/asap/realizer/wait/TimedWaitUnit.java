@@ -95,7 +95,7 @@ public class TimedWaitUnit extends TimedAbstractPlanUnit
     @Override
     public void startUnit(double time)
     {
-        sendFeedback("start", time);        
+        feedback("start", time);        
     }
 
     @Override
@@ -107,7 +107,7 @@ public class TimedWaitUnit extends TimedAbstractPlanUnit
     @Override
     protected void stopUnit(double time) throws TimedPlanUnitPlayException
     {
-        sendFeedback("end", time);
+        feedback("end", time);
     }
 
     @Override

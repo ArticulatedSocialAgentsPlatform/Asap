@@ -198,13 +198,13 @@ public class TimedParameterValueChangeUnit extends TimedAbstractPlanUnit
     @Override
     protected void stopUnit(double time) throws TimedPlanUnitPlayException
     {
-        sendFeedback("end", time);
+        feedback("end", time);
     }
 
     @Override
     protected void startUnit(double time) throws TimedPlanUnitPlayException
     {
-        sendFeedback("start", time);
+        feedback("start", time);
         if (!hasInitialValue)
         {
             try

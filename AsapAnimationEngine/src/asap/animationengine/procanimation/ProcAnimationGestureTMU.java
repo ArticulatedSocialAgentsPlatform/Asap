@@ -554,7 +554,7 @@ public class ProcAnimationGestureTMU extends TimedAnimationMotionUnit
         log.debug("Tmu:{}:{} time={} relax={} stop={}", new Object[] { getBMLId(), getId(), time, getRelaxTime(), getEndTime() });
         if (time >= getRelaxTime() && time < getEndTime())
         {
-            sendFeedback("end", time);
+            feedback("end", time);
         }
     }
 

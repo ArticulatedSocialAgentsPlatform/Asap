@@ -144,7 +144,56 @@ public class IncrementalTTSUnitTest extends AbstractTimedPlanUnitTest
         while(dispatcher.isSpeaking());
         ttsUnit.stop(10);
         assertEquals("s1", fbList.get(1).getSyncId());
-        assertEquals(1, fbList.get(1).getTime(), SPEECH_RETIMING_PRECISION);
+        assertEquals(1, fbList.get(1).getTime(), SPEECH_RETIMING_PRECISION);        
+        assertEquals(1.25, fbList.get(2).getTime(), SPEECH_RETIMING_PRECISION);
+        assertEquals(1.25, fbList.get(3).getTime(), SPEECH_RETIMING_PRECISION);
+    }
+    
+    @Test
+    public void testApplyTwoTimeConstraints() throws TimedPlanUnitPlayException, InterruptedException 
+    {
+        IncrementalTTSUnit ttsUnit = setupPlanUnit(fbManager, BMLBlockPeg.GLOBALPEG, "beh1", "bml1", 0, 
+                "Hello <sync id=\"s1\"/> world<sync id=\"s2\"/>.");
+        fbManager.addFeedbackListener(new ListBMLFeedbackListener.Builder().feedBackList(fbList).build());
+        ttsUnit.setTimePeg("start", TimePegUtil.createAbsoluteTimePeg(0));
+        ttsUnit.setTimePeg("s1", TimePegUtil.createAbsoluteTimePeg(1));
+        ttsUnit.setTimePeg("s2", TimePegUtil.createAbsoluteTimePeg(1.25));
+        ttsUnit.setTimePeg("end", TimePegUtil.createAbsoluteTimePeg(1.25));
+        ttsUnit.applyTimeConstraints();
+        ttsUnit.setState(TimedPlanUnitState.LURKING);
+        ttsUnit.start(0);
+        ttsUnit.play(0);
+        while(dispatcher.isSpeaking());
+        ttsUnit.stop(10);
+        assertEquals("s1", fbList.get(1).getSyncId());
+        assertEquals(1, fbList.get(1).getTime(), SPEECH_RETIMING_PRECISION);        
+        assertEquals("s2", fbList.get(2).getSyncId());
+        assertEquals(1.25, fbList.get(2).getTime(), SPEECH_RETIMING_PRECISION);
+    }
+    
+    @Test
+    public void testApplyTimeConstraintsAndStart() throws TimedPlanUnitPlayException, InterruptedException 
+    {
+        IncrementalTTSUnit ttsUnit = setupPlanUnit(fbManager, BMLBlockPeg.GLOBALPEG, "beh1", "bml1", 0, 
+                "Hello <sync id=\"s1\"/> world.");
+        fbManager.addFeedbackListener(new ListBMLFeedbackListener.Builder().feedBackList(fbList).build());
+        ttsUnit.setTimePeg("start", TimePegUtil.createAbsoluteTimePeg(0.4));
+        ttsUnit.setTimePeg("s1", TimePegUtil.createAbsoluteTimePeg(0.7));
+        ttsUnit.setTimePeg("end", TimePegUtil.createAbsoluteTimePeg(2));
+        ttsUnit.applyTimeConstraints();
+        ttsUnit.setState(TimedPlanUnitState.LURKING);
+        ttsUnit.start(0.4);
+        ttsUnit.play(0.4);
+        while(dispatcher.isSpeaking());
+        ttsUnit.stop(10);
+        assertEquals("start", fbList.get(0).getSyncId());
+        assertEquals(0.4, fbList.get(0).getTime(), SPEECH_RETIMING_PRECISION);    
+        assertEquals("s1", fbList.get(1).getSyncId());
+        assertEquals(0.7, fbList.get(1).getTime(), SPEECH_RETIMING_PRECISION);        
+        assertEquals("relax", fbList.get(2).getSyncId());
+        assertEquals(2, fbList.get(2).getTime(), SPEECH_RETIMING_PRECISION);
+        assertEquals("end", fbList.get(3).getSyncId());
+        assertEquals(2, fbList.get(3).getTime(), SPEECH_RETIMING_PRECISION);
     }
     
     @Test
@@ -162,6 +211,23 @@ public class IncrementalTTSUnitTest extends AbstractTimedPlanUnitTest
         assertEquals("relax", fbList.get(2).getSyncId());
         assertEquals("end", fbList.get(3).getSyncId());
     }
+    
+    @Test
+    public void testSyncFeedbackAtEnd() throws TimedPlanUnitPlayException
+    {
+        IncrementalTTSUnit ttsUnit = setupPlanUnit(fbManager, BMLBlockPeg.GLOBALPEG, "beh1", "bml1", 0, "Hello <sync id=\"s1\"/> world<sync id=\"s2\"/>.");
+        fbManager.addFeedbackListener(new ListBMLFeedbackListener.Builder().feedBackList(fbList).build());
+        ttsUnit.setState(TimedPlanUnitState.LURKING);
+        ttsUnit.start(0);
+        ttsUnit.play(0);
+        while(dispatcher.isSpeaking());
+        ttsUnit.stop(10);        
+        assertEquals("start", fbList.get(0).getSyncId());
+        assertEquals("s1", fbList.get(1).getSyncId());
+        assertEquals("s2", fbList.get(2).getSyncId());
+        assertEquals("relax", fbList.get(3).getSyncId());
+        assertEquals("end", fbList.get(4).getSyncId());
+    }    
 
     @Test
     public void testSyncRelativeTiming() throws TimedPlanUnitPlayException, SyncPointNotFoundException

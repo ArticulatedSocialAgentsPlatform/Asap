@@ -40,7 +40,7 @@ public class TimedActivateUnit extends TimedAbstractPlanUnit
     {
         logger.debug("starting activate unit {} {}",getBMLId(),getId());
         scheduler.activateBlock(target,time);
-        sendFeedback("start",time);              
+        feedback("start",time);              
     }
     
     /**
@@ -62,7 +62,7 @@ public class TimedActivateUnit extends TimedAbstractPlanUnit
     protected void stopUnit(double time) throws TimedPlanUnitPlayException
     {
         logger.debug("stopping activate unit {} {}",getBMLId(),getId());
-        sendFeedback("end",time);        
+        feedback("end",time);        
     }
 
     @Override
