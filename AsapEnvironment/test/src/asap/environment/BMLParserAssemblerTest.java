@@ -4,8 +4,11 @@ import static org.junit.Assert.assertNotNull;
 import hmi.xml.XMLTokenizer;
 
 import java.util.HashMap;
+import java.util.Set;
 
 import org.junit.Test;
+
+import com.google.common.collect.ImmutableSet;
 
 import saiba.bml.core.BMLBehaviorAttributeExtension;
 import saiba.bml.core.BMLBlockComposition;
@@ -35,6 +38,12 @@ public class BMLParserAssemblerTest
         {
             return null;
         }
+
+        @Override
+        public Set<String> getOtherBlockDependencies()
+        {
+            return ImmutableSet.of();
+        }
     }
 
     /**
@@ -52,6 +61,12 @@ public class BMLParserAssemblerTest
         public BMLBlockComposition handleComposition(String sm)
         {
             return null;
+        }
+        
+        @Override
+        public Set<String> getOtherBlockDependencies()
+        {
+            return ImmutableSet.of();
         }
     }
 
