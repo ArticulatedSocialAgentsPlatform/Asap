@@ -72,7 +72,7 @@ public class IncrementalTTSPlannerTest
         System.setProperty("mary.base", System.getProperty("shared.project.root")
                 + "/asapresource/MARYTTSIncremental/resource/MARYTTSIncremental");
         incTTSPlanner = new IncrementalTTSPlanner(mockBmlFeedbackManager, new PlanManager<IncrementalTTSUnit>(),
-                new HesitatingSynthesisIUManager(dispatcher), new NullPhonemeToVisemeMapping(), new HashSet<IncrementalLipSynchProvider>());
+                new HesitatingSynthesisIUManager(dispatcher,null), new NullPhonemeToVisemeMapping(), new HashSet<IncrementalLipSynchProvider>());
         plannerTests = new PlannerTests<IncrementalTTSUnit>(incTTSPlanner, bbPeg);
     }
 

@@ -59,7 +59,7 @@ public class IncrementalTTSUnitTest extends AbstractTimedPlanUnitTest
 
     private IncrementalTTSUnit setupPlanUnit(FeedbackManager bfm, BMLBlockPeg bbPeg, String id, String bmlId, double startTime, String text)
     {
-        IncrementalTTSUnit ttsUnit = new IncrementalTTSUnit(bfm, bbPeg, bmlId, id, text, new HesitatingSynthesisIUManager(dispatcher),
+        IncrementalTTSUnit ttsUnit = new IncrementalTTSUnit(bfm, bbPeg, bmlId, id, text, new HesitatingSynthesisIUManager(dispatcher,null),
                 new ArrayList<IncrementalLipSynchProvider>(), new NullPhonemeToVisemeMapping(), mockSpeechBehaviour);
         ttsUnit.getTimePeg("start").setGlobalValue(startTime);
         return ttsUnit;

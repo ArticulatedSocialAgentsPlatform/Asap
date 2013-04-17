@@ -48,7 +48,8 @@ public class IncrementalTTSEngineLoader implements EngineLoader
     private DispatchStream dispatcher;
     private PhonemeToVisemeMapping visemeMapping = new NullPhonemeToVisemeMapping();
     private Collection<IncrementalLipSynchProvider> lipSynchers = new ArrayList<IncrementalLipSynchProvider>();
-
+    private String voicename = null;
+    
     @Override
     public Engine getEngine()
     {
@@ -105,7 +106,7 @@ public class IncrementalTTSEngineLoader implements EngineLoader
             public void decodeAttributes(HashMap<String, String> attrMap, XMLTokenizer tokenizer)
             {
                 String language = this.getOptionalAttribute("language", attrMap);
-                String voicename = this.getOptionalAttribute("voicename", attrMap);
+                voicename = this.getOptionalAttribute("voicename", attrMap);
                 if (language != null)
                 {
                     System.setProperty("inpro.tts.language", language);
@@ -148,7 +149,7 @@ public class IncrementalTTSEngineLoader implements EngineLoader
         dispatcher = SimpleMonitor.setupDispatcher(new Resources(di.getResource()).getURL(di.getFilename()));
         PlanManager<IncrementalTTSUnit> planManager = new PlanManager<IncrementalTTSUnit>();
         IncrementalTTSPlanner planner = new IncrementalTTSPlanner(realizerEmbodiment.getFeedbackManager(), planManager,
-                new HesitatingSynthesisIUManager(dispatcher), visemeMapping, lipSynchers);
+                new HesitatingSynthesisIUManager(dispatcher, voicename), visemeMapping, lipSynchers);
         engine = new DefaultEngine<IncrementalTTSUnit>(planner, new DefaultPlayer(new SingleThreadedPlanPlayer<IncrementalTTSUnit>(
                 realizerEmbodiment.getFeedbackManager(), planManager)), planManager);
         engine.setId(id);

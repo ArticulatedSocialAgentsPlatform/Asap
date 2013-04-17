@@ -79,7 +79,7 @@ public class IncrementalTTSUnit extends TimedAbstractPlanUnit
     {
         super(fbm, bmlPeg, bmlId, behId);
         this.lsProviders = ImmutableList.copyOf(lsProviders);
-
+        this.iuManager = iuManager;
         String textNoSync = BMLTextUtil.stripSyncs(text);
         setupSyncs(textNoSync, text);
 
@@ -118,7 +118,7 @@ public class IncrementalTTSUnit extends TimedAbstractPlanUnit
         }
 
         this.visemeMapping = visemeMapping;
-        this.iuManager = iuManager;
+        
         startPeg = new TimePeg(bmlPeg);
         endPeg = new TimePeg(bmlPeg);
         relaxPeg = new TimePeg(bmlPeg);
@@ -257,6 +257,10 @@ public class IncrementalTTSUnit extends TimedAbstractPlanUnit
 
     private HesitatingSynthesisIU createHesitatingSynthesisIU(String text)
     {
+        if(iuManager.getVoiceName()!=null)
+        {
+            System.setProperty("inpro.tts.voice", iuManager.getVoiceName());
+        }
         int pointIndex = getNextSentenceSeparatorIndex(text, 0);
         if (pointIndex == -1)
         {
@@ -387,6 +391,8 @@ public class IncrementalTTSUnit extends TimedAbstractPlanUnit
 
     private void stretch(float value)
     {
+        System.out.println("stretch to"+value);        
+        if(stretch == value)return;
         stretch = value;
         log.debug("set stretch {}", value);
         synchronized (synthesisIU)
@@ -404,6 +410,7 @@ public class IncrementalTTSUnit extends TimedAbstractPlanUnit
 
     private void setPitch(float value)
     {
+        if(pitchShiftInCent==value)return;
         pitchShiftInCent = value;
         synchronized (synthesisIU)
         {
