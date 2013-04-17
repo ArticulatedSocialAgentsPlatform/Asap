@@ -76,9 +76,9 @@ public class MixedAnimationEngineLoader implements EngineLoader
     private HnsHandshape hnsHandshape = new HnsHandshape(hns);
     private List<String> handShapeDir = new ArrayList<>();
     
-    String id = "";
+    private String id = "";
     // some variables cached during loading
-    GestureBinding gesturebinding = null;
+    private GestureBinding gesturebinding = null;
 
     private AsapRealizerEmbodiment are = null;
     private WorldObjectEnvironment we = null;
@@ -246,9 +246,6 @@ public class MixedAnimationEngineLoader implements EngineLoader
         }
         AnimationPlanPlayer animationPlanPlayer = new AnimationPlanPlayer(pose, are.getFeedbackManager(), animationPlanManager,
                 new DefaultTimedPlanUnitPlayer(), are.getPegBoard());
-
-        // public AnimationPlayer(VJoint vP, VJoint vC, VJoint vN, ArrayList<MixedSystem> m, float h, WorldObjectManager wom,
-        // PlanPlayer planPlayer)
 
         animationPlayer = new AnimationPlayer(mse.getPreviousVJoint(), mse.getCurrentVJoint(), mse.getNextVJoint(), pe.getMixedSystems(),
                 MixedAnimationPlayerManager.getH(), we.getWorldObjectManager(), animationPlanPlayer);

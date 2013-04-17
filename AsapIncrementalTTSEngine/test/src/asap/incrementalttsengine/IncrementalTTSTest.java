@@ -15,7 +15,7 @@ import org.junit.Test;
 
 import done.inpro.system.carchase.HesitatingSynthesisIU;
 
-@Ignore
+//@Ignore
 public class IncrementalTTSTest
 {
     private static class MyWordUpdateListener implements IUUpdateListener
@@ -37,11 +37,13 @@ public class IncrementalTTSTest
         }
     }
 
-    @Ignore
+    //@Ignore
     @Test
     public void testVoice() throws InterruptedException
     {
-        System.setProperty("inpro.tts.voice", "dfki-prudence-hsmm");
+        //System.setProperty("inpro.tts.voice", "dfki-prudence-hsmm");
+        System.setProperty("inpro.tts.voice", "dfki-poppy-hsmm");
+        //System.setProperty("inpro.tts.voice", "dfki-obadiah-hsmm");
         System.setProperty("inpro.tts.language", "en_GB");
 
         MaryAdapter.getInstance();
@@ -51,7 +53,8 @@ public class IncrementalTTSTest
         dispatcher.playStream(installment.getAudio());
         Thread.sleep(20000);
     }
-
+    
+    @Ignore
     @Test
     public void testSentences() throws InterruptedException
     {
