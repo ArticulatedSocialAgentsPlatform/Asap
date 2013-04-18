@@ -3,6 +3,7 @@ package asap.incrementalspeechengine;
 import inpro.audio.DispatchStream;
 import inpro.incremental.unit.IU;
 import inpro.incremental.unit.WordIU;
+import lombok.Getter;
 import done.inpro.system.carchase.HesitatingSynthesisIU;
 
 /**
@@ -15,11 +16,15 @@ public class HesitatingSynthesisIUManager
     private final DispatchStream dispatcher;
     private HesitatingSynthesisIU currentIU = null;
     private IncrementalTTSUnit currentTTSUnit;
+    @Getter
+    private final String voiceName;
+    
     private static final double MERGE_TIME = 0.001d;
 
-    public HesitatingSynthesisIUManager(DispatchStream dispatcher)
+    public HesitatingSynthesisIUManager(DispatchStream dispatcher, String voiceName)
     {
         this.dispatcher = dispatcher;
+        this.voiceName = voiceName;
     }
 
     private int getRemainingPhonemes(WordIU word)
@@ -77,6 +82,7 @@ public class HesitatingSynthesisIUManager
     {
         if (currentTTSUnit == ttsUnit) return;// already added with appendIU
 
+        
         currentTTSUnit = ttsUnit;
         if (currentIU == null || currentIU.isCompleted())
         {

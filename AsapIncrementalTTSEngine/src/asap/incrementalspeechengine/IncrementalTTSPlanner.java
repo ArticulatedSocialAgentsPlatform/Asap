@@ -32,9 +32,9 @@ public class IncrementalTTSPlanner extends AbstractPlanner<IncrementalTTSUnit>
     private UniModalResolver resolver = new LinearStretchResolver(false);
     private final PhonemeToVisemeMapping visemeMapping;
     private final Collection<IncrementalLipSynchProvider> lipSynchers;
-    private final HesitatingSynthesisIUManager iuManager;
+    private final PhraseIUManager iuManager;
     
-    public IncrementalTTSPlanner(FeedbackManager fbm, PlanManager<IncrementalTTSUnit> planManager, HesitatingSynthesisIUManager iuManager,
+    public IncrementalTTSPlanner(FeedbackManager fbm, PlanManager<IncrementalTTSUnit> planManager, PhraseIUManager iuManager,
             PhonemeToVisemeMapping vm, Collection<IncrementalLipSynchProvider> ls)
     {
         super(fbm, planManager);

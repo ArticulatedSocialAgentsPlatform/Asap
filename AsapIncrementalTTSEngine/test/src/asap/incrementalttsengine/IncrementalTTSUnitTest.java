@@ -1,5 +1,7 @@
 package asap.incrementalttsengine;
 import static org.hamcrest.MatcherAssert.assertThat;
+import static org.hamcrest.number.OrderingComparison.greaterThan;
+import static org.hamcrest.number.OrderingComparison.lessThan;
 import static org.junit.Assert.assertEquals;
 import static org.mockito.Mockito.mock;
 import hmi.tts.util.NullPhonemeToVisemeMapping;
@@ -20,8 +22,8 @@ import org.powermock.core.classloader.annotations.PrepareForTest;
 import org.powermock.modules.junit4.PowerMockRunner;
 
 import saiba.bml.core.SpeechBehaviour;
-import asap.incrementalspeechengine.HesitatingSynthesisIUManager;
 import asap.incrementalspeechengine.IncrementalTTSUnit;
+import asap.incrementalspeechengine.PhraseIUManager;
 import asap.realizer.SyncPointNotFoundException;
 import asap.realizer.feedback.FeedbackManager;
 import asap.realizer.lipsync.IncrementalLipSynchProvider;
@@ -33,8 +35,6 @@ import asap.realizer.scheduler.BMLBlockManager;
 import asap.realizerport.util.ListBMLFeedbackListener;
 import asap.realizertestutil.planunit.AbstractTimedPlanUnitTest;
 import asap.realizertestutil.util.TimePegUtil;
-import static org.hamcrest.number.OrderingComparison.greaterThan;
-import static org.hamcrest.number.OrderingComparison.lessThan;
 /**
  * Testcases for the IncrementalTTSUnit
  * @author hvanwelbergen
@@ -59,7 +59,7 @@ public class IncrementalTTSUnitTest extends AbstractTimedPlanUnitTest
 
     private IncrementalTTSUnit setupPlanUnit(FeedbackManager bfm, BMLBlockPeg bbPeg, String id, String bmlId, double startTime, String text)
     {
-        IncrementalTTSUnit ttsUnit = new IncrementalTTSUnit(bfm, bbPeg, bmlId, id, text, new HesitatingSynthesisIUManager(dispatcher),
+        IncrementalTTSUnit ttsUnit = new IncrementalTTSUnit(bfm, bbPeg, bmlId, id, text, new PhraseIUManager(dispatcher,null),
                 new ArrayList<IncrementalLipSynchProvider>(), new NullPhonemeToVisemeMapping(), mockSpeechBehaviour);
         ttsUnit.getTimePeg("start").setGlobalValue(startTime);
         return ttsUnit;
@@ -182,7 +182,7 @@ public class IncrementalTTSUnitTest extends AbstractTimedPlanUnitTest
         ttsUnit.setTimePeg("end", TimePegUtil.createAbsoluteTimePeg(2));
         ttsUnit.applyTimeConstraints();
         ttsUnit.setState(TimedPlanUnitState.LURKING);
-        ttsUnit.start(0.4);
+        ttsUnit.start(0.4);        
         ttsUnit.play(0.4);
         while(dispatcher.isSpeaking());
         ttsUnit.stop(10);

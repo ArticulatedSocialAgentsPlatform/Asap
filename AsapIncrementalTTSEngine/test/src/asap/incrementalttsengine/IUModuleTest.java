@@ -9,6 +9,8 @@ import inpro.incremental.processor.SynthesisModule;
 import inpro.incremental.unit.EditMessage;
 import inpro.incremental.unit.IU;
 import inpro.incremental.unit.PhraseIU;
+import inpro.incremental.unit.SysInstallmentIU;
+import inpro.incremental.unit.WordIU;
 import inpro.incremental.unit.IU.IUUpdateListener;
 import inpro.synthesis.MaryAdapter;
 
@@ -65,7 +67,15 @@ public class IUModuleTest
         AdaptableSynthesisModule asm = new AdaptableSynthesisModule(dispatcher);
         mb.addListener(asm);
         String str= "Tomorow at 10 is the meeting with your brother. and at two o'clock you'll go shopping, and at eight is the gettogether in the bar";
+        
+        
         PhraseIU piu = new PhraseIU(str);
+        SysInstallmentIU sysiu = new SysInstallmentIU(str);
+        for (IU word : sysiu.groundedIn())
+        {
+            System.out.println("payload " + word.toPayLoad());
+            System.out.println("start " + word.startTime());
+        }
         
         MyWordUpdateListener l = new MyWordUpdateListener();
         

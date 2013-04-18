@@ -23,9 +23,9 @@ import org.junit.Test;
 
 import saiba.bml.core.SpeechBehaviour;
 import saiba.bml.parser.Constraint;
-import asap.incrementalspeechengine.HesitatingSynthesisIUManager;
 import asap.incrementalspeechengine.IncrementalTTSPlanner;
 import asap.incrementalspeechengine.IncrementalTTSUnit;
+import asap.incrementalspeechengine.PhraseIUManager;
 import asap.realizer.BehaviourPlanningException;
 import asap.realizer.SyncAndTimePeg;
 import asap.realizer.feedback.FeedbackManager;
@@ -72,7 +72,7 @@ public class IncrementalTTSPlannerTest
         System.setProperty("mary.base", System.getProperty("shared.project.root")
                 + "/asapresource/MARYTTSIncremental/resource/MARYTTSIncremental");
         incTTSPlanner = new IncrementalTTSPlanner(mockBmlFeedbackManager, new PlanManager<IncrementalTTSUnit>(),
-                new HesitatingSynthesisIUManager(dispatcher), new NullPhonemeToVisemeMapping(), new HashSet<IncrementalLipSynchProvider>());
+                new PhraseIUManager(dispatcher,null), new NullPhonemeToVisemeMapping(), new HashSet<IncrementalLipSynchProvider>());
         plannerTests = new PlannerTests<IncrementalTTSUnit>(incTTSPlanner, bbPeg);
     }
 
