@@ -4,6 +4,7 @@ import inpro.audio.DispatchStream;
 import inpro.incremental.IUModule;
 import inpro.incremental.processor.AdaptableSynthesisModule;
 import inpro.incremental.unit.EditMessage;
+import inpro.incremental.unit.HesitationIU;
 import inpro.incremental.unit.IU;
 import inpro.incremental.unit.PhraseIU;
 import inpro.incremental.unit.WordIU;
@@ -86,8 +87,6 @@ public class PhraseIUManager
             if (getRemainingPhonemes(lastWord) <= 2)
             {                
                 currentTTSUnit = ttsCandidate;
-                
-                
                 iuModule.addToBuffer(synthesisIU);
                 System.out.println("Adding "+ttsCandidate.getBMLId()+" to buffer");
                 return true;
@@ -96,7 +95,7 @@ public class PhraseIUManager
         return false;
     }
 
-    public void playIU(PhraseIU synthesisIU, IncrementalTTSUnit ttsUnit)
+    public void playIU(PhraseIU synthesisIU, HesitationIU hes, IncrementalTTSUnit ttsUnit)
     {
         if (currentTTSUnit == ttsUnit) return;// already added with appendIU
 
@@ -106,6 +105,10 @@ public class PhraseIUManager
         }
         currentTTSUnit = ttsUnit;
         iuModule.addToBuffer(synthesisIU);
+        if(hes!=null)
+        {
+            iuModule.addToBuffer(hes);
+        }
         System.out.println("Adding "+ttsUnit.getBMLId()+" to buffer");
         
         currentIU = synthesisIU;        
