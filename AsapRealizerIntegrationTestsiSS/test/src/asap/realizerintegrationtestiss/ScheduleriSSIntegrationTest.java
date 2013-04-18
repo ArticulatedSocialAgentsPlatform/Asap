@@ -35,9 +35,9 @@ import asap.audioengine.AudioPlanner;
 import asap.audioengine.TimedAbstractAudioUnit;
 import asap.bml.ext.bmla.BMLABMLBehaviorAttributes;
 import asap.hns.Hns;
-import asap.incrementalspeechengine.HesitatingSynthesisIUManager;
 import asap.incrementalspeechengine.IncrementalTTSPlanner;
 import asap.incrementalspeechengine.IncrementalTTSUnit;
+import asap.incrementalspeechengine.PhraseIUManager;
 import asap.realizer.AsapRealizer;
 import asap.realizer.DefaultEngine;
 import asap.realizer.DefaultPlayer;
@@ -88,7 +88,7 @@ public class ScheduleriSSIntegrationTest extends SchedulerIntegrationTestCases
     public void before() throws IOException
     {
         PlanManager<IncrementalTTSUnit> planManager = new PlanManager<IncrementalTTSUnit>();
-        IncrementalTTSPlanner planner = new IncrementalTTSPlanner(bfm, planManager, new HesitatingSynthesisIUManager(dispatcher),
+        IncrementalTTSPlanner planner = new IncrementalTTSPlanner(bfm, planManager, new PhraseIUManager(dispatcher, null),
                 new NullPhonemeToVisemeMapping(), new ArrayList<IncrementalLipSynchProvider>());
         Engine speechEngine = new DefaultEngine<IncrementalTTSUnit>(planner, new DefaultPlayer(
                 new SingleThreadedPlanPlayer<IncrementalTTSUnit>(planManager)), planManager);
