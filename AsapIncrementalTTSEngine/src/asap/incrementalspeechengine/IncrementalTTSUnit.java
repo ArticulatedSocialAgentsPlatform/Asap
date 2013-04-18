@@ -7,6 +7,7 @@ import hmi.tts.util.PhonemeUtil;
 import hmi.tts.util.SyncAndOffset;
 import inpro.incremental.unit.IU;
 import inpro.incremental.unit.IU.IUUpdateListener;
+import inpro.incremental.unit.PhraseIU;
 import inpro.incremental.unit.SegmentIU;
 import inpro.incremental.unit.SysSegmentIU;
 import inpro.incremental.unit.WordIU;
@@ -49,7 +50,7 @@ import done.inpro.system.carchase.HesitatingSynthesisIU;
 @Slf4j
 public class IncrementalTTSUnit extends TimedAbstractPlanUnit
 {
-    private HesitatingSynthesisIU synthesisIU;
+    private PhraseIU synthesisIU;
     private TimePeg startPeg;
     private TimePeg relaxPeg;
     private TimePeg endPeg;
@@ -62,7 +63,7 @@ public class IncrementalTTSUnit extends TimedAbstractPlanUnit
     private final boolean hasRelax;
     private IU lastWord;
     private List<String> syncs = new ArrayList<>();
-    private final HesitatingSynthesisIUManager iuManager;
+    private final PhraseIUManager iuManager;
     private volatile boolean isScheduled = false;
     private int numwords;
     private Set<String> feedbackSent = Collections.synchronizedSet(new HashSet<String>());
@@ -74,7 +75,7 @@ public class IncrementalTTSUnit extends TimedAbstractPlanUnit
     private Map<String, TimePeg> pegs = new HashMap<String, TimePeg>();
 
     public IncrementalTTSUnit(FeedbackManager fbm, BMLBlockPeg bmlPeg, String bmlId, String behId, String text,
-            HesitatingSynthesisIUManager iuManager, Collection<IncrementalLipSynchProvider> lsProviders,
+            PhraseIUManager iuManager, Collection<IncrementalLipSynchProvider> lsProviders,
             PhonemeToVisemeMapping visemeMapping, Behaviour beh)
     {
         super(fbm, bmlPeg, bmlId, behId);
@@ -106,7 +107,7 @@ public class IncrementalTTSUnit extends TimedAbstractPlanUnit
         {
             hasRelax = false;
         }
-        synthesisIU = createHesitatingSynthesisIU(textNoSync);
+        synthesisIU = createPhraseIU(textNoSync);
 
         WordUpdateListener wul = new WordUpdateListener();
         lastWord = null;
@@ -134,7 +135,7 @@ public class IncrementalTTSUnit extends TimedAbstractPlanUnit
         double duration = 0;
         for (int j = j1; j < j2; j++)
         {
-            WordIU word = synthesisIU.getWords().get(j);
+            WordIU word = (WordIU)synthesisIU.groundedIn().get(j);
             for (SegmentIU seg : word.getSegments())
             {
                 SysSegmentIU sseg = (SysSegmentIU) seg;
@@ -158,7 +159,7 @@ public class IncrementalTTSUnit extends TimedAbstractPlanUnit
     {
         for (int j = j1; j < j2; j++)
         {
-            WordIU word = synthesisIU.getWords().get(j);
+            WordIU word = (WordIU)synthesisIU.groundedIn().get(j);
             for (SegmentIU seg : word.getSegments())
             {
                 SysSegmentIU sseg = (SysSegmentIU) seg;
@@ -193,11 +194,11 @@ public class IncrementalTTSUnit extends TimedAbstractPlanUnit
 
         // TODO: apply relax constraint
 
-        double defDuration = getDefaultWordsDuration(prevIndex, synthesisIU.getWords().size());
+        double defDuration = getDefaultWordsDuration(prevIndex, synthesisIU.groundedIn().size());
         if (getEndTime() != TimePeg.VALUE_UNKNOWN)
         {
             double duration = getEndTime() - prevTime;
-            stretchWords(prevIndex, synthesisIU.getWords().size(), duration / defDuration);
+            stretchWords(prevIndex, synthesisIU.groundedIn().size(), duration / defDuration);
         }
     }
 
@@ -233,58 +234,9 @@ public class IncrementalTTSUnit extends TimedAbstractPlanUnit
         return super.getRelativeTime(syncId);
     }
 
-    private int getSeperatorIndexIfFoundAndSmaller(String text, int startIndex, char seperator, int currentValue)
+    private PhraseIU createPhraseIU(String text)
     {
-        int index = text.indexOf(seperator, startIndex);
-        if (index != -1 && index < currentValue)
-        {
-            return index;
-        }
-        return currentValue;
-    }
-
-    private int getNextSentenceSeparatorIndex(String text, int startIndex)
-    {
-        int currentIndex = getSeperatorIndexIfFoundAndSmaller(text, startIndex, '.', Integer.MAX_VALUE);
-        currentIndex = getSeperatorIndexIfFoundAndSmaller(text, startIndex, '!', currentIndex);
-        currentIndex = getSeperatorIndexIfFoundAndSmaller(text, startIndex, '?', currentIndex);
-        if (currentIndex == Integer.MAX_VALUE)
-        {
-            return -1;
-        }
-        return currentIndex;
-    }
-
-    private HesitatingSynthesisIU createHesitatingSynthesisIU(String text)
-    {
-        int pointIndex = getNextSentenceSeparatorIndex(text, 0);
-        if (pointIndex == -1)
-        {
-            return new HesitatingSynthesisIU(text);
-        }
-
-        HesitatingSynthesisIU iu = null;
-        int prevIndex = 0;
-        while (pointIndex != -1)
-        {
-            String currentText = text.substring(prevIndex, pointIndex + 1);
-            if (iu == null)
-            {
-                iu = new HesitatingSynthesisIU(currentText);
-            }
-            else if (currentText.trim().length() > 0)
-            {
-                HesitatingSynthesisIU iuCont = new HesitatingSynthesisIU(currentText);
-                for (WordIU wiu : iuCont.getWords())
-                {
-                    wiu.shiftBy(iu.duration());
-                }
-                iu.appendContinuation(iuCont.getWords());
-            }
-            prevIndex = pointIndex + 1;
-            pointIndex = getNextSentenceSeparatorIndex(text, prevIndex);
-        }
-        return iu;
+        return new PhraseIU(text);        
     }
 
     private void updateLipSyncUnit(IU phIU)
