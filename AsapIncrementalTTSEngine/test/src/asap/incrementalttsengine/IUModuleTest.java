@@ -6,6 +6,7 @@ import inpro.audio.DispatchStream;
 import inpro.incremental.IUModule;
 import inpro.incremental.processor.AdaptableSynthesisModule;
 import inpro.incremental.unit.EditMessage;
+import inpro.incremental.unit.HesitationIU;
 import inpro.incremental.unit.IU;
 import inpro.incremental.unit.IU.IUUpdateListener;
 import inpro.incremental.unit.PhraseIU;
@@ -55,6 +56,7 @@ public class IUModuleTest
         }
     }
     
+    @Ignore
     @Test
     public void testPhraseVSIncremental() throws InterruptedException, IOException
     {
@@ -63,24 +65,69 @@ public class IUModuleTest
         System.setProperty("inpro.tts.language", "en_GB");
         DispatchStream dispatcher = SimpleMonitor.setupDispatcher(new Resources("").getURL("sphinx-config.xml"));
         
-        //String str= "Tomorow at 10 is the meeting with your brother, and at two o'clock you'll go shopping, and at eight is the gettogether in the bar.";
+        String str= "Tomorow at 10 is the meeting with your brother, and at two o clock you will go shopping, and at eight is the gettogether in the bar.";
         MyIUModule mb = new MyIUModule();
         AdaptableSynthesisModule asm = new AdaptableSynthesisModule(dispatcher);
         mb.addListener(asm);
-        //PhraseIU piu = new PhraseIU(str);
-        //mb.addToBuffer(piu);
-        //while(dispatcher.isSpeaking()){};
         
-        String strsplit[] = { "Tomorrow at 10", "is the meeting with your brother,", "and at two o'clock", "you'll go shopping,",
+        PhraseIU piu = new PhraseIU(str);
+        mb.addToBuffer(piu);
+        dispatcher.waitUntilDone();        
+        
+        String strsplit[] = { "Tomorrow at 10", "is the meeting with your brother,", "and at two o clock", "you will go shopping,",
                 "and at eight", "is the gettogether", "in the bar." };
         for(String s:strsplit)
         {
             PhraseIU p = new PhraseIU(s);
             mb.addToBuffer(p);
-        }        
-        while(dispatcher.isSpeaking()){};
+        }  
+        dispatcher.waitUntilDone();
         dispatcher.close();        
     }
+    
+    
+    @Test
+    public void testHesitation() throws InterruptedException, IOException
+    {
+        //MaryAdapter.getInstance();    
+        System.setProperty("inpro.tts.voice", "dfki-prudence-hsmm");
+        System.setProperty("inpro.tts.language", "en_GB");
+        DispatchStream dispatcher = SimpleMonitor.setupDispatcher(new Resources("").getURL("sphinx-config.xml"));
+        MyIUModule mb = new MyIUModule();
+        AdaptableSynthesisModule asm = new AdaptableSynthesisModule(dispatcher);
+        mb.addListener(asm);
+        
+        String str= "Hello";        
+        PhraseIU piu = new PhraseIU(str);
+        mb.addToBuffer(piu);
+        MyWordUpdateListener l = new MyWordUpdateListener();
+        for (IU word : piu.getWords())
+        {
+            word.updateOnGrinUpdates();
+            word.addUpdateListener(l);
+        }
+        
+        String str2 = "world.";
+        PhraseIU piu2 = new PhraseIU(str2);
+        mb.addToBuffer(piu2);
+        for (IU word : piu2.getWords())
+        {
+            word.updateOnGrinUpdates();
+            word.addUpdateListener(l);
+        }
+        
+        
+        HesitationIU hes = new HesitationIU();
+        mb.addToBuffer(hes);        
+        for (IU word : hes.getWords())
+        {
+            word.updateOnGrinUpdates();
+            word.addUpdateListener(l);
+        }
+        dispatcher.waitUntilDone();
+        dispatcher.close();        
+    }
+    
     
     @Ignore
     @Test

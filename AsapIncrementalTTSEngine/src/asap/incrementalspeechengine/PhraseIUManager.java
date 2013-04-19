@@ -25,6 +25,13 @@ class MyIUModule extends IUModule
         rightBuffer.addToBuffer(iu);                
         notifyListeners();
     }
+    
+    //setBuffer empty lists shuts up.
+    //rightbuffer.setBuffer(Collections.<IU>emptyList());
+    //doesn't work
+    
+    
+    //
 }
 
 public class PhraseIUManager

@@ -49,6 +49,7 @@ public class IncrementalTTSUnitTest extends AbstractTimedPlanUnitTest
     private DispatchStream dispatcher;
     private static final double TIMING_PRECISION = 0.0001;
     private static final double SPEECH_RETIMING_PRECISION = 0.01;
+    
     @Before
     public void setup()
     {
@@ -78,7 +79,7 @@ public class IncrementalTTSUnitTest extends AbstractTimedPlanUnitTest
         ttsUnit.setState(TimedPlanUnitState.LURKING);
         ttsUnit.start(0);
         ttsUnit.play(0);
-        while(dispatcher.isSpeaking());
+        dispatcher.waitUntilDone();
     }
 
     @Test
@@ -163,7 +164,7 @@ public class IncrementalTTSUnitTest extends AbstractTimedPlanUnitTest
         ttsUnit.setState(TimedPlanUnitState.LURKING);
         ttsUnit.start(0);
         ttsUnit.play(0);
-        while(dispatcher.isSpeaking());
+        dispatcher.waitUntilDone();
         ttsUnit.stop(10);
         assertEquals("s1", fbList.get(1).getSyncId());
         assertEquals(1, fbList.get(1).getTime(), SPEECH_RETIMING_PRECISION);        
@@ -184,7 +185,7 @@ public class IncrementalTTSUnitTest extends AbstractTimedPlanUnitTest
         ttsUnit.setState(TimedPlanUnitState.LURKING);
         ttsUnit.start(0.4);        
         ttsUnit.play(0.4);
-        while(dispatcher.isSpeaking());
+        dispatcher.waitUntilDone();
         ttsUnit.stop(10);
         assertEquals("start", fbList.get(0).getSyncId());
         assertEquals(0.4, fbList.get(0).getTime(), SPEECH_RETIMING_PRECISION);    
@@ -204,7 +205,7 @@ public class IncrementalTTSUnitTest extends AbstractTimedPlanUnitTest
         ttsUnit.setState(TimedPlanUnitState.LURKING);
         ttsUnit.start(0);
         ttsUnit.play(0);
-        while(dispatcher.isSpeaking());
+        dispatcher.waitUntilDone();
         ttsUnit.stop(10);        
         assertEquals("start", fbList.get(0).getSyncId());
         assertEquals("s1", fbList.get(1).getSyncId());
@@ -220,7 +221,7 @@ public class IncrementalTTSUnitTest extends AbstractTimedPlanUnitTest
         ttsUnit.setState(TimedPlanUnitState.LURKING);
         ttsUnit.start(0);
         ttsUnit.play(0);
-        while(dispatcher.isSpeaking());
+        dispatcher.waitUntilDone();
         ttsUnit.stop(10);        
         assertEquals("start", fbList.get(0).getSyncId());
         assertEquals("s1", fbList.get(1).getSyncId());
