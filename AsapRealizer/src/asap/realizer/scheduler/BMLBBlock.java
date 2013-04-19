@@ -42,11 +42,13 @@ public class BMLBBlock extends AbstractBMLBlock
     
     public void addChunkTarget(String bmlId)
     {
-        chunkAfterSet.add(bmlId);
+        System.out.println("Adding chunk target "+bmlId+" to "+getBMLId());
+        chunkAfterSet.add(bmlId);        
     }
     
     public void addAppendTarget(String bmlId)
     {
+        System.out.println("Adding append target "+bmlId+" to "+getBMLId());
         appendSet.add(bmlId);
     }
 

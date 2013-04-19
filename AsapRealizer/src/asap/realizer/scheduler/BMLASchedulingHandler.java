@@ -102,7 +102,10 @@ public class BMLASchedulingHandler implements SchedulingHandler
         }
         appendAfter.addAll(bmlaAttr.getAppendAfterList());
         chunkAfter.addAll(bmlaAttr.getChunkAfterList());
-
+       
+        BMLBBlock bbm = new BMLBBlock(bb.id, scheduler, pegBoard, appendAfter, bmlaAttr.getOnStartList(), chunkAfter);
+        scheduler.getBMLBlockManager().addBMLBlock(bbm);
+        
         for (String chunkBefore : bmlaAttr.getChunkBeforeList())
         {
             if (!addBMLBlockChunkAfterTarget(chunkBefore, bb.getBmlId(), scheduler.getBMLBlockManager()))
@@ -126,7 +129,8 @@ public class BMLASchedulingHandler implements SchedulingHandler
         scheduler.planningStart(bb.id, predictedStart);
 
         // logger.debug("Scheduling started at: {}",schedulingClock.getTime());
-        BMLBBlock bbm = new BMLBBlock(bb.id, scheduler, pegBoard, appendAfter, bmlaAttr.getOnStartList(), chunkAfter);
+        
+       
         BMLBlockPeg bmlBlockPeg = new BMLBlockPeg(bb.id, predictedStart);
         scheduler.addBMLBlockPeg(bmlBlockPeg);
 

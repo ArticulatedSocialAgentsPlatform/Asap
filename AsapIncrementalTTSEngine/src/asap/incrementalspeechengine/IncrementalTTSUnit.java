@@ -530,15 +530,13 @@ public class IncrementalTTSUnit extends TimedAbstractPlanUnit
         {
             synchronized (synthesisIU)
             {
-                isScheduled = iuManager.justInTimeAppendIU(synthesisIU, this);                
+                //isScheduled = iuManager.justInTimeAppendIU(synthesisIU, this);                
             }
         }
     }
     
     protected void startUnit(double time) throws TimedPlanUnitPlayException
     {
-        updateSyncTiming();
-        updateLipSync();
         feedback("start", time);
         synchronized (synthesisIU)
         {
@@ -566,6 +564,8 @@ public class IncrementalTTSUnit extends TimedAbstractPlanUnit
             endPeg.setGlobalValue(time + lastWord.endTime());
         }
         relaxPeg.setGlobalValue(getEndTime());
+        updateSyncTiming();
+        updateLipSync();
         isScheduled = true;
         super.startUnit(time);        
     }
