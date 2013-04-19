@@ -124,7 +124,7 @@ public class IncrementalTTSUnit extends TimedAbstractPlanUnit
         behavior = beh;
     }
     
-    private List<? extends IU> getWords()
+    private List<WordIU> getWords()
     {
         if(synthesisIU.groundedIn().isEmpty())
         {
@@ -132,9 +132,9 @@ public class IncrementalTTSUnit extends TimedAbstractPlanUnit
         }
         if(hesitation==null)
         {
-            return synthesisIU.groundedIn();
+            return synthesisIU.getWords();
         }
-        return new ImmutableList.Builder<IU>().addAll(synthesisIU.groundedIn()).add(hesitation).build();            
+        return new ImmutableList.Builder<WordIU>().addAll(synthesisIU.getWords()).addAll(hesitation.getWords()).build();            
     }
 
     private double getDefaultWordsDuration(int j1, int j2)
@@ -144,7 +144,7 @@ public class IncrementalTTSUnit extends TimedAbstractPlanUnit
         double duration = 0;
         for (int j = j1; j < j2; j++)
         {
-            WordIU word = (WordIU)getWords().get(j);
+            WordIU word = getWords().get(j);
             for (SegmentIU seg : word.getSegments())
             {
                 SysSegmentIU sseg = (SysSegmentIU) seg;
@@ -168,7 +168,7 @@ public class IncrementalTTSUnit extends TimedAbstractPlanUnit
     {
         for (int j = j1; j < j2; j++)
         {
-            WordIU word = (WordIU)getWords().get(j);
+            WordIU word = getWords().get(j);
             for (SegmentIU seg : word.getSegments())
             {
                 SysSegmentIU sseg = (SysSegmentIU) seg;
@@ -513,7 +513,7 @@ public class IncrementalTTSUnit extends TimedAbstractPlanUnit
         {
             if (entry.getKey() < getWords().size())
             {
-                WordIU wordAfter = (WordIU)getWords().get(entry.getKey());
+                WordIU wordAfter = getWords().get(entry.getKey());
                 pegs.get(entry.getValue()).setGlobalValue(getStartTime() + wordAfter.startTime());
             }
             else
@@ -530,7 +530,7 @@ public class IncrementalTTSUnit extends TimedAbstractPlanUnit
         {
             synchronized (synthesisIU)
             {
-                //isScheduled = iuManager.justInTimeAppendIU(synthesisIU, this);                
+                isScheduled = iuManager.justInTimeAppendIU(synthesisIU, this);                
             }
         }
     }
@@ -542,7 +542,7 @@ public class IncrementalTTSUnit extends TimedAbstractPlanUnit
         {
             iuManager.playIU(synthesisIU, hesitation, this);
         }
-        for (IU word : synthesisIU.groundedIn())
+        for (IU word : synthesisIU.getWords())
         {
             word.updateOnGrinUpdates();
             word.addUpdateListener(wul);

@@ -5,19 +5,34 @@ import inpro.apps.SimpleMonitor;
 import inpro.audio.DispatchStream;
 import inpro.incremental.IUModule;
 import inpro.incremental.processor.AdaptableSynthesisModule;
-import inpro.incremental.processor.SynthesisModule;
 import inpro.incremental.unit.EditMessage;
 import inpro.incremental.unit.IU;
+import inpro.incremental.unit.IU.IUUpdateListener;
 import inpro.incremental.unit.PhraseIU;
 import inpro.incremental.unit.SysInstallmentIU;
-import inpro.incremental.unit.WordIU;
-import inpro.incremental.unit.IU.IUUpdateListener;
 import inpro.synthesis.MaryAdapter;
 
+import java.io.IOException;
 import java.util.Collection;
 import java.util.List;
 
+import org.junit.Ignore;
 import org.junit.Test;
+
+class MyIUModule extends IUModule
+{
+    @Override
+    protected void leftBufferUpdate(Collection<? extends IU> arg0, List<? extends EditMessage<? extends IU>> arg1)
+    {
+                        
+    }     
+    
+    public void addToBuffer(IU iu)
+    {
+        rightBuffer.addToBuffer(iu);                
+        notifyListeners();
+    }
+}
 
 public class IUModuleTest
 {
@@ -40,7 +55,34 @@ public class IUModuleTest
         }
     }
     
+    @Test
+    public void testPhraseVSIncremental() throws InterruptedException, IOException
+    {
+        //MaryAdapter.getInstance();    
+        System.setProperty("inpro.tts.voice", "dfki-prudence-hsmm");
+        System.setProperty("inpro.tts.language", "en_GB");
+        DispatchStream dispatcher = SimpleMonitor.setupDispatcher(new Resources("").getURL("sphinx-config.xml"));
+        
+        //String str= "Tomorow at 10 is the meeting with your brother, and at two o'clock you'll go shopping, and at eight is the gettogether in the bar.";
+        MyIUModule mb = new MyIUModule();
+        AdaptableSynthesisModule asm = new AdaptableSynthesisModule(dispatcher);
+        mb.addListener(asm);
+        //PhraseIU piu = new PhraseIU(str);
+        //mb.addToBuffer(piu);
+        //while(dispatcher.isSpeaking()){};
+        
+        String strsplit[] = { "Tomorrow at 10", "is the meeting with your brother,", "and at two o'clock", "you'll go shopping,",
+                "and at eight", "is the gettogether", "in the bar." };
+        for(String s:strsplit)
+        {
+            PhraseIU p = new PhraseIU(s);
+            mb.addToBuffer(p);
+        }        
+        while(dispatcher.isSpeaking()){};
+        dispatcher.close();        
+    }
     
+    @Ignore
     @Test
     public void test() throws InterruptedException
     {
@@ -49,24 +91,11 @@ public class IUModuleTest
 
         //MaryAdapter.getInstance();    
         DispatchStream dispatcher = SimpleMonitor.setupDispatcher(new Resources("").getURL("sphinx-config.xml"));
-        class MyIUModule extends IUModule
-        {
-            @Override
-            protected void leftBufferUpdate(Collection<? extends IU> arg0, List<? extends EditMessage<? extends IU>> arg1)
-            {
-                                
-            }     
-            
-            public void addToBuffer(IU iu)
-            {
-                rightBuffer.addToBuffer(iu);                
-                notifyListeners();
-            }
-        }
+        
         MyIUModule mb = new MyIUModule();
         AdaptableSynthesisModule asm = new AdaptableSynthesisModule(dispatcher);
         mb.addListener(asm);
-        String str= "Tomorow at 10 is the meeting with your brother. and at two o'clock you'll go shopping, and at eight is the gettogether in the bar";
+        String str= "Tomorrow at 10 is the meeting with your brother. and at two o'clock you'll go shopping, and at eight is the gettogether in the bar";
         
         
         PhraseIU piu = new PhraseIU(str);
