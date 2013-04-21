@@ -197,8 +197,8 @@ public abstract class TimedAbstractPlanUnit implements TimedPlanUnit
             }
             else
             {
-                logger.warn("Starting sub plan unit behaviour {} with id {}:{} at time {} past end time {}, behaviour was never executed.",
-                        new Object[] { getClass().getName(), bmlBlockId, id, time, getEndTime() });
+                logger.warn("Starting sub plan unit behaviour {} with id {}:{} at time {} past end time {}, behaviour was never executed. Start time: {}.",
+                        new Object[] { getClass().getName(), bmlBlockId, id, time, getEndTime(), getStartTime()});
             }
         }
         else

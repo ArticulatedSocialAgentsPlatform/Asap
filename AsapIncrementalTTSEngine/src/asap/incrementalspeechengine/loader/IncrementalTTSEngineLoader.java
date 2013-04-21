@@ -25,12 +25,12 @@ import lombok.extern.slf4j.Slf4j;
 import asap.incrementalspeechengine.IncrementalTTSPlanner;
 import asap.incrementalspeechengine.IncrementalTTSUnit;
 import asap.incrementalspeechengine.PhraseIUManager;
+import asap.incrementalspeechengine.SingleThreadedPlanPlayeriSS;
 import asap.realizer.DefaultEngine;
 import asap.realizer.DefaultPlayer;
 import asap.realizer.Engine;
 import asap.realizer.lipsync.IncrementalLipSynchProvider;
 import asap.realizer.planunit.PlanManager;
-import asap.realizer.planunit.SingleThreadedPlanPlayer;
 import asap.realizerembodiments.AsapRealizerEmbodiment;
 import asap.realizerembodiments.EngineLoader;
 import asap.realizerembodiments.IncrementalLipSynchProviderLoader;
@@ -149,8 +149,8 @@ public class IncrementalTTSEngineLoader implements EngineLoader
         dispatcher = SimpleMonitor.setupDispatcher(new Resources(di.getResource()).getURL(di.getFilename()));
         PlanManager<IncrementalTTSUnit> planManager = new PlanManager<IncrementalTTSUnit>();
         IncrementalTTSPlanner planner = new IncrementalTTSPlanner(realizerEmbodiment.getFeedbackManager(), planManager,
-                new PhraseIUManager(dispatcher, voicename), visemeMapping, lipSynchers);
-        engine = new DefaultEngine<IncrementalTTSUnit>(planner, new DefaultPlayer(new SingleThreadedPlanPlayer<IncrementalTTSUnit>(
+                new PhraseIUManager(dispatcher, voicename, realizerEmbodiment.getBmlScheduler()), visemeMapping, lipSynchers);
+        engine = new DefaultEngine<IncrementalTTSUnit>(planner, new DefaultPlayer(new SingleThreadedPlanPlayeriSS<IncrementalTTSUnit>(
                 realizerEmbodiment.getFeedbackManager(), planManager)), planManager);
         engine.setId(id);
         MaryAdapter.getInstance();

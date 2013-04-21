@@ -8,6 +8,7 @@ import static org.junit.Assert.assertThat;
 import static org.mockito.Mockito.mock;
 import hmi.tts.util.NullPhonemeToVisemeMapping;
 import hmi.util.Resources;
+import hmi.util.SystemClock;
 import hmi.xml.XMLTokenizer;
 import inpro.apps.SimpleMonitor;
 import inpro.audio.DispatchStream;
@@ -22,6 +23,7 @@ import org.junit.Before;
 import org.junit.Test;
 
 import saiba.bml.core.SpeechBehaviour;
+import saiba.bml.parser.BMLParser;
 import saiba.bml.parser.Constraint;
 import asap.incrementalspeechengine.IncrementalTTSPlanner;
 import asap.incrementalspeechengine.IncrementalTTSUnit;
@@ -29,11 +31,17 @@ import asap.incrementalspeechengine.PhraseIUManager;
 import asap.realizer.BehaviourPlanningException;
 import asap.realizer.SyncAndTimePeg;
 import asap.realizer.feedback.FeedbackManager;
+import asap.realizer.feedback.NullFeedbackManager;
 import asap.realizer.lipsync.IncrementalLipSynchProvider;
 import asap.realizer.pegboard.BMLBlockPeg;
 import asap.realizer.pegboard.OffsetPeg;
+import asap.realizer.pegboard.PegBoard;
 import asap.realizer.pegboard.TimePeg;
 import asap.realizer.planunit.PlanManager;
+import asap.realizer.scheduler.BMLASchedulingHandler;
+import asap.realizer.scheduler.BMLBlockManager;
+import asap.realizer.scheduler.BMLScheduler;
+import asap.realizer.scheduler.SortedSmartBodySchedulingStrategy;
 import asap.realizer.scheduler.TimePegAndConstraint;
 import asap.realizertestutil.PlannerTests;
 
@@ -51,7 +59,8 @@ public class IncrementalTTSPlannerTest
     private static DispatchStream dispatcher = SimpleMonitor.setupDispatcher(new Resources("").getURL("sphinx-config.xml"));
     private BMLBlockPeg bbPeg = new BMLBlockPeg(BMLID, 0.3);
     private static final double TIME_PRECISION = 0.0001;
-
+    private PegBoard pegBoard = new PegBoard();
+    
     @AfterClass
     public static void oneTimeCleanup() throws IOException
     {
@@ -69,10 +78,14 @@ public class IncrementalTTSPlannerTest
     @Before
     public void setup()
     {
+        SystemClock clock = new SystemClock();
+        clock.start();        
+        BMLScheduler bmlScheduler = new BMLScheduler("id1", new BMLParser(), NullFeedbackManager.getInstance(),clock ,
+                new BMLASchedulingHandler(new SortedSmartBodySchedulingStrategy(pegBoard), pegBoard), new BMLBlockManager(), pegBoard);
         System.setProperty("mary.base", System.getProperty("shared.project.root")
                 + "/asapresource/MARYTTSIncremental/resource/MARYTTSIncremental");
         incTTSPlanner = new IncrementalTTSPlanner(mockBmlFeedbackManager, new PlanManager<IncrementalTTSUnit>(),
-                new PhraseIUManager(dispatcher,null), new NullPhonemeToVisemeMapping(), new HashSet<IncrementalLipSynchProvider>());
+                new PhraseIUManager(dispatcher,null,bmlScheduler), new NullPhonemeToVisemeMapping(), new HashSet<IncrementalLipSynchProvider>());
         plannerTests = new PlannerTests<IncrementalTTSUnit>(incTTSPlanner, bbPeg);
     }
 

@@ -12,6 +12,7 @@ import inpro.incremental.unit.IU.IUUpdateListener;
 import inpro.incremental.unit.PhraseIU;
 import inpro.incremental.unit.SysInstallmentIU;
 import inpro.synthesis.MaryAdapter;
+import inpro.synthesis.hts.LoudnessPostProcessor;
 
 import java.io.IOException;
 import java.util.Collection;
@@ -85,7 +86,7 @@ public class IUModuleTest
         dispatcher.close();        
     }
     
-    
+    @Ignore
     @Test
     public void testHesitation() throws InterruptedException, IOException
     {
@@ -129,23 +130,27 @@ public class IUModuleTest
     }
     
     
-    @Ignore
     @Test
-    public void test() throws InterruptedException
+    public void test() throws InterruptedException, IOException
     {
         System.setProperty("inpro.tts.voice", "dfki-prudence-hsmm");
         System.setProperty("inpro.tts.language", "en_GB");
 
-        //MaryAdapter.getInstance();    
+        MaryAdapter.getInstance();    
         DispatchStream dispatcher = SimpleMonitor.setupDispatcher(new Resources("").getURL("sphinx-config.xml"));
         
         MyIUModule mb = new MyIUModule();
         AdaptableSynthesisModule asm = new AdaptableSynthesisModule(dispatcher);
         mb.addListener(asm);
-        String str= "Tomorrow at 10 is the meeting with your brother. and at two o'clock you'll go shopping, and at eight is the gettogether in the bar";
         
         
+        LoudnessPostProcessor loudnessAdapter = new LoudnessPostProcessor();
+        asm.setFramePostProcessor(loudnessAdapter);
+
+        String str= "Tomorrow at 10 is the meeting with your brother, and at two o clock you will go shopping, and at eight is the gettogether in the bar";        
         PhraseIU piu = new PhraseIU(str);
+        
+        
         SysInstallmentIU sysiu = new SysInstallmentIU(str);
         for (IU word : sysiu.groundedIn())
         {
@@ -164,9 +169,14 @@ public class IUModuleTest
             word.updateOnGrinUpdates();
             word.addUpdateListener(l);
         }
+        loudnessAdapter.setLoudness(0);
         
+        Thread.sleep(500);
+        loudnessAdapter.setLoudness(70);
+        System.out.println("loudness = 70");
         
-        Thread.sleep(2000);
+        Thread.sleep(2500);
+        loudnessAdapter.setLoudness(-50);
         
         //control at phrase level?
         //asm.scaleTempo(2);
@@ -176,6 +186,7 @@ public class IUModuleTest
         //asm.stopAfterOngoingWord();
         
         
-        Thread.sleep(20000);
+        dispatcher.waitUntilDone();
+        dispatcher.close();
     }
 }

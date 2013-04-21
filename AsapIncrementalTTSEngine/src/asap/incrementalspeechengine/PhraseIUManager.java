@@ -7,10 +7,16 @@ import inpro.incremental.unit.EditMessage;
 import inpro.incremental.unit.HesitationIU;
 import inpro.incremental.unit.IU;
 import inpro.incremental.unit.PhraseIU;
-import inpro.incremental.unit.WordIU;
+import inpro.synthesis.hts.LoudnessPostProcessor;
 
+import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
+import java.util.concurrent.BlockingQueue;
+import java.util.concurrent.LinkedBlockingQueue;
+
+import lombok.Data;
+import asap.realizer.scheduler.BMLScheduler;
 
 class MyIUModule extends IUModule
 {
@@ -25,105 +31,153 @@ class MyIUModule extends IUModule
         rightBuffer.addToBuffer(iu);                
         notifyListeners();
     }
+}
+
+@Data
+class Phrase
+{
+    private final IU iu;
+    private final IU hes;
+    private final IncrementalTTSUnit ttsUnit;
+}
+
+class PhraseConsumer implements Runnable
+{
+    private final BlockingQueue<Phrase> phraseQueue;
+    private MyIUModule iuModule;
     
-    //setBuffer empty lists shuts up.
-    //rightbuffer.setBuffer(Collections.<IU>emptyList());
-    //doesn't work
+    public PhraseConsumer(BlockingQueue<Phrase> phraseQueue, MyIUModule iuModule)
+    {
+        this.phraseQueue = phraseQueue;
+        this.iuModule = iuModule;
+    }
     
+    @Override
+    public void run()
+    {
+        while(true)
+        {
+            try
+            {
+                Phrase p = phraseQueue.take();
+                iuModule.addToBuffer(p.getIu());
+                if(p.getHes()!=null)
+                {
+                    iuModule.addToBuffer(p.getHes());
+                }
+                p.getTtsUnit().addedToBuffer();
+            }
+            catch (InterruptedException e)
+            {
+                Thread.interrupted();
+            }            
+        }
+    }
     
-    //
 }
 
 public class PhraseIUManager
 {
-    private IncrementalTTSUnit currentTTSUnit;
-    private static final double MERGE_TIME = 0.001d;
-    private PhraseIU currentIU = null;
     private final MyIUModule iuModule = new MyIUModule();
     private final AdaptableSynthesisModule asm;
     private String voice;
+    private DispatchStream dispatcher;
+    private final BMLScheduler scheduler;
+    private final LoudnessPostProcessor loudnessAdapter;
+    private final BlockingQueue<Phrase> phraseQueue = new LinkedBlockingQueue<Phrase>();
     
-    public PhraseIUManager(DispatchStream dispatcher, String voice)
+    private List<IncrementalTTSUnit> currentTTSUnits = new ArrayList<>();
+    
+    public PhraseIUManager(DispatchStream dispatcher, String voice, BMLScheduler scheduler)
     {
         asm = new AdaptableSynthesisModule(dispatcher);
         this.voice = voice;
+        this.scheduler = scheduler;
         iuModule.addListener(asm);
+        loudnessAdapter = new LoudnessPostProcessor();
+        asm.setFramePostProcessor(loudnessAdapter);
+        
+        Thread conThread = new Thread(new PhraseConsumer(phraseQueue, iuModule));
+        conThread.start();
     }
     
-    private int getRemainingPhonemes(WordIU word)
+    /**
+     * Set loudness
+     * @param loudness between -100 and 100
+     */
+    public void setLoudness(int loudness)
     {
-        int i = 0;
-        for (IU phonemeIU : word.groundedIn())
-        {
-            if (phonemeIU.isCompleted())
-            {
-                i++;
-            }
-        }
-        return word.groundedIn().size() - i;
+        loudnessAdapter.setLoudness(loudness);
     }
+    
+    public double getCurrentTime()
+    {
+        return scheduler.getSchedulingTime();
+    }
+    
     
     /**
      * Appends synthesisIU to the currentIU if currentIU is ongoing, but finishes or relaxes within two phonemes AND
      * synthesisIU is supposed to start at either the relax time or the end time of the currentIU.
      */
-    public boolean justInTimeAppendIU(PhraseIU synthesisIU, IncrementalTTSUnit ttsCandidate)
+    public boolean justInTimeAppendIU(PhraseIU synthesisIU, HesitationIU hes, IncrementalTTSUnit ttsCandidate)
     {
-        if (currentIU == null || currentIU.isCompleted())
+        if (currentTTSUnits.isEmpty())return false;
+        IncrementalTTSUnit top = currentTTSUnits.get(currentTTSUnits.size()-1);
+        if(ttsCandidate.getTimePeg("start").getLocalValue()==0)
         {
-            return false;
+            //TODO: check if it connects with top
+            System.out.println("updateTiming: adding "+ttsCandidate.getBMLId()+" to buffer");
+            addIU(synthesisIU, hes, ttsCandidate);
+            return true;
         }
-        double timeDiffRelax = Math.abs(ttsCandidate.getStartTime() - currentTTSUnit.getRelaxTime());
-        double timeDiffEnd = Math.abs(ttsCandidate.getStartTime() - currentTTSUnit.getEndTime());
-        
-        WordIU lastWord = (WordIU)currentIU.groundedIn().get(currentIU.groundedIn().size() - 1);
-        
-        boolean merge = false;
-        if (lastWord.toPayLoad().equals("<hes>")&& timeDiffRelax < MERGE_TIME)
+        else
         {
-            lastWord = (WordIU)currentIU.groundedIn().get(currentIU.groundedIn().size() - 2);
-            merge = true;
-        }
-        else if(timeDiffEnd < MERGE_TIME && !lastWord.toPayLoad().equals("<hes>"))
-        {
-            merge = true;
-        }
-
-        if (merge)
-        {
-            if (getRemainingPhonemes(lastWord) <= 2)
-            {                
-                currentTTSUnit = ttsCandidate;
-                iuModule.addToBuffer(synthesisIU);
-                System.out.println("Adding "+ttsCandidate.getBMLId()+" to buffer");
-                return true;
-            }
-        }
+            //System.out.println(ttsCandidate.getBMLId()+"does not start at local time 0");
+        }        
         return false;
     }
 
+    
+    public void removeUnit(IncrementalTTSUnit ttsUnit)
+    {
+        currentTTSUnits.remove(ttsUnit);
+    }
+    
     public void playIU(PhraseIU synthesisIU, HesitationIU hes, IncrementalTTSUnit ttsUnit)
     {
-        if (currentTTSUnit == ttsUnit) return;// already added with appendIU
+        if(currentTTSUnits.contains(ttsUnit))return;
+        addIU(synthesisIU, hes, ttsUnit);        
+    }
 
+    private void addIU(PhraseIU synthesisIU, HesitationIU hes, IncrementalTTSUnit ttsUnit)
+    {
         if(voice!=null)
         {
             System.setProperty("inpro.tts.voice",voice);
-        }
-        currentTTSUnit = ttsUnit;
-        iuModule.addToBuffer(synthesisIU);
-        if(hes!=null)
+        }        
+        currentTTSUnits.add(ttsUnit);        
+        try
         {
-            iuModule.addToBuffer(hes);
+            phraseQueue.put(new Phrase(synthesisIU, hes, ttsUnit));
+        }
+        catch (InterruptedException e1)
+        {
+            Thread.interrupted();
         }
         System.out.println("Adding "+ttsUnit.getBMLId()+" to buffer");
-        
-        currentIU = synthesisIU;        
     }
     
     public void stopAfterOngoingWord()
     {
+        currentTTSUnits.clear();
         asm.stopAfterOngoingWord();
-        System.out.println("Remove All!");
+    }
+    
+    public void stopAfterOngoingPhoneme()
+    {
+        currentTTSUnits.clear();
+        phraseQueue.clear();
+        asm.stopAfterOngoingPhoneme();        
     }
 }
