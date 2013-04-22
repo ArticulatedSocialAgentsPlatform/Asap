@@ -12,12 +12,15 @@ import inpro.synthesis.hts.LoudnessPostProcessor;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
+import java.util.HashSet;
 import java.util.List;
 import java.util.concurrent.BlockingQueue;
 import java.util.concurrent.LinkedBlockingQueue;
 
 import lombok.Data;
 import lombok.extern.slf4j.Slf4j;
+import asap.realizer.scheduler.BMLBBlock;
+import asap.realizer.scheduler.BMLBlock;
 import asap.realizer.scheduler.BMLScheduler;
 
 class MyIUModule extends IUModule
@@ -32,6 +35,11 @@ class MyIUModule extends IUModule
     {
         rightBuffer.addToBuffer(iu);                
         notifyListeners();
+    }
+    
+    public void clearBuffer()
+    {
+        rightBuffer.setBuffer(new ArrayList<IU>());
     }
 }
 
@@ -134,12 +142,21 @@ public class PhraseIUManager
     {
         if (currentTTSUnits.isEmpty())return false;
         IncrementalTTSUnit top = currentTTSUnits.get(currentTTSUnits.size()-1);
-        if(ttsCandidate.getTimePeg("start").getLocalValue()==0 && !scheduler.isPending(ttsCandidate.getBMLId()))
+        if(ttsCandidate.getTimePeg("start").getLocalValue()==0 && !isPending(ttsCandidate.getBMLId()))
         {
-            //TODO: check if it connects with top
-            System.out.println("updateTiming: adding "+ttsCandidate.getBMLId()+" to buffer");
-            addIU(synthesisIU, hes, ttsCandidate);
-            return true;
+            BMLBlock b = scheduler.getBMLBlockManager().getBMLBlock(ttsCandidate.getBMLId());
+            if(b instanceof BMLBBlock)
+            {
+                BMLBBlock bb = (BMLBBlock)b;
+                if(bb.getChunkAfterSet().contains(top.getBMLId()))
+                {
+                    //TODO: check if top aligns with end/relax of its block
+                    
+                    System.out.println("updateTiming: adding "+ttsCandidate.getBMLId()+" to buffer");
+                    addIU(synthesisIU, hes, ttsCandidate);
+                    return true;
+                }
+            }
         }
         else
         {
@@ -148,6 +165,10 @@ public class PhraseIUManager
         return false;
     }
 
+    public boolean isPending(String bmlId)
+    {
+        return scheduler.isPending(bmlId);
+    }
     
     public void removeUnit(IncrementalTTSUnit ttsUnit)
     {
@@ -192,5 +213,6 @@ public class PhraseIUManager
         currentTTSUnits.clear();
         phraseQueue.clear();
         asm.stopAfterOngoingPhoneme();        
+        iuModule.clearBuffer();
     }
 }

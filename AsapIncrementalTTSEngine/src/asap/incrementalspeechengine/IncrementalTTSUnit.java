@@ -69,7 +69,7 @@ public class IncrementalTTSUnit extends TimedAbstractPlanUnit
     private Set<String> feedbackSent = Collections.synchronizedSet(new HashSet<String>());
     private final WordUpdateListener wul;
     private final SysInstallmentIU sysIU;
-    private double startDelay;
+    private double startDelay = 0;
     private int loudness = 0;
 
     // nr of the word after the sync => SyncId
@@ -328,11 +328,12 @@ public class IncrementalTTSUnit extends TimedAbstractPlanUnit
                 {
                     if (ph.isCompleted())
                     {
+                        System.out.println(" first word time " + firstWord.startTime()+ " ph time "+ph.endTime());
                         lastEnd = ph.endTime() - firstWord.startTime();
                     }
                 }
             }
-        }
+        }        
         return lastEnd;
     }
 
@@ -385,6 +386,9 @@ public class IncrementalTTSUnit extends TimedAbstractPlanUnit
         public void update(IU updatedIU)
         {
             startDelay = (iuManager.getCurrentTime() - getStartTime()) - getIUTime();
+            System.out.println(getBMLId() + " startDelay: " + startDelay + " currentTime " + (iuManager.getCurrentTime() - getStartTime())
+                    + " iu time " + getIUTime());
+
             updateEnd();
             updateRelax();
             updateSyncTiming();
@@ -579,10 +583,16 @@ public class IncrementalTTSUnit extends TimedAbstractPlanUnit
     @Override
     public void updateTiming(double time)
     {
+        if (iuManager.isPending(getBMLId()))
+        {
+            isScheduled = false;
+            return;
+        }
         if (!isScheduled)// && time > getStartTime() - 3d)
         {
             isScheduled = iuManager.justInTimeAppendIU(synthesisIU, hesitation, this);
         }
+
     }
 
     public void addedToBuffer()
@@ -609,23 +619,30 @@ public class IncrementalTTSUnit extends TimedAbstractPlanUnit
                 firstWord = hesitation.getWords().get(0);
             }
         }
-        endPeg.setGlobalValue(iuManager.getCurrentTime() + getPreferedDuration());
-        relaxPeg.setGlobalValue(getEndTime());
-        updateSyncTiming();
-        updateLipSync();
+
+        if (isPlaying())
+        {
+            endPeg.setGlobalValue(iuManager.getCurrentTime() + getPreferedDuration());
+            relaxPeg.setGlobalValue(getEndTime());
+            updateSyncTiming();
+            updateLipSync();
+        }
+        System.out.println("Added to buffer " + getBMLId() + " " + getStartTime() + "-" + getEndTime());
     }
 
     protected void startUnit(double time) throws TimedPlanUnitPlayException
     {
+
         endPeg.setGlobalValue(time + getPreferedDuration());
         relaxPeg.setGlobalValue(getEndTime());
         iuManager.setLoudness(0);
-        // updateSyncTiming();
-        // updateLipSync();
         feedback("start", time);
         iuManager.playIU(synthesisIU, hesitation, this);
+        updateSyncTiming();
+        updateLipSync();
         isScheduled = true;
         super.startUnit(time);
+        System.out.println("Started " + getBMLId() + " " + getStartTime() + "-" + getEndTime() + " currentTime: " + time);
     }
 
     @Override
@@ -645,8 +662,8 @@ public class IncrementalTTSUnit extends TimedAbstractPlanUnit
     public void interrupt(double time) throws TimedPlanUnitPlayException
     {
         super.stop(time);
-        iuManager.stopAfterOngoingWord();
-        // iuManager.stopAfterOngoingPhoneme();
+        // iuManager.stopAfterOngoingWord();
+        iuManager.stopAfterOngoingPhoneme();
     }
 
     @Override

@@ -86,7 +86,7 @@ public class IUModuleTest
         dispatcher.close();        
     }
     
-    
+    @Ignore
     @Test
     public void testHesitation() throws InterruptedException, IOException
     {
@@ -108,14 +108,14 @@ public class IUModuleTest
 //            word.addUpdateListener(l);
 //        }
 //        
-        String str2 = "world.";
-        PhraseIU piu2 = new PhraseIU(str2);
-        mb.addToBuffer(piu2);
-        for (IU word : piu2.getWords())
-        {
-            word.updateOnGrinUpdates();
-            word.addUpdateListener(l);
-        }
+//        String str2 = "world.";
+//        PhraseIU piu2 = new PhraseIU(str2);
+//        mb.addToBuffer(piu2);
+//        for (IU word : piu2.getWords())
+//        {
+//            word.updateOnGrinUpdates();
+//            word.addUpdateListener(l);
+//        }
         
         
         HesitationIU hes = new HesitationIU();
@@ -129,7 +129,7 @@ public class IUModuleTest
         dispatcher.close();        
     }
     
-    @Ignore
+    
     @Test
     public void testInterruptContinue() throws InterruptedException, IOException
     {
