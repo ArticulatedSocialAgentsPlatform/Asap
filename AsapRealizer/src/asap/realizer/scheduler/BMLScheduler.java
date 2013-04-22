@@ -373,6 +373,11 @@ public final class BMLScheduler
         pegBoard.removeBehaviour(bmlId, behaviourId);
     }
 
+    public boolean isPending(String bmlId)
+    {
+        return bmlBlocksManager.isPending(bmlId);
+    }
+    
     public double getStartTime(String bmlId)
     {
         return pegBoard.getBMLBlockTime(bmlId);
@@ -502,7 +507,7 @@ public final class BMLScheduler
 
         for (Engine e : getEngines())
         {
-            e.stopBehaviourBlock(bmlId, schedulingClock.getMediaSeconds());
+            e.interruptBehaviourBlock(bmlId, schedulingClock.getMediaSeconds());
         }
 
         if (bmlBlocksManager.getBMLBlockState(bmlId) == TimedPlanUnitState.IN_EXEC

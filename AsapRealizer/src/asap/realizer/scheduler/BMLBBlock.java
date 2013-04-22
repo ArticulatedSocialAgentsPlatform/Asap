@@ -1,6 +1,5 @@
 package asap.realizer.scheduler;
 
-
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashSet;
@@ -39,16 +38,35 @@ public class BMLBBlock extends AbstractBMLBlock
         onStartList.addAll(onStart);
         chunkAfterSet.addAll(chunkAfter);
     }
-    
+
+    private boolean isPending(Set<String> ids)
+    {
+        for (String bmlId : ids)
+        {
+            if (scheduler.isPending(bmlId))
+            {
+                return true;
+            }
+        }
+        return false;
+    }
+
+    @Override
+    public boolean isPending()
+    {
+        if (super.isPending()) return true;
+        if (isPending(chunkAfterSet))return true;
+        if (isPending(appendSet))return true;
+        return false;
+    }
+
     public void addChunkTarget(String bmlId)
     {
-        System.out.println("Adding chunk target "+bmlId+" to "+getBMLId());
-        chunkAfterSet.add(bmlId);        
+        chunkAfterSet.add(bmlId);
     }
-    
+
     public void addAppendTarget(String bmlId)
     {
-        System.out.println("Adding append target "+bmlId+" to "+getBMLId());
         appendSet.add(bmlId);
     }
 
@@ -56,12 +74,12 @@ public class BMLBBlock extends AbstractBMLBlock
     {
         return Collections.unmodifiableList(onStartList);
     }
-    
+
     public Set<String> getAppendSet()
     {
         return Collections.unmodifiableSet(appendSet);
     }
-    
+
     public Set<String> getChunkAfterSet()
     {
         return Collections.unmodifiableSet(chunkAfterSet);
@@ -81,7 +99,7 @@ public class BMLBBlock extends AbstractBMLBlock
         // one (or more) of the behaviors should start at local time 0. Find the timeshift that makes this happen
         for (BehaviorKey bk : cluster.getBehaviors())
         {
-            double startTime = pegBoard.getRelativePegTime(bmlId,bk.getBmlId(), bk.getBehaviorId(), "start");
+            double startTime = pegBoard.getRelativePegTime(bmlId, bk.getBmlId(), bk.getBehaviorId(), "start");
             if (startTime == TimePeg.VALUE_UNKNOWN)
             {
                 log.warn("Skipping realignment of behavior {}:{}, start peg not set.", bk.getBmlId(), bk.getBehaviorId());
@@ -89,14 +107,14 @@ public class BMLBBlock extends AbstractBMLBlock
             else if (startTime < shift)
             {
                 shift = startTime;
-                log.debug("TimeShift from {}:{} = {}",new Object[]{bk.getBmlId(),bk.getBehaviorId(),""+shift});                
+                log.debug("TimeShift from {}:{} = {}", new Object[] { bk.getBmlId(), bk.getBehaviorId(), "" + shift });
                 shiftRequired = true;
             }
         }
-        
+
         if (shiftRequired)
         {
-            log.debug("TimeShift set: {}",shift);
+            log.debug("TimeShift set: {}", shift);
             pegBoard.shiftCluster(cluster, -shift);
         }
     }

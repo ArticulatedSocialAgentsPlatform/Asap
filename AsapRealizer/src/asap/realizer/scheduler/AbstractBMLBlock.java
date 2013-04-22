@@ -46,6 +46,7 @@ public abstract class AbstractBMLBlock implements BMLBlock
         scheduler.blockStartFeedback(bmlId);
     }
 
+    
     public void activate()
     {
         state.set(TimedPlanUnitState.LURKING);
@@ -57,6 +58,12 @@ public abstract class AbstractBMLBlock implements BMLBlock
         scheduler.blockStopFeedback(bmlId);
     }
 
+    @Override
+    public boolean isPending()
+    {
+        return getState().equals(TimedPlanUnitState.PENDING);
+    }
+    
     protected boolean isFinished()
     {
         for (String behId : scheduler.getBehaviours(bmlId))

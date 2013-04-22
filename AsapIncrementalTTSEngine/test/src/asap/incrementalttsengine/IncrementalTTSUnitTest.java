@@ -98,6 +98,17 @@ public class IncrementalTTSUnitTest extends AbstractTimedPlanUnitTest
     }
 
     @Test
+    public void testEmptySpeech() throws TimedPlanUnitPlayException, InterruptedException
+    {
+        IncrementalTTSUnit ttsUnit = setupPlanUnit(fbManager, BMLBlockPeg.GLOBALPEG, "beh1", "bml1", 0, "");
+        fbManager.addFeedbackListener(new ListBMLFeedbackListener.Builder().feedBackList(fbList).build());
+        ttsUnit.setState(TimedPlanUnitState.LURKING);
+        ttsUnit.start(0);
+        ttsUnit.play(0);
+        ttsUnit.stop(10);
+    }
+    
+    @Test
     public void testStartRelaxEndFeedback() throws TimedPlanUnitPlayException, InterruptedException
     {
         IncrementalTTSUnit ttsUnit = setupPlanUnit(fbManager, BMLBlockPeg.GLOBALPEG, "beh1", "bml1", 0, "Hello world.");
@@ -105,10 +116,8 @@ public class IncrementalTTSUnitTest extends AbstractTimedPlanUnitTest
         ttsUnit.setState(TimedPlanUnitState.LURKING);
         ttsUnit.start(0);
         ttsUnit.play(0);
-        ttsUnit.stop(10);
-        assertEquals("start", fbList.get(0).getSyncId());
-        assertEquals("relax", fbList.get(1).getSyncId());
-        assertEquals("end", fbList.get(2).getSyncId());
+        dispatcher.waitUntilDone();
+        ttsUnit.stop(10);        
     }
 
     @Test

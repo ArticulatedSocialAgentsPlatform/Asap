@@ -40,6 +40,8 @@ public interface BMLBlock
      */
     void update(ImmutableMap<String,TimedPlanUnitState> allBlocks);
     
+    boolean isPending();
+    
     String getBMLId();
     void setState(TimedPlanUnitState state);
     TimedPlanUnitState getState();

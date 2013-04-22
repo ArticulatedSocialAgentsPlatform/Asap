@@ -86,7 +86,7 @@ public class IUModuleTest
         dispatcher.close();        
     }
     
-    @Ignore
+    
     @Test
     public void testHesitation() throws InterruptedException, IOException
     {
@@ -97,17 +97,17 @@ public class IUModuleTest
         MyIUModule mb = new MyIUModule();
         AdaptableSynthesisModule asm = new AdaptableSynthesisModule(dispatcher);
         mb.addListener(asm);
-        
-        String str= "Hello";        
-        PhraseIU piu = new PhraseIU(str);
-        mb.addToBuffer(piu);
         MyWordUpdateListener l = new MyWordUpdateListener();
-        for (IU word : piu.getWords())
-        {
-            word.updateOnGrinUpdates();
-            word.addUpdateListener(l);
-        }
-        
+//        String str= "Hello";        
+//        PhraseIU piu = new PhraseIU(str);
+//        mb.addToBuffer(piu);
+//        
+//        for (IU word : piu.getWords())
+//        {
+//            word.updateOnGrinUpdates();
+//            word.addUpdateListener(l);
+//        }
+//        
         String str2 = "world.";
         PhraseIU piu2 = new PhraseIU(str2);
         mb.addToBuffer(piu2);
@@ -129,7 +129,35 @@ public class IUModuleTest
         dispatcher.close();        
     }
     
+    @Ignore
+    @Test
+    public void testInterruptContinue() throws InterruptedException, IOException
+    {
+        System.setProperty("inpro.tts.voice", "dfki-prudence-hsmm");
+        System.setProperty("inpro.tts.language", "en_GB");
+
+        MaryAdapter.getInstance();    
+        DispatchStream dispatcher = SimpleMonitor.setupDispatcher(new Resources("").getURL("sphinx-config.xml"));
+        
+        MyIUModule mb = new MyIUModule();
+        AdaptableSynthesisModule asm = new AdaptableSynthesisModule(dispatcher);
+        mb.addListener(asm);
+
+        String str= "Tomorrow at 10 is the meeting with your brother, and at two o clock you will go shopping, and at eight is the gettogether in the bar";        
+        PhraseIU piu = new PhraseIU(str);
+        mb.addToBuffer(piu);
+        
+        Thread.sleep(1000);
+        asm.stopAfterOngoingPhoneme();        
+        
+        mb.addToBuffer(new PhraseIU("Hello world."));
+        Thread.sleep(500);        
+        
+        dispatcher.waitUntilDone();
+        dispatcher.close();
+    }
     
+    @Ignore
     @Test
     public void test() throws InterruptedException, IOException
     {
@@ -171,12 +199,14 @@ public class IUModuleTest
         }
         loudnessAdapter.setLoudness(0);
         
-        Thread.sleep(500);
-        loudnessAdapter.setLoudness(70);
-        System.out.println("loudness = 70");
+        Thread.sleep(1000);
+        asm.stopAfterOngoingPhoneme();
+        //loudnessAdapter.setLoudness(70);
+        //System.out.println("loudness = 70");
         
-        Thread.sleep(2500);
-        loudnessAdapter.setLoudness(-50);
+        mb.addToBuffer(new PhraseIU("Hello world."));
+        Thread.sleep(500);
+        //loudnessAdapter.setLoudness(-50);
         
         //control at phrase level?
         //asm.scaleTempo(2);

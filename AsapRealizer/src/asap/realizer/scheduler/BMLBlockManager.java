@@ -1,19 +1,16 @@
 package asap.realizer.scheduler;
 
-import saiba.bml.feedback.BMLBlockProgressFeedback;
-import saiba.bml.feedback.BMLSyncPointProgressFeedback;
-
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Map;
 import java.util.Set;
 import java.util.concurrent.ConcurrentHashMap;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
-import asap.realizer.planunit.TimedPlanUnitState;
+import lombok.extern.slf4j.Slf4j;
+import saiba.bml.feedback.BMLBlockProgressFeedback;
+import saiba.bml.feedback.BMLSyncPointProgressFeedback;
 import saiba.bml.feedback.BMLWarningFeedback;
+import asap.realizer.planunit.TimedPlanUnitState;
 
 import com.google.common.base.Objects;
 import com.google.common.collect.HashMultimap;
@@ -28,13 +25,12 @@ import com.google.common.collect.SetMultimap;
  * all other transitions are managed in the BMLBlock (extensions) themselves.
  * @author welberge
  */
+@Slf4j
 public final class BMLBlockManager
 {
     private final ConcurrentHashMap<String, BMLBlock> finishedBMLBlocks = new ConcurrentHashMap<String, BMLBlock>();
 
     private final ConcurrentHashMap<String, BMLBlock> BMLBlocks = new ConcurrentHashMap<String, BMLBlock>();
-
-    private final Logger logger = LoggerFactory.getLogger(BMLBlockManager.class.getName());
 
     private final SetMultimap<BehaviorKey, BMLSyncPointProgressFeedback> behaviorProgress;
 
@@ -81,6 +77,19 @@ public final class BMLBlockManager
         BMLBlocks.remove(bmlId);
         finishedBMLBlocks.remove(bmlId);
         updateBlocks();
+    }
+
+    /**
+     * A block is pending if this block or any of its append/chunkafter targets are pending
+     */
+    public boolean isPending(String bmlId)
+    {
+        BMLBlock b = getBMLBlock(bmlId);
+        if (b == null)
+        {
+            return false;
+        }
+        return b.isPending();
     }
 
     public void finishBlock(String bmlId)
@@ -145,12 +154,12 @@ public final class BMLBlockManager
             block.update(m);
         }
     }
-    
+
     public BMLBlock getBMLBlock(String bmlId)
     {
         return BMLBlocks.get(bmlId);
     }
-    
+
     public synchronized void clear()
     {
         finishedBMLBlocks.clear();
@@ -163,7 +172,7 @@ public final class BMLBlockManager
         BMLBlock bb = BMLBlocks.get(bmlId);
         if (bb == null)
         {
-            logger.warn("Attempting to activate unknown block {}", bmlId);
+            log.warn("Attempting to activate unknown block {}", bmlId);
             return;
         }
         bb.activate();
@@ -172,12 +181,12 @@ public final class BMLBlockManager
 
     public synchronized void blockProgress(BMLBlockProgressFeedback psf)
     {
-        if(psf.getSyncId().equals("end"))
+        if (psf.getSyncId().equals("end"))
         {
             BMLBlock block = BMLBlocks.get(psf.getBmlId());
             if (block == null)
             {
-                logger.warn("Performance stop of block " + psf.getBmlId() + " not managed by the BMLBlockManager");
+                log.warn("Performance stop of block " + psf.getBmlId() + " not managed by the BMLBlockManager");
                 return;
             }
         }
@@ -203,7 +212,7 @@ public final class BMLBlockManager
     public synchronized void syncProgress(BMLSyncPointProgressFeedback spp)
     {
         behaviorProgress.put(new BehaviorKey(spp.getBMLId(), spp.getBehaviourId()), spp);
-        logger.debug("Adding sync {}:{}:{} to behaviorProgress", new String[] { spp.getBMLId(), spp.getBehaviourId(), spp.getSyncId() });
+        log.debug("Adding sync {}:{}:{} to behaviorProgress", new String[] { spp.getBMLId(), spp.getBehaviourId(), spp.getSyncId() });
         for (BMLBlock block : BMLBlocks.values())
         {
             if (block.getBMLId().equals(spp.getBMLId()))

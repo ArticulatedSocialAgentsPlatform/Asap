@@ -20,6 +20,7 @@ import org.powermock.core.classloader.annotations.PrepareForTest;
 import org.powermock.modules.junit4.PowerMockRunner;
 
 import saiba.bml.feedback.BMLSyncPointProgressFeedback;
+import asap.realizer.pegboard.PegBoard;
 import asap.realizer.planunit.TimedPlanUnitState;
 /**
  * Unit test cases for the BMLBlockManager
@@ -110,5 +111,5 @@ public class BMLBlockManagerTest
         
         assertEquals(1,bbm.getSyncsPassed("bml2", "beh2").size());
         assertThat(bbm.getSyncsPassed("bml2", "beh2"),hasItem("start"));
-    }    
+    }   
 }

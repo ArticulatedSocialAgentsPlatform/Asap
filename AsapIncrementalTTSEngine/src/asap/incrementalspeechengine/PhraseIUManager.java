@@ -11,11 +11,13 @@ import inpro.synthesis.hts.LoudnessPostProcessor;
 
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.Collections;
 import java.util.List;
 import java.util.concurrent.BlockingQueue;
 import java.util.concurrent.LinkedBlockingQueue;
 
 import lombok.Data;
+import lombok.extern.slf4j.Slf4j;
 import asap.realizer.scheduler.BMLScheduler;
 
 class MyIUModule extends IUModule
@@ -41,6 +43,7 @@ class Phrase
     private final IncrementalTTSUnit ttsUnit;
 }
 
+@Slf4j
 class PhraseConsumer implements Runnable
 {
     private final BlockingQueue<Phrase> phraseQueue;
@@ -60,7 +63,10 @@ class PhraseConsumer implements Runnable
             try
             {
                 Phrase p = phraseQueue.take();
-                iuModule.addToBuffer(p.getIu());
+                if(p.getIu()!=null)
+                {
+                    iuModule.addToBuffer(p.getIu());
+                }
                 if(p.getHes()!=null)
                 {
                     iuModule.addToBuffer(p.getHes());
@@ -70,7 +76,11 @@ class PhraseConsumer implements Runnable
             catch (InterruptedException e)
             {
                 Thread.interrupted();
-            }            
+            }
+            catch (Exception ex)
+            {
+                log.warn("Exception ", ex);
+            }
         }
     }
     
@@ -86,7 +96,7 @@ public class PhraseIUManager
     private final LoudnessPostProcessor loudnessAdapter;
     private final BlockingQueue<Phrase> phraseQueue = new LinkedBlockingQueue<Phrase>();
     
-    private List<IncrementalTTSUnit> currentTTSUnits = new ArrayList<>();
+    private List<IncrementalTTSUnit> currentTTSUnits = Collections.synchronizedList(new ArrayList<IncrementalTTSUnit>());
     
     public PhraseIUManager(DispatchStream dispatcher, String voice, BMLScheduler scheduler)
     {
@@ -124,7 +134,7 @@ public class PhraseIUManager
     {
         if (currentTTSUnits.isEmpty())return false;
         IncrementalTTSUnit top = currentTTSUnits.get(currentTTSUnits.size()-1);
-        if(ttsCandidate.getTimePeg("start").getLocalValue()==0)
+        if(ttsCandidate.getTimePeg("start").getLocalValue()==0 && !scheduler.isPending(ttsCandidate.getBMLId()))
         {
             //TODO: check if it connects with top
             System.out.println("updateTiming: adding "+ttsCandidate.getBMLId()+" to buffer");
@@ -152,10 +162,12 @@ public class PhraseIUManager
 
     private void addIU(PhraseIU synthesisIU, HesitationIU hes, IncrementalTTSUnit ttsUnit)
     {
+        //TODO: move to PhraseConsumer
         if(voice!=null)
         {
             System.setProperty("inpro.tts.voice",voice);
-        }        
+        }  
+        
         currentTTSUnits.add(ttsUnit);        
         try
         {
@@ -171,6 +183,7 @@ public class PhraseIUManager
     public void stopAfterOngoingWord()
     {
         currentTTSUnits.clear();
+        phraseQueue.clear();
         asm.stopAfterOngoingWord();
     }
     
