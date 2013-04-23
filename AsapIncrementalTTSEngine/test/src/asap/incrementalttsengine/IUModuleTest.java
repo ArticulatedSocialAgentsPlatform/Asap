@@ -88,6 +88,14 @@ public class IUModuleTest
     
     @Ignore
     @Test
+    public void testEmptyPhraseIU()
+    {
+        PhraseIU iu = new PhraseIU("test");
+        iu.getWords();
+    }
+    
+    @Ignore
+    @Test
     public void testHesitation() throws InterruptedException, IOException
     {
         //MaryAdapter.getInstance();    

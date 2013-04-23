@@ -24,6 +24,7 @@ import java.util.Map;
 import java.util.Map.Entry;
 import java.util.Set;
 
+import lombok.Setter;
 import lombok.extern.slf4j.Slf4j;
 import saiba.bml.core.Behaviour;
 import asap.realizer.SyncPointNotFoundException;
@@ -64,13 +65,15 @@ public class IncrementalTTSUnit extends TimedAbstractPlanUnit
     private IU firstWord;
     private List<String> syncs = new ArrayList<>();
     private final PhraseIUManager iuManager;
-    private volatile boolean isScheduled = false;
+    @Setter
+    private volatile boolean scheduled = false;
     private int numwords;
     private Set<String> feedbackSent = Collections.synchronizedSet(new HashSet<String>());
     private final WordUpdateListener wul;
     private final SysInstallmentIU sysIU;
     private double startDelay = 0;
     private int loudness = 0;
+    private String textNoSync;
 
     // nr of the word after the sync => SyncId
     private final BiMap<Integer, String> syncMap = HashBiMap.create();
@@ -79,13 +82,32 @@ public class IncrementalTTSUnit extends TimedAbstractPlanUnit
     // syncName => TimePeg
     private Map<String, TimePeg> pegs = new HashMap<String, TimePeg>();
 
+    public void reset()
+    {
+        if (hesitation != null)
+        {
+            hesitation = new HesitationIU();
+        }
+        if (textNoSync.length() > 0)
+        {
+            synthesisIU = new PhraseIU(textNoSync);
+            lastWord = null;
+            for (WordIU word : sysIU.getWords())
+            {
+                lastWord = word;
+            }
+            firstWord = sysIU.getWords().get(0);
+        }
+        scheduled = false;
+    }
+
     public IncrementalTTSUnit(FeedbackManager fbm, BMLBlockPeg bmlPeg, String bmlId, String behId, String text, PhraseIUManager iuManager,
             Collection<IncrementalLipSynchProvider> lsProviders, PhonemeToVisemeMapping visemeMapping, Behaviour beh)
     {
         super(fbm, bmlPeg, bmlId, behId);
         this.lsProviders = ImmutableList.copyOf(lsProviders);
         this.iuManager = iuManager;
-        String textNoSync = BMLTextUtil.stripSyncs(text);
+        textNoSync = BMLTextUtil.stripSyncs(text);
         setupSyncs(textNoSync, text);
 
         String generateFiller = null;
@@ -263,14 +285,11 @@ public class IncrementalTTSUnit extends TimedAbstractPlanUnit
         if (syncMap.inverse().containsKey(syncId))
         {
             int i = syncMap.inverse().get(syncId);
-            synchronized (synthesisIU)
+            if (i >= getWords().size())
             {
-                if (i >= getWords().size())
-                {
-                    return 1;
-                }
-                return getWordStartTime(i) / getPreferedDuration();
+                return 1;
             }
+            return getWordStartTime(i) / getPreferedDuration();
         }
         return super.getRelativeTime(syncId);
     }
@@ -281,7 +300,12 @@ public class IncrementalTTSUnit extends TimedAbstractPlanUnit
         {
             int number = visemeMapping.getVisemeForPhoneme(PhonemeUtil.phonemeStringToInt(phIU.toPayLoad()));
             Visime viseme = new Visime(number, (int) (1000 * (phIU.endTime() - phIU.startTime())), false);
-            lsp.setLipSyncUnit(getBMLBlockPeg(), behavior, startDelay + phIU.startTime() - firstWord.startTime() + getStartTime(), viseme,
+            double fwTime = 0;
+            if(firstWord!=null)
+            {
+                fwTime = firstWord.startTime();
+            }
+            lsp.setLipSyncUnit(getBMLBlockPeg(), behavior, startDelay + phIU.startTime() - fwTime + getStartTime(), viseme,
                     phIU);
         }
     }
@@ -328,12 +352,12 @@ public class IncrementalTTSUnit extends TimedAbstractPlanUnit
                 {
                     if (ph.isCompleted())
                     {
-                        System.out.println(" first word time " + firstWord.startTime()+ " ph time "+ph.endTime());
+                        // System.out.println(" first word time " + firstWord.startTime()+ " ph time "+ph.endTime());
                         lastEnd = ph.endTime() - firstWord.startTime();
                     }
                 }
             }
-        }        
+        }
         return lastEnd;
     }
 
@@ -386,8 +410,8 @@ public class IncrementalTTSUnit extends TimedAbstractPlanUnit
         public void update(IU updatedIU)
         {
             startDelay = (iuManager.getCurrentTime() - getStartTime()) - getIUTime();
-            System.out.println(getBMLId() + " startDelay: " + startDelay + " currentTime " + (iuManager.getCurrentTime() - getStartTime())
-                    + " iu time " + getIUTime());
+            // System.out.println(getBMLId() + " startDelay: " + startDelay + " currentTime " + (iuManager.getCurrentTime() - getStartTime())
+            // + " iu time " + getIUTime());
 
             updateEnd();
             updateRelax();
@@ -402,16 +426,14 @@ public class IncrementalTTSUnit extends TimedAbstractPlanUnit
         if (stretch == value) return;
         stretch = value;
         log.debug("set stretch {}", value);
-        synchronized (synthesisIU)
+
+        for (SegmentIU seg : synthesisIU.getSegments())
         {
-            for (SegmentIU seg : synthesisIU.getSegments())
+            SysSegmentIU sseg = (SysSegmentIU) seg;
+            if (!seg.isCompleted() && !seg.isOngoing())
             {
-                SysSegmentIU sseg = (SysSegmentIU) seg;
-                if (!seg.isCompleted() && !seg.isOngoing())
-                {
-                    log.debug("setting segment stretch {}", value);
-                    sseg.stretchFromOriginal(value);
-                }
+                log.debug("setting segment stretch {}", value);
+                sseg.stretchFromOriginal(value);
             }
         }
     }
@@ -426,15 +448,12 @@ public class IncrementalTTSUnit extends TimedAbstractPlanUnit
     {
         if (pitchShiftInCent == value) return;
         pitchShiftInCent = value;
-        synchronized (synthesisIU)
+        for (SegmentIU seg : synthesisIU.getSegments())
         {
-            for (SegmentIU seg : synthesisIU.getSegments())
+            SysSegmentIU sseg = (SysSegmentIU) seg;
+            if (!seg.isCompleted() && !seg.isOngoing())
             {
-                SysSegmentIU sseg = (SysSegmentIU) seg;
-                if (!seg.isCompleted() && !seg.isOngoing())
-                {
-                    sseg.pitchShiftInCent = value;
-                }
+                sseg.pitchShiftInCent = value;
             }
         }
     }
@@ -585,18 +604,21 @@ public class IncrementalTTSUnit extends TimedAbstractPlanUnit
     {
         if (iuManager.isPending(getBMLId()))
         {
-            isScheduled = false;
+            scheduled = false;
             return;
         }
-        if (!isScheduled)// && time > getStartTime() - 3d)
+        if (!scheduled)// && time > getStartTime() - 3d)
         {
-            isScheduled = iuManager.justInTimeAppendIU(synthesisIU, hesitation, this);
+            iuManager.justInTimeAppendIU(synthesisIU, hesitation, this);
         }
 
     }
 
     public void addedToBuffer()
     {
+        // inbetween reset
+        if (synthesisIU != null && synthesisIU.groundedIn().isEmpty()) return;
+
         if (synthesisIU != null)
         {
             firstWord = synthesisIU.getWords().get(0);
@@ -627,7 +649,7 @@ public class IncrementalTTSUnit extends TimedAbstractPlanUnit
             updateSyncTiming();
             updateLipSync();
         }
-        System.out.println("Added to buffer " + getBMLId() + " " + getStartTime() + "-" + getEndTime());
+        // System.out.println("Added to buffer " + getBMLId() + " " + getStartTime() + "-" + getEndTime());
     }
 
     protected void startUnit(double time) throws TimedPlanUnitPlayException
@@ -637,12 +659,15 @@ public class IncrementalTTSUnit extends TimedAbstractPlanUnit
         relaxPeg.setGlobalValue(getEndTime());
         iuManager.setLoudness(0);
         feedback("start", time);
+        
+        scheduled = true;
         iuManager.playIU(synthesisIU, hesitation, this);
         updateSyncTiming();
         updateLipSync();
-        isScheduled = true;
+        
+        
         super.startUnit(time);
-        System.out.println("Started " + getBMLId() + " " + getStartTime() + "-" + getEndTime() + " currentTime: " + time);
+        // System.out.println("Started " + getBMLId() + " " + getStartTime() + "-" + getEndTime() + " currentTime: " + time);
     }
 
     @Override
