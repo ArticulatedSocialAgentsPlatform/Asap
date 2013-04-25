@@ -15,6 +15,7 @@ import inpro.audio.DispatchStream;
 import java.io.IOException;
 import java.util.ArrayList;
 
+import org.junit.After;
 import org.junit.AfterClass;
 import org.junit.Before;
 import org.junit.BeforeClass;
@@ -65,7 +66,7 @@ public class ScheduleriSSIntegrationTest extends SchedulerIntegrationTestCases
     private BMLBlockManager bbm = new BMLBlockManager();
     private FeedbackManager bfm = new FeedbackManagerImpl(bbm, "character1");
     private static final SoundManager soundManager = new LWJGLJoalSoundManager();
-    private static DispatchStream dispatcher = SimpleMonitor.setupDispatcher(new Resources("").getURL("sphinx-config.xml"));
+    private DispatchStream dispatcher = SimpleMonitor.setupDispatcher(new Resources("").getURL("sphinx-config.xml"));
 
     @BeforeClass
     public static void oneTimeSetUp()
@@ -80,10 +81,16 @@ public class ScheduleriSSIntegrationTest extends SchedulerIntegrationTestCases
     public static void oneTimeCleanup() throws IOException
     {
         Odejava.close();
-        soundManager.shutdown();
-        dispatcher.close();
+        soundManager.shutdown();        
     }
 
+    @After
+    public void after() throws IOException
+    {
+        dispatcher.waitUntilDone();
+        dispatcher.close();
+    }
+    
     @Before
     public void before() throws IOException
     {
