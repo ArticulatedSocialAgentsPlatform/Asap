@@ -15,7 +15,7 @@ import org.junit.Test;
 
 import done.inpro.system.carchase.HesitatingSynthesisIU;
 
-//@Ignore
+@Ignore
 public class IncrementalTTSTest
 {
     private static class MyWordUpdateListener implements IUUpdateListener

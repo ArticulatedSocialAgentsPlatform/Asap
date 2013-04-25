@@ -1,6 +1,7 @@
 package asap.incrementalttsengine;
 
 import static org.hamcrest.MatcherAssert.assertThat;
+import static org.hamcrest.Matchers.greaterThanOrEqualTo;
 import static org.hamcrest.number.OrderingComparison.greaterThan;
 import static org.hamcrest.number.OrderingComparison.lessThan;
 import static org.junit.Assert.assertEquals;
@@ -10,6 +11,7 @@ import hmi.util.Resources;
 import hmi.util.SystemClock;
 import inpro.apps.SimpleMonitor;
 import inpro.audio.DispatchStream;
+import inpro.synthesis.MaryAdapter;
 
 import java.io.IOException;
 import java.util.ArrayList;
@@ -60,11 +62,12 @@ public class IncrementalTTSUnitTest extends AbstractTimedPlanUnitTest
     private static final double SPEECH_RETIMING_PRECISION = 0.01;
     private PegBoard pegBoard = new PegBoard();
     private BMLScheduler bmlScheduler;
-
+    private SystemClock clock = new SystemClock();
+    
     @Before
     public void setup()
     {
-        SystemClock clock = new SystemClock();
+        MaryAdapter.getInstance();
         clock.start();        
         bmlScheduler = new BMLScheduler("id1", new BMLParser(), NullFeedbackManager.getInstance(),clock ,
                 new BMLASchedulingHandler(new SortedSmartBodySchedulingStrategy(pegBoard), pegBoard), new BMLBlockManager(), pegBoard);
@@ -128,13 +131,16 @@ public class IncrementalTTSUnitTest extends AbstractTimedPlanUnitTest
     }
 
     @Test
-    public void testSyncTiming() throws TimedPlanUnitPlayException
+    public void testSyncTiming() throws TimedPlanUnitPlayException, InterruptedException
     {
         IncrementalTTSUnit ttsUnit = setupPlanUnit(fbManager, BMLBlockPeg.GLOBALPEG, "beh1", "bml1", 0,
                 "<sync id=\"startS\"/>Hello <sync id=\"s1\"/> world.<sync id=\"endS\"/>");
         ttsUnit.setState(TimedPlanUnitState.LURKING);
         ttsUnit.start(0);
-        assertEquals(ttsUnit.getStartTime(), ttsUnit.getTime("startS"), TIMING_PRECISION);
+        Thread.sleep(200);
+        
+        assertThat(ttsUnit.getTime("startS"), greaterThanOrEqualTo(ttsUnit.getTime("start")));
+        assertThat(ttsUnit.getTime("s1"), greaterThan(ttsUnit.getTime("startS")));
         assertThat(ttsUnit.getTime("s1"), greaterThan(ttsUnit.getStartTime()));
         assertThat(ttsUnit.getTime("s1"), lessThan(ttsUnit.getEndTime()));
         assertEquals(ttsUnit.getEndTime(), ttsUnit.getTime("endS"), TIMING_PRECISION);
@@ -146,6 +152,7 @@ public class IncrementalTTSUnitTest extends AbstractTimedPlanUnitTest
         IncrementalTTSUnit ttsUnit = setupPlanUnit(fbManager, BMLBlockPeg.GLOBALPEG, "beh1", "bml1", 0, "Hello <sync id=\"s1\"/> world.");
         ttsUnit.setState(TimedPlanUnitState.LURKING);
         ttsUnit.start(0);
+        Thread.sleep(200);
         double t1 = ttsUnit.getTime("s1");
         ttsUnit.setFloatParameterValue("stretch", 2);
         dispatcher.waitUntilDone();
@@ -155,19 +162,23 @@ public class IncrementalTTSUnitTest extends AbstractTimedPlanUnitTest
     @Test
     public void testApplyTimeConstraints() throws TimedPlanUnitPlayException, InterruptedException
     {
-        IncrementalTTSUnit ttsUnit = setupPlanUnit(fbManager, BMLBlockPeg.GLOBALPEG, "beh1", "bml1", 0, "Hello <sync id=\"s1\"/> world.");
+        IncrementalTTSUnit ttsUnit = setupPlanUnit(fbManager, BMLBlockPeg.GLOBALPEG, "beh1", "bml1", 0, "Hello cruel <sync id=\"s1\"/>world.");
+        clock.setMediaSeconds(0);
+        
         fbManager.addFeedbackListener(new ListBMLFeedbackListener.Builder().feedBackList(fbList).build());
         ttsUnit.setTimePeg("start", TimePegUtil.createAbsoluteTimePeg(0));
-        ttsUnit.setTimePeg("s1", TimePegUtil.createAbsoluteTimePeg(1));
+        ttsUnit.setTimePeg("s1", TimePegUtil.createAbsoluteTimePeg(0.7));
         ttsUnit.setTimePeg("end", TimePegUtil.createAbsoluteTimePeg(1.25));
-        ttsUnit.applyTimeConstraints();
+        //ttsUnit.applyTimeConstraints();
         ttsUnit.setState(TimedPlanUnitState.LURKING);
         ttsUnit.start(0);
         ttsUnit.play(0);
+        Thread.sleep(500);
         dispatcher.waitUntilDone();
         ttsUnit.stop(10);
         assertEquals("s1", fbList.get(1).getSyncId());
-        assertEquals(1, fbList.get(1).getTime(), SPEECH_RETIMING_PRECISION);
+        assertEquals(0, fbList.get(0).getTime(), SPEECH_RETIMING_PRECISION);
+        assertEquals(0.7, fbList.get(1).getTime(), SPEECH_RETIMING_PRECISION);
         assertEquals(1.25, fbList.get(2).getTime(), SPEECH_RETIMING_PRECISION);
         assertEquals(1.25, fbList.get(3).getTime(), SPEECH_RETIMING_PRECISION);
     }
@@ -219,13 +230,14 @@ public class IncrementalTTSUnitTest extends AbstractTimedPlanUnitTest
     }
 
     @Test
-    public void testSyncFeedback() throws TimedPlanUnitPlayException
+    public void testSyncFeedback() throws TimedPlanUnitPlayException, InterruptedException
     {
         IncrementalTTSUnit ttsUnit = setupPlanUnit(fbManager, BMLBlockPeg.GLOBALPEG, "beh1", "bml1", 0, "Hello <sync id=\"s1\"/> world.");
         fbManager.addFeedbackListener(new ListBMLFeedbackListener.Builder().feedBackList(fbList).build());
         ttsUnit.setState(TimedPlanUnitState.LURKING);
         ttsUnit.start(0);
         ttsUnit.play(0);
+        Thread.sleep(500);
         dispatcher.waitUntilDone();
         ttsUnit.stop(10);
         assertEquals("start", fbList.get(0).getSyncId());
@@ -235,7 +247,7 @@ public class IncrementalTTSUnitTest extends AbstractTimedPlanUnitTest
     }
 
     @Test
-    public void testSyncFeedbackAtEnd() throws TimedPlanUnitPlayException
+    public void testSyncFeedbackAtEnd() throws TimedPlanUnitPlayException, InterruptedException
     {
         IncrementalTTSUnit ttsUnit = setupPlanUnit(fbManager, BMLBlockPeg.GLOBALPEG, "beh1", "bml1", 0,
                 "Hello <sync id=\"s1\"/> world<sync id=\"s2\"/>.");
@@ -243,11 +255,12 @@ public class IncrementalTTSUnitTest extends AbstractTimedPlanUnitTest
         ttsUnit.setState(TimedPlanUnitState.LURKING);
         ttsUnit.start(0);
         ttsUnit.play(0);
+        Thread.sleep(300);
         dispatcher.waitUntilDone();
         ttsUnit.stop(10);
         assertEquals("start", fbList.get(0).getSyncId());
-        assertEquals("s1", fbList.get(1).getSyncId());
-        assertEquals("s2", fbList.get(2).getSyncId());
+        assertEquals("Full feedback list:"+fbList, "s1", fbList.get(1).getSyncId());
+        assertEquals("Full feedback list:"+fbList, "s2", fbList.get(2).getSyncId());
         assertEquals("relax", fbList.get(3).getSyncId());
         assertEquals("end", fbList.get(4).getSyncId());
     }

@@ -199,11 +199,19 @@ public class IncrementalTTSUnit extends TimedAbstractPlanUnit
     @Override
     public void feedback(String syncId, double time)
     {
-        if (!feedbackSent.contains(syncId))
+        boolean fb = false;
+        synchronized (feedbackSent)
+        {
+            if (!feedbackSent.contains(syncId))
+            {
+                fb = true;
+                feedbackSent.add(syncId);
+            }            
+        }        
+        if(fb)
         {
             super.feedback(syncId, time);
         }
-        feedbackSent.add(syncId);
     }
 
     private void stretchWords(int j1, int j2, double stretch)
@@ -221,6 +229,9 @@ public class IncrementalTTSUnit extends TimedAbstractPlanUnit
 
     public void applyTimeConstraints()
     {
+        System.out.println("applyConstraints at time" +(iuManager.getCurrentTime()-getStartTime()));
+        System.out.println("start Delay" +startDelay);
+        
         List<Integer> syncOffsets = new ArrayList<>(syncMap.keySet());
         Collections.sort(syncOffsets);
 
@@ -228,7 +239,7 @@ public class IncrementalTTSUnit extends TimedAbstractPlanUnit
         int prevIndex = 0;
         double totalDuration = 0;
 
-        double prevTime = startPeg.getGlobalValue();
+        double prevTime = startPeg.getGlobalValue()+this.startDelay;
         for (int i : syncOffsets)
         {
             String sync = syncMap.get(i);
@@ -301,19 +312,17 @@ public class IncrementalTTSUnit extends TimedAbstractPlanUnit
             int number = visemeMapping.getVisemeForPhoneme(PhonemeUtil.phonemeStringToInt(phIU.toPayLoad()));
             Visime viseme = new Visime(number, (int) (1000 * (phIU.endTime() - phIU.startTime())), false);
             double fwTime = 0;
-            if(firstWord!=null)
+            if (firstWord != null)
             {
                 fwTime = firstWord.startTime();
             }
-            lsp.setLipSyncUnit(getBMLBlockPeg(), behavior, startDelay + phIU.startTime() - fwTime + getStartTime(), viseme,
-                    phIU);
+            lsp.setLipSyncUnit(getBMLBlockPeg(), behavior, startDelay + phIU.startTime() - fwTime + getStartTime(), viseme, phIU);
         }
     }
 
     private void updateFeedback()
     {
         int i = 0;
-
         IU lastWord = null;
         for (IU word : getWords())
         {
@@ -410,9 +419,6 @@ public class IncrementalTTSUnit extends TimedAbstractPlanUnit
         public void update(IU updatedIU)
         {
             startDelay = (iuManager.getCurrentTime() - getStartTime()) - getIUTime();
-            // System.out.println(getBMLId() + " startDelay: " + startDelay + " currentTime " + (iuManager.getCurrentTime() - getStartTime())
-            // + " iu time " + getIUTime());
-
             updateEnd();
             updateRelax();
             updateSyncTiming();
@@ -619,6 +625,7 @@ public class IncrementalTTSUnit extends TimedAbstractPlanUnit
         // inbetween reset
         if (synthesisIU != null && synthesisIU.groundedIn().isEmpty()) return;
 
+        
         if (synthesisIU != null)
         {
             firstWord = synthesisIU.getWords().get(0);
@@ -627,7 +634,7 @@ public class IncrementalTTSUnit extends TimedAbstractPlanUnit
                 word.updateOnGrinUpdates();
                 word.addUpdateListener(wul);
                 lastWord = word;
-            }
+            }        
         }
         if (hesitation != null)
         {
@@ -640,32 +647,46 @@ public class IncrementalTTSUnit extends TimedAbstractPlanUnit
             {
                 firstWord = hesitation.getWords().get(0);
             }
-        }
-
+        }        
+        
         if (isPlaying())
         {
+            System.out.println("isPlaying in addbuffer, update");
+            startDelay = (iuManager.getCurrentTime() - getStartTime()) - getIUTime();
+            
+            //TODO: renable
+            //applyTimeConstraints();
+            
             endPeg.setGlobalValue(iuManager.getCurrentTime() + getPreferedDuration());
             relaxPeg.setGlobalValue(getEndTime());
             updateSyncTiming();
-            updateLipSync();
+            updateLipSync();            
         }
+        
         // System.out.println("Added to buffer " + getBMLId() + " " + getStartTime() + "-" + getEndTime());
     }
 
     protected void startUnit(double time) throws TimedPlanUnitPlayException
     {
-
         endPeg.setGlobalValue(time + getPreferedDuration());
         relaxPeg.setGlobalValue(getEndTime());
+        
         iuManager.setLoudness(0);
         feedback("start", time);
         
+        if(scheduled)
+        {
+            //TODO: reenable
+            //applyTimeConstraints();
+            
+            updateSyncTiming();
+            updateLipSync();
+        }
         scheduled = true;
         iuManager.playIU(synthesisIU, hesitation, this);
-        updateSyncTiming();
-        updateLipSync();
         
         
+
         super.startUnit(time);
         // System.out.println("Started " + getBMLId() + " " + getStartTime() + "-" + getEndTime() + " currentTime: " + time);
     }

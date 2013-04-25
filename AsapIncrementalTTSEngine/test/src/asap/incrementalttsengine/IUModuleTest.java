@@ -94,6 +94,30 @@ public class IUModuleTest
         iu.getWords();
     }
     
+    
+    @Test
+    public void testFeedback() throws InterruptedException, IOException
+    {
+        System.setProperty("inpro.tts.voice", "dfki-prudence-hsmm");
+        System.setProperty("inpro.tts.language", "en_GB");
+        DispatchStream dispatcher = SimpleMonitor.setupDispatcher(new Resources("").getURL("sphinx-config.xml"));
+        MyIUModule mb = new MyIUModule();
+        AdaptableSynthesisModule asm = new AdaptableSynthesisModule(dispatcher);
+        mb.addListener(asm);
+        MyWordUpdateListener l = new MyWordUpdateListener();
+        
+        
+        PhraseIU p = new PhraseIU("Hello world");
+        mb.addToBuffer(p);        
+        for (IU word : p.getWords())
+        {
+            word.updateOnGrinUpdates();
+            word.addUpdateListener(l);
+        }
+        dispatcher.waitUntilDone();
+        dispatcher.close();  
+    }
+    
     @Ignore
     @Test
     public void testHesitation() throws InterruptedException, IOException
