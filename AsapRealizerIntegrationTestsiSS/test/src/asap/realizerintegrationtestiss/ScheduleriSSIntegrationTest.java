@@ -88,7 +88,7 @@ public class ScheduleriSSIntegrationTest extends SchedulerIntegrationTestCases
     public void before() throws IOException
     {
         PlanManager<IncrementalTTSUnit> planManager = new PlanManager<IncrementalTTSUnit>();
-        IncrementalTTSPlanner planner = new IncrementalTTSPlanner(bfm, planManager, new PhraseIUManager(dispatcher, null),
+        IncrementalTTSPlanner planner = new IncrementalTTSPlanner(bfm, planManager, new PhraseIUManager(dispatcher, null, null),
                 new NullPhonemeToVisemeMapping(), new ArrayList<IncrementalLipSynchProvider>());
         Engine speechEngine = new DefaultEngine<IncrementalTTSUnit>(planner, new DefaultPlayer(
                 new SingleThreadedPlanPlayer<IncrementalTTSUnit>(planManager)), planManager);

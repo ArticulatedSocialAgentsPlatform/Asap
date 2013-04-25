@@ -47,6 +47,7 @@
 
       <dependency org="logback" name="logback-classic"     rev="latest.release"  />   
       <dependency org="logback" name="logback-core"        rev="latest.release"  />   
+      <dependency org="inpro" name="inpro_iss"        rev="latest.release"  />   
       
          
    </dependencies>
