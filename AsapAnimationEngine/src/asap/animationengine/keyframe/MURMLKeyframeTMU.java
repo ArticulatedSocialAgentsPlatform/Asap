@@ -48,7 +48,7 @@ public class MURMLKeyframeTMU extends TimedAnimationMotionUnit
             case "strokeEnd":
             case "relax":
                 relaxPeg = sac.peg;
-                break;            
+                break;
             case "end":
                 endPeg = sac.peg;
                 break;
@@ -56,102 +56,138 @@ public class MURMLKeyframeTMU extends TimedAnimationMotionUnit
                 throw new BehaviourPlanningException(b, "Invalid sync " + sac.syncId + " for standalone MURMLKeyframeTMU.");
             }
         }
-        
-        
-        
+
         if (startPeg == null)
         {
-            startPeg = new TimePeg(bbPeg);            
-        }        
+            startPeg = new TimePeg(bbPeg);
+        }
         if (endPeg == null)
         {
-            endPeg = new TimePeg(bbPeg);            
+            endPeg = new TimePeg(bbPeg);
         }
         if (readyPeg == null)
         {
-            if(mu.getKeyPositions().size()>2)
+            if (mu.getKeyPositions().size() > 2)
             {
-                readyPeg = new TimePeg(bbPeg);                
+                readyPeg = new TimePeg(bbPeg);
             }
             else
             {
                 readyPeg = startPeg;
-            }            
+            }
         }
         if (relaxPeg == null)
         {
             relaxPeg = new TimePeg(bbPeg);
-            this.setTimePeg("relax",relaxPeg);
+            setTimePeg("relax", relaxPeg);
         }
 
+        /*
         double readyDuration = 0;
-        if(mu.getKeyPositions().size()>2)
+        if (mu.getKeyPositions().size() > 2)
         {
             readyDuration = mu.getPreparationDuration();
         }
+        */
         
-        if (startPeg.getGlobalValue() == TimePeg.VALUE_UNKNOWN &&
-            relaxPeg.getGlobalValue() == TimePeg.VALUE_UNKNOWN &&
-            readyPeg.getGlobalValue() == TimePeg.VALUE_UNKNOWN &&
-            endPeg.getGlobalValue() == TimePeg.VALUE_UNKNOWN)
+        //startPeg        
+        if (startPeg.getGlobalValue() == TimePeg.VALUE_UNKNOWN)
         {
-            startPeg.setLocalValue(0);
-            readyPeg.setLocalValue(readyDuration);
-            relaxPeg.setLocalValue(mu.getPreferedDuration());
-            endPeg.setLocalValue(mu.getPreferedDuration() + mu.getRetractionDuration());
-        }
-        else if (startPeg.getGlobalValue() != TimePeg.VALUE_UNKNOWN)
-        {
-            if (relaxPeg.getGlobalValue() == TimePeg.VALUE_UNKNOWN)
+            if (readyPeg.getGlobalValue() != TimePeg.VALUE_UNKNOWN)
             {
-                relaxPeg.setGlobalValue(startPeg.getGlobalValue() + mu.getPreferedDuration());                
+                startPeg.setGlobalValue(readyPeg.getGlobalValue()-mu.getPreparationDuration());
             }
-            if (endPeg.getGlobalValue() == TimePeg.VALUE_UNKNOWN)
+            else if(relaxPeg.getGlobalValue() != TimePeg.VALUE_UNKNOWN)
             {
-                endPeg.setGlobalValue(relaxPeg.getGlobalValue() + mu.getRetractionDuration());                
+                startPeg.setGlobalValue(readyPeg.getGlobalValue()-mu.getPreferedDuration());
             }
-            if (readyPeg.getGlobalValue() == TimePeg.VALUE_UNKNOWN)
+            else if(endPeg.getGlobalValue()!=TimePeg.VALUE_UNKNOWN)
             {
-                readyPeg.setGlobalValue(startPeg.getGlobalValue()+readyDuration);
+                startPeg.setGlobalValue(endPeg.getGlobalValue()-mu.getPreferedDuration()-mu.getRetractionDuration());
+            }
+            else
+            {
+                startPeg.setLocalValue(0);
             }
         }
-        else if (relaxPeg.getGlobalValue() != TimePeg.VALUE_UNKNOWN)
+        //readyPeg
+        if (readyPeg.getGlobalValue() == TimePeg.VALUE_UNKNOWN)
         {
-            startPeg.setGlobalValue(relaxPeg.getGlobalValue()-mu.getRetractionDuration());
-            if (endPeg.getGlobalValue() == TimePeg.VALUE_UNKNOWN)
-            {
-                endPeg.setGlobalValue(relaxPeg.getGlobalValue() + mu.getRetractionDuration());                
-            }
-            if (readyPeg.getGlobalValue() == TimePeg.VALUE_UNKNOWN)
-            {
-                readyPeg.setGlobalValue(startPeg.getGlobalValue()+readyDuration);
-            }
+            readyPeg.setGlobalValue(startPeg.getGlobalValue()+mu.getPreparationDuration());
         }
-        else if (readyPeg.getGlobalValue() != TimePeg.VALUE_UNKNOWN)
+        double prepDur = readyPeg.getGlobalValue()-startPeg.getGlobalValue();
+        if (relaxPeg.getGlobalValue() == TimePeg.VALUE_UNKNOWN)
         {
-            startPeg.setGlobalValue(readyPeg.getGlobalValue()-readyDuration);
-            if (relaxPeg.getGlobalValue() == TimePeg.VALUE_UNKNOWN)
-            {
-                relaxPeg.setGlobalValue(startPeg.getGlobalValue() + mu.getPreferedDuration());                
-            }
-            if (endPeg.getGlobalValue() == TimePeg.VALUE_UNKNOWN)
-            {
-                endPeg.setGlobalValue(relaxPeg.getGlobalValue() + mu.getRetractionDuration());                
-            }            
+            relaxPeg.setGlobalValue(readyPeg.getGlobalValue()+mu.getPreferedDuration()-prepDur);
         }
-        else
+        if (endPeg.getGlobalValue() == TimePeg.VALUE_UNKNOWN)
         {
-            relaxPeg.setGlobalValue(endPeg.getGlobalValue()-mu.getRetractionDuration());
-            startPeg.setGlobalValue(relaxPeg.getGlobalValue()-mu.getPreferedDuration());
-            readyPeg.setGlobalValue(startPeg.getGlobalValue()+readyDuration);
+            endPeg.setGlobalValue(relaxPeg.getGlobalValue()+mu.getRetractionDuration());
         }
-        setTimePeg("start",startPeg);
-        setTimePeg("ready",readyPeg);
-        setTimePeg("strokeStart",readyPeg);
-        setTimePeg("stroke",readyPeg);
-        setTimePeg("strokeEnd",relaxPeg);
-        setTimePeg("relax",relaxPeg);
-        setTimePeg("end",endPeg);
+        /*
+         * if (startPeg.getGlobalValue() == TimePeg.VALUE_UNKNOWN &&
+         * relaxPeg.getGlobalValue() == TimePeg.VALUE_UNKNOWN &&
+         * readyPeg.getGlobalValue() == TimePeg.VALUE_UNKNOWN &&
+         * endPeg.getGlobalValue() == TimePeg.VALUE_UNKNOWN)
+         * {
+         * startPeg.setLocalValue(0);
+         * readyPeg.setLocalValue(readyDuration);
+         * relaxPeg.setLocalValue(mu.getPreferedDuration());
+         * endPeg.setLocalValue(mu.getPreferedDuration() + mu.getRetractionDuration());
+         * }
+         * else if (startPeg.getGlobalValue() != TimePeg.VALUE_UNKNOWN)
+         * {
+         * if (relaxPeg.getGlobalValue() == TimePeg.VALUE_UNKNOWN)
+         * {
+         * relaxPeg.setGlobalValue(startPeg.getGlobalValue() + mu.getPreferedDuration());
+         * }
+         * if (endPeg.getGlobalValue() == TimePeg.VALUE_UNKNOWN)
+         * {
+         * endPeg.setGlobalValue(relaxPeg.getGlobalValue() + mu.getRetractionDuration());
+         * }
+         * if (readyPeg.getGlobalValue() == TimePeg.VALUE_UNKNOWN)
+         * {
+         * readyPeg.setGlobalValue(startPeg.getGlobalValue()+readyDuration);
+         * }
+         * }
+         * else if (relaxPeg.getGlobalValue() != TimePeg.VALUE_UNKNOWN)
+         * {
+         * startPeg.setGlobalValue(relaxPeg.getGlobalValue()-mu.getRetractionDuration());
+         * if (endPeg.getGlobalValue() == TimePeg.VALUE_UNKNOWN)
+         * {
+         * endPeg.setGlobalValue(relaxPeg.getGlobalValue() + mu.getRetractionDuration());
+         * }
+         * if (readyPeg.getGlobalValue() == TimePeg.VALUE_UNKNOWN)
+         * {
+         * readyPeg.setGlobalValue(startPeg.getGlobalValue()+readyDuration);
+         * }
+         * }
+         * else if (readyPeg.getGlobalValue() != TimePeg.VALUE_UNKNOWN)
+         * {
+         * startPeg.setGlobalValue(readyPeg.getGlobalValue()-readyDuration);
+         * if (relaxPeg.getGlobalValue() == TimePeg.VALUE_UNKNOWN)
+         * {
+         * relaxPeg.setGlobalValue(startPeg.getGlobalValue() + mu.getPreferedDuration());
+         * }
+         * if (endPeg.getGlobalValue() == TimePeg.VALUE_UNKNOWN)
+         * {
+         * endPeg.setGlobalValue(relaxPeg.getGlobalValue() + mu.getRetractionDuration());
+         * }
+         * }
+         * else
+         * {
+         * relaxPeg.setGlobalValue(endPeg.getGlobalValue()-mu.getRetractionDuration());
+         * startPeg.setGlobalValue(relaxPeg.getGlobalValue()-mu.getPreferedDuration());
+         * readyPeg.setGlobalValue(startPeg.getGlobalValue()+readyDuration);
+         * }
+         */
+        setTimePeg("start", startPeg);
+        setTimePeg("ready", readyPeg);
+        setTimePeg("strokeStart", readyPeg);
+        setTimePeg("stroke", readyPeg);
+        setTimePeg("strokeEnd", relaxPeg);
+        setTimePeg("relax", relaxPeg);
+        setTimePeg("end", endPeg);
     }
 
     @Override

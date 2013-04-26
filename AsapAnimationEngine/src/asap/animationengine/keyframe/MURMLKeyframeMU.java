@@ -109,6 +109,9 @@ public class MURMLKeyframeMU extends KeyFrameMotionUnit implements AnimationUnit
         return null;
     }
 
+    /**
+     * Prefered duration of retraction + stroke
+     */
     @Override
     public double getPreferedDuration()
     {
