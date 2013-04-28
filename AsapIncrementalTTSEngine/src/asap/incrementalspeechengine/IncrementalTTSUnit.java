@@ -69,8 +69,7 @@ public class IncrementalTTSUnit extends TimedAbstractPlanUnit
     private volatile boolean scheduled = false;
     private int numwords;
     private Set<String> feedbackSent = Collections.synchronizedSet(new HashSet<String>());
-    private final WordUpdateListener wul;
-    private final SysInstallmentIU sysIU;
+    private final WordUpdateListener wul;    
     private double startDelay = 0;
     private int loudness = 0;
     private String textNoSync;
@@ -91,12 +90,13 @@ public class IncrementalTTSUnit extends TimedAbstractPlanUnit
         if (textNoSync.length() > 0)
         {
             synthesisIU = new PhraseIU(textNoSync);
+            synthesisIU.preSynthesize();
             lastWord = null;
-            for (WordIU word : sysIU.getWords())
+            for (WordIU word : synthesisIU.getWords())
             {
                 lastWord = word;
             }
-            firstWord = sysIU.getWords().get(0);
+            firstWord = synthesisIU.getWords().get(0);
         }
         scheduled = false;
     }
@@ -131,18 +131,16 @@ public class IncrementalTTSUnit extends TimedAbstractPlanUnit
         if (textNoSync.length() > 0)
         {
             synthesisIU = new PhraseIU(textNoSync);
-            sysIU = new SysInstallmentIU(textNoSync);
-
+            synthesisIU.preSynthesize();
             lastWord = null;
-            for (WordIU word : sysIU.getWords())
+            for (WordIU word : synthesisIU.getWords())
             {
                 lastWord = word;
             }
-            firstWord = sysIU.getWords().get(0);
+            firstWord = synthesisIU.getWords().get(0);
         }
         else
         {
-            sysIU = null;
             synthesisIU = null;
         }
         this.visemeMapping = visemeMapping;
@@ -166,11 +164,6 @@ public class IncrementalTTSUnit extends TimedAbstractPlanUnit
         if (synthesisIU == null && hesitation != null)
         {
             return hesitation.getWords();
-        }
-
-        if (synthesisIU.groundedIn().isEmpty())
-        {
-            return sysIU.getWords();
         }
         if (hesitation == null)
         {
@@ -239,7 +232,7 @@ public class IncrementalTTSUnit extends TimedAbstractPlanUnit
         int prevIndex = 0;
         double totalDuration = 0;
 
-        double prevTime = startPeg.getGlobalValue()+this.startDelay;
+        double prevTime = startPeg.getGlobalValue()+startDelay;
         for (int i : syncOffsets)
         {
             String sync = syncMap.get(i);
@@ -674,17 +667,10 @@ public class IncrementalTTSUnit extends TimedAbstractPlanUnit
         iuManager.setLoudness(0);
         feedback("start", time);
         
-        if(scheduled)
-        {
-            //TODO: reenable
-            //applyTimeConstraints();
-            
-            updateSyncTiming();
-            updateLipSync();
-        }
         scheduled = true;
         iuManager.playIU(synthesisIU, hesitation, this);
-        
+        updateSyncTiming();
+        updateLipSync();
         
 
         super.startUnit(time);

@@ -59,7 +59,7 @@ public class IncrementalTTSUnitTest extends AbstractTimedPlanUnitTest
     private SpeechBehaviour mockSpeechBehaviour = mock(SpeechBehaviour.class);
     private DispatchStream dispatcher;
     private static final double TIMING_PRECISION = 0.0001;
-    private static final double SPEECH_RETIMING_PRECISION = 0.01;
+    private static final double SPEECH_RETIMING_PRECISION = 0.2; //TODO: more precision
     private PegBoard pegBoard = new PegBoard();
     private BMLScheduler bmlScheduler;
     private SystemClock clock = new SystemClock();
@@ -167,9 +167,9 @@ public class IncrementalTTSUnitTest extends AbstractTimedPlanUnitTest
         
         fbManager.addFeedbackListener(new ListBMLFeedbackListener.Builder().feedBackList(fbList).build());
         ttsUnit.setTimePeg("start", TimePegUtil.createAbsoluteTimePeg(0));
-        ttsUnit.setTimePeg("s1", TimePegUtil.createAbsoluteTimePeg(0.7));
+        ttsUnit.setTimePeg("s1", TimePegUtil.createAbsoluteTimePeg(1));
         ttsUnit.setTimePeg("end", TimePegUtil.createAbsoluteTimePeg(1.25));
-        //ttsUnit.applyTimeConstraints();
+        ttsUnit.applyTimeConstraints();
         ttsUnit.setState(TimedPlanUnitState.LURKING);
         ttsUnit.start(0);
         ttsUnit.play(0);
@@ -178,7 +178,7 @@ public class IncrementalTTSUnitTest extends AbstractTimedPlanUnitTest
         ttsUnit.stop(10);
         assertEquals("s1", fbList.get(1).getSyncId());
         assertEquals(0, fbList.get(0).getTime(), SPEECH_RETIMING_PRECISION);
-        assertEquals(0.7, fbList.get(1).getTime(), SPEECH_RETIMING_PRECISION);
+        assertEquals(1, fbList.get(1).getTime(), SPEECH_RETIMING_PRECISION);
         assertEquals(1.25, fbList.get(2).getTime(), SPEECH_RETIMING_PRECISION);
         assertEquals(1.25, fbList.get(3).getTime(), SPEECH_RETIMING_PRECISION);
     }
@@ -188,6 +188,7 @@ public class IncrementalTTSUnitTest extends AbstractTimedPlanUnitTest
     {
         IncrementalTTSUnit ttsUnit = setupPlanUnit(fbManager, BMLBlockPeg.GLOBALPEG, "beh1", "bml1", 0,
                 "Hello <sync id=\"s1\"/> world<sync id=\"s2\"/>.");
+        clock.setMediaSeconds(0);
         fbManager.addFeedbackListener(new ListBMLFeedbackListener.Builder().feedBackList(fbList).build());
         ttsUnit.setTimePeg("start", TimePegUtil.createAbsoluteTimePeg(0));
         ttsUnit.setTimePeg("s1", TimePegUtil.createAbsoluteTimePeg(1));
@@ -197,6 +198,7 @@ public class IncrementalTTSUnitTest extends AbstractTimedPlanUnitTest
         ttsUnit.setState(TimedPlanUnitState.LURKING);
         ttsUnit.start(0);
         ttsUnit.play(0);
+        Thread.sleep(500);
         dispatcher.waitUntilDone();
         ttsUnit.stop(10);
         assertEquals("s1", fbList.get(1).getSyncId());
@@ -209,6 +211,7 @@ public class IncrementalTTSUnitTest extends AbstractTimedPlanUnitTest
     public void testApplyTimeConstraintsAndStart() throws TimedPlanUnitPlayException, InterruptedException
     {
         IncrementalTTSUnit ttsUnit = setupPlanUnit(fbManager, BMLBlockPeg.GLOBALPEG, "beh1", "bml1", 0, "Hello <sync id=\"s1\"/> world.");
+        clock.setMediaSeconds(0.4);
         fbManager.addFeedbackListener(new ListBMLFeedbackListener.Builder().feedBackList(fbList).build());
         ttsUnit.setTimePeg("start", TimePegUtil.createAbsoluteTimePeg(0.4));
         ttsUnit.setTimePeg("s1", TimePegUtil.createAbsoluteTimePeg(0.7));
@@ -217,7 +220,8 @@ public class IncrementalTTSUnitTest extends AbstractTimedPlanUnitTest
         ttsUnit.setState(TimedPlanUnitState.LURKING);
         ttsUnit.start(0.4);
         ttsUnit.play(0.4);
-        dispatcher.waitUntilDone();
+        Thread.sleep(500);
+        dispatcher.waitUntilDone();        
         ttsUnit.stop(10);
         assertEquals("start", fbList.get(0).getSyncId());
         assertEquals(0.4, fbList.get(0).getTime(), SPEECH_RETIMING_PRECISION);
