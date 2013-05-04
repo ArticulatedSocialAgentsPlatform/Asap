@@ -19,6 +19,7 @@
  ******************************************************************************/
 package asap.environment;
 
+import hmi.environmentbase.CompoundLoader;
 import hmi.environmentbase.Embodiment;
 import hmi.environmentbase.EmbodimentLoader;
 import hmi.environmentbase.Environment;
@@ -38,8 +39,6 @@ import lombok.Setter;
 import lombok.extern.slf4j.Slf4j;
 
 import org.fest.swing.util.Arrays;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 import saiba.bml.core.Behaviour;
 import asap.environment.impl.ActivateEngineLoader;
@@ -236,6 +235,13 @@ public class AsapVirtualHuman
                 {
                     log.info("Adding engine {}", loader.getId());
                     engines.add(((EngineLoader) loader).getEngine());
+                }
+                if(loader instanceof CompoundLoader)
+                {
+                    for(Loader l: ((CompoundLoader)loader).getParts())
+                    {
+                        loaders.put(l.getId(),l);
+                    }
                 }
             }
 

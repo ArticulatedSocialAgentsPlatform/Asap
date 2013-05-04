@@ -33,6 +33,10 @@ public class BMLSchedulerAssemblerTest
     private static SchedulingHandler stubbedSchedulingHandler;
     private PegBoard pegBoard = new PegBoard();
     
+    /**
+     * SchedulingHandler test stub 
+     * @author Herwin
+     */
     public static class StubSchedulingHandler implements SchedulingHandler
     {
         private final SchedulingStrategy schedulingStrategy;
