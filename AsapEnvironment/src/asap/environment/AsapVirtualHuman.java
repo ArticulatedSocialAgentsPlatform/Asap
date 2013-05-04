@@ -35,6 +35,7 @@ import java.util.Map.Entry;
 import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.Setter;
+import lombok.extern.slf4j.Slf4j;
 
 import org.fest.swing.util.Arrays;
 import org.slf4j.Logger;
@@ -55,10 +56,9 @@ import asap.realizerport.RealizerPort;
 /**
  * Loads and unloads an AsapVirtualHuman and provides access to its elements (realizer, embodiments, engines, etc)
  */
+@Slf4j
 public class AsapVirtualHuman
 {
-    private Logger logger = LoggerFactory.getLogger(AsapVirtualHuman.class.getName());
-
     /** "human readable name" */
     @Getter
     @Setter(AccessLevel.PROTECTED)
@@ -186,41 +186,22 @@ public class AsapVirtualHuman
                 String id = adapter.getRequiredAttribute("id", attrMap, theTokenizer);
                 String loaderClass = adapter.getRequiredAttribute("loader", attrMap, theTokenizer);
                 String requiredLoaderIds = adapter.getOptionalAttribute("requiredloaders", attrMap, "");
-                try
-                {
-                    loader = (Loader) Class.forName(loaderClass).newInstance();
-                }
-                catch (InstantiationException e)
-                {
-                    throw theTokenizer.getXMLScanException("InstantiationException while starting Loader " + loaderClass);
-                }
-                catch (IllegalAccessException e)
-                {
-                    throw theTokenizer.getXMLScanException("IllegalAccessException while starting Loader " + loaderClass);
-                }
-                catch (ClassNotFoundException e)
-                {
-                    throw theTokenizer.getXMLScanException("ClassNotFoundException while starting Loader " + loaderClass);
-                }
-                catch (ClassCastException e)
-                {
-                    throw theTokenizer.getXMLScanException("ClassCastException while starting Loader " + loaderClass);
-                }
+                loader = constructLoader(loaderClass);
 
                 if (!(loader instanceof AsapRealizerEmbodiment))
                 {
-                    logger.error("AsapVirtualHuman: The first loader *must* be a AsapRealizerEmbodiment");
+                    log.error("AsapVirtualHuman: The first loader *must* be a AsapRealizerEmbodiment");
                     throw new RuntimeException("AsapVirtualHuman: The first loader *must* be a AsapRealizerEmbodiment");
                 }
 
                 if (!requiredLoaderIds.equals(""))
                 {
-                    logger.error("AsapVirtualHuman: no required loaders allowed for AsapRealizerEmbodiment");
+                    log.error("AsapVirtualHuman: no required loaders allowed for AsapRealizerEmbodiment");
                     throw new RuntimeException("AsapVirtualHuman: no required loaders allowed for AsapRealizerEmbodiment");
                 }
                 are = (AsapRealizerEmbodiment) loader;
                 theTokenizer.takeSTag("Loader");
-                logger.debug("Parsing Loader: {}", id);
+                log.debug("Parsing Loader: {}", id);
                 loader.readXML(theTokenizer, id, vhId, name, allEnvironments, new Loader[] { sel });
                 theTokenizer.takeETag("Loader");
                 loaders.put(id, loader);
@@ -245,34 +226,15 @@ public class AsapVirtualHuman
                 }
                 // always add "are" -- just in case someone forgets
                 requiredLoaders.add(are);
-                try
-                {
-                    loader = (Loader) Class.forName(loaderClass).newInstance();
-                }
-                catch (InstantiationException e)
-                {
-                    throw theTokenizer.getXMLScanException("InstantiationException while starting Loader " + loaderClass);
-                }
-                catch (IllegalAccessException e)
-                {
-                    throw theTokenizer.getXMLScanException("IllegalAccessException while starting Loader " + loaderClass);
-                }
-                catch (ClassNotFoundException e)
-                {
-                    throw theTokenizer.getXMLScanException("ClassNotFoundException while starting Loader " + loaderClass);
-                }
-                catch (ClassCastException e)
-                {
-                    throw theTokenizer.getXMLScanException("ClassCastException while starting Loader " + loaderClass);
-                }
+                loader = constructLoader(loaderClass);                
                 theTokenizer.takeSTag("Loader");
-                logger.debug("Parsing Loader: {}", id);
+                log.debug("Parsing Loader: {}", id);
                 loader.readXML(theTokenizer, id, vhId, name, allEnvironments, requiredLoaders.toArray(new Loader[0]));
                 theTokenizer.takeETag("Loader");
                 loaders.put(id, loader);
                 if (loader instanceof EngineLoader)
                 {
-                    logger.info("Adding engine {}", loader.getId());
+                    log.info("Adding engine {}", loader.getId());
                     engines.add(((EngineLoader) loader).getEngine());
                 }
             }
@@ -322,6 +284,32 @@ public class AsapVirtualHuman
 
     }
 
+    private Loader constructLoader(String loaderClass)
+    {
+        Loader loader = null;
+        try
+        {
+            loader = (Loader) Class.forName(loaderClass).newInstance();
+        }
+        catch (InstantiationException e)
+        {
+            throw theTokenizer.getXMLScanException("InstantiationException while starting Loader " + loaderClass);
+        }
+        catch (IllegalAccessException e)
+        {
+            throw theTokenizer.getXMLScanException("IllegalAccessException while starting Loader " + loaderClass);
+        }
+        catch (ClassNotFoundException e)
+        {
+            throw theTokenizer.getXMLScanException("ClassNotFoundException while starting Loader " + loaderClass);
+        }
+        catch (ClassCastException e)
+        {
+            throw theTokenizer.getXMLScanException("ClassCastException while starting Loader " + loaderClass);
+        }
+        return loader;
+    }
+
     private void loadBMLRoutingSection() throws IOException
     {
         attrMap = theTokenizer.getAttributes();
@@ -345,7 +333,7 @@ public class AsapVirtualHuman
             }
             if (engine == null)
             {
-                logger.error("Cannot find engine with id \"{}\"", engineId);
+                log.error("Cannot find engine with id \"{}\"", engineId);
             }
             else
             {
@@ -360,13 +348,13 @@ public class AsapVirtualHuman
                     }
                     else
                     {
-                        logger.error("The class \"{}\" is not a bml Behaviour class", behaviorClassName);
+                        log.error("The class \"{}\" is not a bml Behaviour class", behaviorClassName);
                     }
                 }
                 catch (Exception e)
                 {
-                    logger.error("Cannot find behaviorclass \"{}\"", behaviorClassName);
-                    logger.debug("Exception: ", e);
+                    log.error("Cannot find behaviorclass \"{}\"", behaviorClassName);
+                    log.debug("Exception: ", e);
                 }
             }
             theTokenizer.takeSTag("Route");
