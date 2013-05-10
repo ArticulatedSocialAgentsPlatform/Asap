@@ -24,6 +24,7 @@ import hmi.environmentbase.EmbodimentLoader;
 import hmi.environmentbase.Environment;
 import hmi.environmentbase.Loader;
 import hmi.util.Clock;
+import hmi.xml.XMLScanException;
 import hmi.xml.XMLStructureAdapter;
 import hmi.xml.XMLTokenizer;
 
@@ -38,8 +39,6 @@ import lombok.Setter;
 import lombok.extern.slf4j.Slf4j;
 
 import org.fest.swing.util.Arrays;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 import saiba.bml.core.Behaviour;
 import asap.environment.impl.ActivateEngineLoader;
@@ -88,6 +87,7 @@ public class AsapVirtualHuman
     /** Needed to add any loaded engines to the environment */
     private AsapEnvironment ae = null;
 
+    @Getter(AccessLevel.PROTECTED)
     private AsapRealizerEmbodiment are = null;
 
     /** Needed during the loading process in order to offer all other loaders access to the full list of available environments */
@@ -348,13 +348,13 @@ public class AsapVirtualHuman
                     }
                     else
                     {
-                        log.error("The class \"{}\" is not a bml Behaviour class", behaviorClassName);
+                        throw new XMLScanException("The class \""+behaviorClassName+"\" is not a bml Behaviour class");
                     }
                 }
                 catch (Exception e)
                 {
                     log.error("Cannot find behaviorclass \"{}\"", behaviorClassName);
-                    log.debug("Exception: ", e);
+                    throw new XMLScanException("Cannot find behaviorclass "+behaviorClassName,e);
                 }
             }
             theTokenizer.takeSTag("Route");
