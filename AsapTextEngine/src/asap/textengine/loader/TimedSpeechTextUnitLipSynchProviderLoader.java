@@ -28,7 +28,6 @@ import java.io.IOException;
 
 import asap.realizer.lipsync.LipSynchProvider;
 import asap.realizerembodiments.LipSynchProviderLoader;
-import asap.textengine.TextEngineLoader;
 import asap.textengine.lipsync.TimedSpeechTextUnitLipSynchProvider;
 
 /**

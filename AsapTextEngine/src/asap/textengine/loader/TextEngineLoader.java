@@ -17,19 +17,18 @@
  * You should have received a copy of the GNU General Public License
  * along with Elckerlyc.  If not, see http://www.gnu.org/licenses/.
  ******************************************************************************/
-package asap.textengine;
+package asap.textengine.loader;
 
 import hmi.environmentbase.EmbodimentLoader;
 import hmi.environmentbase.Environment;
 import hmi.environmentbase.Loader;
 import hmi.textembodiments.TextEmbodiment;
+import hmi.util.ArrayUtils;
 import hmi.xml.XMLTokenizer;
 
 import java.io.IOException;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
+import lombok.extern.slf4j.Slf4j;
 import asap.realizer.DefaultEngine;
 import asap.realizer.DefaultPlayer;
 import asap.realizer.Engine;
@@ -40,15 +39,16 @@ import asap.realizer.planunit.PlanPlayer;
 import asap.realizer.planunit.SingleThreadedPlanPlayer;
 import asap.realizerembodiments.AsapRealizerEmbodiment;
 import asap.realizerembodiments.EngineLoader;
+import asap.textengine.EmbodimentTextOutput;
+import asap.textengine.TextOutput;
+import asap.textengine.TextPlanner;
+import asap.textengine.TimedSpeechTextUnit;
 
 /**
  * Handles the construction of a TextEngine through its XML specification.
  */
 public class TextEngineLoader implements EngineLoader
 {
-    @SuppressWarnings("unused")
-    private static Logger logger = LoggerFactory.getLogger(TextEngineLoader.class.getName());
-
     private TextEmbodiment te = null;
 
     private Engine engine = null;
@@ -67,12 +67,16 @@ public class TextEngineLoader implements EngineLoader
             Loader... requiredLoaders) throws IOException
     {
         id = loaderId;
-        for (Loader e : requiredLoaders)
+        for (EmbodimentLoader e : ArrayUtils.getClassesOfType(requiredLoaders, EmbodimentLoader.class))
         {
-            if (e instanceof EmbodimentLoader && ((EmbodimentLoader) e).getEmbodiment() instanceof TextEmbodiment) te = (TextEmbodiment) ((EmbodimentLoader) e)
-                    .getEmbodiment();
-            if (e instanceof EmbodimentLoader && ((EmbodimentLoader) e).getEmbodiment() instanceof AsapRealizerEmbodiment) are = (AsapRealizerEmbodiment) ((EmbodimentLoader) e)
-                    .getEmbodiment();
+            if (e.getEmbodiment() instanceof TextEmbodiment)
+            {
+                te = (TextEmbodiment) e.getEmbodiment();
+            }
+            if (e.getEmbodiment() instanceof AsapRealizerEmbodiment)
+            {
+                are = (AsapRealizerEmbodiment) e.getEmbodiment();
+            }
         }
         if (are == null)
         {
