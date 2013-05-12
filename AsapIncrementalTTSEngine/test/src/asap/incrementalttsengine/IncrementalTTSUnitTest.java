@@ -150,11 +150,12 @@ public class IncrementalTTSUnitTest extends AbstractTimedPlanUnitTest
     public void testSyncTimingUpdate() throws ParameterException, TimedPlanUnitPlayException, InterruptedException
     {
         IncrementalTTSUnit ttsUnit = setupPlanUnit(fbManager, BMLBlockPeg.GLOBALPEG, "beh1", "bml1", 0, "Hello <sync id=\"s1\"/> world.");
+        clock.setMediaSeconds(0);
         ttsUnit.setState(TimedPlanUnitState.LURKING);
-        ttsUnit.start(0);
-        Thread.sleep(200);
+        ttsUnit.start(0);        
         double t1 = ttsUnit.getTime("s1");
         ttsUnit.setFloatParameterValue("stretch", 2);
+        Thread.sleep(200);
         dispatcher.waitUntilDone();
         assertThat(ttsUnit.getTime("s1"), greaterThan(t1));
     }
