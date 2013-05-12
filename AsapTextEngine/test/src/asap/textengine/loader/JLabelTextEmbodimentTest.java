@@ -29,7 +29,7 @@ public class JLabelTextEmbodimentTest
     private JComponentEmbodimentLoader mockJComponenentEmbodimentLoader = mock(JComponentEmbodimentLoader.class);
     
     @Test
-    public void test() throws IOException
+    public void test() throws IOException, InterruptedException
     {
         when(mockJComponenentEmbodimentLoader.getEmbodiment()).thenReturn(mockComponentEmbodiment);
         String loaderStr = "<Loader id=\"pictureengine\" loader=\"asap.textengine.loader.JLabelTextEmbodiment\"/>";
@@ -37,6 +37,7 @@ public class JLabelTextEmbodimentTest
         XMLTokenizer tok = new XMLTokenizer(loaderStr);
         tok.takeSTag();
         loader.readXML(tok, "pa1", "billie", "billie", new Environment[0], new Loader[]{mockJComponenentEmbodimentLoader});
+        Thread.sleep(500);
         verify(mockComponentEmbodiment).addJComponent(any(JLabel.class));
     }
 }
