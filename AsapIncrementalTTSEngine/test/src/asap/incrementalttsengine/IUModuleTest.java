@@ -26,18 +26,24 @@ class MyIUModule extends IUModule
     @Override
     protected void leftBufferUpdate(Collection<? extends IU> arg0, List<? extends EditMessage<? extends IU>> arg1)
     {
-                        
-    }     
-    
+
+    }
+
     public void addToBuffer(IU iu)
     {
-        rightBuffer.addToBuffer(iu);                
+        rightBuffer.addToBuffer(iu);
         notifyListeners();
     }
 }
 
 public class IUModuleTest
 {
+    static
+    {
+        System.setProperty("mary.base", System.getProperty("shared.project.root")
+                + "/asapresource/MARYTTSIncremental/resource/MARYTTSIncremental");
+    }
+
     private static class MyWordUpdateListener implements IUUpdateListener
     {
         @Override
@@ -56,36 +62,36 @@ public class IUModuleTest
 
         }
     }
-    
+
     @Ignore
     @Test
     public void testPhraseVSIncremental() throws InterruptedException, IOException
     {
-        //MaryAdapter.getInstance();    
+        // MaryAdapter.getInstance();
         System.setProperty("inpro.tts.voice", "dfki-prudence-hsmm");
         System.setProperty("inpro.tts.language", "en_GB");
         DispatchStream dispatcher = SimpleMonitor.setupDispatcher(new Resources("").getURL("sphinx-config.xml"));
-        
-        String str= "Tomorow at 10 is the meeting with your brother, and at two o clock you will go shopping, and at eight is the gettogether in the bar.";
+
+        String str = "Tomorow at 10 is the meeting with your brother, and at two o clock you will go shopping, and at eight is the gettogether in the bar.";
         MyIUModule mb = new MyIUModule();
         AdaptableSynthesisModule asm = new AdaptableSynthesisModule(dispatcher);
         mb.addListener(asm);
-        
+
         PhraseIU piu = new PhraseIU(str);
         mb.addToBuffer(piu);
-        dispatcher.waitUntilDone();        
-        
+        dispatcher.waitUntilDone();
+
         String strsplit[] = { "Tomorrow at 10", "is the meeting with your brother,", "and at two o clock", "you will go shopping,",
                 "and at eight", "is the gettogether", "in the bar." };
-        for(String s:strsplit)
+        for (String s : strsplit)
         {
             PhraseIU p = new PhraseIU(s);
             mb.addToBuffer(p);
-        }  
+        }
         dispatcher.waitUntilDone();
-        dispatcher.close();        
+        dispatcher.close();
     }
-    
+
     @Ignore
     @Test
     public void testEmptyPhraseIU()
@@ -93,8 +99,7 @@ public class IUModuleTest
         PhraseIU iu = new PhraseIU("test");
         iu.getWords();
     }
-    
-    
+
     @Test
     public void testFeedback() throws InterruptedException, IOException
     {
@@ -105,24 +110,23 @@ public class IUModuleTest
         AdaptableSynthesisModule asm = new AdaptableSynthesisModule(dispatcher);
         mb.addListener(asm);
         MyWordUpdateListener l = new MyWordUpdateListener();
-        
-        
+
         PhraseIU p = new PhraseIU("Hello world");
-        mb.addToBuffer(p);        
+        mb.addToBuffer(p);
         for (IU word : p.getWords())
         {
             word.updateOnGrinUpdates();
             word.addUpdateListener(l);
         }
         dispatcher.waitUntilDone();
-        dispatcher.close();  
+        dispatcher.close();
     }
-    
+
     @Ignore
     @Test
     public void testHesitation() throws InterruptedException, IOException
     {
-        //MaryAdapter.getInstance();    
+        // MaryAdapter.getInstance();
         System.setProperty("inpro.tts.voice", "dfki-prudence-hsmm");
         System.setProperty("inpro.tts.language", "en_GB");
         DispatchStream dispatcher = SimpleMonitor.setupDispatcher(new Resources("").getURL("sphinx-config.xml"));
@@ -130,65 +134,63 @@ public class IUModuleTest
         AdaptableSynthesisModule asm = new AdaptableSynthesisModule(dispatcher);
         mb.addListener(asm);
         MyWordUpdateListener l = new MyWordUpdateListener();
-//        String str= "Hello";        
-//        PhraseIU piu = new PhraseIU(str);
-//        mb.addToBuffer(piu);
-//        
-//        for (IU word : piu.getWords())
-//        {
-//            word.updateOnGrinUpdates();
-//            word.addUpdateListener(l);
-//        }
-//        
-//        String str2 = "world.";
-//        PhraseIU piu2 = new PhraseIU(str2);
-//        mb.addToBuffer(piu2);
-//        for (IU word : piu2.getWords())
-//        {
-//            word.updateOnGrinUpdates();
-//            word.addUpdateListener(l);
-//        }
-        
-        
+        // String str= "Hello";
+        // PhraseIU piu = new PhraseIU(str);
+        // mb.addToBuffer(piu);
+        //
+        // for (IU word : piu.getWords())
+        // {
+        // word.updateOnGrinUpdates();
+        // word.addUpdateListener(l);
+        // }
+        //
+        // String str2 = "world.";
+        // PhraseIU piu2 = new PhraseIU(str2);
+        // mb.addToBuffer(piu2);
+        // for (IU word : piu2.getWords())
+        // {
+        // word.updateOnGrinUpdates();
+        // word.addUpdateListener(l);
+        // }
+
         HesitationIU hes = new HesitationIU();
-        mb.addToBuffer(hes);        
+        mb.addToBuffer(hes);
         for (IU word : hes.getWords())
         {
             word.updateOnGrinUpdates();
             word.addUpdateListener(l);
         }
         dispatcher.waitUntilDone();
-        dispatcher.close();        
+        dispatcher.close();
     }
-    
-    
+
     @Test
     public void testInterruptContinue() throws InterruptedException, IOException
     {
         System.setProperty("inpro.tts.voice", "dfki-prudence-hsmm");
         System.setProperty("inpro.tts.language", "en_GB");
 
-        MaryAdapter.getInstance();    
+        MaryAdapter.getInstance();
         DispatchStream dispatcher = SimpleMonitor.setupDispatcher(new Resources("").getURL("sphinx-config.xml"));
-        
+
         MyIUModule mb = new MyIUModule();
         AdaptableSynthesisModule asm = new AdaptableSynthesisModule(dispatcher);
         mb.addListener(asm);
 
-        String str= "Tomorrow at 10 is the meeting with your brother, and at two o clock you will go shopping, and at eight is the gettogether in the bar";        
+        String str = "Tomorrow at 10 is the meeting with your brother, and at two o clock you will go shopping, and at eight is the gettogether in the bar";
         PhraseIU piu = new PhraseIU(str);
         mb.addToBuffer(piu);
-        
+
         Thread.sleep(1000);
-        asm.stopAfterOngoingPhoneme();        
-        
+        asm.stopAfterOngoingPhoneme();
+
         mb.addToBuffer(new PhraseIU("Hello world."));
-        Thread.sleep(500);        
-        
+        Thread.sleep(500);
+
         dispatcher.waitUntilDone();
         dispatcher.close();
     }
-    
+
     @Ignore
     @Test
     public void test() throws InterruptedException, IOException
@@ -196,33 +198,31 @@ public class IUModuleTest
         System.setProperty("inpro.tts.voice", "dfki-prudence-hsmm");
         System.setProperty("inpro.tts.language", "en_GB");
 
-        MaryAdapter.getInstance();    
+        MaryAdapter.getInstance();
         DispatchStream dispatcher = SimpleMonitor.setupDispatcher(new Resources("").getURL("sphinx-config.xml"));
-        
+
         MyIUModule mb = new MyIUModule();
         AdaptableSynthesisModule asm = new AdaptableSynthesisModule(dispatcher);
         mb.addListener(asm);
-        
-        
+
         LoudnessPostProcessor loudnessAdapter = new LoudnessPostProcessor();
         asm.setFramePostProcessor(loudnessAdapter);
 
-        String str= "Tomorrow at 10 is the meeting with your brother, and at two o clock you will go shopping, and at eight is the gettogether in the bar";        
+        String str = "Tomorrow at 10 is the meeting with your brother, and at two o clock you will go shopping, and at eight is the gettogether in the bar";
         PhraseIU piu = new PhraseIU(str);
-        
-        
+
         SysInstallmentIU sysiu = new SysInstallmentIU(str);
         for (IU word : sysiu.groundedIn())
         {
             System.out.println("payload " + word.toPayLoad());
             System.out.println("start " + word.startTime());
         }
-        
+
         MyWordUpdateListener l = new MyWordUpdateListener();
-        
+
         piu.updateOnGrinUpdates();
-        //piu.addUpdateListener(l);
-        
+        // piu.addUpdateListener(l);
+
         mb.addToBuffer(piu);
         for (IU word : piu.groundedIn())
         {
@@ -230,24 +230,22 @@ public class IUModuleTest
             word.addUpdateListener(l);
         }
         loudnessAdapter.setLoudness(0);
-        
+
         Thread.sleep(1000);
         asm.stopAfterOngoingPhoneme();
-        //loudnessAdapter.setLoudness(70);
-        //System.out.println("loudness = 70");
-        
+        // loudnessAdapter.setLoudness(70);
+        // System.out.println("loudness = 70");
+
         mb.addToBuffer(new PhraseIU("Hello world."));
         Thread.sleep(500);
-        //loudnessAdapter.setLoudness(-50);
-        
-        //control at phrase level?
-        //asm.scaleTempo(2);
-        //asm.shiftPitch(400);
-        
-        
-        //asm.stopAfterOngoingWord();
-        
-        
+        // loudnessAdapter.setLoudness(-50);
+
+        // control at phrase level?
+        // asm.scaleTempo(2);
+        // asm.shiftPitch(400);
+
+        // asm.stopAfterOngoingWord();
+
         dispatcher.waitUntilDone();
         dispatcher.close();
     }

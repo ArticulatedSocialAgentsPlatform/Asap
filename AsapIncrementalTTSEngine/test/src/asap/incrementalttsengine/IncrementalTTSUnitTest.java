@@ -67,13 +67,13 @@ public class IncrementalTTSUnitTest extends AbstractTimedPlanUnitTest
     @Before
     public void setup()
     {
+        System.setProperty("mary.base", System.getProperty("shared.project.root")
+                + "/asapresource/MARYTTSIncremental/resource/MARYTTSIncremental");
         MaryAdapter.getInstance();
         clock.start();        
         bmlScheduler = new BMLScheduler("id1", new BMLParser(), NullFeedbackManager.getInstance(),clock ,
                 new BMLASchedulingHandler(new SortedSmartBodySchedulingStrategy(pegBoard), pegBoard), new BMLBlockManager(), pegBoard);
-        dispatcher = SimpleMonitor.setupDispatcher(new Resources("").getURL("sphinx-config.xml"));
-        System.setProperty("mary.base", System.getProperty("shared.project.root")
-                + "/asapresource/MARYTTSIncremental/resource/MARYTTSIncremental");
+        dispatcher = SimpleMonitor.setupDispatcher(new Resources("").getURL("sphinx-config.xml"));        
     }
 
     private IncrementalTTSUnit setupPlanUnit(FeedbackManager bfm, BMLBlockPeg bbPeg, String id, String bmlId, double startTime, String text)
@@ -211,7 +211,7 @@ public class IncrementalTTSUnitTest extends AbstractTimedPlanUnitTest
     @Test
     public void testApplyTimeConstraintsAndStart() throws TimedPlanUnitPlayException, InterruptedException
     {
-        IncrementalTTSUnit ttsUnit = setupPlanUnit(fbManager, BMLBlockPeg.GLOBALPEG, "beh1", "bml1", 0, "Hello <sync id=\"s1\"/> world.");
+        IncrementalTTSUnit ttsUnit = setupPlanUnit(fbManager, BMLBlockPeg.GLOBALPEG, "beh1", "bml1", 0.4, "Hello <sync id=\"s1\"/> world.");
         clock.setMediaSeconds(0.4);
         fbManager.addFeedbackListener(new ListBMLFeedbackListener.Builder().feedBackList(fbList).build());
         ttsUnit.setTimePeg("start", TimePegUtil.createAbsoluteTimePeg(0.4));
