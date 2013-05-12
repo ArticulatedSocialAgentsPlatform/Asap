@@ -32,7 +32,6 @@ import saiba.bml.core.BehaviourBlock;
 import saiba.bml.feedback.BMLWarningFeedback;
 import saiba.bml.parser.Constraint;
 import saiba.bml.parser.SyncPoint;
-import asap.bml.ext.bmla.BMLABMLBehaviorAttributes;
 import asap.bml.ext.bmlt.BMLTInfo;
 import asap.realizer.BehaviourPlanningException;
 import asap.realizer.Engine;

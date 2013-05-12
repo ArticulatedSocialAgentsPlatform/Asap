@@ -280,13 +280,13 @@ public class BMLSchedulerTest
         @Override
         public void interruptBehaviourBlock(String bmlId, double time)
         {
-
+            stopBehaviourBlock(bmlId, time);
         }
 
         @Override
         public void interruptBehaviour(String bmlId, String behaviourId, double time)
         {
-
+            stopBehaviour(behaviourId, bmlId, time);
         }
     }
 
@@ -335,15 +335,15 @@ public class BMLSchedulerTest
 
     private String createEmptyBML(String bmlId, String extraAttributes)
     {
-        return "<bml xmlns=\"http://www.bml-initiative.org/bml/bml-1.0\" " + "xmlns:bmla=\"http://www.asap-project.org/bmla\" id=\"" + bmlId
-                + "\" " + extraAttributes + "/>";
+        return "<bml xmlns=\"http://www.bml-initiative.org/bml/bml-1.0\" " + "xmlns:bmla=\"http://www.asap-project.org/bmla\" id=\""
+                + bmlId + "\" " + extraAttributes + "/>";
     }
 
     private String createNonEmptyBML(String bmlId, String extraAttributes)
     {
 
-        return "<bml xmlns=\"http://www.bml-initiative.org/bml/bml-1.0\"" + " xmlns:bmla=\"http://www.asap-project.org/bmla\" id=\"" + bmlId
-                + "\" " + extraAttributes + "><speech id=\"s1\"><text/></speech></bml>";
+        return "<bml xmlns=\"http://www.bml-initiative.org/bml/bml-1.0\"" + " xmlns:bmla=\"http://www.asap-project.org/bmla\" id=\""
+                + bmlId + "\" " + extraAttributes + "><speech id=\"s1\"><text/></speech></bml>";
     }
 
     private String createNonEmptyBML(String bmlId)
@@ -371,8 +371,8 @@ public class BMLSchedulerTest
                 }
             }
         }
-        scheduler = new BMLScheduler("avatar1", parser, fbManager, stubClock, new BMLASchedulingHandler(new StubSchedulingStrategy(),pegBoard),
-                bbManager, pegBoard);
+        scheduler = new BMLScheduler("avatar1", parser, fbManager, stubClock, new BMLASchedulingHandler(new StubSchedulingStrategy(),
+                pegBoard), bbManager, pegBoard);
 
         scheduler.addEngine(SpeechBehaviour.class, stubEngine);
 

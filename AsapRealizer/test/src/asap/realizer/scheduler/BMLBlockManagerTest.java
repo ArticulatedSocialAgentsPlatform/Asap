@@ -20,7 +20,6 @@ import org.powermock.core.classloader.annotations.PrepareForTest;
 import org.powermock.modules.junit4.PowerMockRunner;
 
 import saiba.bml.feedback.BMLSyncPointProgressFeedback;
-import asap.realizer.pegboard.PegBoard;
 import asap.realizer.planunit.TimedPlanUnitState;
 /**
  * Unit test cases for the BMLBlockManager
