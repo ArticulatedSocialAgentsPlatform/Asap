@@ -25,6 +25,7 @@ import hmi.environmentbase.Environment;
 import hmi.environmentbase.Loader;
 import hmi.jcomponentenvironment.JComponentEmbodiment;
 import hmi.textembodiments.TextEmbodiment;
+import hmi.util.ArrayUtils;
 import hmi.xml.XMLTokenizer;
 
 import java.io.IOException;
@@ -57,10 +58,12 @@ public class JLabelTextEmbodiment implements TextEmbodiment, EmbodimentLoader
             Loader... requiredLoaders) throws IOException
     {
         setId(loaderId);
-        for (Loader e : requiredLoaders)
+        for (EmbodimentLoader e : ArrayUtils.getClassesOfType(requiredLoaders, EmbodimentLoader.class))
         {
-            if (e instanceof EmbodimentLoader && ((EmbodimentLoader) e).getEmbodiment() instanceof JComponentEmbodiment) jce = (JComponentEmbodiment) ((EmbodimentLoader) e)
-                    .getEmbodiment();
+            if (e.getEmbodiment() instanceof JComponentEmbodiment)
+            {
+                jce = (JComponentEmbodiment) e.getEmbodiment();
+            }
         }
         if (jce == null)
         {
