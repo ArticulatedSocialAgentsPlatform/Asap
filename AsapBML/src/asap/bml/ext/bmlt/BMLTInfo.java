@@ -28,6 +28,7 @@ public final class BMLTInfo
     // /Behaviors that are parsed
     private static final ImmutableMap<String, Class<? extends Behaviour>> BEHAVIOR_TYPES =
             new ImmutableMap.Builder<String, Class<? extends Behaviour>>()
+            .put(BMLTTextBehaviour.xmlTag(), BMLTTextBehaviour.class)
             .put(BMLTProcAnimationBehaviour.xmlTag(), BMLTProcAnimationBehaviour.class)            
             .put(BMLTControllerBehaviour.xmlTag(), BMLTControllerBehaviour.class)
             .put(BMLTNoiseBehaviour.xmlTag(), BMLTNoiseBehaviour.class)            

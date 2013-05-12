@@ -28,7 +28,6 @@ import hmi.xml.XMLTokenizer;
 
 import java.io.IOException;
 
-import lombok.extern.slf4j.Slf4j;
 import asap.realizer.DefaultEngine;
 import asap.realizer.DefaultPlayer;
 import asap.realizer.Engine;

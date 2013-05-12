@@ -8,6 +8,7 @@ import org.slf4j.LoggerFactory;
 
 import saiba.bml.core.Behaviour;
 import saiba.bml.core.SpeechBehaviour;
+import asap.bml.ext.bmlt.BMLTTextBehaviour;
 import asap.realizer.AbstractPlanner;
 import asap.realizer.BehaviourPlanningException;
 import asap.realizer.SyncAndTimePeg;
@@ -337,6 +338,7 @@ public class TextPlanner extends AbstractPlanner<TimedSpeechTextUnit>
     {
         List<Class<? extends Behaviour>> list = new ArrayList<Class<? extends Behaviour>>();
         list.add(SpeechBehaviour.class);
+        list.add(BMLTTextBehaviour.class);
         return list;
     }
 
