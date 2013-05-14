@@ -1,6 +1,9 @@
 package asap.incrementalttsengine;
 
 import static org.mockito.Mockito.mock;
+
+import java.io.IOException;
+
 import hmi.util.Resources;
 import hmi.util.SystemClock;
 import inpro.apps.SimpleMonitor;
@@ -38,7 +41,7 @@ public class PhraseIUManagerTest
     }
     
     @Test
-    public void test() throws InterruptedException
+    public void test() throws InterruptedException, IOException
     {
         final String CHUNK_CONTENT[] = { "Tomorrow at 10", "is the meeting with your brother", "and at two oclock", "you will go shopping",
                 "and at eight", "is the gettogether", "in the bar" };
@@ -59,5 +62,7 @@ public class PhraseIUManagerTest
             man.playIU(new PhraseIU(str), null, mock(IncrementalTTSUnit.class));
         }
         Thread.sleep(10000);
+        dispatcher.waitUntilDone();
+        dispatcher.close();
     }
 }

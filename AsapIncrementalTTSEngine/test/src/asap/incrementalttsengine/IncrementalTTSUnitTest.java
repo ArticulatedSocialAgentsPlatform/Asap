@@ -75,6 +75,13 @@ public class IncrementalTTSUnitTest extends AbstractTimedPlanUnitTest
                 new BMLASchedulingHandler(new SortedSmartBodySchedulingStrategy(pegBoard), pegBoard), new BMLBlockManager(), pegBoard);
         dispatcher = SimpleMonitor.setupDispatcher(new Resources("").getURL("sphinx-config.xml"));        
     }
+    
+    @After
+    public void tearDown() throws IOException
+    {
+        dispatcher.waitUntilDone();
+        dispatcher.close();
+    }
 
     private IncrementalTTSUnit setupPlanUnit(FeedbackManager bfm, BMLBlockPeg bbPeg, String id, String bmlId, double startTime, String text)
     {
@@ -96,8 +103,7 @@ public class IncrementalTTSUnitTest extends AbstractTimedPlanUnitTest
         IncrementalTTSUnit ttsUnit = setupPlanUnit(fbManager, BMLBlockPeg.GLOBALPEG, "beh1", "bml1", 0, "Sentence one. Sentence two.");
         ttsUnit.setState(TimedPlanUnitState.LURKING);
         ttsUnit.start(0);
-        ttsUnit.play(0);
-        dispatcher.waitUntilDone();
+        ttsUnit.play(0);        
     }
 
     @Test
@@ -281,12 +287,6 @@ public class IncrementalTTSUnitTest extends AbstractTimedPlanUnitTest
         assertThat(ttsUnit.getRelativeTime("s1"), lessThan(1d));
         assertEquals(1, ttsUnit.getRelativeTime("endS"), TIMING_PRECISION);
         assertEquals(1, ttsUnit.getRelativeTime("end"), TIMING_PRECISION);
-    }
-
-    @After
-    public void tearDown() throws IOException
-    {
-        dispatcher.close();
     }
 
     @Test
