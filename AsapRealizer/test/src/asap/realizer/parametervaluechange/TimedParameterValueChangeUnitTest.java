@@ -87,7 +87,7 @@ public class TimedParameterValueChangeUnitTest extends AbstractTimedPlanUnitTest
 
         tpu.start(0);
         tpu.play(0);
-        verify(mockScheduler, times(1)).setParameterValue(TARGETBMLID, TARGETBEHID, TARGETPARAMID, INITIALVALUE);
+        verify(mockScheduler, times(2)).setParameterValue(TARGETBMLID, TARGETBEHID, TARGETPARAMID, INITIALVALUE);
     }
 
     @Test
@@ -113,7 +113,7 @@ public class TimedParameterValueChangeUnitTest extends AbstractTimedPlanUnitTest
 
         tpu.start(0);
         tpu.play(0);
-        verify(mockScheduler, times(1)).setParameterValue(TARGETBMLID, TARGETBEHID, TARGETPARAMID, INITIALVALUE);
+        verify(mockScheduler, times(2)).setParameterValue(TARGETBMLID, TARGETBEHID, TARGETPARAMID, INITIALVALUE);
     }
 
     @Test
@@ -129,7 +129,7 @@ public class TimedParameterValueChangeUnitTest extends AbstractTimedPlanUnitTest
 
         tpu.start(0);
         tpu.play(0);
-        verify(mockScheduler, times(1)).setParameterValue(TARGETBMLID, TARGETBEHID, TARGETPARAMID, INITIALVALUE);
+        verify(mockScheduler, times(2)).setParameterValue(TARGETBMLID, TARGETBEHID, TARGETPARAMID, INITIALVALUE);
     }
 
     @Test
@@ -143,7 +143,7 @@ public class TimedParameterValueChangeUnitTest extends AbstractTimedPlanUnitTest
         tpu.setTimePeg("start", start);
         tpu.getTimePeg("end").setGlobalValue(2);
 
-        tpu.start(0);
+        tpu.start(3);
         tpu.play(3);
         assertThat(FeedbackListUtils.getSyncs(fbList),
                 IsIterableContainingInOrder.contains("start", "end"));
@@ -164,7 +164,7 @@ public class TimedParameterValueChangeUnitTest extends AbstractTimedPlanUnitTest
         tpu.start(0);
         tpu.play(1.999);
         assertThat(FeedbackListUtils.getSyncs(fbList), IsIterableContainingInOrder.contains("start"));
-        verify(mockScheduler, times(1)).setParameterValue(TARGETBMLID, TARGETBEHID, TARGETPARAMID, INITIALVALUE);
+        verify(mockScheduler, times(2)).setParameterValue(TARGETBMLID, TARGETBEHID, TARGETPARAMID, INITIALVALUE);
     }
 
     @Test

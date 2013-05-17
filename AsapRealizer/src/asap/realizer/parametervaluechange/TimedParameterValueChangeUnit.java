@@ -37,6 +37,7 @@ public class TimedParameterValueChangeUnit extends TimedAbstractPlanUnit
     private final float targetValue;
     private final boolean hasInitialValue;
     
+    
     private static final Logger logger = LoggerFactory.getLogger(TimedParameterValueChangeUnit.class.getName());
 
     public TimedParameterValueChangeUnit(FeedbackManager bfm, BMLBlockPeg bmlPeg, String bmlId, String behId, BMLScheduler sched,
@@ -83,7 +84,11 @@ public class TimedParameterValueChangeUnit extends TimedAbstractPlanUnit
     @Override
     public double getEndTime()
     {
-        return TimePeg.VALUE_UNKNOWN;
+        if(!isPlaying()||endPeg==null)
+        {
+            return TimePeg.VALUE_UNKNOWN;       //ensure 1 time playback
+        }
+        return endPeg.getGlobalValue();        
     }
 
     @Override
@@ -156,20 +161,12 @@ public class TimedParameterValueChangeUnit extends TimedAbstractPlanUnit
         return TimePeg.VALUE_UNKNOWN;
     }
 
-    @Override
-    protected void playUnit(double time) throws TimedPlanUnitPlayException
+    private double setValue(double time)throws TimedPlanUnitPlayException
     {
         double t = 1; // instant change if end not set
         if (endPeg.getGlobalValue() != TimePeg.VALUE_UNKNOWN && time < endPeg.getGlobalValue())
         {
             t = (time - getStartTime()) / (endPeg.getGlobalValue() - startPeg.getGlobalValue());
-        }
-        
-        if (fbManager.getSyncsPassed(targetBmlId, targetId).contains("end"))
-        {
-            logger.debug("End passed for {}:{}, stopping parametervaluechange behavior",targetBmlId,targetId);
-            stop(time);
-            return;
         }
         
         try
@@ -189,6 +186,21 @@ public class TimedParameterValueChangeUnit extends TimedAbstractPlanUnit
             //causing the behavior to fail here
             throw new TimedPlanUnitPlayException("Behavior " + targetBmlId + ":" + targetId + " not found at t="+time+".", this, e);            
         }
+        return t;
+    }
+    
+    @Override
+    protected void playUnit(double time) throws TimedPlanUnitPlayException
+    {
+        if (fbManager.getSyncsPassed(targetBmlId, targetId).contains("end"))
+        {
+            logger.debug("End passed for {}:{}, stopping parametervaluechange behavior",targetBmlId,targetId);
+            stop(time);
+            return;
+        }
+               
+        double t = setValue(time);
+        
         if (t >= 1)
         {
             stop(time);
@@ -220,6 +232,7 @@ public class TimedParameterValueChangeUnit extends TimedAbstractPlanUnit
                 throw new TimedPlanUnitPlayException("BehaviorNotFoundException", this,e);                
             }
         }
+        setValue(time);
     }
 
     @Override

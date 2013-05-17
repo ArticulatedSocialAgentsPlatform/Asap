@@ -46,7 +46,8 @@ import asap.realizer.planunit.ParameterNotFoundException;
  */
 public class PlutchikFU implements FaceUnit
 {
-    @Delegate private final KeyPositionManager keyPositionManager = new KeyPositionManagerImpl();
+    @Delegate
+    private final KeyPositionManager keyPositionManager = new KeyPositionManagerImpl();
 
     private float intensity = 1f;
 
@@ -60,8 +61,9 @@ public class PlutchikFU implements FaceUnit
     @Override
     public void startUnit(double t)
     {
-        
+
     }
+
     public PlutchikFU()
     {
         KeyPosition attackPeak = new KeyPosition("attackPeak", 0.1d, 1d);
@@ -78,6 +80,7 @@ public class PlutchikFU implements FaceUnit
     {
         faceController = fc;
     }
+
     public void setEmotionConverter(EmotionConverter ec)
     {
         emotionConverter = ec;
@@ -86,12 +89,15 @@ public class PlutchikFU implements FaceUnit
     @Override
     public void setFloatParameterValue(String name, float value) throws ParameterException
     {
-        if (name.equals("intensity")) intensity = value;
+        if (name.equals("intensity"))
+        {
+            System.out.println("Setting intensity to "+value);
+            intensity = value;
+        }
         else if (name.equals("angle")) angle = value;
         else if (name.equals("activation")) activation = value;
         else throw new ParameterNotFoundException(name);
     }
-
 
     @Override
     public void setParameterValue(String name, String value) throws ParameterException
@@ -102,19 +108,16 @@ public class PlutchikFU implements FaceUnit
         }
         else
         {
-            throw new InvalidParameterException(name,value);
+            throw new InvalidParameterException(name, value);
         }
     }
 
     @Override
     public String getParameterValue(String name)
     {
-        if (name.equals("intensity"))
-            return "" + intensity;
-        else if (name.equals("angle"))
-            return "" + angle;
-        else if (name.equals("activation"))
-            return "" + activation;
+        if (name.equals("intensity")) return "" + intensity;
+        else if (name.equals("angle")) return "" + angle;
+        else if (name.equals("activation")) return "" + activation;
         return null;
     }
 
@@ -126,7 +129,7 @@ public class PlutchikFU implements FaceUnit
         if (name.equals("activation")) return activation;
         throw new ParameterNotFoundException(name);
     }
-    
+
     @Override
     public boolean hasValidParameters()
     {
@@ -161,12 +164,11 @@ public class PlutchikFU implements FaceUnit
         }
         else if (t > relax && t < 1)
         {
-            newAppliedWeight = intensity
-                    * (float) (1 - ((t - relax) / (1 - relax)));
+            newAppliedWeight = intensity * (float) (1 - ((t - relax) / (1 - relax)));
         }
 
-        MPEG4Configuration config = emotionConverter.convert(angle,activation * newAppliedWeight);
-        faceController.addMPEG4Configuration(config);        
+        MPEG4Configuration config = emotionConverter.convert(angle, activation * newAppliedWeight);
+        faceController.addMPEG4Configuration(config);
     }
 
     /**
@@ -209,7 +211,7 @@ public class PlutchikFU implements FaceUnit
         result.setEmotionConverter(econv);
         result.intensity = intensity;
         result.angle = angle;
-        result.activation= activation;
+        result.activation = activation;
         for (KeyPosition keypos : getKeyPositions())
         {
             result.addKeyPosition(keypos.deepCopy());
