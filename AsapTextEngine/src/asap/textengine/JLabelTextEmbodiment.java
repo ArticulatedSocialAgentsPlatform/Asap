@@ -75,8 +75,7 @@ public class JLabelTextEmbodiment implements TextEmbodiment, EmbodimentLoader
             {
                 jce.addJComponent(textLabel);
             }
-        });
-        return;
+        });        
     }
 
     @Override
