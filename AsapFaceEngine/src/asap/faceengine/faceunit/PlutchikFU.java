@@ -91,7 +91,6 @@ public class PlutchikFU implements FaceUnit
     {
         if (name.equals("intensity"))
         {
-            System.out.println("Setting intensity to "+value);
             intensity = value;
         }
         else if (name.equals("angle")) angle = value;
