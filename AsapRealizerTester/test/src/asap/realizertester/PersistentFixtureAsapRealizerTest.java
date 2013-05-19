@@ -18,7 +18,6 @@ import java.util.ArrayList;
 
 import javax.swing.JFrame;
 
-import org.junit.After;
 import org.junit.AfterClass;
 import org.junit.Before;
 import org.junit.BeforeClass;

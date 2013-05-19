@@ -7,7 +7,7 @@ import com.google.common.collect.ImmutableList;
 
 import asap.math.LinearQuatInterpolator;
 /**
- * Cubic spline interpolator for of a list of keyframes. Interpolates groups of 4 dofs as quat using slerp.
+ * Linear interpolator for of a list of keyframes. Interpolates groups of 4 dofs as quat using slerp.
  * @author hvanwelbergen
  */
 public class LinearQuatFloatInterpolator implements Interpolator
