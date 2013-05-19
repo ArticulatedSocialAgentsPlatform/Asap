@@ -38,7 +38,7 @@ public class JLabelTextEmbodiment implements TextEmbodiment, EmbodimentLoader
 {
 
     private JComponentEmbodiment jce = null;
-    private JLabel textLabel = new JLabel();
+    private JLabel textLabel;
     private String id = "";
 
     public void setId(String id)
@@ -73,6 +73,7 @@ public class JLabelTextEmbodiment implements TextEmbodiment, EmbodimentLoader
         {
             public void run()
             {
+                textLabel = new JLabel();
                 jce.addJComponent(textLabel);
             }
         });
