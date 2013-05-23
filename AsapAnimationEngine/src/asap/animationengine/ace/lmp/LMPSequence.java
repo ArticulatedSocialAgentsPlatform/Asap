@@ -165,6 +165,7 @@ public class LMPSequence extends LMP
                 getTimePeg("strokeEnd").setGlobalValue(getTime("strokeStart") + getStrokeDuration(time));
             }
         }
+        
         super.updateTiming(time);
     }
 

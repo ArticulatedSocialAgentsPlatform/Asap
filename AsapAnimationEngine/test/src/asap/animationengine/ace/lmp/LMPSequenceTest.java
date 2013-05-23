@@ -61,8 +61,7 @@ public class LMPSequenceTest
         assertEquals(1, seq.getStartTime(), TIME_PRECISION);
         assertEquals(2, seq.getTime("strokeStart"), TIME_PRECISION);
         assertEquals(4, seq.getTime("strokeEnd"), TIME_PRECISION);
-        assertEquals(6, seq.getTime("end"), TIME_PRECISION);
-
+        
         assertEquals(1, tmu1.getStartTime(), TIME_PRECISION);
         assertEquals(2, tmu1.getTime("strokeStart"), TIME_PRECISION);
         assertEquals(4, tmu1.getTime("strokeEnd"), TIME_PRECISION);
@@ -81,8 +80,7 @@ public class LMPSequenceTest
         assertEquals(2, seq.getStartTime(), TIME_PRECISION);
         assertEquals(3, seq.getTime("strokeStart"), TIME_PRECISION);
         assertEquals(5, seq.getTime("strokeEnd"), TIME_PRECISION);
-        assertEquals(6, seq.getTime("end"), TIME_PRECISION);
-
+        
         assertEquals(2, tmu1.getStartTime(), TIME_PRECISION);
         assertEquals(3, tmu1.getTime("strokeStart"), TIME_PRECISION);
         assertEquals(3 + 6d / 7d, tmu1.getTime("strokeEnd"), TIME_PRECISION);
@@ -107,8 +105,7 @@ public class LMPSequenceTest
         assertEquals(2, seq.getStartTime(), TIME_PRECISION);
         assertEquals(3, seq.getTime("strokeStart"), TIME_PRECISION);
         assertEquals(14, seq.getTime("strokeEnd"), TIME_PRECISION);
-        assertEquals(21, seq.getTime("end"), TIME_PRECISION);
-
+        
         assertEquals(2, tmu1.getTime("start"), TIME_PRECISION);
         assertEquals(3, tmu1.getTime("strokeStart"), TIME_PRECISION);
         assertEquals(6, tmu1.getTime("strokeEnd"), TIME_PRECISION);
@@ -189,8 +186,7 @@ public class LMPSequenceTest
         assertEquals(2, seq.getStartTime(), TIME_PRECISION);
         assertEquals(3, seq.getTime("strokeStart"), TIME_PRECISION);
         assertEquals(11, seq.getTime("strokeEnd"), TIME_PRECISION);
-        assertEquals(13, seq.getTime("end"), TIME_PRECISION);
-
+        
         assertEquals(2, tmu1.getTime("start"), TIME_PRECISION);
         assertEquals(3, tmu1.getTime("strokeStart"), TIME_PRECISION);
         assertEquals(6, tmu1.getTime("strokeEnd"), TIME_PRECISION);
@@ -241,8 +237,7 @@ public class LMPSequenceTest
         assertEquals(1, seq.getStartTime(), TIME_PRECISION);
         assertEquals(3, seq.getTime("strokeStart"), TIME_PRECISION);
         assertEquals(16, seq.getTime("strokeEnd"), TIME_PRECISION);
-        assertEquals(23, seq.getTime("end"), TIME_PRECISION);
-
+        
         assertEquals(1, tmu1.getTime("start"), TIME_PRECISION);
         assertEquals(3, tmu1.getTime("strokeStart"), TIME_PRECISION);
         assertEquals(6, tmu1.getTime("strokeEnd"), TIME_PRECISION);
@@ -274,8 +269,7 @@ public class LMPSequenceTest
 
         assertEquals(2, seq.getStartTime(), TIME_PRECISION);
         assertEquals(3, seq.getTime("strokeStart"), TIME_PRECISION);
-        assertEquals(16, seq.getTime("strokeEnd"), TIME_PRECISION);
-        assertEquals(23, seq.getTime("end"), TIME_PRECISION);
+        assertEquals(16, seq.getTime("strokeEnd"), TIME_PRECISION);        
 
         assertEquals(2, tmu1.getTime("start"), TIME_PRECISION);
         assertEquals(3, tmu1.getTime("strokeStart"), TIME_PRECISION);
@@ -312,8 +306,7 @@ public class LMPSequenceTest
         assertEquals(2, seq.getStartTime(), TIME_PRECISION);
         assertEquals(3, seq.getTime("strokeStart"), TIME_PRECISION);
         assertEquals(15, seq.getTime("strokeEnd"), TIME_PRECISION);
-        assertEquals(22, seq.getTime("end"), TIME_PRECISION);
-
+        
         assertEquals(2, tmu1.getTime("start"), TIME_PRECISION);
         assertEquals(3, tmu1.getTime("strokeStart"), TIME_PRECISION);
         assertEquals(6, tmu1.getTime("strokeEnd"), TIME_PRECISION);
@@ -351,8 +344,7 @@ public class LMPSequenceTest
         assertEquals(2, seq.getStartTime(), TIME_PRECISION);
         assertEquals(3, seq.getTime("strokeStart"), TIME_PRECISION);
         assertEquals(16, seq.getTime("strokeEnd"), TIME_PRECISION);
-        assertEquals(23, seq.getTime("end"), TIME_PRECISION);
-
+        
         assertEquals(2, tmu1.getTime("start"), TIME_PRECISION);
         assertEquals(3, tmu1.getTime("strokeStart"), TIME_PRECISION);
         assertEquals(6, tmu1.getTime("strokeEnd"), TIME_PRECISION);

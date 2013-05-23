@@ -92,8 +92,7 @@ public class LMPPoRotTest extends AbstractTimedPlanUnitTest
         initializeForUpdateTiming(tau);
         tau.updateTiming(0);
         
-        assertEquals(1 - tau.getPreparationDuration(), tau.getTime("start"), TIMING_PRECISION);
-        assertEquals(1 + tau.getStrokeDuration() + tau.getRetractionDuration(), tau.getTime("end"), TIMING_PRECISION);
+        assertEquals(1 - tau.getPreparationDuration(), tau.getTime("start"), TIMING_PRECISION);        
         assertEquals(1, tau.getTime("strokeStart"), TIMING_PRECISION);
         assertEquals(1 + tau.getStrokeDuration(), tau.getTime("strokeEnd"), TIMING_PRECISION);
         assertEquals(1 + tau.getStrokeDuration() / 3d, tau.getTime("stroke1"), TIMING_PRECISION);
@@ -109,7 +108,6 @@ public class LMPPoRotTest extends AbstractTimedPlanUnitTest
         tau.updateTiming(0);
         
         assertEquals(0.5 - tau.getPreparationDuration(), tau.getTime("start"), TIMING_PRECISION);
-        assertEquals(1 + tau.getStrokeDuration() + tau.getRetractionDuration(), tau.getTime("end"), TIMING_PRECISION);
         assertEquals(0.5, tau.getTime("strokeStart"), TIMING_PRECISION);
         assertEquals(1 + tau.getStrokeDuration(), tau.getTime("strokeEnd"), TIMING_PRECISION);
         double strokeDur = 0.5 + tau.getStrokeDuration();
@@ -126,28 +124,10 @@ public class LMPPoRotTest extends AbstractTimedPlanUnitTest
         tau.setTimePeg("strokeEnd",TimePegUtil.createTimePeg(BMLBlockPeg.GLOBALPEG, 2.5f));        
         tau.updateTiming(0);
         assertEquals(0.1, tau.getTime("start"),TIMING_PRECISION);
-        assertEquals(0.1+2+0.8, tau.getTime("end"),TIMING_PRECISION);
         assertEquals(0.5, tau.getTime("strokeStart"),TIMING_PRECISION);
         assertEquals(2+0.4+0.1, tau.getTime("strokeEnd"),TIMING_PRECISION);
         assertEquals(0.4+0.1+2d/3d, tau.getTime("stroke1"),TIMING_PRECISION);
         assertEquals(0.4+0.1+2d/3d+2d/3d, tau.getTime("stroke2"),TIMING_PRECISION);
-    }
-    
-    @Test
-    public void testUpdateTimingEndConstraint() throws TimedPlanUnitPlayException
-    {
-        TimedAnimationUnit tau = setupPlanUnit(fbManager, BMLBlockPeg.GLOBALPEG, "beh1", "bml1");
-        initializeForUpdateTiming(tau);
-        tau.setTimePeg("end",TimePegUtil.createTimePeg(BMLBlockPeg.GLOBALPEG, 10f));        
-        tau.updateTiming(0);
-        
-        
-        assertEquals(1+tau.getStrokeDuration()+tau.getRetractionDuration(), tau.getTime("end"), TIMING_PRECISION);
-        assertEquals(1, tau.getTime("strokeStart"), TIMING_PRECISION);
-        assertEquals(1 - tau.getPreparationDuration(), tau.getTime("start"), TIMING_PRECISION);
-        assertEquals(1 + tau.getStrokeDuration(), tau.getTime("strokeEnd"), TIMING_PRECISION);
-        assertEquals(1 + tau.getStrokeDuration() / 3d, tau.getTime("stroke1"), TIMING_PRECISION);
-        assertEquals(1 + 2 * tau.getStrokeDuration() / 3d, tau.getTime("stroke2"), TIMING_PRECISION);
     }
     
     @Test

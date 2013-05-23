@@ -9,7 +9,6 @@ import asap.animationengine.motionunit.TimedAnimationUnit;
 import asap.realizer.feedback.FeedbackManager;
 import asap.realizer.pegboard.AfterPeg;
 import asap.realizer.pegboard.BMLBlockPeg;
-import asap.realizer.pegboard.BeforePeg;
 import asap.realizer.pegboard.PegBoard;
 import asap.realizer.pegboard.PegKey;
 import asap.realizer.pegboard.TimePeg;
@@ -44,8 +43,7 @@ public class LMPParallel extends LMP
         createPegWhenMissingOnPegBoard("relax");
         createPegWhenMissingOnPegBoard("strokeStart");
         createPegWhenMissingOnPegBoard("strokeEnd");
-        createPegWhenMissingOnPegBoard("start");
-        createPegWhenMissingOnPegBoard("end");
+        createPegWhenMissingOnPegBoard("start");        
     }
 
     @Override
@@ -213,11 +211,11 @@ public class LMPParallel extends LMP
     protected void resolveTimePegs(double time)
     {
         TimePeg strokeStartPeg = getTimePeg("strokeStart");
-        TimePeg strokeEndPeg = getTimePeg("strokeEnd");        
+        //TimePeg strokeEndPeg = getTimePeg("strokeEnd");        
         TimePeg hStartPeg = getTimePeg("start");
-        TimePeg hEndPeg = getTimePeg("end");
+        //TimePeg hEndPeg = getTimePeg("end");
         hStartPeg.setGlobalValue(strokeStartPeg.getGlobalValue()-getPreparationDuration());
-        hEndPeg.setGlobalValue(strokeEndPeg.getGlobalValue()+getRetractionDuration());
+        //hEndPeg.setGlobalValue(strokeEndPeg.getGlobalValue()+getRetractionDuration());
         
         linkLMPSyncs();
         
@@ -236,6 +234,7 @@ public class LMPParallel extends LMP
             }
             lmp.setTimePeg("start", startPeg);
     
+            /*
             TimePeg endPeg = new BeforePeg(hEndPeg, 0, bmlBlockPeg);
             double endValue = strokeEndPeg.getGlobalValue() + lmp.getRetractionDuration();
             if (endValue < hEndPeg.getGlobalValue())
@@ -247,8 +246,9 @@ public class LMPParallel extends LMP
                 endPeg.setGlobalValue(hEndPeg.getGlobalValue());
             }
             lmp.setTimePeg("end", endPeg);
+            */
         }
-        super.resolveTimePegs(0);
+        super.resolveTimePegs(time);
         for(TimedAnimationUnit lmp:lmpQueue)
         {
             if(lmp instanceof LMP)

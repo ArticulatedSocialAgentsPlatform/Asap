@@ -37,8 +37,7 @@ public abstract class LMP extends TimedAbstractPlanUnit implements TimedAnimatio
         this.globalPegBoard = globalPegBoard;
         createPegWhenMissingOnPegBoard("start");
         createPegWhenMissingOnPegBoard("strokeStart");
-        createPegWhenMissingOnPegBoard("strokeEnd");
-        createPegWhenMissingOnPegBoard("end");
+        createPegWhenMissingOnPegBoard("strokeEnd");        
     }
 
     public boolean hasFixedStrokeDuration()
@@ -169,7 +168,7 @@ public abstract class LMP extends TimedAbstractPlanUnit implements TimedAnimatio
         {
             if (tp.getGlobalValue() != TimePeg.VALUE_UNKNOWN && !tp.isAbsoluteTime())
             {
-                if (tp.getGlobalValue() < time)
+                if (tp.getGlobalValue() + 0.05 < time)
                 {
                     tp.setGlobalValue(time);
                 }
@@ -207,8 +206,7 @@ public abstract class LMP extends TimedAbstractPlanUnit implements TimedAnimatio
             {
                 pegBoard.setPegTime(getBMLId(), getId(), "start", getTimePeg("strokeStart").getGlobalValue() - getPreparationDuration());
             }
-        }
-        pegBoard.setPegTime(getBMLId(), getId(), "end", getTimePeg("strokeEnd").getGlobalValue() + getRetractionDuration());
+        }        
 
         setInternalStrokeTiming(time);
 

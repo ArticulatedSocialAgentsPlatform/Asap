@@ -93,8 +93,7 @@ public class LMPWristPosTest extends AbstractTimedPlanUnitTest
         tau.updateTiming(0);
         assertEquals(1-tau.getPreparationDuration(), tau.getTime("start"), TIMING_PRECISION);
         assertEquals(1, tau.getTime("strokeStart"), TIMING_PRECISION);
-        assertEquals(1 + tau.getStrokeDuration(), tau.getTime("strokeEnd"), TIMING_PRECISION);
-        assertEquals(1 + tau.getStrokeDuration()+tau.getRetractionDuration(), tau.getTime("end"), TIMING_PRECISION);        
+        assertEquals(1 + tau.getStrokeDuration(), tau.getTime("strokeEnd"), TIMING_PRECISION);                
     }
 
     @Test
@@ -107,8 +106,7 @@ public class LMPWristPosTest extends AbstractTimedPlanUnitTest
         
         assertEquals(0.8-tau.getPreparationDuration(), tau.getTime("start"), TIMING_PRECISION);        
         assertEquals(0.8,tau.getTime("strokeStart"), TIMING_PRECISION);
-        assertEquals(0.8+0.2+tau.getStrokeDuration(), tau.getTime("strokeEnd"), TIMING_PRECISION);
-        assertEquals(0.8+0.2+tau.getStrokeDuration()+tau.getRetractionDuration(), tau.getTime("end"), TIMING_PRECISION);        
+        assertEquals(0.8+0.2+tau.getStrokeDuration(), tau.getTime("strokeEnd"), TIMING_PRECISION);                
     }
 
     @Test
@@ -122,24 +120,9 @@ public class LMPWristPosTest extends AbstractTimedPlanUnitTest
         tau.updateTiming(0);
         assertEquals(0, tau.getTime("start"), TIMING_PRECISION);
         assertEquals(0.5, tau.getTime("strokeStart"), TIMING_PRECISION);
-        assertEquals(2.5, tau.getTime("strokeEnd"), TIMING_PRECISION);
-        assertEquals(2.5+tau.getRetractionDuration(), tau.getTime("end"), TIMING_PRECISION);        
+        assertEquals(2.5, tau.getTime("strokeEnd"), TIMING_PRECISION);                
     }
 
-    @Test
-    public void testUpdateTimingEndConstraint() throws TimedPlanUnitPlayException
-    {
-        TimedAnimationUnit tau = setupPlanUnit(fbManager, BMLBlockPeg.GLOBALPEG, "bml1", "beh1");
-        initializeForUpdateTiming(tau);
-        tau.setTimePeg("end", TimePegUtil.createTimePeg(BMLBlockPeg.GLOBALPEG, 10f));        
-        tau.updateTiming(0);
-        
-        assertEquals(1+tau.getStrokeDuration()+tau.getRetractionDuration(), tau.getTime("end"), TIMING_PRECISION);
-        assertEquals(1-tau.getPreparationDuration(), tau.getTime("start"), TIMING_PRECISION);
-        assertEquals(1,tau.getTime("strokeStart"), TIMING_PRECISION);
-        assertEquals(1+tau.getStrokeDuration(), tau.getTime("strokeEnd"), TIMING_PRECISION);
-    }
-    
     @Test
     public void testAvailableSyncs() throws TMUPlayException
     {
