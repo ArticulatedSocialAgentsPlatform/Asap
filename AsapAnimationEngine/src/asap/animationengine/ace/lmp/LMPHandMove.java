@@ -108,9 +108,9 @@ public class LMPHandMove extends LMP
     }
 
     public LMPHandMove(String scope, List<PostureConstraint> pcVec, FeedbackManager fbm, BMLBlockPeg bmlPeg, String bmlId, String behId,
-            PegBoard pegBoard, AnimationPlayer aniPlayer)
+            PegBoard pegBoard, PegBoard globalPegBoard, AnimationPlayer aniPlayer)
     {
-        super(fbm, bmlPeg, bmlId, behId, pegBoard);
+        super(fbm, bmlPeg, bmlId, behId, pegBoard, globalPegBoard);
         this.aniPlayer = aniPlayer;
         this.pcVec = pcVec;
         interp = new LinearQuatFloatInterpolator();

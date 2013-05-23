@@ -43,8 +43,8 @@ import asap.realizertestutil.util.TimePegUtil;
 @PrepareForTest({BMLBlockManager.class})
 public class LMPPoRotTest extends AbstractTimedPlanUnitTest
 {
-    //private AnimationPlayer mockAniPlayer = mock(AnimationPlayer.class);
     private PegBoard pegBoard = new PegBoard();
+    private PegBoard globalPegBoard = new PegBoard();
     private double TIMING_PRECISION = 0.001;
     private AnimationPlayer mockAniPlayer = mock(AnimationPlayer.class);
     
@@ -62,7 +62,7 @@ public class LMPPoRotTest extends AbstractTimedPlanUnitTest
         ocList.add(new PoConstraint(12,GStrokePhaseID.STP_STROKE,"stroke2"));
         ocList.add(new PoConstraint(13,GStrokePhaseID.STP_STROKE,"strokeEnd"));    
         when(mockAniPlayer.getvAdditive()).thenReturn(HanimBody.getLOA1HanimBody());
-        LMPPoRot lmp = new LMPPoRot("right_arm", ocList, bfm, bbPeg, bmlId, id, pegBoard,mockAniPlayer);
+        LMPPoRot lmp = new LMPPoRot("right_arm", ocList, bfm, bbPeg, bmlId, id, pegBoard,globalPegBoard,mockAniPlayer);
         initializeForUpdateTiming(lmp);
         lmp.setState(TimedPlanUnitState.IN_PREP);
         return lmp;

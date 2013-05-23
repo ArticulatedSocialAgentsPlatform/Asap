@@ -26,10 +26,10 @@ public class LMPSequence extends LMP
 
     private static final double MINIMUM_PREPARATION_TIME = 0.2;
 
-    public LMPSequence(FeedbackManager fbm, BMLBlockPeg bbPeg, String bmlId, String behId, PegBoard pegBoard,
+    public LMPSequence(FeedbackManager fbm, BMLBlockPeg bbPeg, String bmlId, String behId, PegBoard pegBoard, PegBoard globalPegBoard,
             List<TimedAnimationUnit> lmpList)
     {
-        super(fbm, bbPeg, bmlId, behId, pegBoard);
+        super(fbm, bbPeg, bmlId, behId, pegBoard, globalPegBoard);
         lmpQueue = ImmutableList.copyOf(lmpList);
     }
 
@@ -45,6 +45,7 @@ public class LMPSequence extends LMP
         return kinJoints;
     }
 
+    @Override
     protected int countInternalSyncs(Set<PegKey> pks, int currentCount)
     {
         currentCount = super.countInternalSyncs(pks, currentCount);
@@ -86,11 +87,11 @@ public class LMPSequence extends LMP
     public double getPreparationDuration()
     {
         double startTime = lmpQueue.get(0).getStartTime();
-        double strokeStartTime = lmpQueue.get(0).getTime("strokeStart"); 
-        if(startTime!=TimePeg.VALUE_UNKNOWN && strokeStartTime!=TimePeg.VALUE_UNKNOWN && isPlaying())
+        double strokeStartTime = lmpQueue.get(0).getTime("strokeStart");
+        if (startTime != TimePeg.VALUE_UNKNOWN && strokeStartTime != TimePeg.VALUE_UNKNOWN && isPlaying())
         {
-            return strokeStartTime-startTime;
-        }        
+            return strokeStartTime - startTime;
+        }
         return lmpQueue.get(0).getPreparationDuration();
     }
 
@@ -110,10 +111,10 @@ public class LMPSequence extends LMP
                 duration += tmu.getPreparationDuration();
                 duration += tmu.getStrokeDuration();
             }
-            else if(tmu.getTime("strokeStart")>time || tmu.getTime("strokeStart") == TimePeg.VALUE_UNKNOWN)
+            else if (tmu.getTime("strokeStart") > time || tmu.getTime("strokeStart") == TimePeg.VALUE_UNKNOWN)
             {
                 duration += tmu.getStrokeDuration();
-                duration += tmu.getTime("strokeStart")-tmu.getStartTime();
+                duration += tmu.getTime("strokeStart") - tmu.getStartTime();
             }
             else
             {
@@ -156,18 +157,35 @@ public class LMPSequence extends LMP
     public void updateTiming(double time) throws TimedPlanUnitPlayException
     {
         Set<PegKey> pkStrokeEnd = pegBoard.getPegKeys(getTimePeg("strokeEnd"));
-        if (!getTimePeg("strokeEnd").isAbsoluteTime() && pkStrokeEnd.size() - countInternalSyncs(pkStrokeEnd, 0) == 0)
+        if (!getTimePeg("strokeEnd").isAbsoluteTime())
         {
-            getTimePeg("strokeEnd").setGlobalValue(getTime("strokeStart") + getStrokeDuration(time));
+            if ( (pkStrokeEnd.size() - countInternalSyncs(pkStrokeEnd, 0) == 0)
+                    ||getExternalSyncs("strokeEnd")<=1) 
+            {
+                getTimePeg("strokeEnd").setGlobalValue(getTime("strokeStart") + getStrokeDuration(time));
+            }
         }
         super.updateTiming(time);
     }
 
     @Override
+    protected void startUnit(double time) throws TimedPlanUnitPlayException
+    {
+        if (!lmpQueue.isEmpty() && lmpQueue.get(0).getStartTime() >= time)
+        {
+            lmpQueue.get(0).start(time);
+        }
+        super.startUnit(time);
+    }
+
+    @Override
     protected void playUnit(double time) throws TimedPlanUnitPlayException
     {
+        System.out.println(" LMP seq play " + time + " start: " + getStartTime());
+        System.out.println(lmpQueue);
         for (TimedAnimationUnit tmu : lmpQueue)
         {
+            System.out.println("  seq element start " + tmu.getStartTime());
             if (time > tmu.getStartTime())
             {
                 if (time < tmu.getTime("strokeEnd"))
@@ -253,7 +271,7 @@ public class LMPSequence extends LMP
 
                 TimePeg strokeEnd = lmpQueue.get(i).getTimePeg("strokeEnd");
                 strokeEnd.setGlobalValue(currentStrokeStart.getGlobalValue() + durNeeded);
-                
+
                 currentStrokeStart = lmpQueue.get(i + 1).getTimePeg("strokeStart");
                 currentStrokeStart.setGlobalValue(strokeEnd.getGlobalValue() + durPrep);
             }

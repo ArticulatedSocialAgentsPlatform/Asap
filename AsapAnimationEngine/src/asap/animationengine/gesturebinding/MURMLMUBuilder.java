@@ -441,7 +441,7 @@ public final class MURMLMUBuilder
         return ocVec;
     }
 
-    private LMP createAndAppendLMPWrist(String scope, FeedbackManager bbm, BMLBlockPeg bmlBlockPeg, String bmlId, String id, PegBoard pb,
+    private LMP createAndAppendLMPWrist(String scope, FeedbackManager bbm, BMLBlockPeg bmlBlockPeg, String bmlId, String id, PegBoard pb, PegBoard globalPegBoard,
             AnimationPlayer aniPlayer, List<OrientConstraint> ocVec)
     {
         // -- create lmp and append to motor program
@@ -464,7 +464,7 @@ public final class MURMLMUBuilder
             // }
 
             // build lmp
-            LMPWristRot lmp = createWristRotLMP(scope, ocVec, bbm, bmlBlockPeg, bmlId, id, pb, aniPlayer);
+            LMPWristRot lmp = createWristRotLMP(scope, ocVec, bbm, bmlBlockPeg, bmlId, id, pb, globalPegBoard, aniPlayer);
 
             if (lmp != null)
             {
@@ -482,13 +482,13 @@ public final class MURMLMUBuilder
     }
 
     private LMPWristRot createWristRotLMP(String scope, List<OrientConstraint> ocVec, FeedbackManager bbm, BMLBlockPeg bmlBlockPeg,
-            String bmlId, String id, PegBoard pb, AnimationPlayer aniPlayer)
+            String bmlId, String id, PegBoard pb, PegBoard globalPegBoard, AnimationPlayer aniPlayer)
     {
         if (ocVec.isEmpty())
         {
             return null;
         }
-        LMPWristRot lmp = new LMPWristRot(scope, ocVec, bbm, bmlBlockPeg, bmlId, createLMPId(id), pb, aniPlayer);
+        LMPWristRot lmp = new LMPWristRot(scope, ocVec, bbm, bmlBlockPeg, bmlId, createLMPId(id), pb, globalPegBoard, aniPlayer);
 
         // if ( retrMode == RTRCT_NO )
         // {
@@ -528,7 +528,7 @@ public final class MURMLMUBuilder
     }
 
     private LMP formPOMovement(String scope, Static staticElem, FeedbackManager bbm, BMLBlockPeg bmlBlockPeg, String bmlId, String id,
-            PegBoard pb, AnimationPlayer aniPlayer)
+            PegBoard pb, PegBoard globalPegBoard, AnimationPlayer aniPlayer)
     {
         List<PoConstraint> poVec = new ArrayList<>();
 
@@ -540,10 +540,10 @@ public final class MURMLMUBuilder
         double po = hns.getPalmOrientation(staticElem.getValue(), scope);
 
         poVec.add(new PoConstraint(po, GStrokePhaseID.STP_STROKE, "strokeStart"));
-        return addLMPPoRot(scope, bbm, bmlBlockPeg, bmlId, id, pb, poVec, aniPlayer);
+        return addLMPPoRot(scope, bbm, bmlBlockPeg, bmlId, id, pb, globalPegBoard, poVec, aniPlayer);
     }
 
-    private LMP addLMPPoRot(String scope, FeedbackManager bbm, BMLBlockPeg bmlBlockPeg, String bmlId, String id, PegBoard pb,
+    private LMP addLMPPoRot(String scope, FeedbackManager bbm, BMLBlockPeg bmlBlockPeg, String bmlId, String id, PegBoard pb, PegBoard globalPegBoard,
             List<PoConstraint> poVec, AnimationPlayer aniPlayer)
     {
         // // --- FIX-ME?: ---
@@ -578,13 +578,13 @@ public final class MURMLMUBuilder
         // }
         //
         // -- create lmp and append to motor program
-        LMPPoRot lmp = new LMPPoRot(scope, poVec, bbm, bmlBlockPeg, bmlId, createLMPId(id), pb, aniPlayer);
+        LMPPoRot lmp = new LMPPoRot(scope, poVec, bbm, bmlBlockPeg, bmlId, createLMPId(id), pb, globalPegBoard, aniPlayer);
         lmp.setPoConstraint(poVec);
         return lmp;
     }
 
     private LMP formPOMovement(String scope, List<DynamicElement> elements, FeedbackManager bbm, BMLBlockPeg bmlBlockPeg, String bmlId,
-            String id, PegBoard pb, AnimationPlayer aniPlayer)
+            String id, PegBoard pb, PegBoard globalPegBoard, AnimationPlayer aniPlayer)
     {
         List<PoConstraint> poVec = new ArrayList<>();
         for (DynamicElement dynElem : elements)
@@ -611,7 +611,7 @@ public final class MURMLMUBuilder
             }
         }
         if (poVec.size() == 0) return null;
-        return addLMPPoRot(scope, bbm, bmlBlockPeg, bmlId, id, pb, poVec, aniPlayer);
+        return addLMPPoRot(scope, bbm, bmlBlockPeg, bmlId, id, pb, globalPegBoard, poVec, aniPlayer);
     }
 
     public List<OrientConstraint> getDynamicPalmOrientationElementsTMU(String scope, Slot slot, List<DynamicElement> elements,
@@ -639,7 +639,7 @@ public final class MURMLMUBuilder
     }
 
     public LMP getStaticHandShapeElementTMU(String scope, Static staticElem, FeedbackManager bbm, BMLBlockPeg bmlBlockPeg, String bmlId,
-            String id, PegBoard pb, AnimationPlayer aniPlayer)
+            String id, PegBoard pb, PegBoard globalPegBoard, AnimationPlayer aniPlayer)
     {
 
         // // --- preparations
@@ -714,11 +714,11 @@ public final class MURMLMUBuilder
         // else
         // phaseVec.back().second = GuidingStroke::STP_FINISH;
         //
-        return new LMPHandMove(scope, phaseVec, bbm, bmlBlockPeg, bmlId, createLMPId(id), pb, aniPlayer);
+        return new LMPHandMove(scope, phaseVec, bbm, bmlBlockPeg, bmlId, createLMPId(id), pb, globalPegBoard, aniPlayer);
     }
 
     public LMP getStaticHandLocationElementTMU(String scope, Static staticElem, FeedbackManager bbm, BMLBlockPeg bmlBlockPeg, String bmlId,
-            String id, PegBoard pb, AnimationPlayer aniPlayer)
+            String id, PegBoard pb, PegBoard globalPegBoard, AnimationPlayer aniPlayer)
     {
         GuidingSequence trajectory = new GuidingSequence();
         TPConstraint sT = new TPConstraint();
@@ -736,7 +736,7 @@ public final class MURMLMUBuilder
                 trajectory.addGuidingStroke(new LinearGStroke(GStrokePhaseID.STP_PREP, ePos));
 
                 // create local motor program for anticipated stroke sequence
-                LMPWristPos wristMove = new LMPWristPos(scope, bbm, bmlBlockPeg, bmlId, createLMPId(id), pb, trajectory,
+                LMPWristPos wristMove = new LMPWristPos(scope, bbm, bmlBlockPeg, bmlId, createLMPId(id), pb, globalPegBoard, trajectory,
                         hns.getBaseJoint(), aniPlayer);
 
                 // //cout << "creating lmp from guiding sequence:" << endl; trajectory.writeTo(cout);
@@ -794,7 +794,7 @@ public final class MURMLMUBuilder
     }
 
     public LMP getDynamicHandLocationElementsTMU(String scope, List<DynamicElement> elements, FeedbackManager bbm, BMLBlockPeg bmlBlockPeg,
-            String bmlId, String id, PegBoard pb, AnimationPlayer aniPlayer) throws TMUSetupException
+            String bmlId, String id, PegBoard pb, PegBoard globalPegBoard, AnimationPlayer aniPlayer) throws TMUSetupException
     {
         if (elements.isEmpty())
         {
@@ -830,18 +830,18 @@ public final class MURMLMUBuilder
         // }
 
         // -- build and append retracting lmp(s)
-        return createPosLMP(scope, trajectory, tmu, bbm, bmlBlockPeg, bmlId, id, pb, aniPlayer);
+        return createPosLMP(scope, trajectory, tmu, bbm, bmlBlockPeg, bmlId, id, pb, globalPegBoard, aniPlayer);
     }
 
     private LMP createPosLMP(String scope, GuidingSequence traj, LMP lmp, FeedbackManager bbf, BMLBlockPeg bmlBlockPeg, String bmlId,
-            String id, PegBoard pegBoard, AnimationPlayer aniPlayer)
+            String id, PegBoard pegBoard, PegBoard globalPegBoard, AnimationPlayer aniPlayer)
     {
         if (!traj.isEmpty())
         {
             // -- create lmp for wrist trajectory
             // cout << "==== creating lmp from: "; traj.writeTo(cout); cout << endl;
 
-            LMPWristPos wristMove = new LMPWristPos(scope, bbf, bmlBlockPeg, bmlId, createLMPId(id), pegBoard, traj, hns.getBaseJoint(),
+            LMPWristPos wristMove = new LMPWristPos(scope, bbf, bmlBlockPeg, bmlId, createLMPId(id), pegBoard, globalPegBoard, traj, hns.getBaseJoint(),
                     aniPlayer);
 
             // TODO
@@ -990,7 +990,7 @@ public final class MURMLMUBuilder
         return null;
     }
 
-    public TimedAnimationUnit setupTMU(String murmlStr, FeedbackManager bbm, BMLBlockPeg bmlBlockPeg, String bmlId, String id, PegBoard pb,
+    public TimedAnimationUnit setupTMU(String murmlStr, FeedbackManager bbm, BMLBlockPeg bmlBlockPeg, String bmlId, String id, PegBoard pb, 
             AnimationPlayer aniPlayer) throws TMUSetupException
     {
         MURMLDescription def = new MURMLDescription();
@@ -1049,7 +1049,9 @@ public final class MURMLMUBuilder
     public TimedAnimationUnit setupTMU(MURMLDescription murmlDescription, FeedbackManager bbm, BMLBlockPeg bmlBlockPeg, String bmlId,
             String id, PegBoard pb, AnimationPlayer aniPlayer) throws TMUSetupException
     {
+        PegBoard globalPegBoard = pb;
         PegBoard localPegBoard = new PegBoard();
+        
         localPegBoard.addBMLBlockPeg(bmlBlockPeg);
         LMP lmp = null;
 
@@ -1063,30 +1065,30 @@ public final class MURMLMUBuilder
             }
             else if (dyn.getDynamicElements().size() > 0)
             {
-                lmp = parseProceduralDynamic(bbm, bmlBlockPeg, bmlId, id, aniPlayer, localPegBoard, dyn, ocVec);
+                lmp = parseProceduralDynamic(bbm, bmlBlockPeg, bmlId, id, aniPlayer, localPegBoard, globalPegBoard, dyn, ocVec);
             }
             if (lmp == null)
             {
-                lmp = createAndAppendLMPWrist(dyn.getScope(), bbm, bmlBlockPeg, bmlId, id, localPegBoard, aniPlayer, ocVec);
+                lmp = createAndAppendLMPWrist(dyn.getScope(), bbm, bmlBlockPeg, bmlId, id, localPegBoard, globalPegBoard, aniPlayer, ocVec);
             }
         }
         else if (murmlDescription.getStaticElement() != null)
         {
             Static staticElem = murmlDescription.getStaticElement();
             List<OrientConstraint> ocVec = new ArrayList<OrientConstraint>();
-            lmp = parseStaticElement(bbm, bmlBlockPeg, bmlId, id, aniPlayer, localPegBoard, staticElem, ocVec);
+            lmp = parseStaticElement(bbm, bmlBlockPeg, bmlId, id, aniPlayer, localPegBoard, globalPegBoard, staticElem, ocVec);
             if (lmp == null)
             {
-                lmp = createAndAppendLMPWrist(staticElem.getScope(), bbm, bmlBlockPeg, bmlId, id, localPegBoard, aniPlayer, ocVec);
+                lmp = createAndAppendLMPWrist(staticElem.getScope(), bbm, bmlBlockPeg, bmlId, id, localPegBoard, globalPegBoard, aniPlayer, ocVec);
             }
         }
         else if (murmlDescription.getParallel() != null)
         {
-            lmp = parseParallel(murmlDescription.getParallel(), bbm, bmlBlockPeg, bmlId, id, aniPlayer, localPegBoard);
+            lmp = parseParallel(murmlDescription.getParallel(), bbm, bmlBlockPeg, bmlId, id, aniPlayer, localPegBoard, globalPegBoard);
         }
         else if (murmlDescription.getSequence() != null)
         {
-            lmp = parseSequence(murmlDescription.getSequence(), bbm, bmlBlockPeg, bmlId, id, aniPlayer, localPegBoard);
+            lmp = parseSequence(murmlDescription.getSequence(), bbm, bmlBlockPeg, bmlId, id, aniPlayer, localPegBoard, globalPegBoard);
         }
         if (lmp != null)
         {
@@ -1099,7 +1101,7 @@ public final class MURMLMUBuilder
     }
 
     private LMP parseParallel(Parallel par, FeedbackManager bbm, BMLBlockPeg bmlBlockPeg, String bmlId, String id,
-            AnimationPlayer aniPlayer, PegBoard localPegBoard) throws TMUSetupException
+            AnimationPlayer aniPlayer, PegBoard localPegBoard, PegBoard globalPegBoard) throws TMUSetupException
     {
         Map<String, List<OrientConstraint>> ocMap = new HashMap<>(); // scope->ocVec map
 
@@ -1107,7 +1109,7 @@ public final class MURMLMUBuilder
         for (Static staticElem : par.getStatics())
         {
             List<OrientConstraint> ocVec = new ArrayList<OrientConstraint>();
-            LMP lmpx = parseStaticElement(bbm, bmlBlockPeg, bmlId, id, aniPlayer, localPegBoard, staticElem, ocVec);
+            LMP lmpx = parseStaticElement(bbm, bmlBlockPeg, bmlId, id, aniPlayer, localPegBoard, globalPegBoard, staticElem, ocVec);
             if (lmpx != null)
             {
                 lmps.add(lmpx);
@@ -1134,7 +1136,7 @@ public final class MURMLMUBuilder
             else
             {
                 List<OrientConstraint> ocVec = new ArrayList<OrientConstraint>();
-                LMP lmpx = parseProceduralDynamic(bbm, bmlBlockPeg, bmlId, id, aniPlayer, localPegBoard, dynamicElem, ocVec);
+                LMP lmpx = parseProceduralDynamic(bbm, bmlBlockPeg, bmlId, id, aniPlayer, localPegBoard, globalPegBoard, dynamicElem, ocVec);
                 if (lmpx != null)
                 {
                     lmps.add(lmpx);
@@ -1155,19 +1157,19 @@ public final class MURMLMUBuilder
         }
         for (Sequence seq : par.getSequences())
         {
-            lmps.add(parseSequence(seq, bbm, bmlBlockPeg, bmlId, id, aniPlayer, localPegBoard));
+            lmps.add(parseSequence(seq, bbm, bmlBlockPeg, bmlId, id, aniPlayer, localPegBoard, globalPegBoard));
         }
 
         for (Entry<String, List<OrientConstraint>> entry : ocMap.entrySet())
         {
-            lmps.add(createAndAppendLMPWrist(entry.getKey(), bbm, bmlBlockPeg, bmlId, id, localPegBoard, aniPlayer, entry.getValue()));
+            lmps.add(createAndAppendLMPWrist(entry.getKey(), bbm, bmlBlockPeg, bmlId, id, localPegBoard, globalPegBoard, aniPlayer, entry.getValue()));
         }
-        return new LMPParallel(bbm, bmlBlockPeg, bmlId, id + "_lmppar" + UUID.randomUUID().toString().replaceAll("-", ""), localPegBoard,
+        return new LMPParallel(bbm, bmlBlockPeg, bmlId, id + "_lmppar" + UUID.randomUUID().toString().replaceAll("-", ""), localPegBoard, globalPegBoard,
                 lmps);
     }
 
     private LMP parseSequence(Sequence seq, FeedbackManager bbm, BMLBlockPeg bmlBlockPeg, String bmlId, String id,
-            AnimationPlayer aniPlayer, PegBoard localPegBoard) throws TMUSetupException
+            AnimationPlayer aniPlayer, PegBoard localPegBoard, PegBoard globalPegBoard) throws TMUSetupException
     {
         List<TimedAnimationUnit> lmps = new ArrayList<>();
 
@@ -1177,14 +1179,14 @@ public final class MURMLMUBuilder
             {
                 Static staticElem = (Static) mc;
                 List<OrientConstraint> ocVec = new ArrayList<OrientConstraint>();
-                LMP lmpx = parseStaticElement(bbm, bmlBlockPeg, bmlId, id, aniPlayer, localPegBoard, staticElem, ocVec);
+                LMP lmpx = parseStaticElement(bbm, bmlBlockPeg, bmlId, id, aniPlayer, localPegBoard, globalPegBoard, staticElem, ocVec);
                 if (lmpx != null)
                 {
                     lmps.add(lmpx);
                 }
                 else
                 {
-                    lmps.add(createAndAppendLMPWrist(staticElem.getScope(), bbm, bmlBlockPeg, bmlId, id, localPegBoard, aniPlayer, ocVec));
+                    lmps.add(createAndAppendLMPWrist(staticElem.getScope(), bbm, bmlBlockPeg, bmlId, id, localPegBoard, globalPegBoard, aniPlayer, ocVec));
                 }
             }
             if (mc instanceof Dynamic)
@@ -1197,29 +1199,29 @@ public final class MURMLMUBuilder
                 else
                 {
                     List<OrientConstraint> ocVec = new ArrayList<OrientConstraint>();
-                    LMP lmpx = parseProceduralDynamic(bbm, bmlBlockPeg, bmlId, id, aniPlayer, localPegBoard, dynamicElem, ocVec);
+                    LMP lmpx = parseProceduralDynamic(bbm, bmlBlockPeg, bmlId, id, aniPlayer, localPegBoard,globalPegBoard, dynamicElem, ocVec);
                     if (lmpx != null)
                     {
                         lmps.add(lmpx);
                     }
                     else
                     {
-                        lmps.add(createAndAppendLMPWrist(dynamicElem.getScope(), bbm, bmlBlockPeg, bmlId, id, localPegBoard, aniPlayer,
+                        lmps.add(createAndAppendLMPWrist(dynamicElem.getScope(), bbm, bmlBlockPeg, bmlId, id, localPegBoard, globalPegBoard, aniPlayer,
                                 ocVec));
                     }
                 }
             }
             if (mc instanceof Parallel)
             {
-                lmps.add(parseParallel((Parallel) mc, bbm, bmlBlockPeg, bmlId, id, aniPlayer, localPegBoard));
+                lmps.add(parseParallel((Parallel) mc, bbm, bmlBlockPeg, bmlId, id, aniPlayer, localPegBoard, globalPegBoard));
             }
         }
-        return new LMPSequence(bbm, bmlBlockPeg, bmlId, id + "_lmpseq" + UUID.randomUUID().toString().replaceAll("-", ""), localPegBoard,
+        return new LMPSequence(bbm, bmlBlockPeg, bmlId, id + "_lmpseq" + UUID.randomUUID().toString().replaceAll("-", ""), localPegBoard, globalPegBoard,
                 lmps);
     }
 
     private LMP parseStaticElement(FeedbackManager bbm, BMLBlockPeg bmlBlockPeg, String bmlId, String id, AnimationPlayer aniPlayer,
-            PegBoard localPegBoard, Static staticElem, List<OrientConstraint> ocVec)
+            PegBoard localPegBoard, PegBoard globalPegBoard, Static staticElem, List<OrientConstraint> ocVec)
     {
         switch (staticElem.getSlot())
         {
@@ -1228,9 +1230,9 @@ public final class MURMLMUBuilder
         case Neck:
             break;
         case HandLocation:
-            return getStaticHandLocationElementTMU(staticElem.getScope(), staticElem, bbm, bmlBlockPeg, bmlId, id, localPegBoard, aniPlayer);
+            return getStaticHandLocationElementTMU(staticElem.getScope(), staticElem, bbm, bmlBlockPeg, bmlId, id, localPegBoard, globalPegBoard, aniPlayer);
         case HandShape:
-            return getStaticHandShapeElementTMU(staticElem.getScope(), staticElem, bbm, bmlBlockPeg, bmlId, id, localPegBoard, aniPlayer);
+            return getStaticHandShapeElementTMU(staticElem.getScope(), staticElem, bbm, bmlBlockPeg, bmlId, id, localPegBoard, globalPegBoard, aniPlayer);
         case ExtFingerOrientation:
             ocVec.addAll(getStaticExtFingerOrientationOrientationTMU(staticElem.getScope(), staticElem, bbm, bmlBlockPeg, bmlId, id,
                     localPegBoard, aniPlayer));
@@ -1238,13 +1240,13 @@ public final class MURMLMUBuilder
         case PalmOrientation:
             ocVec.addAll(getStaticPalmOrientationTMU(staticElem.getScope(), staticElem, bbm, bmlBlockPeg, bmlId, id, localPegBoard,
                     aniPlayer));
-            return formPOMovement(staticElem.getScope(), staticElem, bbm, bmlBlockPeg, bmlId, id, localPegBoard, aniPlayer);
+            return formPOMovement(staticElem.getScope(), staticElem, bbm, bmlBlockPeg, bmlId, id, localPegBoard, globalPegBoard, aniPlayer);
         }
         return null;
     }
 
     private LMP parseProceduralDynamic(FeedbackManager bbm, BMLBlockPeg bmlBlockPeg, String bmlId, String id, AnimationPlayer aniPlayer,
-            PegBoard localPegBoard, Dynamic dyn, List<OrientConstraint> ocVec) throws TMUSetupException
+            PegBoard localPegBoard, PegBoard globalPegBoard, Dynamic dyn, List<OrientConstraint> ocVec) throws TMUSetupException
     {
         switch (dyn.getSlot())
         {
@@ -1253,7 +1255,7 @@ public final class MURMLMUBuilder
         case Neck:
             break;
         case HandLocation:
-            return getDynamicHandLocationElementsTMU(dyn.getScope(), dyn.getDynamicElements(), bbm, bmlBlockPeg, bmlId, id, localPegBoard,
+            return getDynamicHandLocationElementsTMU(dyn.getScope(), dyn.getDynamicElements(), bbm, bmlBlockPeg, bmlId, id, localPegBoard, globalPegBoard,
                     aniPlayer);
         case HandShape:
             break;
@@ -1264,7 +1266,7 @@ public final class MURMLMUBuilder
         case PalmOrientation:
             ocVec.addAll(getDynamicPalmOrientationElementsTMU(dyn.getScope(), dyn.getSlot(), dyn.getDynamicElements(), bbm, bmlBlockPeg,
                     bmlId, id, localPegBoard, aniPlayer));
-            return formPOMovement(dyn.getScope(), dyn.getDynamicElements(), bbm, bmlBlockPeg, bmlId, id, localPegBoard, aniPlayer);
+            return formPOMovement(dyn.getScope(), dyn.getDynamicElements(), bbm, bmlBlockPeg, bmlId, id, localPegBoard, globalPegBoard, aniPlayer);
         }
         return null;
     }

@@ -584,7 +584,7 @@ public class MURMLMUBuilderTest
     @Test
     public void testSequenceInParallel() throws TMUSetupException
     {
-      //@formatter:off
+        //@formatter:off
         String murmlString = 
         "<murml-description xmlns=\"http://www.techfak.uni-bielefeld.de/ags/soa/murml\" scope=\"hand\">"+
         "<parallel>"+

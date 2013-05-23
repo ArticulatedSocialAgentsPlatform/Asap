@@ -12,9 +12,9 @@ import asap.realizer.pegboard.PegBoard;
  */
 public abstract class LMPPos extends LMP
 {
-    public LMPPos(FeedbackManager bbf, BMLBlockPeg bmlBlockPeg, String bmlId, String id, PegBoard pb)
+    public LMPPos(FeedbackManager bbf, BMLBlockPeg bmlBlockPeg, String bmlId, String id, PegBoard pb, PegBoard globalPegBoard)
     {
-        super(bbf, bmlBlockPeg, bmlId, id, pb);        
+        super(bbf, bmlBlockPeg, bmlId, id, pb, globalPegBoard);        
     }
     protected GuidingSequence gSeq;    
 

@@ -13,16 +13,20 @@ import java.util.List;
 import java.util.Set;
 
 import org.junit.Before;
+import org.junit.Ignore;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.powermock.core.classloader.annotations.PowerMockIgnore;
 import org.powermock.core.classloader.annotations.PrepareForTest;
 import org.powermock.modules.junit4.PowerMockRunner;
 
+import com.google.common.collect.ImmutableList;
+
 import saiba.bml.feedback.BMLSyncPointProgressFeedback;
 import saiba.bml.parser.Constraint;
 import asap.animationengine.AnimationPlayer;
 import asap.animationengine.ace.OrientConstraint;
+import asap.animationengine.motionunit.TimedAnimationUnit;
 import asap.bml.ext.murml.MURMLGestureBehaviour;
 import asap.realizer.BehaviourPlanningException;
 import asap.realizer.feedback.FeedbackManager;
@@ -47,7 +51,7 @@ import asap.realizertestutil.util.TimePegUtil;
 public class MotorControlProgramTest extends AbstractTimedPlanUnitTest
 {
     private PegBoard globalPegBoard = new PegBoard();
-    private PegBoard localPegboard = new PegBoard();    
+    private PegBoard localPegboard = new PegBoard();
 
     private AnimationPlayer mockAnimationPlayer = mock(AnimationPlayer.class);
 
@@ -57,8 +61,8 @@ public class MotorControlProgramTest extends AbstractTimedPlanUnitTest
     private static final double LMP_RETRACTIONDUR = 0.3;
 
     private BMLBlockPeg bml1Peg = new BMLBlockPeg("bml1", 0);
-    private StubLMP stubTimedAnimationUnit = new StubLMP(fbManager, bml1Peg, "bml1", "beh1_internal", localPegboard, new HashSet<String>()
-            , new HashSet<String>(), LMP_PREPDUR, LMP_RETRACTIONDUR, LMP_STROKEDUR);
+    private StubLMP stubTimedAnimationUnit = new StubLMP(fbManager, bml1Peg, "bml1", "beh1_internal", localPegboard, globalPegBoard, new HashSet<String>(),
+            new HashSet<String>(), LMP_PREPDUR, LMP_RETRACTIONDUR, LMP_STROKEDUR);
 
     @SuppressWarnings("unchecked")
     @Before
@@ -72,20 +76,19 @@ public class MotorControlProgramTest extends AbstractTimedPlanUnitTest
                 stubTimedAnimationUnit);
     }
 
+    private MotorControlProgram setupPlanUnit(FeedbackManager bfm, BMLBlockPeg bbPeg, String bmlId, String id)
+    {
+        return new MotorControlProgram(bfm, bbPeg, bmlId, id, globalPegBoard, localPegboard, mockAnimationPlayer, stubTimedAnimationUnit);
+    }
+
     private MotorControlProgram setupPlanUnit(FeedbackManager bfm, BMLBlockPeg bbPeg, String bmlId, String id, LMP lmp)
     {
         return new MotorControlProgram(bfm, bbPeg, bmlId, id, globalPegBoard, localPegboard, mockAnimationPlayer, lmp);
     }
 
-    private MotorControlProgram setupPlanUnit(FeedbackManager bfm, BMLBlockPeg bbPeg, String bmlId, String id)
+    private MotorControlProgram setupPlanUnit(FeedbackManager bfm, BMLBlockPeg bbPeg, String id, String bmlId, double startTime, LMP lmp)
     {
-        return setupPlanUnit(bfm, bbPeg, bmlId, id, stubTimedAnimationUnit);
-    }
-
-    @Override
-    protected MotorControlProgram setupPlanUnit(FeedbackManager bfm, BMLBlockPeg bbPeg, String id, String bmlId, double startTime)
-    {
-        MotorControlProgram mcp = setupPlanUnit(bfm, bbPeg, bmlId, id);
+        MotorControlProgram mcp = setupPlanUnit(bfm, bbPeg, bmlId, id, lmp);
         mcp.setTimePeg("start", TimePegUtil.createTimePeg(bbPeg, startTime));
         try
         {
@@ -98,24 +101,32 @@ public class MotorControlProgramTest extends AbstractTimedPlanUnitTest
         return mcp;
     }
 
+    @Override
+    protected MotorControlProgram setupPlanUnit(FeedbackManager bfm, BMLBlockPeg bbPeg, String id, String bmlId, double startTime)
+    {
+        return setupPlanUnit(bfm, bbPeg, id, bmlId, startTime, stubTimedAnimationUnit);
+    }
+
     @Test
     public void testUpdateTimingShorterPreparation() throws BehaviourPlanningException, TimedPlanUnitPlayException
     {
         MotorControlProgram mcp = setupPlanUnit(fbManager, bml1Peg, "bml1", "beh1");
         mcp.setState(TimedPlanUnitState.LURKING);
-        mcp.resolveSynchs(BMLBlockPeg.GLOBALPEG, new MURMLGestureBehaviour("bml1"), new ArrayList<TimePegAndConstraint>());
+        ArrayList<TimePegAndConstraint> sacs = new ArrayList<TimePegAndConstraint>();
+        sacs.add(new TimePegAndConstraint("strokeStart", TimePegUtil.createTimePeg(2), new Constraint(), 0, false));
+        mcp.resolveSynchs(BMLBlockPeg.GLOBALPEG, new MURMLGestureBehaviour("bml1"), sacs);
 
         final double LMP_PREPDUR_NEW = 0.3;
         stubTimedAnimationUnit.setPrepDuration(LMP_PREPDUR_NEW);
         mcp.updateTiming(0);
 
-        assertEquals(LMP_PREPDUR - LMP_PREPDUR_NEW, mcp.getTime("start"), TIMING_PRECISION);
-        assertEquals(LMP_PREPDUR, mcp.getTime("ready"), TIMING_PRECISION);
-        assertEquals(LMP_PREPDUR, mcp.getTime("strokeStart"), TIMING_PRECISION);
-        assertEquals(LMP_PREPDUR, mcp.getTime("stroke"), TIMING_PRECISION);
-        assertEquals(LMP_PREPDUR + LMP_STROKEDUR, mcp.getTime("strokeEnd"), TIMING_PRECISION);
-        assertEquals(LMP_PREPDUR + LMP_STROKEDUR, mcp.getTime("relax"), TIMING_PRECISION);
-        assertEquals(LMP_PREPDUR + LMP_STROKEDUR + LMP_RETRACTIONDUR, mcp.getTime("end"), TIMING_PRECISION);
+        assertEquals(2 - LMP_PREPDUR_NEW, mcp.getTime("start"), TIMING_PRECISION);
+        assertEquals(2, mcp.getTime("ready"), TIMING_PRECISION);
+        assertEquals(2, mcp.getTime("strokeStart"), TIMING_PRECISION);
+        assertEquals(2, mcp.getTime("stroke"), TIMING_PRECISION);
+        assertEquals(2 + LMP_STROKEDUR, mcp.getTime("strokeEnd"), TIMING_PRECISION);
+        assertEquals(2 + LMP_STROKEDUR, mcp.getTime("relax"), TIMING_PRECISION);
+        assertEquals(2 + LMP_STROKEDUR + LMP_RETRACTIONDUR, mcp.getTime("end"), TIMING_PRECISION);
     }
 
     @Test
@@ -192,7 +203,7 @@ public class MotorControlProgramTest extends AbstractTimedPlanUnitTest
         ocVec.add(new OrientConstraint("strokeStart"));
         ocVec.add(new OrientConstraint("strokeEnd"));
         LMPWristRot lmpWristRot = new LMPWristRot("left_arm", ocVec, fbManager, BMLBlockPeg.GLOBALPEG, "bml1", "beh1", localPegboard,
-                mockAnimationPlayer);
+                globalPegBoard, mockAnimationPlayer);
         MotorControlProgram mcp = setupPlanUnit(fbManager, BMLBlockPeg.GLOBALPEG, "bml1", "beh1", lmpWristRot);
 
         List<TimePegAndConstraint> sacs = new ArrayList<>();
@@ -257,5 +268,136 @@ public class MotorControlProgramTest extends AbstractTimedPlanUnitTest
         assertEquals(3, mcp.getTime("strokeEnd"), TIMING_PRECISION);
         assertEquals(3, mcp.getTime("relax"), TIMING_PRECISION);
         assertEquals(10 - 2, mcp.getEndTime(), TIMING_PRECISION);
-    }    
+    }
+
+    @Test
+    public void testResolveSequenceNoConstraints() throws BehaviourPlanningException
+    {
+        final double LMP1_PREP = 1, LMP1_RETR = 1, LMP1_STROKE = 2;
+        final double LMP2_PREP = 2, LMP2_RETR = 3, LMP2_STROKE = 4;
+        StubLMP stubTimedAnimationUnit1 = new StubLMP(fbManager, bml1Peg, "bml1", "beh1_internal1", localPegboard, globalPegBoard,
+                new HashSet<String>(), new HashSet<String>(), LMP1_PREP, LMP1_RETR, LMP1_STROKE);
+        StubLMP stubTimedAnimationUnit2 = new StubLMP(fbManager, bml1Peg, "bml1", "beh1_internal2", localPegboard, globalPegBoard,
+                new HashSet<String>(), new HashSet<String>(), LMP2_PREP, LMP2_RETR, LMP2_STROKE);
+
+        LMPSequence lmp = new LMPSequence(fbManager, bml1Peg, "bml1", "beh1_seq", localPegboard,globalPegBoard, 
+                new ImmutableList.Builder<TimedAnimationUnit>().add(stubTimedAnimationUnit1).add(stubTimedAnimationUnit2).build());
+        MotorControlProgram mcp = setupPlanUnit(fbManager, BMLBlockPeg.GLOBALPEG, "bml1", "beh1", lmp);
+        List<TimePegAndConstraint> sacs = new ArrayList<>();
+        mcp.resolveSynchs(BMLBlockPeg.GLOBALPEG, new MURMLGestureBehaviour("bml1"), sacs);
+
+        assertEquals(0, mcp.getStartTime(), TIMING_PRECISION);
+        assertEquals(LMP1_PREP, mcp.getTime("ready"), TIMING_PRECISION);
+        assertEquals(LMP1_PREP, mcp.getTime("strokeStart"), TIMING_PRECISION);
+        assertEquals(LMP1_PREP, mcp.getTime("stroke"), TIMING_PRECISION);
+        assertEquals(LMP1_PREP + LMP1_STROKE + LMP2_PREP + LMP2_STROKE, mcp.getTime("strokeEnd"), TIMING_PRECISION);
+        assertEquals(LMP1_PREP + LMP1_STROKE + LMP2_PREP + LMP2_STROKE, mcp.getTime("relax"), TIMING_PRECISION);
+        assertEquals(LMP1_PREP + LMP1_STROKE + LMP2_PREP + LMP2_STROKE + LMP2_RETR, mcp.getTime("end"), TIMING_PRECISION);
+
+        assertEquals(0, stubTimedAnimationUnit1.getStartTime(), TIMING_PRECISION);
+        assertEquals(LMP1_PREP, stubTimedAnimationUnit1.getTime("strokeStart"), TIMING_PRECISION);
+        assertEquals(LMP1_PREP + LMP1_STROKE, stubTimedAnimationUnit1.getTime("strokeEnd"), TIMING_PRECISION);
+
+        assertEquals(LMP1_PREP + LMP1_STROKE, stubTimedAnimationUnit2.getStartTime(), TIMING_PRECISION);
+        assertEquals(LMP1_PREP + LMP1_STROKE + LMP2_PREP, stubTimedAnimationUnit2.getTime("strokeStart"), TIMING_PRECISION);
+        assertEquals(LMP1_PREP + LMP1_STROKE + LMP2_PREP + LMP2_STROKE, stubTimedAnimationUnit2.getTime("strokeEnd"), TIMING_PRECISION);
+    }
+
+    @Test
+    public void testResolveSequenceInParallelNoConstraints() throws BehaviourPlanningException, TimedPlanUnitPlayException
+    {
+        final double LMP1_PREP = 1, LMP1_RETR = 1, LMP1_STROKE = 2;
+        final double LMP2_PREP = 2, LMP2_RETR = 3, LMP2_STROKE = 4;
+        StubLMP stubTimedAnimationUnit1a = new StubLMP(fbManager, bml1Peg, "bml1", "beh1_internal1a", localPegboard, globalPegBoard, new HashSet<String>(),
+                new HashSet<String>(), LMP1_PREP, LMP1_RETR, LMP1_STROKE);
+        StubLMP stubTimedAnimationUnit1b = new StubLMP(fbManager, bml1Peg, "bml1", "beh1_internal1b", localPegboard, globalPegBoard, new HashSet<String>(),
+                new HashSet<String>(), LMP1_PREP, LMP1_RETR, LMP1_STROKE);
+        StubLMP stubTimedAnimationUnit2a = new StubLMP(fbManager, bml1Peg, "bml1", "beh1_internal2a", localPegboard, globalPegBoard, new HashSet<String>(),
+                new HashSet<String>(), LMP2_PREP, LMP2_RETR, LMP2_STROKE);
+        StubLMP stubTimedAnimationUnit2b = new StubLMP(fbManager, bml1Peg, "bml1", "beh1_internal2b", localPegboard, globalPegBoard, new HashSet<String>(),
+                new HashSet<String>(), LMP2_PREP, LMP2_RETR, LMP2_STROKE);
+        LMPSequence lmpS1 = new LMPSequence(fbManager, bml1Peg, "bml1", "beh1_seq", localPegboard,globalPegBoard, 
+                new ImmutableList.Builder<TimedAnimationUnit>().add(stubTimedAnimationUnit1a).add(stubTimedAnimationUnit2a).build());
+        LMPSequence lmpS2 = new LMPSequence(fbManager, bml1Peg, "bml1", "beh1_seq", localPegboard,globalPegBoard, 
+                new ImmutableList.Builder<TimedAnimationUnit>().add(stubTimedAnimationUnit1b).add(stubTimedAnimationUnit2b).build());
+        LMPParallel lmp = new LMPParallel(fbManager, bml1Peg, "bml1", "beh1_seq", localPegboard,globalPegBoard, 
+                new ImmutableList.Builder<TimedAnimationUnit>().add(lmpS1).add(lmpS2).build());
+
+        MotorControlProgram mcp = setupPlanUnit(fbManager, BMLBlockPeg.GLOBALPEG, "bml1", "beh1", lmp);
+        List<TimePegAndConstraint> sacs = new ArrayList<>();
+        mcp.resolveSynchs(BMLBlockPeg.GLOBALPEG, new MURMLGestureBehaviour("bml1"), sacs);
+
+        assertEquals(0, mcp.getStartTime(), TIMING_PRECISION);
+        assertEquals(LMP1_PREP, mcp.getTime("ready"), TIMING_PRECISION);
+        assertEquals(LMP1_PREP, mcp.getTime("strokeStart"), TIMING_PRECISION);
+        assertEquals(LMP1_PREP, mcp.getTime("stroke"), TIMING_PRECISION);
+        assertEquals(LMP1_PREP + LMP1_STROKE + LMP2_PREP + LMP2_STROKE, mcp.getTime("strokeEnd"), TIMING_PRECISION);
+        assertEquals(LMP1_PREP + LMP1_STROKE + LMP2_PREP + LMP2_STROKE, mcp.getTime("relax"), TIMING_PRECISION);
+        assertEquals(LMP1_PREP + LMP1_STROKE + LMP2_PREP + LMP2_STROKE + LMP2_RETR, mcp.getTime("end"), TIMING_PRECISION);
+
+        assertEquals(0, lmpS1.getStartTime(), TIMING_PRECISION);
+        assertEquals(LMP1_PREP, lmpS1.getTime("strokeStart"), TIMING_PRECISION);
+        assertEquals(LMP1_PREP, lmpS1.getTime("stroke"), TIMING_PRECISION);
+        assertEquals(LMP1_PREP + LMP1_STROKE + LMP2_PREP + LMP2_STROKE, lmpS1.getTime("strokeEnd"), TIMING_PRECISION);
+
+        assertEquals(0, lmpS2.getStartTime(), TIMING_PRECISION);
+        assertEquals(LMP1_PREP, lmpS2.getTime("strokeStart"), TIMING_PRECISION);
+        assertEquals(LMP1_PREP, lmpS2.getTime("stroke"), TIMING_PRECISION);
+        assertEquals(LMP1_PREP + LMP1_STROKE + LMP2_PREP + LMP2_STROKE, lmpS2.getTime("strokeEnd"), TIMING_PRECISION);
+
+        assertEquals(0, stubTimedAnimationUnit1a.getStartTime(), TIMING_PRECISION);
+        assertEquals(LMP1_PREP, stubTimedAnimationUnit1a.getTime("strokeStart"), TIMING_PRECISION);
+        assertEquals(LMP1_PREP + LMP1_STROKE, stubTimedAnimationUnit1a.getTime("strokeEnd"), TIMING_PRECISION);
+
+        assertEquals(LMP1_PREP + LMP1_STROKE, stubTimedAnimationUnit2a.getStartTime(), TIMING_PRECISION);
+        assertEquals(LMP1_PREP + LMP1_STROKE + LMP2_PREP, stubTimedAnimationUnit2a.getTime("strokeStart"), TIMING_PRECISION);
+        assertEquals(LMP1_PREP + LMP1_STROKE + LMP2_PREP + LMP2_STROKE, stubTimedAnimationUnit2a.getTime("strokeEnd"), TIMING_PRECISION);
+
+        assertEquals(0, stubTimedAnimationUnit1b.getStartTime(), TIMING_PRECISION);
+        assertEquals(LMP1_PREP, stubTimedAnimationUnit1b.getTime("strokeStart"), TIMING_PRECISION);
+        assertEquals(LMP1_PREP + LMP1_STROKE, stubTimedAnimationUnit1b.getTime("strokeEnd"), TIMING_PRECISION);
+
+        assertEquals(LMP1_PREP + LMP1_STROKE, stubTimedAnimationUnit2b.getStartTime(), TIMING_PRECISION);
+        assertEquals(LMP1_PREP + LMP1_STROKE + LMP2_PREP, stubTimedAnimationUnit2b.getTime("strokeStart"), TIMING_PRECISION);
+        assertEquals(LMP1_PREP + LMP1_STROKE + LMP2_PREP + LMP2_STROKE, stubTimedAnimationUnit2b.getTime("strokeEnd"), TIMING_PRECISION);
+    }
+
+    @Test
+    public void testSequenceDynamicTimingUpdate() throws BehaviourPlanningException, TimedPlanUnitPlayException
+    {
+        final double LMP1_PREP = 1, LMP1_RETR = 1, LMP1_STROKE = 2;
+        final double LMP2_PREP = 2, LMP2_RETR = 3, LMP2_STROKE = 4;
+        StubLMP stubTimedAnimationUnit1 = new StubLMP(fbManager, bml1Peg, "bml1", "beh1_internal1", localPegboard, globalPegBoard,
+                new HashSet<String>(), new HashSet<String>(), LMP1_PREP, LMP1_RETR, LMP1_STROKE);
+        StubLMP stubTimedAnimationUnit2 = new StubLMP(fbManager, bml1Peg, "bml1", "beh1_internal2", localPegboard, globalPegBoard,
+                new HashSet<String>(), new HashSet<String>(), LMP2_PREP, LMP2_RETR, LMP2_STROKE);
+
+        LMPSequence lmp = new LMPSequence(fbManager, bml1Peg, "bml1", "beh1_seq", localPegboard, globalPegBoard,
+                new ImmutableList.Builder<TimedAnimationUnit>().add(stubTimedAnimationUnit1).add(stubTimedAnimationUnit2).build());
+        MotorControlProgram mcp = setupPlanUnit(fbManager, BMLBlockPeg.GLOBALPEG, "bml1", "beh1", lmp);
+        List<TimePegAndConstraint> sacs = new ArrayList<>();
+        mcp.resolveSynchs(BMLBlockPeg.GLOBALPEG, new MURMLGestureBehaviour("bml1"), sacs);
+        mcp.setState(TimedPlanUnitState.LURKING);
+        mcp.start(0);
+        mcp.play(0);
+        final double LMP2_PREP_NEW = 3;
+        stubTimedAnimationUnit2.setPrepDuration(LMP2_PREP_NEW);
+        mcp.updateTiming(0.1);
+
+        assertEquals(0, mcp.getStartTime(), TIMING_PRECISION);
+        assertEquals(LMP1_PREP, mcp.getTime("ready"), TIMING_PRECISION);
+        assertEquals(LMP1_PREP, mcp.getTime("strokeStart"), TIMING_PRECISION);
+        assertEquals(LMP1_PREP, mcp.getTime("stroke"), TIMING_PRECISION);
+        assertEquals(LMP1_PREP + LMP1_STROKE + LMP2_PREP_NEW + LMP2_STROKE, mcp.getTime("strokeEnd"), TIMING_PRECISION);
+        // assertEquals(LMP1_PREP + LMP1_STROKE + LMP2_PREP_NEW + LMP2_STROKE, mcp.getTime("relax"), TIMING_PRECISION);
+        assertEquals(LMP1_PREP + LMP1_STROKE + LMP2_PREP_NEW + LMP2_STROKE + LMP2_RETR, mcp.getTime("end"), TIMING_PRECISION);
+
+        assertEquals(0, stubTimedAnimationUnit1.getStartTime(), TIMING_PRECISION);
+        assertEquals(LMP1_PREP, stubTimedAnimationUnit1.getTime("strokeStart"), TIMING_PRECISION);
+        assertEquals(LMP1_PREP + LMP1_STROKE, stubTimedAnimationUnit1.getTime("strokeEnd"), TIMING_PRECISION);
+
+        assertEquals(LMP1_PREP + LMP1_STROKE, stubTimedAnimationUnit2.getStartTime(), TIMING_PRECISION);
+        assertEquals(LMP1_PREP + LMP1_STROKE + LMP2_PREP_NEW, stubTimedAnimationUnit2.getTime("strokeStart"), TIMING_PRECISION);
+        assertEquals(LMP1_PREP + LMP1_STROKE + LMP2_PREP_NEW + LMP2_STROKE, stubTimedAnimationUnit2.getTime("strokeEnd"), TIMING_PRECISION);
+    }
 }

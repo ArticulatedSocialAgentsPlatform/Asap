@@ -28,11 +28,13 @@ import com.google.common.collect.ImmutableSet;
 public abstract class LMP extends TimedAbstractPlanUnit implements TimedAnimationUnit
 {
     protected final PegBoard pegBoard;
+    private final PegBoard globalPegBoard;
 
-    public LMP(FeedbackManager fbm, BMLBlockPeg bmlPeg, String bmlId, String behId, PegBoard pegBoard)
+    public LMP(FeedbackManager fbm, BMLBlockPeg bmlPeg, String bmlId, String behId, PegBoard localPegBoard, PegBoard globalPegBoard)
     {
         super(fbm, bmlPeg, bmlId, behId, true);
-        this.pegBoard = pegBoard;
+        this.pegBoard = localPegBoard;
+        this.globalPegBoard = globalPegBoard;
         createPegWhenMissingOnPegBoard("start");
         createPegWhenMissingOnPegBoard("strokeStart");
         createPegWhenMissingOnPegBoard("strokeEnd");
@@ -44,6 +46,11 @@ public abstract class LMP extends TimedAbstractPlanUnit implements TimedAnimatio
         return false;
     }
 
+    protected int getExternalSyncs(String syncId)
+    {
+        return globalPegBoard.getPegKeys(getTimePeg(syncId)).size();
+    }
+    
     @Override
     public List<String> getAvailableSyncs()
     {
