@@ -37,14 +37,13 @@ public class TextEngineLoaderTest
     }
     
     @Test
-    public void test() throws IOException
+    public void test() throws IOException, InterruptedException
     {
         String loaderStr = "<Loader id=\"textengine\" loader=\"asap.textengine.loader.TextEngineLoader\">" + "</Loader>";
         TextEngineLoader loader = new TextEngineLoader();
         XMLTokenizer tok = new XMLTokenizer(loaderStr);
         tok.takeSTag();
         loader.readXML(tok, "pa1", "billie", "billie", new Environment[0], new Loader[]{mockAsapRealizerEmbodiment, mockTextEmbodimentLoader});
-        loader.getTextOutput().setText("test");
         verify(mockAsapRealizerEmbodiment).addEngine(any(Engine.class));
         assertNotNull(loader.getEngine());
     }
