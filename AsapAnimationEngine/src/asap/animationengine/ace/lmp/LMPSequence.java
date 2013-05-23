@@ -217,11 +217,7 @@ public class LMPSequence extends LMP
         if (lmp.getTimePeg("strokeStart") == null)
         {
             lmp.setTimePeg("strokeStart", new TimePeg(bmlBlockPeg));
-        }
-        if (lmp.getTimePeg("end") == null)
-        {
-            lmp.setTimePeg("end", new TimePeg(bmlBlockPeg));
-        }
+        }        
     }
 
     @Override
