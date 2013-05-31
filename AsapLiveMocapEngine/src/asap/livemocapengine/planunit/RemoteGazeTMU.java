@@ -1,7 +1,8 @@
 package asap.livemocapengine.planunit;
 
 import hmi.headandgazeembodiments.GazeEmbodiment;
-import asap.livemocapengine.inputs.PositionInput;
+
+import asap.livemocapengine.inputs.EulerInput;
 import asap.realizer.feedback.FeedbackManager;
 import asap.realizer.pegboard.BMLBlockPeg;
 import asap.realizer.planunit.TimedPlanUnitPlayException;
@@ -13,19 +14,19 @@ import asap.realizer.planunit.TimedPlanUnitPlayException;
  */
 public class RemoteGazeTMU extends LiveMocapTMU
 {
-    private final PositionInput positionInput;
+    private final EulerInput eulerInput;
     private final GazeEmbodiment gazeEmbodiment;
     
-    public RemoteGazeTMU(PositionInput input, GazeEmbodiment embodiment, FeedbackManager fbm, BMLBlockPeg bmlPeg, String bmlId, String behId)
+    public RemoteGazeTMU(EulerInput gazeinput, GazeEmbodiment embodiment, FeedbackManager fbm, BMLBlockPeg bmlPeg, String bmlId, String behId)
     {
         super(fbm, bmlPeg, bmlId, behId);
-        this.positionInput = input;
-        this.gazeEmbodiment = embodiment;                
+        this.eulerInput = gazeinput;
+        this.gazeEmbodiment = embodiment;   
     }
 
     @Override
     protected void playUnit(double time) throws TimedPlanUnitPlayException
     {
-        gazeEmbodiment.setGazePosition(positionInput.getPosition());
+        gazeEmbodiment.setGazeRollPitchYawDegrees(eulerInput.getRollDegrees(), eulerInput.getPitchDegrees(), eulerInput.getYawDegrees());
     }
 }

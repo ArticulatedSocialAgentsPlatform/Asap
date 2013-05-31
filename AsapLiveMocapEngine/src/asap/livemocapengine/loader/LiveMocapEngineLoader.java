@@ -192,7 +192,6 @@ public class LiveMocapEngineLoader implements EngineLoader
             {
                 throw new XMLScanException("output " + output + " is not coupled to an EmbodimentLoader");
             }
-
             checkInterface(output.getInterfaceStr(), loader.getEmbodiment());
             outputBinding.put(output.getName(), output.getInterfaceStr(), loader.getEmbodiment());
         }

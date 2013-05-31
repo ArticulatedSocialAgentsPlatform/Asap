@@ -62,43 +62,43 @@ public class LiveMocapPlanner extends AbstractPlanner<LiveMocapTMU>
     {
         if(b instanceof RemoteHeadBehaviour)
         {
-            EulerInput input = inputBinding.get(b.getInput(), EulerInput.class);
+            EulerInput input = inputBinding.get(b.getStringParameterValue("input"), EulerInput.class);
             if(input == null)
             {
-                throw new BehaviourPlanningException(b,"No input found that matches "+b.getInput()+","+EulerInput.class);
+                throw new BehaviourPlanningException(b,"No input found that matches "+b.getStringParameterValue("input")+","+EulerInput.class);
             }
-            EulerHeadEmbodiment output = outputBinding.get(b.getOutput(), EulerHeadEmbodiment.class);
+            EulerHeadEmbodiment output = outputBinding.get(b.getStringParameterValue("output"), EulerHeadEmbodiment.class);
             if(output == null)
             {
-                throw new BehaviourPlanningException(b,"No output found that matches "+b.getOutput()+","+EulerHeadEmbodiment.class);
+                throw new BehaviourPlanningException(b,"No output found that matches "+b.getStringParameterValue("output")+","+EulerHeadEmbodiment.class);
             }
             return new RemoteHeadTMU(input,output, fbm, bmlPeg, b.getBmlId(),b.id);
         }
         if(b instanceof RemoteFaceFACSBehaviour)
         {
-            FACSFaceInput input = inputBinding.get(b.getInput(), FACSFaceInput.class);
+            FACSFaceInput input = inputBinding.get(b.getStringParameterValue("input"), FACSFaceInput.class);
             if(input == null)
             {
-                throw new BehaviourPlanningException(b,"No input found that matches "+b.getInput()+","+FACSFaceInput.class);
+                throw new BehaviourPlanningException(b,"No input found that matches "+b.getStringParameterValue("input")+","+FACSFaceInput.class);
             }
-            FACSFaceEmbodiment output = outputBinding.get(b.getOutput(), FACSFaceEmbodiment.class);
+            FACSFaceEmbodiment output = outputBinding.get(b.getStringParameterValue("output"), FACSFaceEmbodiment.class);
             if(output == null)
             {
-                throw new BehaviourPlanningException(b,"No output found that matches "+b.getOutput()+","+FACSFaceEmbodiment.class);
+                throw new BehaviourPlanningException(b,"No output found that matches "+b.getStringParameterValue("output")+","+FACSFaceEmbodiment.class);
             }
             return new RemoteFaceFACSTMU(input,output, fbm, bmlPeg, b.getBmlId(),b.id);
         }
         if(b instanceof RemoteGazeBehaviour)
         {
-            PositionInput input = inputBinding.get(b.getInput(), PositionInput.class);
+        	EulerInput input = inputBinding.get(b.getStringParameterValue("input"), EulerInput.class);
             if(input == null)
             {
-                throw new BehaviourPlanningException(b,"No input found that matches "+b.getInput()+","+PositionInput.class);
+                throw new BehaviourPlanningException(b,"No input found that matches "+b.getStringParameterValue("input")+","+PositionInput.class);
             }
-            GazeEmbodiment output = outputBinding.get(b.getOutput(), GazeEmbodiment.class);
+            GazeEmbodiment output = outputBinding.get(b.getStringParameterValue("output"), GazeEmbodiment.class);
             if(output == null)
             {
-                throw new BehaviourPlanningException(b,"No output found that matches "+b.getOutput()+","+GazeEmbodiment.class);
+                throw new BehaviourPlanningException(b,"No output found that matches "+b.getStringParameterValue("output")+","+GazeEmbodiment.class);
             }
             return new RemoteGazeTMU(input, output, fbm, bmlPeg, b.getBmlId(), b.id);
         }
