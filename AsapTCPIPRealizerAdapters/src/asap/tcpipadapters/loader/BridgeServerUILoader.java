@@ -2,7 +2,7 @@ package asap.tcpipadapters.loader;
 
 import hmi.environmentbase.Environment;
 import hmi.environmentbase.Loader;
-import hmi.jcomponentenvironment.JComponentEmbodimentLoader;
+import hmi.jcomponentenvironment.loader.JComponentEmbodimentLoader;
 import hmi.util.ArrayUtils;
 import hmi.util.CollectionUtils;
 import hmi.xml.XMLScanException;

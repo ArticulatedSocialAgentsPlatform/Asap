@@ -6,7 +6,7 @@ import static org.mockito.Mockito.when;
 import hmi.environmentbase.Environment;
 import hmi.environmentbase.Loader;
 import hmi.jcomponentenvironment.JComponentEmbodiment;
-import hmi.jcomponentenvironment.JComponentEmbodimentLoader;
+import hmi.jcomponentenvironment.loader.JComponentEmbodimentLoader;
 import hmi.xml.XMLTokenizer;
 
 import java.io.IOException;

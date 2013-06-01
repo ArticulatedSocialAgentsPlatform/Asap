@@ -5,7 +5,7 @@ import hmi.environmentbase.EmbodimentLoader;
 import hmi.environmentbase.Environment;
 import hmi.environmentbase.Loader;
 import hmi.jcomponentenvironment.JComponentEmbodiment;
-import hmi.jcomponentenvironment.JComponentEmbodimentLoader;
+import hmi.jcomponentenvironment.loader.JComponentEmbodimentLoader;
 import hmi.util.ArrayUtils;
 import hmi.xml.XMLScanException;
 import hmi.xml.XMLTokenizer;

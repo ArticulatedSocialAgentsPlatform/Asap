@@ -7,7 +7,7 @@ import static org.powermock.api.mockito.PowerMockito.when;
 import hmi.environmentbase.Environment;
 import hmi.environmentbase.Loader;
 import hmi.jcomponentenvironment.JComponentEmbodiment;
-import hmi.jcomponentenvironment.JComponentEmbodimentLoader;
+import hmi.jcomponentenvironment.loader.JComponentEmbodimentLoader;
 import hmi.xml.XMLTokenizer;
 
 import java.io.IOException;

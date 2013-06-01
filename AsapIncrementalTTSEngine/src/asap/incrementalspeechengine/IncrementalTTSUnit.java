@@ -10,7 +10,6 @@ import inpro.incremental.unit.IU;
 import inpro.incremental.unit.IU.IUUpdateListener;
 import inpro.incremental.unit.PhraseIU;
 import inpro.incremental.unit.SegmentIU;
-import inpro.incremental.unit.SysInstallmentIU;
 import inpro.incremental.unit.SysSegmentIU;
 import inpro.incremental.unit.WordIU;
 
@@ -61,8 +60,8 @@ public class IncrementalTTSUnit extends TimedAbstractPlanUnit
     private final PhonemeToVisemeMapping visemeMapping;
     private final int visemeLookAhead = 2;
     private final Behaviour behavior;
-    private IU lastWord;
-    private IU firstWord;
+    private volatile IU lastWord;
+    private volatile IU firstWord;
     private List<String> syncs = new ArrayList<>();
     private final PhraseIUManager iuManager;
     @Setter
@@ -310,6 +309,8 @@ public class IncrementalTTSUnit extends TimedAbstractPlanUnit
                 fwTime = firstWord.startTime();
             }
             lsp.setLipSyncUnit(getBMLBlockPeg(), behavior, startDelay + phIU.startTime() - fwTime + getStartTime(), viseme, phIU);
+            System.out.println(this.getBMLId()+" setlipsync, time:"+(startDelay + phIU.startTime() - fwTime + getStartTime())+" fwTime "+fwTime+" startDelay "+startDelay);
+            //lsp.setLipSyncUnit(getBMLBlockPeg(), behavior, startDelay + phIU.startTime() - fwTime + getStartTime(), viseme, phIU);
         }
     }
 
