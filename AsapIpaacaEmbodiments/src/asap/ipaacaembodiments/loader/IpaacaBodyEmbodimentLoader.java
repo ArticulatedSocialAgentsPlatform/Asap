@@ -2,7 +2,6 @@ package asap.ipaacaembodiments.loader;
 
 import hmi.animation.RenamingXMLMap;
 import hmi.environmentbase.ClockDrivenCopyEnvironment;
-import hmi.environmentbase.Embodiment;
 import hmi.environmentbase.EmbodimentLoader;
 import hmi.environmentbase.Environment;
 import hmi.environmentbase.Loader;
@@ -101,7 +100,7 @@ public class IpaacaBodyEmbodimentLoader implements EmbodimentLoader
     }
 
     @Override
-    public Embodiment getEmbodiment()
+    public IpaacaBodyEmbodiment getEmbodiment()
     {
         return embodiment;
     }

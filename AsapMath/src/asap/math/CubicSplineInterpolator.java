@@ -6,8 +6,6 @@ package asap.math;
  * pval[][1] is value at knot<br>
  * Assumes that values in pval are ordered in time
  * @author hvanwelbergen
- * @author hvanwelbergen
- * 
  */
 public class CubicSplineInterpolator
 {

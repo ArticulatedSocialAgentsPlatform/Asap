@@ -1,16 +1,15 @@
 package asap.ipaacaembodiments;
 
 import hmi.animation.VJoint;
-import hmi.animationembodiments.SkeletonEmbodiment;
+import hmi.environment.bodyandfaceembodiments.BodyAndFaceEmbodiment;
 import hmi.faceanimation.FaceController;
-import hmi.faceembodiments.FaceEmbodiment;
 
 /**
  * Steers a body and a face through an ipaaca renderer
  * @author hvanwelbergen
  * 
  */
-public class IpaacaFaceAndBodyEmbodiment implements SkeletonEmbodiment, FaceEmbodiment
+public class IpaacaFaceAndBodyEmbodiment implements BodyAndFaceEmbodiment
 {
     private final IpaacaFaceEmbodiment faceEmbodiment;
     private final IpaacaBodyEmbodiment bodyEmbodiment;
