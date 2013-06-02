@@ -107,19 +107,43 @@ public class IUModuleTest
         System.setProperty("inpro.tts.language", "en_GB");
         DispatchStream dispatcher = SimpleMonitor.setupDispatcher(new Resources("").getURL("sphinx-config.xml"));
         MyIUModule mb = new MyIUModule();
+        
         AdaptableSynthesisModule asm = new AdaptableSynthesisModule(dispatcher);
         mb.addListener(asm);
         MyWordUpdateListener l = new MyWordUpdateListener();
 
         PhraseIU p = new PhraseIU("Hello world");
+        p.preSynthesize();
+        
+        PhraseIU p2 = new PhraseIU("hello hello hello");
+        p2.preSynthesize();
+        
         mb.addToBuffer(p);
         for (IU word : p.getWords())
         {
             word.updateOnGrinUpdates();
             word.addUpdateListener(l);
         }
+        
+        
+        mb.addToBuffer(p2);        
+        for (IU word : p2.getWords())
+        {
+            word.updateOnGrinUpdates();
+            word.addUpdateListener(l);
+        }
+        System.out.println("p1 start:"+p.startTime());
+        System.out.println("p2 start:"+p2.startTime());
+        System.out.println("p1 first word start:"+p.getWords().get(0).startTime());
+        System.out.println("p2 first word start:"+p2.getWords().get(0).startTime());
+        
         dispatcher.waitUntilDone();
         dispatcher.close();
+        
+        System.out.println("p1 start:"+p.startTime());
+        System.out.println("p2 start:"+p2.startTime());
+        System.out.println("p1 first word start:"+p.getWords().get(0).startTime());
+        System.out.println("p2 first word start:"+p2.getWords().get(0).startTime());
     }
 
     @Ignore

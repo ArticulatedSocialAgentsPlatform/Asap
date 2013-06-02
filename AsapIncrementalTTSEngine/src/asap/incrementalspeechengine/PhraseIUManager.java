@@ -12,7 +12,6 @@ import inpro.synthesis.hts.LoudnessPostProcessor;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
-import java.util.HashSet;
 import java.util.List;
 import java.util.concurrent.BlockingQueue;
 import java.util.concurrent.LinkedBlockingQueue;
@@ -102,7 +101,6 @@ public class PhraseIUManager
     private final MyIUModule iuModule = new MyIUModule();
     private final AdaptableSynthesisModule asm;
     private String voice;
-    private DispatchStream dispatcher;
     private final BMLScheduler scheduler;
     private final LoudnessPostProcessor loudnessAdapter;
     private final BlockingQueue<Phrase> phraseQueue = new LinkedBlockingQueue<Phrase>();
