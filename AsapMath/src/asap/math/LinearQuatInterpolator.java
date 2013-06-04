@@ -9,7 +9,7 @@ import hmi.math.Quat4f;
  * @author hvanwelbergen
  *
  */
-public class LinearQuatInterpolator
+public class LinearQuatInterpolator implements QuatInterpolator
 {
     private double keyTimes[];
     private float keyValues[][];
