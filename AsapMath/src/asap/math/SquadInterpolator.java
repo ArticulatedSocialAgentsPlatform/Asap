@@ -15,6 +15,10 @@ public class SquadInterpolator implements QuatInterpolator
     private double keyTimes[];
     private float keyValues[][];
 
+    public SquadInterpolator()
+    {
+    }
+    
     public SquadInterpolator(double[][] pval)
     {
         setPVal(pval);
@@ -80,7 +84,7 @@ public class SquadInterpolator implements QuatInterpolator
             deltanmin1 = keyTimes[q0index] - keyTimes[qmin1index];
             deltan = deltanmin1; 
         }
-        else if (keyTimes[q0index] - keyTimes[qmin1index] > 0)
+        else if (keyTimes[q1index] - keyTimes[q0index] > 0)
         {
             deltan = keyTimes[q1index] - keyTimes[q0index];
             deltanmin1 = deltan;

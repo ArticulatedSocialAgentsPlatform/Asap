@@ -20,7 +20,7 @@ public class Keyframing extends MURMLElement
      */
     public enum Mode
     {
-        SPLINE, LINEAR, QUATERNION, RAW;
+        SPLINE, LINEAR, SQUAD, QUATERNION, RAW;
     }
     enum ApplyMode
     {

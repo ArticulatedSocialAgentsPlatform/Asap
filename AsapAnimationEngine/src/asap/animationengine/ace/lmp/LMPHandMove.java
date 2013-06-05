@@ -19,6 +19,7 @@ import asap.motionunit.keyframe.Interpolator;
 import asap.motionunit.keyframe.KeyFrame;
 import asap.motionunit.keyframe.KeyFrameMotionUnit;
 import asap.motionunit.keyframe.LinearQuatFloatInterpolator;
+import asap.motionunit.keyframe.QuatFloatInterpolator;
 import asap.realizer.feedback.FeedbackManager;
 import asap.realizer.pegboard.BMLBlockPeg;
 import asap.realizer.pegboard.PegBoard;
@@ -42,7 +43,7 @@ public class LMPHandMove extends LMP
     private static final double TRANSITION_TIME = 0.5;
     private static final double DEFAULT_STROKEPHASE_DURATION = 5;
     private HandKeyFrameUnit mu;
-    private LinearQuatFloatInterpolator interp;
+    private QuatFloatInterpolator interp;
 
     private class HandKeyFrameUnit extends KeyFrameMotionUnit
     {

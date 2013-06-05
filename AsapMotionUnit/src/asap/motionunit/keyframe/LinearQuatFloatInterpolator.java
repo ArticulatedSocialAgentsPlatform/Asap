@@ -1,64 +1,30 @@
 package asap.motionunit.keyframe;
 
-import java.util.ArrayList;
-import java.util.List;
-
-import com.google.common.collect.ImmutableList;
-
+import hmi.util.Builder;
 import asap.math.LinearQuatInterpolator;
+
 /**
- * Linear interpolator for of a list of keyframes. Interpolates groups of 4 dofs as quat using slerp.
+ * QuatFloatInterpolator implementation using slerp
  * @author hvanwelbergen
+ *
  */
-public class LinearQuatFloatInterpolator implements Interpolator
+public class LinearQuatFloatInterpolator extends QuatFloatInterpolator<LinearQuatInterpolator>
 {
-    private List<LinearQuatInterpolator> linearQuatInterPolators = new ArrayList<LinearQuatInterpolator>();
-    private List<KeyFrame> keyFrames;
-    private int nrOfDof;
-    
-    @Override
-    public void setKeyFrames(List<KeyFrame> frames, int nrOfDof)
+    public LinearQuatFloatInterpolator()
     {
-        keyFrames = frames;
-        this.nrOfDof = nrOfDof;
-        linearQuatInterPolators.clear();
-        
-        for(int i=0;i<nrOfDof/4;i++)
+        super(new Builder<LinearQuatInterpolator>()
         {
-            double p[][]=new double[frames.size()][];
-            int j=0;
-            for(KeyFrame kf:frames)
+            @Override
+            public LinearQuatInterpolator build()
             {
-                p[j]=new double[5];
-                p[j][0] = kf.getFrameTime();
-                for(int k=0;k<4;k++)
-                {
-                    p[j][k+1] = kf.getDofs()[i*4+k];
-                }
-                j++;
+                return new LinearQuatInterpolator();
             }
-            linearQuatInterPolators.add(new LinearQuatInterpolator(p));            
-        }        
+        });
     }
 
-    @Override
-    public KeyFrame interpolate(double time)
+    public LinearQuatFloatInterpolator(Builder<LinearQuatInterpolator> builder)
     {
-        float dofs[]=new float [linearQuatInterPolators.size()*4];
-        int i=0;
-        for(LinearQuatInterpolator inter:linearQuatInterPolators)
-        {
-            inter.interpolate(time, dofs,i);
-            i+=4;
-        }
-        return new KeyFrame(time,dofs);
-    }
+        super(builder);
 
-    @Override
-    public Interpolator copy()
-    {
-        LinearQuatFloatInterpolator copy = new LinearQuatFloatInterpolator();
-        copy.setKeyFrames(ImmutableList.copyOf(keyFrames), nrOfDof);
-        return copy;
     }
 }

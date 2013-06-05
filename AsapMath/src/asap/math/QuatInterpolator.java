@@ -8,4 +8,6 @@ package asap.math;
 public interface QuatInterpolator
 {   
     void interpolate(double time, float q[]);
+    void interpolate(double time, float q[],int i);
+    void setPVal(double[][] pval);
 }

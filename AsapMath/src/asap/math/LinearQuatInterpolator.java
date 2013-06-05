@@ -14,6 +14,11 @@ public class LinearQuatInterpolator implements QuatInterpolator
     private double keyTimes[];
     private float keyValues[][];
     
+    public LinearQuatInterpolator()
+    {
+        
+    }
+    
     public LinearQuatInterpolator(double[][] pval)
     {
         setPVal(pval);

@@ -38,6 +38,8 @@ import asap.animationengine.motionunit.TMUSetupException;
 import asap.animationengine.motionunit.TimedAnimationUnit;
 import asap.hns.Hns;
 import asap.hns.ShapeSymbols;
+import asap.motionunit.keyframe.CubicQuatFloatInterpolator;
+import asap.motionunit.keyframe.Interpolator;
 import asap.motionunit.keyframe.KeyFrame;
 import asap.motionunit.keyframe.LinearQuatFloatInterpolator;
 import asap.murml.Dynamic;
@@ -46,6 +48,7 @@ import asap.murml.DynamicElement.Type;
 import asap.murml.Frame;
 import asap.murml.JointValue;
 import asap.murml.Keyframing;
+import asap.murml.Keyframing.Mode;
 import asap.murml.MURMLDescription;
 import asap.murml.MovementConstraint;
 import asap.murml.Parallel;
@@ -967,7 +970,16 @@ public final class MURMLMUBuilder
                 keyFrames.add(new KeyFrame(f.getFtime(), dofs));
             }
 
-            LinearQuatFloatInterpolator interp = new LinearQuatFloatInterpolator();
+            Interpolator interp;
+            if(kf.getMode() == Mode.SQUAD)
+            {
+                interp = new CubicQuatFloatInterpolator();
+            }
+            else
+            {
+                interp = new LinearQuatFloatInterpolator();
+            }
+            
             interp.setKeyFrames(keyFrames, nrOfDofs);
             double scale = kf.getEasescale();
             double p = kf.getEaseturningpoint();
