@@ -11,13 +11,20 @@ public class AsapBMLFlowVisualizer implements RealizerPort, BMLFeedbackListener
 {
     private final RealizerPort realizerPort;
     private final JPanel panel = new JPanel();
-    private final PlanningQueueVisualization planningQueue = new PlanningQueueVisualization();
+    private final PlanningQueueVisualization planningQueue;
     
-    public AsapBMLFlowVisualizer(RealizerPort port)
+    public AsapBMLFlowVisualizer(RealizerPort port, PlanningQueueVisualization pqvis)
     {
         realizerPort = port;
         realizerPort.addListeners(this);
-        panel.add(planningQueue.getJPanel());
+        this.planningQueue = pqvis;
+        panel.add(planningQueue.getVisualization());        
+    }
+    
+    public AsapBMLFlowVisualizer(RealizerPort port)
+    {
+        this(port, new PlanningQueueJPanelVisualization());
+        
     }
     @Override
     public void feedback(String feedback)
