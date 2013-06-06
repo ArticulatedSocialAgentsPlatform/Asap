@@ -20,7 +20,7 @@ public interface PipeLoader
      * @throws IOException
      * @throws XMLScanException
      */
-    void readXML(XMLTokenizer theTokenizer, String id, String vhId, String name, RealizerPort realizerPort, Environment[] envs, Clock theSchedulingClock)
+    void readXML(XMLTokenizer theTokenizer, String id, String vhId, String name, RealizerPort realizerPort, Clock theSchedulingClock)
             throws IOException;
 
     /** return the adapted realizerPort */

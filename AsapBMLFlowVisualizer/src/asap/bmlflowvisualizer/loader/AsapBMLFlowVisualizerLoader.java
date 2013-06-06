@@ -1,6 +1,5 @@
 package asap.bmlflowvisualizer.loader;
 
-import hmi.environmentbase.Environment;
 import hmi.util.Clock;
 import hmi.xml.XMLTokenizer;
 
@@ -13,7 +12,7 @@ public class AsapBMLFlowVisualizerLoader implements PipeLoader
 {
 
     @Override
-    public void readXML(XMLTokenizer theTokenizer, String id, String vhId, String name, RealizerPort realizerPort, Environment envs[], Clock theSchedulingClock)
+    public void readXML(XMLTokenizer theTokenizer, String id, String vhId, String name, RealizerPort realizerPort, Clock theSchedulingClock)
             throws IOException
     {
         // TODO Auto-generated method stub

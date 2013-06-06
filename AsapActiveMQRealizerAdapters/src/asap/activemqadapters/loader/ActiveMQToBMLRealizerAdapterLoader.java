@@ -1,6 +1,5 @@
 package asap.activemqadapters.loader;
 
-import hmi.environmentbase.Environment;
 import hmi.util.Clock;
 import hmi.xml.XMLScanException;
 import hmi.xml.XMLTokenizer;
@@ -28,7 +27,7 @@ public class ActiveMQToBMLRealizerAdapterLoader implements PipeLoader
      * @throws XMLScanException
      */
     @Override
-    public void readXML(XMLTokenizer theTokenizer, String id, String vhId, String name, RealizerPort realizerPort, Environment[] envs, Clock theSchedulingClock)
+    public void readXML(XMLTokenizer theTokenizer, String id, String vhId, String name, RealizerPort realizerPort, Clock theSchedulingClock)
             throws IOException
     {
         try

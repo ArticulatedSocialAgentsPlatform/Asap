@@ -1,6 +1,5 @@
 package asap.realizerembodiments;
 
-import hmi.environmentbase.Environment;
 import hmi.util.Clock;
 import hmi.xml.XMLScanException;
 import hmi.xml.XMLStructureAdapter;
@@ -28,7 +27,7 @@ public class LogPipeLoader implements PipeLoader
      */
     @Override
     public void readXML(XMLTokenizer theTokenizer, String id, String vhId, String name, RealizerPort realizerPort,
-            Environment environments[], Clock theSchedulingClock) throws IOException
+            Clock theSchedulingClock) throws IOException
     {
         XMLStructureAdapter adapter = new XMLStructureAdapter();
         HashMap<String, String> attrMap = null;

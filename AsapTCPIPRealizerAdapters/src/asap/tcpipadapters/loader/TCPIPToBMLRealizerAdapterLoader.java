@@ -1,6 +1,5 @@
 package asap.tcpipadapters.loader;
 
-import hmi.environmentbase.Environment;
 import hmi.util.Clock;
 import hmi.xml.XMLScanException;
 import hmi.xml.XMLStructureAdapter;
@@ -30,7 +29,7 @@ public class TCPIPToBMLRealizerAdapterLoader implements PipeLoader
     /**
      * @throws XMLScanException on invalid loader XML
      */
-    public void readXML(XMLTokenizer theTokenizer, String id, String vhId, String name, RealizerPort realizerPort, Environment[] envs, Clock theSchedulingClock)
+    public void readXML(XMLTokenizer theTokenizer, String id, String vhId, String name, RealizerPort realizerPort, Clock theSchedulingClock)
             throws IOException
     {
         adaptedRealizerPort = realizerPort;

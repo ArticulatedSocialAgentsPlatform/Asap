@@ -171,7 +171,7 @@ public class AsapRealizerEmbodiment implements EmbodimentLoader, Embodiment
 
         while (!theTokenizer.atETag("Loader"))
         {
-            readBMLRealizerSubsection(environments);
+            readBMLRealizerSubsection();
         }
 
     }
@@ -230,7 +230,7 @@ public class AsapRealizerEmbodiment implements EmbodimentLoader, Embodiment
         return pipeLoaders.values();
     }
 
-    protected void readBMLRealizerSubsection(Environment[] environments) throws IOException
+    protected void readBMLRealizerSubsection() throws IOException
     {
         if (theTokenizer.atSTag("Scheduler"))
         {
@@ -266,7 +266,7 @@ public class AsapRealizerEmbodiment implements EmbodimentLoader, Embodiment
 
             theTokenizer.takeSTag("PipeLoader");
             log.debug("Parsing PipeLoader: {}", id);
-            pipeloader.readXML(theTokenizer, id, vhId, name, realizerPort, environments, theSchedulingClock);
+            pipeloader.readXML(theTokenizer, id, vhId, name, realizerPort, theSchedulingClock);
             theTokenizer.takeETag("PipeLoader");
             realizerPort = pipeloader.getAdaptedRealizerPort();
             pipeLoaders.put(id, pipeloader);

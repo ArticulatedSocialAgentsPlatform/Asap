@@ -5,7 +5,6 @@ import static org.mockito.Matchers.any;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
-import hmi.environmentbase.Environment;
 import hmi.util.Clock;
 import hmi.xml.XMLTokenizer;
 
@@ -32,7 +31,7 @@ public class ActiveMQToBMLRealizerAdapterLoaderTest
         XMLTokenizer tok = new XMLTokenizer(pipeLoaderStr);
         tok.takeSTag("PipeLoader");
         ActiveMQToBMLRealizerAdapterLoader loader = new ActiveMQToBMLRealizerAdapterLoader();
-        loader.readXML(tok, "id1", "vh1", "name", mockRealizerPort, new Environment[0], mockSchedulingClock);
+        loader.readXML(tok, "id1", "vh1", "name", mockRealizerPort, mockSchedulingClock);
         verify(mockRealizerPort, times(1)).addListeners(any(BMLFeedbackListener[].class));
         assertEquals(mockRealizerPort, loader.getAdaptedRealizerPort());
     }
