@@ -23,13 +23,14 @@ public class AsapBMLFlowVisualizerTest
 {
     private RealizerPort mockPort = mock(RealizerPort.class);
     private PlanningQueueVisualization mockPqVis = mock(PlanningQueueVisualization.class);
-    private AsapBMLFlowVisualizer vis;
+    private AsapBMLFlowVisualizerPort vis;
     
     @Before
     public void before()
     {
         when(mockPqVis.getVisualization()).thenReturn(new JPanel());
-        vis = new AsapBMLFlowVisualizer(mockPort, mockPqVis);
+        vis = new AsapBMLFlowVisualizerPort(mockPort);
+        vis.addVisualization(mockPqVis);
     }
     
     @Test

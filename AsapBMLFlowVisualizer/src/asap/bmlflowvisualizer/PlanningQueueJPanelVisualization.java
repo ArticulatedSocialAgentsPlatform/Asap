@@ -1,45 +1,63 @@
 package asap.bmlflowvisualizer;
 
+import java.awt.Color;
 import java.util.HashMap;
 import java.util.Map;
 
 import javax.swing.BoxLayout;
+import javax.swing.JComponent;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
+import javax.swing.SwingUtilities;
+import javax.swing.border.LineBorder;
 
 import saiba.bml.core.BehaviourBlock;
 
 /**
  * Visualizes the planning queue on a JPanel
  * @author hvanwelbergen
- *
+ * 
  */
 public class PlanningQueueJPanelVisualization implements PlanningQueueVisualization
 {
     private final JPanel panel = new JPanel();
-    private Map<String,JLabel> planMap = new HashMap<>();
-    
+    private Map<String, JComponent> planMap = new HashMap<>();
+
     public PlanningQueueJPanelVisualization()
     {
         panel.setLayout(new BoxLayout(panel, BoxLayout.Y_AXIS));
     }
-    
-    public void addBlock(BehaviourBlock bb)
+
+    public void addBlock(final BehaviourBlock bb)
     {
-        JLabel label = new JLabel(bb.getBmlId());
-        planMap.put(bb.getBmlId(),label);
+        SwingUtilities.invokeLater(new Runnable()
+        {
+            public void run()
+            {
+                JPanel p = new JPanel();
+                JLabel label = new JLabel(bb.getBmlId());
+                p.setBackground(Color.GRAY);
+                p.setBorder(new LineBorder(Color.BLACK));
+                p.add(label);
+                planMap.put(bb.getBmlId(), p);
+                panel.add(p);
+                panel.repaint();
+                panel.updateUI();
+            }
+        });
+
     }
-    
+
     public void removeBlock(String id)
     {
-        JLabel label = planMap.get(id);
+        JComponent label = planMap.get(id);
         planMap.remove(id);
-        if(label!=null)
+        if (label != null)
         {
-            panel.remove(label);        
+            panel.remove(label);
         }
     }
-    
+
     public JPanel getVisualization()
     {
         return panel;

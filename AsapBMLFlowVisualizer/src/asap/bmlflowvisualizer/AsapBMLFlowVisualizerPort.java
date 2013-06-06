@@ -1,31 +1,35 @@
 package asap.bmlflowvisualizer;
 
+import javax.swing.JComponent;
 import javax.swing.JPanel;
 
 import saiba.bml.core.BehaviourBlock;
-
 import asap.realizerport.BMLFeedbackListener;
 import asap.realizerport.RealizerPort;
 
-public class AsapBMLFlowVisualizer implements RealizerPort, BMLFeedbackListener
+/**
+ * Visualizes the status of the BML blocks submitted to the realizer
+ * @author hvanwelbergen
+ *
+ */
+public class AsapBMLFlowVisualizerPort implements RealizerPort, BMLFeedbackListener
 {
     private final RealizerPort realizerPort;
     private final JPanel panel = new JPanel();
-    private final PlanningQueueVisualization planningQueue;
+    private PlanningQueueVisualization planningQueue;
     
-    public AsapBMLFlowVisualizer(RealizerPort port, PlanningQueueVisualization pqvis)
+    public AsapBMLFlowVisualizerPort(RealizerPort port)
     {
         realizerPort = port;
-        realizerPort.addListeners(this);
-        this.planningQueue = pqvis;
-        panel.add(planningQueue.getVisualization());        
+        realizerPort.addListeners(this);                
     }
     
-    public AsapBMLFlowVisualizer(RealizerPort port)
+    public void addVisualization(PlanningQueueVisualization pqvis)
     {
-        this(port, new PlanningQueueJPanelVisualization());
-        
+        this.planningQueue = pqvis;
+        panel.add(planningQueue.getVisualization());
     }
+    
     @Override
     public void feedback(String feedback)
     {
@@ -51,6 +55,11 @@ public class AsapBMLFlowVisualizer implements RealizerPort, BMLFeedbackListener
         bb.readXML(bmlString);
         planningQueue.addBlock(bb);
         realizerPort.performBML(bmlString);        
+    }
+    
+    public JComponent getVisualization()
+    {
+        return panel;
     }
 
 }
