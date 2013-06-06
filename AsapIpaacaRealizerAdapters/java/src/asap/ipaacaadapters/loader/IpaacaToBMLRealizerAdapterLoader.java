@@ -1,5 +1,6 @@
 package asap.ipaacaadapters.loader;
 
+import hmi.environmentbase.Environment;
 import hmi.util.Clock;
 import hmi.xml.XMLScanException;
 import hmi.xml.XMLTokenizer;
@@ -24,7 +25,7 @@ public class IpaacaToBMLRealizerAdapterLoader implements PipeLoader
      * @throws XMLScanException
      */
     @Override
-    public void readXML(XMLTokenizer theTokenizer, String id, String vhId, String name, RealizerPort realizerPort, Clock theSchedulingClock)
+    public void readXML(XMLTokenizer theTokenizer, String id, String vhId, String name, RealizerPort realizerPort, Environment envs[], Clock theSchedulingClock)
             throws IOException
     {
         adaptedRealizerPort = realizerPort;

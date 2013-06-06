@@ -35,10 +35,7 @@ import java.util.Map;
 import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.Setter;
-
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
+import lombok.extern.slf4j.Slf4j;
 import saiba.bml.core.BMLBehaviorAttributeExtension;
 import saiba.bml.core.Behaviour;
 import saiba.bml.parser.BMLParser;
@@ -62,10 +59,9 @@ import com.google.common.collect.ImmutableSet;
 /**
  * Loads and unloads an AsapRealizerEmbodiment and provides access to its elements (realizer, embodiments, engines, etc)
  */
+@Slf4j
 public class AsapRealizerEmbodiment implements EmbodimentLoader, Embodiment
 {
-    private Logger logger = LoggerFactory.getLogger(AsapRealizerEmbodiment.class.getName());
-
     /**
      * The elckerlycRealizer is exposed to facilitate access to some advanced capabilities.
      * Generally you should not use this variable, there is a big chance that access to it
@@ -175,7 +171,7 @@ public class AsapRealizerEmbodiment implements EmbodimentLoader, Embodiment
 
         while (!theTokenizer.atETag("Loader"))
         {
-            readBMLRealizerSubsection();
+            readBMLRealizerSubsection(environments);
         }
 
     }
@@ -234,25 +230,12 @@ public class AsapRealizerEmbodiment implements EmbodimentLoader, Embodiment
         return pipeLoaders.values();
     }
 
-    protected void readBMLRealizerSubsection() throws IOException
+    protected void readBMLRealizerSubsection(Environment[] environments) throws IOException
     {
-        /*
-         * if (theTokenizer.atSTag("ServerAdapter"))
-         * {
-         * attrMap = theTokenizer.getAttributes();
-         * String requestPort = adapter.getRequiredAttribute("requestport", attrMap, theTokenizer);
-         * String feedbackPort = adapter.getRequiredAttribute("feedbackport", attrMap, theTokenizer);
-         * tcpipToBMLRealizerAdapter = new TCPIPToBMLRealizerAdapter(realizerPort, Integer.valueOf(requestPort),
-         * Integer.valueOf(feedbackPort));
-         * theTokenizer.takeSTag("ServerAdapter");
-         * theTokenizer.takeETag("ServerAdapter");
-         * }
-         */
-
         if (theTokenizer.atSTag("Scheduler"))
         {
             // TODO
-            logger.error("Encountered Scheduler section that was not at beginning of AsapRealizerEmbodiment section");
+            log.error("Encountered Scheduler section that was not at beginning of AsapRealizerEmbodiment section");
         }
         else if (theTokenizer.atSTag("PipeLoader"))
         {
@@ -282,8 +265,8 @@ public class AsapRealizerEmbodiment implements EmbodimentLoader, Embodiment
             }
 
             theTokenizer.takeSTag("PipeLoader");
-            logger.debug("Parsing PipeLoader: {}", id);
-            pipeloader.readXML(theTokenizer, id, vhId, name, realizerPort, theSchedulingClock);
+            log.debug("Parsing PipeLoader: {}", id);
+            pipeloader.readXML(theTokenizer, id, vhId, name, realizerPort, environments, theSchedulingClock);
             theTokenizer.takeETag("PipeLoader");
             realizerPort = pipeloader.getAdaptedRealizerPort();
             pipeLoaders.put(id, pipeloader);

@@ -2,6 +2,7 @@ package asap.realizerembodiments;
 
 import java.io.IOException;
 
+import hmi.environmentbase.Environment;
 import hmi.util.Clock;
 import hmi.xml.XMLScanException;
 import hmi.xml.XMLTokenizer;
@@ -19,7 +20,7 @@ public interface PipeLoader
      * @throws IOException
      * @throws XMLScanException
      */
-    void readXML(XMLTokenizer theTokenizer, String id, String vhId, String name, RealizerPort realizerPort, Clock theSchedulingClock)
+    void readXML(XMLTokenizer theTokenizer, String id, String vhId, String name, RealizerPort realizerPort, Environment[] envs, Clock theSchedulingClock)
             throws IOException;
 
     /** return the adapted realizerPort */

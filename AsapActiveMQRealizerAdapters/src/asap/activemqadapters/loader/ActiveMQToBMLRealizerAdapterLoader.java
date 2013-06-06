@@ -1,14 +1,15 @@
 package asap.activemqadapters.loader;
 
+import hmi.environmentbase.Environment;
+import hmi.util.Clock;
+import hmi.xml.XMLScanException;
+import hmi.xml.XMLTokenizer;
+
 import java.io.IOException;
 
 import javax.jms.JMSException;
 
 import lombok.extern.slf4j.Slf4j;
-
-import hmi.util.Clock;
-import hmi.xml.XMLScanException;
-import hmi.xml.XMLTokenizer;
 import asap.activemqadapters.ActiveMQToBMLRealizerAdapter;
 import asap.realizerembodiments.PipeLoader;
 import asap.realizerport.RealizerPort;
@@ -27,7 +28,7 @@ public class ActiveMQToBMLRealizerAdapterLoader implements PipeLoader
      * @throws XMLScanException
      */
     @Override
-    public void readXML(XMLTokenizer theTokenizer, String id, String vhId, String name, RealizerPort realizerPort, Clock theSchedulingClock)
+    public void readXML(XMLTokenizer theTokenizer, String id, String vhId, String name, RealizerPort realizerPort, Environment[] envs, Clock theSchedulingClock)
             throws IOException
     {
         try
