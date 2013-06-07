@@ -81,14 +81,14 @@ public class BMLASchedulingHandler implements SchedulingHandler
             scheduler.interruptBlock(bmlId);
         }
 
-        switch (BMLASchedulingMechanism.parse(bb.getSchedulingMechanism().getNameStart()))
+        switch (BMLASchedulingMechanism.parse(bb.getComposition().getNameStart()))
         {
         case REPLACE:
             scheduler.reset();
             break;
         default:
         case UNKNOWN:
-            log.warn("Unknown scheduling composition {} in BML block {}, defaulting to merge", bb.getSchedulingMechanism(), bb.getBmlId());
+            log.warn("Unknown scheduling composition {} in BML block {}, defaulting to merge", bb.getComposition(), bb.getBmlId());
             break;
         case MERGE:
             break;
@@ -134,7 +134,7 @@ public class BMLASchedulingHandler implements SchedulingHandler
         BMLBlockPeg bmlBlockPeg = new BMLBlockPeg(bb.id, predictedStart);
         scheduler.addBMLBlockPeg(bmlBlockPeg);
 
-        strategy.schedule(bb.getSchedulingMechanism(), bb, bmlBlockPeg, scheduler, scheduler.getSchedulingTime());
+        strategy.schedule(bb.getComposition(), bb, bmlBlockPeg, scheduler, scheduler.getSchedulingTime());
         log.debug("Scheduling finished at: {}", scheduler.getSchedulingTime());
         scheduler.removeInvalidBehaviors(bb.id);
 
@@ -151,7 +151,7 @@ public class BMLASchedulingHandler implements SchedulingHandler
         }
         else
         {
-            switch (BMLASchedulingMechanism.parse(bb.getSchedulingMechanism().getNameStart()))
+            switch (BMLASchedulingMechanism.parse(bb.getComposition().getNameStart()))
             {
             case REPLACE:
             case UNKNOWN:

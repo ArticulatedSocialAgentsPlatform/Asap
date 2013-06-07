@@ -13,5 +13,11 @@ public interface FinishedQueueVisualization
 {
     void addBlock(BMLBlockProgressFeedback bb);
     void removeBlock(String id);
+    
+    /**
+     * remove all visualizations
+     */
+    void clear();
+    
     JComponent getVisualization();
 }

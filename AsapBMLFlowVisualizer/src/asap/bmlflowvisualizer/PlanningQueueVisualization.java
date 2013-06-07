@@ -14,4 +14,9 @@ public interface PlanningQueueVisualization
     void addBlock(BehaviourBlock bb);
     void removeBlock(String id);
     JComponent getVisualization();
+    
+    /**
+     * remove all visualizations
+     */
+    void clear();
 }

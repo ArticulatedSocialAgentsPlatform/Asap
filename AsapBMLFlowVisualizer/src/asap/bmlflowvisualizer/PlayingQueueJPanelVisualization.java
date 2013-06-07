@@ -94,5 +94,14 @@ public class PlayingQueueJPanelVisualization implements PlayingQueueVisualizatio
     {
         return panel;
     }
+    
+    @Override
+    public void clear()
+    {
+        for (String id : blockMap.keySet())
+        {
+            removeBlock(id);
+        }
+    }
 
 }

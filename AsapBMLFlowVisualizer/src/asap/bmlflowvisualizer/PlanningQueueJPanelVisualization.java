@@ -72,4 +72,13 @@ public class PlanningQueueJPanelVisualization implements PlanningQueueVisualizat
     {
         return panel;
     }
+    
+    @Override
+    public void clear()
+    {
+        for (String id : planMap.keySet())
+        {
+            removeBlock(id);
+        }
+    }
 }

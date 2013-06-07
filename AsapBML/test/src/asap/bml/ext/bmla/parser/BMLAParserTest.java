@@ -94,7 +94,7 @@ public class BMLAParserTest
     public void testAppendAfter() throws IOException
     {
         readXML("bmlt/testspeechappendafter.xml");
-        assertEquals(BMLASchedulingMechanism.APPEND_AFTER, block.getSchedulingMechanism());
+        assertEquals(BMLASchedulingMechanism.APPEND_AFTER, block.getComposition());
         assertEquals(3, bmltExt.getAppendAfterList().size());
         assertThat(bmltExt.getAppendAfterList(), hasItems("bml1", "bml2", "bml3"));
     }

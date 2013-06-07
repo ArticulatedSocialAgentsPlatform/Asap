@@ -23,7 +23,7 @@ public class BMLACompositionTest
     {
         String bmlString = "<bml xmlns=\"http://www.bml-initiative.org/bml/bml-1.0\" id=\"bml1\"/>";
         block.readXML(bmlString);
-        assertEquals(CoreComposition.MERGE, block.getSchedulingMechanism());
+        assertEquals(CoreComposition.MERGE, block.getComposition());
     }
 
     @Test

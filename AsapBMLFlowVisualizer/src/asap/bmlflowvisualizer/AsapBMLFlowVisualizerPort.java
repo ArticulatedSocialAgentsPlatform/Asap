@@ -7,6 +7,7 @@ import javax.swing.JComponent;
 import javax.swing.JPanel;
 
 import saiba.bml.core.BehaviourBlock;
+import saiba.bml.core.CoreComposition;
 import saiba.bml.feedback.BMLBlockPredictionFeedback;
 import saiba.bml.feedback.BMLBlockProgressFeedback;
 import saiba.bml.feedback.BMLFeedback;
@@ -101,6 +102,12 @@ public class AsapBMLFlowVisualizerPort implements RealizerPort, BMLFeedbackListe
     {
         BehaviourBlock bb = new BehaviourBlock();
         bb.readXML(bmlString);
+        if(bb.getComposition().equals(CoreComposition.REPLACE))
+        {
+            planningQueue.clear();
+            playingQueue.clear();
+            finishedQueue.clear();
+        }
         planningQueue.addBlock(bb);
         realizerPort.performBML(bmlString);
     }

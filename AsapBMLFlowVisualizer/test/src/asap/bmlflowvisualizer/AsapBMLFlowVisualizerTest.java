@@ -82,4 +82,14 @@ public class AsapBMLFlowVisualizerTest
         verify(mockPlanqVis).removeBlock("bml1");
         verify(mockPlayqVis).startBlock(any(BMLBlockProgressFeedback.class));
     }
+    
+    @Test
+    public void testClear()
+    {
+        String bmlString = "<bml id=\"bml1\" composition=\"REPLACE\" xmlns=\"http://www.bml-initiative.org/bml/bml-1.0\"/>";
+        vis.performBML(bmlString);
+        verify(mockPlanqVis).clear();
+        verify(mockPlayqVis).clear();
+        verify(mockFinishedqVis).clear();
+    }
 }

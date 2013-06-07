@@ -16,4 +16,9 @@ public interface PlayingQueueVisualization
     void updateBlock(BMLBlockPredictionFeedback pf);
     void removeBlock(String id);
     JComponent getVisualization();
+    
+    /**
+     * remove all visualizations
+     */
+    void clear();
 }

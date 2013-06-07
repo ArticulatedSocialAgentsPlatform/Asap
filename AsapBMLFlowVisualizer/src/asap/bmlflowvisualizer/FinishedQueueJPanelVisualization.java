@@ -4,6 +4,7 @@ import java.awt.Color;
 import java.util.HashMap;
 import java.util.Map;
 
+import javax.swing.BoxLayout;
 import javax.swing.JComponent;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
@@ -16,6 +17,11 @@ public class FinishedQueueJPanelVisualization implements FinishedQueueVisualizat
 {
     private JPanel panel = new JPanel();
     private Map<String, JComponent> planMap = new HashMap<>();
+
+    public FinishedQueueJPanelVisualization()
+    {
+        panel.setLayout(new BoxLayout(panel, BoxLayout.Y_AXIS));
+    }
 
     @Override
     public void addBlock(final BMLBlockProgressFeedback bb)
@@ -64,4 +70,12 @@ public class FinishedQueueJPanelVisualization implements FinishedQueueVisualizat
         return panel;
     }
 
+    @Override
+    public void clear()
+    {
+        for (String id : planMap.keySet())
+        {
+            removeBlock(id);
+        }
+    }
 }
