@@ -11,7 +11,8 @@ import org.junit.Before;
 import org.junit.Test;
 
 import saiba.bml.core.BehaviourBlock;
-
+import saiba.bml.feedback.BMLBlockPredictionFeedback;
+import saiba.bml.feedback.BMLBlockProgressFeedback;
 import asap.realizerport.RealizerPort;
 
 /**
@@ -22,15 +23,19 @@ import asap.realizerport.RealizerPort;
 public class AsapBMLFlowVisualizerTest
 {
     private RealizerPort mockPort = mock(RealizerPort.class);
-    private PlanningQueueVisualization mockPqVis = mock(PlanningQueueVisualization.class);
+    private PlanningQueueVisualization mockPlanqVis = mock(PlanningQueueVisualization.class);
+    private FinishedQueueVisualization mockFinishedqVis = mock(FinishedQueueVisualization.class);
+    private PlayingQueueVisualization mockPlayqVis = mock(PlayingQueueVisualization.class);
     private AsapBMLFlowVisualizerPort vis;
     
     @Before
     public void before()
     {
-        when(mockPqVis.getVisualization()).thenReturn(new JPanel());
+        when(mockPlanqVis.getVisualization()).thenReturn(new JPanel());
+        when(mockFinishedqVis.getVisualization()).thenReturn(new JPanel());
+        when(mockPlayqVis.getVisualization()).thenReturn(new JPanel());
         vis = new AsapBMLFlowVisualizerPort(mockPort);
-        vis.addVisualization(mockPqVis);
+        vis.addVisualization(mockPlanqVis,mockFinishedqVis,mockPlayqVis);        
     }
     
     @Test
@@ -46,6 +51,35 @@ public class AsapBMLFlowVisualizerTest
     {
         String bmlString = "<bml id=\"bml1\" xmlns=\"http://www.bml-initiative.org/bml/bml-1.0\"></bml>";
         vis.performBML(bmlString);
-        verify(mockPqVis).addBlock(any(BehaviourBlock.class));
+        verify(mockPlanqVis).addBlock(any(BehaviourBlock.class));
+    }
+    
+    @Test
+    public void testFinished()
+    {
+        String feedbackString = "<blockProgress id=\"bml1:end\" globalTime=\"10\" xmlns=\"http://www.bml-initiative.org/bml/bml-1.0\"/>";
+        vis.feedback(feedbackString);
+        verify(mockFinishedqVis).addBlock(any(BMLBlockProgressFeedback.class));
+        verify(mockPlanqVis).removeBlock("bml1");
+        verify(mockPlayqVis).removeBlock("bml1");
+    }
+    
+    @Test
+    public void testPredictionFeedback()
+    {
+        String feedbackString = "<predictionFeedback xmlns=\"http://www.bml-initiative.org/bml/bml-1.0\">" +
+        		"<bml id=\"bml1\" globalStart=\"1\" globalEnd=\"7\"/></predictionFeedback>";
+        vis.feedback(feedbackString);
+        verify(mockPlanqVis).removeBlock("bml1");
+        verify(mockPlayqVis).updateBlock(any(BMLBlockPredictionFeedback.class));
+    }
+    
+    @Test
+    public void testStartFeedback()
+    {
+        String feedbackString = "<blockProgress id=\"bml1:start\" globalTime=\"10\" xmlns=\"http://www.bml-initiative.org/bml/bml-1.0\"/>";
+        vis.feedback(feedbackString);
+        verify(mockPlanqVis).removeBlock("bml1");
+        verify(mockPlayqVis).startBlock(any(BMLBlockProgressFeedback.class));
     }
 }

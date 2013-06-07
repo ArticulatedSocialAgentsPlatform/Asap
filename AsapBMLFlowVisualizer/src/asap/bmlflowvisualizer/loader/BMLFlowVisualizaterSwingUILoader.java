@@ -12,7 +12,9 @@ import java.io.IOException;
 
 import lombok.Getter;
 import asap.bmlflowvisualizer.AsapBMLFlowVisualizerPort;
+import asap.bmlflowvisualizer.FinishedQueueJPanelVisualization;
 import asap.bmlflowvisualizer.PlanningQueueJPanelVisualization;
+import asap.bmlflowvisualizer.PlayingQueueJPanelVisualization;
 import asap.realizerembodiments.AsapRealizerEmbodiment;
 
 /**
@@ -39,7 +41,8 @@ public class BMLFlowVisualizaterSwingUILoader implements Loader
         AsapBMLFlowVisualizerPortLoader visPortLoader =  CollectionUtils.getFirstClassOfType(are.getPipeLoaders(),
                 AsapBMLFlowVisualizerPortLoader.class);
         AsapBMLFlowVisualizerPort visPort = visPortLoader.getAdaptedRealizerPort();
-        visPort.addVisualization(new PlanningQueueJPanelVisualization());
+        visPort.addVisualization(new PlanningQueueJPanelVisualization(), new FinishedQueueJPanelVisualization(), new PlayingQueueJPanelVisualization());
+        
         jcc.getEmbodiment().addJComponent(visPort.getVisualization());
     }
 

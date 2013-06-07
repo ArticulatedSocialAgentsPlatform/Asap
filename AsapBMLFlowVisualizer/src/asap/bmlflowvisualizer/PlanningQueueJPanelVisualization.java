@@ -48,14 +48,24 @@ public class PlanningQueueJPanelVisualization implements PlanningQueueVisualizat
 
     }
 
-    public void removeBlock(String id)
+    public void removeBlock(final String id)
     {
-        JComponent label = planMap.get(id);
-        planMap.remove(id);
-        if (label != null)
+        SwingUtilities.invokeLater(new Runnable()
         {
-            panel.remove(label);
-        }
+            public void run()
+            {
+                JComponent label = planMap.get(id);
+                planMap.remove(id);
+                if (label != null)
+                {
+
+                    panel.remove(label);
+                    panel.repaint();
+                    panel.updateUI();
+                }
+
+            }
+        });
     }
 
     public JPanel getVisualization()
