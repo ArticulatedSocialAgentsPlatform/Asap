@@ -2,6 +2,7 @@ package asap.bmlflowvisualizer.graphutils;
 
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
@@ -31,6 +32,29 @@ public class DAGUtils
             }
         }
         return incoming;
+    }
+
+    private static <V> void setConnectedUp(Set<V> checkConnections, Set<V> connections, Collection<Edge<V>> edges)
+    {
+        for (V v : checkConnections)
+        {
+            connections.add(v);
+            Set<V> incoming = getIncomingNeighbours(v, edges);
+            if (!incoming.isEmpty())
+            {
+                setConnectedUp(incoming, connections, edges);
+            }
+        }
+    }
+
+    private static <V> Set<V> getConnectedUp(V v, Collection<Edge<V>> edges)
+    {
+        Set<V> connections = new HashSet<V>();
+        connections.add(v);
+        Set<V> checkConnections = new HashSet<V>();
+        checkConnections.add(v);
+        setConnectedUp(checkConnections, connections, edges);
+        return connections;
     }
 
     private static <V> Set<V> getIncomingEdges(Collection<Edge<V>> edges)
@@ -93,6 +117,41 @@ public class DAGUtils
     public static <V> List<V> longestPath(Collection<V> vertices, Collection<Edge<V>> ed)
     {
         List<V> L = new ArrayList<V>();
+        Map<V, Integer> longestPaths = longestPaths(vertices, ed);
+        int max = 0;
+        V maxV = null;
+        for (Entry<V, Integer> entry : longestPaths.entrySet())
+        {
+            if (entry.getValue() >= max)
+            {
+                maxV = entry.getKey();
+                max = entry.getValue();
+            }
+        }
+
+        while (max != 0)
+        {
+            L.add(0, maxV);
+            max = 0;
+            Set<V> incoming = getIncomingNeighbours(maxV, ed);
+            for (V inc : incoming)
+            {
+                int pl = longestPaths.get(inc);
+                if (pl >= max)
+                {
+                    maxV = inc;
+                    max = pl;
+                }
+            }
+        }
+        return L;
+    }
+
+    /**
+     * For each vertex V, provide the longest path ending at V
+     */
+    public static <V> Map<V, Integer> longestPaths(Collection<V> vertices, Collection<Edge<V>> ed)
+    {
         List<V> topologicalOrder = topologicalSort(vertices, ed);
 
         Map<V, Integer> longestPaths = new HashMap<V, Integer>();
@@ -115,35 +174,31 @@ public class DAGUtils
                 longestPaths.put(v, pl + 1);
             }
         }
+        return longestPaths;
+    }
 
-        int max = 0;
-        V maxV = null;
-        for (Entry<V, Integer> entry : longestPaths.entrySet())
+    public static <V> Set<Set<V>> getClusters(Collection<V> vertices, Collection<Edge<V>> ed)
+    {
+        Set<Set<V>> clusters = new HashSet<Set<V>>();
+        List<V> topSort = topologicalSort(vertices, ed);
+        Collections.reverse(topSort);
+        for (V v : topSort)
         {
-            if (entry.getValue() >= max)
+            boolean alreadyIn = false;
+            for (Set<V> cluster : clusters)
             {
-                maxV = entry.getKey();
-                max = entry.getValue();
+                if (cluster.contains(v))
+                {
+                    alreadyIn = true;
+                    continue;                    
+                }
+            }
+            if(!alreadyIn)
+            {
+                clusters.add(getConnectedUp(v, ed));
             }
         }
-        
 
-        while (max != 0)
-        {
-            L.add(0,maxV);
-            max = 0;
-            Set<V> incoming = getIncomingNeighbours(maxV, ed);
-            for (V inc : incoming)
-            {
-                int pl = longestPaths.get(inc);
-                if (pl >= max)
-                {
-                    maxV = inc;
-                    max = pl;
-                }
-            }            
-        }
-
-        return L;
+        return clusters;
     }
 }

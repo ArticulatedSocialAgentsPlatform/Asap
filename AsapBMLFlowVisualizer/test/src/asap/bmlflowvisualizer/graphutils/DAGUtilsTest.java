@@ -1,12 +1,18 @@
 package asap.bmlflowvisualizer.graphutils;
 
 import static org.hamcrest.MatcherAssert.assertThat;
+import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
 
 import java.util.ArrayList;
+import java.util.Iterator;
 import java.util.List;
+import java.util.Map;
+import java.util.Set;
 
+import org.hamcrest.collection.IsIterableContainingInAnyOrder;
 import org.hamcrest.collection.IsIterableContainingInOrder;
+import static org.hamcrest.CoreMatchers.anyOf;
 import org.junit.Test;
 
 import com.google.common.collect.ImmutableList;
@@ -24,7 +30,7 @@ public class DAGUtilsTest
         List<String> V = DAGUtils.topologicalSort(new ArrayList<String>(), new ArrayList<Edge<String>>());
         assertTrue(V.isEmpty());
     }
-    
+
     @Test
     public void sortOne()
     {
@@ -53,25 +59,25 @@ public class DAGUtilsTest
         List<String> V = DAGUtils.topologicalSort(ImmutableList.of("bml1", "bml2", "bml3", "bml4", "bml5", "bml6"), ImmutableList.of(
                 new Edge<String>("bml1", "bml2"), new Edge<String>("bml1", "bml3"), new Edge<String>("bml3", "bml4"), new Edge<String>(
                         "bml2", "bml6"), new Edge<String>("bml4", "bml6")));
-        
-        //implementation specific check: other orders are also valid topological orders 
-        assertThat(V, IsIterableContainingInOrder.contains("bml1","bml3","bml4","bml2","bml5","bml6"));
+
+        // implementation specific check: other orders are also valid topological orders
+        assertThat(V, IsIterableContainingInOrder.contains("bml1", "bml3", "bml4", "bml2", "bml5", "bml6"));
     }
-    
+
     @Test
     public void longestPathNone()
     {
         List<String> V = DAGUtils.longestPath(new ArrayList<String>(), new ArrayList<Edge<String>>());
         assertTrue(V.isEmpty());
     }
-    
+
     @Test
     public void longestPathOne()
     {
         List<String> V = DAGUtils.longestPath(ImmutableList.of("bml1"), new ArrayList<Edge<String>>());
         assertThat(V, IsIterableContainingInOrder.contains("bml1"));
     }
-    
+
     @Test
     public void longestPathQueue()
     {
@@ -79,20 +85,102 @@ public class DAGUtilsTest
                 ImmutableList.of(new Edge<String>("bml1", "bml2"), new Edge<String>("bml2", "bml3")));
         assertThat(V, IsIterableContainingInOrder.contains("bml1", "bml2", "bml3"));
     }
-    
+
     @Test(expected = IllegalArgumentException.class)
     public void longestPathCycle()
     {
-        DAGUtils.topologicalSort(ImmutableList.of("bml1", "bml2"),
+        DAGUtils.longestPath(ImmutableList.of("bml1", "bml2"),
                 ImmutableList.of(new Edge<String>("bml1", "bml2"), new Edge<String>("bml2", "bml1")));
     }
-    
+
     @Test
     public void longestPath()
     {
         List<String> V = DAGUtils.longestPath(ImmutableList.of("bml1", "bml2", "bml3", "bml4", "bml5", "bml6"), ImmutableList.of(
                 new Edge<String>("bml1", "bml2"), new Edge<String>("bml1", "bml3"), new Edge<String>("bml3", "bml4"), new Edge<String>(
                         "bml2", "bml6"), new Edge<String>("bml4", "bml6")));
-        assertThat(V, IsIterableContainingInOrder.contains("bml1","bml3","bml4","bml6"));
+        assertThat(V, IsIterableContainingInOrder.contains("bml1", "bml3", "bml4", "bml6"));
+    }
+
+    @Test
+    public void longestPathsNone()
+    {
+        Map<String, Integer> paths = DAGUtils.longestPaths(new ArrayList<String>(), new ArrayList<Edge<String>>());
+        assertTrue(paths.isEmpty());
+    }
+
+    @Test
+    public void longestPathsOne()
+    {
+        Map<String, Integer> paths = DAGUtils.longestPaths(ImmutableList.of("bml1"), new ArrayList<Edge<String>>());
+        assertEquals(Integer.valueOf(1), paths.get("bml1"));
+    }
+
+    @Test
+    public void longestPathsQueue()
+    {
+        Map<String, Integer> paths = DAGUtils.longestPaths(ImmutableList.of("bml1", "bml2", "bml3"),
+                ImmutableList.of(new Edge<String>("bml1", "bml2"), new Edge<String>("bml2", "bml3")));
+        assertEquals(Integer.valueOf(1), paths.get("bml1"));
+        assertEquals(Integer.valueOf(2), paths.get("bml2"));
+        assertEquals(Integer.valueOf(3), paths.get("bml3"));
+    }
+
+    @Test(expected = IllegalArgumentException.class)
+    public void longestPathsCycle()
+    {
+        DAGUtils.longestPaths(ImmutableList.of("bml1", "bml2"),
+                ImmutableList.of(new Edge<String>("bml1", "bml2"), new Edge<String>("bml2", "bml1")));
+    }
+
+    @Test
+    public void longestPaths()
+    {
+        Map<String, Integer> paths = DAGUtils.longestPaths(ImmutableList.of("bml1", "bml2", "bml3", "bml4", "bml5", "bml6"), ImmutableList
+                .of(new Edge<String>("bml1", "bml2"), new Edge<String>("bml1", "bml3"), new Edge<String>("bml3", "bml4"), new Edge<String>(
+                        "bml2", "bml6"), new Edge<String>("bml4", "bml6")));
+        assertEquals(Integer.valueOf(1), paths.get("bml1"));
+        assertEquals(Integer.valueOf(2), paths.get("bml2"));
+        assertEquals(Integer.valueOf(2), paths.get("bml3"));
+        assertEquals(Integer.valueOf(3), paths.get("bml4"));
+        assertEquals(Integer.valueOf(1), paths.get("bml5"));
+        assertEquals(Integer.valueOf(4), paths.get("bml6"));
+    }
+
+    @Test
+    public void getClustersNone()
+    {
+        Set<Set<String>> clusters = DAGUtils.getClusters(new ArrayList<String>(), new ArrayList<Edge<String>>());
+        assertTrue(clusters.isEmpty());
+    }
+
+    @Test
+    public void getClustersOne()
+    {
+        Set<Set<String>> clusters = DAGUtils.getClusters(ImmutableList.of("bml1"), new ArrayList<Edge<String>>());
+        assertEquals(1, clusters.size());
+    }
+
+    @Test
+    public void getClustersQueue()
+    {
+        Set<Set<String>> clusters = DAGUtils.getClusters(ImmutableList.of("bml1", "bml2", "bml3"),
+                ImmutableList.of(new Edge<String>("bml1", "bml2"), new Edge<String>("bml2", "bml3")));
+        assertEquals(1, clusters.size());
+        assertThat(clusters.iterator().next(), IsIterableContainingInAnyOrder.containsInAnyOrder("bml1", "bml2", "bml3"));
+    }
+
+    @Test
+    public void getClusters()
+    {
+        Set<Set<String>> clusters = DAGUtils.getClusters(ImmutableList.of("bml1", "bml2", "bml3", "bml4", "bml5", "bml6"), ImmutableList.of(
+                new Edge<String>("bml1", "bml2"), new Edge<String>("bml1", "bml3"), new Edge<String>("bml3", "bml4"), new Edge<String>(
+                        "bml2", "bml6"), new Edge<String>("bml4", "bml6")));
+        assertEquals(2, clusters.size());
+        Iterator<Set<String>> c = clusters.iterator();
+        assertThat(c.next(), anyOf(IsIterableContainingInAnyOrder.containsInAnyOrder("bml1", "bml2", "bml3","bml4","bml6"),
+                IsIterableContainingInAnyOrder.containsInAnyOrder("bml5")));
+        assertThat(c.next(), anyOf(IsIterableContainingInAnyOrder.containsInAnyOrder("bml1", "bml2", "bml3","bml4","bml6"),
+                IsIterableContainingInAnyOrder.containsInAnyOrder("bml5")));
     }
 }
