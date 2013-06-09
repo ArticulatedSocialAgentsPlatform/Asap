@@ -20,13 +20,13 @@ import asap.realizerport.RealizerPort;
  * @author hvanwelbergen
  *
  */
-public class AsapBMLFlowVisualizerTest
+public class BMLFlowVisualizerTest
 {
     private RealizerPort mockPort = mock(RealizerPort.class);
     private PlanningQueueVisualization mockPlanqVis = mock(PlanningQueueVisualization.class);
     private FinishedQueueVisualization mockFinishedqVis = mock(FinishedQueueVisualization.class);
     private PlayingQueueVisualization mockPlayqVis = mock(PlayingQueueVisualization.class);
-    private AsapBMLFlowVisualizerPort vis;
+    private BMLFlowVisualizerPort vis;
     
     @Before
     public void before()
@@ -34,7 +34,7 @@ public class AsapBMLFlowVisualizerTest
         when(mockPlanqVis.getVisualization()).thenReturn(new JPanel());
         when(mockFinishedqVis.getVisualization()).thenReturn(new JPanel());
         when(mockPlayqVis.getVisualization()).thenReturn(new JPanel());
-        vis = new AsapBMLFlowVisualizerPort(mockPort);
+        vis = new BMLFlowVisualizerPort(mockPort);
         vis.addVisualization(mockPlanqVis,mockFinishedqVis,mockPlayqVis);        
     }
     

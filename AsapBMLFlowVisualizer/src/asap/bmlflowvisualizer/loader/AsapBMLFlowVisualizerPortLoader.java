@@ -5,7 +5,7 @@ import hmi.xml.XMLTokenizer;
 
 import java.io.IOException;
 
-import asap.bmlflowvisualizer.AsapBMLFlowVisualizerPort;
+import asap.bmlflowvisualizer.BMLFlowVisualizerPort;
 import asap.realizerembodiments.PipeLoader;
 import asap.realizerport.RealizerPort;
 
@@ -16,17 +16,17 @@ import asap.realizerport.RealizerPort;
  */
 public class AsapBMLFlowVisualizerPortLoader implements PipeLoader
 {
-    private AsapBMLFlowVisualizerPort vis;
+    private BMLFlowVisualizerPort vis;
     
     @Override
     public void readXML(XMLTokenizer theTokenizer, String id, String vhId, String name, RealizerPort realizerPort, Clock theSchedulingClock)
             throws IOException
     {
-        vis = new AsapBMLFlowVisualizerPort(realizerPort);        
+        vis = new BMLFlowVisualizerPort(realizerPort);        
     }
 
     @Override
-    public AsapBMLFlowVisualizerPort getAdaptedRealizerPort()
+    public BMLFlowVisualizerPort getAdaptedRealizerPort()
     {
         return vis;
     }

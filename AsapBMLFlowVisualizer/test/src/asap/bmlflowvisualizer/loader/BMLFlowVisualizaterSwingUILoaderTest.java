@@ -18,7 +18,7 @@ import hmi.xml.XMLTokenizer;
 import org.junit.Before;
 import org.junit.Test;
 
-import asap.bmlflowvisualizer.AsapBMLFlowVisualizerPort;
+import asap.bmlflowvisualizer.BMLFlowVisualizerPort;
 import asap.realizerembodiments.AsapRealizerEmbodiment;
 import asap.realizerembodiments.PipeLoader;
 
@@ -33,7 +33,7 @@ public class BMLFlowVisualizaterSwingUILoaderTest
     private JComponentEmbodimentLoader mockJCompEmbLoader = mock(JComponentEmbodimentLoader.class);
     private JComponentEmbodiment mockJCompEmb = mock(JComponentEmbodiment.class);
     private AsapRealizerEmbodiment mockAsapRealizerEmb = mock(AsapRealizerEmbodiment.class);
-    private AsapBMLFlowVisualizerPort mockVisPort = mock(AsapBMLFlowVisualizerPort.class);
+    private BMLFlowVisualizerPort mockVisPort = mock(BMLFlowVisualizerPort.class);
     private AsapBMLFlowVisualizerPortLoader mockVisPortLoader = mock(AsapBMLFlowVisualizerPortLoader.class);
     
     @Before

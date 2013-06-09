@@ -21,7 +21,7 @@ import asap.realizerport.RealizerPort;
  * @author hvanwelbergen
  * 
  */
-public class AsapBMLFlowVisualizerPort implements RealizerPort, BMLFeedbackListener
+public class BMLFlowVisualizerPort implements RealizerPort, BMLFeedbackListener
 {
     private final RealizerPort realizerPort;
     private final JPanel panel = new JPanel();
@@ -29,7 +29,7 @@ public class AsapBMLFlowVisualizerPort implements RealizerPort, BMLFeedbackListe
     private FinishedQueueVisualization finishedQueue;
     private PlayingQueueVisualization playingQueue;
 
-    public AsapBMLFlowVisualizerPort(RealizerPort port)
+    public BMLFlowVisualizerPort(RealizerPort port)
     {
         realizerPort = port;
         realizerPort.addListeners(this);
