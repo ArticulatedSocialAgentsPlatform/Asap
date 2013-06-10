@@ -13,6 +13,7 @@ import saiba.bml.feedback.BMLBlockProgressFeedback;
 import saiba.bml.feedback.BMLFeedback;
 import saiba.bml.feedback.BMLFeedbackParser;
 import saiba.bml.feedback.BMLPredictionFeedback;
+import asap.bml.ext.bmla.BMLABMLBehaviorAttributes;
 import asap.realizerport.BMLFeedbackListener;
 import asap.realizerport.RealizerPort;
 
@@ -100,7 +101,7 @@ public class BMLFlowVisualizerPort implements RealizerPort, BMLFeedbackListener
     @Override
     public void performBML(String bmlString)
     {
-        BehaviourBlock bb = new BehaviourBlock();
+        BehaviourBlock bb = new BehaviourBlock(new BMLABMLBehaviorAttributes());
         bb.readXML(bmlString);
         if(bb.getComposition().equals(CoreComposition.REPLACE))
         {

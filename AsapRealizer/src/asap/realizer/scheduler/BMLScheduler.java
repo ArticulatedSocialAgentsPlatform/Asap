@@ -510,11 +510,14 @@ public final class BMLScheduler
             e.interruptBehaviourBlock(bmlId, schedulingClock.getMediaSeconds());
         }
 
+        /*
         if (bmlBlocksManager.getBMLBlockState(bmlId) == TimedPlanUnitState.IN_EXEC
                 || bmlBlocksManager.getBMLBlockState(bmlId) == TimedPlanUnitState.SUBSIDING)
         {
             bmlBlocksManager.finishBlock(bmlId);
         }
+        */
+        bmlBlocksManager.finishBlock(bmlId);
         bmlBlocksManager.removeBMLBlock(bmlId);
     }
 

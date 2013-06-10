@@ -584,11 +584,11 @@ public class BMLSchedulerTest
         assertEquals(1, getBMLIdsFromStartFeedback(blockProgressFeedbackList).size());
 
         scheduler.interruptBlock("bml2");
-        assertEquals(0, getBMLIdsFromEndFeedback(blockProgressFeedbackList).size());
+        assertEquals(1, getBMLIdsFromEndFeedback(blockProgressFeedbackList).size());
 
         scheduler.blockStopFeedback("bml1");
         assertEquals(1, getBMLIdsFromStartFeedback(blockProgressFeedbackList).size());
-        assertEquals(1, getBMLIdsFromEndFeedback(blockProgressFeedbackList).size());
+        assertEquals(2, getBMLIdsFromEndFeedback(blockProgressFeedbackList).size());
     }
 
     @Test
@@ -785,7 +785,7 @@ public class BMLSchedulerTest
         scheduler.schedule();
 
         assertEquals(0, getBMLIdsFromStartFeedback(blockProgressFeedbackList).size());
-        assertEquals(0, getBMLIdsFromEndFeedback(blockProgressFeedbackList).size());
+        assertEquals(1, getBMLIdsFromEndFeedback(blockProgressFeedbackList).size());
         assertEquals(0, scheduler.getBehaviours("bml1").size());
     }
 

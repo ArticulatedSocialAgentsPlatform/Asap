@@ -75,7 +75,7 @@ public final class BMLBlockManager
     public synchronized void removeBMLBlock(String bmlId)
     {
         BMLBlocks.remove(bmlId);
-        finishedBMLBlocks.remove(bmlId);
+        finishedBMLBlocks.remove(bmlId);        
         updateBlocks();
     }
 
