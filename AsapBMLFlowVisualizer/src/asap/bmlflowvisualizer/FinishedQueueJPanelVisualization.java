@@ -16,6 +16,7 @@ import javax.swing.border.LineBorder;
 import saiba.bml.core.BehaviourBlock;
 import saiba.bml.feedback.BMLBlockPredictionFeedback;
 import saiba.bml.feedback.BMLBlockProgressFeedback;
+import asap.bml.ext.bmla.BMLABMLBehaviorAttributes;
 
 public class FinishedQueueJPanelVisualization implements BMLFlowVisualization
 {
@@ -25,6 +26,7 @@ public class FinishedQueueJPanelVisualization implements BMLFlowVisualization
     private Set<String> addedBlocks = new HashSet<String>();
     private Set<String> plannedBlocks = new HashSet<String>();
     private Set<String> startedBlocks = new HashSet<String>();
+    private Set<String> interruptSet= new HashSet<String>();
 
     public FinishedQueueJPanelVisualization()
     {
@@ -40,7 +42,11 @@ public class FinishedQueueJPanelVisualization implements BMLFlowVisualization
             {
                 JPanel p = new JPanel();
                 JLabel label = new JLabel(bb.getBmlId());
-                if (startedBlocks.contains(bb.getBmlId()))
+                if (startedBlocks.contains(bb.getBmlId()) && interruptSet.contains(bb.getBmlId()))
+                {
+                    p.setBackground(Color.RED);
+                }
+                else if (startedBlocks.contains(bb.getBmlId()))
                 {
                     p.setBackground(Color.GREEN);
                 }
@@ -71,9 +77,6 @@ public class FinishedQueueJPanelVisualization implements BMLFlowVisualization
             {
                 JComponent label = planMap.get(id);
                 planMap.remove(id);
-                plannedBlocks.remove(id);
-                startedBlocks.remove(id);
-                addedBlocks.remove(id);
                 if (label != null)
                 {
 
@@ -95,19 +98,22 @@ public class FinishedQueueJPanelVisualization implements BMLFlowVisualization
     @Override
     public void clear()
     {
-        for (String id : planMap.keySet())
-        {
-            removeBlock(id);
-        }
         plannedBlocks.clear();
         addedBlocks.clear();
         startedBlocks.clear();
+        interruptSet.clear();
+        for (String id : planMap.keySet())
+        {
+            removeBlock(id);
+        }        
     }
 
     @Override
     public void planBlock(BehaviourBlock bb)
     {
         addedBlocks.add(bb.getBmlId());
+        BMLABMLBehaviorAttributes bmlaAttr = bb.getBMLBehaviorAttributeExtension(BMLABMLBehaviorAttributes.class);
+        interruptSet.addAll(bmlaAttr.getInterruptList());
     }
 
     @Override

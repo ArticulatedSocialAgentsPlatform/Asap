@@ -105,16 +105,8 @@ public class BMLFlowVisualizerPort implements RealizerPort, BMLFeedbackListener
     {
         BehaviourBlock bb = new BehaviourBlock(new BMLABMLBehaviorAttributes());
         
-        try
-        {
-            bb.readXML(bmlString);
-        }
-        catch (RuntimeException e)
-        {
-            System.out.println(bmlString);
-            e.printStackTrace();
-            
-        }
+        bb.readXML(bmlString);
+        
         if(bb.getComposition().equals(CoreComposition.REPLACE))
         {
             planningQueue.clear();
