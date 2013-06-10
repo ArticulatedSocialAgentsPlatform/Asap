@@ -113,7 +113,10 @@ public class FinishedQueueJPanelVisualization implements BMLFlowVisualization
     {
         addedBlocks.add(bb.getBmlId());
         BMLABMLBehaviorAttributes bmlaAttr = bb.getBMLBehaviorAttributeExtension(BMLABMLBehaviorAttributes.class);
-        interruptSet.addAll(bmlaAttr.getInterruptList());
+        if(bmlaAttr!=null)
+        {
+            interruptSet.addAll(bmlaAttr.getInterruptList());
+        }
     }
 
     @Override

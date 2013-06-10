@@ -2,7 +2,9 @@ package asap.bmlflowvisualizer;
 
 import java.awt.Color;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.Map;
+import java.util.Set;
 
 import javax.swing.BoxLayout;
 import javax.swing.JComponent;
@@ -14,11 +16,13 @@ import javax.swing.border.LineBorder;
 import saiba.bml.core.BehaviourBlock;
 import saiba.bml.feedback.BMLBlockPredictionFeedback;
 import saiba.bml.feedback.BMLBlockProgressFeedback;
+import asap.bml.ext.bmla.BMLABMLBehaviorAttributes;
 
 public class PlayingQueueJPanelVisualization implements BMLFlowVisualization
 {
     private JPanel panel = new JPanel();
     private Map<String, JPanel> blockMap = new HashMap<String, JPanel>();
+    private Set<String> preplannedBlocks = new HashSet<String>();
 
     public PlayingQueueJPanelVisualization()
     {
@@ -49,14 +53,16 @@ public class PlayingQueueJPanelVisualization implements BMLFlowVisualization
             {
                 JPanel p = getBlock(bb.getBmlId());
                 p.setBackground(Color.ORANGE);
+                if (preplannedBlocks.contains(bb.getBmlId()))
+                {
+                    p.setBorder(new LineBorder(Color.BLUE,4));
+                }
                 panel.repaint();
                 panel.updateUI();
             }
         });
 
     }
-
-    
 
     @Override
     public void removeBlock(final String id)
@@ -82,10 +88,11 @@ public class PlayingQueueJPanelVisualization implements BMLFlowVisualization
     {
         return panel;
     }
-    
+
     @Override
     public void clear()
     {
+        preplannedBlocks.clear();
         for (String id : blockMap.keySet())
         {
             removeBlock(id);
@@ -95,13 +102,20 @@ public class PlayingQueueJPanelVisualization implements BMLFlowVisualization
     @Override
     public void planBlock(BehaviourBlock bb)
     {
-                
+        BMLABMLBehaviorAttributes bmlaAttr = bb.getBMLBehaviorAttributeExtension(BMLABMLBehaviorAttributes.class);
+        if (bmlaAttr != null)
+        {
+            if (bmlaAttr.isPrePlanned())
+            {
+                preplannedBlocks.add(bb.getBmlId());
+            }
+        }
     }
 
     @Override
     public void finishBlock(BMLBlockProgressFeedback bb)
     {
-        removeBlock(bb.getBmlId());        
+        removeBlock(bb.getBmlId());
     }
 
     @Override
@@ -118,6 +132,5 @@ public class PlayingQueueJPanelVisualization implements BMLFlowVisualization
             }
         });
     }
-    
-   
+
 }
