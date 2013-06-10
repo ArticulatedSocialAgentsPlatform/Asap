@@ -2,7 +2,9 @@ package asap.bmlflowvisualizer;
 
 import java.awt.Color;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.Map;
+import java.util.Set;
 
 import javax.swing.BoxLayout;
 import javax.swing.JComponent;
@@ -11,12 +13,18 @@ import javax.swing.JPanel;
 import javax.swing.SwingUtilities;
 import javax.swing.border.LineBorder;
 
+import saiba.bml.core.BehaviourBlock;
+import saiba.bml.feedback.BMLBlockPredictionFeedback;
 import saiba.bml.feedback.BMLBlockProgressFeedback;
 
-public class FinishedQueueJPanelVisualization implements FinishedQueueVisualization
+public class FinishedQueueJPanelVisualization implements BMLFlowVisualization
 {
     private JPanel panel = new JPanel();
     private Map<String, JComponent> planMap = new HashMap<>();
+
+    private Set<String> addedBlocks = new HashSet<String>();
+    private Set<String> plannedBlocks = new HashSet<String>();
+    private Set<String> startedBlocks = new HashSet<String>();
 
     public FinishedQueueJPanelVisualization()
     {
@@ -24,7 +32,7 @@ public class FinishedQueueJPanelVisualization implements FinishedQueueVisualizat
     }
 
     @Override
-    public void addBlock(final BMLBlockProgressFeedback bb)
+    public void finishBlock(final BMLBlockProgressFeedback bb)
     {
         SwingUtilities.invokeLater(new Runnable()
         {
@@ -32,7 +40,18 @@ public class FinishedQueueJPanelVisualization implements FinishedQueueVisualizat
             {
                 JPanel p = new JPanel();
                 JLabel label = new JLabel(bb.getBmlId());
-                p.setBackground(Color.GREEN);
+                if (startedBlocks.contains(bb.getBmlId()))
+                {
+                    p.setBackground(Color.GREEN);
+                }
+                else if (plannedBlocks.contains(bb.getBmlId()))
+                {
+                    p.setBackground(Color.YELLOW);
+                }
+                else if (addedBlocks.contains(bb.getBmlId()))
+                {
+                    p.setBackground(Color.GRAY);
+                }
                 p.setBorder(new LineBorder(Color.BLACK));
                 p.add(label);
                 planMap.put(bb.getBmlId(), p);
@@ -52,6 +71,9 @@ public class FinishedQueueJPanelVisualization implements FinishedQueueVisualizat
             {
                 JComponent label = planMap.get(id);
                 planMap.remove(id);
+                plannedBlocks.remove(id);
+                startedBlocks.remove(id);
+                addedBlocks.remove(id);
                 if (label != null)
                 {
 
@@ -77,5 +99,26 @@ public class FinishedQueueJPanelVisualization implements FinishedQueueVisualizat
         {
             removeBlock(id);
         }
+        plannedBlocks.clear();
+        addedBlocks.clear();
+        startedBlocks.clear();
+    }
+
+    @Override
+    public void planBlock(BehaviourBlock bb)
+    {
+        addedBlocks.add(bb.getBmlId());
+    }
+
+    @Override
+    public void startBlock(BMLBlockProgressFeedback bb)
+    {
+        startedBlocks.add(bb.getBmlId());
+    }
+
+    @Override
+    public void updateBlock(BMLBlockPredictionFeedback pred)
+    {
+        plannedBlocks.add(pred.getId());
     }
 }

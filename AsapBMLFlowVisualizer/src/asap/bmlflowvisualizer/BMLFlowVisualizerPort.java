@@ -26,9 +26,9 @@ public class BMLFlowVisualizerPort implements RealizerPort, BMLFeedbackListener
 {
     private final RealizerPort realizerPort;
     private final JPanel panel = new JPanel();
-    private PlanningQueueVisualization planningQueue;
-    private FinishedQueueVisualization finishedQueue;
-    private PlayingQueueVisualization playingQueue;
+    private BMLFlowVisualization planningQueue;
+    private BMLFlowVisualization finishedQueue;
+    private BMLFlowVisualization playingQueue;
 
     public BMLFlowVisualizerPort(RealizerPort port)
     {
@@ -36,7 +36,7 @@ public class BMLFlowVisualizerPort implements RealizerPort, BMLFeedbackListener
         realizerPort.addListeners(this);
     }
 
-    public void addVisualization(PlanningQueueVisualization pqvis, FinishedQueueVisualization fqvis, PlayingQueueVisualization plqvis)
+    public void addVisualization(BMLFlowVisualization pqvis, BMLFlowVisualization fqvis, BMLFlowVisualization plqvis)
     {
         this.planningQueue = pqvis;
         this.finishedQueue = fqvis;
@@ -65,14 +65,15 @@ public class BMLFlowVisualizerPort implements RealizerPort, BMLFeedbackListener
             BMLBlockProgressFeedback fbBlock = (BMLBlockProgressFeedback)fb;
             if(fbBlock.getSyncId().equals("end"))
             {
-                finishedQueue.addBlock(fbBlock);
-                planningQueue.removeBlock(fbBlock.getBmlId());
-                playingQueue.removeBlock(fbBlock.getBmlId());
+                finishedQueue.finishBlock(fbBlock);
+                planningQueue.finishBlock(fbBlock);
+                playingQueue.finishBlock(fbBlock);
             }
             else if(fbBlock.getSyncId().equals("start"))
             {
-                planningQueue.removeBlock(fbBlock.getBmlId());
+                planningQueue.startBlock(fbBlock);
                 playingQueue.startBlock(fbBlock);
+                finishedQueue.startBlock(fbBlock);
             }
         }
         if(fb instanceof BMLPredictionFeedback)
@@ -80,8 +81,9 @@ public class BMLFlowVisualizerPort implements RealizerPort, BMLFeedbackListener
             BMLPredictionFeedback pf = (BMLPredictionFeedback)fb;
             for(BMLBlockPredictionFeedback bbp:pf.getBmlBlockPredictions())
             {
-                planningQueue.removeBlock(bbp.getId());
+                planningQueue.updateBlock(bbp);
                 playingQueue.updateBlock(bbp);
+                finishedQueue.updateBlock(bbp);
             }
         }
     }
@@ -102,14 +104,26 @@ public class BMLFlowVisualizerPort implements RealizerPort, BMLFeedbackListener
     public void performBML(String bmlString)
     {
         BehaviourBlock bb = new BehaviourBlock(new BMLABMLBehaviorAttributes());
-        bb.readXML(bmlString);
+        
+        try
+        {
+            bb.readXML(bmlString);
+        }
+        catch (RuntimeException e)
+        {
+            System.out.println(bmlString);
+            e.printStackTrace();
+            
+        }
         if(bb.getComposition().equals(CoreComposition.REPLACE))
         {
             planningQueue.clear();
             playingQueue.clear();
             finishedQueue.clear();
         }
-        planningQueue.addBlock(bb);
+        planningQueue.planBlock(bb);
+        playingQueue.planBlock(bb);
+        finishedQueue.planBlock(bb);
         realizerPort.performBML(bmlString);
     }
 

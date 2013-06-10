@@ -12,13 +12,15 @@ import javax.swing.SwingUtilities;
 import javax.swing.border.LineBorder;
 
 import saiba.bml.core.BehaviourBlock;
+import saiba.bml.feedback.BMLBlockPredictionFeedback;
+import saiba.bml.feedback.BMLBlockProgressFeedback;
 
 /**
  * Visualizes the planning queue on a JPanel
  * @author hvanwelbergen
  * 
  */
-public class PlanningQueueJPanelVisualization implements PlanningQueueVisualization
+public class PlanningQueueJPanelVisualization implements BMLFlowVisualization
 {
     private final JPanel panel = new JPanel();
     private Map<String, JComponent> planMap = new HashMap<>();
@@ -28,7 +30,8 @@ public class PlanningQueueJPanelVisualization implements PlanningQueueVisualizat
         panel.setLayout(new BoxLayout(panel, BoxLayout.Y_AXIS));
     }
 
-    public void addBlock(final BehaviourBlock bb)
+    @Override
+    public void planBlock(final BehaviourBlock bb)
     {
         SwingUtilities.invokeLater(new Runnable()
         {
@@ -80,5 +83,24 @@ public class PlanningQueueJPanelVisualization implements PlanningQueueVisualizat
         {
             removeBlock(id);
         }
+    }
+
+    @Override
+    public void startBlock(BMLBlockProgressFeedback bb)
+    {
+        removeBlock(bb.getBmlId());
+    }
+
+    @Override
+    public void finishBlock(BMLBlockProgressFeedback bb)
+    {
+        removeBlock(bb.getBmlId());
+        
+    }
+
+    @Override
+    public void updateBlock(BMLBlockPredictionFeedback pred)
+    {
+        removeBlock(pred.getId());        
     }
 }

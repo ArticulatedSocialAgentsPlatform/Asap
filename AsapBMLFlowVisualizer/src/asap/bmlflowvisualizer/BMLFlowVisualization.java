@@ -2,18 +2,22 @@ package asap.bmlflowvisualizer;
 
 import javax.swing.JComponent;
 
+import saiba.bml.core.BehaviourBlock;
 import saiba.bml.feedback.BMLBlockPredictionFeedback;
 import saiba.bml.feedback.BMLBlockProgressFeedback;
 
 /**
- * Visualizes the currently planned, may be playing bml blocks
+ * Visualizes BML blocks
  * @author hvanwelbergen
  *
  */
-public interface PlayingQueueVisualization
+public interface BMLFlowVisualization
 {
+    void planBlock(BehaviourBlock bb);
     void startBlock(BMLBlockProgressFeedback bb);
-    void updateBlock(BMLBlockPredictionFeedback pf);
+    void finishBlock(BMLBlockProgressFeedback bb);
+    void updateBlock (BMLBlockPredictionFeedback pred);
+    
     void removeBlock(String id);
     JComponent getVisualization();
     

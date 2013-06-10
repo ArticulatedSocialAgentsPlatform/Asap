@@ -11,10 +11,11 @@ import javax.swing.JPanel;
 import javax.swing.SwingUtilities;
 import javax.swing.border.LineBorder;
 
+import saiba.bml.core.BehaviourBlock;
 import saiba.bml.feedback.BMLBlockPredictionFeedback;
 import saiba.bml.feedback.BMLBlockProgressFeedback;
 
-public class PlayingQueueJPanelVisualization implements PlayingQueueVisualization
+public class PlayingQueueJPanelVisualization implements BMLFlowVisualization
 {
     private JPanel panel = new JPanel();
     private Map<String, JPanel> blockMap = new HashMap<String, JPanel>();
@@ -55,20 +56,7 @@ public class PlayingQueueJPanelVisualization implements PlayingQueueVisualizatio
 
     }
 
-    @Override
-    public void updateBlock(final BMLBlockPredictionFeedback pf)
-    {
-        SwingUtilities.invokeLater(new Runnable()
-        {
-            public void run()
-            {
-                JPanel p = getBlock(pf.getId());
-                p.setBackground(Color.YELLOW);
-                panel.repaint();
-                panel.updateUI();
-            }
-        });
-    }
+    
 
     @Override
     public void removeBlock(final String id)
@@ -104,4 +92,32 @@ public class PlayingQueueJPanelVisualization implements PlayingQueueVisualizatio
         }
     }
 
+    @Override
+    public void planBlock(BehaviourBlock bb)
+    {
+                
+    }
+
+    @Override
+    public void finishBlock(BMLBlockProgressFeedback bb)
+    {
+        removeBlock(bb.getBmlId());        
+    }
+
+    @Override
+    public void updateBlock(final BMLBlockPredictionFeedback pf)
+    {
+        SwingUtilities.invokeLater(new Runnable()
+        {
+            public void run()
+            {
+                JPanel p = getBlock(pf.getId());
+                p.setBackground(Color.YELLOW);
+                panel.repaint();
+                panel.updateUI();
+            }
+        });
+    }
+    
+   
 }
