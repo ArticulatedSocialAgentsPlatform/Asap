@@ -1,9 +1,12 @@
 package asap.bmlflowvisualizer.graphutils;
 
+import static org.hamcrest.CoreMatchers.anyOf;
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
+import static org.hamcrest.CoreMatchers.equalTo;
 
+import java.awt.Point;
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
@@ -12,7 +15,6 @@ import java.util.Set;
 
 import org.hamcrest.collection.IsIterableContainingInAnyOrder;
 import org.hamcrest.collection.IsIterableContainingInOrder;
-import static org.hamcrest.CoreMatchers.anyOf;
 import org.junit.Test;
 
 import com.google.common.collect.ImmutableList;
@@ -169,6 +171,15 @@ public class DAGUtilsTest
         assertEquals(1, clusters.size());
         assertThat(clusters.iterator().next(), IsIterableContainingInAnyOrder.containsInAnyOrder("bml1", "bml2", "bml3"));
     }
+    
+    @Test
+    public void getClustersTree()
+    {
+        Set<Set<String>> clusters  = DAGUtils.getClusters(ImmutableList.of("bml1", "bml2", "bml3"),
+                ImmutableList.of(new Edge<String>("bml1", "bml2"), new Edge<String>("bml1", "bml3")));
+        assertEquals(1, clusters.size());
+        
+    }
 
     @Test
     public void getClusters()
@@ -182,5 +193,43 @@ public class DAGUtilsTest
                 IsIterableContainingInAnyOrder.containsInAnyOrder("bml5")));
         assertThat(c.next(), anyOf(IsIterableContainingInAnyOrder.containsInAnyOrder("bml1", "bml2", "bml3","bml4","bml6"),
                 IsIterableContainingInAnyOrder.containsInAnyOrder("bml5")));
+    }
+    
+    @Test
+    public void layoutNone()
+    {
+        Map<String,Point> layout = DAGUtils.layout(new ArrayList<String>(), new ArrayList<Edge<String>>());
+        assertTrue(layout.isEmpty());
+    }
+    
+    @Test
+    public void layoutOne()
+    {
+        Map<String,Point> layout = DAGUtils.layout(ImmutableList.of("bml1"), new ArrayList<Edge<String>>());
+        assertEquals(1,layout.size());
+        assertEquals(new Point(0,0), layout.get("bml1"));
+    }
+    
+    @Test
+    public void layoutQueue()
+    {
+        Map<String,Point> layout = DAGUtils.layout(ImmutableList.of("bml1", "bml2", "bml3"),
+                ImmutableList.of(new Edge<String>("bml1", "bml2"), new Edge<String>("bml2", "bml3")));
+        assertEquals(3,layout.size());
+        assertEquals(new Point(0,0), layout.get("bml1"));
+        assertEquals(new Point(0,1), layout.get("bml2"));
+        assertEquals(new Point(0,2), layout.get("bml3"));
+    }
+    
+    @SuppressWarnings("unchecked")
+    @Test
+    public void layoutTree()
+    {
+        Map<String,Point> layout = DAGUtils.layout(ImmutableList.of("bml1", "bml2", "bml3"),
+                ImmutableList.of(new Edge<String>("bml1", "bml2"), new Edge<String>("bml1", "bml3")));
+        assertEquals(3,layout.size());
+        assertEquals(new Point(0,0), layout.get("bml1"));
+        assertThat(layout.get("bml2"), anyOf( equalTo(new Point(0,1)), equalTo(new Point(1,1))));
+        assertThat(layout.get("bml3"), anyOf( equalTo(new Point(0,1)), equalTo(new Point(1,1))));        
     }
 }

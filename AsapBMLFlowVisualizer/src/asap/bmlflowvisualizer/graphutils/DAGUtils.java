@@ -1,5 +1,6 @@
 package asap.bmlflowvisualizer.graphutils;
 
+import java.awt.Point;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
@@ -21,6 +22,20 @@ public class DAGUtils
     {
     }
 
+    private static <V> Set<V> getOutgoingNeighbours(V v, Collection<Edge<V>> edges)
+    {
+        Set<V> outgoing = new HashSet<V>();
+        for (Edge<V> e : edges)
+        {
+            if (e.getStart().equals(v))
+            {
+                outgoing.add(e.getEnd());
+            }
+        }
+        return outgoing;
+    }
+
+    
     private static <V> Set<V> getIncomingNeighbours(V v, Collection<Edge<V>> edges)
     {
         Set<V> incoming = new HashSet<V>();
@@ -34,26 +49,26 @@ public class DAGUtils
         return incoming;
     }
 
-    private static <V> void setConnectedUp(Set<V> checkConnections, Set<V> connections, Collection<Edge<V>> edges)
+    private static <V> void setConnectedDown(Set<V> checkConnections, Set<V> connections, Collection<Edge<V>> edges)
     {
         for (V v : checkConnections)
         {
             connections.add(v);
-            Set<V> incoming = getIncomingNeighbours(v, edges);
-            if (!incoming.isEmpty())
+            Set<V> outgoing = getOutgoingNeighbours(v, edges);
+            if (!outgoing.isEmpty())
             {
-                setConnectedUp(incoming, connections, edges);
+                setConnectedDown(outgoing, connections, edges);
             }
         }
     }
 
-    private static <V> Set<V> getConnectedUp(V v, Collection<Edge<V>> edges)
+    private static <V> Set<V> getConnectedDown(V v, Collection<Edge<V>> edges)
     {
         Set<V> connections = new HashSet<V>();
         connections.add(v);
         Set<V> checkConnections = new HashSet<V>();
         checkConnections.add(v);
-        setConnectedUp(checkConnections, connections, edges);
+        setConnectedDown(checkConnections, connections, edges);
         return connections;
     }
 
@@ -181,7 +196,7 @@ public class DAGUtils
     {
         Set<Set<V>> clusters = new HashSet<Set<V>>();
         List<V> topSort = topologicalSort(vertices, ed);
-        Collections.reverse(topSort);
+        
         for (V v : topSort)
         {
             boolean alreadyIn = false;
@@ -195,10 +210,46 @@ public class DAGUtils
             }
             if(!alreadyIn)
             {
-                clusters.add(getConnectedUp(v, ed));
+                Set<V> downConnected = getConnectedDown(v, ed);
+                clusters.add(downConnected);
             }
         }
 
         return clusters;
+    }
+    
+    public static <V> Map<V,Point> layout(Collection<V> vertices, Collection<Edge<V>> ed)
+    {
+        Map<V,Point> pos = new HashMap<V,Point>();
+        Map<V, Integer> paths = longestPaths(vertices,ed);
+        Map<Integer, Integer> width = new HashMap<Integer,Integer>();
+        
+        for(Set<V> cluster:getClusters(vertices, ed))
+        {
+            int maxwidth = 0;
+            for (V v:cluster)
+            {
+                int y = paths.get(v)-1;
+                if(width.get(y)==null)
+                {
+                    width.put(y, 0);
+                }
+                else
+                {
+                    int x = width.get(y);
+                    width.put(y, x+1);
+                    if(x>maxwidth)
+                    {
+                        maxwidth = x;
+                    }
+                }
+                pos.put(v, new Point(width.get(y), y));
+            }
+            for(Entry<Integer,Integer> entry:width.entrySet())
+            {
+                entry.setValue(maxwidth+1);
+            }
+        }
+        return pos;
     }
 }
