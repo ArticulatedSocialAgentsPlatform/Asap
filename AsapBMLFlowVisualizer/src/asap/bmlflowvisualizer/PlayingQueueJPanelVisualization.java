@@ -11,6 +11,7 @@ import javax.swing.JComponent;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.SwingUtilities;
+import javax.swing.border.Border;
 import javax.swing.border.LineBorder;
 
 import saiba.bml.core.BehaviourBlock;
@@ -37,7 +38,12 @@ public class PlayingQueueJPanelVisualization implements BMLFlowVisualization
             p = new JPanel();
             JLabel label = new JLabel(id);
             p.add(label);
-            p.setBorder(new LineBorder(Color.BLACK));
+            Border b = new LineBorder(Color.BLACK);
+            if (preplannedBlocks.contains(id))
+            {
+                b = new LineBorder(Color.BLUE,2);
+            }
+            p.setBorder(b);
             blockMap.put(id, p);
             panel.add(p);
         }
@@ -53,10 +59,7 @@ public class PlayingQueueJPanelVisualization implements BMLFlowVisualization
             {
                 JPanel p = getBlock(bb.getBmlId());
                 p.setBackground(Color.ORANGE);
-                if (preplannedBlocks.contains(bb.getBmlId()))
-                {
-                    p.setBorder(new LineBorder(Color.BLUE,4));
-                }
+                
                 panel.repaint();
                 panel.updateUI();
             }

@@ -26,7 +26,7 @@ public class FinishedQueueJPanelVisualization implements BMLFlowVisualization
     private Set<String> addedBlocks = new HashSet<String>();
     private Set<String> plannedBlocks = new HashSet<String>();
     private Set<String> startedBlocks = new HashSet<String>();
-    private Set<String> interruptSet= new HashSet<String>();
+    private Set<String> interruptSet= new HashSet<String>();    
 
     public FinishedQueueJPanelVisualization()
     {
@@ -101,7 +101,7 @@ public class FinishedQueueJPanelVisualization implements BMLFlowVisualization
         plannedBlocks.clear();
         addedBlocks.clear();
         startedBlocks.clear();
-        interruptSet.clear();
+        interruptSet.clear();        
         for (String id : planMap.keySet())
         {
             removeBlock(id);

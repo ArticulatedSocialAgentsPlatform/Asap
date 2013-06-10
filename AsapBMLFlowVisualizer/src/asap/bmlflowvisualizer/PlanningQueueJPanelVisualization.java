@@ -9,13 +9,13 @@ import javax.swing.JComponent;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.SwingUtilities;
+import javax.swing.border.Border;
 import javax.swing.border.LineBorder;
-
-import asap.bml.ext.bmla.BMLABMLBehaviorAttributes;
 
 import saiba.bml.core.BehaviourBlock;
 import saiba.bml.feedback.BMLBlockPredictionFeedback;
 import saiba.bml.feedback.BMLBlockProgressFeedback;
+import asap.bml.ext.bmla.BMLABMLBehaviorAttributes;
 
 /**
  * Visualizes the planning queue on a JPanel
@@ -40,16 +40,19 @@ public class PlanningQueueJPanelVisualization implements BMLFlowVisualization
             public void run()
             {
                 JPanel p = new JPanel();
-                JLabel label = new JLabel(bb.getBmlId());
-                p.setBackground(Color.GRAY);
                 BMLABMLBehaviorAttributes bmlaAttr = bb.getBMLBehaviorAttributeExtension(BMLABMLBehaviorAttributes.class);
+                Border b = new LineBorder(Color.BLACK);
                 if(bmlaAttr!=null)
                 {
                     if(bmlaAttr.isPrePlanned())
                     {
-                        p.setBorder(new LineBorder(Color.BLACK));
+                        b = new LineBorder(Color.BLUE,2);
                     }
-                }                
+                }
+                JLabel label = new JLabel(bb.getBmlId());
+                p.setBorder(b);
+                p.setBackground(Color.GRAY);
+                                
                 p.add(label);
                 planMap.put(bb.getBmlId(), p);
                 panel.add(p);
