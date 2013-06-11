@@ -109,7 +109,7 @@ public class DAGUtils
 
             for (Edge<V> e : ed)
             {
-                if (e.getStart() == n)
+                if (e.getStart().equals(n))
                 {
                     V m = e.getEnd();
                     edges.remove(e);
@@ -122,7 +122,8 @@ public class DAGUtils
         }
         if (!edges.isEmpty())
         {
-            throw new IllegalArgumentException("Attempting topological sort on a graph with one or more cycles.");
+            throw new IllegalArgumentException("Attempting topological sort on a graph with one or more cycles. Edges:" + ed + ", "
+                    + " Vertices: " + vertices + " Unhandled edges " + edges);
         }
         return L;
     }
@@ -216,7 +217,7 @@ public class DAGUtils
         return clusters;
     }
 
-    public static <V> Map<V, Point> layout(Collection<V> vertices, Collection<Edge<V>> ed)
+    public synchronized static <V> Map<V, Point> layout(Collection<V> vertices, Collection<Edge<V>> ed)
     {
         Map<V, Point> pos = new HashMap<V, Point>();
         Map<V, Integer> paths = longestPaths(vertices, ed);
@@ -236,7 +237,7 @@ public class DAGUtils
                 }
                 else
                 {
-                    int x = width.get(y)+1;
+                    int x = width.get(y) + 1;
                     width.put(y, x);
                     if (x > maxx)
                     {

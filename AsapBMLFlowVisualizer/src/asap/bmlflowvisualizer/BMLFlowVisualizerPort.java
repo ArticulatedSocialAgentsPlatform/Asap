@@ -1,6 +1,7 @@
 package asap.bmlflowvisualizer;
 
-import java.awt.FlowLayout;
+import java.awt.GridBagConstraints;
+import java.awt.GridBagLayout;
 import java.io.IOException;
 
 import javax.swing.JComponent;
@@ -41,10 +42,25 @@ public class BMLFlowVisualizerPort implements RealizerPort, BMLFeedbackListener
         this.planningQueue = pqvis;
         this.finishedQueue = fqvis;
         this.playingQueue = plqvis;
-        panel.setLayout(new FlowLayout());
-        panel.add(planningQueue.getVisualization());
-        panel.add(plqvis.getVisualization());
-        panel.add(finishedQueue.getVisualization());        
+        panel.setLayout(new GridBagLayout());
+        
+        GridBagConstraints c = new GridBagConstraints();
+        c.gridx = 1;
+        c.gridy = 1;
+        c.anchor = GridBagConstraints.NORTH;
+        panel.add(planningQueue.getVisualization(),c);
+        
+        c = new GridBagConstraints();
+        c.gridx = 2;
+        c.gridy = 1;
+        c.anchor = GridBagConstraints.NORTH;
+        panel.add(plqvis.getVisualization(),c);
+        
+        c = new GridBagConstraints();
+        c.gridx = 3;
+        c.gridy = 1;
+        c.anchor = GridBagConstraints.NORTH;
+        panel.add(finishedQueue.getVisualization(),c);        
     }
 
     @Override

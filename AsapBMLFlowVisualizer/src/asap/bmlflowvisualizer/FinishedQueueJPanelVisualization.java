@@ -26,11 +26,12 @@ public class FinishedQueueJPanelVisualization implements BMLFlowVisualization
     private Set<String> addedBlocks = new HashSet<String>();
     private Set<String> plannedBlocks = new HashSet<String>();
     private Set<String> startedBlocks = new HashSet<String>();
-    private Set<String> interruptSet= new HashSet<String>();    
+    private Set<String> interruptSet = new HashSet<String>();
 
     public FinishedQueueJPanelVisualization()
     {
         panel.setLayout(new BoxLayout(panel, BoxLayout.Y_AXIS));
+        panel.add(new JLabel(" Finished "));
     }
 
     @Override
@@ -40,7 +41,7 @@ public class FinishedQueueJPanelVisualization implements BMLFlowVisualization
         {
             public void run()
             {
-                JPanel p = new JPanel();
+                JPanel p = new JPanel();                
                 JLabel label = new JLabel(bb.getBmlId());
                 if (startedBlocks.contains(bb.getBmlId()) && interruptSet.contains(bb.getBmlId()))
                 {
@@ -101,11 +102,11 @@ public class FinishedQueueJPanelVisualization implements BMLFlowVisualization
         plannedBlocks.clear();
         addedBlocks.clear();
         startedBlocks.clear();
-        interruptSet.clear();        
+        interruptSet.clear();
         for (String id : planMap.keySet())
         {
             removeBlock(id);
-        }        
+        }
     }
 
     @Override
@@ -113,7 +114,7 @@ public class FinishedQueueJPanelVisualization implements BMLFlowVisualization
     {
         addedBlocks.add(bb.getBmlId());
         BMLABMLBehaviorAttributes bmlaAttr = bb.getBMLBehaviorAttributeExtension(BMLABMLBehaviorAttributes.class);
-        if(bmlaAttr!=null)
+        if (bmlaAttr != null)
         {
             interruptSet.addAll(bmlaAttr.getInterruptList());
         }

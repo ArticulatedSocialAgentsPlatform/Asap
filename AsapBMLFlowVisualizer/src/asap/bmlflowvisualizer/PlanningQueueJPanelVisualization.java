@@ -30,6 +30,7 @@ public class PlanningQueueJPanelVisualization implements BMLFlowVisualization
     public PlanningQueueJPanelVisualization()
     {
         panel.setLayout(new BoxLayout(panel, BoxLayout.Y_AXIS));
+        panel.add(new JLabel(" Planning "));
     }
 
     @Override
@@ -39,7 +40,7 @@ public class PlanningQueueJPanelVisualization implements BMLFlowVisualization
         {
             public void run()
             {
-                JPanel p = new JPanel();
+                JPanel p = new JPanel();                
                 BMLABMLBehaviorAttributes bmlaAttr = bb.getBMLBehaviorAttributeExtension(BMLABMLBehaviorAttributes.class);
                 Border b = new LineBorder(Color.BLACK);
                 if(bmlaAttr!=null)

@@ -65,7 +65,7 @@ public class DAGUtilsTest
         // implementation specific check: other orders are also valid topological orders
         assertThat(V, IsIterableContainingInOrder.contains("bml1", "bml3", "bml4", "bml2", "bml5", "bml6"));
     }
-
+    
     @Test
     public void longestPathNone()
     {
