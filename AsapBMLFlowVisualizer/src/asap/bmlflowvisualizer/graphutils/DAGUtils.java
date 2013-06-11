@@ -3,7 +3,6 @@ package asap.bmlflowvisualizer.graphutils;
 import java.awt.Point;
 import java.util.ArrayList;
 import java.util.Collection;
-import java.util.Collections;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
@@ -35,7 +34,6 @@ public class DAGUtils
         return outgoing;
     }
 
-    
     private static <V> Set<V> getIncomingNeighbours(V v, Collection<Edge<V>> edges)
     {
         Set<V> incoming = new HashSet<V>();
@@ -196,7 +194,7 @@ public class DAGUtils
     {
         Set<Set<V>> clusters = new HashSet<Set<V>>();
         List<V> topSort = topologicalSort(vertices, ed);
-        
+
         for (V v : topSort)
         {
             boolean alreadyIn = false;
@@ -205,10 +203,10 @@ public class DAGUtils
                 if (cluster.contains(v))
                 {
                     alreadyIn = true;
-                    continue;                    
+                    continue;
                 }
             }
-            if(!alreadyIn)
+            if (!alreadyIn)
             {
                 Set<V> downConnected = getConnectedDown(v, ed);
                 clusters.add(downConnected);
@@ -217,38 +215,41 @@ public class DAGUtils
 
         return clusters;
     }
-    
-    public static <V> Map<V,Point> layout(Collection<V> vertices, Collection<Edge<V>> ed)
+
+    public static <V> Map<V, Point> layout(Collection<V> vertices, Collection<Edge<V>> ed)
     {
-        Map<V,Point> pos = new HashMap<V,Point>();
-        Map<V, Integer> paths = longestPaths(vertices,ed);
-        Map<Integer, Integer> width = new HashMap<Integer,Integer>();
-        
-        for(Set<V> cluster:getClusters(vertices, ed))
+        Map<V, Point> pos = new HashMap<V, Point>();
+        Map<V, Integer> paths = longestPaths(vertices, ed);
+        Map<Integer, Integer> width = new HashMap<Integer, Integer>();
+
+        int currentx = 0;
+
+        for (Set<V> cluster : getClusters(vertices, ed))
         {
-            int maxwidth = 0;
-            for (V v:cluster)
+            int maxx = currentx;
+            for (V v : cluster)
             {
-                int y = paths.get(v)-1;
-                if(width.get(y)==null)
+                int y = paths.get(v) - 1;
+                if (width.get(y) == null)
                 {
-                    width.put(y, 0);
+                    width.put(y, currentx);
                 }
                 else
                 {
-                    int x = width.get(y);
-                    width.put(y, x+1);
-                    if(x>maxwidth)
+                    int x = width.get(y)+1;
+                    width.put(y, x);
+                    if (x > maxx)
                     {
-                        maxwidth = x;
+                        maxx = x;
                     }
                 }
                 pos.put(v, new Point(width.get(y), y));
             }
-            for(Entry<Integer,Integer> entry:width.entrySet())
+            for (Entry<Integer, Integer> entry : width.entrySet())
             {
-                entry.setValue(maxwidth+1);
+                entry.setValue(maxx + 1);
             }
+            currentx = maxx + 2;
         }
         return pos;
     }

@@ -232,4 +232,21 @@ public class DAGUtilsTest
         assertThat(layout.get("bml2"), anyOf( equalTo(new Point(0,1)), equalTo(new Point(1,1))));
         assertThat(layout.get("bml3"), anyOf( equalTo(new Point(0,1)), equalTo(new Point(1,1))));        
     }
+    
+    @SuppressWarnings("unchecked")
+    @Test
+    public void layout()
+    {
+        Map<String,Point> layout = DAGUtils.layout(ImmutableList.of("bml1", "bml2", "bml3", "bml4", "bml5", "bml6"), ImmutableList.of(
+                new Edge<String>("bml1", "bml2"), new Edge<String>("bml1", "bml3"), new Edge<String>("bml3", "bml4"), new Edge<String>(
+                        "bml2", "bml6"), new Edge<String>("bml4", "bml6")));
+        assertEquals(6,layout.size());
+        System.out.println(layout);
+        assertThat(layout.get("bml1"), anyOf(equalTo(new Point(0,0)),equalTo(new Point(2,0))));
+        assertThat(layout.get("bml5"), anyOf(equalTo(new Point(0,0)),equalTo(new Point(2,0))));
+        assertThat(layout.get("bml2"), anyOf(equalTo(new Point(0,1)),equalTo(new Point(1,1)),equalTo(new Point(2,1)),equalTo(new Point(3,1))));
+        assertThat(layout.get("bml3"), anyOf(equalTo(new Point(0,1)),equalTo(new Point(1,1)),equalTo(new Point(2,1)),equalTo(new Point(3,1))));
+        assertEquals(new Point(layout.get("bml3").x, 2), layout.get("bml4"));
+        assertEquals(new Point(layout.get("bml3").x, 3), layout.get("bml6"));
+    }
 }
