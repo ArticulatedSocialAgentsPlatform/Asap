@@ -6,7 +6,7 @@
       <dependency org="HMI"     name="HmiXml"            rev="latest.${resolve.status}"    />
       <dependency org="Asap"    name="AsapMURML"            rev="latest.${resolve.status}"    />
 
-	  <dependency org="saiba"     name="saibabml"           rev="latest.release"    />
+	  <dependency org="saiba"     name="openbmlparser"           rev="latest.release"    />
       <dependency org="google"  name="guava"             rev="latest.release"    />
       <dependency org="lombok"  name="lombok"            rev="latest.release"    />
       <dependency org="jcip"    name="jcip-annotations"  rev="latest.release"  />
