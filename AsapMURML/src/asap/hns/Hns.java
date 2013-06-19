@@ -28,7 +28,7 @@ public class Hns extends XMLStructureAdapter
 
     @Getter
     private String baseJoint = "HumanoidRoot";
-
+    
     private static final String XMLTAG = "hns";
     private static final String HAND_REFERENCES = "handReferences";
     private static final String HAND_LOCATORS = "handLocators";

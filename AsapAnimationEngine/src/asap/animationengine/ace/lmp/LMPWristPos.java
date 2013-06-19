@@ -78,6 +78,7 @@ public class LMPWristPos extends LMPPos
             float pos[] = spline.getPosition(t);
             float m[] = Mat4f.getMat4f();
             vjBase.getPathTransformMatrix(aniPlayer.getVCurr(), m);
+            
             Mat4f.transformPoint(m, pos);
             return pos;
         }
@@ -282,15 +283,7 @@ public class LMPWristPos extends LMPPos
                 // cout << _gSeq->getStrokeEndVelocityOf(i) << endl;
             }
 
-            _spline = new NUSSpline3(4);
-            System.out.println("Times: " + Joiner.on(",").join(tv));
-            System.out.println("Points: ");
-            for (float[] point : pv)
-            {
-                System.out.print(Vec3f.toString(point) + ",");
-            }
-            System.out.println("");
-
+            _spline = new NUSSpline3(4);            
             _spline.interpolate3(pv, tv, vv);
         }
 
@@ -443,7 +436,7 @@ public class LMPWristPos extends LMPPos
     {
         VJoint vj = aniPlayer.getVCurr().getPartBySid(getWristJointSid());
         float wristCurr[] = Vec3f.getVec3f();
-        vj.getPathTranslation(aniPlayer.getVCurr(), wristCurr);
+        vj.getPathTranslation(aniPlayer.getVCurr().getPart(baseJoint), wristCurr);
         return wristCurr;
     }
 
