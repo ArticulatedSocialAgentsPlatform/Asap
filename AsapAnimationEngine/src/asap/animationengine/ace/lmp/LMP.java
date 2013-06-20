@@ -183,6 +183,16 @@ public abstract class LMP extends TimedAbstractPlanUnit implements TimedAnimatio
     }
 
     protected abstract void setInternalStrokeTiming(double time);
+    
+    
+    public double getStrokeDuration(double time)
+    {
+        if(time>=getTime("strokeStart"))
+        {
+            return getTime("strokeEnd")-getTime("strokeStart"); 
+        }
+        return getStrokeDuration();
+    }
 
     protected int countInternalSyncs(Set<PegKey> pks, int currentCount)
     {

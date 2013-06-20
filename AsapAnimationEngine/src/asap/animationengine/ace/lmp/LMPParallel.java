@@ -211,11 +211,8 @@ public class LMPParallel extends LMP
     protected void resolveTimePegs(double time)
     {
         TimePeg strokeStartPeg = getTimePeg("strokeStart");
-        //TimePeg strokeEndPeg = getTimePeg("strokeEnd");        
         TimePeg hStartPeg = getTimePeg("start");
-        //TimePeg hEndPeg = getTimePeg("end");
         hStartPeg.setGlobalValue(strokeStartPeg.getGlobalValue()-getPreparationDuration());
-        //hEndPeg.setGlobalValue(strokeEndPeg.getGlobalValue()+getRetractionDuration());
         
         linkLMPSyncs();
         
@@ -233,20 +230,6 @@ public class LMPParallel extends LMP
                 startPeg.setGlobalValue(hStartPeg.getGlobalValue());
             }
             lmp.setTimePeg("start", startPeg);
-    
-            /*
-            TimePeg endPeg = new BeforePeg(hEndPeg, 0, bmlBlockPeg);
-            double endValue = strokeEndPeg.getGlobalValue() + lmp.getRetractionDuration();
-            if (endValue < hEndPeg.getGlobalValue())
-            {
-                endPeg.setGlobalValue(endValue);
-            }
-            else
-            {
-                endPeg.setGlobalValue(hEndPeg.getGlobalValue());
-            }
-            lmp.setTimePeg("end", endPeg);
-            */
         }
         super.resolveTimePegs(time);
         for(TimedAnimationUnit lmp:lmpQueue)
@@ -261,7 +244,7 @@ public class LMPParallel extends LMP
     @Override
     protected void setInternalStrokeTiming(double time)
     {
-        // TODO Auto-generated method stub
+
     }
 
     @Override

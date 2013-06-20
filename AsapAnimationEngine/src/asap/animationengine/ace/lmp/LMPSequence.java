@@ -101,7 +101,8 @@ public class LMPSequence extends LMP
         return lmpQueue.get(lmpQueue.size() - 1).getRetractionDuration();
     }
 
-    private double getStrokeDuration(double time)
+    @Override
+    public double getStrokeDuration(double time)
     {
         double duration = 0;
         for (TimedAnimationUnit tmu : lmpQueue)
@@ -159,6 +160,7 @@ public class LMPSequence extends LMP
         Set<PegKey> pkStrokeEnd = pegBoard.getPegKeys(getTimePeg("strokeEnd"));
         if (!getTimePeg("strokeEnd").isAbsoluteTime())
         {
+            int strokeEnds = countInternalSyncs(pkStrokeEnd, 0);
             if ( (pkStrokeEnd.size() - countInternalSyncs(pkStrokeEnd, 0) == 0)
                     ||getExternalSyncs("strokeEnd")<=1) 
             {

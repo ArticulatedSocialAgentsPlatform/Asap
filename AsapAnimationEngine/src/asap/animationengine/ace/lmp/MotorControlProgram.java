@@ -84,6 +84,11 @@ public class MotorControlProgram extends TimedAbstractPlanUnit implements TimedA
     {
         return lmp.getStrokeDuration();
     }
+    
+    public double getStrokeDuration(double time)
+    {
+        return lmp.getStrokeDuration(time);
+    }
 
     @Override
     public double getRetractionDuration()
@@ -166,7 +171,7 @@ public class MotorControlProgram extends TimedAbstractPlanUnit implements TimedA
 
     protected void resolveInternal(LMP lmp)
     {
-        linkMCPSynchs(lmp);        
+        linkMCPSynchs(lmp);
         lmp.resolveTimePegs(0);
     }
 
@@ -234,7 +239,7 @@ public class MotorControlProgram extends TimedAbstractPlanUnit implements TimedA
         getTimePeg("ready").setGlobalValue(getTime("strokeStart"));
         getTimePeg("relax").setGlobalValue(getTime("strokeEnd"));
 
-        resolveInternal(lmp);        
+        resolveInternal(lmp);
     }
 
     @Override
@@ -336,19 +341,30 @@ public class MotorControlProgram extends TimedAbstractPlanUnit implements TimedA
         return lmp.getPhysicalJoints();
     }
 
+    private void updatePreparation(double time)
+    {
+        if (!getTimePeg("start").isAbsoluteTime()
+                && globalPegBoard.getPegKeys(globalPegBoard.getTimePeg(getBMLId(), getId(), "start")).size() == 1)
+        {
+            localPegBoard.setPegTime(getBMLId(), getId(), "start", getTimePeg("strokeStart").getGlobalValue() - getPreparationDuration());
+        }
+    }
+
     @Override
     public void updateTiming(double time) throws TimedPlanUnitPlayException
     {
         if (isLurking())
         {
-            if (!getTimePeg("start").isAbsoluteTime()
-                    && globalPegBoard.getPegKeys(globalPegBoard.getTimePeg(getBMLId(), getId(), "start")).size() == 1)
+            updatePreparation(time);
+        }
+        if (isLurking() || isInExec())
+        {
+            if (globalPegBoard.getPegKeys(getTimePeg("strokeEnd")).size() <= 1 && !getTimePeg("strokeEnd").isAbsoluteTime())
             {
-                localPegBoard.setPegTime(getBMLId(), getId(), "start", getTimePeg("strokeStart").getGlobalValue()
-                        - getPreparationDuration());
+                getTimePeg("strokeEnd").setGlobalValue(getTimePeg("strokeStart").getGlobalValue() + getStrokeDuration(time));
             }
         }
-        lmp.updateTiming(time);        
+        lmp.updateTiming(time);
     }
 
     @Override
@@ -393,8 +409,6 @@ public class MotorControlProgram extends TimedAbstractPlanUnit implements TimedA
         feedback("start", time);
     }
 
-    
-    
     @Override
     protected void relaxUnit(double time) throws TimedPlanUnitPlayException
     {

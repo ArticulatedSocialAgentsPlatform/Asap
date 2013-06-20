@@ -278,6 +278,11 @@ public abstract class TimedAbstractPlanUnit implements TimedPlanUnit
     {
         return state.get().isLurking();
     }
+    
+    public boolean isInExec()
+    {
+        return state.get().isInExec();
+    }
 
     @Override
     public boolean isDone()

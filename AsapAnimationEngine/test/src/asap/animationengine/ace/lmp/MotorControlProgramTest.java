@@ -30,6 +30,7 @@ import asap.animationengine.motionunit.TimedAnimationUnit;
 import asap.bml.ext.murml.MURMLGestureBehaviour;
 import asap.realizer.BehaviourPlanningException;
 import asap.realizer.feedback.FeedbackManager;
+import asap.realizer.feedback.NullFeedbackManager;
 import asap.realizer.pegboard.BMLBlockPeg;
 import asap.realizer.pegboard.PegBoard;
 import asap.realizer.pegboard.TimePeg;
@@ -76,6 +77,12 @@ public class MotorControlProgramTest extends AbstractTimedPlanUnitTest
                 stubTimedAnimationUnit);
     }
 
+    private LMP createStub(String bmlId, String id, double prepDur, double retrDur, double strokeDur, boolean hasFixedStrokeDur)
+    {
+        return new StubLMP(NullFeedbackManager.getInstance(), BMLBlockPeg.GLOBALPEG, bmlId, id, localPegboard, globalPegBoard,
+                new HashSet<String>(), new HashSet<String>(), prepDur, retrDur, strokeDur, hasFixedStrokeDur);
+    }
+    
     private MotorControlProgram setupPlanUnit(FeedbackManager bfm, BMLBlockPeg bbPeg, String bmlId, String id)
     {
         return new MotorControlProgram(bfm, bbPeg, bmlId, id, globalPegBoard, localPegboard, mockAnimationPlayer, stubTimedAnimationUnit);
@@ -303,6 +310,7 @@ public class MotorControlProgramTest extends AbstractTimedPlanUnitTest
         assertEquals(LMP1_PREP + LMP1_STROKE + LMP2_PREP + LMP2_STROKE, stubTimedAnimationUnit2.getTime("strokeEnd"), TIMING_PRECISION);
     }
 
+    
     @Test
     public void testResolveSequenceInParallelNoConstraints() throws BehaviourPlanningException, TimedPlanUnitPlayException
     {
@@ -360,6 +368,84 @@ public class MotorControlProgramTest extends AbstractTimedPlanUnitTest
         assertEquals(LMP1_PREP + LMP1_STROKE, stubTimedAnimationUnit2b.getStartTime(), TIMING_PRECISION);
         assertEquals(LMP1_PREP + LMP1_STROKE + LMP2_PREP, stubTimedAnimationUnit2b.getTime("strokeStart"), TIMING_PRECISION);
         assertEquals(LMP1_PREP + LMP1_STROKE + LMP2_PREP + LMP2_STROKE, stubTimedAnimationUnit2b.getTime("strokeEnd"), TIMING_PRECISION);
+    }
+    
+    @Test
+    public void testResolveSequenceInParallelAndHandmoveNoConstraints() throws BehaviourPlanningException, TimedPlanUnitPlayException
+    {
+        LMP tmu1 = createStub("bml1", "beh1-1", 1, 3, 3, true);
+        LMP tmu2a = createStub("bml1", "beh1-2a", 2, 1, 2, false);
+        LMP tmu2b = createStub("bml1", "beh1-2b", 1, 2, 3, false);
+        
+        LMPSequence seq = new LMPSequence(fbManager, BMLBlockPeg.GLOBALPEG, "bml1", "beh1", localPegboard,globalPegBoard, 
+                new ImmutableList.Builder<TimedAnimationUnit>().add(tmu2a, tmu2b).build());
+        LMPParallel par = new LMPParallel(fbManager, BMLBlockPeg.GLOBALPEG, "bml1", "beh1-par", localPegboard,globalPegBoard, 
+                new ImmutableList.Builder<TimedAnimationUnit>().add(tmu1).add(seq).build());
+        
+        MotorControlProgram mcp = setupPlanUnit(fbManager, BMLBlockPeg.GLOBALPEG, "bml1", "beh1", par);
+        List<TimePegAndConstraint> sacs = new ArrayList<>();
+        mcp.resolveSynchs(BMLBlockPeg.GLOBALPEG, new MURMLGestureBehaviour("bml1"), sacs);
+                
+        assertEquals(0, mcp.getStartTime(), TIMING_PRECISION);
+        
+        assertEquals(0, par.getStartTime(), TIMING_PRECISION);
+        assertEquals(2, par.getTime("strokeStart"), TIMING_PRECISION);
+        assertEquals(5, par.getTime("strokeEnd"), TIMING_PRECISION);
+        
+        assertEquals(1, tmu1.getTime("start"), TIMING_PRECISION);
+        assertEquals(2, tmu1.getTime("strokeStart"), TIMING_PRECISION);
+        assertEquals(5, tmu1.getTime("strokeEnd"), TIMING_PRECISION);
+        
+        assertEquals(0, seq.getTime("start"), TIMING_PRECISION);
+        assertEquals(2, seq.getTime("strokeStart"), TIMING_PRECISION);
+        assertEquals(5, seq.getTime("strokeEnd"), TIMING_PRECISION);
+        
+        assertEquals(0, tmu2a.getTime("start"), TIMING_PRECISION);
+        assertEquals(2, tmu2a.getTime("strokeStart"), TIMING_PRECISION);
+        assertEquals(3, tmu2a.getTime("strokeEnd"), TIMING_PRECISION);
+        assertEquals(3, tmu2b.getTime("start"), TIMING_PRECISION);
+        assertEquals(3.5, tmu2b.getTime("strokeStart"), TIMING_PRECISION);
+        assertEquals(5, tmu2b.getTime("strokeEnd"), TIMING_PRECISION);        
+    }
+    
+    @Ignore //FIXME!
+    @Test
+    public void testResolveSequenceInParallelAndHandmoveNoConstraintsUpdateTiming() throws BehaviourPlanningException, TimedPlanUnitPlayException
+    {
+        LMP tmu1 = createStub("bml1", "beh1-1", 1, 3, 3, true);
+        LMP tmu2a = createStub("bml1", "beh1-2a", 2, 1, 2, false);
+        LMP tmu2b = createStub("bml1", "beh1-2b", 1, 2, 3, false);
+        
+        LMPSequence seq = new LMPSequence(fbManager, BMLBlockPeg.GLOBALPEG, "bml1", "beh1", localPegboard,globalPegBoard, 
+                new ImmutableList.Builder<TimedAnimationUnit>().add(tmu2a, tmu2b).build());
+        LMPParallel par = new LMPParallel(fbManager, BMLBlockPeg.GLOBALPEG, "bml1", "beh1-par", localPegboard,globalPegBoard, 
+                new ImmutableList.Builder<TimedAnimationUnit>().add(tmu1).add(seq).build());
+        
+        MotorControlProgram mcp = setupPlanUnit(fbManager, BMLBlockPeg.GLOBALPEG, "bml1", "beh1", par);
+        List<TimePegAndConstraint> sacs = new ArrayList<>();
+        mcp.resolveSynchs(BMLBlockPeg.GLOBALPEG, new MURMLGestureBehaviour("bml1"), sacs);
+        mcp.updateTiming(0);
+        
+        assertEquals(0, mcp.getStartTime(), TIMING_PRECISION);
+        
+        assertEquals(0, par.getStartTime(), TIMING_PRECISION);
+        assertEquals(2, par.getTime("strokeStart"), TIMING_PRECISION);
+        assertEquals(5, par.getTime("strokeEnd"), TIMING_PRECISION);
+        
+        assertEquals(1, tmu1.getTime("start"), TIMING_PRECISION);
+        assertEquals(2, tmu1.getTime("strokeStart"), TIMING_PRECISION);
+        assertEquals(5, tmu1.getTime("strokeEnd"), TIMING_PRECISION);
+        
+        assertEquals(0, seq.getTime("start"), TIMING_PRECISION);
+        assertEquals(2, seq.getTime("strokeStart"), TIMING_PRECISION);
+        assertEquals(5, seq.getTime("strokeEnd"), TIMING_PRECISION);
+        
+        assertEquals(0, tmu2a.getTime("start"), TIMING_PRECISION);
+        assertEquals(2, tmu2a.getTime("strokeStart"), TIMING_PRECISION);
+        assertEquals(3, tmu2a.getTime("strokeEnd"), TIMING_PRECISION);
+        assertEquals(3, tmu2b.getTime("start"), TIMING_PRECISION);
+        assertEquals(3.5, tmu2b.getTime("strokeStart"), TIMING_PRECISION);
+        assertEquals(5, tmu2b.getTime("strokeEnd"), TIMING_PRECISION);        
     }
 
     @Test

@@ -7,6 +7,7 @@ import java.util.HashSet;
 import java.util.List;
 
 import org.junit.Before;
+import org.junit.Ignore;
 import org.junit.Test;
 
 import asap.animationengine.motionunit.TimedAnimationUnit;
@@ -15,6 +16,7 @@ import asap.realizer.feedback.FeedbackManagerImpl;
 import asap.realizer.feedback.NullFeedbackManager;
 import asap.realizer.pegboard.BMLBlockPeg;
 import asap.realizer.pegboard.PegBoard;
+import asap.realizer.pegboard.TimePeg;
 import asap.realizer.planunit.TimedPlanUnitPlayException;
 import asap.realizer.planunit.TimedPlanUnitState;
 import asap.realizer.scheduler.BMLBlockManager;
@@ -193,6 +195,48 @@ public class LMPParallelTest
         assertEquals(4.5, tmu2b.getTime("strokeStart"), TIME_PRECISION);
         assertEquals(6, tmu2b.getTime("strokeEnd"), TIME_PRECISION);        
     }
+    
+    @Ignore //FIXME!
+    @Test
+    public void testResolveWithSequenceInParallelAndHandmoveUpdateTiming() throws TimedPlanUnitPlayException
+    {
+        LMP tmu1 = createStub("bml1", "beh1-1", 1, 3, 3, true);
+        LMP tmu2a = createStub("bml1", "beh1-2a", 2, 1, 2);
+        LMP tmu2b = createStub("bml1", "beh1-2b", 1, 2, 3);
+        LMPSequence seq = new LMPSequence(fbm, BMLBlockPeg.GLOBALPEG, "bml1", "beh1", pegBoard,globalPegBoard, 
+                new ImmutableList.Builder<TimedAnimationUnit>().add(tmu2a, tmu2b).build());
+        LMPParallel par = new LMPParallel(fbm, BMLBlockPeg.GLOBALPEG, "bml1", "beh1-par", pegBoard,globalPegBoard, 
+                new ImmutableList.Builder<TimedAnimationUnit>().add(tmu1).add(seq).build());
+
+        TimePeg strokeStartPeg = TimePegUtil.createTimePeg(3);
+        TimePeg strokeEndPeg = TimePegUtil.createTimePeg(3 + par.getStrokeDuration());
+        globalPegBoard.addTimePeg("bml1","beh1","strokeEnd",strokeEndPeg);
+        globalPegBoard.addTimePeg("bml1","beh1","strokeStart",strokeStartPeg);
+        
+        par.setTimePeg("strokeStart", strokeStartPeg);
+        par.setTimePeg("strokeEnd", strokeEndPeg);
+        par.resolveTimePegs(0);
+        par.updateTiming(0);
+        
+        assertEquals(1, par.getStartTime(), TIME_PRECISION);
+        assertEquals(3, par.getTime("strokeStart"), TIME_PRECISION);
+        assertEquals(6, par.getTime("strokeEnd"), TIME_PRECISION);
+        
+        assertEquals(2, tmu1.getTime("start"), TIME_PRECISION);
+        assertEquals(3, tmu1.getTime("strokeStart"), TIME_PRECISION);
+        assertEquals(6, tmu1.getTime("strokeEnd"), TIME_PRECISION);
+        
+        assertEquals(1, seq.getTime("start"), TIME_PRECISION);
+        assertEquals(3, seq.getTime("strokeStart"), TIME_PRECISION);
+        assertEquals(6, seq.getTime("strokeEnd"), TIME_PRECISION);
+        
+        assertEquals(1, tmu2a.getTime("start"), TIME_PRECISION);
+        assertEquals(3, tmu2a.getTime("strokeStart"), TIME_PRECISION);
+        assertEquals(4, tmu2a.getTime("strokeEnd"), TIME_PRECISION);
+        assertEquals(4, tmu2b.getTime("start"), TIME_PRECISION);
+        assertEquals(4.5, tmu2b.getTime("strokeStart"), TIME_PRECISION);
+        assertEquals(6, tmu2b.getTime("strokeEnd"), TIME_PRECISION);        
+    }
 
     @Test
     public void testResolveWithSequenceInParallelAndHandmoveAfterStart() throws TimedPlanUnitPlayException
@@ -244,7 +288,7 @@ public class LMPParallelTest
         LMPParallel par = new LMPParallel(fbm, BMLBlockPeg.GLOBALPEG, "bml1", "beh1-par", pegBoard,globalPegBoard, 
                 new ImmutableList.Builder<TimedAnimationUnit>().add(tmu1).add(seq).build());
 
-        assertEquals(3, par.getStrokeDuration(), TIME_PRECISION);
+        assertEquals(3, par.getStrokeDuration(), TIME_PRECISION);        
     }
 
     @Test
