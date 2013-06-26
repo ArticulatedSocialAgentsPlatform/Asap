@@ -29,9 +29,9 @@ public class LMPParallel extends LMP
 {
     private ImmutableList<TimedAnimationUnit> lmpQueue;
     
-    public LMPParallel(FeedbackManager fbm, BMLBlockPeg bmlPeg, String bmlId, String behId, PegBoard pegBoard, PegBoard globalPegBoard, List<TimedAnimationUnit> lmps)
+    public LMPParallel(FeedbackManager fbm, BMLBlockPeg bmlPeg, String bmlId, String behId, PegBoard pegBoard, List<TimedAnimationUnit> lmps)
     {
-        super(fbm, bmlPeg, bmlId, behId, pegBoard, globalPegBoard);
+        super(fbm, bmlPeg, bmlId, behId, pegBoard);
         lmpQueue = ImmutableList.copyOf(lmps);
         createMissingTimePegs();
     }

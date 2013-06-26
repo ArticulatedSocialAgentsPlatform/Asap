@@ -202,12 +202,11 @@ public final class LinearStretchTemporalResolver
     }
 
     /**
-     * 
-     * @param times
+     * Solves all times, given prefered durations, scaling weights and a minimum start time
+     * @param times, use LinearStretchTemporalResolver.TIME_UNKNOWN for unkown
      * @param preferedDurations ith element is the duration from i to i+1
-     * @param weights
-     * @param minStart
-     * @return
+     * @param weights weight of segment i (the segment from i to i+1). Segments with higher weights get stretched skewed over those with lower weight.
+     * @param minStart minimum start time
      */
     public static double[] solve(double[] times, double[] preferedDurations, double[] weights, double minStart)
     {

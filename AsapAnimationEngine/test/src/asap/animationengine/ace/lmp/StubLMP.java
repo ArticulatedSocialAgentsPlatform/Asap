@@ -30,16 +30,16 @@ public class StubLMP extends LMP
     
     private final boolean hasFixedStrokeDuration;
 
-    public StubLMP(FeedbackManager fbm, BMLBlockPeg bmlPeg, String bmlId, String behId, PegBoard pegBoard, PegBoard globalPegBoard, Set<String> kinematicJoints,
+    public StubLMP(FeedbackManager fbm, BMLBlockPeg bmlPeg, String bmlId, String behId, PegBoard pegBoard, Set<String> kinematicJoints,
             Set<String> physicalJoints, double prepDuration, double retrDuration, double strokeDuration)
     {
-        this(fbm, bmlPeg, bmlId, behId, pegBoard, globalPegBoard, kinematicJoints, physicalJoints, prepDuration, retrDuration, strokeDuration, false);
+        this(fbm, bmlPeg, bmlId, behId, pegBoard, kinematicJoints, physicalJoints, prepDuration, retrDuration, strokeDuration, false);
     }
 
-    public StubLMP(FeedbackManager fbm, BMLBlockPeg bmlPeg, String bmlId, String behId, PegBoard pegBoard, PegBoard globalPegBoard, Set<String> kinematicJoints,
+    public StubLMP(FeedbackManager fbm, BMLBlockPeg bmlPeg, String bmlId, String behId, PegBoard pegBoard, Set<String> kinematicJoints,
             Set<String> physicalJoints, double prepDuration, double retrDuration, double strokeDuration, boolean hasFixedStrokeDuration)
     {
-        super(fbm, bmlPeg, bmlId, behId, pegBoard, globalPegBoard);
+        super(fbm, bmlPeg, bmlId, behId, pegBoard);
         this.kinematicJoints = kinematicJoints;
         this.physicalJoints = physicalJoints;
         this.prepDuration = prepDuration;

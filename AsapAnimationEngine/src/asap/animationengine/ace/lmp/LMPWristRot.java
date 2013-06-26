@@ -54,9 +54,9 @@ public class LMPWristRot extends LMP
     }
 
     public LMPWristRot(String scope, List<OrientConstraint> ocVec, FeedbackManager bbf, BMLBlockPeg bmlBlockPeg, String bmlId, String id,
-            PegBoard localPegBoard, PegBoard globalPegBoard, AnimationPlayer aniPlayer)
+            PegBoard localPegBoard, AnimationPlayer aniPlayer)
     {
-        super(bbf, bmlBlockPeg, bmlId, id, localPegBoard, globalPegBoard);
+        super(bbf, bmlBlockPeg, bmlId, id, localPegBoard);
         this.aniPlayer = aniPlayer;
 
         // TODO: implement proper scope selection when no scope is provided.

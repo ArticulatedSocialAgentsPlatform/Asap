@@ -48,10 +48,10 @@ public class LMPWristPos extends LMPPos
     private double leftArmStartSwivel;
     private final String baseJoint;
 
-    public LMPWristPos(String scope, FeedbackManager bbf, BMLBlockPeg bmlBlockPeg, String bmlId, String id, PegBoard pegBoard, PegBoard globalPegBoard,
+    public LMPWristPos(String scope, FeedbackManager bbf, BMLBlockPeg bmlBlockPeg, String bmlId, String id, PegBoard pegBoard, 
             GuidingSequence gSeq, String baseJoint, AnimationPlayer aniPlayer)
     {
-        super(bbf, bmlBlockPeg, bmlId, id, pegBoard, globalPegBoard);
+        super(bbf, bmlBlockPeg, bmlId, id, pegBoard);
         this.baseJoint = baseJoint;
         this.gSeq = gSeq;
         this.pegBoard = pegBoard;

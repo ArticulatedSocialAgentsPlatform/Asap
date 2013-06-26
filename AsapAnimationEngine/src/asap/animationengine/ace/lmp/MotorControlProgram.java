@@ -10,11 +10,11 @@ import saiba.bml.core.Behaviour;
 import saiba.bml.core.GestureBehaviour;
 import asap.animationengine.AnimationPlayer;
 import asap.animationengine.motionunit.TimedAnimationUnit;
+import asap.math.LinearStretchTemporalResolver;
 import asap.realizer.BehaviourPlanningException;
 import asap.realizer.feedback.FeedbackManager;
 import asap.realizer.feedback.NullFeedbackManager;
 import asap.realizer.pegboard.BMLBlockPeg;
-import asap.realizer.pegboard.OffsetPeg;
 import asap.realizer.pegboard.PegBoard;
 import asap.realizer.pegboard.PegKey;
 import asap.realizer.pegboard.TimePeg;
@@ -23,6 +23,7 @@ import asap.realizer.planunit.TimedPlanUnitPlayException;
 import asap.realizer.planunit.TimedPlanUnitState;
 import asap.realizer.scheduler.TimePegAndConstraint;
 
+import com.google.common.collect.ImmutableList;
 import com.google.common.collect.ImmutableMap;
 
 /**
@@ -30,7 +31,6 @@ import com.google.common.collect.ImmutableMap;
  * @author hvanwelbergen
  * 
  */
-@Slf4j
 public class MotorControlProgram extends TimedAbstractPlanUnit implements TimedAnimationUnit
 {
     private LMP lmp;
@@ -39,39 +39,6 @@ public class MotorControlProgram extends TimedAbstractPlanUnit implements TimedA
     private Set<String> syncsHandled = new HashSet<String>();
     private final AnimationPlayer aniPlayer;
     private TimedAnimationUnit relaxUnit;
-
-    // TODO: more or less duplicate with LinearStretchResolver, ProcAnimationGestureTMU
-    private void linkSynchs(List<TimePegAndConstraint> sacs)
-    {
-        for (TimePegAndConstraint s : sacs)
-        {
-            for (String syncId : getAvailableSyncs())
-            {
-                if (s.syncId.equals(syncId))
-                {
-                    if (s.offset == 0)
-                    {
-                        setTimePeg(syncId, s.peg);
-                    }
-                    else
-                    {
-                        setTimePeg(syncId, new OffsetPeg(s.peg, -s.offset));
-                    }
-                }
-            }
-        }
-    }
-
-    private boolean notSet(String syncId)
-    {
-        return getTime(syncId) == TimePeg.VALUE_UNKNOWN;
-    }
-
-    private boolean noPegsSet()
-    {
-        return notSet("start") && notSet("relax") && notSet("ready") && notSet("strokeStart") && notSet("stroke") && notSet("strokeEnd")
-                && notSet("relax") && notSet("end");
-    }
 
     @Override
     public double getPreparationDuration()
@@ -84,7 +51,7 @@ public class MotorControlProgram extends TimedAbstractPlanUnit implements TimedA
     {
         return lmp.getStrokeDuration();
     }
-    
+
     public double getStrokeDuration(double time)
     {
         return lmp.getStrokeDuration(time);
@@ -94,60 +61,6 @@ public class MotorControlProgram extends TimedAbstractPlanUnit implements TimedA
     public double getRetractionDuration()
     {
         return lmp.getRetractionDuration();
-    }
-
-    private List<Integer> getSetSyncs(String[] syncs)
-    {
-        List<Integer> setsyncs = new ArrayList<>();
-        int i = 0;
-        for (String s : syncs)
-        {
-            if (getTime(s) != TimePeg.VALUE_UNKNOWN)
-            {
-                setsyncs.add(i);
-            }
-            i++;
-        }
-        return setsyncs;
-    }
-
-    private void backwardsResolve(int fromSync, String syncs[], double durations[])
-    {
-        double offset = getTime(syncs[fromSync]);
-        for (int i = fromSync - 1; i >= 0; i--)
-        {
-            offset -= durations[i];
-            this.getTimePeg(syncs[i]).setGlobalValue(offset);
-        }
-    }
-
-    private void forwardsResolve(int fromSync, String syncs[], double durations[])
-    {
-
-        double offset = getTime(syncs[fromSync]);
-        for (int i = fromSync + 1; i < syncs.length; i++)
-        {
-            offset += durations[i - 1];
-            this.getTimePeg(syncs[i]).setGlobalValue(offset);
-        }
-    }
-
-    private void inbetweenResolve(int fromSync, int toSync, String syncs[], double durations[])
-    {
-        double totalDuration = getTime(syncs[toSync]) - getTime(syncs[fromSync]);
-        double defaultDuration = 0;
-
-        for (int i = fromSync + 1; i <= toSync; i++)
-        {
-            defaultDuration += durations[i - 1];
-        }
-
-        double offset = getTime(syncs[fromSync]);
-        for (int i = fromSync + 1; i < toSync; i++)
-        {
-            offset += totalDuration * durations[i - 1] / defaultDuration;
-            this.getTimePeg(syncs[i]).setGlobalValue(offset);
-        }
     }
 
     public void resolveSynchs(BMLBlockPeg bbPeg) throws BehaviourPlanningException
@@ -202,6 +115,73 @@ public class MotorControlProgram extends TimedAbstractPlanUnit implements TimedA
         }
     }
 
+    
+    
+    
+    private void updateTimePegs(int offset, double time)
+    {
+        String syncs[] = { "start", "ready", "strokeStart", "stroke", "strokeEnd", "relax", "end" };
+        double times[] = new double[syncs.length];
+        for (int i = offset; i < times.length; i++)
+        {
+            if (getTime(syncs[i]) != TimePeg.VALUE_UNKNOWN && (globalPegBoard.getPegKeys(getTimePeg(syncs[i])).size() > 1||getTimePeg(syncs[i]).isAbsoluteTime()))
+            {
+                times[i] = getTime(syncs[i]);
+            }
+            else
+            {
+                times[i] = LinearStretchTemporalResolver.TIME_UNKNOWN;
+            }
+        }
+        solvePegTiming(offset, syncs, times, time);
+    }
+    
+    private void setupTimePegs(int offset)
+    {
+        String syncs[] = { "start", "ready", "strokeStart", "stroke", "strokeEnd", "relax", "end" };
+        double times[] = new double[syncs.length];
+        for (int i = offset; i < times.length; i++)
+        {
+            if (getTime(syncs[i]) != TimePeg.VALUE_UNKNOWN)
+            {
+                times[i] = getTime(syncs[i]);
+            }
+            else
+            {
+                times[i] = LinearStretchTemporalResolver.TIME_UNKNOWN;
+            }
+        }
+        solvePegTiming(offset, syncs, times);
+    }
+
+    private void solvePegTiming(int offset, String[] syncs, double[] times)
+    {
+        double prefDurations[] = { getPreparationDuration(), 0, 0, getStrokeDuration(), 0, getRetractionDuration() };
+        resolvePegTimes(offset, syncs, times, prefDurations);
+    }
+    
+    private void solvePegTiming(int offset, String[] syncs, double[] times, double time)
+    {
+        double prefDurations[] = { getPreparationDuration(), 0, 0, getStrokeDuration(time), 0, getRetractionDuration() };
+        resolvePegTimes(offset, syncs, times, prefDurations);
+    }
+
+    private void resolvePegTimes(int offset, String[] syncs, double[] times, double[] prefDurations)
+    {
+        double weights[] = { 2, 1, 1, 1, 1, 2 };
+
+        double startTime = bmlBlockPeg.getValue();
+        if (offset > 0)
+        {
+            startTime = getTime(syncs[offset - 1]);
+        }
+        double solvedTimes[] = LinearStretchTemporalResolver.solve(times, prefDurations, weights, startTime);
+        for (int i = offset; i < times.length; i++)
+        {
+            getTimePeg(syncs[i]).setGlobalValue(solvedTimes[i]);
+        }
+    }
+
     public void resolveSynchs(BMLBlockPeg bbPeg, List<TimePegAndConstraint> sacs) throws BehaviourPlanningException
     {
         linkSynchs(sacs);
@@ -213,31 +193,7 @@ public class MotorControlProgram extends TimedAbstractPlanUnit implements TimedA
         checkAndSetMissingTimePeg("relax", TimePeg.VALUE_UNKNOWN);
         checkAndSetMissingTimePeg("end", TimePeg.VALUE_UNKNOWN);
 
-        String syncs[] = { "start", "ready", "strokeStart", "stroke", "strokeEnd", "relax", "end" };
-        double defaultDurations[] = { getPreparationDuration(), 0, 0, getStrokeDuration(), 0, getRetractionDuration() };
-
-        if (noPegsSet())
-        {
-            getTimePeg("start").setLocalValue(0);
-            getTimePeg("strokeStart").setLocalValue(getPreparationDuration());
-            getTimePeg("stroke").setLocalValue(getPreparationDuration());
-            getTimePeg("strokeEnd").setLocalValue(getPreparationDuration() + getStrokeDuration());
-            getTimePeg("end").setLocalValue(getPreparationDuration() + getStrokeDuration() + getRetractionDuration());
-        }
-        else
-        {
-            List<Integer> setsyncs = getSetSyncs(syncs);
-            backwardsResolve(setsyncs.get(0), syncs, defaultDurations);
-            forwardsResolve(setsyncs.get(setsyncs.size() - 1), syncs, defaultDurations);
-            for (int i = 0; i < setsyncs.size() - 1; i++)
-            {
-                inbetweenResolve(setsyncs.get(i), setsyncs.get(i + 1), syncs, defaultDurations);
-            }
-        }
-
-        // XXX for now, ready and relax are not set up separately from strokeStart and strokeEnd
-        getTimePeg("ready").setGlobalValue(getTime("strokeStart"));
-        getTimePeg("relax").setGlobalValue(getTime("strokeEnd"));
+        setupTimePegs(0);
 
         resolveInternal(lmp);
     }
@@ -341,29 +297,29 @@ public class MotorControlProgram extends TimedAbstractPlanUnit implements TimedA
         return lmp.getPhysicalJoints();
     }
 
-    private void updatePreparation(double time)
-    {
-        if (!getTimePeg("start").isAbsoluteTime()
-                && globalPegBoard.getPegKeys(globalPegBoard.getTimePeg(getBMLId(), getId(), "start")).size() == 1)
-        {
-            localPegBoard.setPegTime(getBMLId(), getId(), "start", getTimePeg("strokeStart").getGlobalValue() - getPreparationDuration());
-        }
-    }
-
     @Override
     public void updateTiming(double time) throws TimedPlanUnitPlayException
     {
-        if (isLurking())
+        int syncOffset = 0;
+        if (!isLurking())
         {
-            updatePreparation(time);
+            syncOffset = 1;
         }
+        String syncsArr[] = { "start", "ready", "strokeStart", "stroke", "strokeEnd", "relax", "end" };
+
         if (isLurking() || isInExec())
         {
-            if (globalPegBoard.getPegKeys(getTimePeg("strokeEnd")).size() <= 1 && !getTimePeg("strokeEnd").isAbsoluteTime())
+            for (int i = 1; i < syncsArr.length; i++)
             {
-                getTimePeg("strokeEnd").setGlobalValue(getTimePeg("strokeStart").getGlobalValue() + getStrokeDuration(time));
+                if (getTime(syncsArr[i - 1]) != TimePeg.VALUE_UNKNOWN && getTime(syncsArr[i - 1]) < time)
+                {
+                    syncOffset = i;
+                    break;
+                }
             }
         }
+        updateTimePegs(syncOffset,time>bmlBlockPeg.getValue()?time:bmlBlockPeg.getValue());
+
         lmp.updateTiming(time);
     }
 

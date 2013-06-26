@@ -44,7 +44,6 @@ import asap.realizertestutil.util.TimePegUtil;
 public class LMPWristPosTest extends AbstractTimedPlanUnitTest
 {
     private PegBoard pegBoard = new PegBoard();
-    private PegBoard globalPegBoard = new PegBoard();
     private double TIMING_PRECISION = 0.001;
     private AnimationPlayer mockAniPlayer = mock(AnimationPlayer.class);
 
@@ -65,7 +64,7 @@ public class LMPWristPosTest extends AbstractTimedPlanUnitTest
         gSeq.getStroke(1).setEDt(0.7);
         when(mockAniPlayer.getVCurr()).thenReturn(HanimBody.getLOA1HanimBody());
         when(mockAniPlayer.getVNext()).thenReturn(HanimBody.getLOA1HanimBody());
-        return new LMPWristPos("right_arm", bfm, bbPeg, bmlId, id, pegBoard, globalPegBoard, gSeq, Hanim.HumanoidRoot, mockAniPlayer);
+        return new LMPWristPos("right_arm", bfm, bbPeg, bmlId, id, pegBoard, gSeq, Hanim.HumanoidRoot, mockAniPlayer);
     }
 
     @Override

@@ -43,7 +43,6 @@ import asap.realizertestutil.util.TimePegUtil;
 public class LMPWristRotTest extends AbstractTimedPlanUnitTest
 {
     private PegBoard pegBoard = new PegBoard();
-    private PegBoard globalPegBoard = new PegBoard();
     private double TIMING_PRECISION = 0.001;
     private AnimationPlayer mockAniPlayer = mock(AnimationPlayer.class);
 
@@ -63,7 +62,7 @@ public class LMPWristRotTest extends AbstractTimedPlanUnitTest
         when(mockAniPlayer.getVCurr()).thenReturn(HanimBody.getLOA1HanimBody());
         when(mockAniPlayer.getVNext()).thenReturn(HanimBody.getLOA1HanimBody());
         
-        LMPWristRot wr = new LMPWristRot("right_arm", ocList, bfm, bbPeg, bmlId, id, pegBoard, globalPegBoard, mockAniPlayer);
+        LMPWristRot wr = new LMPWristRot("right_arm", ocList, bfm, bbPeg, bmlId, id, pegBoard, mockAniPlayer);
         initializeForUpdateTiming(wr);        
         wr.setState(TimedPlanUnitState.IN_PREP);
         return wr;
