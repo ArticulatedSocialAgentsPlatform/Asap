@@ -157,12 +157,22 @@ public class IncrementalTTSUnitTest extends AbstractTimedPlanUnitTest
     {
         IncrementalTTSUnit ttsUnit = setupPlanUnit(fbManager, BMLBlockPeg.GLOBALPEG, "beh1", "bml1", 0, "Hello <sync id=\"s1\"/> world.");
         clock.setMediaSeconds(0);
+        fbManager.addFeedbackListener(new ListBMLFeedbackListener.Builder().feedBackList(fbList).build());
         ttsUnit.setState(TimedPlanUnitState.LURKING);
         ttsUnit.start(0);        
         double t1 = ttsUnit.getTime("s1");
         ttsUnit.setFloatParameterValue("stretch", 2);
         Thread.sleep(200);
+        while(dispatcher.isSpeaking())
+        {
+            ttsUnit.play(clock.getMediaSeconds());
+            Thread.sleep(10);
+        }
+        ttsUnit.stop(clock.getMediaSeconds());
         dispatcher.waitUntilDone();
+        
+        assertEquals("s1", fbList.get(1).getSyncId());
+        assertThat(fbList.get(1).getTime(), greaterThan(t1));
         assertThat(ttsUnit.getTime("s1"), greaterThan(t1));
     }
 
@@ -170,8 +180,7 @@ public class IncrementalTTSUnitTest extends AbstractTimedPlanUnitTest
     public void testApplyTimeConstraints() throws TimedPlanUnitPlayException, InterruptedException
     {
         IncrementalTTSUnit ttsUnit = setupPlanUnit(fbManager, BMLBlockPeg.GLOBALPEG, "beh1", "bml1", 0, "Hello cruel <sync id=\"s1\"/>world.");
-        clock.setMediaSeconds(0);
-        
+        clock.setMediaSeconds(0);        
         fbManager.addFeedbackListener(new ListBMLFeedbackListener.Builder().feedBackList(fbList).build());
         ttsUnit.setTimePeg("start", TimePegUtil.createAbsoluteTimePeg(0));
         ttsUnit.setTimePeg("s1", TimePegUtil.createAbsoluteTimePeg(1));
@@ -179,10 +188,15 @@ public class IncrementalTTSUnitTest extends AbstractTimedPlanUnitTest
         ttsUnit.applyTimeConstraints();
         ttsUnit.setState(TimedPlanUnitState.LURKING);
         ttsUnit.start(0);
-        ttsUnit.play(0);
-        Thread.sleep(500);
-        dispatcher.waitUntilDone();
-        ttsUnit.stop(10);
+        //ttsUnit.play(0);
+        Thread.sleep(300);
+        while(dispatcher.isSpeaking())
+        {
+            ttsUnit.play(clock.getMediaSeconds());
+            Thread.sleep(10);
+        }
+        ttsUnit.stop(clock.getMediaSeconds());
+        dispatcher.waitUntilDone();        
         assertEquals("s1", fbList.get(1).getSyncId());
         assertEquals(0, fbList.get(0).getTime(), SPEECH_RETIMING_PRECISION);
         assertEquals(1, fbList.get(1).getTime(), SPEECH_RETIMING_PRECISION);
