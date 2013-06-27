@@ -114,7 +114,7 @@ public class IncrementalTTSUnitTest extends AbstractTimedPlanUnitTest
         ttsUnit.setState(TimedPlanUnitState.LURKING);
         ttsUnit.start(0);
         ttsUnit.play(0);
-        ttsUnit.stop(10);
+        ttsUnit.stop(10);        
     }
     
     @Test
@@ -125,8 +125,11 @@ public class IncrementalTTSUnitTest extends AbstractTimedPlanUnitTest
         ttsUnit.setState(TimedPlanUnitState.LURKING);
         ttsUnit.start(0);
         ttsUnit.play(0);
-        dispatcher.waitUntilDone();
-        ttsUnit.stop(10);        
+        while(ttsUnit.isPlaying())
+        {
+            ttsUnit.play(clock.getMediaSeconds());
+            Thread.sleep(10);
+        }                        
     }
 
     @Test
@@ -143,8 +146,11 @@ public class IncrementalTTSUnitTest extends AbstractTimedPlanUnitTest
                 "<sync id=\"startS\"/>Hello <sync id=\"s1\"/> world.<sync id=\"endS\"/>");
         ttsUnit.setState(TimedPlanUnitState.LURKING);
         ttsUnit.start(0);
-        Thread.sleep(200);
-        
+        while(ttsUnit.isPlaying())
+        {
+            ttsUnit.play(clock.getMediaSeconds());
+            Thread.sleep(10);
+        }
         assertThat(ttsUnit.getTime("startS"), greaterThanOrEqualTo(ttsUnit.getTime("start")));
         assertThat(ttsUnit.getTime("s1"), greaterThan(ttsUnit.getTime("startS")));
         assertThat(ttsUnit.getTime("s1"), greaterThan(ttsUnit.getStartTime()));
@@ -162,15 +168,11 @@ public class IncrementalTTSUnitTest extends AbstractTimedPlanUnitTest
         ttsUnit.start(0);        
         double t1 = ttsUnit.getTime("s1");
         ttsUnit.setFloatParameterValue("stretch", 2);
-        Thread.sleep(200);
-        while(dispatcher.isSpeaking())
+        while(ttsUnit.isPlaying())
         {
             ttsUnit.play(clock.getMediaSeconds());
             Thread.sleep(10);
         }
-        ttsUnit.stop(clock.getMediaSeconds());
-        dispatcher.waitUntilDone();
-        
         assertEquals("s1", fbList.get(1).getSyncId());
         assertThat(fbList.get(1).getTime(), greaterThan(t1));
         assertThat(ttsUnit.getTime("s1"), greaterThan(t1));
@@ -188,15 +190,11 @@ public class IncrementalTTSUnitTest extends AbstractTimedPlanUnitTest
         ttsUnit.applyTimeConstraints();
         ttsUnit.setState(TimedPlanUnitState.LURKING);
         ttsUnit.start(0);
-        //ttsUnit.play(0);
-        Thread.sleep(300);
-        while(dispatcher.isSpeaking())
+        while(ttsUnit.isPlaying())
         {
             ttsUnit.play(clock.getMediaSeconds());
             Thread.sleep(10);
-        }
-        ttsUnit.stop(clock.getMediaSeconds());
-        dispatcher.waitUntilDone();        
+        }               
         assertEquals("s1", fbList.get(1).getSyncId());
         assertEquals(0, fbList.get(0).getTime(), SPEECH_RETIMING_PRECISION);
         assertEquals(1, fbList.get(1).getTime(), SPEECH_RETIMING_PRECISION);
@@ -217,11 +215,13 @@ public class IncrementalTTSUnitTest extends AbstractTimedPlanUnitTest
         ttsUnit.setTimePeg("end", TimePegUtil.createAbsoluteTimePeg(1.25));
         ttsUnit.applyTimeConstraints();
         ttsUnit.setState(TimedPlanUnitState.LURKING);
-        ttsUnit.start(0);
-        ttsUnit.play(0);
-        Thread.sleep(500);
+        ttsUnit.start(0);        
+        while(ttsUnit.isPlaying())
+        {
+            ttsUnit.play(clock.getMediaSeconds());
+            Thread.sleep(10);
+        }
         dispatcher.waitUntilDone();
-        ttsUnit.stop(10);
         assertEquals("s1", fbList.get(1).getSyncId());
         assertEquals(1, fbList.get(1).getTime(), SPEECH_RETIMING_PRECISION);
         assertEquals("s2", fbList.get(2).getSyncId());
@@ -241,9 +241,11 @@ public class IncrementalTTSUnitTest extends AbstractTimedPlanUnitTest
         ttsUnit.setState(TimedPlanUnitState.LURKING);
         ttsUnit.start(0.4);
         ttsUnit.play(0.4);
-        Thread.sleep(500);
-        dispatcher.waitUntilDone();        
-        ttsUnit.stop(10);
+        while(ttsUnit.isPlaying())
+        {
+            ttsUnit.play(clock.getMediaSeconds());
+            Thread.sleep(10);
+        }         
         assertEquals("start", fbList.get(0).getSyncId());
         assertEquals(0.4, fbList.get(0).getTime(), SPEECH_RETIMING_PRECISION);
         assertEquals("s1", fbList.get(1).getSyncId());
@@ -262,9 +264,11 @@ public class IncrementalTTSUnitTest extends AbstractTimedPlanUnitTest
         ttsUnit.setState(TimedPlanUnitState.LURKING);
         ttsUnit.start(0);
         ttsUnit.play(0);
-        Thread.sleep(500);
-        dispatcher.waitUntilDone();
-        ttsUnit.stop(10);
+        while(ttsUnit.isPlaying())
+        {
+            ttsUnit.play(clock.getMediaSeconds());
+            Thread.sleep(10);
+        }          
         assertEquals("start", fbList.get(0).getSyncId());
         assertEquals("s1", fbList.get(1).getSyncId());
         assertEquals("relax", fbList.get(2).getSyncId());
@@ -280,9 +284,11 @@ public class IncrementalTTSUnitTest extends AbstractTimedPlanUnitTest
         ttsUnit.setState(TimedPlanUnitState.LURKING);
         ttsUnit.start(0);
         ttsUnit.play(0);
-        Thread.sleep(300);
-        dispatcher.waitUntilDone();
-        ttsUnit.stop(10);
+        while(ttsUnit.isPlaying())
+        {
+            ttsUnit.play(clock.getMediaSeconds());
+            Thread.sleep(10);
+        }  
         assertEquals("start", fbList.get(0).getSyncId());
         assertEquals("Full feedback list:"+fbList, "s1", fbList.get(1).getSyncId());
         assertEquals("Full feedback list:"+fbList, "s2", fbList.get(2).getSyncId());

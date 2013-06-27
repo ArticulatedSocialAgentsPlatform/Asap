@@ -219,11 +219,11 @@ public class IncrementalTTSUnit extends TimedAbstractPlanUnit
         }
     }
 
+    /**
+     * Stretch timing to match that set in the timepegs
+     */
     public void applyTimeConstraints()
     {
-        System.out.println("applyConstraints at time" +(iuManager.getCurrentTime()-getStartTime()));
-        System.out.println("start Delay" +startDelay);
-        
         List<Integer> syncOffsets = new ArrayList<>(syncMap.keySet());
         Collections.sort(syncOffsets);
 
@@ -309,7 +309,6 @@ public class IncrementalTTSUnit extends TimedAbstractPlanUnit
                 fwTime = firstWord.startTime();
             }
             lsp.setLipSyncUnit(getBMLBlockPeg(), behavior, startDelay + phIU.startTime() - fwTime + getStartTime(), viseme, phIU);
-            System.out.println(this.getBMLId()+" setlipsync, time:"+(startDelay + phIU.startTime() - fwTime + getStartTime())+" fwTime "+fwTime+" startDelay "+startDelay);
             //lsp.setLipSyncUnit(getBMLBlockPeg(), behavior, startDelay + phIU.startTime() - fwTime + getStartTime(), viseme, phIU);
         }
     }
@@ -355,7 +354,6 @@ public class IncrementalTTSUnit extends TimedAbstractPlanUnit
                 {
                     if (ph.isCompleted())
                     {
-                        // System.out.println(" first word time " + firstWord.startTime()+ " ph time "+ph.endTime());
                         lastEnd = ph.endTime() - firstWord.startTime();
                     }
                 }
@@ -424,6 +422,9 @@ public class IncrementalTTSUnit extends TimedAbstractPlanUnit
     private void stretch(float value)
     {
         if (stretch == value) return;
+        
+        //TODO: update timing of syncs
+        
         stretch = value;
         log.debug("set stretch {}", value);
 
@@ -645,19 +646,17 @@ public class IncrementalTTSUnit extends TimedAbstractPlanUnit
         
         if (isPlaying())
         {
-            System.out.println("isPlaying in addbuffer, update");
             startDelay = (iuManager.getCurrentTime() - getStartTime()) - getIUTime();
             
-            //TODO: renable
+            //TODO: re-enable once sync stretching properly updates timing of syncs
             //applyTimeConstraints();
             
             endPeg.setGlobalValue(iuManager.getCurrentTime() + getPreferedDuration());
             relaxPeg.setGlobalValue(getEndTime());
+            
             updateSyncTiming();
             updateLipSync();            
-        }
-        
-        // System.out.println("Added to buffer " + getBMLId() + " " + getStartTime() + "-" + getEndTime());
+        }        
     }
 
     protected void startUnit(double time) throws TimedPlanUnitPlayException
@@ -675,7 +674,6 @@ public class IncrementalTTSUnit extends TimedAbstractPlanUnit
         
 
         super.startUnit(time);
-        // System.out.println("Started " + getBMLId() + " " + getStartTime() + "-" + getEndTime() + " currentTime: " + time);
     }
 
     @Override
