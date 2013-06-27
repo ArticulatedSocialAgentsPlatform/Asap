@@ -210,8 +210,11 @@ public abstract class LMP extends TimedAbstractPlanUnit implements TimedAnimatio
                 pegBoard.setPegTime(getBMLId(), getId(), "start", getTimePeg("strokeStart").getGlobalValue() - getPreparationDuration());
             }
         }        
-
-        setInternalStrokeTiming(time);
+        
+        if(time < getRelaxTime())
+        {
+            setInternalStrokeTiming(time);
+        }
 
         if (!isPlaying()&&!isDone())
         {

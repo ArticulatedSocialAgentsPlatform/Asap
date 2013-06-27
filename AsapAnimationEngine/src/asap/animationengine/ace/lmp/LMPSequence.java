@@ -156,24 +156,6 @@ public class LMPSequence extends LMP
     }
 
     @Override
-    public void updateTiming(double time) throws TimedPlanUnitPlayException
-    {
-        /*
-         * Set<PegKey> pkStrokeEnd = pegBoard.getPegKeys(getTimePeg("strokeEnd"));
-         * if (!getTimePeg("strokeEnd").isAbsoluteTime())
-         * {
-         * int strokeEnds = countInternalSyncs(pkStrokeEnd, 0);
-         * if ( (pkStrokeEnd.size() - countInternalSyncs(pkStrokeEnd, 0) == 0)
-         * ||getExternalSyncs("strokeEnd")<=1)
-         * {
-         * getTimePeg("strokeEnd").setGlobalValue(getTime("strokeStart") + getStrokeDuration(time));
-         * }
-         * }
-         */
-        super.updateTiming(time);
-    }
-
-    @Override
     protected void startUnit(double time) throws TimedPlanUnitPlayException
     {
         if (!lmpQueue.isEmpty() && lmpQueue.get(0).getStartTime() >= time)
@@ -279,13 +261,20 @@ public class LMPSequence extends LMP
         double defaultDuration = strokeStartPeg.getGlobalValue() + getStrokeDuration(time) - startStretchPeg.getGlobalValue();
         double duration = strokeEndPeg.getGlobalValue() - startStretchPeg.getGlobalValue();
         double stretch = duration / defaultDuration;
+        
+        
+        if(stretch!=1.0)
+        {
+            System.out.println("stretch: "+stretch);
+        }
+        
         double durPrep[] = new double[lmpQueue.size()];
         double prefPrepDur = 0;
         for (int i = iPrepStretchStart; i < lmpQueue.size(); i++)
         {
             durPrep[i] = lmpQueue.get(i).getPreparationDuration() * stretch;
             prefPrepDur += lmpQueue.get(i).getPreparationDuration();
-            if (durPrep[i] < MINIMUM_PREPARATION_TIME)
+            if (stretch<1 && durPrep[i] < MINIMUM_PREPARATION_TIME)
             {
                 durPrep[i] = MINIMUM_PREPARATION_TIME;
             }
@@ -293,7 +282,11 @@ public class LMPSequence extends LMP
         }
 
         stretch = duration / (defaultDuration - prefPrepDur);
-
+        if(stretch!=1.0)
+        {
+            System.out.println("stretch: "+stretch);
+        }
+        
         if (iPrepStretchStart > iStrokeStretchStart)
         {
             TimePeg tpStrokeStart = lmpQueue.get(iStrokeStretchStart).getTimePeg("strokeStart");

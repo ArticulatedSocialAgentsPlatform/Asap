@@ -492,6 +492,43 @@ public class MotorControlProgramTest extends AbstractTimedPlanUnitTest
     }
     
     @Test
+    public void testUpdateTimingStartConstraint() throws BehaviourPlanningException, TimedPlanUnitPlayException
+    {
+        StubLMP tmu = createStub("bml1", "beh1-1", 1, 2, 3);
+        MotorControlProgram mcp = setupPlanUnit(fbManager, BMLBlockPeg.GLOBALPEG, "bml1", "beh1", tmu);
+        List<TimePegAndConstraint> sacs = new ArrayList<>();
+        sacs.add(new TimePegAndConstraint("start", TimePegUtil.createAbsoluteTimePeg(3), new Constraint(), 0, false));
+        mcp.resolveSynchs(BMLBlockPeg.GLOBALPEG, new MURMLGestureBehaviour("bml1"), sacs);
+        mcp.setState(TimedPlanUnitState.LURKING);
+        mcp.start(3);
+        mcp.updateTiming(3);
+        assertEquals(3, mcp.getStartTime(), TIME_PRECISION);
+        assertEquals(4, mcp.getTime("strokeStart"), TIME_PRECISION);
+        assertEquals(7, mcp.getTime("strokeEnd"), TIME_PRECISION);
+    }
+    
+    @Test
+    public void testUpdateTimingStartBBPegConstraint() throws BehaviourPlanningException, TimedPlanUnitPlayException
+    {
+        StubLMP tmu = createStub("bml1", "beh1-1", 1, 2, 3);
+        BMLBlockPeg bbPeg = new BMLBlockPeg("bml1",2);
+        globalPegBoard.addBMLBlockPeg(bbPeg);
+        MotorControlProgram mcp = setupPlanUnit(fbManager, bbPeg, "bml1", "beh1", tmu);
+        List<TimePegAndConstraint> sacs = new ArrayList<>();
+        TimePeg tp = new TimePeg(bbPeg);
+        tp.setLocalValue(3);
+        tp.setAbsoluteTime(true);
+        sacs.add(new TimePegAndConstraint("start", tp, new Constraint(), 0, false));
+        mcp.resolveSynchs(BMLBlockPeg.GLOBALPEG, new MURMLGestureBehaviour("bml1"), sacs);
+        mcp.setState(TimedPlanUnitState.LURKING);
+        mcp.start(5);
+        mcp.updateTiming(5);
+        assertEquals(5, mcp.getStartTime(), TIME_PRECISION);
+        assertEquals(6, mcp.getTime("strokeStart"), TIME_PRECISION);
+        assertEquals(9, mcp.getTime("strokeEnd"), TIME_PRECISION);
+    }
+    
+    @Test
     public void testUpdateTimingSeq() throws TimedPlanUnitPlayException, BehaviourPlanningException
     {
         StubLMP tmu1 = createStub("bml1", "beh1-1", 1, 2, 3);
