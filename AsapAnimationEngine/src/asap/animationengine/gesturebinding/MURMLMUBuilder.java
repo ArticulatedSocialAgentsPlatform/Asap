@@ -1073,7 +1073,9 @@ public final class MURMLMUBuilder
             List<OrientConstraint> ocVec = new ArrayList<OrientConstraint>();
             if (dyn.getKeyframing() != null)
             {
-                return getKeyFramingTMU(dyn.getKeyframing(), bbm, bmlBlockPeg, bmlId, id, pb, aniPlayer);
+                TimedAnimationUnit tmu = getKeyFramingTMU(dyn.getKeyframing(), bbm, bmlBlockPeg, bmlId, id, pb, aniPlayer);
+                tmu.setPriority(murmlDescription.getPriority());
+                return tmu;
             }
             else if (dyn.getDynamicElements().size() > 0)
             {
@@ -1104,7 +1106,9 @@ public final class MURMLMUBuilder
         }
         if (lmp != null)
         {
-            return new MotorControlProgram(bbm, bmlBlockPeg, bmlId, id, pb, localPegBoard, aniPlayer, lmp);
+            TimedAnimationUnit tmu = new MotorControlProgram(bbm, bmlBlockPeg, bmlId, id, pb, localPegBoard, aniPlayer, lmp);
+            tmu.setPriority(murmlDescription.getPriority());
+            return tmu;
         }
         else
         {

@@ -42,6 +42,7 @@ import asap.animationengine.motionunit.TimedAnimationUnit;
 import asap.hns.Hns;
 import asap.hns.ShapeSymbols;
 import asap.motionunit.MUPlayException;
+import asap.murml.MURMLDescription;
 import asap.realizer.feedback.FeedbackManagerImpl;
 import asap.realizer.pegboard.BMLBlockPeg;
 import asap.realizer.pegboard.PegBoard;
@@ -99,6 +100,21 @@ public class MURMLMUBuilderTest
         Quat4fTestUtil.assertQuat4fRotationEquivalent(qExp, q, ROT_PRECISION);
     }
 
+    @Test
+    public void testPriorityKeyframing() throws MUPlayException, MUSetupException, TMUSetupException
+    {
+        String murmlString = "<murml-description xmlns=\"http://www.techfak.uni-bielefeld.de/ags/soa/murml\">"
+                + "<dynamic><keyframing><phase><frame ftime=\"0\"><posture>Humanoid "
+                + "(l_shoulder 3 100 0 0)</posture></frame></phase></keyframing></dynamic></murml-description>";
+        MURMLDescription def = new MURMLDescription();
+        def.setPriority(34);
+        def.readXML(murmlString);
+        
+        TimedAnimationUnit tmu = murmlMuBuilder.setupTMU(def, new FeedbackManagerImpl(new BMLBlockManager(), ""),
+                BMLBlockPeg.GLOBALPEG, "bml1", "g1", pb, mockAnimationPlayer);
+        assertEquals(34, tmu.getPriority());
+    }
+    
     @Test
     public void testTwoFrames() throws MUPlayException, MUSetupException
     {
@@ -403,7 +419,8 @@ public class MURMLMUBuilderTest
         // @formatter:on
         TimedAnimationUnit tau = murmlMuBuilder.setupTMU(murmlString, new FeedbackManagerImpl(new BMLBlockManager(), ""),
                 BMLBlockPeg.GLOBALPEG, "bml1", "g1", pb, mockAnimationPlayer);
-
+        assertEquals(100,tau.getPriority());
+        
         assertThat(tau, instanceOf(MotorControlProgram.class));
         assertThat(tau.getKinematicJoints(), IsIterableContainingInAnyOrder.containsInAnyOrder(Hanim.r_wrist));
 
@@ -411,6 +428,22 @@ public class MURMLMUBuilderTest
         assertThat(lmp, instanceOf(LMPWristRot.class));
     }
 
+    @Test
+    public void testPriorityOther() throws MUPlayException, MUSetupException, TMUSetupException
+    {
+      //@formatter:off
+        String murmlString = 
+                "<murml-description xmlns=\"http://www.techfak.uni-bielefeld.de/ags/soa/murml\">" +
+                        "<static slot=\"PalmOrientation\" scope=\"right_arm\" value=\"DirU\"/>"+
+                "</murml-description>";
+        // @formatter:on
+        MURMLDescription def = new MURMLDescription();
+        def.readXML(murmlString);
+        def.setPriority(34);
+        TimedAnimationUnit tau = murmlMuBuilder.setupTMU(def, new FeedbackManagerImpl(new BMLBlockManager(), ""),
+                BMLBlockPeg.GLOBALPEG, "bml1", "g1", pb, mockAnimationPlayer);
+        assertEquals(34,tau.getPriority());
+    }
     @Test
     public void setupTMURelativeStaticPalmOrientation() throws TMUSetupException
     {
