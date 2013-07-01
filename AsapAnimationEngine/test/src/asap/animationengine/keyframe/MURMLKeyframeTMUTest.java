@@ -32,6 +32,7 @@ import asap.realizer.feedback.FeedbackManager;
 import asap.realizer.feedback.NullFeedbackManager;
 import asap.realizer.pegboard.BMLBlockPeg;
 import asap.realizer.pegboard.PegBoard;
+import asap.realizer.planunit.Priority;
 import asap.realizer.scheduler.BMLBlockManager;
 import asap.realizer.scheduler.TimePegAndConstraint;
 import asap.realizertestutil.planunit.AbstractTimedPlanUnitTest;
@@ -104,6 +105,7 @@ public class MURMLKeyframeTMUTest extends AbstractTimedPlanUnitTest
         List<TimePegAndConstraint> sacs = new ArrayList<>();
         sacs.add(new TimePegAndConstraint("start", TimePegUtil.createTimePeg(1), new Constraint(), 0));
         tmu.resolveSynchs(BMLBlockPeg.GLOBALPEG, mockBeh, sacs);
+        assertEquals(Priority.GESTURE, tmu.getPriority());
         assertEquals(1d, tmu.getStartTime(), TIME_PRECISION);
         assertEquals(1d, tmu.getTime("strokeStart"), TIME_PRECISION);
         assertEquals(1d, tmu.getTime("stroke"), TIME_PRECISION);

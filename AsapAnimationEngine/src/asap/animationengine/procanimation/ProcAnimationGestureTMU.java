@@ -16,7 +16,6 @@ import asap.realizer.pegboard.BMLBlockPeg;
 import asap.realizer.pegboard.OffsetPeg;
 import asap.realizer.pegboard.PegBoard;
 import asap.realizer.pegboard.TimePeg;
-import asap.realizer.planunit.Priority;
 import asap.realizer.planunit.TimedPlanUnitPlayException;
 import asap.realizer.scheduler.TimePegAndConstraint;
 
@@ -37,7 +36,6 @@ public class ProcAnimationGestureTMU extends TimedAnimationMotionUnit
             PegBoard pb)
     {
         super(bbf, bmlBlockPeg, bmlId, id, m, pb);
-        setPriority(Priority.GESTURE);
         mu = m;
     }
 

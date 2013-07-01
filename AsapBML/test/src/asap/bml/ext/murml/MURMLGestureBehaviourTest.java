@@ -9,6 +9,8 @@ import java.io.IOException;
 
 import org.junit.Test;
 
+import asap.bml.ext.bmlt.BMLTInfo;
+
 import saiba.bml.BMLInfo;
 import saiba.bml.core.AbstractBehaviourTest;
 import saiba.bml.core.Behaviour;
@@ -21,6 +23,11 @@ import saiba.bml.core.GestureBehaviour;
  */
 public class MURMLGestureBehaviourTest extends AbstractBehaviourTest
 {
+    static
+    {
+        BMLTInfo.init();
+    }
+    
     @Override
     protected Behaviour createBehaviour(String bmlId, String extraAttributeString) throws IOException
     {
@@ -70,4 +77,13 @@ public class MURMLGestureBehaviourTest extends AbstractBehaviourTest
         assertEquals(0, beh.getMurmlDescription().getDynamic().getKeyframing().getPhases().get(0).getFrames().get(0).getFtime(), FRAME_PRECISION);
     }
 
+    @Test
+    public void testPriority() throws IOException
+    {
+        String bmlString = "<murmlgesture xmlns:bmla=\"http://www.asap-project.org/bmla\" bmla:priority=\"10\" xmlns=\"http://www.techfak.uni-bielefeld.de/ags/soa/murml\" " + "id=\"a1\" start=\"nod1:end\">"
+                + "<murml-description><dynamic><keyframing><phase><frame ftime=\"0\"><posture>Humanoid "
+                + "(l_shoulder 3 70 0 0)</posture></frame></phase></keyframing></dynamic></murml-description>" + "</murml:murmlgesture>";
+        MURMLGestureBehaviour beh = new MURMLGestureBehaviour("bmla", new XMLTokenizer(bmlString));
+        assertEquals(10, beh.getFloatParameterValue("http://www.asap-project.org/bmla:priority"),FRAME_PRECISION);
+    }
 }

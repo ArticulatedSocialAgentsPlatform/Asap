@@ -30,6 +30,7 @@ import asap.realizer.feedback.NullFeedbackManager;
 import asap.realizer.pegboard.BMLBlockPeg;
 import asap.realizer.pegboard.PegBoard;
 import asap.realizer.pegboard.TimePeg;
+import asap.realizer.planunit.Priority;
 import asap.realizer.scheduler.LinearStretchResolver;
 import asap.realizer.scheduler.TimePegAndConstraint;
 import asap.realizer.scheduler.UniModalResolver;
@@ -73,6 +74,7 @@ public class TimedAnimationMotionUnit extends TimedMotionUnit implements TimedAn
     public TimedAnimationMotionUnit(FeedbackManager bbf, BMLBlockPeg bmlBlockPeg, String bmlId, String id, AnimationUnit m, PegBoard pb)
     {
         super(bbf, bmlBlockPeg, bmlId, id, m);
+        setPriority(Priority.GESTURE);
         mu = m;
         pegBoard = pb;
     }

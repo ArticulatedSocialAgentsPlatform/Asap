@@ -3,8 +3,11 @@ package asap.bml.ext.bmlt;
 import saiba.bml.BMLInfo;
 import saiba.bml.core.Behaviour;
 import saiba.bml.core.GazeBehaviour;
+import saiba.bml.core.GestureBehaviour;
+import saiba.bml.core.HeadBehaviour;
 import saiba.bml.core.SpeechBehaviour;
 
+import asap.bml.ext.bmla.BMLAInfo;
 import asap.bml.ext.bmla.BMLAInterruptBehaviour;
 import asap.bml.ext.bmla.BMLAActivateBehaviour;
 import asap.bml.ext.bmla.BMLAParameterValueChangeBehaviour;
@@ -12,6 +15,7 @@ import asap.bml.ext.maryxml.MaryAllophonesBehaviour;
 import asap.bml.ext.maryxml.MaryWordsBehaviour;
 import asap.bml.ext.maryxml.MaryXMLBehaviour;
 import asap.bml.ext.msapi.MSApiBehaviour;
+import asap.bml.ext.murml.MURMLGestureBehaviour;
 import asap.bml.ext.ssml.SSMLBehaviour;
 
 import com.google.common.collect.ImmutableMap;
@@ -61,5 +65,14 @@ public final class BMLTInfo
         BMLInfo.addExternalBlockId(ANTICIPATORBLOCKID);
         BMLInfo.addCustomStringAttribute(GazeBehaviour.class, BMLTBehaviour.BMLTNAMESPACE, "dynamic");
         BMLInfo.addCustomStringAttribute(SpeechBehaviour.class, BMLTBehaviour.BMLTNAMESPACE, "voice");
+        
+        BMLInfo.addCustomFloatAttribute(GazeBehaviour.class, BMLAInfo.BMLA_NAMESPACE, "priority");
+        BMLInfo.addCustomFloatAttribute(HeadBehaviour.class, BMLAInfo.BMLA_NAMESPACE, "priority");
+        BMLInfo.addCustomFloatAttribute(GestureBehaviour.class, BMLAInfo.BMLA_NAMESPACE, "priority");
+        BMLInfo.addCustomFloatAttribute(MURMLGestureBehaviour.class,BMLAInfo.BMLA_NAMESPACE, "priority");
+        BMLInfo.addCustomFloatAttribute(BMLTProcAnimationBehaviour.class,BMLAInfo.BMLA_NAMESPACE, "priority");
+        BMLInfo.addCustomFloatAttribute(BMLTNoiseBehaviour.class,BMLAInfo.BMLA_NAMESPACE, "priority");
+        BMLInfo.addCustomFloatAttribute(BMLTKeyframeBehaviour.class,BMLAInfo.BMLA_NAMESPACE, "priority");
+        BMLInfo.addCustomFloatAttribute(BMLTControllerBehaviour.class,BMLAInfo.BMLA_NAMESPACE, "priority");
     }
 }
