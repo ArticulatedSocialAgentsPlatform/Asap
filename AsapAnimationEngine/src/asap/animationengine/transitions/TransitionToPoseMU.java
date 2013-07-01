@@ -13,6 +13,10 @@ import com.google.common.base.Function;
 import com.google.common.collect.Collections2;
 import com.google.common.collect.ImmutableSet;
 
+/**
+ * Transitions from a dynamic start position to a pose.
+ * @author Herwin
+ */
 public abstract class TransitionToPoseMU extends TransitionMU
 {
     protected float startPose[] = null;

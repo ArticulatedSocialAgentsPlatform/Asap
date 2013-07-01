@@ -47,7 +47,7 @@ public class T1RTransitionToPoseMU extends TransitionToPoseMU
     }
 
     @Override
-    public TransitionMU copy(AnimationPlayer player)
+    public T1RTransitionToPoseMU copy(AnimationPlayer player)
     {
         ArrayList<VJoint> startPoseJoints = new ArrayList<VJoint>();
         float[] ep = null;
@@ -58,13 +58,13 @@ public class T1RTransitionToPoseMU extends TransitionToPoseMU
 
         if (startJoints == null)
         {
-            startPoseJoints.addAll(player.getVNext().getParts());
+            startPoseJoints.addAll(player.getVCurr().getParts());
         }
         else
         {
             for (VJoint vj : startJoints)
             {
-                VJoint vNew = player.getVNext().getPart(vj.getSid());
+                VJoint vNew = player.getVCurr().getPart(vj.getSid());
                 startPoseJoints.add(vNew);
             }
         }
@@ -74,7 +74,7 @@ public class T1RTransitionToPoseMU extends TransitionToPoseMU
             ArrayList<VJoint> newJoints = new ArrayList<VJoint>();
             for (VJoint vj : joints)
             {
-                VJoint newJ = player.getVNext().getPart(vj.getSid());
+                VJoint newJ = player.getVCurr().getPart(vj.getSid());
                 if (newJ != null)
                 {
                     newJoints.add(newJ);
@@ -84,7 +84,7 @@ public class T1RTransitionToPoseMU extends TransitionToPoseMU
         }
         else
         {
-            return new T1RTransitionToPoseMU(player.getVNext().getParts(), startPoseJoints, ep);
+            return new T1RTransitionToPoseMU(player.getVCurr().getParts(), startPoseJoints, ep);
         }
     }
 

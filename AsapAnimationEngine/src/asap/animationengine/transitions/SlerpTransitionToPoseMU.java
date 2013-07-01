@@ -73,7 +73,7 @@ public class SlerpTransitionToPoseMU extends TransitionToPoseMU
             ArrayList<VJoint> newJoints = new ArrayList<VJoint>();
             for (VJoint vj : joints)
             {
-                VJoint newJ = player.getVNext().getPart(vj.getSid());
+                VJoint newJ = player.getVCurr().getPart(vj.getSid());
                 if (newJ != null)
                 {
                     newJoints.add(newJ);
@@ -83,7 +83,7 @@ public class SlerpTransitionToPoseMU extends TransitionToPoseMU
         }
         else
         {
-            return new SlerpTransitionToPoseMU(player.getVNext().getParts(), startPoseJoints, ep);
+            return new SlerpTransitionToPoseMU(player.getVCurr().getParts(), startPoseJoints, ep);
         }
     }
 

@@ -33,7 +33,7 @@ import asap.realizer.planunit.TimedPlanUnitState;
 public class SkeletonPoseRestPose implements RestPose
 {
     private AnimationPlayer player;
-    private VJoint poseTree;
+    private VJoint poseTree;        //Holds the pose on a VJoint structure. Joints not in the pose are set to have identity rotation.
     private SkeletonPose pose;
 
     public SkeletonPoseRestPose()
@@ -167,25 +167,49 @@ public class SkeletonPoseRestPose implements RestPose
 
     }
 
+    private void setRotConfig(VJoint poseTree, int startIndex, float[] config)
+    {
+        int i = 0;
+        for(VJoint vj:poseTree.getParts())
+        {
+            if(vj.getSid()!=null)
+            {
+                vj.getRotation(config, startIndex+i);
+                i+=4;
+            }
+        }
+    }
+    
     public PostureShiftTMU createPostureShiftTMU(FeedbackManager bbf, BMLBlockPeg bmlBlockPeg, String bmlId, String id, PegBoard pb)
             throws MUSetupException
     {
         List<VJoint> targetJoints = new ArrayList<VJoint>();
         List<VJoint> startJoints = new ArrayList<VJoint>();
-        for (String joint : pose.getPartIds())
+        
+        for(VJoint vj:poseTree.getParts())
         {
-            targetJoints.add(player.getVNext().getPartBySid(joint));
-            startJoints.add(player.getVCurr().getPartBySid(joint));
+            if(vj.getSid()!=null)
+            {
+                targetJoints.add(player.getVNext().getPartBySid(vj.getSid()));
+                startJoints.add(player.getVCurr().getPartBySid(vj.getSid()));
+            }
         }
-
+        
+        
+        
         AnimationUnit mu;
         if (pose.getConfigType().equals("R"))
         {
-            mu = new SlerpTransitionToPoseMU(startJoints, targetJoints, pose.getConfig());
+            float config[]= new float[targetJoints.size()*4];
+            setRotConfig(poseTree, 0, config);
+            mu = new SlerpTransitionToPoseMU(startJoints, targetJoints, config);
         }
         else if (pose.getConfigType().equals("T1R"))
         {
-            mu = new T1RTransitionToPoseMU(startJoints, targetJoints, pose.getConfig());
+            float config[]= new float[targetJoints.size()*4+3];
+            poseTree.getTranslation(config);
+            setRotConfig(poseTree, 3, config);
+            mu = new T1RTransitionToPoseMU(startJoints, targetJoints, config);
         }
         else
         {
