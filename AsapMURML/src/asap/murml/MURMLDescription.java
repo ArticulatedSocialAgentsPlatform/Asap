@@ -7,6 +7,7 @@ import java.io.IOException;
 import java.util.HashMap;
 
 import lombok.Getter;
+import lombok.Setter;
 
 /**
  * Parser for the MURML BML description
@@ -23,6 +24,9 @@ public class MURMLDescription extends MURMLElement
 
     @Getter
     private boolean pointStroke;
+    
+    @Getter @Setter
+    private int priority = 100;
 
     @Override
     public void decodeAttributes(HashMap<String, String> attrMap, XMLTokenizer tokenizer)

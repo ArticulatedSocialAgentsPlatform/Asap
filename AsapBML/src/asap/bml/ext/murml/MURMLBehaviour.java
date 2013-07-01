@@ -6,6 +6,7 @@ import java.io.IOException;
 
 import lombok.Getter;
 import saiba.bml.core.Behaviour;
+import asap.bml.ext.bmla.BMLAInfo;
 import asap.murml.MURMLDescription;
 
 /**
@@ -40,7 +41,11 @@ public abstract class MURMLBehaviour extends Behaviour
             if (tag.equals(MURMLDescription.xmlTag()))
             {
                 murmlDescription = new MURMLDescription();
-                murmlDescription.readXML(tokenizer);                
+                murmlDescription.readXML(tokenizer);
+                if(specifiesParameter(BMLAInfo.BMLA_NAMESPACE+":priority"))
+                {
+                   murmlDescription.setPriority((int)getFloatParameterValue(BMLAInfo.BMLA_NAMESPACE+":priority")); 
+                }
             }
         }
         ensureDecodeProgress(tokenizer);
