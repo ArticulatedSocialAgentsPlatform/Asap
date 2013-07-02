@@ -41,6 +41,11 @@ public enum TimedPlanUnitState
         return this == LURKING;
     }
     
+    public boolean isInExec()
+    {
+        return this == IN_EXEC;
+    }
+    
     public boolean isPending()
     {
         return this == PENDING;

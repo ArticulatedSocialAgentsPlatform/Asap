@@ -33,18 +33,17 @@ public class LMPParallelTest
     private BMLBlockManager bbm = new BMLBlockManager();
     private FeedbackManager fbm = new FeedbackManagerImpl(bbm, "char1");
     private PegBoard pegBoard = new PegBoard();
-    private PegBoard globalPegBoard = new PegBoard();
     private final double TIME_PRECISION = 0.001;
 
     private LMP createStub(String bmlId, String id, double prepDur, double retrDur, double strokeDur, boolean hasFixedStrokeDur)
     {
-        return new StubLMP(NullFeedbackManager.getInstance(), BMLBlockPeg.GLOBALPEG, bmlId, id, pegBoard, globalPegBoard,
+        return new StubLMP(NullFeedbackManager.getInstance(), BMLBlockPeg.GLOBALPEG, bmlId, id, pegBoard, 
                 new HashSet<String>(), new HashSet<String>(), prepDur, retrDur, strokeDur, hasFixedStrokeDur);
     }
 
     private StubLMP createStub(String bmlId, String id, double prepDur, double retrDur, double strokeDur)
     {
-        return new StubLMP(NullFeedbackManager.getInstance(), BMLBlockPeg.GLOBALPEG, bmlId, id, pegBoard, globalPegBoard,
+        return new StubLMP(NullFeedbackManager.getInstance(), BMLBlockPeg.GLOBALPEG, bmlId, id, pegBoard, 
                 new HashSet<String>(), new HashSet<String>(), prepDur, retrDur, strokeDur);
     }
 
@@ -58,7 +57,7 @@ public class LMPParallelTest
     public void testEmpty() throws TimedPlanUnitPlayException
     {
         List<TimedAnimationUnit> lmps = new ArrayList<>();
-        LMPParallel par = new LMPParallel(fbm, BMLBlockPeg.GLOBALPEG, "bml1", "beh1", pegBoard, globalPegBoard, lmps);
+        LMPParallel par = new LMPParallel(fbm, BMLBlockPeg.GLOBALPEG, "bml1", "beh1", pegBoard, lmps);
         par.setState(TimedPlanUnitState.LURKING);
         par.start(0);
         assertEquals(TimedPlanUnitState.IN_EXEC, par.getState());
@@ -68,7 +67,7 @@ public class LMPParallelTest
     public void testResolveOne()
     {
         LMP tmu1 = createStub("bml1", "beh1-1", 1, 2, 3);
-        LMPParallel par = new LMPParallel(fbm, BMLBlockPeg.GLOBALPEG, "bml1", "beh1", pegBoard,globalPegBoard, 
+        LMPParallel par = new LMPParallel(fbm, BMLBlockPeg.GLOBALPEG, "bml1", "beh1", pegBoard, 
                 new ImmutableList.Builder<TimedAnimationUnit>().add(tmu1).build());
         par.setTimePeg("strokeStart", TimePegUtil.createTimePeg(2));
         par.setTimePeg("strokeEnd", TimePegUtil.createTimePeg(4));
@@ -83,7 +82,7 @@ public class LMPParallelTest
     {
         LMP tmu1 = createStub("bml1", "beh1-1", 1, 2, 3);
         LMP tmu2 = createStub("bml1", "beh1-2", 2, 1, 2);
-        LMPParallel par = new LMPParallel(fbm, BMLBlockPeg.GLOBALPEG, "bml1", "beh1", pegBoard,globalPegBoard, 
+        LMPParallel par = new LMPParallel(fbm, BMLBlockPeg.GLOBALPEG, "bml1", "beh1", pegBoard, 
                 new ImmutableList.Builder<TimedAnimationUnit>().add(tmu1, tmu2).build());
         par.setTimePeg("strokeStart", TimePegUtil.createTimePeg(3));
         par.setTimePeg("strokeEnd", TimePegUtil.createTimePeg(5));
@@ -101,7 +100,7 @@ public class LMPParallelTest
     {
         LMP tmu1 = createStub("bml1", "beh1-1", 1, 2, 3);
         LMP tmu2 = createStub("bml1", "beh1-2", 2, 1, 2);
-        LMPParallel par = new LMPParallel(fbm, BMLBlockPeg.GLOBALPEG, "bml1", "beh1", pegBoard,globalPegBoard, 
+        LMPParallel par = new LMPParallel(fbm, BMLBlockPeg.GLOBALPEG, "bml1", "beh1", pegBoard, 
                 new ImmutableList.Builder<TimedAnimationUnit>().add(tmu1, tmu2).build());
         assertEquals(3, par.getStrokeDuration(), TIME_PRECISION);
         assertEquals(2, par.getPreparationDuration(), TIME_PRECISION);
@@ -114,9 +113,9 @@ public class LMPParallelTest
         LMP tmu1 = createStub("bml1", "beh1-1", 1, 2, 3);
         LMP tmu2a = createStub("bml1", "beh1-2a", 2, 1, 2);
         LMP tmu2b = createStub("bml1", "beh1-2b", 1, 2, 3);
-        LMPSequence seq = new LMPSequence(fbm, BMLBlockPeg.GLOBALPEG, "bml1", "beh1", pegBoard,globalPegBoard, 
+        LMPSequence seq = new LMPSequence(fbm, BMLBlockPeg.GLOBALPEG, "bml1", "beh1", pegBoard, 
                 new ImmutableList.Builder<TimedAnimationUnit>().add(tmu2a, tmu2b).build());
-        LMPParallel par = new LMPParallel(fbm, BMLBlockPeg.GLOBALPEG, "bml1", "beh1-par", pegBoard,globalPegBoard, 
+        LMPParallel par = new LMPParallel(fbm, BMLBlockPeg.GLOBALPEG, "bml1", "beh1-par", pegBoard, 
                 new ImmutableList.Builder<TimedAnimationUnit>().add(tmu1).add(seq).build());
 
         assertEquals(6, par.getStrokeDuration(), TIME_PRECISION);
@@ -130,9 +129,9 @@ public class LMPParallelTest
         LMP tmu1 = createStub("bml1", "beh1-1", 1, 2, 3);
         LMP tmu2a = createStub("bml1", "beh1-2a", 2, 1, 2);
         LMP tmu2b = createStub("bml1", "beh1-2b", 1, 2, 3);
-        LMPSequence seq = new LMPSequence(fbm, BMLBlockPeg.GLOBALPEG, "bml1", "beh1", pegBoard,globalPegBoard, 
+        LMPSequence seq = new LMPSequence(fbm, BMLBlockPeg.GLOBALPEG, "bml1", "beh1", pegBoard, 
                 new ImmutableList.Builder<TimedAnimationUnit>().add(tmu2a, tmu2b).build());
-        LMPParallel par = new LMPParallel(fbm, BMLBlockPeg.GLOBALPEG, "bml1", "beh1-par", pegBoard,globalPegBoard, 
+        LMPParallel par = new LMPParallel(fbm, BMLBlockPeg.GLOBALPEG, "bml1", "beh1-par", pegBoard, 
                 new ImmutableList.Builder<TimedAnimationUnit>().add(tmu1).add(seq).build());
 
         par.setTimePeg("strokeStart", TimePegUtil.createTimePeg(3));
@@ -165,9 +164,9 @@ public class LMPParallelTest
         LMP tmu1 = createStub("bml1", "beh1-1", 1, 3, 3, true);
         LMP tmu2a = createStub("bml1", "beh1-2a", 2, 1, 2);
         LMP tmu2b = createStub("bml1", "beh1-2b", 1, 2, 3);
-        LMPSequence seq = new LMPSequence(fbm, BMLBlockPeg.GLOBALPEG, "bml1", "beh1", pegBoard,globalPegBoard, 
+        LMPSequence seq = new LMPSequence(fbm, BMLBlockPeg.GLOBALPEG, "bml1", "beh1", pegBoard, 
                 new ImmutableList.Builder<TimedAnimationUnit>().add(tmu2a, tmu2b).build());
-        LMPParallel par = new LMPParallel(fbm, BMLBlockPeg.GLOBALPEG, "bml1", "beh1-par", pegBoard,globalPegBoard, 
+        LMPParallel par = new LMPParallel(fbm, BMLBlockPeg.GLOBALPEG, "bml1", "beh1-par", pegBoard, 
                 new ImmutableList.Builder<TimedAnimationUnit>().add(tmu1).add(seq).build());
 
         par.setTimePeg("strokeStart", TimePegUtil.createTimePeg(3));
@@ -193,16 +192,17 @@ public class LMPParallelTest
         assertEquals(4.5, tmu2b.getTime("strokeStart"), TIME_PRECISION);
         assertEquals(6, tmu2b.getTime("strokeEnd"), TIME_PRECISION);        
     }
-
+    
+    
     @Test
     public void testResolveWithSequenceInParallelAndHandmoveAfterStart() throws TimedPlanUnitPlayException
     {
         LMP tmu1 = createStub("bml1", "beh1-1", 1, 3, 3, true);
         LMP tmu2a = createStub("bml1", "beh1-2a", 2, 1, 2);
         LMP tmu2b = createStub("bml1", "beh1-2b", 1, 2, 3);
-        LMPSequence seq = new LMPSequence(fbm, BMLBlockPeg.GLOBALPEG, "bml1", "beh1", pegBoard,globalPegBoard, 
+        LMPSequence seq = new LMPSequence(fbm, BMLBlockPeg.GLOBALPEG, "bml1", "beh1", pegBoard, 
                 new ImmutableList.Builder<TimedAnimationUnit>().add(tmu2a, tmu2b).build());
-        LMPParallel par = new LMPParallel(fbm, BMLBlockPeg.GLOBALPEG, "bml1", "beh1-par", pegBoard,globalPegBoard, 
+        LMPParallel par = new LMPParallel(fbm, BMLBlockPeg.GLOBALPEG, "bml1", "beh1-par", pegBoard, 
                 new ImmutableList.Builder<TimedAnimationUnit>().add(tmu1).add(seq).build());
 
         par.setTimePeg("strokeStart", TimePegUtil.createTimePeg(3));
@@ -239,12 +239,12 @@ public class LMPParallelTest
         LMP tmu1 = createStub("bml1", "beh1-1", 1, 2, 3, true);
         LMP tmu2a = createStub("bml1", "beh1-2a", 2, 1, 2);
         LMP tmu2b = createStub("bml1", "beh1-2b", 1, 2, 3);
-        LMPSequence seq = new LMPSequence(fbm, BMLBlockPeg.GLOBALPEG, "bml1", "beh1", pegBoard,globalPegBoard, 
+        LMPSequence seq = new LMPSequence(fbm, BMLBlockPeg.GLOBALPEG, "bml1", "beh1", pegBoard, 
                 new ImmutableList.Builder<TimedAnimationUnit>().add(tmu2a, tmu2b).build());
-        LMPParallel par = new LMPParallel(fbm, BMLBlockPeg.GLOBALPEG, "bml1", "beh1-par", pegBoard,globalPegBoard, 
+        LMPParallel par = new LMPParallel(fbm, BMLBlockPeg.GLOBALPEG, "bml1", "beh1-par", pegBoard, 
                 new ImmutableList.Builder<TimedAnimationUnit>().add(tmu1).add(seq).build());
 
-        assertEquals(3, par.getStrokeDuration(), TIME_PRECISION);
+        assertEquals(3, par.getStrokeDuration(), TIME_PRECISION);        
     }
 
     @Test
@@ -252,7 +252,7 @@ public class LMPParallelTest
     {
         StubLMP tmu1 = createStub("bml1", "beh1-1", 1, 2, 3);
         StubLMP tmu2 = createStub("bml1", "beh1-2", 2, 1, 2);
-        LMPParallel par = new LMPParallel(fbm, BMLBlockPeg.GLOBALPEG, "bml1", "beh1", pegBoard,globalPegBoard, 
+        LMPParallel par = new LMPParallel(fbm, BMLBlockPeg.GLOBALPEG, "bml1", "beh1", pegBoard, 
                 new ImmutableList.Builder<TimedAnimationUnit>().add(tmu1, tmu2).build());
         par.setTimePeg("strokeStart", TimePegUtil.createTimePeg(3));
         par.setTimePeg("strokeEnd", TimePegUtil.createTimePeg(5));
@@ -274,7 +274,7 @@ public class LMPParallelTest
     {
         StubLMP tmu1 = createStub("bml1", "beh1-1", 1, 2, 3);
         StubLMP tmu2 = createStub("bml1", "beh1-2", 2, 1, 2);
-        LMPParallel par = new LMPParallel(fbm, BMLBlockPeg.GLOBALPEG, "bml1", "beh1", pegBoard,globalPegBoard, 
+        LMPParallel par = new LMPParallel(fbm, BMLBlockPeg.GLOBALPEG, "bml1", "beh1", pegBoard, 
                 new ImmutableList.Builder<TimedAnimationUnit>().add(tmu1, tmu2).build());
         par.setTimePeg("strokeStart", TimePegUtil.createTimePeg(3));
         par.setTimePeg("strokeEnd", TimePegUtil.createTimePeg(5));
@@ -301,9 +301,9 @@ public class LMPParallelTest
         StubLMP tmu1 = createStub("bml1", "beh1-1", 1, 2, 3);
         StubLMP tmu2a = createStub("bml1", "beh1-2a", 2, 1, 2);
         StubLMP tmu2b = createStub("bml1", "beh1-2b", 1, 2, 3);
-        LMPSequence seq = new LMPSequence(fbm, BMLBlockPeg.GLOBALPEG, "bml1", "beh1", pegBoard,globalPegBoard, 
+        LMPSequence seq = new LMPSequence(fbm, BMLBlockPeg.GLOBALPEG, "bml1", "beh1", pegBoard, 
                 new ImmutableList.Builder<TimedAnimationUnit>().add(tmu2a, tmu2b).build());
-        LMPParallel par = new LMPParallel(fbm, BMLBlockPeg.GLOBALPEG, "bml1", "beh1-par", pegBoard,globalPegBoard, 
+        LMPParallel par = new LMPParallel(fbm, BMLBlockPeg.GLOBALPEG, "bml1", "beh1-par", pegBoard, 
                 new ImmutableList.Builder<TimedAnimationUnit>().add(tmu1).add(seq).build());
 
         par.setTimePeg("strokeStart", TimePegUtil.createTimePeg(3));

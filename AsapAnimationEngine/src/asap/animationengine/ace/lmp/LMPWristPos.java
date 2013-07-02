@@ -48,10 +48,10 @@ public class LMPWristPos extends LMPPos
     private double leftArmStartSwivel;
     private final String baseJoint;
 
-    public LMPWristPos(String scope, FeedbackManager bbf, BMLBlockPeg bmlBlockPeg, String bmlId, String id, PegBoard pegBoard, PegBoard globalPegBoard,
+    public LMPWristPos(String scope, FeedbackManager bbf, BMLBlockPeg bmlBlockPeg, String bmlId, String id, PegBoard pegBoard,
             GuidingSequence gSeq, String baseJoint, AnimationPlayer aniPlayer)
     {
-        super(bbf, bmlBlockPeg, bmlId, id, pegBoard, globalPegBoard);
+        super(bbf, bmlBlockPeg, bmlId, id, pegBoard);
         this.baseJoint = baseJoint;
         this.gSeq = gSeq;
         this.pegBoard = pegBoard;
@@ -78,6 +78,7 @@ public class LMPWristPos extends LMPPos
             float pos[] = spline.getPosition(t);
             float m[] = Mat4f.getMat4f();
             vjBase.getPathTransformMatrix(aniPlayer.getVCurr(), m);
+
             Mat4f.transformPoint(m, pos);
             return pos;
         }
@@ -92,7 +93,7 @@ public class LMPWristPos extends LMPPos
     {
         return true;
     }
-    
+
     public float[] getVelocity(double t)
     {
         if (spline != null)
@@ -283,14 +284,6 @@ public class LMPWristPos extends LMPPos
             }
 
             _spline = new NUSSpline3(4);
-            System.out.println("Times: " + Joiner.on(",").join(tv));
-            System.out.println("Points: ");
-            for (float[] point : pv)
-            {
-                System.out.print(Vec3f.toString(point) + ",");
-            }
-            System.out.println("");
-
             _spline.interpolate3(pv, tv, vv);
         }
 
@@ -425,25 +418,25 @@ public class LMPWristPos extends LMPPos
 
     protected void setInternalStrokeTiming(double time)
     {
-        double defaultStrokeDuration = getStrokeDuration();
-        if (getTimePeg("strokeStart").getGlobalValue() == TimePeg.VALUE_UNKNOWN
-                && getTimePeg("strokeEnd").getGlobalValue() != TimePeg.VALUE_UNKNOWN)
-        {
-            pegBoard.setPegTime(getBMLId(), getId(), "strokeStart", getTimePeg("strokeEnd").getGlobalValue() - defaultStrokeDuration);
-        }
-
-        if (getTimePeg("strokeEnd").getGlobalValue() == TimePeg.VALUE_UNKNOWN
-                && getTimePeg("strokeStart").getGlobalValue() != TimePeg.VALUE_UNKNOWN)
-        {
-            pegBoard.setPegTime(getBMLId(), getId(), "strokeEnd", getTimePeg("strokeStart").getGlobalValue() + defaultStrokeDuration);
-        }
+        // double defaultStrokeDuration = getStrokeDuration();
+        // if (getTimePeg("strokeStart").getGlobalValue() == TimePeg.VALUE_UNKNOWN
+        // && getTimePeg("strokeEnd").getGlobalValue() != TimePeg.VALUE_UNKNOWN)
+        // {
+        // pegBoard.setPegTime(getBMLId(), getId(), "strokeStart", getTimePeg("strokeEnd").getGlobalValue() - defaultStrokeDuration);
+        // }
+        //
+        // if (getTimePeg("strokeEnd").getGlobalValue() == TimePeg.VALUE_UNKNOWN
+        // && getTimePeg("strokeStart").getGlobalValue() != TimePeg.VALUE_UNKNOWN)
+        // {
+        // pegBoard.setPegTime(getBMLId(), getId(), "strokeEnd", getTimePeg("strokeStart").getGlobalValue() + defaultStrokeDuration);
+        // }
     }
 
     private float[] getGlobalWristPosition()
     {
         VJoint vj = aniPlayer.getVCurr().getPartBySid(getWristJointSid());
         float wristCurr[] = Vec3f.getVec3f();
-        vj.getPathTranslation(aniPlayer.getVCurr(), wristCurr);
+        vj.getPathTranslation(aniPlayer.getVCurr().getPart(baseJoint), wristCurr);
         return wristCurr;
     }
 
@@ -457,16 +450,20 @@ public class LMPWristPos extends LMPPos
         return wristJoint;
     }
 
-    // get preparation duration, given current hand position
+    // get estimated preparation duration, given current hand position if not started, start pos otherwise
     public double getPreparationDuration()
     {
         GuidingStroke gstroke = gSeq.getStroke(0);
-        return FittsLaw.getHandTrajectoryDuration(Vec3f.distanceBetweenPoints(gstroke.getEndPos(), getGlobalWristPosition()));
+        if (!isPlaying())
+        {
+            return FittsLaw.getHandTrajectoryDuration(Vec3f.distanceBetweenPoints(gstroke.getEndPos(), getGlobalWristPosition()));
+        }
+        return FittsLaw.getHandTrajectoryDuration(Vec3f.distanceBetweenPoints(gstroke.getEndPos(), gSeq.getStartPos()));
     }
 
     public double getRetractionDuration()
     {
-        return 0;
+        return 1; //properly handled in MCP
     }
 
     public double getStrokeDuration()

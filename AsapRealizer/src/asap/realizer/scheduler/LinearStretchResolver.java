@@ -31,28 +31,6 @@ public class LinearStretchResolver implements UniModalResolver
         this.resolveEndAsOffset = resolveEndAsOffset;
     }
     
-    // link synchpoints in sac to tmu
-    private void linkSynchs(TimedPlanUnit tmu, List<TimePegAndConstraint> sacs)
-    {
-        for (TimePegAndConstraint s : sacs)
-        {
-            for (String syncId : tmu.getAvailableSyncs())
-            {
-                if (s.syncId.equals(syncId))
-                {
-                    if (s.offset == 0)
-                    {
-                        tmu.setTimePeg(syncId, s.peg);
-                    }
-                    else
-                    {
-                        tmu.setTimePeg(syncId, new OffsetPeg(s.peg, -s.offset));
-                    }
-                }
-            }
-        }
-    }
-
     private void validateSyncs(TimedPlanUnit pu, Behaviour b, List<TimePegAndConstraint> sac) throws BehaviourPlanningException
     {
         for (TimePegAndConstraint s : sac)
@@ -69,6 +47,7 @@ public class LinearStretchResolver implements UniModalResolver
             throws BehaviourPlanningException
     {
         validateSyncs(pu, b, sac);
+
         // sort sac
         ArrayList<TimePegAndConstraint> sortedSac = new ArrayList<TimePegAndConstraint>();
         for (String syncId : pu.getAvailableSyncs())
@@ -83,7 +62,7 @@ public class LinearStretchResolver implements UniModalResolver
             }
         }
 
-        linkSynchs(pu, sortedSac);
+        pu.linkSynchs(sortedSac);
 
         // determine avg stretch
         int sections = 0;
@@ -117,7 +96,7 @@ public class LinearStretchResolver implements UniModalResolver
                         {
                             try
                             {
-                                startKey = pu.getRelativeTime(syncId);
+                                endKey = pu.getRelativeTime(syncId);
                             }
                             catch (SyncPointNotFoundException e)
                             {
@@ -167,7 +146,14 @@ public class LinearStretchResolver implements UniModalResolver
                     // if sacStart.resolveAsStartOffset is set, this just keeps
                     // the created temporary timepeg
                     // sacStart.peg.setValue(-sacStart.offset);
-                    sacStart.peg.setLocalValue(0);
+                    try
+                    {
+                        sacStart.peg.setLocalValue(pu.getRelativeTime(sacStart.syncId)*pu.getPreferedDuration());
+                    }
+                    catch (SyncPointNotFoundException e)
+                    {
+                        throw new BehaviourPlanningException(b, "RelativeSyncNotFoundException "+sacNext.syncId, e);
+                    }
                 }
                 else
                 {
@@ -190,8 +176,6 @@ public class LinearStretchResolver implements UniModalResolver
                     }
                     else
                     {
-                        // TODO: test this, it never happens with the smartbody
-                        // scheduler, it is always asked to resolve start
                         sacStart.peg.setGlobalValue(tStart + sacStart.offset);
                     }
                 }

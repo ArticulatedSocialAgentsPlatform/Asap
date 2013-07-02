@@ -50,9 +50,9 @@ public class LMPPoRot extends LMP
     private List<PoConstraint> poVec;
 
     public LMPPoRot(String scope, List<PoConstraint> poVec, FeedbackManager fbm, BMLBlockPeg bmlPeg, String bmlId, String behId,
-            PegBoard pegBoard, PegBoard globalPegBoard, AnimationPlayer aniPlayer)
+            PegBoard pegBoard, AnimationPlayer aniPlayer)
     {
-        super(fbm, bmlPeg, bmlId, behId, pegBoard, globalPegBoard);
+        super(fbm, bmlPeg, bmlId, behId, pegBoard);
         this.aniPlayer = aniPlayer;
         this.poVec = poVec;
 

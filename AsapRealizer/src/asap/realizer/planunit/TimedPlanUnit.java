@@ -6,6 +6,7 @@ import saiba.bml.feedback.BMLSyncPointProgressFeedback;
 import asap.realizer.SyncPointNotFoundException;
 import asap.realizer.pegboard.BMLBlockPeg;
 import asap.realizer.pegboard.TimePeg;
+import asap.realizer.scheduler.TimePegAndConstraint;
 
 /**
  * Units of the Unimodal Plan normally used in an Engine.
@@ -141,6 +142,12 @@ public interface TimedPlanUnit
      */
     double getRelativeTime(String syncId) throws SyncPointNotFoundException;
 
+    
+    /**
+     * Link timepegs to those in the TimedPlanUnit
+     */
+    void linkSynchs(List<TimePegAndConstraint> sacs);
+    
     /**
      * null is not set TODO: throw exception on not set instead?
      */

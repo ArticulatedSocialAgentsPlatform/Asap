@@ -13,7 +13,6 @@ import asap.motionunit.TMUPlayException;
 import asap.realizer.BehaviourPlanningException;
 import asap.realizer.feedback.FeedbackManager;
 import asap.realizer.pegboard.BMLBlockPeg;
-import asap.realizer.pegboard.OffsetPeg;
 import asap.realizer.pegboard.PegBoard;
 import asap.realizer.pegboard.TimePeg;
 import asap.realizer.planunit.TimedPlanUnitPlayException;
@@ -37,28 +36,6 @@ public class ProcAnimationGestureTMU extends TimedAnimationMotionUnit
     {
         super(bbf, bmlBlockPeg, bmlId, id, m, pb);
         mu = m;
-    }
-
-    // TODO: more or less duplicate with LinearStretchResolver
-    private void linkSynchs(List<TimePegAndConstraint> sacs)
-    {
-        for (TimePegAndConstraint s : sacs)
-        {
-            for (String syncId : getAvailableSyncs())
-            {
-                if (s.syncId.equals(syncId))
-                {
-                    if (s.offset == 0)
-                    {
-                        setTimePeg(syncId, s.peg);
-                    }
-                    else
-                    {
-                        setTimePeg(syncId, new OffsetPeg(s.peg, -s.offset));
-                    }
-                }
-            }
-        }
     }
 
     // TODO: more or less duplicate with LinearStretchResolver

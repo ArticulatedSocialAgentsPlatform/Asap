@@ -28,13 +28,11 @@ import com.google.common.collect.ImmutableSet;
 public abstract class LMP extends TimedAbstractPlanUnit implements TimedAnimationUnit
 {
     protected final PegBoard pegBoard;
-    private final PegBoard globalPegBoard;
-
-    public LMP(FeedbackManager fbm, BMLBlockPeg bmlPeg, String bmlId, String behId, PegBoard localPegBoard, PegBoard globalPegBoard)
+    
+    public LMP(FeedbackManager fbm, BMLBlockPeg bmlPeg, String bmlId, String behId, PegBoard localPegBoard)
     {
         super(fbm, bmlPeg, bmlId, behId, true);
         this.pegBoard = localPegBoard;
-        this.globalPegBoard = globalPegBoard;
         createPegWhenMissingOnPegBoard("start");
         createPegWhenMissingOnPegBoard("strokeStart");
         createPegWhenMissingOnPegBoard("strokeEnd");        
@@ -45,11 +43,6 @@ public abstract class LMP extends TimedAbstractPlanUnit implements TimedAnimatio
         return false;
     }
 
-    protected int getExternalSyncs(String syncId)
-    {
-        return globalPegBoard.getPegKeys(getTimePeg(syncId)).size();
-    }
-    
     @Override
     public List<String> getAvailableSyncs()
     {
@@ -183,6 +176,16 @@ public abstract class LMP extends TimedAbstractPlanUnit implements TimedAnimatio
     }
 
     protected abstract void setInternalStrokeTiming(double time);
+    
+    
+    public double getStrokeDuration(double time)
+    {
+        if(time>=getTime("strokeStart"))
+        {
+            return getTime("strokeEnd")-getTime("strokeStart"); 
+        }
+        return getStrokeDuration();
+    }
 
     protected int countInternalSyncs(Set<PegKey> pks, int currentCount)
     {
@@ -207,8 +210,11 @@ public abstract class LMP extends TimedAbstractPlanUnit implements TimedAnimatio
                 pegBoard.setPegTime(getBMLId(), getId(), "start", getTimePeg("strokeStart").getGlobalValue() - getPreparationDuration());
             }
         }        
-
-        setInternalStrokeTiming(time);
+        
+        if(time < getRelaxTime())
+        {
+            setInternalStrokeTiming(time);
+        }
 
         if (!isPlaying()&&!isDone())
         {

@@ -10,7 +10,9 @@ import saiba.bml.feedback.BMLSyncPointProgressFeedback;
 import asap.realizer.SyncPointNotFoundException;
 import asap.realizer.feedback.FeedbackManager;
 import asap.realizer.pegboard.BMLBlockPeg;
+import asap.realizer.pegboard.OffsetPeg;
 import asap.realizer.pegboard.TimePeg;
+import asap.realizer.scheduler.TimePegAndConstraint;
 
 /**
  * Skeleton implementation of TimedPlanUnit Keeps track of the TimedPlanUnit id information, BMLBlockPeg, feedback listener registration, provides a
@@ -38,6 +40,27 @@ public abstract class TimedAbstractPlanUnit implements TimedPlanUnit
         bmlBlockId = bmlId;
         state = new AtomicReference<TimedPlanUnitState>(TimedPlanUnitState.IN_PREP);
         subUnit = sub;    
+    }
+    
+    public void linkSynchs(List<TimePegAndConstraint> sacs)
+    {
+        for (TimePegAndConstraint s : sacs)
+        {
+            for (String syncId : getAvailableSyncs())
+            {
+                if (s.syncId.equals(syncId))
+                {
+                    if (s.offset == 0)
+                    {
+                        setTimePeg(syncId, s.peg);
+                    }
+                    else
+                    {
+                        setTimePeg(syncId, new OffsetPeg(s.peg, -s.offset));
+                    }
+                }
+            }
+        }
     }
     
     @Override
@@ -277,6 +300,11 @@ public abstract class TimedAbstractPlanUnit implements TimedPlanUnit
     public boolean isLurking()
     {
         return state.get().isLurking();
+    }
+    
+    public boolean isInExec()
+    {
+        return state.get().isInExec();
     }
 
     @Override
