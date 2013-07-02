@@ -60,8 +60,8 @@ public class MotorControlProgram extends TimedAbstractPlanUnit implements TimedA
     @Override
     public double getRetractionDuration()
     {
-        //return lmp.getRetractionDuration();
-        return 1;
+        return lmp.getRetractionDuration();
+        //return 1;
     }
 
     public void resolveSynchs(BMLBlockPeg bbPeg) throws BehaviourPlanningException
