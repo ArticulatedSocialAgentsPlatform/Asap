@@ -152,11 +152,12 @@ public class FeedbackManagerImpl implements FeedbackManager
     {
         synchronized (feedbackListeners)
         {
+            String feedbackString = bpf.toXMLString();
             for (BMLFeedbackListener pl : feedbackListeners)
             {
                 try
                 {
-                    pl.feedback(bpf.toXMLString());
+                    pl.feedback(feedbackString);
                 }
                 catch (Exception ex)
                 {

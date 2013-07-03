@@ -18,10 +18,7 @@
  ******************************************************************************/
 package asap.realizer.scheduler;
 
-import saiba.bml.core.Behaviour;
-import saiba.bml.core.BehaviourBlock;
-import saiba.bml.feedback.BMLSyncPointProgressFeedback;
-import saiba.bml.parser.BMLParser;
+import hmi.util.Clock;
 
 import java.util.ArrayList;
 import java.util.Collection;
@@ -37,6 +34,16 @@ import lombok.Delegate;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import saiba.bml.core.Behaviour;
+import saiba.bml.core.BehaviourBlock;
+import saiba.bml.feedback.BMLBlockPredictionFeedback;
+import saiba.bml.feedback.BMLBlockProgressFeedback;
+import saiba.bml.feedback.BMLPredictionFeedback;
+import saiba.bml.feedback.BMLSyncPointProgressFeedback;
+import saiba.bml.feedback.BMLWarningFeedback;
+import saiba.bml.parser.BMLParser;
+import saiba.bml.parser.InvalidSyncRefException;
+import saiba.bml.parser.SyncPoint;
 import asap.realizer.BehaviorNotFoundException;
 import asap.realizer.Engine;
 import asap.realizer.SyncPointNotFoundException;
@@ -49,11 +56,6 @@ import asap.realizer.pegboard.TimePeg;
 import asap.realizer.planunit.ParameterException;
 import asap.realizer.planunit.TimedPlanUnitState;
 import asap.realizerport.BMLFeedbackListener;
-import hmi.util.Clock;
-import saiba.bml.feedback.BMLBlockPredictionFeedback;
-import saiba.bml.feedback.BMLPredictionFeedback;
-import saiba.bml.feedback.BMLWarningFeedback;
-import saiba.bml.feedback.BMLBlockProgressFeedback;
 
 import com.google.common.collect.ImmutableSet;
 
@@ -65,6 +67,8 @@ import com.google.common.collect.ImmutableSet;
  */
 public final class BMLScheduler
 {
+    private Map<String,BehaviourBlock> bmlBlockMap = new HashMap<String,BehaviourBlock>();
+    
     private final Logger logger = LoggerFactory.getLogger(BMLScheduler.class.getName());
 
     private final BMLParser parser;
@@ -316,6 +320,61 @@ public final class BMLScheduler
     {
         return anticipators.values().size();
     }
+    
+    private void addBehaviorPredictions(BehaviourBlock bb, BMLPredictionFeedback bpf)
+    {
+        for(Behaviour b:bb.behaviours)
+        {
+            Behaviour bPred = b;
+            bPred.removeSyncPoints(b.getSyncPoints());
+            double start = pegBoard.getRelativePegTime(bb.id, b.id, "start");
+            double end = pegBoard.getRelativePegTime(bb.id, b.id, "end");
+            if(start!=TimePeg.VALUE_UNKNOWN)
+            {
+                SyncPoint sp = new SyncPoint(bb.getBmlId(),b.id, "start");
+                try
+                {
+                    sp.setRefString(""+start);
+                }
+                catch (InvalidSyncRefException e)
+                {
+                    throw new AssertionError(e);
+                }
+                bPred.addSyncPoint(sp);
+            }
+            if(end!=TimePeg.VALUE_UNKNOWN)
+            {
+                SyncPoint sp = new SyncPoint(bb.getBmlId(),b.id, "end");
+                try
+                {
+                    sp.setRefString(""+end);
+                }
+                catch (InvalidSyncRefException e)
+                {
+                    throw new AssertionError(e);
+                }
+                bPred.addSyncPoint(sp);
+            }
+            bpf.addBehaviorPrediction(bPred);
+        }
+        
+    }
+    
+    private BMLPredictionFeedback createBehaviorPrediction(BehaviourBlock bb)
+    {
+        BMLPredictionFeedback bpf = new BMLPredictionFeedback();
+        addBehaviorPredictions(bb, bpf);
+        return bpf;
+    }
+    
+    private BMLPredictionFeedback createFilledBlockPrediction(BehaviourBlock bb, double predictedStart, double predictedEnd)
+    {
+        BMLPredictionFeedback bpf = new BMLPredictionFeedback();
+        BMLBlockPredictionFeedback bp = new BMLBlockPredictionFeedback(bb.getBmlId(), predictedStart, predictedEnd);
+        bpf.addBMLBlockPrediction(bp);        
+        addBehaviorPredictions(bb,bpf);
+        return bpf;
+    }
 
     private BMLPredictionFeedback createSingleBlockPrediction(String bmlId, double predictedStart, double predictedEnd)
     {
@@ -330,9 +389,9 @@ public final class BMLScheduler
         prediction(createSingleBlockPrediction(bmlId,predictedStart,BMLBlockPredictionFeedback.UNKNOWN_TIME));
     }
 
-    public void planningFinished(String bmlId, double predictedStart, double predictedEnd)
+    public void planningFinished(BehaviourBlock bb, double predictedStart, double predictedEnd)
     {
-        prediction(createSingleBlockPrediction(bmlId,predictedStart,predictedEnd));        
+        prediction(createFilledBlockPrediction(bb,predictedStart,predictedEnd));        
     }
 
     /**
@@ -468,10 +527,10 @@ public final class BMLScheduler
      */
     public void schedule()
     {
-
         for (BehaviourBlock bb : parser.getBehaviourBlocks())
         {
-            schedulingHandler.schedule(bb, this);
+            bmlBlockMap.put(bb.id, bb);
+            schedulingHandler.schedule(bb, this);            
         }
         parser.clear();
     }
@@ -550,6 +609,7 @@ public final class BMLScheduler
         pegBoard.setBMLBlockTime(bmlId, schedulingClock.getMediaSeconds());
         logger.debug("Starting bml block {}", bmlId);
 
+        prediction(this.createBehaviorPrediction(bmlBlockMap.get(bmlId)));
         bmlBlocksManager.startBlock(bmlId);
 
         for (Engine e : getEngines())

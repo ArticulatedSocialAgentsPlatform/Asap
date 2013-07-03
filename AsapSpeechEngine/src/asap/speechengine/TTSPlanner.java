@@ -254,10 +254,11 @@ public class TTSPlanner extends AbstractPlanner<TimedTTSUnit>
         linkStartAndEnd(b, sacs, bs);
         ArrayList<SyncAndTimePeg> satp = new ArrayList<SyncAndTimePeg>();
         satp.add(new SyncAndTimePeg(b.getBmlId(), b.id, "start", bs.getStartPeg()));
-        if (bs.getEndPeg() != null)
+        if (bs.getEndPeg() == null)
         {
-            satp.add(new SyncAndTimePeg(b.getBmlId(), b.id, "end", bs.getEndPeg()));
+            bs.setEnd(new OffsetPeg(bs.getStartPeg(), bs.getPreferedDuration()));
         }
+        satp.add(new SyncAndTimePeg(b.getBmlId(), b.id, "end", bs.getEndPeg()));
         linkBookmarks(bs, sacs, bs.getStartTime(), b);
 
         // find pegs
