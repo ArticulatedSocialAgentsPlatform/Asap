@@ -9,6 +9,7 @@ import asap.realizer.feedback.FeedbackManager;
 import asap.realizer.pegboard.BMLBlockPeg;
 import asap.realizer.pegboard.PegBoard;
 import asap.realizer.pegboard.TimePeg;
+import asap.realizer.planunit.Priority;
 import asap.realizer.planunit.TimedPlanUnitPlayException;
 import asap.realizer.scheduler.TimePegAndConstraint;
 
@@ -193,6 +194,10 @@ public class MURMLKeyframeTMU extends TimedAnimationMotionUnit
     @Override
     protected void relaxUnit(double time) throws TimedPlanUnitPlayException
     {
+        if(getPriority()>=Priority.GESTURE_RETRACTION)
+        {
+            setPriority(Priority.GESTURE_RETRACTION);
+        }
         getTimePeg("end").setGlobalValue(time + mu.getRetractionDurationFromCurrent());
         mu.setupRelaxUnit();
         super.relaxUnit(time);

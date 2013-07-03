@@ -72,8 +72,8 @@ public class AnimationPlanner extends AbstractPlanner<TimedAnimationUnit>
         BMLInfo.addDescriptionExtension(MURMLGestureBehaviour.xmlTag(), MURMLGestureBehaviour.class);
     }
 
-    public AnimationPlanner(FeedbackManager bfm, AnimationPlayer p, GestureBinding g, Hns hns, HnsHandshape hnsHandshapes, PlanManager<TimedAnimationUnit> planManager,
-            PegBoard pb)
+    public AnimationPlanner(FeedbackManager bfm, AnimationPlayer p, GestureBinding g, Hns hns, HnsHandshape hnsHandshapes,
+            PlanManager<TimedAnimationUnit> planManager, PegBoard pb)
     {
         super(bfm, planManager);
         pegBoard = pb;
@@ -138,17 +138,17 @@ public class AnimationPlanner extends AbstractPlanner<TimedAnimationUnit>
             // apply syncs to tmu
             resolveDefaultKeyPositions(b, (TimedAnimationMotionUnit) tmu);
         }
-        
+
         linkSynchs(tmu, sacs);
 
-        for(String sync: tmu.getAvailableSyncs())
+        for (String sync : tmu.getAvailableSyncs())
         {
             TimePeg tp = tmu.getTimePeg(sync);
-            if(tp!=null)
+            if (tp != null)
             {
                 satps.add(new SyncAndTimePeg(b.getBmlId(), b.id, sync, tp));
             }
-        } 
+        }
 
         planManager.addPlanUnit(tmu);
         return satps;
@@ -161,7 +161,7 @@ public class AnimationPlanner extends AbstractPlanner<TimedAnimationUnit>
         TimedAnimationUnit tmu = createTAU(bbPeg, b);
         if (tmu instanceof TimedAnimationMotionUnit) // XXX ugly...
         {
-            resolveDefaultKeyPositions(b, (TimedAnimationMotionUnit) tmu);            
+            resolveDefaultKeyPositions(b, (TimedAnimationMotionUnit) tmu);
         }
         tmu.resolveSynchs(bbPeg, b, sac);
         return tmu;
@@ -179,7 +179,7 @@ public class AnimationPlanner extends AbstractPlanner<TimedAnimationUnit>
             }
             catch (TMUSetupException e)
             {
-                throw new BehaviourPlanningException(b, "MURMLGestureBehaviour " + b.id + " could not be constructed: "+e.getMessage(), e);
+                throw new BehaviourPlanningException(b, "MURMLGestureBehaviour " + b.id + " could not be constructed: " + e.getMessage(), e);
             }
         }
         else if (b instanceof PostureShiftBehaviour)
