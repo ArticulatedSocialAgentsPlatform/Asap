@@ -131,6 +131,7 @@ public class TTSPlannerTest extends AbstractSpeechPlannerTest<TimedTTSUnit>
         SpeechBehaviour beh = createSpeechBehaviour(SPEECHID, BMLID, "xmlns:bmlt=\"" + BMLTBehaviour.BMLTNAMESPACE
                 + "\" bmlt:voice=\"testvoice\"", SPEECHTEXT);
         ArrayList<TimePegAndConstraint> sacs = new ArrayList<TimePegAndConstraint>();
+        sacs.add(new TimePegAndConstraint("start", TimePegUtil.createTimePeg(bbPeg, 0), new Constraint(), 0, true));        
         speechPlanner.addBehaviour(bbPeg, beh, sacs, null);
         verify(mockTTSBinding).setVoice("testvoice");
     }
