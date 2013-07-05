@@ -113,7 +113,7 @@ public class BMLASchedulingHandlerTest
         assertEquals(TimedPlanUnitState.LURKING, block.getState());
         assertBlockPegAdded("bml1", 3d);
         verify(mockScheduler, times(1)).planningStart("bml1", 3d);
-        verify(mockScheduler, times(1)).planningFinished(eq("bml1"), eq(3d), anyDouble());
+        verify(mockScheduler, times(1)).planningFinished(eq(bb), eq(3d), anyDouble());
     }
 
     @Test
@@ -128,7 +128,7 @@ public class BMLASchedulingHandlerTest
         assertEquals(TimedPlanUnitState.LURKING, block.getState());
         assertBlockPegAdded("bml1", 0d);
         verify(mockScheduler, times(1)).planningStart("bml1", 0d);
-        verify(mockScheduler, times(1)).planningFinished(eq("bml1"), eq(0d), anyDouble());
+        verify(mockScheduler, times(1)).planningFinished(eq(bb), eq(0d), anyDouble());
     }
 
     @Test
@@ -145,7 +145,7 @@ public class BMLASchedulingHandlerTest
         assertThat(block, instanceOf(BMLBBlock.class));
         assertEquals(TimedPlanUnitState.LURKING, block.getState());
         verify(mockScheduler, times(1)).planningStart("bml1", 3d);
-        verify(mockScheduler, times(1)).planningFinished(eq("bml1"), eq(3d), anyDouble());
+        verify(mockScheduler, times(1)).planningFinished(eq(bb), eq(3d), anyDouble());
     }
 
     @Test
@@ -163,7 +163,7 @@ public class BMLASchedulingHandlerTest
         assertEquals(TimedPlanUnitState.LURKING, block.getState());
         assertBlockPegAdded("bml1", 3d);
         verify(mockScheduler, times(1)).planningStart("bml1", 3d);
-        verify(mockScheduler, times(1)).planningFinished(eq("bml1"), eq(3d), anyDouble());
+        verify(mockScheduler, times(1)).planningFinished(eq(bb), eq(3d), anyDouble());
     }
 
     @Test
