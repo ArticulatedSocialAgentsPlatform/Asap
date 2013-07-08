@@ -285,66 +285,64 @@ public class AnimationPlayer implements Player, MixedAnimationPlayer
     public synchronized void playStep(double prevTime)
     {
         log.debug("time {}", prevTime);
-
         setAdditiveToIdentity();
-
         controllers.clear();
         prevValidOld = prevValid;
+        
+        playKinematics(prevTime);
+        playPhysics(prevTime);
+    }
 
-        // play kinematics
-        if (prevValid)
+    private void playPhysics(double prevTime)
+    {
+        List<String> controlledJoints = getRequiredPhJoints();
+        MixedSystem bestMatch = getBestMixedSystemMatch(controlledJoints, getDesiredPhJoints(controlledJoints));
+        
+        synchronized (PhysicsSync.getSync())
         {
-            votcCurrToPrev.copyConfig();
-            votcNextToCurr.copyConfig();
-            setVNextToIdentity();
-            app.play(prevTime);
-            additiveBlender.blend();
-        }
-        else
-        {
-            setVNextToIdentity();
-            app.play(prevTime);
-            additiveBlender.blend();
-
-            votcNextToCurr.copyConfig();
-            votcCurrToPrev.copyConfig();
-            prevValid = true;
-        }
-        applyCurrentOnVNext();
-
-        ArrayList<String> controlledJoints = new ArrayList<String>();
-        for (PhysicalController p : controllers)
-        {
-            for (String jid : p.getRequiredJointIDs())
+            if (bestMatch==null)
             {
-                if (!controlledJoints.contains(jid))
+                log.warn("Could not find a mixed system that contains joints: {} ", controlledJoints);
+                bestMatch = mPlayer.getSystem();
+            }
+
+            if (bestMatch != mPlayer.getSystem())
+            {
+                log.debug("Switching system {}", prevTime);
+                mPlayer.switchSystem(bestMatch, stepTime, vPrev, vCurr, vNext, prevValidOld);
+                pHuman.setEnabled(false);
+                pHuman = mPlayer.getSystem().getPHuman();
+                pHuman.setEnabled(true);
+                for (PhysicalController p : controllers)
                 {
-                    controlledJoints.add(jid);
+                    p.setPhysicalHumanoid(pHuman);
                 }
             }
-        }
+            mPlayer.play(stepTime);
+            pHuman.updateCOM(stepTime);
 
-        ArrayList<String> desiredJoints = new ArrayList<String>();
-        for (PhysicalController p : controllers)
-        {
-            for (String jid : p.getDesiredJointIDs())
+            for (PhysicalController p : controllers)
             {
-                if (!desiredJoints.contains(jid) && !controlledJoints.contains(jid))
-                {
-                    desiredJoints.add(jid);
-                }
+                p.setPhysicalHumanoid(pHuman); // Could be done more elegantly,
+                                               // not needed to do this every
+                                               // frame?
+                // But at least ensures that the controller always runs on the
+                // correct physical humanoid now.
+                p.update(stepTime);
             }
         }
+    }
 
-        // The best matching mSystem is the one that has (in order of importance):
-        // 1. All required joints for all controllers
-        // 2. The most matching desired joints
-        // 3. The least total number of physical joints
-        // Note that desired physical joints, when selected, still override the kinematic motion on the same joint
-        MixedSystem bestMatch = mPlayer.getSystem();
+    // The best matching mSystem is the one that has (in order of importance):
+    // 1. All required joints for all controllers
+    // 2. The most matching desired joints
+    // 3. The least total number of physical joints
+    // Note that desired physical joints, when selected, still override the kinematic motion on the same joint
+    private MixedSystem getBestMixedSystemMatch(List<String> controlledJoints, List<String> desiredJoints)
+    {        
+        MixedSystem bestMatch = null;
         int jointsInPH = Integer.MAX_VALUE;
         int nrOfDesiredJoints = -1;
-        boolean foundMatch = false;
         for (MixedSystem m : mSystems)
         {
             PhysicalHumanoid ph = m.getPHuman();
@@ -395,53 +393,74 @@ public class AnimationPlayer implements Player, MixedAnimationPlayer
                 {
                     nrOfDesiredJoints = dJoints;
                     bestMatch = m;
-                    jointsInPH = ph.getJoints().size();
-                    foundMatch = true;
+                    jointsInPH = ph.getJoints().size();                    
                 }
                 else if (dJoints == nrOfDesiredJoints)
                 {
                     if (ph.getJoints().size() < jointsInPH)
                     {
                         bestMatch = m;
-                        jointsInPH = ph.getJoints().size();
-                        foundMatch = true;
+                        jointsInPH = ph.getJoints().size();                        
                     }
                 }
             }
         }
-        // play physics
-        synchronized (PhysicsSync.getSync())
-        {
-            if (!foundMatch)
-            {
-                log.warn("Could not find a mixed system that contains joints: {} ", controlledJoints);
-            }
+        return bestMatch;
+    }
 
-            if (bestMatch != mPlayer.getSystem())
+    private List<String> getDesiredPhJoints(List<String> controlledJoints)
+    {
+        ArrayList<String> desiredJoints = new ArrayList<String>();
+        for (PhysicalController p : controllers)
+        {
+            for (String jid : p.getDesiredJointIDs())
             {
-                log.debug("Switching system {}", prevTime);
-                mPlayer.switchSystem(bestMatch, stepTime, vPrev, vCurr, vNext, prevValidOld);
-                pHuman.setEnabled(false);
-                pHuman = mPlayer.getSystem().getPHuman();
-                pHuman.setEnabled(true);
-                for (PhysicalController p : controllers)
+                if (!desiredJoints.contains(jid) && !controlledJoints.contains(jid))
                 {
-                    p.setPhysicalHumanoid(pHuman);
+                    desiredJoints.add(jid);
                 }
             }
-            mPlayer.play(stepTime);
-            pHuman.updateCOM(stepTime);
-
-            for (PhysicalController p : controllers)
-            {
-                p.setPhysicalHumanoid(pHuman); // Could be done more elegantly,
-                                               // not needed to do this every
-                                               // frame?
-                // But at least ensures that the controller always runs on the
-                // correct physical humanoid now.
-                p.update(stepTime);
-            }
         }
+        return desiredJoints;
+    }
+
+    private List<String> getRequiredPhJoints()
+    {
+        ArrayList<String> controlledJoints = new ArrayList<String>();
+        for (PhysicalController p : controllers)
+        {
+            for (String jid : p.getRequiredJointIDs())
+            {
+                if (!controlledJoints.contains(jid))
+                {
+                    controlledJoints.add(jid);
+                }
+            }            
+        }
+        return controlledJoints;
+    }
+
+    private void playKinematics(double prevTime)
+    {
+        if (prevValid)
+        {
+            votcCurrToPrev.copyConfig();
+            votcNextToCurr.copyConfig();
+            setVNextToIdentity();
+            app.play(prevTime);
+            additiveBlender.blend();
+        }
+        else
+        {
+            setVNextToIdentity();
+            app.play(prevTime);
+            additiveBlender.blend();
+
+            votcNextToCurr.copyConfig();
+            votcCurrToPrev.copyConfig();
+            prevValid = true;
+        }
+        applyCurrentOnVNext();
     }
 
     public synchronized void copyPhysics()
