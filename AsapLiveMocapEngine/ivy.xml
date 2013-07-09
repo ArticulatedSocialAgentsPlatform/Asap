@@ -11,7 +11,7 @@
       <dependency org="HMI"   name="HmiJComponentEnvironment"             rev="latest.${resolve.status}"   />
       <dependency org="slf4j"  name="slf4j-api"      rev="latest.release"  />
       <dependency org="lombok" name="lombok"          rev="latest.release"  />
-      <dependency org="saiba" name="saibabml"          rev="latest.release"  />
+      <dependency org="saiba" name="openbmlparser"          rev="latest.release"  />
       <dependency org="google" name="guava"          rev="latest.release"  />
    </dependencies>
 </ivy-module>

@@ -65,7 +65,7 @@
       <!-- for tests with SAPI -->
       <dependency org="HMI"      name="HmiTTSnative"        rev="latest.${resolve.status}"  />
 	
-      <dependency org="saiba"     name="saibabml"           rev="latest.release"    />
+      <dependency org="saiba"     name="openbmlparser"           rev="latest.release"    />
       <dependency org="lwjgl"    name="lwjgl"            rev="latest.release"  />   
       <dependency org="Sun"      name="jlfgr"              rev="latest.release"  />   
       <dependency org="singularsystems"   name="jep"       rev="latest.release"  />   

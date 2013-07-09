@@ -17,7 +17,7 @@
 	  <dependency org="Asap"   name="AsapRealizer"             transitive="false" rev="latest.${resolve.status}"   />
 	  <dependency org="Asap"   name="AsapRealizerEmbodiments"             rev="latest.${resolve.status}"   />
       
-	  <dependency org="saiba"     name="saibabml"           rev="latest.release"    />
+	  <dependency org="saiba"     name="openbmlparser"           rev="latest.release"    />
       <dependency org="aldebaran"  name="jnaoqi"      rev="latest.release"  />
       <dependency org="slf4j"  name="slf4j-api"      rev="latest.release"  />
 

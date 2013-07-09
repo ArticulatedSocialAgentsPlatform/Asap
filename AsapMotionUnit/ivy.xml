@@ -5,7 +5,7 @@
       <dependency org="Asap"     name="AsapMath"           rev="latest.${resolve.status}"    />
       <dependency org="HMI"     name="HmiUtil"           rev="latest.${resolve.status}"    />
       <dependency org="HMI"     name="HmiXml"           rev="latest.${resolve.status}"    />
-      <dependency org="saiba"     name="saibabml"           rev="latest.release"    />
+      <dependency org="saiba"     name="openbmlparser"           rev="latest.release"    />
       
       <!-- TODO: This dependency should be factored out -->
       <dependency org="Asap"     name="AsapRealizer"      transitive="false"    rev="latest.${resolve.status}"    />

@@ -9,6 +9,6 @@
 	   <dependency org="Asap"      transitive="false" name="AsapRealizerTestUtil"        rev="latest.{$resolve.status}"  />
 	   <dependency org="Asap"      transitive="false" name="AsapTestUtil"        rev="latest.{$resolve.status}"  />
 	   <dependency org="Asap"      transitive="false" name="AsapRealizerPort"        rev="latest.{$resolve.status}"  />
-	   <dependency org="saiba" name="saibabml-test"       rev="latest.release"  />
+	   <dependency org="saiba" name="openbmlparser-test"       rev="latest.release"  />
    </dependencies>
 </ivy-module>

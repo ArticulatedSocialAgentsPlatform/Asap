@@ -54,7 +54,7 @@
       <dependency org="odejava"  name="odejava"            rev="latest.release"  />   
       <dependency org="JogAmp" name="jogl" rev="latest.beta"  />  
       
-      <dependency org="saiba"     name="saibabml"           rev="latest.${resolve.status}"    />
+      <dependency org="saiba"     name="openbmlparser"           rev="latest.${resolve.status}"    />
       <dependency org="jcip"     name="jcip-annotations"   rev="latest.release"  />   
 
       <dependency org="lwjgl"    name="lwjgl"            rev="latest.release"  />   
