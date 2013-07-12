@@ -204,6 +204,12 @@ public class DefaultEngine<T extends TimedPlanUnit> implements Engine
     {
         return id;
     }
+    
+    @Override
+    public String toString()
+    {
+        return id;
+    }
 
     @Override
     public double getRigidity(Behaviour beh)
