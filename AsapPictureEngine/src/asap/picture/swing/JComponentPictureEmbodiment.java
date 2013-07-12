@@ -10,6 +10,7 @@ import hmi.util.ArrayUtils;
 import hmi.xml.XMLScanException;
 import hmi.xml.XMLTokenizer;
 
+import java.awt.GridLayout;
 import java.io.IOException;
 
 import javax.swing.JPanel;
@@ -51,6 +52,7 @@ public class JComponentPictureEmbodiment implements EmbodimentLoader, PictureEmb
         
         
         JPanel jPanel = new JPanel();
+        jPanel.setLayout(new GridLayout(1,1));
         display = new PictureJComponent(jPanel);
         jce.addJComponent(jPanel);
     }

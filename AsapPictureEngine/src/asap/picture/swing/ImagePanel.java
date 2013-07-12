@@ -1,6 +1,5 @@
 package asap.picture.swing;
 
-import java.awt.Dimension;
 import java.awt.Graphics;
 import java.awt.Image;
 import java.util.Collection;
@@ -11,15 +10,11 @@ public class ImagePanel extends JComponent
 {
     private static final long serialVersionUID = 1L;
 
-    private static final int WIDTH = 400;
-    private static final int HEIGHT = 400;
-
     private Collection<Image> images;
 
     public ImagePanel()
     {
-        super();
-        setPreferredSize(new Dimension(WIDTH, HEIGHT));
+        super();        
     }
 
     public void drawPicture(Collection<Image> images)
