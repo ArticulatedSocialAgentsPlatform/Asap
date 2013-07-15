@@ -26,6 +26,7 @@ public class HnsTest
     private String hnsXML=
     "<hns>"+
       "<basejoint sid=\"vl5\"/>"+
+      "<autoswivel minSwivel=\"-2\" maxSwivel=\"1\" freedomOfTheGaussianMean=\"0.1\"/>"+      
       "<symbols>"+
         "<symbol class=\"handReferences\" name=\"LocAboveHead\" value=\"60\"/>"+
         "<symbol class=\"handReferences\" name=\"LocHead\" value=\"54\"/>" +
@@ -180,5 +181,13 @@ public class HnsTest
         float [] dir = Vec3f.getVec3f(1,2,3);
         Vec3f.normalize(dir);
         assertVec3fEquals(dir, direction, PRECISION);
+    }
+    
+    @Test
+    public void testAutoSwivelParameters()
+    {
+        assertEquals(-2, hns.getMinSwivel(), PRECISION);
+        assertEquals(1, hns.getMaxSwivel(), PRECISION);
+        assertEquals(0.1, hns.getSwivelFreedomOfTheGaussianMean(), PRECISION);
     }
 }
