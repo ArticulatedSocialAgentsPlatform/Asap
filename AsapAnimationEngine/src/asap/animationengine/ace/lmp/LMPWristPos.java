@@ -4,6 +4,7 @@ import hmi.animation.Hanim;
 import hmi.animation.VJoint;
 import hmi.math.Mat4f;
 import hmi.math.Vec3f;
+import hmi.neurophysics.BiologicalSwivelCostsEvaluator;
 import hmi.neurophysics.FittsLaw;
 
 import java.util.ArrayList;
@@ -26,7 +27,6 @@ import asap.realizer.pegboard.PegBoard;
 import asap.realizer.pegboard.TimePeg;
 import asap.realizer.planunit.TimedPlanUnitPlayException;
 
-import com.google.common.base.Joiner;
 import com.google.common.collect.ImmutableSet;
 
 /**
@@ -44,14 +44,16 @@ public class LMPWristPos extends LMPPos
     private AnimationPlayer aniPlayer;
     private IKBody ikBody;
     private String scope;
-    private double rightArmStartSwivel;
-    private double leftArmStartSwivel;
+    private double rightArmStartSwivel, rightArmDesiredSwivel;
+    private double leftArmStartSwivel, leftArmDesiredSwivel;
     private final String baseJoint;
+    private final BiologicalSwivelCostsEvaluator autoSwivel;
 
     public LMPWristPos(String scope, FeedbackManager bbf, BMLBlockPeg bmlBlockPeg, String bmlId, String id, PegBoard pegBoard,
-            GuidingSequence gSeq, String baseJoint, AnimationPlayer aniPlayer)
+            GuidingSequence gSeq, String baseJoint, AnimationPlayer aniPlayer, BiologicalSwivelCostsEvaluator swEval)
     {
         super(bbf, bmlBlockPeg, bmlId, id, pegBoard);
+        this.autoSwivel = swEval;
         this.baseJoint = baseJoint;
         this.gSeq = gSeq;
         this.pegBoard = pegBoard;
@@ -135,6 +137,8 @@ public class LMPWristPos extends LMPPos
             gSeq.setST(new TPConstraint(time));
             rightArmStartSwivel = ikBody.getSwivelRightArm();
             leftArmStartSwivel = ikBody.getSwivelLeftArm();
+            rightArmDesiredSwivel = autoSwivel.getSwivelAngleWithMinCost(rightArmStartSwivel);
+            leftArmDesiredSwivel = autoSwivel.getSwivelAngleWithMinCost(leftArmStartSwivel);
             refine();
         }
         else
@@ -354,14 +358,14 @@ public class LMPWristPos extends LMPPos
             double relT = (time - getStartTime()) / (getTime("strokeStart") - getStartTime());
             if (scope.equals("left_arm"))
             {
-                swivel = leftArmStartSwivel + (0 - leftArmStartSwivel) * relT;
+                swivel = leftArmStartSwivel + (leftArmDesiredSwivel - leftArmStartSwivel) * relT;
             }
             else
             {
-                swivel = rightArmStartSwivel + (0 - rightArmStartSwivel) * relT;
+                swivel = rightArmStartSwivel + (rightArmDesiredSwivel - rightArmStartSwivel) * relT;
             }
         }
-
+        //System.out.println("swivel: "+swivel+" leftArmDesiredSwivel "+leftArmDesiredSwivel+ "rightArmDesiredSwivel "+rightArmDesiredSwivel);
         if (time < getTime("strokeEnd"))
         {
             double t = time;
@@ -376,12 +380,12 @@ public class LMPWristPos extends LMPPos
             float pos[] = getPosition(t);
             if (scope.equals("left_arm"))
             {
-                // ikBody.setSwivelLeftHand(swivel);
+                ikBody.setSwivelLeftHand(leftArmDesiredSwivel);
                 ikBody.setLeftHand(pos);
             }
             else
             {
-                // ikBody.setSwivelRightHand(swivel);
+                ikBody.setSwivelRightHand(rightArmDesiredSwivel);
                 ikBody.setRightHand(pos);
             }
         }

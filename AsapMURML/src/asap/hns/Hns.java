@@ -25,9 +25,6 @@ public class Hns extends XMLStructureAdapter
 {
     private Map<String, String> settings = new HashMap<>(); // name->value map
     private Map<String, Map<String, Double>> symbols = new HashMap<>(); // className->(name->value)
-    private double minSwivel = 0;
-    private double maxSwivel = 0;
-    private double freedomOfTheGaussianMean = 0;
     
     @Getter
     private String baseJoint = "HumanoidRoot";
@@ -69,19 +66,39 @@ public class Hns extends XMLStructureAdapter
         Sym, SymMS, SymMT, SymMF, SymMST, SymMSF, SymMTF, SymMSTF
     }
 
-    public double getMinSwivel()
+    public double getMinSwivelLeft()
     {
-        return minSwivel;
+        return -2.5;
     }
     
-    public double getMaxSwivel()
+    public double getMaxSwivelLeft()
     {
-        return maxSwivel;
+        return 1;
     }
     
-    public double getSwivelFreedomOfTheGaussianMean()
+    public double getMinSwivelRight()
     {
-        return freedomOfTheGaussianMean;
+        return -1;
+    }
+    
+    public double getMaxSwivelRight()
+    {
+        return 2.5;
+    }
+    
+    public double getSwivelSigmaOfGaussianCostsDistribution()
+    {
+        return 0.4;
+    }
+    
+    public double getSwivelFreedomOfTheGaussianMeanLeft()
+    {
+        return 0;
+    }
+    
+    public double getSwivelFreedomOfTheGaussianMeanRight()
+    {
+        return 0;
     }
     
     public Set<String> getBasicHandShapes()
@@ -542,14 +559,7 @@ public class Hns extends XMLStructureAdapter
         while (tokenizer.atSTag())
         {
             switch (tokenizer.getTagName())
-            {
-            case AutoSwivel.XMLTAG:
-                AutoSwivel as = new AutoSwivel();
-                as.readXML(tokenizer);
-                freedomOfTheGaussianMean = as.getFreedomOfTheGaussianMean();
-                minSwivel = as.getMinSwivel();
-                maxSwivel = as.getMaxSwivel();
-                break;
+            {            
             case BaseJoint.XMLTAG:
                 BaseJoint bj = new BaseJoint();
                 bj.readXML(tokenizer);

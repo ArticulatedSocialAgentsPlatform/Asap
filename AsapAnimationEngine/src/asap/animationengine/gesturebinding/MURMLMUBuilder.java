@@ -3,6 +3,7 @@ package asap.animationengine.gesturebinding;
 import hmi.animation.SkeletonPose;
 import hmi.math.Quat4f;
 import hmi.math.Vec3f;
+import hmi.neurophysics.BiologicalSwivelCostsEvaluator;
 import hmi.neurophysics.FittsLaw;
 
 import java.util.ArrayList;
@@ -444,7 +445,7 @@ public final class MURMLMUBuilder
         return ocVec;
     }
 
-    private LMP createAndAppendLMPWrist(String scope, FeedbackManager bbm, BMLBlockPeg bmlBlockPeg, String bmlId, String id, PegBoard pb, 
+    private LMP createAndAppendLMPWrist(String scope, FeedbackManager bbm, BMLBlockPeg bmlBlockPeg, String bmlId, String id, PegBoard pb,
             AnimationPlayer aniPlayer, List<OrientConstraint> ocVec)
     {
         // -- create lmp and append to motor program
@@ -546,7 +547,7 @@ public final class MURMLMUBuilder
         return addLMPPoRot(scope, bbm, bmlBlockPeg, bmlId, id, pb, poVec, aniPlayer);
     }
 
-    private LMP addLMPPoRot(String scope, FeedbackManager bbm, BMLBlockPeg bmlBlockPeg, String bmlId, String id, PegBoard pb, 
+    private LMP addLMPPoRot(String scope, FeedbackManager bbm, BMLBlockPeg bmlBlockPeg, String bmlId, String id, PegBoard pb,
             List<PoConstraint> poVec, AnimationPlayer aniPlayer)
     {
         // // --- FIX-ME?: ---
@@ -720,6 +721,20 @@ public final class MURMLMUBuilder
         return new LMPHandMove(scope, phaseVec, bbm, bmlBlockPeg, bmlId, createLMPId(id), pb, aniPlayer);
     }
 
+    private BiologicalSwivelCostsEvaluator constructAutoSwivel(String scope)
+    {
+        if (scope.equals("left_arm"))
+        {
+            return new BiologicalSwivelCostsEvaluator(hns.getMinSwivelLeft(), hns.getMaxSwivelLeft(),
+                    hns.getSwivelSigmaOfGaussianCostsDistribution(), hns.getSwivelFreedomOfTheGaussianMeanLeft());
+        }
+        else
+        {
+            return new BiologicalSwivelCostsEvaluator(hns.getMinSwivelRight(), hns.getMaxSwivelRight(),
+                    hns.getSwivelSigmaOfGaussianCostsDistribution(), hns.getSwivelFreedomOfTheGaussianMeanRight());
+        }
+    }
+
     public LMP getStaticHandLocationElementTMU(String scope, Static staticElem, FeedbackManager bbm, BMLBlockPeg bmlBlockPeg, String bmlId,
             String id, PegBoard pb, AnimationPlayer aniPlayer)
     {
@@ -740,7 +755,7 @@ public final class MURMLMUBuilder
 
                 // create local motor program for anticipated stroke sequence
                 LMPWristPos wristMove = new LMPWristPos(scope, bbm, bmlBlockPeg, bmlId, createLMPId(id), pb, trajectory,
-                        hns.getBaseJoint(), aniPlayer);
+                        hns.getBaseJoint(), aniPlayer, constructAutoSwivel(scope));
 
                 // //cout << "creating lmp from guiding sequence:" << endl; trajectory.writeTo(cout);
                 // //lmp->overshoot(mcLoc->getEndTPC().time);
@@ -845,7 +860,7 @@ public final class MURMLMUBuilder
             // cout << "==== creating lmp from: "; traj.writeTo(cout); cout << endl;
 
             LMPWristPos wristMove = new LMPWristPos(scope, bbf, bmlBlockPeg, bmlId, createLMPId(id), pegBoard, traj, hns.getBaseJoint(),
-                    aniPlayer);
+                    aniPlayer, constructAutoSwivel(scope));
 
             // TODO
             // -- set transformation for converting positions into base coordinates
@@ -916,13 +931,13 @@ public final class MURMLMUBuilder
     {
         List<Frame> frames = new ArrayList<Frame>();
         double offset = 0;
-        double currOffset=0;
-        for(Phase ph:phases)
+        double currOffset = 0;
+        for (Phase ph : phases)
         {
-            for(Frame f:ph.getFrames())
+            for (Frame f : ph.getFrames())
             {
-                currOffset=f.getFtime();
-                frames.add(new Frame(f.getFtime()+offset, f.getPosture()));
+                currOffset = f.getFtime();
+                frames.add(new Frame(f.getFtime() + offset, f.getPosture()));
             }
             offset += currOffset;
         }
@@ -931,9 +946,9 @@ public final class MURMLMUBuilder
 
     public AnimationUnit getKeyFramingMU(Keyframing kf)
     {
-        //Phase ph = kf.getPhases().get(0);
-        List<Frame>frames = mergeFrames(kf.getPhases());
-        
+        // Phase ph = kf.getPhases().get(0);
+        List<Frame> frames = mergeFrames(kf.getPhases());
+
         if (frames.size() > 0)
         {
             Posture p0 = frames.get(0).getPosture();
@@ -971,7 +986,7 @@ public final class MURMLMUBuilder
             }
 
             Interpolator interp;
-            if(kf.getMode() == Mode.SQUAD)
+            if (kf.getMode() == Mode.SQUAD)
             {
                 interp = new CubicQuatFloatInterpolator();
             }
@@ -979,7 +994,7 @@ public final class MURMLMUBuilder
             {
                 interp = new LinearQuatFloatInterpolator();
             }
-            
+
             interp.setKeyFrames(keyFrames, nrOfDofs);
             double scale = kf.getEasescale();
             double p = kf.getEaseturningpoint();
@@ -1002,7 +1017,7 @@ public final class MURMLMUBuilder
         return null;
     }
 
-    public TimedAnimationUnit setupTMU(String murmlStr, FeedbackManager bbm, BMLBlockPeg bmlBlockPeg, String bmlId, String id, PegBoard pb, 
+    public TimedAnimationUnit setupTMU(String murmlStr, FeedbackManager bbm, BMLBlockPeg bmlBlockPeg, String bmlId, String id, PegBoard pb,
             AnimationPlayer aniPlayer) throws TMUSetupException
     {
         MURMLDescription def = new MURMLDescription();
@@ -1062,7 +1077,7 @@ public final class MURMLMUBuilder
             String id, PegBoard pb, AnimationPlayer aniPlayer) throws TMUSetupException
     {
         PegBoard localPegBoard = new PegBoard();
-        
+
         localPegBoard.addBMLBlockPeg(bmlBlockPeg);
         LMP lmp = null;
 
@@ -1179,7 +1194,7 @@ public final class MURMLMUBuilder
         {
             lmps.add(createAndAppendLMPWrist(entry.getKey(), bbm, bmlBlockPeg, bmlId, id, localPegBoard, aniPlayer, entry.getValue()));
         }
-        return new LMPParallel(bbm, bmlBlockPeg, bmlId, id + "_lmppar" + UUID.randomUUID().toString().replaceAll("-", ""), localPegBoard, 
+        return new LMPParallel(bbm, bmlBlockPeg, bmlId, id + "_lmppar" + UUID.randomUUID().toString().replaceAll("-", ""), localPegBoard,
                 lmps);
     }
 
