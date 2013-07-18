@@ -365,7 +365,19 @@ public class LMPWristPos extends LMPPos
                 swivel = rightArmStartSwivel + (rightArmDesiredSwivel - rightArmStartSwivel) * relT;
             }
         }
-        //System.out.println("swivel: "+swivel+" leftArmDesiredSwivel "+leftArmDesiredSwivel+ "rightArmDesiredSwivel "+rightArmDesiredSwivel);
+        else
+        {
+            if (scope.equals("left_arm"))
+            {
+                swivel = leftArmDesiredSwivel;
+            }
+            else
+            {
+                swivel = rightArmDesiredSwivel;
+            } 
+        }
+        
+        System.out.println("swivel: "+swivel+" leftArmDesiredSwivel "+leftArmDesiredSwivel+ "rightArmDesiredSwivel "+rightArmDesiredSwivel);
         if (time < getTime("strokeEnd"))
         {
             double t = time;
@@ -380,12 +392,12 @@ public class LMPWristPos extends LMPPos
             float pos[] = getPosition(t);
             if (scope.equals("left_arm"))
             {
-                ikBody.setSwivelLeftHand(leftArmDesiredSwivel);
+                ikBody.setSwivelLeftHand(swivel);
                 ikBody.setLeftHand(pos);
             }
             else
             {
-                ikBody.setSwivelRightHand(rightArmDesiredSwivel);
+                ikBody.setSwivelRightHand(swivel);
                 ikBody.setRightHand(pos);
             }
         }
