@@ -44,8 +44,8 @@ public class LMPWristPos extends LMPPos
     private AnimationPlayer aniPlayer;
     private IKBody ikBody;
     private String scope;
-    private double rightArmStartSwivel, rightArmDesiredSwivel;
-    private double leftArmStartSwivel, leftArmDesiredSwivel;
+    private double startSwivel;
+    private double desiredSwivel;
     private final String baseJoint;
     private final BiologicalSwivelCostsEvaluator autoSwivel;
 
@@ -135,10 +135,15 @@ public class LMPWristPos extends LMPPos
         {
             gSeq.setStartPos(getGlobalWristPosition());
             gSeq.setST(new TPConstraint(time));
-            rightArmStartSwivel = ikBody.getSwivelRightArm();
-            leftArmStartSwivel = ikBody.getSwivelLeftArm();
-            rightArmDesiredSwivel = autoSwivel.getSwivelAngleWithMinCost(rightArmStartSwivel);
-            leftArmDesiredSwivel = autoSwivel.getSwivelAngleWithMinCost(leftArmStartSwivel);
+            if(scope.equals("left_arm"))
+            {
+                startSwivel = ikBody.getSwivelLeftArm();
+            }
+            else
+            {
+                startSwivel = ikBody.getSwivelRightArm();
+            }
+            desiredSwivel = autoSwivel.getSwivelAngleWithMinCost(startSwivel);            
             refine();
         }
         else
@@ -356,28 +361,14 @@ public class LMPWristPos extends LMPPos
         if (time < getTime("strokeStart"))
         {
             double relT = (time - getStartTime()) / (getTime("strokeStart") - getStartTime());
-            if (scope.equals("left_arm"))
-            {
-                swivel = leftArmStartSwivel + (leftArmDesiredSwivel - leftArmStartSwivel) * relT;
-            }
-            else
-            {
-                swivel = rightArmStartSwivel + (rightArmDesiredSwivel - rightArmStartSwivel) * relT;
-            }
+            swivel = startSwivel + (desiredSwivel - startSwivel) * relT;            
         }
         else
         {
-            if (scope.equals("left_arm"))
-            {
-                swivel = leftArmDesiredSwivel;
-            }
-            else
-            {
-                swivel = rightArmDesiredSwivel;
-            } 
+            swivel = desiredSwivel;             
         }
         
-        System.out.println("swivel: "+swivel+" leftArmDesiredSwivel "+leftArmDesiredSwivel+ "rightArmDesiredSwivel "+rightArmDesiredSwivel);
+        //System.out.println("swivel: "+swivel+" desiredSwivel "+desiredSwivel+ " startSwivel "+startSwivel);
         if (time < getTime("strokeEnd"))
         {
             double t = time;

@@ -1,6 +1,7 @@
 package asap.environment;
 
 import static org.junit.Assert.assertNotNull;
+import hmi.xml.XMLFormatting;
 import hmi.xml.XMLTokenizer;
 
 import java.util.HashMap;
@@ -44,6 +45,12 @@ public class BMLParserAssemblerTest
         {
             return ImmutableSet.of();
         }
+
+        @Override
+        public StringBuilder appendAttributeString(StringBuilder buf, XMLFormatting fmt)
+        {
+            return buf;
+        }
     }
 
     /**
@@ -62,11 +69,17 @@ public class BMLParserAssemblerTest
         {
             return null;
         }
-        
+
         @Override
         public Set<String> getOtherBlockDependencies()
         {
             return ImmutableSet.of();
+        }
+
+        @Override
+        public StringBuilder appendAttributeString(StringBuilder buf, XMLFormatting fmt)
+        {
+            return buf;
         }
     }
 
@@ -84,7 +97,7 @@ public class BMLParserAssemblerTest
     {
         BMLParserAssembler assembler = new BMLParserAssembler();
         String str = "<BMLParser>" + "<BMLAttributeExtension class=\"asap.environment.BMLParserAssemblerTest$StubAttributeExtension1\"/>"
-        + "</BMLParser>";
+                + "</BMLParser>";
         assembler.readXML(str);
         assertNotNull(assembler.getBMLParser());
         BehaviourBlock bb = assembler.getBMLParser().createBehaviourBlock();

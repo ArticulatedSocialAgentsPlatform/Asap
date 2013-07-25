@@ -1,7 +1,9 @@
 package asap.bml.ext.bmla;
 
 import hmi.util.StringUtil;
+import hmi.xml.XMLFormatting;
 import hmi.xml.XMLScanException;
+import hmi.xml.XMLStructureAdapter;
 import hmi.xml.XMLTokenizer;
 
 import java.util.ArrayList;
@@ -11,6 +13,7 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
+import com.google.common.base.Joiner;
 import com.google.common.collect.ImmutableSet;
 
 import saiba.bml.core.BMLBehaviorAttributeExtension;
@@ -136,5 +139,12 @@ public class BMLABMLBehaviorAttributes implements BMLBehaviorAttributeExtension
     {
         return new ImmutableSet.Builder<String>().addAll(chunkAfterList).addAll(appendAfterList).addAll(prependBeforeList)
                 .addAll(chunkBeforeList).addAll(interruptList).addAll(onStartList).build();
+    }
+
+    @Override
+    public StringBuilder appendAttributeString(StringBuilder buf, XMLFormatting fmt)
+    {
+        XMLStructureAdapter.appendNamespacedAttribute(buf, fmt, "http://www.asap-project.org/bmla", "chunkBefore",Joiner.on(",").join(chunkBeforeList));
+        return buf;
     }
 }

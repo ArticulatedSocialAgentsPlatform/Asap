@@ -95,30 +95,22 @@ public class IKBody
         // setup left foot solver
         lknee.getPathTranslation(lhip, tv);
         lankle.getPathTranslation(lknee, sv);
-        solverLFeet = new AnalyticalIKSolver(sv, tv,
-                AnalyticalIKSolver.LimbPosition.LEG, (Vec3f.length(sv) + Vec3f
-                        .length(tv)) * 0.999f);
+        solverLFeet = new AnalyticalIKSolver(sv, tv, AnalyticalIKSolver.LimbPosition.LEG);
 
         // setup right foot solver
         rknee.getPathTranslation(rhip, tv);
         rankle.getPathTranslation(rknee, sv);
-        solverRFeet = new AnalyticalIKSolver(sv, tv,
-                AnalyticalIKSolver.LimbPosition.LEG, (Vec3f.length(sv) + Vec3f
-                        .length(tv)) * 0.999f);
+        solverRFeet = new AnalyticalIKSolver(sv, tv, AnalyticalIKSolver.LimbPosition.LEG);
 
         // left hand solver
         lelbow.getPathTranslation(lshoulder, tv);
         lwrist.getPathTranslation(lelbow, sv);
-        solverLHand = new AnalyticalIKSolver(sv, tv,
-                AnalyticalIKSolver.LimbPosition.ARM, (Vec3f.length(sv) + Vec3f
-                        .length(tv)) * 0.999f);
+        solverLHand = new AnalyticalIKSolver(sv, tv, AnalyticalIKSolver.LimbPosition.ARM);
 
         // right hand solver
         relbow.getPathTranslation(rshoulder, tv);
         rwrist.getPathTranslation(relbow, sv);
-        solverRHand = new AnalyticalIKSolver(sv, tv,
-                AnalyticalIKSolver.LimbPosition.ARM, (Vec3f.length(sv) + Vec3f
-                        .length(tv)) * 0.999f);
+        solverRHand = new AnalyticalIKSolver(sv, tv, AnalyticalIKSolver.LimbPosition.ARM);
     }
 
     /**
@@ -140,7 +132,7 @@ public class IKBody
         setFeet(leftFoot, rightFoot, true);
     }
 
-    private void setFoot(float pos[], boolean keepFlat, VJoint hip, VJoint knee,VJoint ankle,AnalyticalIKSolver solver)
+    private void setFoot(float pos[], boolean keepFlat, VJoint hip, VJoint knee, VJoint ankle, AnalyticalIKSolver solver)
     {
         float qSho[] = new float[4];
         float qElb[] = new float[4];
@@ -160,7 +152,8 @@ public class IKBody
             if (Vec3f.lengthSq(xAxis) < 0.01)
             {
                 Vec3f.set(xAxis, 1, 0, 0);
-            } else
+            }
+            else
             {
                 Vec3f.normalize(xAxis);
             }
@@ -168,7 +161,8 @@ public class IKBody
             if (Vec3f.lengthSq(xAxis) < 0.01)
             {
                 Vec3f.set(zAxis, 0, 0, 1);
-            } else
+            }
+            else
             {
                 Vec3f.normalize(zAxis);
             }
@@ -182,7 +176,7 @@ public class IKBody
             ankle.setRotation(q);
         }
     }
-    
+
     /**
      * Set the hip and knee rotation so that a certain left foot position is
      * satisfied.
@@ -197,9 +191,9 @@ public class IKBody
     {
         if (l != null)
         {
-            Vec3f.set(leftFoot,l);
+            Vec3f.set(leftFoot, l);
         }
-        setFoot(l,keepFlat, lhip, lknee,lankle,solverLFeet);
+        setFoot(l, keepFlat, lhip, lknee, lankle, solverLFeet);
     }
 
     /**
@@ -216,9 +210,9 @@ public class IKBody
     {
         if (r != null)
         {
-            Vec3f.set(rightFoot,r);
+            Vec3f.set(rightFoot, r);
         }
-        setFoot(r,keepFlat, rhip, rknee,rankle,solverRFeet);
+        setFoot(r, keepFlat, rhip, rknee, rankle, solverRFeet);
     }
 
     /**
@@ -377,22 +371,28 @@ public class IKBody
      */
     public double getSwivelLeftArm()
     {
-        //float e[] = new float[3];
+        // float e[] = new float[3];
         float g[] = new float[3];
         float lWrist[] = new float[3];
-        //float lElbow[] = new float[3];
+        
         lwrist.getPathTranslation(null, lWrist);
         AnalyticalIKSolver.translateToLocalSystem(null, lshoulder, lWrist, g);
 
         float qSho[] = new float[4];
         lshoulder.getRotation(qSho);
+        float qElb[] = new float[4];
+        lelbow.getRotation(qElb);
         
-        /*
+        float lElbow[] = new float[3];
+        float e[] = new float[3];
         lelbow.getPathTranslation(null, lElbow);
         AnalyticalIKSolver.translateToLocalSystem(null, lshoulder, lElbow, e);
-        return solverLHand.getSwivel(e, g);
-        */
-        return solverLHand.getSwivelFromShoulderAndGoal(qSho, g);
+        System.out.println("elbow pos: "+Vec3f.toString(e));
+        System.out.println("g: "+Vec3f.toString(g));
+        System.out.println("swivel: "+solverLHand.getSwivelFromShoulderElbowAndGoal(qSho, qElb, g));
+        //return solverLHand.getSwivel(e, g);
+         
+        return solverLHand.getSwivelFromShoulderElbowAndGoal(qSho, qElb, g);
     }
 
     /**
@@ -402,21 +402,31 @@ public class IKBody
      */
     public double getSwivelRightArm()
     {
-        //float e[] = new float[3];
+        // float e[] = new float[3];
         float g[] = new float[3];
         float rWrist[] = new float[3];
-        //float rElbow[] = new float[3];
+        // float rElbow[] = new float[3];
         rwrist.getPathTranslation(null, rWrist);
         AnalyticalIKSolver.translateToLocalSystem(null, rshoulder, rWrist, g);
         float qSho[] = new float[4];
         rshoulder.getRotation(qSho);
-
+        float qElb[] = new float[4];
+        relbow.getRotation(qElb);
         /*
+         * relbow.getPathTranslation(null, rElbow);
+         * AnalyticalIKSolver.translateToLocalSystem(null, rshoulder, rElbow, e);
+         * return solverRHand.getSwivel(e, g);
+         */
+        float rElbow[] = new float[3];
+        float e[] = new float[3];
         relbow.getPathTranslation(null, rElbow);
         AnalyticalIKSolver.translateToLocalSystem(null, rshoulder, rElbow, e);
-        return solverRHand.getSwivel(e, g);
-        */
-        return solverRHand.getSwivelFromShoulderAndGoal(qSho, g);
+        System.out.println("elbow pos: "+Vec3f.toString(e));
+        System.out.println("g: "+Vec3f.toString(g));
+        System.out.println("swivel: "+solverRHand.getSwivelFromShoulderElbowAndGoal(qSho, qElb, g));
+        
+        
+        return solverRHand.getSwivelFromShoulderElbowAndGoal(qSho, qElb, g);
     }
 
     /**
@@ -432,8 +442,7 @@ public class IKBody
      * @param qk
      *            output: left knee rotation
      */
-    public void getLeftFootRotation(double swivel, float lf[], float qh[],
-            float qk[])
+    public void getLeftFootRotation(double swivel, float lf[], float qh[], float qk[])
     {
         float left[] = new float[3];
         AnalyticalIKSolver.translateToLocalSystem(null, lhip, lf, left);
@@ -467,8 +476,7 @@ public class IKBody
      * @param qk
      *            output: right knee rotation
      */
-    public void getRightFootRotation(double swivel, float rf[], float qh[],
-            float qk[])
+    public void getRightFootRotation(double swivel, float rf[], float qh[], float qk[])
     {
         float right[] = new float[3];
         AnalyticalIKSolver.translateToLocalSystem(null, rhip, rf, right);
@@ -498,5 +506,5 @@ public class IKBody
     public VJoint getHuman()
     {
         return human;
-    }    
+    }
 }
