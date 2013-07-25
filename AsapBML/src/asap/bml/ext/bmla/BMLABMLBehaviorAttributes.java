@@ -145,6 +145,12 @@ public class BMLABMLBehaviorAttributes implements BMLBehaviorAttributeExtension
     public StringBuilder appendAttributeString(StringBuilder buf, XMLFormatting fmt)
     {
         XMLStructureAdapter.appendNamespacedAttribute(buf, fmt, "http://www.asap-project.org/bmla", "chunkBefore",Joiner.on(",").join(chunkBeforeList));
+        XMLStructureAdapter.appendNamespacedAttribute(buf, fmt, "http://www.asap-project.org/bmla", "chunkAfter",Joiner.on(",").join(chunkAfterList));
+        XMLStructureAdapter.appendNamespacedAttribute(buf, fmt, "http://www.asap-project.org/bmla", "appendAfter",Joiner.on(",").join(appendAfterList));
+        XMLStructureAdapter.appendNamespacedAttribute(buf, fmt, "http://www.asap-project.org/bmla", "prependBefore",Joiner.on(",").join(prependBeforeList));
+        XMLStructureAdapter.appendNamespacedAttribute(buf, fmt, "http://www.asap-project.org/bmla", "interrupt",Joiner.on(",").join(interruptList));
+        XMLStructureAdapter.appendNamespacedAttribute(buf, fmt, "http://www.asap-project.org/bmla", "onStart",Joiner.on(",").join(onStartList));
+        XMLStructureAdapter.appendNamespacedAttribute(buf, fmt, "http://www.asap-project.org/bmla", "preplan",""+isPrePlanned());
         return buf;
     }
 }
