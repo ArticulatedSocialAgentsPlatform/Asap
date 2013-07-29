@@ -78,15 +78,6 @@ public class GuidingSequence
         }
     }
 
-//    public double getEndTime()
-//    {
-//        if (strokes.isEmpty())
-//        {
-//            return sT.getTime();
-//        }
-//        return strokes.get(strokes.size() - 1).getEndTime();
-//    }
-
     public float[] getEndPos()
     {
         float[]result = Vec3f.getVec3f();
@@ -131,53 +122,7 @@ public class GuidingSequence
         return result;
     }
 
-//    public double getStartTimeOfStroke(int i)
-//    {
-//
-//        if (i >= strokes.size())
-//        {
-//            log.warn("GuidingSequence::getStartTimeOfStroke : no. of strokes exceeded!");
-//            return 0;
-//        }
-//
-//        if (i == 0)
-//        {
-//            return sT.getTime();
-//        }
-//        else
-//        {
-//            return strokes.get(i - 1).getEndTime();
-//        }
-//    }
 
-//    /**
-//     * return values:
-//     * -1 -> stroke sequence empty
-//     * 0..n-1 -> index of stroke at t = fTime
-//     * n -> stroke sequence exceeded at t = fTime
-//     */
-//    public int getStrokeIndexAt(double time)
-//    {
-//        if (strokes.isEmpty())
-//        {
-//            log.warn("GuidingSequence::getStrokeIndexAt : stroke sequence empty!");
-//            return -1;
-//        }
-//
-//        int gStrokeIndex = 0;
-//        for (GuidingStroke gs : strokes)
-//        {
-//            if (gs.getEndTime() <= time)
-//            {
-//                gStrokeIndex++;
-//            }
-//            else
-//            {
-//                break;
-//            }
-//        }
-//        return gStrokeIndex;
-//    }
 
     public GuidingStroke getStroke(int i)
     {
@@ -189,14 +134,6 @@ public class GuidingSequence
         return strokes.get(i);
     }
 
-//    public void postPone(double time)
-//    {
-//        sT.add(time);
-//        for (GuidingStroke gs : strokes)
-//        {
-//            gs.eT.add(time);
-//        }
-//    }
 
     public void replaceStroke(int i, List<GuidingStroke> gsSubs)
     {
@@ -332,7 +269,13 @@ public class GuidingSequence
         {
             vDir = inDir;
         }
-
+        
+        if(Vec3f.lengthSq(vDir)<=0.0001)
+        {
+            Vec3f.set(result, vDir);
+            return;
+        }
+        
         // --- approx. speed (absolute velocity value)
         // -- determine radius or angle, resp., between these guiding strokes
         Vec3f.normalize(inDir);
