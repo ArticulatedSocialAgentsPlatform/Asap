@@ -33,6 +33,21 @@ public class LMPSequence extends LMP
         lmpQueue = ImmutableList.copyOf(lmpList);
     }
 
+    public boolean hasFixedStrokeDuration()
+    {
+        for(TimedAnimationUnit tmu:lmpQueue)
+        {
+            if(tmu instanceof LMP)
+            {
+                if( ((LMP)tmu).hasFixedStrokeDuration())
+                {
+                    return true;
+                }
+            }
+        }
+        return false;
+    }
+    
     @Override
     public Set<String> getKinematicJoints()
     {
