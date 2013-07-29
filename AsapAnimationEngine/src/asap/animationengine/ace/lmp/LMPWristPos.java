@@ -8,6 +8,7 @@ import hmi.neurophysics.BiologicalSwivelCostsEvaluator;
 import hmi.neurophysics.FittsLaw;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 import java.util.Set;
 
@@ -44,7 +45,7 @@ public class LMPWristPos extends LMPPos
     private AnimationPlayer aniPlayer;
     private IKBody ikBody;
     private IKBody ikBodyCurrent;
-    
+
     private String scope;
     private double startSwivel;
     private double desiredSwivel;
@@ -138,7 +139,7 @@ public class LMPWristPos extends LMPPos
         {
             gSeq.setStartPos(getGlobalWristPosition());
             gSeq.setST(new TPConstraint(time));
-            if(scope.equals("left_arm"))
+            if (scope.equals("left_arm"))
             {
                 startSwivel = ikBodyCurrent.getSwivelLeftArm();
             }
@@ -147,8 +148,8 @@ public class LMPWristPos extends LMPPos
                 startSwivel = ikBodyCurrent.getSwivelRightArm();
             }
             desiredSwivel = autoSwivel.getSwivelAngleWithMinCost(startSwivel);
-            
-            System.out.println(getBMLId()+":"+getId()+" desiredSwivel "+desiredSwivel+ " startSwivel "+startSwivel);
+
+            System.out.println(getBMLId() + ":" + getId() + " desiredSwivel " + desiredSwivel + " startSwivel " + startSwivel);
             refine();
         }
         else
@@ -232,7 +233,9 @@ public class LMPWristPos extends LMPPos
 
             // complete curvilinear guiding strokes
             // cout << "completing curvilinear strokes..." << endl;
-            double sT = getStartTime();
+            
+            //double sT = getStartTime();
+            double sT = _gSeq.getStartTPC().getTime();
             double prepDur = getTime("strokeStart") - getStartTime();
             _gSeq.getStroke(0).setEDt(prepDur);
 
@@ -251,8 +254,8 @@ public class LMPWristPos extends LMPPos
             // cout << "setting up trajectory constraints..." << endl;
             float[] p, v;
 
-            // sT = _gSeq.getStartTPC().getTime();
-            sT = getStartTime();
+            //double sT = getStartTime();
+            sT = _gSeq.getStartTPC().getTime();
 
             // double prepDur = getPreparationDuration();
 
@@ -299,6 +302,13 @@ public class LMPWristPos extends LMPPos
 
             _spline = new NUSSpline3(4);
             _spline.interpolate3(pv, tv, vv);
+
+            System.out.println("tv: " + tv);
+            System.out.println("vv: " + vv);
+            for (int i = 0; i < _gSeq.size(); i++)
+            {
+                System.out.println("eDT " + i + ":" + _gSeq.getStroke(i).getEDt());
+            }
         }
 
         return _spline;
@@ -366,14 +376,14 @@ public class LMPWristPos extends LMPPos
         if (time < getTime("strokeStart"))
         {
             double relT = (time - getStartTime()) / (getTime("strokeStart") - getStartTime());
-            swivel = startSwivel + (desiredSwivel - startSwivel) * relT;            
+            swivel = startSwivel + (desiredSwivel - startSwivel) * relT;
         }
         else
         {
-            swivel = desiredSwivel;             
+            swivel = desiredSwivel;
         }
-        
-        //System.out.println(getBMLId()+":"+getId()+" swivel: "+swivel+" desiredSwivel "+desiredSwivel+ " startSwivel "+startSwivel);
+
+        // System.out.println(getBMLId()+":"+getId()+" swivel: "+swivel+" desiredSwivel "+desiredSwivel+ " startSwivel "+startSwivel);
         if (time < getTime("strokeEnd"))
         {
             double t = time;
@@ -475,7 +485,7 @@ public class LMPWristPos extends LMPPos
 
     public double getRetractionDuration()
     {
-        return 1; //properly handled in MCP
+        return 1; // properly handled in MCP
     }
 
     public double getStrokeDuration()
