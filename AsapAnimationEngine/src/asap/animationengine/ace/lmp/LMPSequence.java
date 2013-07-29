@@ -168,11 +168,11 @@ public class LMPSequence extends LMP
     @Override
     protected void playUnit(double time) throws TimedPlanUnitPlayException
     {
-        System.out.println(" LMP seq play " + time + " start: " + getStartTime());
-        System.out.println(lmpQueue);
+        //System.out.println(" LMP seq play " + time + " start: " + getStartTime());
+        //System.out.println(lmpQueue);
         for (TimedAnimationUnit tmu : lmpQueue)
         {
-            System.out.println("  seq element start " + tmu.getStartTime());
+            //System.out.println("  seq element start " + tmu.getStartTime());
             if (time > tmu.getStartTime())
             {
                 if (time < tmu.getTime("strokeEnd"))

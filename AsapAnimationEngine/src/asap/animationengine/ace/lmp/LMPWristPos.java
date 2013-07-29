@@ -43,6 +43,8 @@ public class LMPWristPos extends LMPPos
     private NUSSpline3 spline;
     private AnimationPlayer aniPlayer;
     private IKBody ikBody;
+    private IKBody ikBodyCurrent;
+    
     private String scope;
     private double startSwivel;
     private double desiredSwivel;
@@ -59,6 +61,7 @@ public class LMPWristPos extends LMPPos
         this.pegBoard = pegBoard;
         this.aniPlayer = aniPlayer;
         this.ikBody = new IKBody(aniPlayer.getVNext()); // TODO: may also be on additive joint
+        this.ikBodyCurrent = new IKBody(aniPlayer.getVCurr()); // TODO: may also be on additive joint
         this.scope = scope;
 
         if (scope.equals("left_arm"))
@@ -137,13 +140,15 @@ public class LMPWristPos extends LMPPos
             gSeq.setST(new TPConstraint(time));
             if(scope.equals("left_arm"))
             {
-                startSwivel = ikBody.getSwivelLeftArm();
+                startSwivel = ikBodyCurrent.getSwivelLeftArm();
             }
             else
             {
-                startSwivel = ikBody.getSwivelRightArm();
+                startSwivel = ikBodyCurrent.getSwivelRightArm();
             }
-            desiredSwivel = autoSwivel.getSwivelAngleWithMinCost(startSwivel);            
+            desiredSwivel = autoSwivel.getSwivelAngleWithMinCost(startSwivel);
+            
+            System.out.println(getBMLId()+":"+getId()+" desiredSwivel "+desiredSwivel+ " startSwivel "+startSwivel);
             refine();
         }
         else
@@ -368,7 +373,7 @@ public class LMPWristPos extends LMPPos
             swivel = desiredSwivel;             
         }
         
-        //System.out.println("swivel: "+swivel+" desiredSwivel "+desiredSwivel+ " startSwivel "+startSwivel);
+        //System.out.println(getBMLId()+":"+getId()+" swivel: "+swivel+" desiredSwivel "+desiredSwivel+ " startSwivel "+startSwivel);
         if (time < getTime("strokeEnd"))
         {
             double t = time;
