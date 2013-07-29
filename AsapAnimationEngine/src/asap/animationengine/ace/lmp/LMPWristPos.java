@@ -301,14 +301,7 @@ public class LMPWristPos extends LMPPos
             }
 
             _spline = new NUSSpline3(4);
-            _spline.interpolate3(pv, tv, vv);
-
-            System.out.println("tv: " + tv);
-            System.out.println("vv: " + vv);
-            for (int i = 0; i < _gSeq.size(); i++)
-            {
-                System.out.println("eDT " + i + ":" + _gSeq.getStroke(i).getEDt());
-            }
+            _spline.interpolate3(pv, tv, vv);            
         }
 
         return _spline;
