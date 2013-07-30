@@ -176,7 +176,7 @@ public class LMPParallel extends LMP
             {
                 duration = lmp.getStrokeDuration();
             }
-        }
+        }        
         return duration;
     }
 
@@ -250,6 +250,10 @@ public class LMPParallel extends LMP
     @Override
     protected void playUnit(double time) throws TimedPlanUnitPlayException
     {
+        /*
+        System.out.println("parallel: strokeStart= "+getTime("strokeStart"));
+        System.out.println("parallel: strokeEnd= "+getTime("strokeEnd"));
+        */
         for (TimedAnimationUnit tmu : lmpQueue)
         {
             if (time >= tmu.getStartTime())

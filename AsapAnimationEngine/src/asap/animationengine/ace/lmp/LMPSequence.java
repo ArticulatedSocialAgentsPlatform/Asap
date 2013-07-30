@@ -183,11 +183,8 @@ public class LMPSequence extends LMP
     @Override
     protected void playUnit(double time) throws TimedPlanUnitPlayException
     {
-        //System.out.println(" LMP seq play " + time + " start: " + getStartTime());
-        //System.out.println(lmpQueue);
         for (TimedAnimationUnit tmu : lmpQueue)
         {
-            //System.out.println("  seq element start " + tmu.getStartTime());
             if (time > tmu.getStartTime())
             {
                 if (time < tmu.getTime("strokeEnd"))
@@ -246,11 +243,11 @@ public class LMPSequence extends LMP
         for (TimedAnimationUnit lmp : lmpQueue)
         {
             createInternalPegs(lmp);
-        }
-
+        }       
+        
         TimePeg startStretchPeg = strokeStartPeg;
-        int iPrepStretchStart = 0;
-        int iStrokeStretchStart = 0;
+        int iPrepStretchStart = lmpQueue.size();
+        int iStrokeStretchStart = lmpQueue.size();
         for (int i = 0; i < lmpQueue.size(); i++)
         {
             if (i > 0)
@@ -271,17 +268,13 @@ public class LMPSequence extends LMP
                 break;
             }
         }
-
+        
+        
+        
         // pegs assumed to be set: 0:strokeStart, last:strokeEnd
         double defaultDuration = strokeStartPeg.getGlobalValue() + getStrokeDuration(time) - startStretchPeg.getGlobalValue();
         double duration = strokeEndPeg.getGlobalValue() - startStretchPeg.getGlobalValue();
         double stretch = duration / defaultDuration;
-        
-        
-        if(stretch!=1.0)
-        {
-            System.out.println("stretch: "+stretch);
-        }
         
         double durPrep[] = new double[lmpQueue.size()];
         double prefPrepDur = 0;
@@ -297,10 +290,6 @@ public class LMPSequence extends LMP
         }
 
         stretch = duration / (defaultDuration - prefPrepDur);
-        if(stretch!=1.0)
-        {
-            System.out.println("stretch: "+stretch);
-        }
         
         if (iPrepStretchStart > iStrokeStretchStart)
         {
@@ -308,6 +297,7 @@ public class LMPSequence extends LMP
             lmpQueue.get(iStrokeStretchStart).getTimePeg("strokeEnd")
                     .setGlobalValue(tpStrokeStart.getGlobalValue() + lmpQueue.get(iStrokeStretchStart).getStrokeDuration() * stretch);
         }
+        
         for (int i = iPrepStretchStart; i < lmpQueue.size(); i++)
         {
             TimePeg tpStart = lmpQueue.get(i).getTimePeg("start");
@@ -315,7 +305,7 @@ public class LMPSequence extends LMP
             tpStrokeStart.setGlobalValue(tpStart.getGlobalValue() + durPrep[i]);
             lmpQueue.get(i).getTimePeg("strokeEnd")
                     .setGlobalValue(tpStrokeStart.getGlobalValue() + lmpQueue.get(i).getStrokeDuration() * stretch);
-        }
+        }        
     }
 
     @Override

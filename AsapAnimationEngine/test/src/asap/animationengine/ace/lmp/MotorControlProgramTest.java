@@ -453,6 +453,42 @@ public class MotorControlProgramTest extends AbstractTimedPlanUnitTest
     }
 
     @Test
+    public void testResolveSequenceInParallelAndHandmoveNoConstraintsUpdateTiming2() throws BehaviourPlanningException,
+            TimedPlanUnitPlayException
+    {
+        LMP tmu1 = createStub("bml1", "beh1-1", 1, 1, 1, true);
+        LMP tmu2a = createStub("bml1", "beh1-2a", 0.4, 0.4, 5, false);        
+
+        LMPSequence seq = new LMPSequence(fbManager, BMLBlockPeg.GLOBALPEG, "bml1", "beh1", localPegboard, 
+                new ImmutableList.Builder<TimedAnimationUnit>().add(tmu2a).build());
+        LMPParallel par = new LMPParallel(fbManager, BMLBlockPeg.GLOBALPEG, "bml1", "beh1-par", localPegboard, 
+                new ImmutableList.Builder<TimedAnimationUnit>().add(tmu1).add(seq).build());
+
+        MotorControlProgram mcp = setupPlanUnit(fbManager, BMLBlockPeg.GLOBALPEG, "bml1", "beh1", par);
+        List<TimePegAndConstraint> sacs = new ArrayList<>();
+        mcp.resolveSynchs(BMLBlockPeg.GLOBALPEG, new MURMLGestureBehaviour("bml1"), sacs);
+        mcp.updateTiming(0);
+
+        assertEquals(0, mcp.getStartTime(), TIME_PRECISION);
+
+        assertEquals(0, par.getStartTime(), TIME_PRECISION);
+        assertEquals(1, par.getTime("strokeStart"), TIME_PRECISION);
+        assertEquals(2, par.getTime("strokeEnd"), TIME_PRECISION);
+
+        assertEquals(0, tmu1.getTime("start"), TIME_PRECISION);
+        assertEquals(1, tmu1.getTime("strokeStart"), TIME_PRECISION);
+        assertEquals(2, tmu1.getTime("strokeEnd"), TIME_PRECISION);
+
+        assertEquals(0.6, seq.getTime("start"), TIME_PRECISION);
+        assertEquals(1, seq.getTime("strokeStart"), TIME_PRECISION);
+        assertEquals(2, seq.getTime("strokeEnd"), TIME_PRECISION);
+
+        assertEquals(0.6, tmu2a.getTime("start"), TIME_PRECISION);
+        assertEquals(1, tmu2a.getTime("strokeStart"), TIME_PRECISION);
+        assertEquals(2, tmu2a.getTime("strokeEnd"), TIME_PRECISION);        
+    }
+    
+    @Test
     public void testSequenceDynamicTimingUpdate() throws BehaviourPlanningException, TimedPlanUnitPlayException
     {
         final double LMP1_PREP = 1, LMP1_RETR = 1, LMP1_STROKE = 2;

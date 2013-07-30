@@ -14,6 +14,7 @@ import java.util.Set;
 
 import asap.animationengine.AnimationPlayer;
 import asap.animationengine.ace.PostureConstraint;
+import asap.math.LinearQuatInterpolator;
 import asap.motionunit.MUPlayException;
 import asap.motionunit.keyframe.Interpolator;
 import asap.motionunit.keyframe.KeyFrame;
@@ -43,7 +44,7 @@ public class LMPHandMove extends LMP
     private static final double TRANSITION_TIME = 0.5;
     private static final double DEFAULT_STROKEPHASE_DURATION = 5;
     private HandKeyFrameUnit mu;
-    private QuatFloatInterpolator interp;
+    private QuatFloatInterpolator<LinearQuatInterpolator> interp;
 
     private class HandKeyFrameUnit extends KeyFrameMotionUnit
     {

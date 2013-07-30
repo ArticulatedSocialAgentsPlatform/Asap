@@ -38,8 +38,8 @@ public class MotorControlProgram extends TimedAbstractPlanUnit implements TimedA
     private final PegBoard localPegBoard;
     private Set<String> syncsHandled = new HashSet<String>();
     private final AnimationPlayer aniPlayer;
-    private TimedAnimationUnit relaxUnit;
-
+    private TimedAnimationUnit relaxUnit;    
+    
     @Override
     public double getPreparationDuration()
     {
@@ -66,7 +66,7 @@ public class MotorControlProgram extends TimedAbstractPlanUnit implements TimedA
 
     public void resolveSynchs(BMLBlockPeg bbPeg) throws BehaviourPlanningException
     {
-        resolveSynchs(bbPeg, new ArrayList<TimePegAndConstraint>());
+        resolveSynchs(bbPeg, new ArrayList<TimePegAndConstraint>());        
     }
 
     protected void linkMCPSynchs(LMP lmp)
@@ -333,7 +333,7 @@ public class MotorControlProgram extends TimedAbstractPlanUnit implements TimedA
         {
             lmp.play(time);
         }
-        feedbackForSyncs(time);
+        feedbackForSyncs(time);        
     }
 
     private void feedbackForSyncs(double time)
@@ -361,7 +361,7 @@ public class MotorControlProgram extends TimedAbstractPlanUnit implements TimedA
     protected void startUnit(double time) throws TimedPlanUnitPlayException
     {
         lmp.start(time);
-        feedback("start", time);
+        feedback("start", time);        
     }
 
     @Override
