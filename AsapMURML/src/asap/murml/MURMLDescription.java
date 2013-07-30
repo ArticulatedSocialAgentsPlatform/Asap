@@ -46,7 +46,7 @@ public class MURMLDescription extends MURMLElement
     private Parallel parallel;
 
     @Getter
-    private Symmetrical symetrical;
+    private Symmetrical symmetrical;
 
     @Getter
     private Sequence sequence;
@@ -66,8 +66,8 @@ public class MURMLDescription extends MURMLElement
             parallel.readXML(tokenizer);
             break;
         case Symmetrical.XMLTAG:
-            symetrical = new Symmetrical();
-            symetrical.readXML(tokenizer);
+            symmetrical = new Symmetrical();
+            symmetrical.readXML(tokenizer);
             break;
         case Static.XMLTAG:
             staticElement = new Static();
@@ -80,6 +80,25 @@ public class MURMLDescription extends MURMLElement
         default:
             throw new XMLScanException("Invalid tag " + tag + " in <murml-description>");
         }
+        normalizeSymmetricals();
+    }
+    
+    private void normalizeSymmetricals()
+    {
+        if(symmetrical!=null)
+        {
+            Parallel p = symmetrical.normalize();
+            if(parallel!=null) 
+            {
+                parallel = p;
+            }
+            else
+            {
+                //TODO: add content of p to existing parallel.
+            }
+        }
+        
+        //TODO: normalize inner symmetricals
     }
 
     private static final String XMLTAG = "murml-description";

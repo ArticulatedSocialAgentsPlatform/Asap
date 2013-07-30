@@ -28,6 +28,16 @@ public class Parallel extends MURMLElement implements MovementConstraint
     @Getter
     private List<Symmetrical> symmetricals = new ArrayList<>();
 
+    public void add(Dynamic d)
+    {
+        dynamics.add(d);
+    }
+    
+    public void add(Static s)
+    {
+        statics.add(s);
+    }
+    
     @Override
     public void decodeContent(XMLTokenizer tokenizer) throws IOException
     {

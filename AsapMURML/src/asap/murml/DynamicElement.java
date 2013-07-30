@@ -9,6 +9,8 @@ import java.util.Map;
 import java.util.Map.Entry;
 import java.util.Set;
 
+import com.google.common.collect.ImmutableMap;
+
 import lombok.Getter;
 
 /**
@@ -29,6 +31,15 @@ public class DynamicElement extends MURMLElement
     public enum Type
     {
         CURVE, LINEAR, CHOP;
+    }
+    
+    public DynamicElement copy()
+    {
+        DynamicElement de = new DynamicElement();
+        de.scope = scope;
+        de.type = type;
+        de.valueMap = ImmutableMap.copyOf(valueMap);
+        return de;
     }
     
     @Override

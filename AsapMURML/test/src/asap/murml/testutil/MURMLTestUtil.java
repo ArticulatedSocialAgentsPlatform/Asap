@@ -14,7 +14,7 @@ import asap.murml.Static;
  * @author hvanwelbergen
  *
  */
-public final class MURMLTestUtil
+public final class MURMLTestUtil 
 {
     private MURMLTestUtil(){}
     public static JointValue createJointValue(String id, float ... dofs)

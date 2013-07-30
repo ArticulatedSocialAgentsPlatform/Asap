@@ -179,7 +179,7 @@ public class MURMLDescriptionTest
         //@formatter:on
         MURMLDescription desc = new MURMLDescription();
         desc.readXML(murmlScript);
-        Symmetrical sym = desc.getSymetrical();
+        Symmetrical sym = desc.getSymmetrical();
         assertNotNull(sym);
         Parallel par = sym.getParallel();
         assertNotNull(par);

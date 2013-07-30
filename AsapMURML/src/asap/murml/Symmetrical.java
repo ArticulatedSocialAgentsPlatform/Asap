@@ -28,15 +28,38 @@ public class Symmetrical extends MURMLElement implements MovementConstraint
 
     @Getter
     private Dynamic dynamic;
-    
+
     @Getter
     private Static staticElem;
-    
+
     @Override
     public void decodeAttributes(HashMap<String, String> attrMap, XMLTokenizer tokenizer)
     {
         dominant = Dominant.valueOf(getRequiredAttribute("dominant", attrMap, tokenizer).toUpperCase());
         symmetry = Symmetry.valueOf(getRequiredAttribute("symmetry", attrMap, tokenizer));
+    }
+
+    public Parallel normalize()
+    {
+        Parallel p = new Parallel();
+        if (dynamic != null)
+        {
+            dynamic.setScope(dominant.toString().toLowerCase());
+            p.add(Dynamic.mirror(dynamic, symmetry));
+        }
+        else if (staticElem != null)
+        {
+
+        }
+        else if (sequence != null)
+        {
+
+        }
+        else if (parallel != null)
+        {
+
+        }
+        return p;
     }
 
     public void decodeContent(XMLTokenizer tokenizer) throws IOException

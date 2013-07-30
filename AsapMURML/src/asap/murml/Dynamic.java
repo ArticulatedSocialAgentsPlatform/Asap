@@ -9,6 +9,7 @@ import java.util.HashMap;
 import java.util.List;
 
 import lombok.Getter;
+import lombok.Setter;
 
 /**
  * Parses the MURML dynamic element
@@ -26,7 +27,28 @@ public class Dynamic extends MURMLElement implements MovementConstraint
     private Slot slot;
 
     @Getter
+    @Setter
     private String scope;
+
+    public static Dynamic mirror(Dynamic d, Symmetry s)
+    {
+        Dynamic dMirror = new Dynamic();
+        dMirror.slot = d.slot;
+        if (d.scope.equals("left_arm"))
+        {
+            dMirror.scope = "right_arm";
+        }
+        else
+        {
+            dMirror.scope = "left_arm";
+        }
+        for (DynamicElement de : d.dynamicElements)
+        {
+            dMirror.dynamicElements.add(de.copy());
+        }
+        //TODO: encode symmetrytransform
+        return dMirror;
+    }
 
     @Override
     public void decodeContent(XMLTokenizer tokenizer) throws IOException
