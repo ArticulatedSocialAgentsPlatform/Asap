@@ -43,6 +43,20 @@ public class Parallel extends MURMLElement implements MovementConstraint
         statics.add(s);
     }
     
+    public void normalizeInnerSymmetricals()
+    {
+        for(Symmetrical sym: symmetricals)
+        {
+            Parallel p = sym.normalize();
+            dynamics.addAll(p.getDynamics());
+            statics.addAll(p.getStatics());            
+        }
+        for(Sequence seq: sequences)
+        {
+            seq.normalizeInnerSymmetricals();
+        }
+    }
+    
     public void makeSymmetric(Dominant dominantHand, Symmetry sym)
     {
         List<Static> newStatics = new ArrayList<Static>();
@@ -59,7 +73,15 @@ public class Parallel extends MURMLElement implements MovementConstraint
         }
         dynamics = newDynamics;
         
-        //TODO: sequences, symmetricals
+        for(Sequence seq:sequences)
+        {
+            seq.makeSymmetric(dominantHand, sym);
+        }
+        
+        if(symmetricals.size()>0)
+        {
+            throw new XMLScanException("Cannot have inner <symmetric> inside another symmetric block.");
+        }
     }
     
     @Override

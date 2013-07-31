@@ -4,6 +4,7 @@ import static org.hamcrest.CoreMatchers.instanceOf;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertThat;
+import hmi.xml.XMLScanException;
 
 import org.junit.Test;
 
@@ -280,7 +281,7 @@ public class MURMLDescriptionTest
     @Test
     public void testSymmetricalParallel()
     {
-      //@formatter:off
+        //@formatter:off
         String murmlScript =
         "<murml-description xmlns=\"http://www.techfak.uni-bielefeld.de/ags/soa/murml\">"+
           "<symmetrical dominant=\"right_arm\" symmetry=\"SymMS\">"+
@@ -301,6 +302,208 @@ public class MURMLDescriptionTest
         assertNotNull(par);
         assertEquals(2, par.getStatics().size());
         assertEquals(2, par.getDynamics().size());
+    }
+    
+    @Test
+    public void testInnerSymmetricalInParallel()
+    {
+        //@formatter:off
+        String murmlScript =
+        "<murml-description xmlns=\"http://www.techfak.uni-bielefeld.de/ags/soa/murml\">"+
+          "<parallel>"+
+              "<symmetrical dominant=\"right_arm\" symmetry=\"SymMS\">"+
+                  "<static slot=\"PalmOrientation\" value=\"DirLTL\"/>"+                  
+              "</symmetrical>"+
+              "<static slot=\"HandShape\" value=\"BSfist (ThExt)\" scope=\"right_arm\"/>"+
+          "</parallel>"+
+        "</murml-description>";
+        //@formatter:on        
+        desc.readXML(murmlScript);        
+        Parallel par = desc.getParallel();
+        assertNotNull(par);
+        assertEquals(3, par.getStatics().size());
+        assertEquals("right_arm", par.getStatics().get(0).getScope());
+        assertEquals("right_arm", par.getStatics().get(1).getScope());
+        assertEquals("left_arm", par.getStatics().get(2).getScope());        
+    }
+    
+    @Test
+    public void testInnerSymmetricalInSequence()
+    {
+        //@formatter:off
+        String murmlScript =
+        "<murml-description xmlns=\"http://www.techfak.uni-bielefeld.de/ags/soa/murml\">"+
+          "<sequence>"+
+              "<symmetrical dominant=\"right_arm\" symmetry=\"SymMS\">"+
+                  "<static slot=\"PalmOrientation\" value=\"DirLTL\"/>"+                  
+              "</symmetrical>"+
+              "<static slot=\"HandShape\" value=\"BSfist (ThExt)\" scope=\"right_arm\"/>"+
+          "</sequence>"+
+        "</murml-description>";
+        //@formatter:on        
+        desc.readXML(murmlScript);
+        Sequence seq = desc.getSequence();
+        assertEquals(2, seq.getSequence().size());
+        
+        assertThat(seq.getSequence().get(0), instanceOf(Parallel.class));
+        assertThat(seq.getSequence().get(1), instanceOf(Static.class));
+        Parallel par = (Parallel)(seq.getSequence().get(0));
+        assertEquals(2,par.getStatics().size());
+        assertEquals("right_arm", par.getStatics().get(0).getScope());
+        assertEquals("left_arm", par.getStatics().get(1).getScope());    
+    }
+    
+    @Test
+    public void testInnerSymmetricalInParallelInSequence()
+    {
+        //@formatter:off
+        String murmlScript =
+        "<murml-description xmlns=\"http://www.techfak.uni-bielefeld.de/ags/soa/murml\">"+
+          "<sequence>"+
+              "<parallel>"+    
+                  "<symmetrical dominant=\"right_arm\" symmetry=\"SymMS\">"+
+                      "<static slot=\"PalmOrientation\" value=\"DirLTL\"/>"+                  
+                  "</symmetrical>"+
+                  "<static slot=\"HandShape\" value=\"BSfist (ThExt)\" scope=\"left_arm\"/>"+
+              "</parallel>"+
+              "<static slot=\"HandShape\" value=\"BSfist (ThExt)\" scope=\"right_arm\"/>"+
+          "</sequence>"+
+        "</murml-description>";
+        //@formatter:on        
+        desc.readXML(murmlScript);
+        Sequence seq = desc.getSequence();
+        assertEquals(2, seq.getSequence().size());
+        
+        assertThat(seq.getSequence().get(0), instanceOf(Parallel.class));
+        assertThat(seq.getSequence().get(1), instanceOf(Static.class));
+        
+        Parallel par = (Parallel)(seq.getSequence().get(0));
+        assertEquals(3,par.getStatics().size());
+    }
+    
+    @Test
+    public void testInnerSymmetricalInSequenceInParallel()
+    {
+        //@formatter:off
+        String murmlScript =
+        "<murml-description xmlns=\"http://www.techfak.uni-bielefeld.de/ags/soa/murml\">"+
+          "<parallel>"+
+              "<sequence>"+    
+                  "<symmetrical dominant=\"right_arm\" symmetry=\"SymMS\">"+
+                      "<static slot=\"PalmOrientation\" value=\"DirLTL\"/>"+                  
+                  "</symmetrical>"+
+                  "<static slot=\"HandShape\" value=\"BSfist (ThExt)\" scope=\"left_arm\"/>"+
+              "</sequence>"+
+              "<static slot=\"HandShape\" value=\"BSfist (ThExt)\" scope=\"right_arm\"/>"+
+          "</parallel>"+
+        "</murml-description>";
+        //@formatter:on        
+        desc.readXML(murmlScript);
+        Parallel par = desc.getParallel();
+        assertNotNull(par);
+        assertEquals(1, par.getSequences().size());
+        assertEquals(1, par.getStatics().size());
+        Sequence seq = par.getSequences().get(0);
+        assertEquals(2, seq.getSequence().size());
+        
+        assertThat(seq.getSequence().get(0), instanceOf(Parallel.class));        
+    }
+    
+    @Test
+    public void testSymmetricalInSequenceInParallel()
+    {
+        //@formatter:off
+        String murmlScript =
+        "<murml-description xmlns=\"http://www.techfak.uni-bielefeld.de/ags/soa/murml\">"+
+          "<symmetrical dominant=\"right_arm\" symmetry=\"SymMS\">"+
+            "<parallel>"+
+              "<sequence>"+
+                 "<static slot=\"PalmOrientation\" value=\"DirLTL\"/>"+
+                 "<static slot=\"HandShape\" value=\"BSfist (ThExt)\" scope=\"left_arm\"/>"+
+              "</sequence>"+
+              "<static slot=\"HandShape\" value=\"BSfist (ThExt)\" scope=\"right_arm\"/>"+
+            "</parallel>"+
+          "</symmetrical>"+
+        "</murml-description>";
+        //@formatter:on
+        
+        desc.readXML(murmlScript);
+        Parallel par = desc.getParallel();
+        assertNotNull(par);
+        assertEquals(1, par.getSequences().size());
+        assertEquals(2, par.getStatics().size());
+        Sequence seq = par.getSequences().get(0);
+        assertEquals(2,seq.getSequence().size());
+        assertThat(seq.getSequence().get(0), instanceOf(Parallel.class));
+        assertThat(seq.getSequence().get(1), instanceOf(Parallel.class));        
+    }
+    
+    @Test
+    public void testSymmetricalInParallelInSequence()
+    {
+        //@formatter:off
+        String murmlScript =
+        "<murml-description xmlns=\"http://www.techfak.uni-bielefeld.de/ags/soa/murml\">"+
+          "<symmetrical dominant=\"right_arm\" symmetry=\"SymMS\">"+
+            "<sequence>"+
+              "<parallel>"+
+                 "<static slot=\"PalmOrientation\" value=\"DirLTL\"/>"+
+                 "<static slot=\"HandShape\" value=\"BSfist (ThExt)\"/>"+
+              "</parallel>"+
+              "<static slot=\"HandShape\" value=\"BSfist (ThExt)\"/>"+
+            "</sequence>"+
+          "</symmetrical>"+
+        "</murml-description>";
+        //@formatter:on
+        
+        desc.readXML(murmlScript);
+        Parallel par = desc.getParallel();
+        assertNotNull(par);
+        assertEquals(1, par.getSequences().size());
+        Sequence seq = par.getSequences().get(0);
+        assertEquals(2,seq.getSequence().size());
+        assertThat(seq.getSequence().get(0), instanceOf(Parallel.class));
+        assertThat(seq.getSequence().get(1), instanceOf(Parallel.class));    
+        Parallel parInner = (Parallel)seq.getSequence().get(0);
+        assertEquals(4,parInner.getStatics().size());
+    }
+    
+    @Test(expected=XMLScanException.class)
+    public void testSymmetricalInParallelInSymmetrical()
+    {
+      //@formatter:off
+        String murmlScript =
+        "<murml-description xmlns=\"http://www.techfak.uni-bielefeld.de/ags/soa/murml\">"+
+          "<symmetrical dominant=\"right_arm\" symmetry=\"SymMS\">"+
+            "<parallel>"+
+                "<symmetrical dominant=\"right_arm\" symmetry=\"SymMS\">"+
+                     "<static slot=\"HandShape\" value=\"BSfist (ThExt)\"/>"+
+                 "</symmetrical>"+
+                 "<static slot=\"HandShape\" value=\"BSfist (ThExt)\"/>"+
+            "</parallel>"+
+          "</symmetrical>"+
+        "</murml-description>";
+        //@formatter:on
+        desc.readXML(murmlScript);
+    }
+    
+    @Test(expected=XMLScanException.class)
+    public void testSymmetricalInSequenceInSymmetrical()
+    {
+      //@formatter:off
+        String murmlScript =
+        "<murml-description xmlns=\"http://www.techfak.uni-bielefeld.de/ags/soa/murml\">"+
+          "<symmetrical dominant=\"right_arm\" symmetry=\"SymMS\">"+
+            "<sequence>"+
+                "<symmetrical dominant=\"right_arm\" symmetry=\"SymMS\">"+
+                     "<static slot=\"HandShape\" value=\"BSfist (ThExt)\"/>"+
+                 "</symmetrical>"+
+                 "<static slot=\"HandShape\" value=\"BSfist (ThExt)\"/>"+
+            "</sequence>"+
+          "</symmetrical>"+
+        "</murml-description>";
+        //@formatter:on
+        desc.readXML(murmlScript);
     }
     
     @Test

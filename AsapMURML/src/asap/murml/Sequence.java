@@ -26,6 +26,27 @@ public class Sequence extends MURMLElement implements MovementConstraint
         return XMLTAG;
     }
 
+    public void normalizeInnerSymmetricals()
+    {
+        List<MovementConstraint> newSequence = new ArrayList<MovementConstraint>();
+        for(MovementConstraint mc:sequence)
+        {
+            if (mc instanceof Symmetrical)
+            {
+                newSequence.add(((Symmetrical)mc).normalize());
+            }
+            else
+            {
+                newSequence.add(mc);
+                if(mc instanceof Parallel)
+                {
+                    ((Parallel)mc).normalizeInnerSymmetricals();
+                }
+            }
+        }
+        sequence = newSequence;
+    }
+    
     public void makeSymmetric(Dominant dominantHand, Symmetry sym)
     {
         List<MovementConstraint> newSequence = new ArrayList<MovementConstraint>();
@@ -42,11 +63,12 @@ public class Sequence extends MURMLElement implements MovementConstraint
             }
             else if (mc instanceof Parallel)
             {
-                
+                ((Parallel)mc).makeSymmetric(dominantHand, sym);
+                newSequence.add(mc);
             }
             else if (mc instanceof Symmetrical)
             {
-
+                throw new XMLScanException("Cannot have inner <symmetric> inside another symmetric block.");
             }
         }
         sequence = newSequence;

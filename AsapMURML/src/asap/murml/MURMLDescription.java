@@ -87,18 +87,16 @@ public class MURMLDescription extends MURMLElement
     {
         if(symmetrical!=null)
         {
-            Parallel p = symmetrical.normalize();
-            if(parallel==null) 
-            {
-                parallel = p;
-            }
-            else
-            {
-                //TODO: add content of p to existing parallel.
-            }
+            parallel = symmetrical.normalize();            
         }
-        
-        //TODO: normalize inner symmetricals
+        else if(parallel!=null)
+        {
+            parallel.normalizeInnerSymmetricals();
+        }
+        else if(sequence!=null)
+        {
+            sequence.normalizeInnerSymmetricals();
+        }
     }
 
     private static final String XMLTAG = "murml-description";
