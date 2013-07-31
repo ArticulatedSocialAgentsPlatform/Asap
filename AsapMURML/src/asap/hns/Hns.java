@@ -15,6 +15,7 @@ import java.util.Set;
 
 import lombok.Getter;
 import lombok.extern.slf4j.Slf4j;
+import asap.murml.Symmetry;
 
 /**
  * HNS file parser
@@ -59,11 +60,6 @@ public class Hns extends XMLStructureAdapter
     enum SkewdnessSymbols
     {
         Round, FunnelS, FunnelE
-    }
-
-    enum SymmetrySymbol
-    {
-        Sym, SymMS, SymMT, SymMF, SymMST, SymMSF, SymMTF, SymMSTF
     }
 
     public double getMinSwivelLeft()
@@ -191,7 +187,23 @@ public class Hns extends XMLStructureAdapter
         return false;
     }
 
-    public void getSymmetryTransform(SymmetrySymbol sym, float mLoc[], float mDir[])
+    public void transFormLocation(float loc[], Symmetry sym)
+    {
+        float mLoc[]=Mat4f.getMat4f();
+        float mDir[]=Mat4f.getMat4f();
+        getSymmetryTransform(sym, mLoc, mDir);
+        Mat4f.transformPoint(mLoc, loc);
+    }
+    
+    public void transFormDirection(float dir[], Symmetry sym)
+    {
+        float mLoc[]=Mat4f.getMat4f();
+        float mDir[]=Mat4f.getMat4f();
+        getSymmetryTransform(sym, mLoc, mDir);
+        Mat4f.transformPoint(mDir, dir);
+    }
+    
+    public void getSymmetryTransform(Symmetry  sym, float mLoc[], float mDir[])
     {
         switch (sym)
         {
@@ -211,12 +223,12 @@ public class Hns extends XMLStructureAdapter
             break;
         case SymMT:
             // @formatter:off
-            Mat4f.set(mLoc, 1,0,0,0,
+            Mat4f.set(mDir, 1,0,0,0,
                             0,-1,0,0,
                             0,0,1,0,
                             0,0,0,1
                     );
-            Mat4f.set(mDir,-1,0,0,0,
+            Mat4f.set(mLoc,-1,0,0,0,
                             0,-1,0,0,
                             0,0,1,0,
                             0,0,0,1
@@ -225,12 +237,12 @@ public class Hns extends XMLStructureAdapter
             break;
         case SymMF:
             // @formatter:off
-            Mat4f.set(mLoc, 1,0,0,0,
+            Mat4f.set(mDir, 1,0,0,0,
                             0,1,0,0,
                             0,0,-1,0,
                             0,0,0,1
                     );
-            Mat4f.set(mDir,-1,0,0,0,
+            Mat4f.set(mLoc,-1,0,0,0,
                             0,1,0,0,
                             0,0,-1,0,
                             0,0,0,1
@@ -239,12 +251,12 @@ public class Hns extends XMLStructureAdapter
             break;
         case SymMST:
          // @formatter:off
-            Mat4f.set(mLoc, -1,0,0,0,
+            Mat4f.set(mDir, -1,0,0,0,
                             0,-1,0,0,
                             0,0,1,0,
                             0,0,0,1
                     );
-            Mat4f.set(mDir,-1,0,0,0,
+            Mat4f.set(mLoc,-1,0,0,0,
                             0,-1,0,0,
                             0,0,1,0,
                             0,0,0,1
@@ -253,12 +265,12 @@ public class Hns extends XMLStructureAdapter
             break;
         case SymMSF:
             // @formatter:off
-            Mat4f.set(mLoc, -1,0,0,0,
+            Mat4f.set(mDir, -1,0,0,0,
                             0,1,0,0,
                             0,0,-1,0,
                             0,0,0,1
                     );
-            Mat4f.set(mDir,-1,0,0,0,
+            Mat4f.set(mLoc,-1,0,0,0,
                             0,1,0,0,
                             0,0,-1,0,
                             0,0,0,1
@@ -267,12 +279,12 @@ public class Hns extends XMLStructureAdapter
             break;
         case SymMTF:
             // @formatter:off
-            Mat4f.set(mLoc, 1,0,0,0,
+            Mat4f.set(mDir, 1,0,0,0,
                             0,-1,0,0,
                             0,0,-1,0,
                             0,0,0,1
                     );
-            Mat4f.set(mDir,-1,0,0,0,
+            Mat4f.set(mLoc,-1,0,0,0,
                             0,-1,0,0,
                             0,0,-1,0,
                             0,0,0,1
@@ -281,12 +293,12 @@ public class Hns extends XMLStructureAdapter
             break;
         case SymMSTF:
          // @formatter:off
-            Mat4f.set(mLoc, -1,0,0,0,
+            Mat4f.set(mDir, -1,0,0,0,
                             0,-1,0,0,
                             0,0,-1,0,
                             0,0,0,1
                     );
-            Mat4f.set(mDir,-1,0,0,0,
+            Mat4f.set(mLoc,-1,0,0,0,
                             0,-1,0,0,
                             0,0,-1,0,
                             0,0,0,1
