@@ -30,10 +30,24 @@ public class Dynamic extends MURMLElement implements MovementConstraint
     @Setter
     private String scope;
 
+    @Getter
+    @Setter
+    private Symmetry symmetryTransform = Symmetry.Sym;
+
+    public static Parallel constructMirror(Dynamic d, Dominant dominantHand, Symmetry sym)
+    {
+        Parallel p = new Parallel();
+        d.setScope(dominantHand.toString().toLowerCase());
+        p.add(d);
+        p.add(Dynamic.mirror(d, sym));       
+        return p;
+    }
+    
     public static Dynamic mirror(Dynamic d, Symmetry s)
     {
         Dynamic dMirror = new Dynamic();
         dMirror.slot = d.slot;
+        dMirror.setSymmetryTransform(s);
         if (d.scope.equals("left_arm"))
         {
             dMirror.scope = "right_arm";
@@ -46,7 +60,7 @@ public class Dynamic extends MURMLElement implements MovementConstraint
         {
             dMirror.dynamicElements.add(de.copy());
         }
-        //TODO: encode symmetrytransform
+
         return dMirror;
     }
 

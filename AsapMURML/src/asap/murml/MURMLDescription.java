@@ -88,7 +88,7 @@ public class MURMLDescription extends MURMLElement
         if(symmetrical!=null)
         {
             Parallel p = symmetrical.normalize();
-            if(parallel!=null) 
+            if(parallel==null) 
             {
                 parallel = p;
             }

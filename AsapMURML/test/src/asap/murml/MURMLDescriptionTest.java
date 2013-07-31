@@ -18,7 +18,8 @@ import asap.murml.testutil.MURMLTestUtil;
 public class MURMLDescriptionTest
 {
     private static final double PRECISION = 0.001;
-
+    private MURMLDescription desc = new MURMLDescription();
+    
     @Test
     public void testKeyframeGesture()
     {
@@ -41,7 +42,6 @@ public class MURMLDescriptionTest
                                     "</dynamic>"+                                    
                                   "</murml-description>";
             // @formatter:on
-        MURMLDescription desc = new MURMLDescription();
         desc.readXML(murmlScript);
         Dynamic dynamic = desc.getDynamic();
         assertEquals(Slot.Neck, dynamic.getSlot());
@@ -77,7 +77,6 @@ public class MURMLDescriptionTest
                   "</dynamic>"+                                               
             "</murml-description>";
        // @formatter:on
-        MURMLDescription desc = new MURMLDescription();
         desc.readXML(murmlScript);
         
         Dynamic handLoc = desc.getDynamic();
@@ -123,7 +122,6 @@ public class MURMLDescriptionTest
                 "</parallel>"+              
             "</murml-description>";
        // @formatter:on
-        MURMLDescription desc = new MURMLDescription();
         desc.readXML(murmlScript);
         Parallel p = desc.getParallel();
         assertEquals(4, p.getDynamics().size());
@@ -152,7 +150,6 @@ public class MURMLDescriptionTest
           "</parallel>"+
         "</murml-description>";
         // @formatter:on
-        MURMLDescription desc = new MURMLDescription();
         desc.readXML(murmlScript);
         Parallel par = desc.getParallel();
         assertNotNull(par);
@@ -177,7 +174,6 @@ public class MURMLDescriptionTest
          "</symmetrical>"+
         "</murml-description>";
         //@formatter:on
-        MURMLDescription desc = new MURMLDescription();
         desc.readXML(murmlScript);
         Symmetrical sym = desc.getSymmetrical();
         assertNotNull(sym);
@@ -186,6 +182,125 @@ public class MURMLDescriptionTest
         Static stat = MURMLTestUtil.getStatic(Slot.PalmOrientation, par.getStatics());
         assertEquals("DirL", stat.getValue());
         assertEquals(Slot.PalmOrientation, stat.getSlot());
+    }
+    
+    @Test
+    public void testSymmetricalDynamic()
+    {
+        //@formatter:off
+        String murmlScript =
+        "<murml-description xmlns=\"http://www.techfak.uni-bielefeld.de/ags/soa/murml\">"+
+          "<symmetrical dominant=\"right_arm\" symmetry=\"SymMS\">"+
+            "<dynamic slot=\"HandLocation\">"+
+              "<dynamicElement type=\"linear\" scope=\"right_arm\">"+
+                "<value type=\"start\" name=\"LocLowerChest LocCCenter LocNorm\"/>"+
+                "<value type=\"end\" name=\"LocStomach LocCenterRight LocFFar\"/>"+
+              "</dynamicElement>"+
+            "</dynamic>"+
+          "</symmetrical>"+
+        "</murml-description>";
+        //@formatter:on        
+        desc.readXML(murmlScript);
+        Parallel par = desc.getParallel();
+        assertNotNull(par);
+        assertEquals(2, par.getDynamics().size());
+        Dynamic dynRight = par.getDynamics().get(0);
+        assertEquals("right_arm", dynRight.getScope());
+        
+        Dynamic dynLeft = par.getDynamics().get(1);
+        assertEquals("left_arm", dynLeft.getScope());
+        assertEquals(Symmetry.SymMS, dynLeft.getSymmetryTransform());
+    }
+    
+    @Test
+    public void testSymmetricalStatic()
+    {
+        //@formatter:off
+        String murmlScript =
+        "<murml-description xmlns=\"http://www.techfak.uni-bielefeld.de/ags/soa/murml\">"+
+          "<symmetrical dominant=\"right_arm\" symmetry=\"SymMS\">"+
+              "<static slot=\"PalmOrientation\" value=\"DirL\"/>"+ 
+          "</symmetrical>"+
+        "</murml-description>";
+        //@formatter:on
+        
+        desc.readXML(murmlScript);
+        Parallel par = desc.getParallel();
+        assertNotNull(par);
+        assertEquals(2, par.getStatics().size());
+        Static sRight = par.getStatics().get(0);
+        assertEquals("right_arm", sRight.getScope());
+        
+        Static sLeft = par.getStatics().get(1);
+        assertEquals("left_arm", sLeft.getScope());
+        assertEquals(Symmetry.SymMS, sLeft.getSymmetryTransform());
+        assertEquals(Slot.PalmOrientation, sLeft.getSlot());
+        assertEquals("DirL", sLeft.getValue());
+    }
+    
+    @Test
+    public void testSymmetricalSequence()
+    {
+        //@formatter:off
+        String murmlScript =
+        "<murml-description xmlns=\"http://www.techfak.uni-bielefeld.de/ags/soa/murml\">"+
+          "<symmetrical dominant=\"right_arm\" symmetry=\"SymMS\">"+
+              "<sequence>"+
+                  "<static slot=\"PalmOrientation\" value=\"DirLTL\"/>"+
+                  "<dynamic slot=\"PalmOrientation\">"+
+                      "<dynamicElement>"+
+                        "<value type=\"start\" name=\"PalmLU\"/>"+
+                        "<value type=\"end\" name=\"PalmU\"/>"+
+                      "</dynamicElement>"+
+                  "</dynamic>"+
+              "</sequence>"+
+          "</symmetrical>"+
+        "</murml-description>";
+        //@formatter:on        
+        desc.readXML(murmlScript);        
+        Parallel par = desc.getParallel();
+        assertNotNull(par);
+        assertEquals(1, par.getSequences().size());
+        Sequence seq = par.getSequences().get(0);
+        assertEquals(2, seq.getSequence().size());
+        assertThat(seq.getSequence().get(0), instanceOf(Parallel.class));
+        assertThat(seq.getSequence().get(1), instanceOf(Parallel.class));
+        
+        Parallel p1 = (Parallel)(seq.getSequence().get(0));
+        assertEquals(2, p1.getStatics().size());
+        Static sRight = p1.getStatics().get(0);
+        assertEquals("right_arm", sRight.getScope());
+        Static sLeft = p1.getStatics().get(1);
+        assertEquals("left_arm", sLeft.getScope());
+        
+        Parallel p2 = (Parallel)(seq.getSequence().get(1));
+        assertEquals(2, p2.getDynamics().size());
+    }
+    
+    @Test
+    public void testSymmetricalParallel()
+    {
+      //@formatter:off
+        String murmlScript =
+        "<murml-description xmlns=\"http://www.techfak.uni-bielefeld.de/ags/soa/murml\">"+
+          "<symmetrical dominant=\"right_arm\" symmetry=\"SymMS\">"+
+              "<parallel>"+
+                  "<static slot=\"PalmOrientation\" value=\"DirLTL\"/>"+
+                  "<dynamic slot=\"PalmOrientation\">"+
+                      "<dynamicElement>"+
+                        "<value type=\"start\" name=\"PalmLU\"/>"+
+                        "<value type=\"end\" name=\"PalmU\"/>"+
+                      "</dynamicElement>"+
+                  "</dynamic>"+
+              "</parallel>"+
+          "</symmetrical>"+
+        "</murml-description>";
+        //@formatter:on        
+        desc.readXML(murmlScript);        
+        Parallel par = desc.getParallel();
+        assertNotNull(par);
+        assertEquals(2, par.getStatics().size());
+        assertEquals(2, par.getDynamics().size());
     }
     
     @Test
@@ -210,7 +325,6 @@ public class MURMLDescriptionTest
           "</sequence>"+
         "</murml-description>";
         // @formatter:on
-        MURMLDescription desc = new MURMLDescription();
         desc.readXML(murmlScript);
         Sequence seq = desc.getSequence();
         assertNotNull(seq);

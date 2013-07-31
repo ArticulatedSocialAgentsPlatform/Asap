@@ -28,6 +28,11 @@ public class Parallel extends MURMLElement implements MovementConstraint
     @Getter
     private List<Symmetrical> symmetricals = new ArrayList<>();
 
+    public void add(Sequence seq)
+    {
+        sequences.add(seq);
+    }
+    
     public void add(Dynamic d)
     {
         dynamics.add(d);
@@ -36,6 +41,25 @@ public class Parallel extends MURMLElement implements MovementConstraint
     public void add(Static s)
     {
         statics.add(s);
+    }
+    
+    public void makeSymmetric(Dominant dominantHand, Symmetry sym)
+    {
+        List<Static> newStatics = new ArrayList<Static>();
+        for(Static s:statics)
+        {
+            newStatics.addAll(Static.constructMirror(s, dominantHand, sym).getStatics());
+        }
+        statics = newStatics;
+        
+        List<Dynamic> newDynamics = new ArrayList<Dynamic>();
+        for(Dynamic d:dynamics)
+        {
+            newDynamics.addAll(Dynamic.constructMirror(d, dominantHand,sym).getDynamics());
+        }
+        dynamics = newDynamics;
+        
+        //TODO: sequences, symmetricals
     }
     
     @Override

@@ -41,25 +41,27 @@ public class Symmetrical extends MURMLElement implements MovementConstraint
 
     public Parallel normalize()
     {
-        Parallel p = new Parallel();
         if (dynamic != null)
         {
-            dynamic.setScope(dominant.toString().toLowerCase());
-            p.add(Dynamic.mirror(dynamic, symmetry));
+            return Dynamic.constructMirror(dynamic, dominant, symmetry);            
         }
         else if (staticElem != null)
         {
-
+            return Static.constructMirror(staticElem, dominant, symmetry);
         }
         else if (sequence != null)
         {
-
+            Parallel p = new Parallel();
+            sequence.makeSymmetric(dominant, symmetry);
+            p.add(sequence);
+            return p;
         }
         else if (parallel != null)
         {
-
+            parallel.makeSymmetric(dominant, symmetry);
+            return parallel;
         }
-        return p;
+        return new Parallel();
     }
 
     public void decodeContent(XMLTokenizer tokenizer) throws IOException

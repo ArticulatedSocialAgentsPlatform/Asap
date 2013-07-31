@@ -5,6 +5,7 @@ import hmi.xml.XMLTokenizer;
 import java.util.HashMap;
 
 import lombok.Getter;
+import lombok.Setter;
 
 /**
  * Parser for the static murml element
@@ -13,7 +14,7 @@ import lombok.Getter;
  */
 public class Static extends MURMLElement implements MovementConstraint
 {
-    @Getter
+    @Getter @Setter
     private String scope;
     
     @Getter
@@ -21,6 +22,36 @@ public class Static extends MURMLElement implements MovementConstraint
     
     @Getter
     private String value;
+    
+    @Getter
+    @Setter
+    private Symmetry symmetryTransform = Symmetry.Sym;
+    
+    public static Parallel constructMirror(Static s, Dominant dominantHand, Symmetry sym)
+    {
+        Parallel p = new Parallel();
+        s.setScope(dominantHand.toString().toLowerCase());
+        p.add(s);
+        p.add(Static.mirror(s, sym));
+        return p;
+    }
+    
+    public static Static mirror(Static s, Symmetry sym)
+    {
+        Static sMirror = new Static();
+        if (s.scope.equals("left_arm"))
+        {
+            sMirror.scope = "right_arm";
+        }
+        else
+        {
+            sMirror.scope = "left_arm";
+        }
+        sMirror.setSymmetryTransform(sym);
+        sMirror.slot = s.slot;
+        sMirror.value = s.value;
+        return sMirror;
+    }
     
     @Override
     public void decodeAttributes(HashMap<String, String> attrMap, XMLTokenizer tokenizer)
