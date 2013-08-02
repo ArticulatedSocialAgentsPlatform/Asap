@@ -176,7 +176,8 @@ public final class MURMLMUBuilder
                 // no valid definition, ignoring movement segment
                 else
                 {
-                    throw new TMUSetupException("ArmMotorControl::appendSubtrajectory : invalid definition of for linear segment", null);
+                    throw new TMUSetupException("ArmMotorControl::appendSubtrajectory : invalid definition of for linear segment, linear segment " +
+                    		"requires either an end definition or a direction and distance.", null);
                 }
 
                 // -- create guiding stroke, estimate duration and add to subtrajectory
@@ -754,6 +755,8 @@ public final class MURMLMUBuilder
         {
             if (getStartConf(ePos, staticElem, hns))
             {
+                hns.transFormLocation(ePos, staticElem.getSymmetryTransform());
+                
                 // --- create linear guiding stroke for the preparatory movement which
                 // ends with the constraints start configuration
                 trajectory.addGuidingStroke(new LinearGStroke(GStrokePhaseID.STP_PREP, ePos));

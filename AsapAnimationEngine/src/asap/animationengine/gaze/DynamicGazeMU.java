@@ -43,6 +43,11 @@ public class DynamicGazeMU extends GazeMU
     private static final double TORSO_TIME_SCALE = 2; // 2x slower than neck
     private static final int FPS_THORACIC = 3; // used as multiplier for the tmp setup
     private static final int FPS_CERVICAL = 3; // used as multiplier for the tmp setup
+    
+    private static final double CENTRAL_FOVEAL_AREA = Math.toRadians(30);
+    private static final double CERVICAL_ONLY = Math.toRadians(15);
+    private static final double EYE_ONLY = Math.toRadians(15);
+    
     private TimeManipulator tmpThoracic;
     private TimeManipulator tmpCervical;
 
@@ -62,12 +67,41 @@ public class DynamicGazeMU extends GazeMU
 
     private float[] getSpine(float q[])
     {
+        float spineGaze[]=Quat4f.getQuat4f(qGaze);
         float[] spineRots = new float[joints.size() * 4];
+        
+        int i=0;
+        if(Quat4f.getAngle(spineGaze)<EYE_ONLY)
+        {
+            for (VJoint vj : joints)
+            {
+                player.getVCurr().getPartBySid(vj.getSid()).getRotation(spineRots,i);
+                i+=4;
+            }
+            return spineRots;
+        }
+        float aa[] = Quat4f.getAxisAngle4fFromQuat4f(spineGaze);
+        Quat4f.setFromAxisAngle4f(spineGaze, aa[0],aa[1],aa[2],aa[3]-(float)EYE_ONLY);
+        
+        List<VJoint> jointsToSteer = joints;
+        if(Quat4f.getAngle(spineGaze)<CERVICAL_ONLY)
+        {
+            jointsToSteer = cervicalJoints;
+            for (VJoint vj : thoracicJoints)
+            {
+                player.getVCurr().getPartBySid(vj.getSid()).getRotation(spineRots,i);
+                i+=4;
+            }            
+        }
+        
+        
+        
         float[] rpy = Vec3f.getVec3f();
-        Quat4f.getRollPitchYaw(q, rpy);
-
-        int n = joints.size();
-        for (int i = 1; i <= joints.size(); i++)
+        Quat4f.getRollPitchYaw(spineGaze, rpy);
+        
+        
+        int n = jointsToSteer.size();
+        for (i = 1; i <= jointsToSteer.size(); i++)
         {
             float s = (float) Torso.getLinearIncrease(i, n);
             Quat4f.setFromRollPitchYaw(spineRots, (i - 1) * 4, s * rpy[0], s * rpy[1], s * rpy[2]);
@@ -85,17 +119,13 @@ public class DynamicGazeMU extends GazeMU
         }
     }
 
-    public void playEye(double t) throws MUPlayException
+    public void playEye(double t, float qDesRight[], float qDesLeft[]) throws MUPlayException
     {
         float qCurrRight[] = Quat4f.getQuat4f();
         float qCurrLeft[] = Quat4f.getQuat4f();
         lEyeCurr.getRotation(qCurrLeft);
         rEyeCurr.getRotation(qCurrRight);
-        float qDesRight[] = Quat4f.getQuat4f();
-        float qDesLeft[] = Quat4f.getQuat4f();
-        setEndEyeRotation(lEye, qDesLeft);
-        setEndEyeRotation(rEye, qDesRight);
-
+        
         double dur = Math.max(Saccade.getSaccadeDuration(getAngle(qDesRight, qCurrRight)),
                 Saccade.getSaccadeDuration(getAngle(qDesLeft, qCurrLeft)));
 
@@ -153,6 +183,17 @@ public class DynamicGazeMU extends GazeMU
         setTarget();
         float qSpine[] = getSpine(qGaze);
 
+        float qDesRight[] = Quat4f.getQuat4f();
+        float qDesLeft[] = Quat4f.getQuat4f();
+        setEndEyeRotation(lEye, qDesLeft);
+        setEndEyeRotation(rEye, qDesRight);
+        
+        playSpine(t, qSpine);
+        playEye(t,qDesLeft, qDesRight);
+    }
+
+    private void playSpine(double t, float[] qSpine) throws MUPlayException
+    {
         if (t < RELATIVE_READY_TIME)
         {
             double tRel = t / RELATIVE_READY_TIME;
@@ -181,7 +222,6 @@ public class DynamicGazeMU extends GazeMU
         {
             setSpine(qSpine);
         }
-        playEye(t);
     }
 
     @Override

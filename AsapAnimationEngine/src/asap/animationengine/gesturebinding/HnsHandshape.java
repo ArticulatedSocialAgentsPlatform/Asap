@@ -93,6 +93,11 @@ public class HnsHandshape
         if (hns.getBasicHandShapes().contains(basicSymbol) || hns.getSpecificHandShapes().contains(basicSymbol))
         {
             SkeletonPose p = poseMap.get(basicSymbol);
+            if(p==null)
+            {
+                log.warn("No HNS hand shape description for {} in poseMap.", basicSymbol);
+                return null;
+            }
             return p.untargettedDeepCopy();
             
             // TODO: parse and handle stuff between ()'s

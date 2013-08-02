@@ -506,6 +506,47 @@ public class MURMLDescriptionTest
         desc.readXML(murmlScript);
     }
     
+    @Test(expected=XMLScanException.class)
+    public void testInnerSymmetricalInSequenceInSymmetrical()
+    {
+        //@formatter:off
+        String murmlScript =
+        "<murml-description xmlns=\"http://www.techfak.uni-bielefeld.de/ags/soa/murml\">"+
+          "<parallel>"+
+          "<symmetrical dominant=\"right_arm\" symmetry=\"SymMS\">"+
+            "<sequence>"+
+                "<symmetrical dominant=\"right_arm\" symmetry=\"SymMS\">"+
+                     "<static slot=\"HandShape\" value=\"BSfist (ThExt)\"/>"+
+                 "</symmetrical>"+
+                 "<static slot=\"HandShape\" value=\"BSfist (ThExt)\"/>"+
+            "</sequence>"+
+          "</symmetrical>"+
+          "</parallel>"+
+        "</murml-description>";
+        //@formatter:on
+        desc.readXML(murmlScript);
+    }
+    
+    @Test(expected=XMLScanException.class)
+    public void testParallelInParallel()
+    {
+        //@formatter:off
+        String murmlScript =
+        "<murml-description xmlns=\"http://www.techfak.uni-bielefeld.de/ags/soa/murml\">"+
+          "<parallel>"+
+            "<parallel>"+
+                "<symmetrical dominant=\"right_arm\" symmetry=\"SymMS\">"+
+                     "<static slot=\"HandShape\" value=\"BSfist (ThExt)\"/>"+
+                 "</symmetrical>"+
+                 "<static slot=\"HandShape\" value=\"BSfist (ThExt)\"/>"+
+            "</parallel>"+
+            "<static slot=\"PalmOrientation\" value=\"DirLTL\"/>"+        
+          "</parallel>"+
+        "</murml-description>";
+        //@formatter:on
+        desc.readXML(murmlScript);
+    }
+    
     @Test
     public void testSequence()
     {
@@ -535,4 +576,6 @@ public class MURMLDescriptionTest
         assertEquals(5,seq.getSequence().size());        
         assertThat(seq.getSequence().get(4), instanceOf(Dynamic.class));
     }
+    
+    
 }

@@ -77,8 +77,8 @@ public class GazeMU implements AnimationUnit
 {
     protected static final double TARGET_IMPORTANCE = 8;
     protected static final double NECK_VELOCITY = 2 * Math.PI;
-    
-    protected float qGaze[];
+
+    protected float qGaze[] = Quat4f.getIdentity();
 
     protected float qTemp[];
 
@@ -97,16 +97,16 @@ public class GazeMU implements AnimationUnit
     protected VJoint rEye;
 
     protected VJoint lEye;
-    
+
     protected VJoint rEyeCurr;
 
     protected VJoint lEyeCurr;
-    
+
     protected AnimationPlayer player;
 
     protected WorldObjectManager woManager;
 
-    protected String target="";
+    protected String target = "";
 
     protected TimeManipulator tmp;
 
@@ -122,7 +122,7 @@ public class GazeMU implements AnimationUnit
 
     protected double offsetAngle = 0;
     protected OffsetDirection offsetDirection = OffsetDirection.NONE;
-    
+
     protected GazeInfluence influence = GazeInfluence.NECK;
 
     protected static final double RELATIVE_READY_TIME = 0.25;
@@ -132,13 +132,12 @@ public class GazeMU implements AnimationUnit
 
     public GazeMU()
     {
-        qGaze = new float[4];
         qTemp = new float[4];
         qStart = new float[4];
         qStartLeftEye = new float[4];
         qStartRightEye = new float[4];
         vecTemp = new float[3];
-        setupKeyPositions();        
+        setupKeyPositions();
 
         // defaults from presenter
         tmp = new SigmoidManipulator(5, 1);
@@ -194,7 +193,13 @@ public class GazeMU implements AnimationUnit
 
     protected void setEndEyeRotation(VJoint eye, float qEye[]) throws MUPlayException
     {
-        float gazeDir[]=Vec3f.getVec3f();
+        float[] q = getUnsaturizedEyeRotation(eye);
+        EyeSaturation.sat(q, Quat4f.getIdentity(), qEye);
+    }
+
+    protected float[] getUnsaturizedEyeRotation(VJoint eye) throws MUPlayException
+    {
+        float gazeDir[] = Vec3f.getVec3f();
         woTarget = woManager.getWorldObject(target);
         if (woTarget == null)
         {
@@ -205,9 +210,9 @@ public class GazeMU implements AnimationUnit
         Vec3f.normalize(gazeDir);
         float q[] = Quat4f.getQuat4f();
         ListingsLaw.listingsEye(gazeDir, q);
-        EyeSaturation.sat(q, Quat4f.getIdentity(), qEye);
+        return q;
     }
-    
+
     @Override
     public GazeMU copy(AnimationPlayer p) throws MUSetupException
     {
@@ -238,12 +243,12 @@ public class GazeMU implements AnimationUnit
         }
         setTarget();
     }
-    
+
     protected void setTarget() throws MUPlayException
     {
         woTarget.getTranslation2(localGaze, neck);
         Quat4f.transformVec3f(getOffsetRotation(), localGaze);
-        setEndRotation(localGaze);        
+        setEndRotation(localGaze);
     }
 
     public void setStartPose() throws MUPlayException
@@ -289,9 +294,9 @@ public class GazeMU implements AnimationUnit
     @Override
     public double getPreferedDuration()
     {
-        return getPreferedReadyDuration()+getPreferedRelaxDuration()+getPreferedStayDuration();
-    }    
-    
+        return getPreferedReadyDuration() + getPreferedRelaxDuration() + getPreferedStayDuration();
+    }
+
     /**
      * Time to stay on target
      */
@@ -299,21 +304,21 @@ public class GazeMU implements AnimationUnit
     {
         return 2;
     }
-    
+
     public double getPreferedRelaxDuration()
     {
         return getPreferedReadyDuration();
     }
-    
+
     public double getPreferedReadyDuration()
     {
-        float q[]=Quat4f.getQuat4f();
+        float q[] = Quat4f.getQuat4f();
         Quat4f.set(q, qGaze);
-        Quat4f.mulConjugateRight(q, qStart);        
-        return TARGET_IMPORTANCE*Quat4f.getAngle(q)/NECK_VELOCITY;
-        
+        Quat4f.mulConjugateRight(q, qStart);
+        return TARGET_IMPORTANCE * Quat4f.getAngle(q) / NECK_VELOCITY;
+
     }
-    
+
     private void playEye(double t, float[] qDesNeck, float[] qStartEye, VJoint eye, VJoint eyeCurr) throws MUPlayException
     {
 
@@ -394,7 +399,7 @@ public class GazeMU implements AnimationUnit
         else if (t > 0.75)
         {
             relaxUnit.play((t - 0.75) / 0.25);
-            log.debug("play relax {}",(t - 0.75) / 0.25);
+            log.debug("play relax {}", (t - 0.75) / 0.25);
         }
         else
         {
@@ -413,7 +418,7 @@ public class GazeMU implements AnimationUnit
     {
         this.influence = influence;
     }
-    
+
     @Override
     public void setParameterValue(String name, String value) throws ParameterException
     {
