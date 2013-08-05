@@ -64,7 +64,7 @@ public class T1RTransitionToPoseMU extends TransitionToPoseMU
         {
             for (VJoint vj : startJoints)
             {
-                VJoint vNew = player.getVCurr().getPart(vj.getSid());
+                VJoint vNew = player.getVCurrPartBySid(vj.getSid());
                 startPoseJoints.add(vNew);
             }
         }
@@ -74,7 +74,7 @@ public class T1RTransitionToPoseMU extends TransitionToPoseMU
             ArrayList<VJoint> newJoints = new ArrayList<VJoint>();
             for (VJoint vj : joints)
             {
-                VJoint newJ = player.getVCurr().getPart(vj.getSid());
+                VJoint newJ = player.getVCurrPartBySid(vj.getSid());
                 if (newJ != null)
                 {
                     newJoints.add(newJ);

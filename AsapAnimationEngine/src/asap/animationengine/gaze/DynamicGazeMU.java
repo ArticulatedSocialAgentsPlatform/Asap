@@ -75,7 +75,7 @@ public class DynamicGazeMU extends GazeMU
         {
             for (VJoint vj : joints)
             {
-                player.getVCurr().getPartBySid(vj.getSid()).getRotation(spineRots,i);
+                player.getVCurrPartBySid(vj.getSid()).getRotation(spineRots,i);
                 i+=4;
             }
             return spineRots;
@@ -89,7 +89,7 @@ public class DynamicGazeMU extends GazeMU
             jointsToSteer = cervicalJoints;
             for (VJoint vj : thoracicJoints)
             {
-                player.getVCurr().getPartBySid(vj.getSid()).getRotation(spineRots,i);
+                player.getVCurrPartBySid(vj.getSid()).getRotation(spineRots,i);
                 i+=4;
             }            
         }
@@ -235,7 +235,7 @@ public class DynamicGazeMU extends GazeMU
         int i = 0;
         for (VJoint vj : joints)
         {
-            VJoint vjCur = player.getVCurr().getPart(vj.getSid());
+            VJoint vjCur = player.getVCurrPartBySid(vj.getSid());
             {
                 vjCur.getRotation(qStart, i);
             }
@@ -329,7 +329,7 @@ public class DynamicGazeMU extends GazeMU
             else if(influence == GazeInfluence.SHOULDER)
             {
                 List<VJoint> cerv = VJointUtils.gatherJoints(Hanim.CERVICAL_JOINTS, player.getVNext());
-                List<VJoint> shoulderPath = player.getVNext().getPath(player.getVNext().getPartBySid(Hanim.r_shoulder));
+                List<VJoint> shoulderPath = player.getVNext().getPath(player.getVNextPartBySid(Hanim.r_shoulder));
                 while(!shoulderPath.contains(cerv.get(0)))
                 {
                     cerv.add(0, cerv.get(0).getParent());
@@ -369,10 +369,10 @@ public class DynamicGazeMU extends GazeMU
         copy.offsetDirection = offsetDirection;
         copy.woManager = p.getWoManager();
         copy.target = target;
-        copy.lEye = p.getVNext().getPart(Hanim.l_eyeball_joint);
-        copy.rEye = p.getVNext().getPart(Hanim.r_eyeball_joint);
-        copy.lEyeCurr = p.getVCurr().getPart(Hanim.l_eyeball_joint);
-        copy.rEyeCurr = p.getVCurr().getPart(Hanim.r_eyeball_joint);
+        copy.lEye = p.getVNextPartBySid(Hanim.l_eyeball_joint);
+        copy.rEye = p.getVNextPartBySid(Hanim.r_eyeball_joint);
+        copy.lEyeCurr = p.getVCurrPartBySid(Hanim.l_eyeball_joint);
+        copy.rEyeCurr = p.getVCurrPartBySid(Hanim.r_eyeball_joint);
         return copy;
     }
 

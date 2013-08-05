@@ -217,11 +217,11 @@ public class GazeMU implements AnimationUnit
     public GazeMU copy(AnimationPlayer p) throws MUSetupException
     {
         GazeMU gmu = new GazeMU();
-        gmu.neck = p.getVNext().getPart(Hanim.skullbase);
-        gmu.lEye = p.getVNext().getPart(Hanim.l_eyeball_joint);
-        gmu.rEye = p.getVNext().getPart(Hanim.r_eyeball_joint);
-        gmu.lEyeCurr = p.getVCurr().getPart(Hanim.l_eyeball_joint);
-        gmu.rEyeCurr = p.getVCurr().getPart(Hanim.r_eyeball_joint);
+        gmu.neck = p.getVNextPartBySid(Hanim.skullbase);
+        gmu.lEye = p.getVNextPartBySid(Hanim.l_eyeball_joint);
+        gmu.rEye = p.getVNextPartBySid(Hanim.r_eyeball_joint);
+        gmu.lEyeCurr = p.getVCurrPartBySid(Hanim.l_eyeball_joint);
+        gmu.rEyeCurr = p.getVCurrPartBySid(Hanim.r_eyeball_joint);
         gmu.offsetAngle = offsetAngle;
         gmu.offsetDirection = offsetDirection;
         gmu.player = p;
@@ -254,7 +254,7 @@ public class GazeMU implements AnimationUnit
     public void setStartPose() throws MUPlayException
     {
 
-        player.getVCurr().getPart(Hanim.skullbase).getRotation(qStart);
+        player.getVCurrPartBySid(Hanim.skullbase).getRotation(qStart);
         if (lEyeCurr != null && rEyeCurr != null)
         {
             lEyeCurr.getRotation(qStartLeftEye);

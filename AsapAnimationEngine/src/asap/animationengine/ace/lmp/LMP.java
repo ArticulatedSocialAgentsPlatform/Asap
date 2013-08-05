@@ -4,6 +4,8 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Set;
 
+import lombok.Getter;
+import lombok.Setter;
 import saiba.bml.core.Behaviour;
 import asap.animationengine.motionunit.TimedAnimationUnit;
 import asap.realizer.BehaviourPlanningException;
@@ -28,14 +30,26 @@ import com.google.common.collect.ImmutableSet;
 public abstract class LMP extends TimedAbstractPlanUnit implements TimedAnimationUnit
 {
     protected final PegBoard pegBoard;
-    
+
+    @Getter
+    @Setter
+    private volatile boolean startMoveable;
+    private volatile boolean firstResolve = true;
+
+    @Getter
+    private volatile TimePeg startPeg;
+    @Getter
+    private volatile TimePeg strokeStartPeg;
+    @Getter
+    private volatile TimePeg strokeEndPeg;
+
     public LMP(FeedbackManager fbm, BMLBlockPeg bmlPeg, String bmlId, String behId, PegBoard localPegBoard)
     {
         super(fbm, bmlPeg, bmlId, behId, true);
         this.pegBoard = localPegBoard;
-        createPegWhenMissingOnPegBoard("start");
-        createPegWhenMissingOnPegBoard("strokeStart");
-        createPegWhenMissingOnPegBoard("strokeEnd");        
+        startPeg = createPegWhenMissingOnPegBoard("start");
+        strokeStartPeg = createPegWhenMissingOnPegBoard("strokeStart");
+        strokeEndPeg = createPegWhenMissingOnPegBoard("strokeEnd");
     }
 
     public boolean hasFixedStrokeDuration()
@@ -63,19 +77,17 @@ public abstract class LMP extends TimedAbstractPlanUnit implements TimedAnimatio
     {
         double prepDuration = getPreparationDuration();
 
-        TimePeg startPeg = getTimePeg("start");
-        TimePeg strokeStartPeg = getTimePeg("strokeStart");
         ImmutableSet<PegKey> keys = pegBoard.getPegKeys(startPeg);
-        if (keys.size()-countInternalSyncs(keys,0) == 0)
+        if (keys.size() - countInternalSyncs(keys, 0) == 0)
         {
             double localStart = pegBoard.getRelativePegTime(getBMLId(), strokeStartPeg) - prepDuration;
             if (localStart < 0) localStart = 0;
             startPeg.setLocalValue(localStart);
         }
-        else if(startPeg instanceof AfterPeg)
+        else if (startPeg instanceof AfterPeg)
         {
-            double intendedStart = strokeStartPeg.getGlobalValue()-prepDuration;
-            if(intendedStart<startPeg.getLink().getGlobalValue())
+            double intendedStart = strokeStartPeg.getGlobalValue() - prepDuration;
+            if (intendedStart < startPeg.getLink().getGlobalValue())
             {
                 intendedStart = startPeg.getLink().getGlobalValue();
             }
@@ -92,24 +104,36 @@ public abstract class LMP extends TimedAbstractPlanUnit implements TimedAnimatio
         {
             updateStartTime();
         }
-        resolveTimePegs(time);        
+        resolveTimePegs(time);
     }
 
-    protected void createPegWhenMissingOnPegBoard(String syncId)
+    protected TimePeg createPegWhenMissingOnPegBoard(String syncId)
     {
-        if (pegBoard.getTimePeg(getBMLId(), getId(), syncId) == null)
+        TimePeg tp = pegBoard.getTimePeg(getBMLId(), getId(), syncId);
+        if (tp == null)
         {
-            TimePeg tp = new TimePeg(getBMLBlockPeg());
+            tp = new TimePeg(getBMLBlockPeg());
             pegBoard.addTimePeg(getBMLId(), getId(), syncId, tp);
         }
+        return tp;
     }
 
     @Override
     public double getStartTime()
     {
-        return pegBoard.getPegTime(getBMLId(), getId(), "start");
+        return startPeg.getGlobalValue();
     }
 
+    public double getStrokeStartTime()
+    {
+        return strokeStartPeg.getGlobalValue();
+    }
+    
+    public double getStrokeEndTime()
+    {
+        return strokeEndPeg.getGlobalValue();
+    }
+    
     @Override
     public double getEndTime()
     {
@@ -123,11 +147,7 @@ public abstract class LMP extends TimedAbstractPlanUnit implements TimedAnimatio
         {
             return pegBoard.getPegTime(getBMLId(), getId(), "relax");
         }
-        else if (pegBoard.getPegTime(getBMLId(), getId(), "strokeEnd") != TimePeg.VALUE_UNKNOWN)
-        {
-            return pegBoard.getPegTime(getBMLId(), getId(), "strokeEnd");
-        }
-        return getEndTime();
+        return strokeEndPeg.getGlobalValue();
     }
 
     @Override
@@ -140,6 +160,9 @@ public abstract class LMP extends TimedAbstractPlanUnit implements TimedAnimatio
     public void setTimePeg(String syncId, TimePeg peg)
     {
         pegBoard.addTimePeg(getBMLId(), getId(), syncId, peg);
+        if (syncId.equals("start")) startPeg = peg;
+        else if(syncId.equals("strokeStart")) strokeStartPeg = peg;
+        else if(syncId.equals("strokeEnd")) strokeEndPeg = peg;
     }
 
     protected boolean noPegsSet()
@@ -176,13 +199,12 @@ public abstract class LMP extends TimedAbstractPlanUnit implements TimedAnimatio
     }
 
     protected abstract void setInternalStrokeTiming(double time);
-    
-    
+
     public double getStrokeDuration(double time)
     {
-        if(time>=getTime("strokeStart"))
+        if (time >= strokeStartPeg.getGlobalValue())
         {
-            return getTime("strokeEnd")-getTime("strokeStart"); 
+            return strokeEndPeg.getGlobalValue() - strokeStartPeg.getGlobalValue();
         }
         return getStrokeDuration();
     }
@@ -201,22 +223,29 @@ public abstract class LMP extends TimedAbstractPlanUnit implements TimedAnimatio
 
     protected void resolveTimePegs(double time)
     {
-        Set<PegKey> pkStart = pegBoard.getPegKeys(getTimePeg("start"));
-        
-        if(isLurking()||isInPrep())
+
+        Set<PegKey> pkStart = pegBoard.getPegKeys(startPeg);
+
+        if (firstResolve)
         {
-            if (!getTimePeg("start").isAbsoluteTime() && pkStart.size()-countInternalSyncs(pkStart,0) == 0)
+            setStartMoveable(pkStart.size() - countInternalSyncs(pkStart, 0) == 0);
+            firstResolve = false;
+        }
+
+        if (isLurking() || isInPrep())
+        {
+            if (!startPeg.isAbsoluteTime() && isStartMoveable())
             {
-                pegBoard.setPegTime(getBMLId(), getId(), "start", getTimePeg("strokeStart").getGlobalValue() - getPreparationDuration());
+                startPeg.setGlobalValue(strokeStartPeg.getGlobalValue() - getPreparationDuration());                
             }
-        }        
-        
-        if(time < getRelaxTime())
+        }
+
+        if (time < getRelaxTime())
         {
             setInternalStrokeTiming(time);
         }
 
-        if (!isPlaying()&&!isDone())
+        if (!isPlaying() && !isDone())
         {
             setTpMinimumTime(time);
         }

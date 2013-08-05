@@ -50,8 +50,8 @@ public class EyeGazeMU extends GazeMU
     public EyeGazeMU copy(AnimationPlayer p) throws MUSetupException
     {
         EyeGazeMU gmu = new EyeGazeMU();
-        gmu.lEye = p.getVNext().getPart(Hanim.l_eyeball_joint);
-        gmu.rEye = p.getVNext().getPart(Hanim.r_eyeball_joint);
+        gmu.lEye = p.getVNextPartBySid(Hanim.l_eyeball_joint);
+        gmu.rEye = p.getVNextPartBySid(Hanim.r_eyeball_joint);
         if(gmu.lEye == null || gmu.rEye==null)
         {
             throw new MUSetupException("Eyegaze MU requested, but no eyeball joint in skeleton.",this);

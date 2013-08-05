@@ -28,24 +28,14 @@ import com.google.common.collect.ImmutableSet;
 public class LMPParallel extends LMP
 {
     private ImmutableList<TimedAnimationUnit> lmpQueue;
+    private volatile boolean linked = false;
     
     public LMPParallel(FeedbackManager fbm, BMLBlockPeg bmlPeg, String bmlId, String behId, PegBoard pegBoard, List<TimedAnimationUnit> lmps)
     {
         super(fbm, bmlPeg, bmlId, behId, pegBoard);
-        lmpQueue = ImmutableList.copyOf(lmps);
-        createMissingTimePegs();
+        lmpQueue = ImmutableList.copyOf(lmps);        
     }
     
-    private void createMissingTimePegs()
-    {
-        createPegWhenMissingOnPegBoard("stroke");
-        createPegWhenMissingOnPegBoard("ready");
-        createPegWhenMissingOnPegBoard("relax");
-        createPegWhenMissingOnPegBoard("strokeStart");
-        createPegWhenMissingOnPegBoard("strokeEnd");
-        createPegWhenMissingOnPegBoard("start");        
-    }
-
     @Override
     public Set<String> getKinematicJoints()
     {
@@ -192,6 +182,7 @@ public class LMPParallel extends LMP
     
     public void linkLMPSyncs()
     {
+        if(linked)return;
         for (String hSync : pegBoard.getSyncs(getBMLId(), getId()))
         {
             for (TimedAnimationUnit lmp: lmpQueue)
@@ -205,6 +196,7 @@ public class LMPParallel extends LMP
                 }
             }
         }
+        linked = true;
     }
     
     @Override

@@ -155,7 +155,7 @@ public class PerlinNoiseMU implements NoiseMU
             float rotzRad = getFloatParameterValue("offsetz") + getFloatParameterValue("baseamplitudez")
                     * pnz1.noise((float) t * getFloatParameterValue("basefreqz"));
             Quat4f.setFromRollPitchYaw(q, rotzRad, rotxRad, rotyRad);
-            player.getVNext().getPart(getParameterValue("joint")).setRotation(q);
+            player.getVNextPartBySid(getParameterValue("joint")).setRotation(q);
         }
         catch (Exception ex)
         {

@@ -267,6 +267,44 @@ public class LMPSequenceTest
         assertEquals(4, tmu2.getTime("strokeStart"), TIME_PRECISION);
         assertEquals(5, tmu2.getTime("strokeEnd"), TIME_PRECISION);
     }
+    
+    @Test
+    public void testSetInternalStrokeTimingZeroStrokeAndPrepDuration()
+    {
+        StubLMP tmu1 = createStub("bml1", "beh1-1", 1, 2, 0);
+        StubLMP tmu2 = createStub("bml1", "beh1-2", 0, 2, 0);
+        LMPSequence seq = new LMPSequence(fbm, BMLBlockPeg.GLOBALPEG, "bml1", "beh1", pegBoard,
+                new ImmutableList.Builder<TimedAnimationUnit>().add(tmu1, tmu2).build());
+        seq.setTimePeg("strokeStart", TimePegUtil.createTimePeg(3));
+        seq.setTimePeg("strokeEnd", TimePegUtil.createTimePeg(3));
+        seq.setInternalStrokeTiming(0);
+
+        assertEquals(3, tmu1.getTime("strokeStart"), TIME_PRECISION);
+        assertEquals(3, tmu1.getTime("strokeEnd"), TIME_PRECISION);
+        assertEquals(3, tmu2.getTime("start"), TIME_PRECISION);
+        assertEquals(3, tmu2.getTime("strokeStart"), TIME_PRECISION);
+        assertEquals(3, tmu2.getTime("strokeEnd"), TIME_PRECISION);
+    }
+    
+    @Test
+    public void testSetInternalStrokeTimingZeroStrokeAndPrepDurationAfterStart()
+    {
+        StubLMP tmu1 = createStub("bml1", "beh1-1", 1, 2, 0);
+        StubLMP tmu2 = createStub("bml1", "beh1-2", 0, 2, 0);
+        LMPSequence seq = new LMPSequence(fbm, BMLBlockPeg.GLOBALPEG, "bml1", "beh1", pegBoard,
+                new ImmutableList.Builder<TimedAnimationUnit>().add(tmu1, tmu2).build());
+        seq.setTimePeg("strokeStart", TimePegUtil.createTimePeg(3));
+        seq.setTimePeg("strokeEnd", TimePegUtil.createTimePeg(3));
+        seq.setTimePeg("start", TimePegUtil.createTimePeg(2));
+        seq.setInternalStrokeTiming(0);
+        seq.setInternalStrokeTiming(3.0);
+
+        assertEquals(3, tmu1.getTime("strokeStart"), TIME_PRECISION);
+        assertEquals(3, tmu1.getTime("strokeEnd"), TIME_PRECISION);
+        assertEquals(3, tmu2.getTime("start"), TIME_PRECISION);
+        assertEquals(3, tmu2.getTime("strokeStart"), TIME_PRECISION);
+        assertEquals(3, tmu2.getTime("strokeEnd"), TIME_PRECISION);
+    }
 
     @Test
     public void testSetInternalStrokeTimingChange()

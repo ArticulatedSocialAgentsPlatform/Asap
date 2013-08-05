@@ -23,6 +23,8 @@ import hmi.animation.Hanim;
 import hmi.animation.Skeleton;
 import hmi.animation.SkeletonPose;
 import hmi.animation.VJoint;
+import hmi.animation.VJointPartsMap;
+import hmi.animation.VJointUtils;
 import hmi.animation.VObjectTransformCopier;
 import hmi.math.Quat4f;
 import hmi.mixedanimationenvironment.MixedAnimationPlayer;
@@ -63,10 +65,14 @@ import asap.realizer.planunit.TimedPlanUnitState;
 @Slf4j
 public class AnimationPlayer implements Player, MixedAnimationPlayer
 {
-    private VJoint vPrev;
-    private VJoint vCurr;
-    private VJoint vNext;
-    private VJoint vAdditive;
+    private final VJoint vPrev;
+    private final VJoint vCurr;
+    private final VJoint vNext;
+    private final VJointPartsMap vPrevMap;
+    private final VJointPartsMap vNextMap;
+    private final VJointPartsMap vCurrMap;
+    private final VJoint vAdditive;
+    private final VJointPartsMap vAdditiveMap;
 
     @Getter
     @Setter
@@ -141,7 +147,7 @@ public class AnimationPlayer implements Player, MixedAnimationPlayer
                 vj.getRotation(q);
                 if (Quat4f.epsilonEquals(q, Quat4f.getIdentity(), 0.001f))
                 {
-                    vCurr.getPartBySid(vj.getSid()).getRotation(q);
+                    vCurrMap.get(vj.getSid()).getRotation(q);
                     vj.setRotation(q);
                 }
             }
@@ -154,9 +160,16 @@ public class AnimationPlayer implements Player, MixedAnimationPlayer
         vPrev = vP;
         vCurr = vC;
         vNext = vN;
+        VJointUtils.setSidToIdOrNameIfNullSid(vPrev.getParts());
+        VJointUtils.setSidToIdOrNameIfNullSid(vCurr.getParts());
+        VJointUtils.setSidToIdOrNameIfNullSid(vNext.getParts());        
+        vPrevMap = new VJointPartsMap(vP);
+        vCurrMap = new VJointPartsMap(vC);
+        vNextMap = new VJointPartsMap(vN);
         vAdditive = vC.copyTree("vAdditive-");
         setAdditiveToIdentity();
-
+        vAdditiveMap = new VJointPartsMap(vAdditive);
+        
         prevSkel = new Skeleton("prevSkel", vPrev);
         curSkel = new Skeleton("curSkel", vCurr);
         nextSkel = new Skeleton("nextSkel", vNext);
@@ -504,6 +517,26 @@ public class AnimationPlayer implements Player, MixedAnimationPlayer
     public VJoint getVNext()
     {
         return vNext;
+    }
+    
+    public VJoint getVNextPartBySid(String sid)
+    {
+        return vNextMap.get(sid);
+    }
+    
+    public VJoint getVCurrPartBySid(String sid)
+    {
+        return vCurrMap.get(sid);
+    }
+    
+    public VJoint getVPrevPartBySid(String sid)
+    {
+        return vPrevMap.get(sid);
+    }
+    
+    public VJoint getVAdditivePartBySid(String sid)
+    {
+        return vAdditiveMap.get(sid);
     }
 
     public VJoint getvAdditive()

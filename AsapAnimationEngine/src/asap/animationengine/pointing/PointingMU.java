@@ -165,9 +165,9 @@ public class PointingMU implements AnimationUnit
         PointingMU pmu = new PointingMU();
         pmu.shoulderId = shoulderId;
         pmu.elbowId = elbowId;
-        pmu.vjShoulder = p.getVNext().getPart(shoulderId);
-        pmu.vjShoulder = p.getVNext().getPart(elbowId);
-        pmu.vjWrist = p.getVNext().getPart(wristId);
+        pmu.vjShoulder = p.getVNextPartBySid(shoulderId);
+        pmu.vjShoulder = p.getVNextPartBySid(elbowId);
+        pmu.vjWrist = p.getVNextPartBySid(wristId);
         pmu.player = p;
         pmu.woManager = p.getWoManager();
         pmu.target = target;
@@ -197,8 +197,8 @@ public class PointingMU implements AnimationUnit
     public void setStartPose(double prep) throws MUPlayException
     {
         preparationDuration = prep;
-        player.getVCurr().getPart(shoulderId).getRotation(qShoulderStart);
-        player.getVCurr().getPart(elbowId).getRotation(qElbowStart);
+        player.getVCurrPartBySid(shoulderId).getRotation(qShoulderStart);
+        player.getVCurrPartBySid(elbowId).getRotation(qElbowStart);
         setTarget(target);
     }
 
@@ -247,10 +247,10 @@ public class PointingMU implements AnimationUnit
         {
             throw new RuntimeException("Invalid hand spec " + hand);
         }
-        vjShoulder = player.getVNext().getPart(shoulderId);
-        vjElbow = player.getVNext().getPart(elbowId);
-        vjWrist = player.getVNext().getPart(wristId);
-        vjFingerTip = player.getVNext().getPart(fingerTipId);
+        vjShoulder = player.getVNextPartBySid(shoulderId);
+        vjElbow = player.getVNextPartBySid(elbowId);
+        vjWrist = player.getVNextPartBySid(wristId);
+        vjFingerTip = player.getVNextPartBySid(fingerTipId);
         setupSolver();
     }
 

@@ -129,6 +129,6 @@ public class LMPWristPosTest extends AbstractTimedPlanUnitTest
     {
         TimedAnimationUnit tau = setupPlanUnit(fbManager, BMLBlockPeg.GLOBALPEG, "bml1", "beh1");
         assertThat(tau.getAvailableSyncs(),
-                IsIterableContainingInAnyOrder.containsInAnyOrder("start", "ready", "strokeStart", "stroke", "strokeEnd", "relax", "end"));
+                IsIterableContainingInAnyOrder.containsInAnyOrder("start", "strokeStart", "strokeEnd"));
     }
 }

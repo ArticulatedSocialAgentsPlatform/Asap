@@ -208,8 +208,8 @@ public class LMPWristRot extends LMP
             if (constraintMap.get(oc) == null)
             {
                 TimePeg tp = new TimePeg(getBMLBlockPeg());
-                constraintMap.put(oc, tp);
-                pegBoard.addTimePeg(getBMLId(), getId(), oc.getId(), tp);
+                constraintMap.put(oc, tp);                
+                setTimePeg(oc.getId(), tp);                
             }
         }        
     }
@@ -451,8 +451,8 @@ public class LMPWristRot extends LMP
     protected void playUnit(double time) throws TimedPlanUnitPlayException
     {
         float q[] = getOrient(time);
-        VJoint vjRoot = aniPlayer.getVCurr().getPartBySid(Hanim.HumanoidRoot);
-        VJoint vjWristCurr = aniPlayer.getVCurr().getPartBySid(joint);
+        VJoint vjRoot = aniPlayer.getVCurrPartBySid(Hanim.HumanoidRoot);
+        VJoint vjWristCurr = aniPlayer.getVCurrPartBySid(joint);
         
         float qw[]=Quat4f.getQuat4f();                
         float qp[]=Quat4f.getQuat4f();
@@ -462,7 +462,7 @@ public class LMPWristRot extends LMP
         par.getPathRotation(vjRoot, qp);
         Quat4f.inverse(qp);
         Quat4f.mul(q2, qp, qw);
-        VJoint vjWrist = aniPlayer.getVNext().getPartBySid(joint);        
+        VJoint vjWrist = aniPlayer.getVNextPartBySid(joint);        
         vjWrist.setRotation(q2);        
     }
 
@@ -478,8 +478,8 @@ public class LMPWristRot extends LMP
         orientVec.clear();
 
         // start and first stroke quaternions already determined by 'activate()'
-        orientVec.add(new OrientPos(getTimePeg("start"), cQuat));
-        orientVec.add(new OrientPos(getTimePeg("strokeStart"), startQuat));
+        orientVec.add(new OrientPos(getStartPeg(), cQuat));
+        orientVec.add(new OrientPos(getStrokeStartPeg(), startQuat));
 
         // subsequent stroke orientations
         float rot[] = Mat3f.getMat3f();
@@ -502,17 +502,17 @@ public class LMPWristRot extends LMP
         Mat3f.getColumn(c, EXT_FINGER_COLUMN, d);
         OrientConstraint ocNew = new OrientConstraint("start", GStrokePhaseID.STP_PREP, d, p);
         ocVec.add(0, ocNew);
-        constraintMap.put(ocNew, getTimePeg("start"));
+        constraintMap.put(ocNew, getStartPeg());
     }
 
     @Override
     protected void startUnit(double time) throws TimedPlanUnitPlayException
     {
-        getTimePeg("start").setAbsoluteTime(true);  //don't mess with start anymore!
+        getStartPeg().setAbsoluteTime(true);  //don't mess with start anymore!
         resolveTimePegs(time);
         float cQuat[] = Quat4f.getQuat4f();
-        VJoint root = aniPlayer.getVCurr().getPartBySid(Hanim.HumanoidRoot);
-        aniPlayer.getVCurr().getPartBySid(joint).getPathRotation(root, cQuat);
+        VJoint root = aniPlayer.getVCurrPartBySid(Hanim.HumanoidRoot);
+        aniPlayer.getVCurrPartBySid(joint).getPathRotation(root, cQuat);
 
         float[] c = Mat3f.getMat3f();
         Mat3f.setFromQuatScale(c, cQuat, 1);

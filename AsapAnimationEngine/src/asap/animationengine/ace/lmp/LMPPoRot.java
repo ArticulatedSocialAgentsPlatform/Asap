@@ -138,7 +138,7 @@ public class LMPPoRot extends LMP
             {
                 TimePeg tp = new TimePeg(getBMLBlockPeg());
                 constraintMap.put(oc, tp);
-                pegBoard.addTimePeg(getBMLId(), getId(), oc.getId(), tp);
+                setTimePeg(oc.getId(), tp);
             }
         }        
     }

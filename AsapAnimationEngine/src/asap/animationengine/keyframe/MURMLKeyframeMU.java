@@ -124,7 +124,7 @@ public class MURMLKeyframeMU extends KeyFrameMotionUnit implements AnimationUnit
         int i = 0;
         for (String target : targets)
         {
-            aniPlayer.getVNext().getPartBySid(target).setRotation(kf.getDofs(), i * 4);
+            aniPlayer.getVNextPartBySid(target).setRotation(kf.getDofs(), i * 4);
             i++;
         }
     }
@@ -171,7 +171,7 @@ public class MURMLKeyframeMU extends KeyFrameMotionUnit implements AnimationUnit
         int i = 0;
         for (String target : targets)
         {
-            VJoint vj = aniPlayer.getVCurr().getPartBySid(target);
+            VJoint vj = aniPlayer.getVCurrPartBySid(target);
             vj.getRotation(q, i);
             i += 4;
         }

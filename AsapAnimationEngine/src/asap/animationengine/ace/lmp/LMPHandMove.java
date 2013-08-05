@@ -42,7 +42,7 @@ public class LMPHandMove extends LMP
     private List<PostureConstraint> pcVec;
     private Map<PostureConstraint, TimePeg> constraintMap = new HashMap<>();
     private static final double TRANSITION_TIME = 0.5;
-    private static final double DEFAULT_STROKEPHASE_DURATION = 5;
+    private static final double DEFAULT_STROKEPHASE_DURATION = 2;
     private HandKeyFrameUnit mu;
     private QuatFloatInterpolator<LinearQuatInterpolator> interp;
 
@@ -88,7 +88,7 @@ public class LMPHandMove extends LMP
             int i = 0;
             for (String target : getKinematicJoints())
             {
-                aniPlayer.getVNext().getPartBySid(target).setRotation(kf.getDofs(), i * 4);
+                aniPlayer.getVNextPartBySid(target).setRotation(kf.getDofs(), i * 4);
                 i++;
             }
         }
@@ -100,7 +100,7 @@ public class LMPHandMove extends LMP
             int i = 0;
             for (String target : getKinematicJoints())
             {
-                VJoint vj = aniPlayer.getVCurr().getPartBySid(target);
+                VJoint vj = aniPlayer.getVCurrPartBySid(target);
                 vj.getRotation(q, i);
                 i += 4;
             }
@@ -140,7 +140,7 @@ public class LMPHandMove extends LMP
         Set<String> removeIds = new HashSet<>();
         for (String id : jointIds)
         {
-            if (aniPlayer.getVCurr().getPartBySid(id) == null)
+            if (aniPlayer.getVCurrPartBySid(id) == null)
             {
                 removeIds.add(id);
             }
@@ -353,9 +353,10 @@ public class LMPHandMove extends LMP
     @Override
     protected void playUnit(double time) throws TimedPlanUnitPlayException
     {
-        if (time < getRelaxTime())
+        double relaxTime = getRelaxTime();
+        if (time < relaxTime)
         {
-            double t = (time - getStartTime()) / (getRelaxTime() - getStartTime());
+            double t = (time - getStartTime()) / (relaxTime - getStartTime());
             try
             {
                 mu.play(t);

@@ -190,14 +190,14 @@ public class LMPSequence extends LMP
                 {
                     if (!tmu.isPlaying())
                     {
-
-                        tmu.start(time);
+                        tmu.start(time);                        
                     }
-                    tmu.play(time);
+                    tmu.play(time);                    
                 }
                 else if (!tmu.isPlaying())
                 {
                     tmu.setState(TimedPlanUnitState.DONE);
+                    System.out.println("DONE :"+tmu.getId());
                 }
             }
         }
@@ -281,6 +281,7 @@ public class LMPSequence extends LMP
         {
             stretch = 1;
         }        
+        //System.out.println("stretch 1: "+stretch);
         
         double durPrep[] = new double[lmpQueue.size()];
         double prefPrepDur = 0;
@@ -303,6 +304,7 @@ public class LMPSequence extends LMP
         {
             stretch = 1;
         }
+        //System.out.println("stretch 2: "+stretch);
 
         if (iPrepStretchStart > iStrokeStretchStart)
         {

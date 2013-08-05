@@ -42,11 +42,11 @@ public class DynamicPointingMU extends PointingMU
         DynamicPointingMU pmu = new DynamicPointingMU();
         pmu.shoulderId = shoulderId; 
         pmu.elbowId = elbowId;
-        pmu.vjShoulder = p.getVNext().getPart(shoulderId);
-        pmu.vjElbow = p.getVNext().getPart(elbowId);
-        pmu.vjWrist = p.getVNext().getPart(wristId);
-        pmu.vCurrShoulder = p.getVCurr().getPart(shoulderId);
-        pmu.vCurrElbow = p.getVCurr().getPart(elbowId);
+        pmu.vjShoulder = p.getVNextPartBySid(shoulderId);
+        pmu.vjElbow = p.getVNextPartBySid(elbowId);
+        pmu.vjWrist = p.getVNextPartBySid(wristId);
+        pmu.vCurrShoulder = p.getVCurrPartBySid(shoulderId);
+        pmu.vCurrElbow = p.getVCurrPartBySid(elbowId);
         pmu.player = p;
         pmu.woManager = p.getWoManager();        
         pmu.target = target;

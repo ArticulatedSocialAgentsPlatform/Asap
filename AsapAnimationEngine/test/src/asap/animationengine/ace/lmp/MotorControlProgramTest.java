@@ -349,12 +349,10 @@ public class MotorControlProgramTest extends AbstractTimedPlanUnitTest
 
         assertEquals(0, lmpS1.getStartTime(), TIME_PRECISION);
         assertEquals(LMP1_PREP, lmpS1.getTime("strokeStart"), TIME_PRECISION);
-        assertEquals(LMP1_PREP, lmpS1.getTime("stroke"), TIME_PRECISION);
         assertEquals(LMP1_PREP + LMP1_STROKE + LMP2_PREP + LMP2_STROKE, lmpS1.getTime("strokeEnd"), TIME_PRECISION);
 
         assertEquals(0, lmpS2.getStartTime(), TIME_PRECISION);
         assertEquals(LMP1_PREP, lmpS2.getTime("strokeStart"), TIME_PRECISION);
-        assertEquals(LMP1_PREP, lmpS2.getTime("stroke"), TIME_PRECISION);
         assertEquals(LMP1_PREP + LMP1_STROKE + LMP2_PREP + LMP2_STROKE, lmpS2.getTime("strokeEnd"), TIME_PRECISION);
 
         assertEquals(0, stubTimedAnimationUnit1a.getStartTime(), TIME_PRECISION);

@@ -8,7 +8,6 @@ import hmi.neurophysics.BiologicalSwivelCostsEvaluator;
 import hmi.neurophysics.FittsLaw;
 
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
 import java.util.Set;
 
@@ -72,15 +71,14 @@ public class LMPWristPos extends LMPPos
         else if (scope.equals("right_arm"))
         {
             kinematicJoints = ImmutableSet.of(Hanim.r_shoulder, Hanim.r_elbow);
-        }
-        createMissingTimePegs();
+        }        
     }
 
     public float[] getPosition(double t)
     {
         if (spline != null)
         {
-            VJoint vjBase = aniPlayer.getVCurr().getPartBySid(baseJoint);
+            VJoint vjBase = aniPlayer.getVCurrPartBySid(baseJoint);
             float pos[] = spline.getPosition(t);
             float m[] = Mat4f.getMat4f();
             vjBase.getPathTransformMatrix(aniPlayer.getVCurr(), m);
@@ -148,8 +146,6 @@ public class LMPWristPos extends LMPPos
                 startSwivel = ikBodyCurrent.getSwivelRightArm();
             }
             desiredSwivel = autoSwivel.getSwivelAngleWithMinCost(startSwivel);
-
-            System.out.println(getBMLId() + ":" + getId() + " desiredSwivel " + desiredSwivel + " startSwivel " + startSwivel);
             refine();
         }
         else
@@ -236,7 +232,7 @@ public class LMPWristPos extends LMPPos
             
             //double sT = getStartTime();
             double sT = _gSeq.getStartTPC().getTime();
-            double prepDur = getTime("strokeStart") - getStartTime();
+            double prepDur = getStrokeStartTime() - getStartTime();
             _gSeq.getStroke(0).setEDt(prepDur);
 
             for (int i = 0; i < _gSeq.size(); i++)
@@ -307,17 +303,7 @@ public class LMPWristPos extends LMPPos
         return _spline;
     }
 
-    @Override
-    public double getStartTime()
-    {
-        TimePeg tpStart = pegBoard.getTimePeg(this.getBMLId(), this.getId(), "start");
-        if (tpStart != null)
-        {
-            return tpStart.getGlobalValue();
-        }
-
-        return TimePeg.VALUE_UNKNOWN;
-    }
+    
 
     @Override
     public double getEndTime()
@@ -332,30 +318,6 @@ public class LMPWristPos extends LMPPos
     }
 
     @Override
-    public double getRelaxTime()
-    {
-        TimePeg relaxPeg = pegBoard.getTimePeg(getBMLId(), getId(), "relax");
-
-        if (relaxPeg != null && relaxPeg.getGlobalValue() != TimePeg.VALUE_UNKNOWN)
-        {
-            return pegBoard.getTimePeg(this.getBMLId(), this.getId(), "relax").getGlobalValue();
-        }
-        else return getEndTime();
-    }
-
-    @Override
-    public TimePeg getTimePeg(String syncId)
-    {
-        return pegBoard.getTimePeg(getBMLId(), getId(), syncId);
-    }
-
-    @Override
-    public void setTimePeg(String syncId, TimePeg peg)
-    {
-        pegBoard.addTimePeg(getBMLId(), getId(), syncId, peg);
-    }
-
-    @Override
     public boolean hasValidTiming()
     {
         // TODO Auto-generated method stub
@@ -366,9 +328,9 @@ public class LMPWristPos extends LMPPos
     protected void playUnit(double time) throws TimedPlanUnitPlayException
     {
         double swivel = 0;
-        if (time < getTime("strokeStart"))
+        if (time < getStrokeStartTime())
         {
-            double relT = (time - getStartTime()) / (getTime("strokeStart") - getStartTime());
+            double relT = (time - getStartTime()) / (getStrokeStartTime() - getStartTime());
             swivel = startSwivel + (desiredSwivel - startSwivel) * relT;
         }
         else
@@ -377,15 +339,15 @@ public class LMPWristPos extends LMPPos
         }
 
         // System.out.println(getBMLId()+":"+getId()+" swivel: "+swivel+" desiredSwivel "+desiredSwivel+ " startSwivel "+startSwivel);
-        if (time < getTime("strokeEnd"))
+        if (time < getStrokeEndTime())
         {
             double t = time;
-            if (t > getTime("strokeStart"))
+            if (t > getStrokeStartTime())
             {
-                double strokeDuration = getTime("strokeEnd") - getTime("strokeStart");
+                double strokeDuration = getStrokeEndTime() - getStrokeStartTime();
                 double relDur = getStrokeDuration() / strokeDuration;
-                double relT = time - getTime("strokeStart");
-                t = getTime("strokeStart") + relT * relDur;
+                double relT = time - getStrokeStartTime();
+                t = getStrokeStartTime() + relT * relDur;
             }
 
             float pos[] = getPosition(t);
@@ -418,18 +380,7 @@ public class LMPWristPos extends LMPPos
     public Set<String> getPhysicalJoints()
     {
         return ImmutableSet.of();
-    }
-
-    private void createMissingTimePegs()
-    {
-        createPegWhenMissingOnPegBoard("stroke");
-        createPegWhenMissingOnPegBoard("ready");
-        createPegWhenMissingOnPegBoard("relax");
-        createPegWhenMissingOnPegBoard("strokeStart");
-        createPegWhenMissingOnPegBoard("strokeEnd");
-        createPegWhenMissingOnPegBoard("start");
-        createPegWhenMissingOnPegBoard("end");
-    }
+    }    
 
     protected void setInternalStrokeTiming(double time)
     {
@@ -449,9 +400,9 @@ public class LMPWristPos extends LMPPos
 
     private float[] getGlobalWristPosition()
     {
-        VJoint vj = aniPlayer.getVCurr().getPartBySid(getWristJointSid());
+        VJoint vj = aniPlayer.getVCurrPartBySid(getWristJointSid());
         float wristCurr[] = Vec3f.getVec3f();
-        vj.getPathTranslation(aniPlayer.getVCurr().getPart(baseJoint), wristCurr);
+        vj.getPathTranslation(aniPlayer.getVCurrPartBySid(baseJoint), wristCurr);
         return wristCurr;
     }
 

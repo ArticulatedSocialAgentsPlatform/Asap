@@ -167,8 +167,8 @@ public class PhysicalBalanceRestPose implements RestPose
         {
             VJoint vj = restPoseTree.getPartBySid(joint);
             vj.getRotation(rotations, i);
-            targetJoints.add(player.getVNext().getPartBySid(joint));
-            startJoints.add(player.getVCurr().getPartBySid(joint));
+            targetJoints.add(player.getVNextPartBySid(joint));
+            startJoints.add(player.getVCurrPartBySid(joint));
             i += 4;
         }
         TransitionMU mu = new SlerpTransitionToPoseMU(targetJoints, startJoints, rotations);

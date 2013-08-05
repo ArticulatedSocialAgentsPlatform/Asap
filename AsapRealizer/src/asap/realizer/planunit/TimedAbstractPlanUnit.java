@@ -289,7 +289,7 @@ public abstract class TimedAbstractPlanUnit implements TimedPlanUnit
     {
         return state.get().isPlaying();
     }
-
+    
     @Override
     public boolean isPending()
     {

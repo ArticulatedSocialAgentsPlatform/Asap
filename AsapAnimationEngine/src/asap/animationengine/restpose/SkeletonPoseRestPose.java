@@ -85,7 +85,7 @@ public class SkeletonPoseRestPose implements RestPose
             if (!kinematicJoints.contains(vj.getSid()) && !physicalJoints.contains(vj.getSid()))
             {                
                 vj.getRotation(q);
-                VJoint vjSet = player.getVNext().getPartBySid(vj.getSid());
+                VJoint vjSet = player.getVNextPartBySid(vj.getSid());
                 if (vjSet != null)
                 {
                     vjSet.setRotation(q);
@@ -136,8 +136,8 @@ public class SkeletonPoseRestPose implements RestPose
         {
             VJoint vj = poseTree.getPartBySid(joint);
             vj.getRotation(rotations, i);
-            targetJoints.add(player.getVNext().getPartBySid(joint));
-            startJoints.add(player.getVCurr().getPartBySid(joint));
+            targetJoints.add(player.getVNextPartBySid(joint));
+            startJoints.add(player.getVCurrPartBySid(joint));
             i += 4;
         }
         TransitionMU mu = new SlerpTransitionToPoseMU(targetJoints, startJoints, rotations);
@@ -190,8 +190,8 @@ public class SkeletonPoseRestPose implements RestPose
         {
             if(vj.getSid()!=null)
             {
-                targetJoints.add(player.getVNext().getPartBySid(vj.getSid()));
-                startJoints.add(player.getVCurr().getPartBySid(vj.getSid()));
+                targetJoints.add(player.getVNextPartBySid(vj.getSid()));
+                startJoints.add(player.getVCurrPartBySid(vj.getSid()));
             }
         }
         

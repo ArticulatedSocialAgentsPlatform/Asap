@@ -113,7 +113,7 @@ public class ProcAnimationGestureMU implements GestureUnit
             float vecDst[] = new float[3];
             float vecSrc[] = new float[3];
             copyJoint.getPart(Hanim.l_wrist).getPathTranslation(copyJoint.getPart(Hanim.l_shoulder).getParent(), vecDst);
-            aniPlayer.getVCurr().getPart(Hanim.l_wrist).getPathTranslation(aniPlayer.getVCurr().getPart(Hanim.l_shoulder), vecSrc);
+            aniPlayer.getVCurrPartBySid(Hanim.l_wrist).getPathTranslation(aniPlayer.getVCurrPartBySid(Hanim.l_shoulder), vecSrc);
             log.debug("copyJoint lwrist pos at strokeStart:{}\n current lwrist pos:{}", Vec3f.toString(vecDst), Vec3f.toString(vecSrc));
         }
 
