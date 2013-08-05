@@ -34,7 +34,7 @@ import com.google.common.collect.ImmutableSet;
  * Eyes adhere to biologically motivated rotation limits; eye rotation is calculated using Listing's law
  * (using D. Tweed. Three-dimensional model of the human eye-head saccadic system.
  * Journal of Neurophysiology, 77(2):654–666, February 1997).
- * @author Herwin
+ * @author Herwin 
  */
 public class DynamicGazeMU extends GazeMU
 {

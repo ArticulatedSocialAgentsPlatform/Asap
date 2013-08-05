@@ -192,6 +192,83 @@ public class LMPSequenceTest
     }
 
     @Test
+    public void testSetInternalStrokeTimingZeroStrokeDuration()
+    {
+        StubLMP tmu1 = createStub("bml1", "beh1-1", 1, 2, 0);
+        StubLMP tmu2 = createStub("bml1", "beh1-2", 1, 2, 0);
+        LMPSequence seq = new LMPSequence(fbm, BMLBlockPeg.GLOBALPEG, "bml1", "beh1", pegBoard,
+                new ImmutableList.Builder<TimedAnimationUnit>().add(tmu1, tmu2).build());
+        seq.setTimePeg("strokeStart", TimePegUtil.createTimePeg(3));
+        seq.setTimePeg("strokeEnd", TimePegUtil.createTimePeg(4));
+        seq.setInternalStrokeTiming(0);
+
+        assertEquals(3, tmu1.getTime("strokeStart"), TIME_PRECISION);
+        assertEquals(3, tmu1.getTime("strokeEnd"), TIME_PRECISION);
+        assertEquals(3, tmu2.getTime("start"), TIME_PRECISION);
+        assertEquals(4, tmu2.getTime("strokeStart"), TIME_PRECISION);
+        assertEquals(4, tmu2.getTime("strokeEnd"), TIME_PRECISION);
+    }
+
+    @Test
+    public void testSetInternalStrokeTimingZeroStrokeDurationStretch()
+    {
+        StubLMP tmu1 = createStub("bml1", "beh1-1", 1, 2, 0);
+        StubLMP tmu2 = createStub("bml1", "beh1-2", 1, 2, 0);
+        StubLMP tmu3 = createStub("bml1", "beh1-3", 1, 2, 0);
+        LMPSequence seq = new LMPSequence(fbm, BMLBlockPeg.GLOBALPEG, "bml1", "beh1", pegBoard,
+                new ImmutableList.Builder<TimedAnimationUnit>().add(tmu1, tmu2, tmu3).build());
+        seq.setTimePeg("strokeStart", TimePegUtil.createTimePeg(3));
+        seq.setTimePeg("strokeEnd", TimePegUtil.createTimePeg(7));
+        seq.setInternalStrokeTiming(0);
+
+        assertEquals(3, tmu1.getTime("strokeStart"), TIME_PRECISION);
+        assertEquals(3, tmu1.getTime("strokeEnd"), TIME_PRECISION);
+        assertEquals(3, tmu2.getTime("start"), TIME_PRECISION);
+        assertEquals(5, tmu2.getTime("strokeStart"), TIME_PRECISION);
+        assertEquals(5, tmu2.getTime("strokeEnd"), TIME_PRECISION);
+        assertEquals(5, tmu3.getTime("start"), TIME_PRECISION);
+        assertEquals(7, tmu3.getTime("strokeStart"), TIME_PRECISION);
+        assertEquals(7, tmu3.getTime("strokeEnd"), TIME_PRECISION);
+    }
+
+    @Test
+    public void testSetInternalStrokeTimingZeroStrokeDurationAfterStrokeStart()
+    {
+        StubLMP tmu1 = createStub("bml1", "beh1-1", 1, 2, 0);
+        StubLMP tmu2 = createStub("bml1", "beh1-2", 0, 2, 0);
+        LMPSequence seq = new LMPSequence(fbm, BMLBlockPeg.GLOBALPEG, "bml1", "beh1", pegBoard,
+                new ImmutableList.Builder<TimedAnimationUnit>().add(tmu1, tmu2).build());
+        seq.setTimePeg("strokeStart", TimePegUtil.createTimePeg(3));
+        seq.setTimePeg("strokeEnd", TimePegUtil.createTimePeg(3));
+        seq.setInternalStrokeTiming(0);
+        seq.setInternalStrokeTiming(4);
+
+        assertEquals(3, tmu1.getTime("strokeStart"), TIME_PRECISION);
+        assertEquals(3, tmu1.getTime("strokeEnd"), TIME_PRECISION);
+        assertEquals(3, tmu2.getTime("start"), TIME_PRECISION);
+        assertEquals(3, tmu2.getTime("strokeStart"), TIME_PRECISION);
+        assertEquals(3, tmu2.getTime("strokeEnd"), TIME_PRECISION);
+    }
+
+    @Test
+    public void testSetInternalStrokeTimingZeroPrepDuration()
+    {
+        StubLMP tmu1 = createStub("bml1", "beh1-1", 1, 2, 1);
+        StubLMP tmu2 = createStub("bml1", "beh1-2", 0, 2, 1);
+        LMPSequence seq = new LMPSequence(fbm, BMLBlockPeg.GLOBALPEG, "bml1", "beh1", pegBoard,
+                new ImmutableList.Builder<TimedAnimationUnit>().add(tmu1, tmu2).build());
+        seq.setTimePeg("strokeStart", TimePegUtil.createTimePeg(3));
+        seq.setTimePeg("strokeEnd", TimePegUtil.createTimePeg(5));
+        seq.setInternalStrokeTiming(0);
+
+        assertEquals(3, tmu1.getTime("strokeStart"), TIME_PRECISION);
+        assertEquals(4, tmu1.getTime("strokeEnd"), TIME_PRECISION);
+        assertEquals(4, tmu2.getTime("start"), TIME_PRECISION);
+        assertEquals(4, tmu2.getTime("strokeStart"), TIME_PRECISION);
+        assertEquals(5, tmu2.getTime("strokeEnd"), TIME_PRECISION);
+    }
+
+    @Test
     public void testSetInternalStrokeTimingChange()
     {
         StubLMP tmu1 = createStub("bml1", "beh1-1", 1, 2, 3);
@@ -476,10 +553,10 @@ public class LMPSequenceTest
 
         assertEquals(6, tmu2.getTime("start"), TIME_PRECISION);
         assertEquals(8, tmu2.getTime("strokeStart"), TIME_PRECISION);
-        assertEquals(8+3*6d/8d, tmu2.getTime("strokeEnd"), TIME_PRECISION);
+        assertEquals(8 + 3 * 6d / 8d, tmu2.getTime("strokeEnd"), TIME_PRECISION);
 
-        assertEquals(8+3*6d/8d, tmu3.getTime("start"), TIME_PRECISION);
-        assertEquals(8+5*6d/8d, tmu3.getTime("strokeStart"), TIME_PRECISION);
+        assertEquals(8 + 3 * 6d / 8d, tmu3.getTime("start"), TIME_PRECISION);
+        assertEquals(8 + 5 * 6d / 8d, tmu3.getTime("strokeStart"), TIME_PRECISION);
         assertEquals(14, tmu3.getTime("strokeEnd"), TIME_PRECISION);
     }
 }
