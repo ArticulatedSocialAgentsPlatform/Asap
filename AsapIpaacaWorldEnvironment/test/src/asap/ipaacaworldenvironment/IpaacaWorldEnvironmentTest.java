@@ -7,6 +7,7 @@ import static org.mockito.Mockito.verify;
 import hmi.animation.VJoint;
 import hmi.math.Vec3f;
 import hmi.testutil.math.Vec3fTestUtil;
+import hmi.worldobjectenvironment.VJointWorldObject;
 import hmi.worldobjectenvironment.WorldObject;
 import hmi.worldobjectenvironment.WorldObjectManager;
 import ipaaca.LocalIU;
@@ -66,7 +67,7 @@ public class IpaacaWorldEnvironmentTest
     public void testPosExisting() throws InterruptedException
     {
         WorldObjectManager woManager = new WorldObjectManager();
-        WorldObject ent1 = new WorldObject(new VJoint("ent1"));
+        WorldObject ent1 = new VJointWorldObject(new VJoint("ent1"));
         woManager.addWorldObject("ent 1", ent1);
         
         new IpaacaWorldEnvironment(woManager);

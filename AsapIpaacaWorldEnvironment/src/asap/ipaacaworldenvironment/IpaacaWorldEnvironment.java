@@ -3,6 +3,7 @@ package asap.ipaacaworldenvironment;
 import hmi.animation.VJoint;
 import hmi.environmentbase.Environment;
 import hmi.util.ClockListener;
+import hmi.worldobjectenvironment.VJointWorldObject;
 import hmi.worldobjectenvironment.WorldObject;
 import hmi.worldobjectenvironment.WorldObjectManager;
 import ipaaca.AbstractIU;
@@ -74,17 +75,13 @@ public class IpaacaWorldEnvironment implements ClockListener, Environment
     {
         WorldObject wo = woManager.getWorldObject(name);
         VJoint vj = null;
-        if (wo != null)
-        {
-            vj = wo.getJoint();
-        }
-        else
+        if (wo == null)        
         {
             vj = new VJoint(name, name);
-            wo = new WorldObject(vj);
+            wo = new VJointWorldObject(vj);
             woManager.addWorldObject(name, wo);
         }
-        vj.setTranslation(pos);
+        wo.setTranslation(pos);
     }
 
     class SceneInfoHandler implements HandlerFunctor

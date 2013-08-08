@@ -2,25 +2,9 @@
         xmlns:ac="antlib:net.sf.antcontrib"	
 	>   
 	
-	
-	<!-- really ugly way to handle nested properties: http://orthogonal.me/2010/03/29/nested-ant-properties/ -->
-	<!--
-	<macrodef name="propertycopy">
-  <attribute name="name"/>
-  <attribute name="from"/>
-  <sequential>
-    <property name="@{name}" value="${@{from}}"/>
-  </sequential>
-</macrodef>
-	
-	
+	 <property name="build.test.results.dir" location="${build.dir}/test/results" />
+ <property name="test.report.dir"        value="${test.dir}/report" />
 
-
- <property name="rebuild.list.prop" value="${language}.rebuild.list"/>
- <property name="release.list.prop" value="${language}.release.list"/>
-  <propertycopy name="rebuild.list" from="${rebuild.list.prop}"/>
-  <propertycopy name="release.list" from="${release.list.prop}"/>
- -->
   <!-- Settings for "javadoc" -->
    <property name="docs.dir"              value="docs"     />
    <property name="javadoc.dir"           location="${docs.dir}/Asap"/>
@@ -52,7 +36,15 @@
    <target name="resolveAll">
     <delegate target="resolve" list="rebuildList" verbose="true"/>
    </target>
+   
+    <target name="ivyxmlreportAll">
+    <delegate target="ivyxmlreport" list="rebuildList" verbose="true"/>
+   </target>
 
+   <target name="ivyreportAll">
+    <delegate target="ivyreport" list="rebuildList" verbose="true"/>
+   </target>
+  
    <target name="nbuild" depends="nightlybuild" description="produce a nightly build of the Asap project"/>
 
    <target name="releaseAll"  description="produce a full minor release of the Asap project">
@@ -136,8 +128,17 @@
         <delegate target="-junit" list="rebuildList"/>
    </target>
  
-    <target name="junitreportAll"  description="Runs junit tests on all HMI projects">     
-        <delegate target="junitreport" list="rebuildList"/>
+     <target name="junitreportAll"  depends="junitAll" description="Runs junit tests on all HMI projects and produces html report">     
+      <delete dir="${test.report.dir}" failonerror="false"/>
+      <mkdir dir="${test.report.dir}"/>
+      <mkdir dir="${build.test.results.dir}"/>
+      <echo message="${build.test.results.dir}/TEST"/>
+      <junitreport todir="${build.test.results.dir}" >
+         <fileset dir=".">
+            <include name="**/build/test/results/TEST-*.xml"/>
+         </fileset>
+         <report format="frames" todir="${test.report.dir}"/>
+      </junitreport>
    </target>
    
    <target name="findbugsAll"  description="Runs findbugs on all HMI projects">     
