@@ -146,8 +146,8 @@ public class LMPHandMove extends LMP
             }
         }
         jointIds.removeAll(removeIds);
-        kinematicJoints = ImmutableSet.copyOf(jointIds);
-        createMissingTimePegs();
+        kinematicJoints = ImmutableSet.copyOf(jointIds);        
+        createPCTimePegs();
     }
 
     private void constructKeyFrames(double startTime)
@@ -192,7 +192,7 @@ public class LMPHandMove extends LMP
         return syncs;
     }
 
-    private void createMissingTimePegs()
+    private void createPCTimePegs()
     {
         for (PostureConstraint oc : pcVec)
         {
@@ -202,11 +202,7 @@ public class LMPHandMove extends LMP
                 constraintMap.put(oc, tp);
                 pegBoard.addTimePeg(getBMLId(), getId(), oc.getId(), tp);
             }
-        }
-        createPegWhenMissingOnPegBoard("start");
-        createPegWhenMissingOnPegBoard("end");
-        createPegWhenMissingOnPegBoard("relax");
-        createPegWhenMissingOnPegBoard("ready");
+        }        
     }
 
     @Override
