@@ -44,7 +44,7 @@ public class LMPPoRot extends LMP
     private List<Double> timeVec;
 
     private static final double TRANSITION_TIME = 0.4; // TODO: use getPODurationFromAmplitude instead?
-    private static final double DEFAULT_STROKEPHASE_DURATION = 0;
+    private static final double DEFAULT_STROKEPHASE_DURATION = 2;
 
     @Setter
     private List<PoConstraint> poVec;
@@ -55,6 +55,8 @@ public class LMPPoRot extends LMP
         super(fbm, bmlPeg, bmlId, behId, pegBoard);
         this.aniPlayer = aniPlayer;
         this.poVec = poVec;
+        
+        
 
         // TODO: implement proper scope selection when no scope is provided.
         if (scope == null)

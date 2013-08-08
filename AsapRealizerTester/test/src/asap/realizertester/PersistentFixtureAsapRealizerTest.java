@@ -8,7 +8,7 @@ import hmi.mixedanimationenvironment.MixedAnimationEnvironment;
 import hmi.physicsenvironment.OdePhysicsEnvironment;
 import hmi.renderenvironment.HmiRenderEnvironment;
 import hmi.renderenvironment.HmiRenderEnvironment.RenderStyle;
-import hmi.worldobjectenvironment.WorldObject;
+import hmi.worldobjectenvironment.VJointWorldObject;
 import hmi.worldobjectenvironment.WorldObjectEnvironment;
 
 import java.awt.Toolkit;
@@ -118,7 +118,7 @@ public class PersistentFixtureAsapRealizerTest extends AbstractASAPRealizerTest
 
         // add worldobject "camera" that we can use to look at user :)
         VJoint camera = hre.getCameraTarget();
-        we.getWorldObjectManager().addWorldObject("camera", new WorldObject(camera));
+        we.getWorldObjectManager().addWorldObject("camera", new VJointWorldObject(camera));
 
         try
         {
@@ -137,7 +137,7 @@ public class PersistentFixtureAsapRealizerTest extends AbstractASAPRealizerTest
                 0.2f, 1, 1 }, new float[] { 0.2f, 0.2f, 1, 0 }, new float[] { 0.2f, 0.2f, 1, 1 });
         VJoint boxJoint = hre.getObjectRootJoint("bluebox");
         boxJoint.setTranslation(-0.25f, 1.45f, 0.3f);
-        we.getWorldObjectManager().addWorldObject("bluebox", new WorldObject(boxJoint));
+        we.getWorldObjectManager().addWorldObject("bluebox", new VJointWorldObject(boxJoint));
         
         hre.startRenderClock();
         ope.startPhysicsClock();

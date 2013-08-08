@@ -421,7 +421,7 @@ public final class MURMLMUBuilder
             {
                 String cid = vn.getKey();
 
-                // force first and last ids to be stroke_start and stroke_end respectively
+                // force first and last ids to be strokeStart and strokeEnd respectively
                 if (i == 0) cid = "strokeStart";
                 if (i == dynElem.getValueNodes().size() - 1) cid = "strokeEnd";
 

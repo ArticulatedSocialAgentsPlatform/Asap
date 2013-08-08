@@ -42,7 +42,7 @@ public class LMPHandMove extends LMP
     private List<PostureConstraint> pcVec;
     private Map<PostureConstraint, TimePeg> constraintMap = new HashMap<>();
     private static final double TRANSITION_TIME = 0.5;
-    private static final double DEFAULT_STROKEPHASE_DURATION = 0;
+    private static final double DEFAULT_STROKEPHASE_DURATION = 2;
     private HandKeyFrameUnit mu;
     private QuatFloatInterpolator<LinearQuatInterpolator> interp;
 

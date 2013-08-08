@@ -45,7 +45,7 @@ public class LMPWristRot extends LMP
     private static final float PRECISION = 0.001f;
     public static final double TRANSITION_TIME = 0.4;
     
-    public static final double DEFAULT_STROKEPHASE_DURATION = 0;
+    public static final double DEFAULT_STROKEPHASE_DURATION = 5;
 
     @Data
     private static class OrientPos
@@ -59,6 +59,8 @@ public class LMPWristRot extends LMP
     {
         super(bbf, bmlBlockPeg, bmlId, id, localPegBoard);
         this.aniPlayer = aniPlayer;
+        
+        System.out.println("ocVec size: "+ocVec.size());
 
         // TODO: implement proper scope selection when no scope is provided.
         if (scope == null)

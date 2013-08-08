@@ -11,6 +11,7 @@ import hmi.animation.Hanim;
 import hmi.animation.VJoint;
 import hmi.math.Vec3f;
 import hmi.testutil.animation.HanimBody;
+import hmi.worldobjectenvironment.VJointWorldObject;
 import hmi.worldobjectenvironment.WorldObject;
 import hmi.worldobjectenvironment.WorldObjectManager;
 
@@ -69,7 +70,7 @@ public class GazeTMUTest extends AbstractTimedPlanUnitTest
         WorldObjectManager woManager = new WorldObjectManager();
         VJoint bluebox = new VJoint();
         bluebox.setTranslation(Vec3f.getVec3f(1,1,1));
-        WorldObject blueBox = new WorldObject(bluebox);
+        WorldObject blueBox = new VJointWorldObject(bluebox);
         woManager.addWorldObject("bluebox", blueBox);
         
         mu.player = mockAnimationPlayer;

@@ -266,18 +266,22 @@ public class LMPSequence extends LMP
         {
             stretch = 1;
         }        
-        //System.out.println("stretch 1: "+stretch);
+        //System.out.println("stretch 1: "+stretch+ " duration "+duration+" defaultDuration="+defaultDuration);
         
         double durPrep[] = new double[lmpQueue.size()];
         double prefPrepDur = 0;
         for (int i = iPrepStretchStart; i < lmpQueue.size(); i++)
         {
+            System.out.println("lmpprefprep "+i+"="+lmpQueue.get(i).getPreparationDuration());
             durPrep[i] = lmpQueue.get(i).getPreparationDuration() * stretch;
+            
             prefPrepDur += lmpQueue.get(i).getPreparationDuration();
             if (stretch < 1 && durPrep[i] < MINIMUM_PREPARATION_TIME)
             {
                 durPrep[i] = MINIMUM_PREPARATION_TIME;
             }
+            System.out.println("durPrep "+i+"="+durPrep[i]);
+            
             duration -= durPrep[i];
         }
 
@@ -289,7 +293,7 @@ public class LMPSequence extends LMP
         {
             stretch = 1;
         }
-        //System.out.println("stretch 2: "+stretch);
+        //System.out.println("stretch 2: "+stretch+ "duration "+duration+" defaultDuration-prefPrepDur="+(defaultDuration-prefPrepDur));
 
         if (iPrepStretchStart > iStrokeStretchStart)
         {

@@ -7,6 +7,7 @@ import static org.mockito.Mockito.when;
 import hmi.animation.Hanim;
 import hmi.animation.VJoint;
 import hmi.testutil.animation.HanimBody;
+import hmi.worldobjectenvironment.VJointWorldObject;
 import hmi.worldobjectenvironment.WorldObject;
 import hmi.worldobjectenvironment.WorldObjectManager;
 
@@ -59,7 +60,7 @@ public class PointingTMUTest extends AbstractTimedPlanUnitTest
         when(mockAnimationPlayer.getVNextPartBySid(anyString())).thenReturn(HanimBody.getLOA1HanimBody().getPartBySid(Hanim.l_shoulder));
         
         WorldObjectManager woManager = new WorldObjectManager();
-        WorldObject blueBox = new WorldObject(new VJoint());
+        WorldObject blueBox = new VJointWorldObject(new VJoint());
         woManager.addWorldObject("bluebox", blueBox);
         
         mu.player = mockAnimationPlayer;
