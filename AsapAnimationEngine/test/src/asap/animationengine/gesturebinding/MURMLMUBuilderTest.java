@@ -26,6 +26,7 @@ import org.junit.Test;
 import com.google.common.collect.ObjectArrays;
 
 import asap.animationengine.AnimationPlayer;
+import asap.animationengine.AnimationPlayerMock;
 import asap.animationengine.ace.GuidingSequence;
 import asap.animationengine.ace.lmp.LMPHandMove;
 import asap.animationengine.ace.lmp.LMPParallel;
@@ -54,10 +55,12 @@ import asap.realizer.scheduler.BMLBlockManager;
  */
 public class MURMLMUBuilderTest
 {
-    private AnimationPlayer mockAnimationPlayer = mock(AnimationPlayer.class);
+    
     private AnimationUnit mockMu = mock(AnimationUnit.class);
     private VJoint vNext = HanimBody.getLOA2HanimBody();
     private VJoint vCurr = HanimBody.getLOA2HanimBody();
+    private AnimationPlayer mockAnimationPlayer = AnimationPlayerMock.createAnimationPlayerMock(vCurr,vNext);
+            
     private static final float ROT_PRECISION = 0.001f;
     private Hns mockHns = mock(Hns.class);
     private SkeletonPose mockSkeletonPose = mock(SkeletonPose.class);
@@ -70,9 +73,7 @@ public class MURMLMUBuilderTest
     @Before
     public void setup()
     {
-        when(mockAnimationPlayer.getVNext()).thenReturn(vNext);
-        when(mockAnimationPlayer.getVCurr()).thenReturn(vCurr);
-        when(mockAnimationPlayer.createTransitionToRest(any(Set.class))).thenReturn(mockMu);
+        when(mockAnimationPlayer.createTransitionToRest(any(Set.class))).thenReturn(mockMu);        
         when(mockHns.getHandLocation(anyString(), any(float[].class))).thenReturn(true);
         when(mockHns.getAbsoluteDirection(startsWith("Palm"), any(float[].class))).thenReturn(false);
         when(mockHns.getAbsoluteDirection(startsWith("Dir"), any(float[].class))).thenReturn(true);

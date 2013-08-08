@@ -4,6 +4,7 @@ import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.number.OrderingComparison.greaterThan;
 import static org.junit.Assert.assertEquals;
 import static org.mockito.Matchers.any;
+import static org.mockito.Matchers.anyString;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
 import hmi.animation.Hanim;
@@ -62,6 +63,9 @@ public class GazeTMUTest extends AbstractTimedPlanUnitTest
         
         when(mockAnimationPlayer.getVCurr()).thenReturn(vCurr);
         when(mockAnimationPlayer.getVNext()).thenReturn(vNext);
+        when(mockAnimationPlayer.getVCurrPartBySid(anyString())).thenReturn(HanimBody.getLOA1HanimBody().getPartBySid(Hanim.l_shoulder));
+        when(mockAnimationPlayer.getVNextPartBySid(anyString())).thenReturn(HanimBody.getLOA1HanimBody().getPartBySid(Hanim.l_shoulder));
+        
         WorldObjectManager woManager = new WorldObjectManager();
         VJoint bluebox = new VJoint();
         bluebox.setTranslation(Vec3f.getVec3f(1,1,1));

@@ -44,7 +44,7 @@ public class LMPPoRot extends LMP
     private List<Double> timeVec;
 
     private static final double TRANSITION_TIME = 0.4; // TODO: use getPODurationFromAmplitude instead?
-    private static final double DEFAULT_STROKEPHASE_DURATION = 5;
+    private static final double DEFAULT_STROKEPHASE_DURATION = 0;
 
     @Setter
     private List<PoConstraint> poVec;

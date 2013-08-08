@@ -2,6 +2,7 @@ package asap.animationengine.ace.lmp;
 
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.junit.Assert.assertEquals;
+import static org.mockito.Matchers.anyString;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
 import hmi.animation.Hanim;
@@ -63,8 +64,12 @@ public class LMPWristPosTest extends AbstractTimedPlanUnitTest
                 0, 0, 0));
         gSeq.getStroke(0).setEDt(0.7);
         gSeq.getStroke(1).setEDt(0.7);
+        
         when(mockAniPlayer.getVCurr()).thenReturn(HanimBody.getLOA1HanimBody());
         when(mockAniPlayer.getVNext()).thenReturn(HanimBody.getLOA1HanimBody());
+        when(mockAniPlayer.getVCurrPartBySid(anyString())).thenReturn(HanimBody.getLOA1HanimBody().getPartBySid(Hanim.l_shoulder));
+        when(mockAniPlayer.getVNextPartBySid(anyString())).thenReturn(HanimBody.getLOA1HanimBody().getPartBySid(Hanim.l_shoulder));
+        
         return new LMPWristPos("right_arm", bfm, bbPeg, bmlId, id, pegBoard, gSeq, Hanim.HumanoidRoot, mockAniPlayer,
                 new BiologicalSwivelCostsEvaluator(-2, 1, 0.1));
     }

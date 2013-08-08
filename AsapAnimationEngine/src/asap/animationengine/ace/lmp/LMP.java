@@ -50,12 +50,7 @@ public abstract class LMP extends TimedAbstractPlanUnit implements TimedAnimatio
         startPeg = createPegWhenMissingOnPegBoard("start");
         strokeStartPeg = createPegWhenMissingOnPegBoard("strokeStart");
         strokeEndPeg = createPegWhenMissingOnPegBoard("strokeEnd");
-    }
-
-    public boolean hasFixedStrokeDuration()
-    {
-        return false;
-    }
+    }    
 
     @Override
     public List<String> getAvailableSyncs()

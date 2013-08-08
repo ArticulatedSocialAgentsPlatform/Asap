@@ -9,6 +9,7 @@ import asap.animationengine.motionunit.TimedAnimationUnit;
 import asap.realizer.feedback.FeedbackManager;
 import asap.realizer.pegboard.AfterPeg;
 import asap.realizer.pegboard.BMLBlockPeg;
+import asap.realizer.pegboard.BeforePeg;
 import asap.realizer.pegboard.PegBoard;
 import asap.realizer.pegboard.PegKey;
 import asap.realizer.pegboard.TimePeg;
@@ -19,7 +20,7 @@ import com.google.common.collect.ImmutableList;
 import com.google.common.collect.ImmutableSet;
 
 /**
- * Parallel executed LMPs. That is: strokeStart and strokeEnd are connected to the same TimePeg for all LMPs.
+ * Parallel executed LMPs. That is: strokeStart is connected to the same TimePeg for all LMPs; strokeEnd is the latest strokeEnd of the LMP set.
  * Start and end of each LMP are connected to after and before peg of the LMPParallel.
  * @author hvanwelbergen
  * 
@@ -29,13 +30,13 @@ public class LMPParallel extends LMP
 {
     private ImmutableList<TimedAnimationUnit> lmpQueue;
     private volatile boolean linked = false;
-    
+
     public LMPParallel(FeedbackManager fbm, BMLBlockPeg bmlPeg, String bmlId, String behId, PegBoard pegBoard, List<TimedAnimationUnit> lmps)
     {
         super(fbm, bmlPeg, bmlId, behId, pegBoard);
-        lmpQueue = ImmutableList.copyOf(lmps);        
+        lmpQueue = ImmutableList.copyOf(lmps);
     }
-    
+
     @Override
     public Set<String> getKinematicJoints()
     {
@@ -50,16 +51,16 @@ public class LMPParallel extends LMP
     protected int countInternalSyncs(Set<PegKey> pks, int currentCount)
     {
         currentCount = super.countInternalSyncs(pks, currentCount);
-        for(TimedAnimationUnit tmu:lmpQueue)
+        for (TimedAnimationUnit tmu : lmpQueue)
         {
-            if(tmu instanceof LMP)
+            if (tmu instanceof LMP)
             {
-                currentCount = ((LMP)tmu).countInternalSyncs(pks,currentCount);
+                currentCount = ((LMP) tmu).countInternalSyncs(pks, currentCount);
             }
         }
         return currentCount;
     }
-    
+
     @Override
     public Set<String> getPhysicalJoints()
     {
@@ -73,9 +74,9 @@ public class LMPParallel extends LMP
 
     public TimePeg getTimePeg(String sync)
     {
-        return pegBoard.getTimePeg(getBMLId(),getId(),sync);
-    }    
-    
+        return pegBoard.getTimePeg(getBMLId(), getId(), sync);
+    }
+
     @Override
     public void setState(TimedPlanUnitState newState)
     {
@@ -89,8 +90,6 @@ public class LMPParallel extends LMP
         super.setState(newState);
     }
 
-    
-
     @Override
     public void updateTiming(double time) throws TimedPlanUnitPlayException
     {
@@ -102,10 +101,10 @@ public class LMPParallel extends LMP
 
         for (TimedAnimationUnit lmp : lmpQueue)
         {
-            lmp.updateTiming(time);            
+            lmp.updateTiming(time);
         }
-        
-        if(isLurking())
+
+        if (isLurking())
         {
             updateStartTime();
         }
@@ -143,30 +142,14 @@ public class LMPParallel extends LMP
     public double getStrokeDuration()
     {
         double duration = 0;
-        boolean setByHandMove = false;
-        
+
         for (TimedAnimationUnit lmp : lmpQueue)
         {
-            if(lmp instanceof LMP && ((LMP)lmp).hasFixedStrokeDuration())
-            {
-                if(setByHandMove)
-                {
-                    if (lmp.getStrokeDuration() > duration)
-                    {
-                        duration = lmp.getStrokeDuration();
-                    }
-                }
-                else
-                {
-                    duration = lmp.getStrokeDuration();
-                }
-                setByHandMove = true;
-            }
-            else if (lmp.getStrokeDuration() > duration && !setByHandMove)
+            if (lmp.getStrokeDuration() > duration)
             {
                 duration = lmp.getStrokeDuration();
             }
-        }        
+        }
         return duration;
     }
 
@@ -179,37 +162,44 @@ public class LMPParallel extends LMP
         }
         return true;
     }
-    
+
     public void linkLMPSyncs()
     {
-        if(linked)return;
+        if (linked) return;
         for (String hSync : pegBoard.getSyncs(getBMLId(), getId()))
         {
-            for (TimedAnimationUnit lmp: lmpQueue)
+            for (TimedAnimationUnit lmp : lmpQueue)
             {
-                for(String sync:lmp.getAvailableSyncs())
+                for (String sync : lmp.getAvailableSyncs())
                 {
-                    if (hSync.equals(sync) && !hSync.equals("end") && !hSync.equals("start"))
+                    if (hSync.equals(sync))
                     {
-                        lmp.setTimePeg(sync, pegBoard.getTimePeg(getBMLId(), getId(), sync));
+                        if(!hSync.equals("end") && !hSync.equals("start") && !hSync.equals("strokeEnd"))
+                        {
+                            lmp.setTimePeg(sync, pegBoard.getTimePeg(getBMLId(), getId(), sync));
+                        }
+                        else if (hSync.equals("strokeEnd"))
+                        {
+                            lmp.setTimePeg(sync, new BeforePeg(pegBoard.getTimePeg(getBMLId(), getId(), sync)));
+                        }
                     }
                 }
+                lmp.setTimePeg("relax", getStrokeEndPeg());
             }
         }
         linked = true;
     }
-    
+
     @Override
     protected void resolveTimePegs(double time)
     {
         TimePeg strokeStartPeg = getTimePeg("strokeStart");
         TimePeg hStartPeg = getTimePeg("start");
-        hStartPeg.setGlobalValue(strokeStartPeg.getGlobalValue()-getPreparationDuration());
-        
+        hStartPeg.setGlobalValue(strokeStartPeg.getGlobalValue() - getPreparationDuration());
+
         linkLMPSyncs();
-        
-        
-        for (TimedAnimationUnit lmp: lmpQueue)
+
+        for (TimedAnimationUnit lmp : lmpQueue)
         {
             TimePeg startPeg = new AfterPeg(hStartPeg, 0, bmlBlockPeg);
             double startValue = strokeStartPeg.getGlobalValue() - lmp.getPreparationDuration();
@@ -222,13 +212,27 @@ public class LMPParallel extends LMP
                 startPeg.setGlobalValue(hStartPeg.getGlobalValue());
             }
             lmp.setTimePeg("start", startPeg);
+
+            //update stroke durations
+            if (time < getStrokeStartTime())
+            {
+                double desiredStrokeEnd = getStrokeStartTime() + lmp.getStrokeDuration();
+                if(desiredStrokeEnd<getStrokeEndTime())
+                {
+                    lmp.getTimePeg("strokeEnd").setGlobalValue(desiredStrokeEnd);
+                }
+                else
+                {
+                    lmp.getTimePeg("strokeEnd").setGlobalValue(getStrokeEndTime());
+                }
+            }
         }
         super.resolveTimePegs(time);
-        for(TimedAnimationUnit lmp:lmpQueue)
+        for (TimedAnimationUnit lmp : lmpQueue)
         {
-            if(lmp instanceof LMP)
+            if (lmp instanceof LMP)
             {
-                ((LMP)lmp).resolveTimePegs(time);
+                ((LMP) lmp).resolveTimePegs(time);
             }
         }
     }
@@ -243,9 +247,9 @@ public class LMPParallel extends LMP
     protected void playUnit(double time) throws TimedPlanUnitPlayException
     {
         /*
-        System.out.println("parallel: strokeStart= "+getTime("strokeStart"));
-        System.out.println("parallel: strokeEnd= "+getTime("strokeEnd"));
-        */
+         * System.out.println("parallel: strokeStart= "+getTime("strokeStart"));
+         * System.out.println("parallel: strokeEnd= "+getTime("strokeEnd"));
+         */
         for (TimedAnimationUnit tmu : lmpQueue)
         {
             if (time >= tmu.getStartTime())
@@ -263,6 +267,6 @@ public class LMPParallel extends LMP
     @Override
     protected void stopUnit(double time) throws TimedPlanUnitPlayException
     {
-        
+
     }
 }

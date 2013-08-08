@@ -5,10 +5,12 @@ import static org.junit.Assert.assertEquals;
 import static org.mockito.AdditionalMatchers.eq;
 import static org.mockito.Matchers.any;
 import static org.mockito.Matchers.anyDouble;
+import static org.mockito.Matchers.anyString;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
+import hmi.animation.Hanim;
 import hmi.animation.VJoint;
 import saiba.bml.BMLGestureSync;
 import asap.realizertestutil.util.KeyPositionMocker;
@@ -58,6 +60,9 @@ public class ProcAnimationGestureMUMockupProcTest
         VJoint vNext = HanimBody.getLOA1HanimBody();
         when(mockAnimationPlayer.getVCurr()).thenReturn(vCurr);
         when(mockAnimationPlayer.getVNext()).thenReturn(vNext);
+        when(mockAnimationPlayer.getVCurrPartBySid(anyString())).thenReturn(HanimBody.getLOA1HanimBody().getPartBySid(Hanim.l_shoulder));
+        when(mockAnimationPlayer.getVNextPartBySid(anyString())).thenReturn(HanimBody.getLOA1HanimBody().getPartBySid(Hanim.l_shoulder));
+        
         when(mockProcAnimation.getPrefDuration()).thenReturn(PREFERED_STROKE_DURATION);
         when(mockProcAnimation.getPreferedDuration()).thenReturn(PREFERED_STROKE_DURATION);        
         when(mockProcAnimation.copy(mockAnimationPlayer)).thenReturn(mockProcAnimation);

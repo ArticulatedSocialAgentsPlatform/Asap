@@ -2,8 +2,10 @@ package asap.animationengine.ace.lmp;
 
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.junit.Assert.assertEquals;
+import static org.mockito.Matchers.anyString;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
+import hmi.animation.Hanim;
 import hmi.testutil.animation.HanimBody;
 
 import java.util.ArrayList;
@@ -18,6 +20,7 @@ import org.powermock.core.classloader.annotations.PrepareForTest;
 import org.powermock.modules.junit4.PowerMockRunner;
 
 import asap.animationengine.AnimationPlayer;
+import asap.animationengine.AnimationPlayerMock;
 import asap.animationengine.ace.OrientConstraint;
 import asap.animationengine.motionunit.TimedAnimationUnit;
 import asap.motionunit.TMUPlayException;
@@ -44,7 +47,7 @@ public class LMPWristRotTest extends AbstractTimedPlanUnitTest
 {
     private PegBoard pegBoard = new PegBoard();
     private double TIMING_PRECISION = 0.001;
-    private AnimationPlayer mockAniPlayer = mock(AnimationPlayer.class);
+    private AnimationPlayer mockAniPlayer = AnimationPlayerMock.createAnimationPlayerMock();
 
     @Before
     public void setup()
@@ -58,9 +61,7 @@ public class LMPWristRotTest extends AbstractTimedPlanUnitTest
         ocList.add(new OrientConstraint("strokeStart"));
         ocList.add(new OrientConstraint("stroke1"));
         ocList.add(new OrientConstraint("stroke2"));
-        ocList.add(new OrientConstraint("strokeEnd"));
-        when(mockAniPlayer.getVCurr()).thenReturn(HanimBody.getLOA1HanimBody());
-        when(mockAniPlayer.getVNext()).thenReturn(HanimBody.getLOA1HanimBody());
+        ocList.add(new OrientConstraint("strokeEnd"));        
         
         LMPWristRot wr = new LMPWristRot("right_arm", ocList, bfm, bbPeg, bmlId, id, pegBoard, mockAniPlayer);
         initializeForUpdateTiming(wr);        

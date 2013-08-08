@@ -433,10 +433,12 @@ public class LMPSequenceTest
 
         assertEquals(6, tmu2a.getStartTime(), TIME_PRECISION);
         assertEquals(8, tmu2a.getTime("strokeStart"), TIME_PRECISION);
-        assertEquals(11, tmu2a.getTime("strokeEnd"), TIME_PRECISION);
+        assertEquals(10, tmu2a.getTime("strokeEnd"), TIME_PRECISION);
+        assertEquals(11, tmu2a.getRelaxTime(), TIME_PRECISION);
         assertEquals(7, tmu2b.getStartTime(), TIME_PRECISION);
         assertEquals(8, tmu2b.getTime("strokeStart"), TIME_PRECISION);
         assertEquals(11, tmu2b.getTime("strokeEnd"), TIME_PRECISION);
+        assertEquals(11, tmu2b.getRelaxTime(), TIME_PRECISION);
     }
 
     @Test

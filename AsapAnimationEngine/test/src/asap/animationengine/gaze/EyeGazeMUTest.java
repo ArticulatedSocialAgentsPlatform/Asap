@@ -1,15 +1,14 @@
 package asap.animationengine.gaze;
 
-import static org.mockito.Mockito.mock;
-import static org.mockito.Mockito.when;
+import static org.junit.Assert.assertNotNull;
+import hmi.testutil.animation.HanimBody;
 
 import org.junit.Test;
-import static org.junit.Assert.*;
+
 import asap.animationengine.AnimationPlayer;
+import asap.animationengine.AnimationPlayerMock;
 import asap.animationengine.motionunit.MUSetupException;
 import asap.motionunit.MUPlayException;
-import hmi.animation.VJoint;
-import hmi.testutil.animation.HanimBody;
 
 /**
  * Unit testcases for EyeGazeMU
@@ -17,16 +16,12 @@ import hmi.testutil.animation.HanimBody;
  */
 public class EyeGazeMUTest
 {
-    private AnimationPlayer mockAnimationPlayer = mock(AnimationPlayer.class);
+    private AnimationPlayer mockAnimationPlayer;
     
     @Test(expected=MUSetupException.class)
     public void testNoEyes() throws MUPlayException, MUSetupException
     {
-        VJoint vCurr = HanimBody.getLOA1HanimBody();
-        VJoint vNext = HanimBody.getLOA1HanimBody();
-        when(mockAnimationPlayer.getVCurr()).thenReturn(vCurr);
-        when(mockAnimationPlayer.getVNext()).thenReturn(vNext);
-        
+        mockAnimationPlayer = AnimationPlayerMock.createAnimationPlayerMock(HanimBody.getLOA1HanimBody(),HanimBody.getLOA1HanimBody());        
         EyeGazeMU mu = new EyeGazeMU();
         mu.copy(mockAnimationPlayer);        
     }
@@ -34,11 +29,7 @@ public class EyeGazeMUTest
     @Test
     public void testCopy() throws MUSetupException
     {
-        VJoint vCurr = HanimBody.getLOA1HanimBodyWithEyes();
-        VJoint vNext = HanimBody.getLOA1HanimBodyWithEyes();
-        when(mockAnimationPlayer.getVCurr()).thenReturn(vCurr);
-        when(mockAnimationPlayer.getVNext()).thenReturn(vNext);
-        
+        mockAnimationPlayer = AnimationPlayerMock.createAnimationPlayerMock(HanimBody.getLOA1HanimBodyWithEyes(),HanimBody.getLOA1HanimBodyWithEyes());
         EyeGazeMU mu = new EyeGazeMU();
         assertNotNull(mu.copy(mockAnimationPlayer));
     }

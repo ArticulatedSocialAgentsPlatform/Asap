@@ -8,7 +8,7 @@ import javax.annotation.concurrent.GuardedBy;
  * 
  * if the link's value is TimePeg.VALUE_UNKNOWN, it is ignored.
  * 
- *   
+ * 
  * @author welberge
  */
 public class BeforePeg extends TimePeg
@@ -28,6 +28,11 @@ public class BeforePeg extends TimePeg
     public synchronized void setOffset(double o)
     {
         offset = o;
+    }
+
+    public BeforePeg(TimePeg l)
+    {
+        this(l, 0);
     }
 
     public BeforePeg(TimePeg l, double o)
@@ -74,7 +79,7 @@ public class BeforePeg extends TimePeg
             {
                 if (v > link.getValue(bmlBlockPeg) + offset)
                 {
-                    link.setValue(v - offset,bmlBlockPeg);
+                    link.setValue(v - offset, bmlBlockPeg);
                 }
             }
         }

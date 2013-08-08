@@ -6,8 +6,10 @@ import static org.hamcrest.number.OrderingComparison.greaterThan;
 import static org.hamcrest.number.OrderingComparison.lessThan;
 import static org.junit.Assert.assertEquals;
 import static org.mockito.Matchers.any;
+import static org.mockito.Matchers.anyString;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
+import hmi.animation.Hanim;
 import hmi.animation.VJoint;
 import saiba.bml.BMLGestureSync;
 import saiba.bml.parser.Constraint;
@@ -74,6 +76,9 @@ public class ProcAnimationGestureTMUTest extends TimedAnimationMotionUnitTest
         mu.setGestureUnit(mockProcAnimation);
         when(mockAnimationPlayer.getVCurr()).thenReturn(vCurr);
         when(mockAnimationPlayer.getVNext()).thenReturn(vNext);
+        when(mockAnimationPlayer.getVCurrPartBySid(anyString())).thenReturn(HanimBody.getLOA1HanimBody().getPartBySid(Hanim.l_shoulder));
+        when(mockAnimationPlayer.getVNextPartBySid(anyString())).thenReturn(HanimBody.getLOA1HanimBody().getPartBySid(Hanim.l_shoulder));
+        
         when(mockProcAnimation.copy((VJoint) any())).thenReturn(mockProcAnimation);
         when(mockProcAnimation.getPreferedDuration()).thenReturn(STROKE_DURATION);
         when(mockProcAnimation.getPrefDuration()).thenReturn(STROKE_DURATION);

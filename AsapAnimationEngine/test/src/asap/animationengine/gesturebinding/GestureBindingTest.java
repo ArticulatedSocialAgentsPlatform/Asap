@@ -22,8 +22,10 @@ import static org.hamcrest.CoreMatchers.instanceOf;
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
+import static org.mockito.Matchers.anyString;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
+import hmi.animation.Hanim;
 import hmi.animation.VJoint;
 import hmi.physics.PhysicalHumanoid;
 import hmi.testutil.animation.HanimBody;
@@ -151,6 +153,8 @@ public class GestureBindingTest
         when(mockAniPlayer.getVNext()).thenReturn(human);
         when(mockAniPlayer.getVCurr()).thenReturn(human);
         when(mockAniPlayer.getPHuman()).thenReturn(mockPHuman);
+        when(mockAniPlayer.getVCurrPartBySid(anyString())).thenReturn(HanimBody.getLOA1HanimBody().getPartBySid(Hanim.l_shoulder));
+        when(mockAniPlayer.getVNextPartBySid(anyString())).thenReturn(HanimBody.getLOA1HanimBody().getPartBySid(Hanim.l_shoulder));
     }
 
     public GazeBehaviour createGazeBehaviour(String bmlId, String bml) throws IOException

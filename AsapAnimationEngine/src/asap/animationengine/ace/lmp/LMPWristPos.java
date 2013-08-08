@@ -92,12 +92,6 @@ public class LMPWristPos extends LMPPos
         }
     }
 
-    @Override
-    public boolean hasFixedStrokeDuration()
-    {
-        return true;
-    }
-
     public float[] getVelocity(double t)
     {
         if (spline != null)

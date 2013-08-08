@@ -2,7 +2,6 @@ package asap.animationengine.procanimation;
 
 import static hmi.testutil.math.Vec3fTestUtil.assertVec3fEquals;
 import static org.junit.Assert.assertEquals;
-import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
 import hmi.animation.Hanim;
 import hmi.animation.VJoint;
@@ -15,6 +14,7 @@ import org.junit.Test;
 
 import saiba.bml.BMLGestureSync;
 import asap.animationengine.AnimationPlayer;
+import asap.animationengine.AnimationPlayerMock;
 import asap.animationengine.motionunit.MUSetupException;
 import asap.animationengine.restpose.RestPose;
 import asap.animationengine.restpose.SkeletonPoseRestPose;
@@ -28,10 +28,10 @@ import asap.realizer.planunit.KeyPosition;
  */
 public class ProcAnimationGestureMUEndEffectorTest
 {
-    private VJoint vNext;
-    private VJoint vAdditive;
-    private VJoint vCurr;
-    private AnimationPlayer mockAnimationPlayer = mock(AnimationPlayer.class);
+    private VJoint vNext = HanimBody.getLOA1HanimBody();
+    private VJoint vAdditive = HanimBody.getLOA1HanimBody();
+    private VJoint vCurr = vNext;//small hack so we don't have to copy curr to next
+    private AnimationPlayer mockAnimationPlayer = AnimationPlayerMock.createAnimationPlayerMock(vCurr,vNext);
     private static final float POSITION_PRECISION = 0.01f;
     private static final float TIMING_PRECISION = 0.01f;
     private ProcAnimationGestureMU pag;
@@ -39,22 +39,16 @@ public class ProcAnimationGestureMUEndEffectorTest
     @Before
     public void setup() throws MUPlayException, MUSetupException
     {
-        vCurr = HanimBody.getLOA1HanimBody();
         vCurr.getPart(Hanim.l_elbow).setTranslation(Vec3f.getVec3f(0, -0.5f, 0));
         vCurr.getPart(Hanim.l_wrist).setTranslation(Vec3f.getVec3f(0, -0.3f, 0));
         vCurr.getPart(Hanim.r_elbow).setTranslation(Vec3f.getVec3f(0, -0.5f, 0));
         vCurr.getPart(Hanim.r_wrist).setTranslation(Vec3f.getVec3f(0, -0.3f, 0));
 
-        vNext = HanimBody.getLOA1HanimBody();
         vNext.getPart(Hanim.l_elbow).setTranslation(Vec3f.getVec3f(0, -0.5f, 0));
         vNext.getPart(Hanim.l_wrist).setTranslation(Vec3f.getVec3f(0, -0.3f, 0));
         vNext.getPart(Hanim.r_elbow).setTranslation(Vec3f.getVec3f(0, -0.5f, 0));
-        vNext.getPart(Hanim.r_wrist).setTranslation(Vec3f.getVec3f(0, -0.3f, 0));
-
-        vAdditive = HanimBody.getLOA1HanimBody();
+        vNext.getPart(Hanim.r_wrist).setTranslation(Vec3f.getVec3f(0, -0.3f, 0));        
         
-        when(mockAnimationPlayer.getVCurr()).thenReturn(vNext);
-        when(mockAnimationPlayer.getVNext()).thenReturn(vNext);
         RestPose pose = new SkeletonPoseRestPose();
         pose.setAnimationPlayer(mockAnimationPlayer);
         when(mockAnimationPlayer.getRestPose()).thenReturn(pose);

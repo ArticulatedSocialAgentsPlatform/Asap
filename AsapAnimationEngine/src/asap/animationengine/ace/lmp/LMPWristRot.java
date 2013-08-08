@@ -45,7 +45,7 @@ public class LMPWristRot extends LMP
     private static final float PRECISION = 0.001f;
     public static final double TRANSITION_TIME = 0.4;
     
-    public static final double DEFAULT_STROKEPHASE_DURATION = 5;
+    public static final double DEFAULT_STROKEPHASE_DURATION = 0;
 
     @Data
     private static class OrientPos

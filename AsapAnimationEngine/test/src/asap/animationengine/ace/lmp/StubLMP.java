@@ -26,33 +26,20 @@ public class StubLMP extends LMP
     private double retrDuration;
     
     @Setter
-    private double strokeDuration;
+    private double strokeDuration;    
     
-    private final boolean hasFixedStrokeDuration;
-
     public StubLMP(FeedbackManager fbm, BMLBlockPeg bmlPeg, String bmlId, String behId, PegBoard pegBoard, Set<String> kinematicJoints,
             Set<String> physicalJoints, double prepDuration, double retrDuration, double strokeDuration)
-    {
-        this(fbm, bmlPeg, bmlId, behId, pegBoard, kinematicJoints, physicalJoints, prepDuration, retrDuration, strokeDuration, false);
-    }
-
-    public StubLMP(FeedbackManager fbm, BMLBlockPeg bmlPeg, String bmlId, String behId, PegBoard pegBoard, Set<String> kinematicJoints,
-            Set<String> physicalJoints, double prepDuration, double retrDuration, double strokeDuration, boolean hasFixedStrokeDuration)
     {
         super(fbm, bmlPeg, bmlId, behId, pegBoard);
         this.kinematicJoints = kinematicJoints;
         this.physicalJoints = physicalJoints;
         this.prepDuration = prepDuration;
         this.retrDuration = retrDuration;
-        this.strokeDuration = strokeDuration;
-        this.hasFixedStrokeDuration = hasFixedStrokeDuration;
+        this.strokeDuration = strokeDuration;        
     }
 
-    @Override
-    public boolean hasFixedStrokeDuration()
-    {
-        return hasFixedStrokeDuration;
-    }
+   
 
     @Override
     public Set<String> getKinematicJoints()

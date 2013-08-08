@@ -105,8 +105,11 @@ public class AnimationPlannerTest
         when(mockHns.getAbsoluteDirection(startsWith("Dir"), any(float[].class))).thenReturn(true);
         when(mockHns.isPalmOrientation(startsWith("Palm"))).thenReturn(true);
         when(mockHns.getElementShape(anyString())).thenReturn(ShapeSymbols.LeftC);
+        
         when(mockPlayer.getVCurr()).thenReturn(HanimBody.getLOA1HanimBody());
         when(mockPlayer.getVNext()).thenReturn(HanimBody.getLOA1HanimBody());
+        when(mockPlayer.getVCurrPartBySid(anyString())).thenReturn(HanimBody.getLOA1HanimBody().getPartBySid(Hanim.l_shoulder));
+        when(mockPlayer.getVNextPartBySid(anyString())).thenReturn(HanimBody.getLOA1HanimBody().getPartBySid(Hanim.l_shoulder));
     }
 
     public HeadBehaviour createHeadBehaviour() throws IOException
