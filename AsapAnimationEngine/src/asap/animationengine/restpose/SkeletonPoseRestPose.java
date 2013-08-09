@@ -88,7 +88,7 @@ public class SkeletonPoseRestPose implements RestPose
                 VJoint vjSet = player.getVNextPartBySid(vj.getSid());
                 if (vjSet != null)
                 {
-                    vjSet.setRotation(q);
+                    vjSet.setRotation(q);                    
                 }                
             }
         }        

@@ -126,7 +126,7 @@ public class AnimationPlayer implements Player, MixedAnimationPlayer
 
     private void setVNextToIdentity()
     {
-        for (VJoint vj : vNext.getParts())
+        for (VJoint vj : vNextMap.getJoints())
         {
             if (vj.getSid() != null)
             {
@@ -140,9 +140,10 @@ public class AnimationPlayer implements Player, MixedAnimationPlayer
     private void applyCurrentOnVNext()
     {
         float q[] = Quat4f.getQuat4f();
-        for (VJoint vj : vNext.getParts())
+        for (VJoint vj : vNextMap.getJoints())
         {
-            if (vj.getSid() != null && !vj.getSid().equals(Hanim.l_eyeball_joint) && !vj.getSid().equals(Hanim.r_eyeball_joint))
+            //XXX:ugliness, the eyes move so fast that they might have identity rotation in the next frame and non-identity rotation in the previous
+            if (vj.getSid() != null && !vj.getSid().equals(Hanim.l_eyeball_joint) && !vj.getSid().equals(Hanim.r_eyeball_joint))    
             {
                 vj.getRotation(q);
                 if (Quat4f.epsilonEquals(q, Quat4f.getIdentity(), 0.001f))
@@ -160,9 +161,6 @@ public class AnimationPlayer implements Player, MixedAnimationPlayer
         vPrev = vP;
         vCurr = vC;
         vNext = vN;
-        VJointUtils.setSidToIdOrNameIfNullSid(vPrev.getParts());
-        VJointUtils.setSidToIdOrNameIfNullSid(vCurr.getParts());
-        VJointUtils.setSidToIdOrNameIfNullSid(vNext.getParts());        
         vPrevMap = new VJointPartsMap(vP);
         vCurrMap = new VJointPartsMap(vC);
         vNextMap = new VJointPartsMap(vN);
