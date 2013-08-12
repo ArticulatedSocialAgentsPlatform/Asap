@@ -13,6 +13,8 @@ import java.util.Set;
 import lombok.Setter;
 import lombok.extern.slf4j.Slf4j;
 import asap.animationengine.AnimationPlayer;
+import asap.animationengine.ace.GStrokePhaseID;
+import asap.animationengine.ace.OrientConstraint;
 import asap.animationengine.ace.PoConstraint;
 import asap.math.splines.TCBSplineN;
 import asap.realizer.feedback.FeedbackManager;
@@ -43,7 +45,7 @@ public class LMPPoRot extends LMP
     private List<Double> timeVec;
 
     private static final double TRANSITION_TIME = 0.4; // TODO: use getPODurationFromAmplitude instead?
-    private static final double DEFAULT_STROKEPHASE_DURATION = 2;
+    private static final double DEFAULT_STROKEPHASE_DURATION = 0;
 
     @Setter
     private List<PoConstraint> poVec;
@@ -408,6 +410,19 @@ public class LMPPoRot extends LMP
     @Override
     public double getStrokeDuration()
     {
-        return DEFAULT_STROKEPHASE_DURATION;
+        double strokeDuration = 0;
+        PoConstraint ocPrev = null;
+        for (PoConstraint oc : poVec)
+        {
+            if (oc.getPhase() == GStrokePhaseID.STP_STROKE)
+            {
+                if (ocPrev != null)
+                {
+                    strokeDuration += TRANSITION_TIME;                    
+                }
+                ocPrev = oc;
+            }
+        }
+        return strokeDuration;
     }
 }

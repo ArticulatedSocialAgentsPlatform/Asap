@@ -21,6 +21,7 @@ import org.powermock.modules.junit4.PowerMockRunner;
 
 import asap.animationengine.AnimationPlayer;
 import asap.animationengine.AnimationPlayerMock;
+import asap.animationengine.ace.GStrokePhaseID;
 import asap.animationengine.ace.OrientConstraint;
 import asap.animationengine.motionunit.TimedAnimationUnit;
 import asap.motionunit.TMUPlayException;
@@ -52,19 +53,19 @@ public class LMPWristRotTest extends AbstractTimedPlanUnitTest
     @Before
     public void setup()
     {
-        pegBoard.addBMLBlockPeg(new BMLBlockPeg("bml1",0));
+        pegBoard.addBMLBlockPeg(new BMLBlockPeg("bml1", 0));
     }
-    
+
     private LMPWristRot setupPlanUnit(FeedbackManager bfm, BMLBlockPeg bbPeg, String bmlId, String id)
     {
         List<OrientConstraint> ocList = new ArrayList<>();
-        ocList.add(new OrientConstraint("strokeStart"));
-        ocList.add(new OrientConstraint("stroke1"));
-        ocList.add(new OrientConstraint("stroke2"));
-        ocList.add(new OrientConstraint("strokeEnd"));        
-        
+        ocList.add(new OrientConstraint("strokeStart", GStrokePhaseID.STP_STROKE));
+        ocList.add(new OrientConstraint("stroke1", GStrokePhaseID.STP_STROKE));
+        ocList.add(new OrientConstraint("stroke2", GStrokePhaseID.STP_STROKE));
+        ocList.add(new OrientConstraint("strokeEnd", GStrokePhaseID.STP_RETRACT));
+
         LMPWristRot wr = new LMPWristRot("right_arm", ocList, bfm, bbPeg, bmlId, id, pegBoard, mockAniPlayer);
-        initializeForUpdateTiming(wr);        
+        initializeForUpdateTiming(wr);
         wr.setState(TimedPlanUnitState.IN_PREP);
         return wr;
     }
@@ -73,7 +74,7 @@ public class LMPWristRotTest extends AbstractTimedPlanUnitTest
     protected LMPWristRot setupPlanUnit(FeedbackManager bfm, BMLBlockPeg bbPeg, String id, String bmlId, double startTime)
     {
         LMPWristRot lmp = setupPlanUnit(bfm, bbPeg, bmlId, id);
-        lmp.setTimePeg("start", TimePegUtil.createTimePeg(bbPeg, startTime));        
+        lmp.setTimePeg("start", TimePegUtil.createTimePeg(bbPeg, startTime));
         return lmp;
     }
 
@@ -93,6 +94,7 @@ public class LMPWristRotTest extends AbstractTimedPlanUnitTest
         initializeForUpdateTiming(tau);
 
         tau.updateTiming(0);
+        assertEquals(LMPWristRot.TRANSITION_TIME * 3, tau.getStrokeDuration(), TIMING_PRECISION);
         assertEquals(1 - tau.getPreparationDuration(), tau.getTime("start"), TIMING_PRECISION);
         assertEquals(1, tau.getTime("strokeStart"), TIMING_PRECISION);
         assertEquals(1 + tau.getStrokeDuration(), tau.getTime("strokeEnd"), TIMING_PRECISION);
@@ -108,7 +110,7 @@ public class LMPWristRotTest extends AbstractTimedPlanUnitTest
         tau.setTimePeg("strokeStart", TimePegUtil.createTimePeg(BMLBlockPeg.GLOBALPEG, 0.5f));
 
         tau.updateTiming(0);
-        assertEquals(0.5 - tau.getPreparationDuration(), tau.getTime("start"), TIMING_PRECISION);        
+        assertEquals(0.5 - tau.getPreparationDuration(), tau.getTime("start"), TIMING_PRECISION);
         assertEquals(0.5, tau.getTime("strokeStart"), TIMING_PRECISION);
         assertEquals(1 + tau.getStrokeDuration(), tau.getTime("strokeEnd"), TIMING_PRECISION);
         double strokeDur = 0.5 + tau.getStrokeDuration();
@@ -137,13 +139,13 @@ public class LMPWristRotTest extends AbstractTimedPlanUnitTest
     {
         TimedAnimationUnit tau = setupPlanUnit(fbManager, BMLBlockPeg.GLOBALPEG, "bml1", "beh1");
         initializeForUpdateTiming(tau);
-        tau.setTimePeg("strokeStart", TimePegUtil.createTimePeg(BMLBlockPeg.GLOBALPEG, 0.3f));        
-        tau.setTimePeg("strokeEnd", TimePegUtil.createTimePeg(BMLBlockPeg.GLOBALPEG, 0.3f+tau.getStrokeDuration()));
+        tau.setTimePeg("strokeStart", TimePegUtil.createTimePeg(BMLBlockPeg.GLOBALPEG, 0.3f));
+        tau.setTimePeg("strokeEnd", TimePegUtil.createTimePeg(BMLBlockPeg.GLOBALPEG, 0.3f + tau.getStrokeDuration()));
         tau.updateTiming(0);
-        
+
         assertEquals(0, tau.getTime("start"), TIMING_PRECISION);
         assertEquals(0.3, tau.getTime("strokeStart"), TIMING_PRECISION);
-        assertEquals(0.3+tau.getStrokeDuration(), tau.getTime("strokeEnd"), TIMING_PRECISION);        
+        assertEquals(0.3 + tau.getStrokeDuration(), tau.getTime("strokeEnd"), TIMING_PRECISION);
         assertEquals(0.3 + tau.getStrokeDuration() / 3d, tau.getTime("stroke1"), TIMING_PRECISION);
         assertEquals(0.3 + 2 * tau.getStrokeDuration() / 3d, tau.getTime("stroke2"), TIMING_PRECISION);
     }
@@ -153,6 +155,6 @@ public class LMPWristRotTest extends AbstractTimedPlanUnitTest
     {
         TimedAnimationUnit tau = setupPlanUnit(fbManager, BMLBlockPeg.GLOBALPEG, "bml1", "beh1");
         assertThat(tau.getAvailableSyncs(),
-                IsIterableContainingInAnyOrder.containsInAnyOrder("start","strokeStart", "stroke1", "stroke2", "strokeEnd","end"));
+                IsIterableContainingInAnyOrder.containsInAnyOrder("start", "strokeStart", "stroke1", "stroke2", "strokeEnd", "end"));
     }
 }

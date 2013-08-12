@@ -124,9 +124,8 @@ public final class MURMLMUBuilder
      * 2. Segment-Dauer abhaengig von Segment-Laenge
      * => Skalierungsstrategie?!
      */
-    private void appendSubTrajectory(Dynamic dyn, GuidingSequence traj, TimedAnimationUnit tmu,
-            FeedbackManager bbf, BMLBlockPeg bmlBlockPeg, String bmlId, String id, PegBoard pegBoard, AnimationPlayer aniPlayer)
-            throws TMUSetupException
+    private void appendSubTrajectory(Dynamic dyn, GuidingSequence traj, TimedAnimationUnit tmu, FeedbackManager bbf,
+            BMLBlockPeg bmlBlockPeg, String bmlId, String id, PegBoard pegBoard, AnimationPlayer aniPlayer) throws TMUSetupException
     {
         double tEst = 0;
         float swivel = -99;
@@ -177,8 +176,9 @@ public final class MURMLMUBuilder
                 // no valid definition, ignoring movement segment
                 else
                 {
-                    throw new TMUSetupException("ArmMotorControl::appendSubtrajectory : invalid definition of for linear segment, linear segment " +
-                    		"requires either an end definition or a direction and distance.", null);
+                    throw new TMUSetupException(
+                            "ArmMotorControl::appendSubtrajectory : invalid definition of for linear segment, linear segment "
+                                    + "requires either an end definition or a direction and distance.", null);
                 }
 
                 // -- create guiding stroke, estimate duration and add to subtrajectory
@@ -365,11 +365,9 @@ public final class MURMLMUBuilder
     private List<OrientConstraint> formWristMovement(String scope, Static staticElem, FeedbackManager bbm, BMLBlockPeg bmlBlockPeg,
             String bmlId, String id, PegBoard pb, AnimationPlayer aniPlayer)
     {
-        OrientConstraint oc1 = new OrientConstraint("strokeStart");
-        OrientConstraint oc2 = new OrientConstraint("strokeEnd");
-        oc1.setPhase(GStrokePhaseID.STP_STROKE);
-        oc2.setPhase(GStrokePhaseID.STP_RETRACT);
-
+        OrientConstraint oc1 = new OrientConstraint("strokeStart",GStrokePhaseID.STP_STROKE);
+        OrientConstraint oc2 = new OrientConstraint("strokeEnd",GStrokePhaseID.STP_RETRACT);
+        
         float[] vec = Vec3f.getVec3f();
 
         if (staticElem.getSlot() == Slot.ExtFingerOrientation && hns.getAbsoluteDirection(staticElem.getValue(), vec))
@@ -400,7 +398,7 @@ public final class MURMLMUBuilder
         }
         return numValues;
     }
-    
+
     private List<OrientConstraint> formWristMovement(Dynamic dyn, FeedbackManager bbm, BMLBlockPeg bmlBlockPeg, String bmlId, String id,
             PegBoard pb, AnimationPlayer aniPlayer)
     {
@@ -420,8 +418,8 @@ public final class MURMLMUBuilder
         // }
 
         int i = 0;
-        int lastValue = getNumberOfValues(dyn);        
-        
+        int lastValue = getNumberOfValues(dyn);
+
         for (DynamicElement dynElem : dyn.getDynamicElements())
         {
             if (dynElem.getValues().size() < 2)
@@ -433,17 +431,16 @@ public final class MURMLMUBuilder
             for (Value v : dynElem.getValues())
             {
                 String cid = v.getId();
-                
+
                 // force first and last ids to be strokeStart and strokeEnd respectively
                 if (i == 0) cid = "strokeStart";
                 if (i == lastValue - 1) cid = "strokeEnd";
-                if(cid.isEmpty())
+                if (cid.isEmpty())
                 {
-                    cid = "stroke"+i;
+                    cid = "stroke" + i;
                 }
-                
-                OrientConstraint oc = new OrientConstraint(cid);
-                oc.setPhase(GStrokePhaseID.STP_STROKE);
+
+                OrientConstraint oc = new OrientConstraint(cid, GStrokePhaseID.STP_STROKE);
                 vec = Vec3f.getVec3f();
                 if (hns.getAbsoluteDirection(v.getName(), vec))
                 {
@@ -610,13 +607,13 @@ public final class MURMLMUBuilder
         return lmp;
     }
 
-    private LMP formPOMovement(Dynamic dyn, FeedbackManager bbm, BMLBlockPeg bmlBlockPeg, String bmlId,
-            String id, PegBoard pb, AnimationPlayer aniPlayer)
+    private LMP formPOMovement(Dynamic dyn, FeedbackManager bbm, BMLBlockPeg bmlBlockPeg, String bmlId, String id, PegBoard pb,
+            AnimationPlayer aniPlayer)
     {
         List<PoConstraint> poVec = new ArrayList<>();
         int i = 0;
-        int lastValue = getNumberOfValues(dyn);        
-        
+        int lastValue = getNumberOfValues(dyn);
+
         for (DynamicElement dynElem : dyn.getDynamicElements())
         {
             if (dynElem.getValues().size() >= 2)
@@ -629,9 +626,9 @@ public final class MURMLMUBuilder
                         String cid = v.getId();
                         if (i == 0) cid = "strokeStart";
                         if (i == lastValue - 1) cid = "strokeEnd";
-                        if(cid.isEmpty())
+                        if (cid.isEmpty())
                         {
-                            cid = "stroke"+i;
+                            cid = "stroke" + i;
                         }
                         poVec.add(new PoConstraint(po, GStrokePhaseID.STP_STROKE, cid));
                         i++;
@@ -671,11 +668,12 @@ public final class MURMLMUBuilder
         return formWristMovement(scope, staticElem, bbm, bmlBlockPeg, bmlId, id, pb, aniPlayer);
     }
 
-    public LMP getDynamicHandShapeTMU(Dynamic dyn, FeedbackManager bbm, BMLBlockPeg bmlBlockPeg,String bmlId, String id, PegBoard pb, AnimationPlayer aniPlayer)
+    public LMP getDynamicHandShapeTMU(Dynamic dyn, FeedbackManager bbm, BMLBlockPeg bmlBlockPeg, String bmlId, String id, PegBoard pb,
+            AnimationPlayer aniPlayer)
     {
         return null;
     }
-    
+
     public LMP getStaticHandShapeElementTMU(String scope, Static staticElem, FeedbackManager bbm, BMLBlockPeg bmlBlockPeg, String bmlId,
             String id, PegBoard pb, AnimationPlayer aniPlayer)
     {
@@ -784,7 +782,7 @@ public final class MURMLMUBuilder
             if (getStartConf(ePos, staticElem, hns))
             {
                 hns.transFormLocation(ePos, staticElem.getSymmetryTransform());
-                
+
                 // --- create linear guiding stroke for the preparatory movement which
                 // ends with the constraints start configuration
                 trajectory.addGuidingStroke(new LinearGStroke(GStrokePhaseID.STP_PREP, ePos));
@@ -1324,7 +1322,7 @@ public final class MURMLMUBuilder
         case HandLocation:
             return getDynamicHandLocationElementsTMU(dyn, bbm, bmlBlockPeg, bmlId, id, localPegBoard, aniPlayer);
         case HandShape:
-            return getDynamicHandShapeTMU(dyn, bbm, bmlBlockPeg, bmlId, id, localPegBoard, aniPlayer);           
+            return getDynamicHandShapeTMU(dyn, bbm, bmlBlockPeg, bmlId, id, localPegBoard, aniPlayer);
         case ExtFingerOrientation:
             ocVec.addAll(getExtFingerOrientationnElementsTMU(dyn, bbm, bmlBlockPeg, bmlId, id, localPegBoard, aniPlayer));
             return null;

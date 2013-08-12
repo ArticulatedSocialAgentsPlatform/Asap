@@ -22,6 +22,7 @@ import org.powermock.modules.junit4.PowerMockRunner;
 import saiba.bml.feedback.BMLSyncPointProgressFeedback;
 import saiba.bml.parser.Constraint;
 import asap.animationengine.AnimationPlayer;
+import asap.animationengine.ace.GStrokePhaseID;
 import asap.animationengine.ace.OrientConstraint;
 import asap.animationengine.motionunit.TimedAnimationUnit;
 import asap.bml.ext.murml.MURMLGestureBehaviour;
@@ -206,8 +207,8 @@ public class MotorControlProgramTest extends AbstractTimedPlanUnitTest
     {
 
         List<OrientConstraint> ocVec = new ArrayList<>();
-        ocVec.add(new OrientConstraint("strokeStart"));
-        ocVec.add(new OrientConstraint("strokeEnd"));
+        ocVec.add(new OrientConstraint("strokeStart", GStrokePhaseID.STP_STROKE));
+        ocVec.add(new OrientConstraint("strokeEnd", GStrokePhaseID.STP_RETRACT));
         LMPWristRot lmpWristRot = new LMPWristRot("left_arm", ocVec, fbManager, BMLBlockPeg.GLOBALPEG, "bml1", "beh1", localPegboard,
                 mockAnimationPlayer);
         MotorControlProgram mcp = setupPlanUnit(fbManager, BMLBlockPeg.GLOBALPEG, "bml1", "beh1", lmpWristRot);
@@ -219,10 +220,9 @@ public class MotorControlProgramTest extends AbstractTimedPlanUnitTest
         assertEquals(LMPWristRot.TRANSITION_TIME + 2, mcp.getTime("ready"), TIME_PRECISION);
         assertEquals(LMPWristRot.TRANSITION_TIME + 2, mcp.getTime("strokeStart"), TIME_PRECISION);
         assertEquals(LMPWristRot.TRANSITION_TIME + 2, mcp.getTime("stroke"), TIME_PRECISION);
-        assertEquals(LMPWristRot.TRANSITION_TIME + 2 + LMPWristRot.DEFAULT_STROKEPHASE_DURATION, mcp.getTime("strokeEnd"), TIME_PRECISION);
-        assertEquals(LMPWristRot.TRANSITION_TIME + 2 + LMPWristRot.DEFAULT_STROKEPHASE_DURATION, mcp.getTime("relax"), TIME_PRECISION);
-        assertEquals(LMPWristRot.TRANSITION_TIME + LMPWristRot.TRANSITION_TIME + 2 + LMPWristRot.DEFAULT_STROKEPHASE_DURATION,
-                mcp.getEndTime(), TIME_PRECISION);
+        assertEquals(LMPWristRot.TRANSITION_TIME + 2 + LMPWristRot.TRANSITION_TIME, mcp.getTime("strokeEnd"), TIME_PRECISION);
+        assertEquals(LMPWristRot.TRANSITION_TIME + 2 + LMPWristRot.TRANSITION_TIME, mcp.getTime("relax"), TIME_PRECISION);
+        assertEquals(LMPWristRot.TRANSITION_TIME * 3 + 2, mcp.getEndTime(), TIME_PRECISION);
     }
 
     @Test
@@ -471,7 +471,7 @@ public class MotorControlProgramTest extends AbstractTimedPlanUnitTest
 
         assertEquals(0, tmu1.getTime("start"), TIME_PRECISION);
         assertEquals(1, tmu1.getTime("strokeStart"), TIME_PRECISION);
-        assertEquals(2, tmu1.getTime("strokeEnd"), TIME_PRECISION);        
+        assertEquals(2, tmu1.getTime("strokeEnd"), TIME_PRECISION);
         assertEquals(6, tmu1.getRelaxTime(), TIME_PRECISION);
 
         assertEquals(0.6, seq.getTime("start"), TIME_PRECISION);

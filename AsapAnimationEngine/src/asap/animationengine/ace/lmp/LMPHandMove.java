@@ -78,10 +78,9 @@ public class LMPHandMove extends LMP
         @Override
         public double getPreferedDuration()
         {
-            return DEFAULT_STROKEPHASE_DURATION + TRANSITION_TIME * 2;
+            return getStrokeDuration() + TRANSITION_TIME * 2;
         }
 
-                
         @Override
         public void applyKeyFrame(KeyFrame kf)
         {
@@ -146,7 +145,7 @@ public class LMPHandMove extends LMP
             }
         }
         jointIds.removeAll(removeIds);
-        kinematicJoints = ImmutableSet.copyOf(jointIds);        
+        kinematicJoints = ImmutableSet.copyOf(jointIds);
         createPCTimePegs();
     }
 
@@ -202,7 +201,7 @@ public class LMPHandMove extends LMP
                 constraintMap.put(oc, tp);
                 pegBoard.addTimePeg(getBMLId(), getId(), oc.getId(), tp);
             }
-        }        
+        }
     }
 
     @Override
@@ -379,7 +378,7 @@ public class LMPHandMove extends LMP
     @Override
     protected void stopUnit(double time) throws TimedPlanUnitPlayException
     {
-        
+
     }
 
     @Override
@@ -397,7 +396,17 @@ public class LMPHandMove extends LMP
     @Override
     public double getStrokeDuration()
     {
-        return DEFAULT_STROKEPHASE_DURATION;
+        double strokeDuration = 0;
+        PostureConstraint ocPrev = null;
+        for (PostureConstraint oc : pcVec)
+        {
+            if (ocPrev != null)
+            {
+                strokeDuration += TRANSITION_TIME;
+            }
+            ocPrev = oc;
+        }
+        return strokeDuration;
     }
 
 }

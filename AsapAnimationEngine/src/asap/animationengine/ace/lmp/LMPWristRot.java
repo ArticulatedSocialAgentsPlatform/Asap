@@ -44,8 +44,6 @@ public class LMPWristRot extends LMP
 
     private static final float PRECISION = 0.001f;
     public static final double TRANSITION_TIME = 0.4;
-    
-    public static final double DEFAULT_STROKEPHASE_DURATION = 5;
 
     @Data
     private static class OrientPos
@@ -59,8 +57,8 @@ public class LMPWristRot extends LMP
     {
         super(bbf, bmlBlockPeg, bmlId, id, localPegBoard);
         this.aniPlayer = aniPlayer;
-        
-        System.out.println("ocVec size: "+ocVec.size());
+
+        System.out.println("ocVec size: " + ocVec.size());
 
         // TODO: implement proper scope selection when no scope is provided.
         if (scope == null)
@@ -168,7 +166,7 @@ public class LMPWristRot extends LMP
         else if (!Vec3f.epsilonEquals(oc.getP(), Vec3f.getZero(), PRECISION))
         // -- only palm orientation given
         {
-            
+
             // get transformation pOld -> p
             float p[] = Vec3f.getVec3f(oc.getP());
             if (joint.equals(Hanim.l_wrist))
@@ -177,7 +175,7 @@ public class LMPWristRot extends LMP
             }
             Vec3f.normalize(p);
             Vec3f.normalize(pOld);
-            
+
             float m1[] = Mat3f.getMat3f();
             // M.makeRotate(pOld,p);
             float q[] = Quat4f.getQuat4f();
@@ -210,10 +208,10 @@ public class LMPWristRot extends LMP
             if (constraintMap.get(oc) == null)
             {
                 TimePeg tp = new TimePeg(getBMLBlockPeg());
-                constraintMap.put(oc, tp);                
-                setTimePeg(oc.getId(), tp);                
+                constraintMap.put(oc, tp);
+                setTimePeg(oc.getId(), tp);
             }
-        }        
+        }
     }
 
     @Override
@@ -272,7 +270,7 @@ public class LMPWristRot extends LMP
                 }
             }
         }
-        double avgDur = DEFAULT_STROKEPHASE_DURATION / (ocVec.size() - 1);
+        double avgDur = getStrokeDuration() / (ocVec.size() - 1);
         if (segments > 0)
         {
             avgDur = totalDur / segments;
@@ -300,8 +298,6 @@ public class LMPWristRot extends LMP
             constraintMap.get(ocVec.get(j)).setGlobalValue(time);
         }
     }
-
-    
 
     private OrientConstraint findOrientConstraint(String syncId)
     {
@@ -455,17 +451,17 @@ public class LMPWristRot extends LMP
         float q[] = getOrient(time);
         VJoint vjRoot = aniPlayer.getVCurrPartBySid(Hanim.HumanoidRoot);
         VJoint vjWristCurr = aniPlayer.getVCurrPartBySid(joint);
-        
-        float qw[]=Quat4f.getQuat4f();                
-        float qp[]=Quat4f.getQuat4f();
-        float q2[]=Quat4f.getQuat4f();
+
+        float qw[] = Quat4f.getQuat4f();
+        float qp[] = Quat4f.getQuat4f();
+        float q2[] = Quat4f.getQuat4f();
         Quat4f.set(qw, q);
         VJoint par = vjWristCurr.getParent();
         par.getPathRotation(vjRoot, qp);
         Quat4f.inverse(qp);
         Quat4f.mul(q2, qp, qw);
-        VJoint vjWrist = aniPlayer.getVNextPartBySid(joint);        
-        vjWrist.setRotation(q2);        
+        VJoint vjWrist = aniPlayer.getVNextPartBySid(joint);
+        vjWrist.setRotation(q2);
     }
 
     // Prepares a sequence of quaternions for interpolating
@@ -510,7 +506,7 @@ public class LMPWristRot extends LMP
     @Override
     protected void startUnit(double time) throws TimedPlanUnitPlayException
     {
-        getStartPeg().setAbsoluteTime(true);  //don't mess with start anymore!
+        getStartPeg().setAbsoluteTime(true); // don't mess with start anymore!
         resolveTimePegs(time);
         float cQuat[] = Quat4f.getQuat4f();
         VJoint root = aniPlayer.getVCurrPartBySid(Hanim.HumanoidRoot);
@@ -527,10 +523,9 @@ public class LMPWristRot extends LMP
     @Override
     protected void stopUnit(double time) throws TimedPlanUnitPlayException
     {
-        
+
     }
-    
-    
+
     @Override
     public double getPreparationDuration()
     {
@@ -546,7 +541,15 @@ public class LMPWristRot extends LMP
     @Override
     public double getStrokeDuration()
     {
-        return DEFAULT_STROKEPHASE_DURATION;
+        double strokeDuration = 0;
+        for (OrientConstraint oc : ocVec)
+        {
+            if (oc.getPhase() == GStrokePhaseID.STP_STROKE)
+            {
+                strokeDuration += TRANSITION_TIME;
+            }
+        }
+        return strokeDuration;
     }
 
 }
