@@ -4,14 +4,14 @@ import hmi.xml.XMLScanException;
 import hmi.xml.XMLTokenizer;
 
 import java.io.IOException;
+import java.util.ArrayList;
+import java.util.Collections;
 import java.util.HashMap;
-import java.util.Map;
-import java.util.Map.Entry;
-import java.util.Set;
-
-import com.google.common.collect.ImmutableMap;
+import java.util.List;
 
 import lombok.Getter;
+
+import com.google.common.collect.ImmutableList;
 
 /**
  * dynamicElement parser
@@ -26,11 +26,11 @@ public class DynamicElement extends MURMLElement
     private Type type;
     
     //value type->names mape
-    private Map<String, String> valueMap = new HashMap<>();
+    private List<Value> values = new ArrayList<Value>();
     
     public enum Type
     {
-        CURVE, LINEAR, CHOP;
+        CURVE, LINEAR, CHOP, VIA;
     }
     
     public DynamicElement copy()
@@ -38,7 +38,7 @@ public class DynamicElement extends MURMLElement
         DynamicElement de = new DynamicElement();
         de.scope = scope;
         de.type = type;
-        de.valueMap = ImmutableMap.copyOf(valueMap);
+        de.values = ImmutableList.copyOf(values);
         return de;
     }
     
@@ -53,14 +53,25 @@ public class DynamicElement extends MURMLElement
         }
     }
     
-    public String getName(String type)
+    public String getName(String typeOrId)
     {
-        return valueMap.get(type);
+        for(Value v:values)
+        {
+            if(v.getType().equals(typeOrId)||v.getId().equals(typeOrId))
+            {
+                return v.getName();
+            }
+        }
+        return null;
     }
     
-    public Set<Entry<String,String>> getValueNodes()
+    /**
+     * Get an unmodifiable view of the values in this dynamic element
+     * @return
+     */
+    public List<Value> getValues()
     {
-        return valueMap.entrySet();
+        return Collections.unmodifiableList(values);
     }
     
     @Override
@@ -73,7 +84,7 @@ public class DynamicElement extends MURMLElement
             {
                 Value v = new Value();
                 v.readXML(tokenizer);
-                valueMap.put(v.getType(), v.getName());
+                values.add(v);
             }            
             else
             {

@@ -5,6 +5,7 @@ import static org.fest.reflect.core.Reflection.field;
 import static org.hamcrest.CoreMatchers.instanceOf;
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertNotNull;
 import static org.mockito.Matchers.any;
 import static org.mockito.Matchers.anyString;
 import static org.mockito.Matchers.startsWith;
@@ -22,8 +23,6 @@ import java.util.Set;
 import org.hamcrest.collection.IsIterableContainingInAnyOrder;
 import org.junit.Before;
 import org.junit.Test;
-
-import com.google.common.collect.ObjectArrays;
 
 import asap.animationengine.AnimationPlayer;
 import asap.animationengine.AnimationPlayerMock;
@@ -48,6 +47,8 @@ import asap.realizer.feedback.FeedbackManagerImpl;
 import asap.realizer.pegboard.BMLBlockPeg;
 import asap.realizer.pegboard.PegBoard;
 import asap.realizer.scheduler.BMLBlockManager;
+
+import com.google.common.collect.ObjectArrays;
 
 /**
  * Testcases for the MURML MotionUnit builder
@@ -408,6 +409,37 @@ public class MURMLMUBuilderTest
         TimedAnimationUnit lmp = field("lmp").ofType(TimedAnimationUnit.class).in(tau).get();
         assertThat(lmp, instanceOf(LMPPoRot.class));
     }
+    
+    @Test
+    public void setupTMURelativeDynamicPalmOrientation2Elements() throws TMUSetupException
+    {
+        //@formatter:off
+        String murmlString = 
+                "<murml-description xmlns=\"http://www.techfak.uni-bielefeld.de/ags/soa/murml\">" +
+                  "<dynamic slot=\"PalmOrientation\" scope=\"right_arm\">"+
+                        "<dynamicElement>"+
+                              "<value type=\"start\" name=\"PalmU\"/>"+
+                              "<value type=\"end\" name=\"PalmD\"/>"+
+                        "</dynamicElement>"+
+                        "<dynamicElement>"+
+                            "<value type=\"start\" name=\"PalmU\"/>"+
+                            "<value type=\"end\" name=\"PalmD\"/>"+
+                        "</dynamicElement>"+
+                  "</dynamic>"+
+                "</murml-description>";
+        // @formatter:on
+        TimedAnimationUnit tau = murmlMuBuilder.setupTMU(murmlString, new FeedbackManagerImpl(new BMLBlockManager(), ""),
+                BMLBlockPeg.GLOBALPEG, "bml1", "g1", pb, mockAnimationPlayer);
+
+        assertThat(tau, instanceOf(MotorControlProgram.class));
+        assertThat(tau.getKinematicJoints(), IsIterableContainingInAnyOrder.containsInAnyOrder(Hanim.r_wrist));
+
+        TimedAnimationUnit lmp = field("lmp").ofType(TimedAnimationUnit.class).in(tau).get();
+        assertNotNull(lmp.getTimePeg("strokeStart"));
+        assertNotNull(lmp.getTimePeg("stroke1"));
+        assertNotNull(lmp.getTimePeg("stroke2"));
+        assertNotNull(lmp.getTimePeg("strokeEnd"));
+    }
 
     @Test
     public void setupTMUStaticPalmOrientation() throws TMUSetupException
@@ -533,6 +565,36 @@ public class MURMLMUBuilderTest
         assertThat(tau.getKinematicJoints(), IsIterableContainingInAnyOrder.containsInAnyOrder(Hanim.LEFTHAND_JOINTS));
     }
 
+    
+//    @Test
+//    public void setupDynamicHandshape() throws TMUSetupException
+//    {
+//      //@formatter:off
+//        String murmlString =
+//        "<murml-description xmlns=\"http://www.techfak.uni-bielefeld.de/ags/soa/murml\">" +
+//        "<dynamic slot=\"HandShape\" scope=\"right_arm\">"+
+//        "<dynamicElement>"+
+//              "<value type=\"start\" name=\"BSfist (ThExt)\"/>"+
+//              "<value type=\"end\" name=\"ASL5\"/>"+
+//        "</dynamicElement>"+
+////        "<dynamicElement>"+
+////            "<value type=\"start\" name=\"BSfist (ThExt)\"/>"+
+////            "<value type=\"end\" name=\"BSfist (ThExt)\"/>"+
+////        "</dynamicElement>"+
+//        "</dynamic>"+
+//        "</murml-description>";
+//        //@formatter:on
+//        TimedAnimationUnit tau = murmlMuBuilder.setupTMU(murmlString, new FeedbackManagerImpl(new BMLBlockManager(), ""),
+//                BMLBlockPeg.GLOBALPEG, "bml1", "gesture1", pb, mockAnimationPlayer);
+//
+//        assertThat(tau, instanceOf(MotorControlProgram.class));
+//        
+//        TimedAnimationUnit lmp = field("lmp").ofType(TimedAnimationUnit.class).in(tau).get();
+//        assertThat(lmp, instanceOf(LMPHandMove.class));
+//        assertThat(tau.getKinematicJoints(), IsIterableContainingInAnyOrder.containsInAnyOrder(Hanim.RIGHTHAND_JOINTS));
+//    }
+    
+    
     @Test
     public void setupParallelHandshapeAndPalmOrientation() throws TMUSetupException
     {

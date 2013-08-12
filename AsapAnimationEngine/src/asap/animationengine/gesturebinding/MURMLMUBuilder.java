@@ -58,6 +58,7 @@ import asap.murml.Posture;
 import asap.murml.Sequence;
 import asap.murml.Slot;
 import asap.murml.Static;
+import asap.murml.Value;
 import asap.realizer.feedback.FeedbackManager;
 import asap.realizer.pegboard.BMLBlockPeg;
 import asap.realizer.pegboard.PegBoard;
@@ -390,6 +391,16 @@ public final class MURMLMUBuilder
         return ImmutableList.of(oc1, oc2);
     }
 
+    private int getNumberOfValues(Dynamic dyn)
+    {
+        int numValues = 0;
+        for (DynamicElement dynElem : dyn.getDynamicElements())
+        {
+            numValues += dynElem.getValues().size();
+        }
+        return numValues;
+    }
+    
     private List<OrientConstraint> formWristMovement(Dynamic dyn, FeedbackManager bbm, BMLBlockPeg bmlBlockPeg, String bmlId, String id,
             PegBoard pb, AnimationPlayer aniPlayer)
     {
@@ -408,27 +419,33 @@ public final class MURMLMUBuilder
         // ocNodes.push_back(mcMap[i]);
         // }
 
+        int i = 0;
+        int lastValue = getNumberOfValues(dyn);        
+        
         for (DynamicElement dynElem : dyn.getDynamicElements())
         {
-            if (dynElem.getValueNodes().size() < 2)
+            if (dynElem.getValues().size() < 2)
             {
                 log.warn("form dynamic constraint: insufficient number of values!");
                 return ocVec;
             }
 
-            int i = 0;
-            for (Entry<String, String> vn : dynElem.getValueNodes())
+            for (Value v : dynElem.getValues())
             {
-                String cid = vn.getKey();
-
+                String cid = v.getId();
+                
                 // force first and last ids to be strokeStart and strokeEnd respectively
                 if (i == 0) cid = "strokeStart";
-                if (i == dynElem.getValueNodes().size() - 1) cid = "strokeEnd";
-
+                if (i == lastValue - 1) cid = "strokeEnd";
+                if(cid.isEmpty())
+                {
+                    cid = "stroke"+i;
+                }
+                
                 OrientConstraint oc = new OrientConstraint(cid);
                 oc.setPhase(GStrokePhaseID.STP_STROKE);
                 vec = Vec3f.getVec3f();
-                if (hns.getAbsoluteDirection(vn.getValue(), vec))
+                if (hns.getAbsoluteDirection(v.getName(), vec))
                 {
                     switch (dyn.getSlot())
                     {
@@ -593,23 +610,29 @@ public final class MURMLMUBuilder
         return lmp;
     }
 
-    private LMP formPOMovement(String scope, List<DynamicElement> elements, FeedbackManager bbm, BMLBlockPeg bmlBlockPeg, String bmlId,
+    private LMP formPOMovement(Dynamic dyn, FeedbackManager bbm, BMLBlockPeg bmlBlockPeg, String bmlId,
             String id, PegBoard pb, AnimationPlayer aniPlayer)
     {
         List<PoConstraint> poVec = new ArrayList<>();
-        for (DynamicElement dynElem : elements)
+        int i = 0;
+        int lastValue = getNumberOfValues(dyn);        
+        
+        for (DynamicElement dynElem : dyn.getDynamicElements())
         {
-            if (dynElem.getValueNodes().size() >= 2)
+            if (dynElem.getValues().size() >= 2)
             {
-                int i = 0;
-                for (Entry<String, String> vn : dynElem.getValueNodes())
+                for (Value v : dynElem.getValues())
                 {
-                    if (hns.isPalmOrientation(vn.getValue()))
+                    if (hns.isPalmOrientation(v.getName()))
                     {
-                        double po = hns.getPalmOrientation(vn.getValue(), scope);
-                        String cid = vn.getKey();
+                        double po = hns.getPalmOrientation(v.getName(), dyn.getScope());
+                        String cid = v.getId();
                         if (i == 0) cid = "strokeStart";
-                        if (i == dynElem.getValueNodes().size() - 1) cid = "strokeEnd";
+                        if (i == lastValue - 1) cid = "strokeEnd";
+                        if(cid.isEmpty())
+                        {
+                            cid = "stroke"+i;
+                        }
                         poVec.add(new PoConstraint(po, GStrokePhaseID.STP_STROKE, cid));
                         i++;
                     }
@@ -621,7 +644,7 @@ public final class MURMLMUBuilder
             }
         }
         if (poVec.size() == 0) return null;
-        return addLMPPoRot(scope, bbm, bmlBlockPeg, bmlId, id, pb, poVec, aniPlayer);
+        return addLMPPoRot(dyn.getScope(), bbm, bmlBlockPeg, bmlId, id, pb, poVec, aniPlayer);
     }
 
     public List<OrientConstraint> getDynamicPalmOrientationElementsTMU(Dynamic dyn, FeedbackManager bbm, BMLBlockPeg bmlBlockPeg,
@@ -648,6 +671,11 @@ public final class MURMLMUBuilder
         return formWristMovement(scope, staticElem, bbm, bmlBlockPeg, bmlId, id, pb, aniPlayer);
     }
 
+    public LMP getDynamicHandShapeTMU(Dynamic dyn, FeedbackManager bbm, BMLBlockPeg bmlBlockPeg,String bmlId, String id, PegBoard pb, AnimationPlayer aniPlayer)
+    {
+        return null;
+    }
+    
     public LMP getStaticHandShapeElementTMU(String scope, Static staticElem, FeedbackManager bbm, BMLBlockPeg bmlBlockPeg, String bmlId,
             String id, PegBoard pb, AnimationPlayer aniPlayer)
     {
@@ -1296,13 +1324,13 @@ public final class MURMLMUBuilder
         case HandLocation:
             return getDynamicHandLocationElementsTMU(dyn, bbm, bmlBlockPeg, bmlId, id, localPegBoard, aniPlayer);
         case HandShape:
-            break;
+            return getDynamicHandShapeTMU(dyn, bbm, bmlBlockPeg, bmlId, id, localPegBoard, aniPlayer);           
         case ExtFingerOrientation:
             ocVec.addAll(getExtFingerOrientationnElementsTMU(dyn, bbm, bmlBlockPeg, bmlId, id, localPegBoard, aniPlayer));
             return null;
         case PalmOrientation:
             ocVec.addAll(getDynamicPalmOrientationElementsTMU(dyn, bbm, bmlBlockPeg, bmlId, id, localPegBoard, aniPlayer));
-            return formPOMovement(dyn.getScope(), dyn.getDynamicElements(), bbm, bmlBlockPeg, bmlId, id, localPegBoard, aniPlayer);
+            return formPOMovement(dyn, bbm, bmlBlockPeg, bmlId, id, localPegBoard, aniPlayer);
         }
         return null;
     }

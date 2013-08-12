@@ -36,7 +36,6 @@ public class LMPPoRot extends LMP
     private ImmutableSet<String> kinematicJoints;
     private final String joint;
     private double qS, qDotS; // start angles and angular velocity (for scope joints only!!!)
-    private int segments;
     private Map<PoConstraint, TimePeg> constraintMap = new HashMap<>();
     private TCBSplineN traj;
 
@@ -106,7 +105,7 @@ public class LMPPoRot extends LMP
             poVec = vv;
             qS = 0;
             qDotS = 0;
-            segments = vv.size() - 1;
+            //segments = vv.size() - 1;
             // if (segments >= timeVec.size())
             // cerr << "Warning: " << segments << " segments "
             // << "for " << timeVec.size() << " time points!" << endl;
