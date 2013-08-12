@@ -14,7 +14,6 @@ import lombok.Setter;
 import lombok.extern.slf4j.Slf4j;
 import asap.animationengine.AnimationPlayer;
 import asap.animationengine.ace.GStrokePhaseID;
-import asap.animationengine.ace.OrientConstraint;
 import asap.animationengine.ace.PoConstraint;
 import asap.math.splines.TCBSplineN;
 import asap.realizer.feedback.FeedbackManager;
@@ -410,17 +409,12 @@ public class LMPPoRot extends LMP
     @Override
     public double getStrokeDuration()
     {
-        double strokeDuration = 0;
-        PoConstraint ocPrev = null;
+        double strokeDuration = 0;        
         for (PoConstraint oc : poVec)
         {
             if (oc.getPhase() == GStrokePhaseID.STP_STROKE)
             {
-                if (ocPrev != null)
-                {
-                    strokeDuration += TRANSITION_TIME;                    
-                }
-                ocPrev = oc;
+                strokeDuration += TRANSITION_TIME;
             }
         }
         return strokeDuration;

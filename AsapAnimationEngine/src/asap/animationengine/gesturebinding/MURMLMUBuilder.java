@@ -431,14 +431,14 @@ public final class MURMLMUBuilder
             for (Value v : dynElem.getValues())
             {
                 String cid = v.getId();
-
-                // force first and last ids to be strokeStart and strokeEnd respectively
-                if (i == 0) cid = "strokeStart";
-                if (i == lastValue - 1) cid = "strokeEnd";
                 if (cid.isEmpty())
                 {
                     cid = "stroke" + i;
                 }
+                // force first and last ids to be strokeStart and strokeEnd respectively
+                if (i == 0) cid = "strokeStart";
+                if (i == lastValue - 1) cid = "strokeEnd";
+                
 
                 OrientConstraint oc = new OrientConstraint(cid, GStrokePhaseID.STP_STROKE);
                 vec = Vec3f.getVec3f();
@@ -671,7 +671,29 @@ public final class MURMLMUBuilder
     public LMP getDynamicHandShapeTMU(Dynamic dyn, FeedbackManager bbm, BMLBlockPeg bmlBlockPeg, String bmlId, String id, PegBoard pb,
             AnimationPlayer aniPlayer)
     {
-        return null;
+        List<PostureConstraint> phaseVec = new ArrayList<>();
+        
+        int i = 0;
+        int lastValue = getNumberOfValues(dyn);
+
+        for (DynamicElement dynElem : dyn.getDynamicElements())
+        {
+            for(Value v:dynElem.getValues())
+            {
+                String cid = v.getId();
+                if (cid.isEmpty())
+                {
+                    cid = "stroke" + i;                    
+                }
+                if (i == 0) cid = "strokeStart";
+                if (i == lastValue - 1) cid = "strokeEnd";
+                SkeletonPose pose = hnsHandshapes.getHNSHandShape(v.getName());
+                phaseVec.add(new PostureConstraint(cid, pose));
+                i++;
+            }
+        }
+        
+        return new LMPHandMove(dyn.getScope(), phaseVec, bbm, bmlBlockPeg, bmlId, createLMPId(id), pb, aniPlayer);
     }
 
     public LMP getStaticHandShapeElementTMU(String scope, Static staticElem, FeedbackManager bbm, BMLBlockPeg bmlBlockPeg, String bmlId,

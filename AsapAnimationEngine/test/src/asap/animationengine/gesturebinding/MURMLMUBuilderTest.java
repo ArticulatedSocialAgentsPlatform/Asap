@@ -566,33 +566,67 @@ public class MURMLMUBuilderTest
     }
 
     
-//    @Test
-//    public void setupDynamicHandshape() throws TMUSetupException
-//    {
-//      //@formatter:off
-//        String murmlString =
-//        "<murml-description xmlns=\"http://www.techfak.uni-bielefeld.de/ags/soa/murml\">" +
-//        "<dynamic slot=\"HandShape\" scope=\"right_arm\">"+
-//        "<dynamicElement>"+
-//              "<value type=\"start\" name=\"BSfist (ThExt)\"/>"+
-//              "<value type=\"end\" name=\"ASL5\"/>"+
-//        "</dynamicElement>"+
-////        "<dynamicElement>"+
-////            "<value type=\"start\" name=\"BSfist (ThExt)\"/>"+
-////            "<value type=\"end\" name=\"BSfist (ThExt)\"/>"+
-////        "</dynamicElement>"+
-//        "</dynamic>"+
-//        "</murml-description>";
-//        //@formatter:on
-//        TimedAnimationUnit tau = murmlMuBuilder.setupTMU(murmlString, new FeedbackManagerImpl(new BMLBlockManager(), ""),
-//                BMLBlockPeg.GLOBALPEG, "bml1", "gesture1", pb, mockAnimationPlayer);
-//
-//        assertThat(tau, instanceOf(MotorControlProgram.class));
-//        
-//        TimedAnimationUnit lmp = field("lmp").ofType(TimedAnimationUnit.class).in(tau).get();
-//        assertThat(lmp, instanceOf(LMPHandMove.class));
-//        assertThat(tau.getKinematicJoints(), IsIterableContainingInAnyOrder.containsInAnyOrder(Hanim.RIGHTHAND_JOINTS));
-//    }
+    @Test
+    public void setupDynamicHandshape() throws TMUSetupException
+    {
+      //@formatter:off
+        String murmlString =
+        "<murml-description xmlns=\"http://www.techfak.uni-bielefeld.de/ags/soa/murml\">" +
+        "<dynamic slot=\"HandShape\" scope=\"right_arm\">"+
+        "<dynamicElement>"+
+              "<value type=\"start\" name=\"BSfist (ThExt)\"/>"+
+              "<value type=\"end\" name=\"ASL5\"/>"+
+        "</dynamicElement>"+
+        "<dynamicElement>"+
+            "<value type=\"start\" name=\"BSfist (ThExt)\"/>"+
+            "<value type=\"end\" name=\"BSfist (ThExt)\"/>"+
+        "</dynamicElement>"+
+        "</dynamic>"+
+        "</murml-description>";
+        //@formatter:on
+        TimedAnimationUnit tau = murmlMuBuilder.setupTMU(murmlString, new FeedbackManagerImpl(new BMLBlockManager(), ""),
+                BMLBlockPeg.GLOBALPEG, "bml1", "gesture1", pb, mockAnimationPlayer);
+
+        assertThat(tau, instanceOf(MotorControlProgram.class));
+        
+        TimedAnimationUnit lmp = field("lmp").ofType(TimedAnimationUnit.class).in(tau).get();
+        assertThat(lmp, instanceOf(LMPHandMove.class));
+        assertThat(tau.getKinematicJoints(), IsIterableContainingInAnyOrder.containsInAnyOrder(Hanim.RIGHTHAND_JOINTS));
+        assertNotNull(tau.getTime("strokeStart"));
+        assertNotNull(tau.getTime("stroke1"));
+        assertNotNull(tau.getTime("stroke2"));
+        assertNotNull(tau.getTime("strokeEnd"));
+    }
+    
+    @Test
+    public void setupDynamicHandshape2() throws TMUSetupException
+    {
+      //@formatter:off
+        String murmlString =
+        "<murml-description xmlns=\"http://www.techfak.uni-bielefeld.de/ags/soa/murml\">" +
+        "<dynamic slot=\"HandShape\" scope=\"right_arm\">"+
+        "<dynamicElement>"+
+              "<value id=\"strokeStart\" name=\"BSfist (ThExt)\"/>"+
+              "<value id=\"stroke1\" name=\"ASL5\"/>"+        
+            "<value type=\"stroke2\" name=\"BSfist (ThExt)\"/>"+
+            "<value type=\"strokeEnd\" name=\"BSfist (ThExt)\"/>"+
+        "</dynamicElement>"+
+        "</dynamic>"+
+        "</murml-description>";
+        //@formatter:on
+        TimedAnimationUnit tau = murmlMuBuilder.setupTMU(murmlString, new FeedbackManagerImpl(new BMLBlockManager(), ""),
+                BMLBlockPeg.GLOBALPEG, "bml1", "gesture1", pb, mockAnimationPlayer);
+
+        assertThat(tau, instanceOf(MotorControlProgram.class));
+        
+        TimedAnimationUnit lmp = field("lmp").ofType(TimedAnimationUnit.class).in(tau).get();
+        assertThat(lmp, instanceOf(LMPHandMove.class));
+        assertThat(tau.getKinematicJoints(), IsIterableContainingInAnyOrder.containsInAnyOrder(Hanim.RIGHTHAND_JOINTS));
+        assertNotNull(tau.getTime("strokeStart"));
+        assertNotNull(tau.getTime("stroke1"));
+        assertNotNull(tau.getTime("stroke2"));
+        assertNotNull(tau.getTime("strokeEnd"));
+    }
     
     
     @Test
