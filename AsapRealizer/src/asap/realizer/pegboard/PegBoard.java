@@ -170,6 +170,11 @@ public final class PegBoard
         return pegs.get(bmlId, behaviorId);
     }
 
+    public Set<String> getBehaviours(final String bmlId)
+    {
+        return pegs.getBehaviours(bmlId);
+    }
+    
     public TimePeg getTimePeg(String bmlId, String id, String syncId)
     {
         return pegs.get(new PegKey(bmlId, id, syncId));

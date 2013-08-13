@@ -58,6 +58,16 @@ public class PegBoardTest
     }
 
     @Test
+    public void testGetBehaviours()
+    {
+        pb.addTimePeg("bml1","beh1","start", new TimePeg(BMLBlockPeg.GLOBALPEG));
+        pb.addTimePeg("bml1","beh2","start", new TimePeg(BMLBlockPeg.GLOBALPEG));
+        pb.addTimePeg("bml2","beh3","start", new TimePeg(BMLBlockPeg.GLOBALPEG));
+        pb.addTimePeg("bml1","beh1","end", new TimePeg(BMLBlockPeg.GLOBALPEG));
+        assertThat(pb.getBehaviours("bml1"), containsInAnyOrder("beh1", "beh2"));
+    }
+    
+    @Test
     public void testRemoveBehaviour()
     {
         TimePeg tp1 = new TimePeg(BMLBlockPeg.GLOBALPEG);

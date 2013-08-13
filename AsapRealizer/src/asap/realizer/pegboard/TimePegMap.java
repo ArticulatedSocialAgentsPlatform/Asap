@@ -52,6 +52,33 @@ final class TimePegMap
         return entries;
     }
 
+    private synchronized Collection<Entry<PegKey, TimePeg>> getEntries(final String bmlId)
+    {
+        Collection<Entry<PegKey, TimePeg>> entries = Collections2.filter(pegMap.entrySet(), new Predicate<Entry<PegKey, TimePeg>>()
+        {
+            @Override
+            public boolean apply(Entry<PegKey, TimePeg> arg)
+            {
+                return arg.getKey().bmlId.equals(bmlId);
+            }
+        });
+        return entries;
+    }
+
+    public synchronized ImmutableSet<String> getBehaviours(final String bmlId)
+    {
+        Collection<Entry<PegKey, TimePeg>> entries = getEntries(bmlId);
+        Collection<String> behCol = Collections2.transform(entries, new Function<Entry<PegKey, TimePeg>, String>()
+        {
+            @Override
+            public String apply(Entry<PegKey, TimePeg> arg)
+            {
+                return arg.getKey().id;
+            }
+        });
+        return ImmutableSet.copyOf(behCol);
+    }
+
     public synchronized ImmutableSet<String> getSyncs(final String bmlId, final String behaviorId)
     {
         Collection<Entry<PegKey, TimePeg>> entries = getEntries(bmlId, behaviorId);
