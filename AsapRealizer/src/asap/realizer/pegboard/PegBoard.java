@@ -6,11 +6,8 @@ import java.util.List;
 import java.util.Set;
 import java.util.concurrent.ConcurrentHashMap;
 
+import lombok.extern.slf4j.Slf4j;
 import net.jcip.annotations.ThreadSafe;
-
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
 import asap.realizer.SyncAndTimePeg;
 
 import com.google.common.collect.ImmutableMap;
@@ -21,13 +18,12 @@ import com.google.common.collect.ImmutableSet;
  * @author Herwin van Welbergen
  */
 @ThreadSafe
+@Slf4j
 public final class PegBoard
 {
     private final TimePegMap pegs = new TimePegMap();
     private final ConcurrentHashMap<String, BMLBlockPeg> bmlBlockPegs = new ConcurrentHashMap<String, BMLBlockPeg>();
-
-    private Logger logger = LoggerFactory.getLogger(PegBoard.class.getName());
-
+    
     public PegBoard()
     {
         bmlBlockPegs.put(BMLBlockPeg.GLOBALPEG.getId(), BMLBlockPeg.GLOBALPEG);
@@ -78,7 +74,7 @@ public final class PegBoard
         BMLBlockPeg bmlP = bmlBlockPegs.get(bmlTargetId);
         if (bmlP == null)
         {
-            logger.warn("getRelativePegTime with invalid bmlTargetId {}", bmlTargetId);
+            log.warn("getRelativePegTime with invalid bmlTargetId {}", bmlTargetId);
             return TimePeg.VALUE_UNKNOWN;
         }
         return p.getGlobalValue() - bmlP.getValue();
@@ -94,7 +90,7 @@ public final class PegBoard
         BMLBlockPeg bmlP = bmlBlockPegs.get(bmlTargetId);
         if (bmlP == null)
         {
-            logger.warn("getRelativePegTime with invalid bmlTargetId {}", bmlTargetId);
+            log.warn("getRelativePegTime with invalid bmlTargetId {}", bmlTargetId);
             return TimePeg.VALUE_UNKNOWN;
         }
         return p.getGlobalValue() - bmlP.getValue();

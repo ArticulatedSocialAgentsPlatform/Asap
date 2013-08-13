@@ -42,9 +42,10 @@ public class LMPHandMove extends LMP
     private List<PostureConstraint> pcVec;
     private Map<PostureConstraint, TimePeg> constraintMap = new HashMap<>();
     private static final double TRANSITION_TIME = 0.5;
-    private static final double DEFAULT_STROKEPHASE_DURATION = 2;
+    private static final double DEFAULT_STROKEPHASE_DURATION = 0;
     private HandKeyFrameUnit mu;
     private QuatFloatInterpolator<LinearQuatInterpolator> interp;
+    private final boolean isStatic;
 
     private class HandKeyFrameUnit extends KeyFrameMotionUnit
     {
@@ -109,11 +110,12 @@ public class LMPHandMove extends LMP
     }
 
     public LMPHandMove(String scope, List<PostureConstraint> pcVec, FeedbackManager fbm, BMLBlockPeg bmlPeg, String bmlId, String behId,
-            PegBoard pegBoard, AnimationPlayer aniPlayer)
+            PegBoard pegBoard, AnimationPlayer aniPlayer, boolean isStatic)
     {
         super(fbm, bmlPeg, bmlId, behId, pegBoard);
         this.aniPlayer = aniPlayer;
         this.pcVec = pcVec;
+        this.isStatic = isStatic;
         interp = new LinearQuatFloatInterpolator();
         mu = new HandKeyFrameUnit(interp);
 
@@ -396,6 +398,7 @@ public class LMPHandMove extends LMP
     @Override
     public double getStrokeDuration()
     {
+        if (isStatic) return 0;
         double strokeDuration = 0;
         PostureConstraint ocPrev = null;
         for (PostureConstraint oc : pcVec)

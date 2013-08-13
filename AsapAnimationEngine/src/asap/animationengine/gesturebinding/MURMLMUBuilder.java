@@ -693,7 +693,7 @@ public final class MURMLMUBuilder
             }
         }
         
-        return new LMPHandMove(dyn.getScope(), phaseVec, bbm, bmlBlockPeg, bmlId, createLMPId(id), pb, aniPlayer);
+        return new LMPHandMove(dyn.getScope(), phaseVec, bbm, bmlBlockPeg, bmlId, createLMPId(id), pb, aniPlayer, false);
     }
 
     public LMP getStaticHandShapeElementTMU(String scope, Static staticElem, FeedbackManager bbm, BMLBlockPeg bmlBlockPeg, String bmlId,
@@ -772,7 +772,7 @@ public final class MURMLMUBuilder
         // else
         // phaseVec.back().second = GuidingStroke::STP_FINISH;
         //
-        return new LMPHandMove(scope, phaseVec, bbm, bmlBlockPeg, bmlId, createLMPId(id), pb, aniPlayer);
+        return new LMPHandMove(scope, phaseVec, bbm, bmlBlockPeg, bmlId, createLMPId(id), pb, aniPlayer, true);
     }
 
     private BiologicalSwivelCostsEvaluator constructAutoSwivel(String scope)
