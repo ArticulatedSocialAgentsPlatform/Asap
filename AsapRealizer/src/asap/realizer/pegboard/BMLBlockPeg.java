@@ -10,7 +10,8 @@ import net.jcip.annotations.ThreadSafe;
 @ThreadSafe
 public final class BMLBlockPeg
 {
-    public static final BMLBlockPeg GLOBALPEG = new BMLBlockPeg("global", 0);  
+    public static final String GLOBAL_PEG_ID = "global";
+    public static final BMLBlockPeg GLOBALPEG = new BMLBlockPeg(GLOBAL_PEG_ID, 0);  
     
     private final String id;
     
