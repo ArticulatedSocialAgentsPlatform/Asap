@@ -17,7 +17,6 @@ import com.google.common.collect.ImmutableMap;
 
 /**
  * Face controller that handles face morphing through ipaaca
- * Assumes no other animation (e.g. on the body) is used. Use the IpaacaFaceAndBodyEmbodiment if the body is also to be animated.
  * @author hvanwelbergen
  * 
  */
@@ -112,4 +111,8 @@ public class IpaacaMorphFaceController implements MorphFaceController
         morphTargetHandler.setMorphTargets(arg0, arg1);
     }
 
+    public float getCurrentWeight(String morph)
+    {
+        return morphTargetHandler.getCurrentWeight(morph);
+    }
 }

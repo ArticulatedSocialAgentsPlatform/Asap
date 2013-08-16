@@ -65,8 +65,15 @@ public class IpaacaFaceController implements FaceController
         return mfc.getDesiredMorphTargets();
     }
     
+    
     public void copy()
     {
         mfc.copy();
+    }
+
+    @Override
+    public float getCurrentWeight(String targetName)
+    {
+        return mfc.getCurrentWeight(targetName);
     }
 }

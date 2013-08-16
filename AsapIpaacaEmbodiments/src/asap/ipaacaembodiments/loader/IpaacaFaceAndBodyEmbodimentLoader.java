@@ -6,6 +6,7 @@ import hmi.environmentbase.ClockDrivenCopyEnvironment;
 import hmi.environmentbase.EmbodimentLoader;
 import hmi.environmentbase.Environment;
 import hmi.environmentbase.Loader;
+import hmi.faceembodiments.loader.EyelidMorpherLoader;
 import hmi.util.ArrayUtils;
 import hmi.util.Resources;
 import hmi.xml.XMLScanException;
@@ -66,7 +67,8 @@ public class IpaacaFaceAndBodyEmbodimentLoader implements EmbodimentLoader
         {
             readSection(tokenizer);
         }
-
+        
+        
         IpaacaEmbodiment ipEmb = ldr.getEmbodiment();
 
         IpaacaFaceController fc = new IpaacaFaceController(ldr.getEmbodiment(), morphRenaming);
@@ -86,6 +88,11 @@ public class IpaacaFaceAndBodyEmbodimentLoader implements EmbodimentLoader
         bodyEmbodiment.init(skeletonRenaming, jointFilter);
         embodiment = new IpaacaFaceAndBodyEmbodiment(id, ipEmb, faceEmbodiment, bodyEmbodiment);
 
+        EyelidMorpherLoader eml = ArrayUtils.getFirstClassOfType(requiredLoaders, EyelidMorpherLoader.class);
+        if(eml!=null)
+        {
+            embodiment.setEyelidMorpher(eml.getEmbodiment());
+        }
         copyEnv.addCopyEmbodiment(embodiment);
     }
 
