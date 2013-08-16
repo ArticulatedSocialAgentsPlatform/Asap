@@ -12,7 +12,7 @@ import static org.hamcrest.collection.IsIterableContainingInOrder.*;
 import static org.hamcrest.MatcherAssert.assertThat;
 
 /**
- * Unit test cases for LinearFloatInterpolator
+ * Unit test cases for LinearFloatInterpolator in 3D
  * @author hvanwelbergen
  *
  */
