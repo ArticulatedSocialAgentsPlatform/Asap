@@ -68,19 +68,73 @@ public class BMLASchedulingHandler implements SchedulingHandler
         return false;
     }
 
+    public boolean checkBlockConstraints(BehaviourBlock bb, BMLScheduler scheduler, BMLABMLBehaviorAttributes bmlaAttr)
+    {
+        for (String chunkBefore : bmlaAttr.getChunkBeforeList())
+        {
+            if (!addBMLBlockChunkAfterTarget(chunkBefore, bb.getBmlId(), scheduler.getBMLBlockManager()))
+            {
+                scheduler.warn(new BMLWarningFeedback(bb.getBmlId(), "TargetBlockAlreadyStartedException", "Block " + chunkBefore + " in"
+                        + "chunkBefore was already started"));
+                return false;
+            }
+        }
+        for (String prependBefore : bmlaAttr.getPrependBeforeList())
+        {
+            if (!addBMLBlockAppendAfterTarget(prependBefore, bb.getBmlId(), scheduler.getBMLBlockManager()))
+            {
+                scheduler.warn(new BMLWarningFeedback(bb.getBmlId(), "TargetBlockAlreadyStartedException", "Block " + prependBefore + " in"
+                        + "prependBefore was already started"));
+                return false;
+            }
+        }
+        return true;
+    }
+
     @Override
     public void schedule(BehaviourBlock bb, BMLScheduler scheduler)
     {
         BMLABMLBehaviorAttributes bmlaAttr = bb.getBMLBehaviorAttributeExtension(BMLABMLBehaviorAttributes.class);
-        
+        handleInterrupt(scheduler, bmlaAttr);
+
         Set<String> appendAfter = new HashSet<String>();
         Set<String> chunkAfter = new HashSet<String>();
-        for (String bmlId : bmlaAttr.getInterruptList())
-        {
-            log.debug("interrupting {}", bmlId);
-            scheduler.interruptBlock(bmlId);
-        }
+        handleComposition(bb, scheduler, bmlaAttr, appendAfter, chunkAfter);
 
+        BMLBBlock bbm = new BMLBBlock(bb.id, scheduler, pegBoard, appendAfter, bmlaAttr.getOnStartList(), chunkAfter);
+        scheduler.getBMLBlockManager().addBMLBlock(bbm);
+        if (!checkBlockConstraints(bb, scheduler, bmlaAttr))
+        {
+            return;
+        }
+        
+        schedule(bb, scheduler, appendAfter, chunkAfter, bbm);
+
+        setupBlockStartState(bb, scheduler, bmlaAttr, appendAfter, chunkAfter, bbm);
+    }
+
+    private void schedule(BehaviourBlock bb, BMLScheduler scheduler, Set<String> appendAfter, Set<String> chunkAfter, BMLBBlock bbm)
+    {
+        double predictedStart = Math.max(scheduler.predictEndTime(appendAfter), scheduler.predictSubsidingTime(chunkAfter));
+        scheduler.planningStart(bb.id, predictedStart);
+
+        BMLBlockPeg bmlBlockPeg = new BMLBlockPeg(bb.id, predictedStart);
+        scheduler.addBMLBlockPeg(bmlBlockPeg);
+
+        strategy.schedule(bb.getComposition(), bb, bmlBlockPeg, scheduler, scheduler.getSchedulingTime());
+        log.debug("Scheduling finished at: {}", scheduler.getSchedulingTime());
+        scheduler.removeInvalidBehaviors(bb.id);
+
+        predictedStart = Math.max(scheduler.predictEndTime(appendAfter), scheduler.predictSubsidingTime(chunkAfter));
+        scheduler.addBMLBlock(bbm);
+        bmlBlockPeg.setValue(predictedStart);
+
+        scheduler.planningFinished(bb, predictedStart, scheduler.predictEndTime(bb.id));
+    }
+
+    private void handleComposition(BehaviourBlock bb, BMLScheduler scheduler, BMLABMLBehaviorAttributes bmlaAttr, Set<String> appendAfter,
+            Set<String> chunkAfter)
+    {
         switch (BMLASchedulingMechanism.parse(bb.getComposition().getNameStart()))
         {
         case REPLACE:
@@ -102,48 +156,20 @@ public class BMLASchedulingHandler implements SchedulingHandler
         }
         appendAfter.addAll(bmlaAttr.getAppendAfterList());
         chunkAfter.addAll(bmlaAttr.getChunkAfterList());
-       
-        BMLBBlock bbm = new BMLBBlock(bb.id, scheduler, pegBoard, appendAfter, bmlaAttr.getOnStartList(), chunkAfter);
-        scheduler.getBMLBlockManager().addBMLBlock(bbm);
-        
-        for (String chunkBefore : bmlaAttr.getChunkBeforeList())
+    }
+
+    private void handleInterrupt(BMLScheduler scheduler, BMLABMLBehaviorAttributes bmlaAttr)
+    {
+        for (String bmlId : bmlaAttr.getInterruptList())
         {
-            if (!addBMLBlockChunkAfterTarget(chunkBefore, bb.getBmlId(), scheduler.getBMLBlockManager()))
-            {
-                scheduler.warn(new BMLWarningFeedback(bb.getBmlId(), "TargetBlockAlreadyStartedException", "Block " + chunkBefore + " in"
-                        + "chunkBefore was already started"));
-                return;
-            }
+            log.debug("interrupting {}", bmlId);
+            scheduler.interruptBlock(bmlId);
         }
-        for (String prependBefore : bmlaAttr.getPrependBeforeList())
-        {
-            if(!addBMLBlockAppendAfterTarget(prependBefore, bb.getBmlId(), scheduler.getBMLBlockManager()))
-            {
-                scheduler.warn(new BMLWarningFeedback(bb.getBmlId(), "TargetBlockAlreadyStartedException", "Block " + prependBefore + " in"
-                        + "prependBefore was already started"));
-                return;
-            }            
-        }
+    }
 
-        double predictedStart = Math.max(scheduler.predictEndTime(appendAfter), scheduler.predictSubsidingTime(chunkAfter));
-        scheduler.planningStart(bb.id, predictedStart);
-
-        // logger.debug("Scheduling started at: {}",schedulingClock.getTime());
-        
-       
-        BMLBlockPeg bmlBlockPeg = new BMLBlockPeg(bb.id, predictedStart);
-        scheduler.addBMLBlockPeg(bmlBlockPeg);
-
-        strategy.schedule(bb.getComposition(), bb, bmlBlockPeg, scheduler, scheduler.getSchedulingTime());
-        log.debug("Scheduling finished at: {}", scheduler.getSchedulingTime());
-        scheduler.removeInvalidBehaviors(bb.id);
-
-        predictedStart = Math.max(scheduler.predictEndTime(appendAfter), scheduler.predictSubsidingTime(chunkAfter));
-        scheduler.addBMLBlock(bbm);
-        bmlBlockPeg.setValue(predictedStart);
-
-        scheduler.planningFinished(bb, predictedStart, scheduler.predictEndTime(bb.id));
-
+    private void setupBlockStartState(BehaviourBlock bb, BMLScheduler scheduler, BMLABMLBehaviorAttributes bmlaAttr,
+            Set<String> appendAfter, Set<String> chunkAfter, BMLBBlock bbm)
+    {
         if (bmlaAttr.isPrePlanned())
         {
             log.debug("Preplanning {}.", bb.id);

@@ -47,20 +47,8 @@ public class LinearStretchResolver implements UniModalResolver
             throws BehaviourPlanningException
     {
         validateSyncs(pu, b, sac);
-
-        // sort sac
-        ArrayList<TimePegAndConstraint> sortedSac = new ArrayList<TimePegAndConstraint>();
-        for (String syncId : pu.getAvailableSyncs())
-        {
-            for (TimePegAndConstraint s : sac)
-            {
-                if (s.syncId.equals(syncId))
-                {
-                    sortedSac.add(s);
-                    break;
-                }
-            }
-        }
+        
+        ArrayList<TimePegAndConstraint> sortedSac = sortSacs(sac, pu);
 
         pu.linkSynchs(sortedSac);
 
@@ -312,6 +300,23 @@ public class LinearStretchResolver implements UniModalResolver
                 pu.setTimePeg("end", op);
             }
         }
+    }
+
+    private ArrayList<TimePegAndConstraint> sortSacs(List<TimePegAndConstraint> sac, TimedPlanUnit pu)
+    {
+        ArrayList<TimePegAndConstraint> sortedSac = new ArrayList<TimePegAndConstraint>();
+        for (String syncId : pu.getAvailableSyncs())
+        {
+            for (TimePegAndConstraint s : sac)
+            {
+                if (s.syncId.equals(syncId))
+                {
+                    sortedSac.add(s);
+                    break;
+                }
+            }
+        }
+        return sortedSac;
     }
 
 }

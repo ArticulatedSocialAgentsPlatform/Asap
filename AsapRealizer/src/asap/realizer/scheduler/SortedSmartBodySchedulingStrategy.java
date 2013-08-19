@@ -23,6 +23,8 @@ import asap.realizer.pegboard.PegBoard;
 public class SortedSmartBodySchedulingStrategy implements SchedulingStrategy
 {
     private SmartBodySchedulingStrategy strategy;
+    private SimpleAfterConstraintSolver afterConstraintSolver = new SimpleAfterConstraintSolver();
+    
     public SortedSmartBodySchedulingStrategy(PegBoard pb)
     {
         strategy = new SmartBodySchedulingStrategy(pb);
@@ -135,5 +137,6 @@ public class SortedSmartBodySchedulingStrategy implements SchedulingStrategy
     {
         Collections.sort(bb.behaviours, new SimpleBehaviourComparator(bb.behaviours, scheduler));
         strategy.schedule(mechanism, bb, bmlBlockPeg, scheduler, schedulingTime);
+        afterConstraintSolver.scheduleAfterConstraints(bb,scheduler);
     }
 }

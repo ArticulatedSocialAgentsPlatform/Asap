@@ -77,8 +77,8 @@ public class SmartBodySchedulingStrategy implements SchedulingStrategy
             syncId = s;
             offset = o;
         }
-    }
-
+    }   
+    
     @Override
     public void schedule(BMLBlockComposition mechanism, BehaviourBlock bb, BMLBlockPeg bmlBlockPeg, BMLScheduler scheduler,
             double scheduleTime)
@@ -90,8 +90,15 @@ public class SmartBodySchedulingStrategy implements SchedulingStrategy
         {
             scheduleBehaviour(mechanism, bb.id, bmlBlockPeg, scheduler, scheduleTime, scheduledBehaviors, syncMap, b);
         }
+        timeShiftPass(bb, scheduler, scheduledBehaviors, syncMap);
+    }
 
-        // Time-shifting pass for time pegs with negative time
+    /**
+     * // Time-shifting pass for time pegs with negative time
+     */
+    private void timeShiftPass(BehaviourBlock bb, BMLScheduler scheduler, ArrayList<Behaviour> scheduledBehaviors,
+            HashMap<Behaviour, ArrayList<TimePegAndConstraint>> syncMap)
+    {
         boolean moving = true;
         ArrayList<Behaviour> behToRemove = new ArrayList<Behaviour>();
         while (moving)
@@ -148,143 +155,16 @@ public class SmartBodySchedulingStrategy implements SchedulingStrategy
             double scheduleTime, ArrayList<Behaviour> scheduledBehaviors, HashMap<Behaviour, ArrayList<TimePegAndConstraint>> syncMap,
             Behaviour b)
     {
+        //constraints to solve for this behavior
         ArrayList<TimePegAndConstraint> syncList = new ArrayList<TimePegAndConstraint>();
 
         // link realizer syncs to behavior syncs (+ constraints)
         for (Constraint c : scheduler.getParser().getConstraints())
         {
-            // find all constraints on this behavior
-            ArrayList<ConstrInfo> constraintInfo = new ArrayList<ConstrInfo>();
-            for (SyncPoint s : c.getTargets())
-            {
-                if (s.getBehaviourId() != null && s.getBehaviourId().equals(b.id) && s.getBmlId().equals(b.getBmlId()))
-                {
-                    double offset = s.getOffset();
-                    String syncId = s.getName();
-                    constraintInfo.add(new ConstrInfo(syncId, offset));
-                    logger.debug("Constraint info:{} sync:{} offset:{}", new Object[] { b, syncId, offset });
-                }
-            }
-
-            for (ConstrInfo ci : constraintInfo)
-            {
-                boolean syncExists = false;
-
-                // try to link to an existing TimePegAndConstraint
-                for (Behaviour b2 : scheduledBehaviors)
-                {
-                    for (TimePegAndConstraint said : syncMap.get(b2))
-                    {
-                        if (said.constr == c)
-                        {
-                            syncList.add(new TimePegAndConstraint(ci.syncId, said.peg, c, ci.offset));
-                            syncExists = true;
-                            break;
-                        }
-                    }
-                    if (syncExists) break;
-                }
-
-                // can't be linked to an existing TimePegAndConstraint,
-                // create a new one
-                if (!syncExists)
-                {
-                    // TimePegAndConstraint linked to static time or
-                    // anticipator?
-                    boolean isStaticOrAnticipator = false;
-                    for (SyncPoint s : c.getTargets())
-                    {
-                        if (s.getBehaviourId() == null)
-                        {
-                            if (s.getBmlId().equals(BMLTInfo.ANTICIPATORBLOCKID))
-                            {
-                                // synched to anticipator
-                                String str[] = s.getName().split(":");
-                                if (str.length == 2 && !str[0].equals("bml"))
-                                {
-                                    Anticipator ap = scheduler.getAnticipator(str[0]);
-                                    isStaticOrAnticipator = true;
-                                    if (ap != null)
-                                    {
-                                        TimePeg sp = ap.getSynchronisationPoint(str[1]);
-                                        if (sp == null)
-                                        {
-                                            String warningText = "Unknown anticipator synchronization point " + s.getName()
-                                                    + " sync ignored.";
-                                            scheduler.warn(new BMLWarningFeedback(bmlId + ":" + b.id, "UNKNOWN_ANTICIPATOR_SYNC",
-                                                    warningText));
-                                            break;
-                                        }
-
-                                        syncList.add(new TimePegAndConstraint(ci.syncId, sp, c, ci.offset - s.offset));
-                                        logger.debug("Link to anticipator: {} at time {} with offset {}",
-                                                new Object[] { str[1], sp.getGlobalValue(), ci.offset });
-                                        sp.setAbsoluteTime(true);
-                                        break;
-                                    }
-                                    else
-                                    {
-                                        String warningText = "Unknown sync point " + s.getName() + " sync ignored.";
-                                        scheduler.warn(new BMLWarningFeedback(bmlId + ":" + b.id, "UNKNOWN_SYNCPOINT", warningText));
-                                        break;
-                                    }
-                                }
-                            }
-                            else
-                            {
-                                // static sync
-                                isStaticOrAnticipator = true;
-                                TimePeg sync = new TimePeg(bmlBlockPeg);
-                                sync.setAbsoluteTime(true);
-                                sync.setLocalValue(s.getOffset());
-                                syncList.add(new TimePegAndConstraint(ci.syncId, sync, c, ci.offset));
-                                break;
-                            }
-                        }
-                        if (!s.getBmlId().equals(bmlId))
-                        {
-                            isStaticOrAnticipator = true;
-                            TimePeg sp = pegBoard.getTimePeg(s.getBmlId(), s.getBehaviourId(), s.getName());
-                            syncList.add(new TimePegAndConstraint(ci.syncId, sp, c, ci.offset - s.offset));
-                            logger.debug("Link to behavior in other block: {}:{} at time {} with offset {}",
-                                    new Object[] { s.getBmlId(), s.getBehaviourId(), sp.getGlobalValue(), ci.offset - s.offset });
-                            sp.setAbsoluteTime(true);
-                            break;
-                        }
-                        else
-                        {
-                            // TODO: handle this
-                        }
-                    }
-                    if (!isStaticOrAnticipator)
-                    {
-                        // add new sync, unknown timing
-                        TimePeg sync = new TimePeg(bmlBlockPeg);
-                        sync.setGlobalValue(TimePeg.VALUE_UNKNOWN);
-                        syncList.add(new TimePegAndConstraint(ci.syncId, sync, c, ci.offset));
-                    }
-                }
-            }
+            ArrayList<ConstrInfo> constraintInfo = findConstraints(b, c);
+            setupTimePegAndConstraints(bmlId, bmlBlockPeg, scheduler, scheduledBehaviors, syncMap, b, syncList, c, constraintInfo);
         }
-
-        // make sure start is always resolved
-        boolean resolveStart = true;
-        for (TimePegAndConstraint sac : syncList)
-        {
-            if (sac.syncId.equals("start"))
-            {
-                resolveStart = false;
-                break;
-            }
-        }
-        if (resolveStart)
-        {
-            TimePeg temp = new TimePeg(bmlBlockPeg);
-            OffsetPeg sync = new OffsetPeg(temp, 0, bmlBlockPeg);
-            boolean offsetRes = false;
-            if (syncList.size() > 0) offsetRes = true;
-            syncList.add(new TimePegAndConstraint("start", sync, new Constraint(), 0, offsetRes));
-        }
+        ensureStartResolved(bmlBlockPeg, syncList);
 
         // resolve unknown syncs
         Engine eng = scheduler.getEngine(b.getClass());
@@ -316,6 +196,149 @@ public class SmartBodySchedulingStrategy implements SchedulingStrategy
         }
         syncMap.put(b, syncList);
         scheduledBehaviors.add(b);
+    }
+
+    private void setupTimePegAndConstraints(String bmlId, BMLBlockPeg bmlBlockPeg, BMLScheduler scheduler, ArrayList<Behaviour> scheduledBehaviors,
+            HashMap<Behaviour, ArrayList<TimePegAndConstraint>> syncMap, Behaviour b, ArrayList<TimePegAndConstraint> syncList,
+            Constraint c, ArrayList<ConstrInfo> constraintInfo)
+    {
+        for (ConstrInfo ci : constraintInfo)
+        {
+            boolean syncExists = false;
+
+            // try to link to an existing TimePegAndConstraint
+            for (Behaviour b2 : scheduledBehaviors)
+            {
+                for (TimePegAndConstraint said : syncMap.get(b2))
+                {
+                    if (said.constr == c)
+                    {
+                        syncList.add(new TimePegAndConstraint(ci.syncId, said.peg, c, ci.offset));
+                        syncExists = true;
+                        break;
+                    }
+                }
+                if (syncExists) break;
+            }
+
+            // can't be linked to an existing TimePegAndConstraint,
+            // create a new one
+            if (!syncExists)
+            {
+                // TimePegAndConstraint linked to static time or
+                // anticipator?
+                boolean isStaticOrAnticipator = false;
+                for (SyncPoint s : c.getTargets())
+                {
+                    if (s.getBehaviourId() == null)
+                    {
+                        if (s.getBmlId().equals(BMLTInfo.ANTICIPATORBLOCKID))
+                        {
+                            // synched to anticipator
+                            String str[] = s.getName().split(":");
+                            if (str.length == 2 && !str[0].equals("bml"))
+                            {
+                                Anticipator ap = scheduler.getAnticipator(str[0]);
+                                isStaticOrAnticipator = true;
+                                if (ap != null)
+                                {
+                                    TimePeg sp = ap.getSynchronisationPoint(str[1]);
+                                    if (sp == null)
+                                    {
+                                        String warningText = "Unknown anticipator synchronization point " + s.getName()
+                                                + " sync ignored.";
+                                        scheduler.warn(new BMLWarningFeedback(bmlId + ":" + b.id, "UNKNOWN_ANTICIPATOR_SYNC",
+                                                warningText));
+                                        break;
+                                    }
+
+                                    syncList.add(new TimePegAndConstraint(ci.syncId, sp, c, ci.offset - s.offset));
+                                    logger.debug("Link to anticipator: {} at time {} with offset {}",
+                                            new Object[] { str[1], sp.getGlobalValue(), ci.offset });
+                                    sp.setAbsoluteTime(true);
+                                    break;
+                                }
+                                else
+                                {
+                                    String warningText = "Unknown sync point " + s.getName() + " sync ignored.";
+                                    scheduler.warn(new BMLWarningFeedback(bmlId + ":" + b.id, "UNKNOWN_SYNCPOINT", warningText));
+                                    break;
+                                }
+                            }
+                        }
+                        else
+                        {
+                            // static sync
+                            isStaticOrAnticipator = true;
+                            TimePeg sync = new TimePeg(bmlBlockPeg);
+                            sync.setAbsoluteTime(true);
+                            sync.setLocalValue(s.getOffset());
+                            syncList.add(new TimePegAndConstraint(ci.syncId, sync, c, ci.offset));
+                            break;
+                        }
+                    }
+                    if (!s.getBmlId().equals(bmlId))
+                    {
+                        isStaticOrAnticipator = true;
+                        TimePeg sp = pegBoard.getTimePeg(s.getBmlId(), s.getBehaviourId(), s.getName());
+                        syncList.add(new TimePegAndConstraint(ci.syncId, sp, c, ci.offset - s.offset));
+                        logger.debug("Link to behavior in other block: {}:{} at time {} with offset {}",
+                                new Object[] { s.getBmlId(), s.getBehaviourId(), sp.getGlobalValue(), ci.offset - s.offset });
+                        sp.setAbsoluteTime(true);
+                        break;
+                    }
+                    else
+                    {
+                        // TODO: handle this
+                    }
+                }
+                if (!isStaticOrAnticipator)
+                {
+                    // add new sync, unknown timing
+                    TimePeg sync = new TimePeg(bmlBlockPeg);
+                    sync.setGlobalValue(TimePeg.VALUE_UNKNOWN);
+                    syncList.add(new TimePegAndConstraint(ci.syncId, sync, c, ci.offset));
+                }
+            }
+        }
+    }
+
+    private ArrayList<ConstrInfo> findConstraints(Behaviour b, Constraint c)
+    {
+        // find all constraints on this behavior
+        ArrayList<ConstrInfo> constraintInfo = new ArrayList<ConstrInfo>();
+        for (SyncPoint s : c.getTargets())
+        {
+            if (s.getBehaviourId() != null && s.getBehaviourId().equals(b.id) && s.getBmlId().equals(b.getBmlId()))
+            {
+                double offset = s.getOffset();
+                String syncId = s.getName();
+                constraintInfo.add(new ConstrInfo(syncId, offset));
+                logger.debug("Constraint info:{} sync:{} offset:{}", new Object[] { b, syncId, offset });
+            }
+        }
+        return constraintInfo;
+    }
+
+    private void ensureStartResolved(BMLBlockPeg bmlBlockPeg, ArrayList<TimePegAndConstraint> syncList)
+    {
+        boolean resolveStart = true;
+        for (TimePegAndConstraint sac : syncList)
+        {
+            if (sac.syncId.equals("start"))
+            {
+                resolveStart = false;
+                break;
+            }
+        }
+        if (resolveStart)
+        {
+            TimePeg temp = new TimePeg(bmlBlockPeg);
+            OffsetPeg sync = new OffsetPeg(temp, 0, bmlBlockPeg);
+            boolean offsetRes = false;
+            if (syncList.size() > 0) offsetRes = true;
+            syncList.add(new TimePegAndConstraint("start", sync, new Constraint(), 0, offsetRes));
+        }
     }
 
     private boolean moveBehavior(double move, Behaviour b, ArrayList<TimePeg> movedPegs,
