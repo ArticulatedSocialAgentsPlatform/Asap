@@ -92,10 +92,26 @@ public class AudioPlanner extends AbstractPlanner<TimedAbstractAudioUnit>
         }
         
         linkStartAndEnd(b, sacs, au);
-        satp.add(new SyncAndTimePeg(b.getBmlId(), b.id, "start", au.getStartPeg()));
+        if (au.getStartPeg()!=null)
+        {
+            satp.add(new SyncAndTimePeg(b.getBmlId(), b.id, "start", au.getStartPeg()));
+        }
+        else
+        {
+            TimePeg sp = new TimePeg(bbPeg);
+            satp.add(new SyncAndTimePeg(b.getBmlId(), b.id, "start",sp));
+            au.setStart(sp);
+        }
+        
         if (au.getEndPeg() != null)
         {
-            satp.add(new SyncAndTimePeg(b.getBmlId(), b.id, "end", au.getEndPeg()));
+            satp.add(new SyncAndTimePeg(b.getBmlId(), b.id, "end", au.getEndPeg()));            
+        }
+        else
+        {
+            TimePeg ep = new TimePeg(bbPeg);
+            satp.add(new SyncAndTimePeg(b.getBmlId(), b.id, "end",ep));
+            au.setEnd(ep);
         }
         planManager.addPlanUnit(au);
 
