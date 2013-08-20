@@ -8,7 +8,7 @@ import hmi.util.Resources;
 
 import org.junit.Test;
 
-import asap.animationengine.motionunit.StubMotionUnit;
+import asap.animationengine.motionunit.StubAnimationUnit;
 
 class NotAMotionUnit {}
 
@@ -32,8 +32,8 @@ public class MotionUnitAssemblerTest
     @Test
     public void testMotionUnitFromClass()
     {
-        mu.readXML("<MotionUnit type=\"class\" class=\"asap.animationengine.motionunit.StubMotionUnit\"/>");
-        assertThat(mu.getMotionUnit(), instanceOf(StubMotionUnit.class));        
+        mu.readXML("<MotionUnit type=\"class\" class=\"asap.animationengine.motionunit.StubAnimationUnit\"/>");
+        assertThat(mu.getMotionUnit(), instanceOf(StubAnimationUnit.class));        
     }
     
     @Test

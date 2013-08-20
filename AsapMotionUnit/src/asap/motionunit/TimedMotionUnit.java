@@ -7,6 +7,7 @@ import java.util.concurrent.CopyOnWriteArrayList;
 
 import asap.realizer.feedback.FeedbackManager;
 import asap.realizer.pegboard.BMLBlockPeg;
+import asap.realizer.pegboard.TimePeg;
 import asap.realizer.planunit.KeyPosition;
 import asap.realizer.planunit.ParameterException;
 import asap.realizer.planunit.ParameterNotFoundException;
@@ -118,6 +119,11 @@ public class TimedMotionUnit extends TimedAbstractPlanUnit
     @Override
     protected void startUnit(double time) throws TimedPlanUnitPlayException
     {
+        if(getEndTime()==TimePeg.VALUE_UNKNOWN && getPreferedDuration()>0)
+        {
+            getTimePeg("end").setGlobalValue(time+getPreferedDuration());
+        }
+            
         try
         {
             mu.startUnit(time);
@@ -125,7 +131,7 @@ public class TimedMotionUnit extends TimedAbstractPlanUnit
         catch (MUPlayException ex)
         {
             throw new TimedPlanUnitPlayException("MUPlayException on mu startUnit", this, ex);
-        }
+        }        
         super.startUnit(time);        
     }
 

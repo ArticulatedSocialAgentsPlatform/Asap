@@ -11,7 +11,7 @@ import asap.realizertestutil.util.TimePegUtil;
  * @author hvanwelbergen
  *
  */
-public class PegBoardVisualizationTest
+public class PegBoardVisualizationDemo
 {
     public static void main(String args[])
     {

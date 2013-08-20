@@ -144,10 +144,11 @@ public class AnimationPlanner extends AbstractPlanner<TimedAnimationUnit>
         for (String sync : tmu.getAvailableSyncs())
         {
             TimePeg tp = tmu.getTimePeg(sync);
-            if (tp != null)
+            if (tp == null)
             {
-                satps.add(new SyncAndTimePeg(b.getBmlId(), b.id, sync, tp));
+                tp = new TimePeg(bbPeg);
             }
+            satps.add(new SyncAndTimePeg(b.getBmlId(), b.id, sync, tp));
         }
 
         planManager.addPlanUnit(tmu);
