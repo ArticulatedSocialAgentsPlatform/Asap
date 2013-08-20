@@ -35,7 +35,8 @@ import asap.realizer.scheduler.TimePegAndConstraint;
 public interface Planner<T extends TimedPlanUnit>
 {
     /**
-     * Adds a behavior to the plan. All timepegs in sac must be resolved.
+     * Adds a behavior to the plan. All timepegs in sac must be resolved (have time other than unknown); all TimePegs for the behavior are to be added to 
+     * SyncAndTimePeg.
      * 
      * @param planElement planElement obtained from resolveSynchs, null to create a new planElement
      * @return a list of all syncs of the behavior and their linked TimePegs

@@ -18,7 +18,7 @@ import asap.realizer.scheduler.BMLScheduler;
 import asap.realizer.scheduler.TimePegAndConstraint;
 
 /**
- * Planner for the bmlt interrupt behavior 
+ * Planner for the bmla interrupt behavior 
  * @author welberge
  */
 public class InterruptPlanner extends AbstractPlanner<TimedInterruptUnit>

@@ -164,4 +164,28 @@ public class ParameterValueChangePlannerTest
 
         assertThat(planManager.getBehaviours("bml1"), IsIterableContainingInOrder.contains("paramchange1"));
     }
+    
+    @Test
+    public void testAdd2Constraints() throws BehaviourPlanningException, IOException
+    {
+        BMLAParameterValueChangeBehaviour beh = createBehavior("param1", "bml1:beh1", 0, 100, "linear");
+        ArrayList<TimePegAndConstraint> sac = new ArrayList<TimePegAndConstraint>();
+
+        TimePeg tpStart = createTimePeg(1);
+        TimePeg tpEnd = createTimePeg(2);
+        sac.add(new TimePegAndConstraint("start", tpStart, new Constraint(), 0));
+        sac.add(new TimePegAndConstraint("end", tpEnd, new Constraint(), 0));
+        TimedParameterValueChangeUnit tpu = pvcp.resolveSynchs(BMLBlockPeg.GLOBALPEG, beh, sac);
+
+        List<SyncAndTimePeg> satp = pvcp.addBehaviour(BMLBlockPeg.GLOBALPEG, beh, sac, tpu);
+        assertEquals(2, satp.size());
+        assertEquals("start", satp.get(0).sync);
+        assertEquals("end", satp.get(1).sync);
+        assertEquals("bml1", satp.get(0).bmlId);
+        assertEquals("bml1", satp.get(1).bmlId);
+        assertEquals(tpStart, satp.get(0).peg);
+        assertEquals(tpEnd, satp.get(1).peg);
+
+        assertThat(planManager.getBehaviours("bml1"), IsIterableContainingInOrder.contains("paramchange1"));
+    }
 }

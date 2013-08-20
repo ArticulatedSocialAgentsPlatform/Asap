@@ -18,7 +18,7 @@ import asap.realizer.scheduler.BMLScheduler;
 import asap.realizer.scheduler.TimePegAndConstraint;
 
 /**
- * Planner for the bmlt activate behaviors 
+ * Planner for the bmla activate behaviors 
  * @author welberge
  */
 public class ActivatePlanner extends AbstractPlanner<TimedActivateUnit>
