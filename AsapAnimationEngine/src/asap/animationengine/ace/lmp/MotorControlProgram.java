@@ -369,8 +369,7 @@ public class MotorControlProgram extends TimedAbstractPlanUnit implements TimedA
         Set<String> usedJoints = new HashSet<String>();
         usedJoints.addAll(getKinematicJoints());
         usedJoints.addAll(getPhysicalJoints());
-        double retractionDuration = aniPlayer.getTransitionToRestDuration(usedJoints);
-        System.out.println("retractionDuration " + retractionDuration);
+        double retractionDuration = aniPlayer.getTransitionToRestDuration(usedJoints);        
 
         TimePeg relaxPeg = getTimePeg("relax");
         TimePeg endPeg = getTimePeg("end");
@@ -388,7 +387,6 @@ public class MotorControlProgram extends TimedAbstractPlanUnit implements TimedA
     @Override
     protected void stopUnit(double time) throws TimedPlanUnitPlayException
     {
-        System.out.println("MCP Stopped");
         feedbackForSyncs(time);
         if (!syncsHandled.contains("end"))
         {
