@@ -1,11 +1,10 @@
 package asap.realizer.wait;
 
-import saiba.bml.core.Behaviour;
-import saiba.bml.core.WaitBehaviour;
-
 import java.util.ArrayList;
 import java.util.List;
 
+import saiba.bml.core.Behaviour;
+import saiba.bml.core.WaitBehaviour;
 import asap.realizer.AbstractPlanner;
 import asap.realizer.BehaviourPlanningException;
 import asap.realizer.SyncAndTimePeg;
@@ -19,13 +18,13 @@ import asap.realizer.scheduler.TimePegAndConstraint;
 /**
  * Planner that manages wait behaviors.
  * @author Herwin van Welbergen
- *
+ * 
  */
 public class WaitPlanner extends AbstractPlanner<TimedWaitUnit>
 {
     public WaitPlanner(FeedbackManager bfm, PlanManager<TimedWaitUnit> planManager)
     {
-        super(bfm, planManager);        
+        super(bfm, planManager);
     }
 
     private void validateSacs(Behaviour b, List<TimePegAndConstraint> sacs) throws BehaviourPlanningException
@@ -33,6 +32,10 @@ public class WaitPlanner extends AbstractPlanner<TimedWaitUnit>
         if (sacs.size() > 2)
         {
             throw new BehaviourPlanningException(b, "More than two synchronization constraints: " + sacs + " on wait behaviour " + b);
+        }
+        if(sacs.size()<=1 && b.getFloatParameterValue("max-wait")<=0)
+        {
+            throw new BehaviourPlanningException(b, "Wait behavior "+b+" must have either two synchronization constraints, or on constraints and a set max-wait attribute.");
         }
         for (TimePegAndConstraint sac : sacs)
         {
@@ -54,48 +57,51 @@ public class WaitPlanner extends AbstractPlanner<TimedWaitUnit>
         validateSacs(b, sacs);
         planManager.addPlanUnit(wu);
         
-
+        
         List<SyncAndTimePeg> list = new ArrayList<SyncAndTimePeg>();
 
-        for (TimePegAndConstraint sac : sacs)
+        TimePegAndConstraint sacStart = getSacStart(sacs);
+        TimePegAndConstraint sacEnd = getSacEnd(sacs);
+        
+        TimePeg tpStart;
+        if(sacStart!=null)
         {
-            if (sac.syncId.equals("start"))
-            {
-                wu.setStartPeg(sac.peg);
-            }
-            if (sac.syncId.equals("end"))
-            {
-                wu.setEndPeg(sac.peg);
-            }
-            list.add(new SyncAndTimePeg(b.getBmlId(), b.id, sac.syncId, sac.peg));
+            tpStart = sacStart.peg;
         }
-
+        else
+        {
+            tpStart = new OffsetPeg(sacEnd.peg,-b.getFloatParameterValue("max-wait"));
+        }
+        wu.setStartPeg(tpStart);
+        list.add(new SyncAndTimePeg(b.getBmlId(), b.id, "start", tpStart));
+        
+        TimePeg tpEnd;
+        if(sacEnd!=null)
+        {
+            tpEnd = sacEnd.peg;
+        }
+        else
+        {
+            tpEnd = new OffsetPeg(sacStart.peg,b.getFloatParameterValue("max-wait"));
+        }
+        wu.setEndPeg(tpEnd);
+        list.add(new SyncAndTimePeg(b.getBmlId(), b.id, "end", tpEnd));
+        
         return list;
     }
 
+    
+    
     @Override
-    public TimedWaitUnit resolveSynchs(BMLBlockPeg bbPeg, Behaviour b, List<TimePegAndConstraint> sacs)
-            throws BehaviourPlanningException
+    public TimedWaitUnit resolveSynchs(BMLBlockPeg bbPeg, Behaviour b, List<TimePegAndConstraint> sacs) throws BehaviourPlanningException
     {
         validateSacs(b, sacs);
         TimedWaitUnit wu = new TimedWaitUnit(fbManager, bbPeg, b.getBmlId(), b.id);
-
-        TimePegAndConstraint sacStart = null;
-        TimePegAndConstraint sacEnd = null;
         float maxDur = b.getFloatParameterValue("max-wait");
-
-        for (TimePegAndConstraint sac : sacs)
-        {
-            if (sac.syncId.equals("start"))
-            {
-                sacStart = sac;
-            }
-            if (sac.syncId.equals("end"))
-            {
-                sacEnd = sac;
-            }
-        }
-
+         
+        TimePegAndConstraint sacStart = getSacStart(sacs);
+        TimePegAndConstraint sacEnd = getSacEnd(sacs);
+        
         // resolve start peg
         TimePeg startPeg = null;
         if (sacStart != null)
@@ -111,7 +117,7 @@ public class WaitPlanner extends AbstractPlanner<TimedWaitUnit>
                     sacStart.peg.setGlobalValue(sacEnd.peg.getGlobalValue() - maxDur);
                 }
             }
-            if(sacStart.offset==0)
+            if (sacStart.offset == 0)
             {
                 startPeg = sacStart.peg;
             }

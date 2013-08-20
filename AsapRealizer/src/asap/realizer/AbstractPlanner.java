@@ -19,29 +19,27 @@ public abstract class AbstractPlanner<T extends TimedPlanUnit> implements Planne
 {
     protected final PlanManager<T> planManager;
     protected final FeedbackManager fbManager;
-    
-    protected TimePegAndConstraint getSacStart(List<TimePegAndConstraint> sacs)
+
+    protected TimePegAndConstraint getSac(String sync, List<TimePegAndConstraint> sacs)
     {
         for (TimePegAndConstraint sac : sacs)
         {
-            if (sac.syncId.equals("start"))
+            if (sac.syncId.equals(sync))
             {
                 return sac;
             }
         }
         return null;
     }
+    
+    protected TimePegAndConstraint getSacStart(List<TimePegAndConstraint> sacs)
+    {
+        return getSac("start", sacs);
+    }
 
     protected TimePegAndConstraint getSacEnd(List<TimePegAndConstraint> sacs)
     {
-        for (TimePegAndConstraint sac : sacs)
-        {
-            if (sac.syncId.equals("end"))
-            {
-                return sac;
-            }
-        }
-        return null;
+        return getSac("end", sacs);
     }
     
     public AbstractPlanner(FeedbackManager fbm, PlanManager<T> planManager)

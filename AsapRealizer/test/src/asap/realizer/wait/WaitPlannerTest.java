@@ -5,6 +5,7 @@ import static org.powermock.api.mockito.PowerMockito.mock;
 
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.List;
 
 import saiba.bml.core.WaitBehaviour;
 import saiba.bml.parser.Constraint;
@@ -15,6 +16,7 @@ import org.junit.Before;
 import org.junit.Test;
 
 import asap.realizer.BehaviourPlanningException;
+import asap.realizer.SyncAndTimePeg;
 import asap.realizer.feedback.FeedbackManager;
 import asap.realizer.pegboard.BMLBlockPeg;
 import asap.realizer.pegboard.TimePeg;
@@ -89,7 +91,7 @@ public class WaitPlannerTest
     @Test
     public void testResolve2() throws BehaviourPlanningException, IOException
     {
-        WaitBehaviour wb = createWaitBehaviour("<wait xmlns=\"http://www.bml-initiative.org/bml/bml-1.0\" id=\"w1\"/>");
+        WaitBehaviour wb = createWaitBehaviour("<wait xmlns=\"http://www.bml-initiative.org/bml/bml-1.0\" max-wait=\"1\" id=\"w1\"/>");
         ArrayList<TimePegAndConstraint> sacs = new ArrayList<TimePegAndConstraint>();
         TimePeg startPeg = new TimePeg(BMLBlockPeg.GLOBALPEG);
         sacs.add(new TimePegAndConstraint("start", startPeg, new Constraint(), 0));
@@ -99,7 +101,7 @@ public class WaitPlannerTest
         assertEquals("bml1", pu.getBMLId());
         assertEquals("w1", pu.getId());
         assertEquals(0, pu.getStartTime(), RESOLVE_TIME_PRECISION);
-        assertEquals(TimePeg.VALUE_UNKNOWN, pu.getEndTime(), RESOLVE_TIME_PRECISION);
+        assertEquals(1, pu.getEndTime(), RESOLVE_TIME_PRECISION);
         assertEquals(0, startPeg.getGlobalValue(), RESOLVE_TIME_PRECISION);
     }
 
@@ -123,5 +125,37 @@ public class WaitPlannerTest
         assertEquals(5, pu.getEndTime(), RESOLVE_TIME_PRECISION);
         assertEquals(3, startPeg.getGlobalValue(), RESOLVE_TIME_PRECISION);
         assertEquals(5, endPeg.getGlobalValue(), RESOLVE_TIME_PRECISION);
+    }
+    
+    @Test
+    public void testAddWithStartConstraint() throws BehaviourPlanningException, IOException
+    {
+        WaitBehaviour wb = createWaitBehaviour("<wait xmlns=\"http://www.bml-initiative.org/bml/bml-1.0\" max-wait=\"1\" id=\"w1\"/>");
+        ArrayList<TimePegAndConstraint> sacs = new ArrayList<TimePegAndConstraint>();
+        TimePeg startPeg = new TimePeg(BMLBlockPeg.GLOBALPEG);
+        sacs.add(new TimePegAndConstraint("start", startPeg, new Constraint(), 0));
+        TimedWaitUnit pu = waitPlanner.resolveSynchs(BMLBlockPeg.GLOBALPEG, wb, sacs);
+        List<SyncAndTimePeg> syncAndTimePeg = waitPlanner.addBehaviour(BMLBlockPeg.GLOBALPEG, wb, sacs, pu);
+        assertEquals(2, syncAndTimePeg.size());
+        assertEquals("start", syncAndTimePeg.get(0).sync);
+        assertEquals("end", syncAndTimePeg.get(1).sync);
+        assertEquals(0, syncAndTimePeg.get(0).peg.getGlobalValue(), RESOLVE_TIME_PRECISION);
+        assertEquals(1, syncAndTimePeg.get(1).peg.getGlobalValue(), RESOLVE_TIME_PRECISION);
+    }
+    
+    @Test
+    public void testAddEndStartConstraint() throws BehaviourPlanningException, IOException
+    {
+        WaitBehaviour wb = createWaitBehaviour("<wait xmlns=\"http://www.bml-initiative.org/bml/bml-1.0\" max-wait=\"2\" id=\"w1\"/>");
+        ArrayList<TimePegAndConstraint> sacs = new ArrayList<TimePegAndConstraint>();
+        TimePeg endPeg = new TimePeg(BMLBlockPeg.GLOBALPEG);
+        sacs.add(new TimePegAndConstraint("end", endPeg, new Constraint(), 0));
+        TimedWaitUnit pu = waitPlanner.resolveSynchs(BMLBlockPeg.GLOBALPEG, wb, sacs);
+        List<SyncAndTimePeg> syncAndTimePeg = waitPlanner.addBehaviour(BMLBlockPeg.GLOBALPEG, wb, sacs, pu);
+        assertEquals(2, syncAndTimePeg.size());
+        assertEquals("start", syncAndTimePeg.get(0).sync);
+        assertEquals("end", syncAndTimePeg.get(1).sync);
+        assertEquals(0, syncAndTimePeg.get(0).peg.getGlobalValue(), RESOLVE_TIME_PRECISION);
+        assertEquals(2, syncAndTimePeg.get(1).peg.getGlobalValue(), RESOLVE_TIME_PRECISION);
     }
 }
