@@ -29,7 +29,7 @@ import com.google.common.collect.ImmutableList;
  */
 public class IncrementalTTSPlanner extends AbstractPlanner<IncrementalTTSUnit>
 {
-    private UniModalResolver resolver = new LinearStretchResolver(false);
+    private UniModalResolver resolver = new LinearStretchResolver();
     private final PhonemeToVisemeMapping visemeMapping;
     private final Collection<IncrementalLipSynchProvider> lipSynchers;
     private final PhraseIUManager iuManager;

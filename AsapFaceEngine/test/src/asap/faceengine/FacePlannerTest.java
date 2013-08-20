@@ -7,14 +7,6 @@ import static org.junit.Assert.assertNotNull;
 import static org.mockito.Matchers.any;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
-import saiba.bml.core.Behaviour;
-import saiba.bml.core.FaceLexemeBehaviour;
-import saiba.bml.parser.Constraint;
-import asap.realizertestutil.PlannerTests;
-import asap.realizer.scheduler.BMLBlockManager;
-import asap.realizer.scheduler.TimePegAndConstraint;
-import asap.realizertestutil.util.KeyPositionMocker;
-import asap.realizertestutil.util.TimePegUtil;
 import hmi.faceanimation.FaceController;
 import hmi.faceanimation.converters.EmotionConverter;
 import hmi.faceanimation.converters.FACSConverter;
@@ -30,18 +22,25 @@ import org.junit.runner.RunWith;
 import org.powermock.core.classloader.annotations.PrepareForTest;
 import org.powermock.modules.junit4.PowerMockRunner;
 
+import saiba.bml.core.Behaviour;
+import saiba.bml.core.FaceLexemeBehaviour;
+import saiba.bml.parser.Constraint;
 import asap.bml.ext.murml.MURMLFaceBehaviour;
 import asap.faceengine.facebinding.FaceBinding;
 import asap.faceengine.faceunit.FaceUnit;
 import asap.faceengine.faceunit.KeyframeMorphFU;
 import asap.faceengine.faceunit.TimedFaceUnit;
 import asap.realizer.BehaviourPlanningException;
+import asap.realizer.SyncAndTimePeg;
 import asap.realizer.feedback.FeedbackManager;
 import asap.realizer.feedback.FeedbackManagerImpl;
 import asap.realizer.pegboard.BMLBlockPeg;
 import asap.realizer.pegboard.TimePeg;
-import asap.realizer.planunit.KeyPosition;
 import asap.realizer.planunit.PlanManager;
+import asap.realizer.scheduler.BMLBlockManager;
+import asap.realizer.scheduler.TimePegAndConstraint;
+import asap.realizertestutil.PlannerTests;
+import asap.realizertestutil.util.TimePegUtil;
 
 /**
  * Unit testcases for the FacePlanner
@@ -61,8 +60,8 @@ public class FacePlannerTest
     private FaceController mockFaceController = mock(FaceController.class);
     private final PlanManager<TimedFaceUnit> planManager = new PlanManager<TimedFaceUnit>();
     private FaceBinding mockFaceBinding = mock(FaceBinding.class);
-    private FaceUnit mockUnit = mock(FaceUnit.class);
     private static final float PLAN_PRECISION = 0.00001f;
+    private FaceUnit stubFaceUnit = new StubFaceUnit();
 
     @Before
     public void setup()
@@ -70,15 +69,12 @@ public class FacePlannerTest
         facePlanner = new FacePlanner(fbManager, mockFaceController, null, null, mockFaceBinding, planManager);
         plannerTests = new PlannerTests<TimedFaceUnit>(facePlanner, bbPeg);
 
-        TimedFaceUnit tmu = new TimedFaceUnit(fbManager, bbPeg, BMLID, "nod1", mockUnit);
-        KeyPositionMocker.stubKeyPositions(mockUnit, new KeyPosition("start", 0, 1), new KeyPosition("end", 1, 1));
+        TimedFaceUnit tmu = new TimedFaceUnit(fbManager, bbPeg, BMLID, "nod1", stubFaceUnit);
         final List<TimedFaceUnit> tmus = new ArrayList<TimedFaceUnit>();
         tmus.add(tmu);
         when(
                 mockFaceBinding.getFaceUnit((FeedbackManager) any(), (BMLBlockPeg) any(), (Behaviour) any(), (FaceController) any(),
                         (FACSConverter) any(), (EmotionConverter) any())).thenReturn(tmus);
-        when(mockUnit.getPreferedDuration()).thenReturn(3.0);
-        when(mockUnit.hasValidParameters()).thenReturn(true);
     }
 
     public FaceLexemeBehaviour createFaceBehaviour() throws IOException
@@ -109,9 +105,10 @@ public class FacePlannerTest
     public void testResolveMURML() throws IOException, BehaviourPlanningException
     {
         String bmlString = "<murmlface xmlns=\"http://www.techfak.uni-bielefeld.de/ags/soa/murml\" " + "id=\"a1\" start=\"nod1:end\">"
-                + "<murml-description><dynamic><keyframing><phase>" + "<frame ftime=\"0\">" + "<posture>Humanoid (dB_Smile 3 70 0 0)</posture>"
-                + "</frame>" + "<frame ftime=\"2\">" + "<posture>Humanoid (dB_Smile 3 80 0 0)</posture>" + "</frame>"
-                + "</phase></keyframing></dynamic></murml-description>" + "</murml:murmlface>";
+                + "<murml-description><dynamic><keyframing><phase>" + "<frame ftime=\"0\">"
+                + "<posture>Humanoid (dB_Smile 3 70 0 0)</posture>" + "</frame>" + "<frame ftime=\"2\">"
+                + "<posture>Humanoid (dB_Smile 3 80 0 0)</posture>" + "</frame>" + "</phase></keyframing></dynamic></murml-description>"
+                + "</murml:murmlface>";
         MURMLFaceBehaviour b = new MURMLFaceBehaviour(BMLID, new XMLTokenizer(bmlString));
         ArrayList<TimePegAndConstraint> sacs = new ArrayList<TimePegAndConstraint>();
         TimePeg startPeg = TimePegUtil.createTimePeg(0);
@@ -124,5 +121,42 @@ public class FacePlannerTest
         assertThat(tfu.getFaceUnit(), instanceOf(KeyframeMorphFU.class));
         assertEquals(0, tfu.getStartTime(), PLAN_PRECISION);
         assertEquals(2, tfu.getEndTime(), PLAN_PRECISION);
+    }
+
+    @Test
+    public void testAdd() throws IOException, BehaviourPlanningException
+    {
+        FaceLexemeBehaviour beh = createFaceBehaviour();
+        ArrayList<TimePegAndConstraint> sacs = new ArrayList<TimePegAndConstraint>();
+        TimedFaceUnit tfu = facePlanner.resolveSynchs(bbPeg, beh, sacs);
+        List<SyncAndTimePeg> syncAndPegs = facePlanner.addBehaviour(BMLBlockPeg.GLOBALPEG, beh, sacs, tfu);
+        assertEquals(4, syncAndPegs.size());
+        assertEquals("start", syncAndPegs.get(0).sync);
+        assertEquals("attackPeak", syncAndPegs.get(1).sync);
+        assertEquals("relax", syncAndPegs.get(2).sync);
+        assertEquals("end", syncAndPegs.get(3).sync);
+        assertEquals(TimePeg.VALUE_UNKNOWN, syncAndPegs.get(0).peg.getGlobalValue(), PLAN_PRECISION);
+        assertEquals(TimePeg.VALUE_UNKNOWN, syncAndPegs.get(1).peg.getGlobalValue(), PLAN_PRECISION);
+        assertEquals(TimePeg.VALUE_UNKNOWN, syncAndPegs.get(2).peg.getGlobalValue(), PLAN_PRECISION);
+        assertEquals(TimePeg.VALUE_UNKNOWN, syncAndPegs.get(3).peg.getGlobalValue(), PLAN_PRECISION);
+    }
+    
+    @Test
+    public void testAddWithStartConstraint() throws IOException, BehaviourPlanningException
+    {
+        FaceLexemeBehaviour beh = createFaceBehaviour();
+        ArrayList<TimePegAndConstraint> sacs = new ArrayList<TimePegAndConstraint>();
+        sacs.add(new TimePegAndConstraint("start", new TimePeg(BMLBlockPeg.GLOBALPEG), new Constraint(), 0));
+        TimedFaceUnit tfu = facePlanner.resolveSynchs(bbPeg, beh, sacs);
+        List<SyncAndTimePeg> syncAndPegs = facePlanner.addBehaviour(BMLBlockPeg.GLOBALPEG, beh, sacs, tfu);
+        assertEquals(4, syncAndPegs.size());
+        assertEquals("start", syncAndPegs.get(0).sync);
+        assertEquals("attackPeak", syncAndPegs.get(1).sync);
+        assertEquals("relax", syncAndPegs.get(2).sync);
+        assertEquals("end", syncAndPegs.get(3).sync);
+        assertEquals(0, syncAndPegs.get(0).peg.getGlobalValue(), PLAN_PRECISION);
+        assertEquals(TimePeg.VALUE_UNKNOWN, syncAndPegs.get(1).peg.getGlobalValue(), PLAN_PRECISION);
+        assertEquals(TimePeg.VALUE_UNKNOWN, syncAndPegs.get(2).peg.getGlobalValue(), PLAN_PRECISION);
+        assertEquals(TimePeg.VALUE_UNKNOWN, syncAndPegs.get(3).peg.getGlobalValue(), PLAN_PRECISION);
     }
 }

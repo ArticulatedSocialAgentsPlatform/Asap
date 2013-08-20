@@ -25,6 +25,7 @@ import saiba.bml.core.FaceLexemeBehaviour;
 import saiba.bml.feedback.BMLWarningFeedback;
 import saiba.bml.parser.Constraint;
 import asap.faceengine.FacePlanner;
+import asap.faceengine.StubFaceUnit;
 import asap.faceengine.facebinding.FaceBinding;
 import asap.realizer.BehaviourPlanningException;
 import asap.realizer.DefaultPlayer;
@@ -33,7 +34,6 @@ import asap.realizer.feedback.FeedbackManager;
 import asap.realizer.feedback.FeedbackManagerImpl;
 import asap.realizer.pegboard.BMLBlockPeg;
 import asap.realizer.pegboard.TimePeg;
-import asap.realizer.planunit.KeyPosition;
 import asap.realizer.planunit.PlanManager;
 import asap.realizer.planunit.SingleThreadedPlanPlayer;
 import asap.realizer.planunit.TimedPlanUnitPlayException;
@@ -42,7 +42,6 @@ import asap.realizer.scheduler.BMLBlockManager;
 import asap.realizer.scheduler.TimePegAndConstraint;
 import asap.realizerport.util.ListBMLFeedbackListener;
 import asap.realizertestutil.PlannerTests;
-import asap.realizertestutil.util.KeyPositionMocker;
 import asap.realizertestutil.util.TimePegUtil;
 
 /**
@@ -58,7 +57,7 @@ public class FacePlannerTest
     private FaceController mockFaceController = mock(FaceController.class);
     private EmotionConverter mockEmotionConverter = mock(EmotionConverter.class);
     private FACSConverter mockFACSConverter = mock(FACSConverter.class);
-    private FaceUnit mockFaceUnit = mock(FaceUnit.class);
+    private FaceUnit stubFaceUnit = new StubFaceUnit();
     private FaceLexemeBehaviour mockFaceBehaviour = mock(FaceLexemeBehaviour.class);
 
     private List<BMLWarningFeedback> beList;
@@ -83,18 +82,14 @@ public class FacePlannerTest
         facePlanner = new FacePlanner(fbManager, mockFaceController, mockFACSConverter, mockEmotionConverter, mockFaceBinding, planManager);
         beList = new ArrayList<BMLWarningFeedback>();
         fbManager.addFeedbackListener(new ListBMLFeedbackListener.Builder().warningList(beList).build());
-        plannerTests = new PlannerTests<TimedFaceUnit>(facePlanner, bbPeg);
-
-        when(mockFaceUnit.hasValidParameters()).thenReturn(true);
-        KeyPositionMocker.stubKeyPositions(mockFaceUnit, new KeyPosition("start", 0, 1), new KeyPosition("end", 1, 1));
-
+        plannerTests = new PlannerTests<TimedFaceUnit>(facePlanner, bbPeg);        
         List<TimedFaceUnit> fmus = new ArrayList<TimedFaceUnit>();
-        TimedFaceUnit tfu = new TimedFaceUnit(fbManager, bbPeg, BMLID, "f1", mockFaceUnit);
+        TimedFaceUnit tfu = new TimedFaceUnit(fbManager, bbPeg, BMLID, "f1", stubFaceUnit);
         fmus.add(tfu);
         when(
                 mockFaceBinding.getFaceUnit((FeedbackManager) any(), (BMLBlockPeg) any(), (FaceLexemeBehaviour) any(),
                         eq(mockFaceController), eq(mockFACSConverter), eq(mockEmotionConverter))).thenReturn(fmus);
-        when(mockFaceUnit.getPreferedDuration()).thenReturn(3.0);
+        
     }
 
     @Test
@@ -127,7 +122,7 @@ public class FacePlannerTest
         when(mockTimedFaceUnit.isLurking()).thenReturn(false);
         when(mockTimedFaceUnit.isPlaying()).thenReturn(true);
         when(mockTimedFaceUnit.getState()).thenReturn(TimedPlanUnitState.IN_EXEC);
-        when(mockTimedFaceUnit.getFaceUnit()).thenReturn(mockFaceUnit);
+        when(mockTimedFaceUnit.getFaceUnit()).thenReturn(stubFaceUnit);
         when(mockTimedFaceUnit.getId()).thenReturn("fu1");
         when(mockTimedFaceUnit.getBMLId()).thenReturn("bml1");
         PowerMockito.doThrow(new TimedPlanUnitPlayException("failure!", mockTimedFaceUnit)).when(mockTimedFaceUnit).play(0);

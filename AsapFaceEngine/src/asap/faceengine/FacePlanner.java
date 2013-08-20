@@ -65,10 +65,10 @@ public class FacePlanner extends AbstractPlanner<TimedFaceUnit>
     /* register the MURML BML face behaviors with the BML parser... */
     static
     {
-        BMLInfo.addBehaviourType(MURMLFaceBehaviour.xmlTag(), MURMLFaceBehaviour.class);    
-        BMLInfo.addDescriptionExtension(MURMLFaceBehaviour.xmlTag(), MURMLFaceBehaviour.class);        
+        BMLInfo.addBehaviourType(MURMLFaceBehaviour.xmlTag(), MURMLFaceBehaviour.class);
+        BMLInfo.addDescriptionExtension(MURMLFaceBehaviour.xmlTag(), MURMLFaceBehaviour.class);
     }
-    
+
     public FacePlanner(FeedbackManager bfm, FaceController fc, FACSConverter fconv, EmotionConverter econv, FaceBinding fb,
             PlanManager<TimedFaceUnit> planManager)
     {
@@ -134,10 +134,14 @@ public class FacePlanner extends AbstractPlanner<TimedFaceUnit>
 
         planManager.addPlanUnit(tfu);
 
-        for (KeyPosition kp : tfu.getPegs().keySet())
+        for (String sync : tfu.getAvailableSyncs())
         {
-            TimePeg p = tfu.getPegs().get(kp);
-            satps.add(new SyncAndTimePeg(b.getBmlId(), b.id, kp.id, p));
+            TimePeg p = tfu.getTimePeg(sync);
+            if (p == null)
+            {
+                p = new TimePeg(bbPeg);
+            }
+            satps.add(new SyncAndTimePeg(b.getBmlId(), b.id, sync, p));
         }
         return satps;
     }

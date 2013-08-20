@@ -19,18 +19,6 @@ import asap.realizer.planunit.TimedPlanUnit;
  */
 public class LinearStretchResolver implements UniModalResolver
 {
-    private final boolean resolveEndAsOffset;
-    
-    public LinearStretchResolver()
-    {
-        this(true);
-    }
-    
-    public LinearStretchResolver(boolean resolveEndAsOffset)
-    {
-        this.resolveEndAsOffset = resolveEndAsOffset;
-    }
-    
     private void validateSyncs(TimedPlanUnit pu, Behaviour b, List<TimePegAndConstraint> sac) throws BehaviourPlanningException
     {
         for (TimePegAndConstraint s : sac)
@@ -275,7 +263,8 @@ public class LinearStretchResolver implements UniModalResolver
 
             // resolve end if unknown and not a persistent behavior
             sacEnd = sortedSac.get(sortedSac.size() - 1);
-            // System.out.println(sacEnd.id);
+            
+            /*
             if (!sacEnd.syncId.equals("end") && pu.getPreferedDuration() > 0 && resolveEndAsOffset)
             {
                 double keyPrev;
@@ -299,6 +288,7 @@ public class LinearStretchResolver implements UniModalResolver
                 OffsetPeg op = new OffsetPeg(pu.getTimePeg(sacEnd.syncId), (keyEnd - keyPrev) * avgStretch * pu.getPreferedDuration());
                 pu.setTimePeg("end", op);
             }
+            */
         }
     }
 
