@@ -1,5 +1,6 @@
 package asap.picture;
 
+import static org.junit.Assert.assertEquals;
 import static org.mockito.Matchers.any;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
@@ -16,17 +17,21 @@ import org.powermock.core.classloader.annotations.PrepareForTest;
 import org.powermock.modules.junit4.PowerMockRunner;
 
 import saiba.bml.core.Behaviour;
+import saiba.bml.parser.Constraint;
 import saiba.utils.TestUtil;
 import asap.picture.bml.SetImageBehavior;
 import asap.picture.picturebinding.PictureBinding;
 import asap.picture.planunit.PictureUnit;
 import asap.picture.planunit.TimedPictureUnit;
 import asap.realizer.BehaviourPlanningException;
+import asap.realizer.SyncAndTimePeg;
 import asap.realizer.feedback.FeedbackManager;
 import asap.realizer.feedback.FeedbackManagerImpl;
 import asap.realizer.pegboard.BMLBlockPeg;
+import asap.realizer.pegboard.TimePeg;
 import asap.realizer.planunit.PlanManager;
 import asap.realizer.scheduler.BMLBlockManager;
+import asap.realizer.scheduler.TimePegAndConstraint;
 import asap.realizertestutil.PlannerTests;
 
 /**
@@ -47,6 +52,7 @@ public class PicturePlannerTest
     private PicturePlanner picturePlanner;
     private final BMLBlockPeg bbPeg = new BMLBlockPeg("Peg1", 0.3);
     private PictureUnit stubPU = new StubPictureUnit();
+    private static final float PLAN_PRECISION = 0.00001f;
     
     @Before
     public void setup()
@@ -81,5 +87,34 @@ public class PicturePlannerTest
     public void testResolveStartOffset() throws IOException, BehaviourPlanningException
     {
         plannerTests.testResolveStartOffset(createSetImageBehaviorBehaviour());
+    }
+    
+    @Test
+    public void testAdd() throws IOException, BehaviourPlanningException
+    {
+        SetImageBehavior beh = createSetImageBehaviorBehaviour();
+        ArrayList<TimePegAndConstraint> sacs = new ArrayList<TimePegAndConstraint>();
+        TimedPictureUnit tpu = picturePlanner.resolveSynchs(bbPeg, beh, sacs); 
+        List<SyncAndTimePeg> syncAndPegs = picturePlanner.addBehaviour(BMLBlockPeg.GLOBALPEG, beh, sacs, tpu);
+        assertEquals(2, syncAndPegs.size());
+        assertEquals("start", syncAndPegs.get(0).sync);
+        assertEquals("end", syncAndPegs.get(1).sync);
+        assertEquals(TimePeg.VALUE_UNKNOWN, syncAndPegs.get(0).peg.getGlobalValue(), PLAN_PRECISION);
+        assertEquals(TimePeg.VALUE_UNKNOWN, syncAndPegs.get(1).peg.getGlobalValue(), PLAN_PRECISION);
+    }
+    
+    @Test
+    public void testAddWithStartConstraint() throws IOException, BehaviourPlanningException
+    {
+        SetImageBehavior beh = createSetImageBehaviorBehaviour();
+        ArrayList<TimePegAndConstraint> sacs = new ArrayList<TimePegAndConstraint>();
+        sacs.add(new TimePegAndConstraint("start", new TimePeg(BMLBlockPeg.GLOBALPEG), new Constraint(), 0));
+        TimedPictureUnit tpu = picturePlanner.resolveSynchs(bbPeg, beh, sacs); 
+        List<SyncAndTimePeg> syncAndPegs = picturePlanner.addBehaviour(BMLBlockPeg.GLOBALPEG, beh, sacs, tpu);
+        assertEquals(2, syncAndPegs.size());
+        assertEquals("start", syncAndPegs.get(0).sync);
+        assertEquals("end", syncAndPegs.get(1).sync);
+        assertEquals(0, syncAndPegs.get(0).peg.getGlobalValue(), PLAN_PRECISION);
+        assertEquals(TimePeg.VALUE_UNKNOWN, syncAndPegs.get(1).peg.getGlobalValue(), PLAN_PRECISION);
     }
 }

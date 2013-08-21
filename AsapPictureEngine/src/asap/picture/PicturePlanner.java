@@ -113,12 +113,7 @@ public class PicturePlanner extends AbstractPlanner<TimedPictureUnit>
 
         planManager.addPlanUnit(tpu);
 
-        for (KeyPosition kp : tpu.getPegs().keySet())
-        {
-            TimePeg p = tpu.getPegs().get(kp);
-            satps.add(new SyncAndTimePeg(b.getBmlId(), b.id, kp.id, p));
-        }
-        return satps;
+        return constructSyncAndTimePegs(bbPeg,b,tpu);
     }
 
     @Override
