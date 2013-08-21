@@ -140,10 +140,6 @@ public class LiveMocapPlanner extends AbstractPlanner<LiveMocapTMU>
                 start.setLocalValue(0);
             }
         }
-        else 
-        {
-            lmu.getTimePeg("start").setLocalValue(0);
-        }
         
         if (getSacEnd(sac) != null)
         {
@@ -172,10 +168,7 @@ public class LiveMocapPlanner extends AbstractPlanner<LiveMocapTMU>
         validateSacs(b,sacs);
         setupPegs(planElement,sacs);
         
-        List<SyncAndTimePeg> list = new ArrayList<SyncAndTimePeg>();
-        list.add(new SyncAndTimePeg(b.getBmlId(), b.id, "start", planElement.getTimePeg("start")));
-        list.add(new SyncAndTimePeg(b.getBmlId(), b.id, "end", planElement.getTimePeg("end")));
-        return list;
+        return constructSyncAndTimePegs(bbPeg,b,planElement);
     }
 
     @Override
