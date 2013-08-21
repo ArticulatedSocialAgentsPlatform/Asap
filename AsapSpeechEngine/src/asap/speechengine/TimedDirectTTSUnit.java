@@ -46,8 +46,9 @@ public class TimedDirectTTSUnit extends TimedTTSUnit
     }
     
     @Override
-    public void startUnit(double time)
+    public void startUnit(double time) throws TimedPlanUnitPlayException
     {
+        super.startUnit(time);
         logger.debug("startUnit {}", speechText);
         sendStartProgress(time);
         bmlStartTime = time;

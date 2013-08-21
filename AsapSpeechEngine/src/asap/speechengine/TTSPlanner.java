@@ -252,16 +252,17 @@ public class TTSPlanner extends AbstractPlanner<TimedTTSUnit>
         validateSacs(b, bs, sacs);
 
         linkStartAndEnd(b, sacs, bs);
-        ArrayList<SyncAndTimePeg> satp = new ArrayList<SyncAndTimePeg>();
-        satp.add(new SyncAndTimePeg(b.getBmlId(), b.id, "start", bs.getStartPeg()));
-        if (bs.getEndPeg() == null)
-        {
-            bs.setEnd(new OffsetPeg(bs.getStartPeg(), bs.getPreferedDuration()));
-        }
-        satp.add(new SyncAndTimePeg(b.getBmlId(), b.id, "end", bs.getEndPeg()));
+        //ArrayList<SyncAndTimePeg> satp = new ArrayList<SyncAndTimePeg>();
+        //satp.add(new SyncAndTimePeg(b.getBmlId(), b.id, "start", bs.getStartPeg()));
+//        if (bs.getEndPeg() == null)
+//        {
+//            bs.setEnd(new OffsetPeg(bs.getStartPeg(), bs.getPreferedDuration()));
+//        }
+        //satp.add(new SyncAndTimePeg(b.getBmlId(), b.id, "end", bs.getEndPeg()));
         linkBookmarks(bs, sacs, bs.getStartTime(), b);
 
         // find pegs
+        /*
         for (Bookmark bm : bs.getBookmarks())
         {
             TimePeg p = bs.getBookMarkTimePeg(bm);
@@ -270,6 +271,8 @@ public class TTSPlanner extends AbstractPlanner<TimedTTSUnit>
                 satp.add(new SyncAndTimePeg(b.getBmlId(), b.id, bm.getName(), p));
             }
         }
+        */
+        List<SyncAndTimePeg> satp = constructSyncAndTimePegs(bbPeg, b, bs); 
 
         for (LipSynchProvider ls : lipSynchers)
         {

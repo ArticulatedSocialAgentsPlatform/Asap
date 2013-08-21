@@ -9,6 +9,7 @@ import hmi.xml.XMLTokenizer;
 
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.List;
 
 import org.junit.Test;
 
@@ -16,6 +17,7 @@ import saiba.bml.core.SpeechBehaviour;
 import saiba.bml.parser.Constraint;
 import asap.realizer.BehaviourPlanningException;
 import asap.realizer.Planner;
+import asap.realizer.SyncAndTimePeg;
 import asap.realizer.feedback.FeedbackManager;
 import asap.realizer.pegboard.BMLBlockPeg;
 import asap.realizer.pegboard.OffsetPeg;
@@ -41,7 +43,8 @@ public abstract class AbstractSpeechPlannerTest<T extends TimedAbstractSpeechUni
     protected Planner<T> speechPlanner;
     private PlannerTests<T> plannerTests;
     protected FeedbackManager mockFeedbackManager = mock(FeedbackManager.class);
-
+    private static final double RESOLVE_PRECISION = 0.001;
+    
     public void setup()
     {
         plannerTests = new PlannerTests<T>(speechPlanner, bbPeg);
@@ -57,10 +60,10 @@ public abstract class AbstractSpeechPlannerTest<T extends TimedAbstractSpeechUni
         return createSpeechBehaviour(String.format("<speech xmlns=\"http://www.bml-initiative.org/bml/bml-1.0\" "
                 + "id=\"%s\" %s><text>%s</text></speech>", id, otherAttributes, speech), bmlId);
     }
-    
+
     protected SpeechBehaviour createSpeechBehaviour(String id, String bmlId, String speech) throws IOException
     {
-        return createSpeechBehaviour(id,bmlId,"",speech);
+        return createSpeechBehaviour(id, bmlId, "", speech);
     }
 
     @Test
@@ -100,9 +103,43 @@ public abstract class AbstractSpeechPlannerTest<T extends TimedAbstractSpeechUni
         assertTrue(endPeg.getGlobalValue() > s1Peg.getGlobalValue());
         assertEquals(2, s1Peg.getGlobalValue(), 0.0001);
 
-        speechPlanner.addBehaviour(bbPeg, beh, sacs, pu);
+        List<SyncAndTimePeg> syncAndPegs = speechPlanner.addBehaviour(bbPeg, beh, sacs, pu);
         assertThat(s1Peg.getGlobalValue(), greaterThan(startPeg.getGlobalValue()));
         assertThat(endPeg.getGlobalValue(), greaterThan(s1Peg.getGlobalValue()));
         assertEquals(2, s1Peg.getGlobalValue(), 0.0001);
+        assertEquals(3, syncAndPegs.size());
+    }
+    
+    @Test
+    public void testAdd() throws IOException, BehaviourPlanningException
+    {
+        SpeechBehaviour beh = createSpeechBehaviour(SPEECHID, BMLID, SPEECHTEXT);
+        ArrayList<TimePegAndConstraint> sacs = new ArrayList<TimePegAndConstraint>();
+        T pu = speechPlanner.resolveSynchs(bbPeg, beh, sacs);
+        List<SyncAndTimePeg> syncAndPegs = speechPlanner.addBehaviour(bbPeg, beh, sacs, pu);
+        assertEquals(3, syncAndPegs.size());
+        assertEquals("start", syncAndPegs.get(0).sync);
+        assertEquals("s1", syncAndPegs.get(1).sync);
+        assertEquals("end", syncAndPegs.get(2).sync);
+        assertEquals(TimePeg.VALUE_UNKNOWN, syncAndPegs.get(0).peg.getGlobalValue(), RESOLVE_PRECISION);
+        assertEquals(TimePeg.VALUE_UNKNOWN, syncAndPegs.get(1).peg.getGlobalValue(), RESOLVE_PRECISION);
+        assertEquals(TimePeg.VALUE_UNKNOWN, syncAndPegs.get(2).peg.getGlobalValue(), RESOLVE_PRECISION);
+    }
+    
+    @Test
+    public void testAddWithStartConstraint() throws IOException, BehaviourPlanningException
+    {
+        SpeechBehaviour beh = createSpeechBehaviour(SPEECHID, BMLID, SPEECHTEXT);
+        ArrayList<TimePegAndConstraint> sacs = new ArrayList<TimePegAndConstraint>();
+        sacs.add(new TimePegAndConstraint("start", new TimePeg(BMLBlockPeg.GLOBALPEG), new Constraint(), 0));
+        T pu = speechPlanner.resolveSynchs(bbPeg, beh, sacs);
+        List<SyncAndTimePeg> syncAndPegs = speechPlanner.addBehaviour(bbPeg, beh, sacs, pu);
+        assertEquals(3, syncAndPegs.size());
+        assertEquals("start", syncAndPegs.get(0).sync);
+        assertEquals("s1", syncAndPegs.get(1).sync);
+        assertEquals("end", syncAndPegs.get(2).sync);
+        assertEquals(0.3, syncAndPegs.get(0).peg.getGlobalValue(), RESOLVE_PRECISION);
+        assertEquals(TimePeg.VALUE_UNKNOWN, syncAndPegs.get(1).peg.getGlobalValue(), RESOLVE_PRECISION);
+        assertEquals(TimePeg.VALUE_UNKNOWN, syncAndPegs.get(2).peg.getGlobalValue(), RESOLVE_PRECISION);
     }
 }

@@ -13,7 +13,6 @@ import java.util.List;
 
 import org.junit.Test;
 
-import saiba.bml.core.Behaviour;
 import saiba.bml.core.SpeechBehaviour;
 import saiba.bml.parser.Constraint;
 import asap.realizer.BehaviourPlanningException;
@@ -23,7 +22,6 @@ import asap.realizer.feedback.FeedbackManager;
 import asap.realizer.pegboard.BMLBlockPeg;
 import asap.realizer.pegboard.OffsetPeg;
 import asap.realizer.pegboard.TimePeg;
-import asap.realizer.planunit.TimedPlanUnit;
 import asap.realizer.scheduler.TimePegAndConstraint;
 import asap.realizertestutil.PlannerTests;
 import asap.realizertestutil.util.TimePegUtil;
