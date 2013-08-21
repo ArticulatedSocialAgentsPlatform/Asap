@@ -42,6 +42,7 @@ import asap.bml.ext.murml.MURMLGestureBehaviour;
 import asap.hns.Hns;
 import asap.hns.ShapeSymbols;
 import asap.realizer.BehaviourPlanningException;
+import asap.realizer.SyncAndTimePeg;
 import asap.realizer.feedback.FeedbackManager;
 import asap.realizer.feedback.FeedbackManagerImpl;
 import asap.realizer.pegboard.BMLBlockPeg;
@@ -145,8 +146,9 @@ public class AnimationPlannerTest
         TimePeg sp = new TimePeg(bbPeg);
         sacs.add(new TimePegAndConstraint("start", sp, new Constraint(), 0, false));
         TimedAnimationUnit pu = animationPlanner.resolveSynchs(bbPeg, beh, sacs);
-        animationPlanner.addBehaviour(bbPeg, beh, sacs, pu);
+        List<SyncAndTimePeg> syncAndPegs = animationPlanner.addBehaviour(bbPeg, beh, sacs, pu);
         assertThat(planManager.getBehaviours(BMLID), IsIterableContainingInOrder.contains("nod1"));
+        assertEquals(7, syncAndPegs.size());
     }
 
     @Test
@@ -163,7 +165,7 @@ public class AnimationPlannerTest
         assertEquals(0.3, sp.getGlobalValue(), TIMING_PRECISION);
         animationPlanner.addBehaviour(bbPeg, beh, sacs, pu);
         assertEquals(0.3, pu.getStartTime(), TIMING_PRECISION);
-        assertEquals(3.3, pu.getEndTime(), TIMING_PRECISION);
+        assertEquals(TimePeg.VALUE_UNKNOWN, pu.getEndTime(), TIMING_PRECISION);
     }
 
     @Test
@@ -180,7 +182,7 @@ public class AnimationPlannerTest
         assertEquals(0.3, sp.getGlobalValue(), TIMING_PRECISION);
         animationPlanner.addBehaviour(bbPeg, beh, sacs, pu);
         assertEquals(0.3, pu.getStartTime(), TIMING_PRECISION);
-        assertEquals(3.3, pu.getEndTime(), TIMING_PRECISION);
+        assertEquals(TimePeg.VALUE_UNKNOWN, pu.getEndTime(), TIMING_PRECISION);
     }
 
     @Test
