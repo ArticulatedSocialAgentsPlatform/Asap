@@ -140,6 +140,7 @@ public class FacePlanner extends AbstractPlanner<TimedFaceUnit>
             if (p == null)
             {
                 p = new TimePeg(bbPeg);
+                tfu.setTimePeg(sync,p);
             }
             satps.add(new SyncAndTimePeg(b.getBmlId(), b.id, sync, p));
         }

@@ -18,7 +18,7 @@ import com.google.common.collect.ImmutableSet;
  * Motion unit stub, typically used to test a TimedMotionUnit implementation.
  * @author welberge
  */
-public class StubMotionUnit implements AnimationUnit
+public class StubAnimationUnit implements AnimationUnit
 {
     @Delegate
     private KeyPositionManager keyPositionManager = new KeyPositionManagerImpl();    

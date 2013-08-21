@@ -47,6 +47,7 @@ public class GazeTMU extends TimedAnimationMotionUnit
     @Override
     protected void startUnit(double time) throws TimedPlanUnitPlayException
     {
+        super.startUnit(time);
         try
         {
             double readyTime = getTime("ready");
@@ -102,7 +103,7 @@ public class GazeTMU extends TimedAnimationMotionUnit
         catch(MUPlayException ex)
         {
             throw new TMUPlayException(ex.getLocalizedMessage(),this,ex);            
-        }        
+        }    
     }   
     
     @Override

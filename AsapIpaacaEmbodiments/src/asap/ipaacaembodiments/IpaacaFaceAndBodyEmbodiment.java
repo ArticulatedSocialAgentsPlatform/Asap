@@ -8,7 +8,6 @@ import hmi.faceembodiments.EyelidMorpherEmbodiment;
 import hmi.math.Quat4f;
 
 import java.util.ArrayList;
-import java.util.List;
 
 import lombok.Setter;
 
@@ -26,7 +25,7 @@ public class IpaacaFaceAndBodyEmbodiment implements BodyAndFaceEmbodiment
 
     @Setter
     private EyelidMorpherEmbodiment eyelidMorpher = new EyelidMorpherEmbodiment(new ArrayList<String>());
-    
+
     public IpaacaFaceAndBodyEmbodiment(String id, IpaacaEmbodiment ipaacaEmbodiment, IpaacaFaceEmbodiment faceEmbodiment,
             IpaacaBodyEmbodiment bodyEmbodiment)
     {
@@ -41,12 +40,14 @@ public class IpaacaFaceAndBodyEmbodiment implements BodyAndFaceEmbodiment
     {
         VJoint vjRightEye = getAnimationVJoint().getPartBySid(Hanim.r_eyeball_joint);
         VJoint vjLeftEye = getAnimationVJoint().getPartBySid(Hanim.l_eyeball_joint);
-        float qRight[] = Quat4f.getQuat4f();
-        float qLeft[] = Quat4f.getQuat4f();
-        vjRightEye.getRotation(qRight);
-        vjLeftEye.getRotation(qLeft);
-        eyelidMorpher.setEyeLidMorph(qLeft, qRight, faceEmbodiment.getFaceController());
-        
+        if (vjRightEye != null && vjLeftEye != null)
+        {
+            float qRight[] = Quat4f.getQuat4f();
+            float qLeft[] = Quat4f.getQuat4f();
+            vjRightEye.getRotation(qRight);
+            vjLeftEye.getRotation(qLeft);
+            eyelidMorpher.setEyeLidMorph(qLeft, qRight, faceEmbodiment.getFaceController());
+        }
         ipaacaEmbodiment.setJointData(bodyEmbodiment.getJointMatrices(), faceEmbodiment.getDesiredMorphTargets());
     }
 

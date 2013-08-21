@@ -124,7 +124,7 @@ public class BMLASchedulingHandler implements SchedulingHandler
         strategy.schedule(bb.getComposition(), bb, bmlBlockPeg, scheduler, scheduler.getSchedulingTime());
         log.debug("Scheduling finished at: {}", scheduler.getSchedulingTime());
         scheduler.removeInvalidBehaviors(bb.id);
-
+        
         predictedStart = Math.max(scheduler.predictEndTime(appendAfter), scheduler.predictSubsidingTime(chunkAfter));
         scheduler.addBMLBlock(bbm);
         bmlBlockPeg.setValue(predictedStart);

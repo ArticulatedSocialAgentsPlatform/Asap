@@ -62,7 +62,7 @@ public class TimedAnimationMotionUnitTest extends AbstractTimedPlanUnitTest
     {
         fbList = new ArrayList<BMLSyncPointProgressFeedback>();
         fbl = new ListBMLFeedbackListener.Builder().feedBackList(fbList).build();
-        muMock = spy(new StubMotionUnit());
+        muMock = spy(new StubAnimationUnit());
         tmu = new TimedAnimationMotionUnit(fbManager, BMLBlockPeg.GLOBALPEG, "bml1", "behaviour1", muMock, pegBoard);
         fbManager.addFeedbackListener(fbl);
     }
@@ -325,7 +325,7 @@ public class TimedAnimationMotionUnitTest extends AbstractTimedPlanUnitTest
     @Override
     protected TimedPlanUnit setupPlanUnit(FeedbackManager bfm, BMLBlockPeg bbPeg, String id, String bmlId, double startTime)
     {
-        tmu = new TimedAnimationMotionUnit(bfm, bbPeg, bmlId, id, new StubMotionUnit(),pegBoard);
+        tmu = new TimedAnimationMotionUnit(bfm, bbPeg, bmlId, id, new StubAnimationUnit(),pegBoard);
         tmu.resolveGestureKeyPositions();
         tmu.setTimePeg("start", TimePegUtil.createTimePeg(bbPeg, startTime));
         return tmu;
