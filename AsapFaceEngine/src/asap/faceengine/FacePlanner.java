@@ -18,10 +18,6 @@
  ******************************************************************************/
 package asap.faceengine;
 
-import saiba.bml.BMLInfo;
-import saiba.bml.core.Behaviour;
-import saiba.bml.core.FaceLexemeBehaviour;
-import saiba.bml.core.ext.FaceFacsBehaviour;
 import hmi.faceanimation.FaceController;
 import hmi.faceanimation.converters.EmotionConverter;
 import hmi.faceanimation.converters.FACSConverter;
@@ -29,6 +25,10 @@ import hmi.faceanimation.converters.FACSConverter;
 import java.util.ArrayList;
 import java.util.List;
 
+import saiba.bml.BMLInfo;
+import saiba.bml.core.Behaviour;
+import saiba.bml.core.FaceLexemeBehaviour;
+import saiba.bml.core.ext.FaceFacsBehaviour;
 import asap.bml.ext.bmlt.BMLTFaceMorphBehaviour;
 import asap.bml.ext.murml.MURMLFaceBehaviour;
 import asap.faceengine.facebinding.FaceBinding;
@@ -41,7 +41,6 @@ import asap.realizer.SyncAndTimePeg;
 import asap.realizer.feedback.FeedbackManager;
 import asap.realizer.pegboard.BMLBlockPeg;
 import asap.realizer.pegboard.OffsetPeg;
-import asap.realizer.pegboard.TimePeg;
 import asap.realizer.planunit.KeyPosition;
 import asap.realizer.planunit.PlanManager;
 import asap.realizer.scheduler.LinearStretchResolver;
@@ -122,7 +121,7 @@ public class FacePlanner extends AbstractPlanner<TimedFaceUnit>
     public List<SyncAndTimePeg> addBehaviour(BMLBlockPeg bbPeg, Behaviour b, List<TimePegAndConstraint> sacs, TimedFaceUnit tfu)
             throws BehaviourPlanningException
     {
-        List<SyncAndTimePeg> satps = new ArrayList<SyncAndTimePeg>();
+        
         if (tfu == null)
         {
             tfu = createTfu(bbPeg, b);
@@ -133,18 +132,7 @@ public class FacePlanner extends AbstractPlanner<TimedFaceUnit>
         linkSynchs(tfu, sacs);
 
         planManager.addPlanUnit(tfu);
-
-        for (String sync : tfu.getAvailableSyncs())
-        {
-            TimePeg p = tfu.getTimePeg(sync);
-            if (p == null)
-            {
-                p = new TimePeg(bbPeg);
-                tfu.setTimePeg(sync,p);
-            }
-            satps.add(new SyncAndTimePeg(b.getBmlId(), b.id, sync, p));
-        }
-        return satps;
+        return constructSyncAndTimePegs(bbPeg, b, tfu);
     }
 
     @Override

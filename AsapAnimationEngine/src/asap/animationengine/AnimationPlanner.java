@@ -50,7 +50,6 @@ import asap.realizer.feedback.FeedbackManager;
 import asap.realizer.pegboard.BMLBlockPeg;
 import asap.realizer.pegboard.OffsetPeg;
 import asap.realizer.pegboard.PegBoard;
-import asap.realizer.pegboard.TimePeg;
 import asap.realizer.planunit.PlanManager;
 import asap.realizer.scheduler.TimePegAndConstraint;
 
@@ -125,7 +124,7 @@ public class AnimationPlanner extends AbstractPlanner<TimedAnimationUnit>
     public List<SyncAndTimePeg> addBehaviour(BMLBlockPeg bbPeg, Behaviour b, List<TimePegAndConstraint> sacs, TimedAnimationUnit tmu)
             throws BehaviourPlanningException
     {
-        List<SyncAndTimePeg> satps = new ArrayList<SyncAndTimePeg>();
+        
 
         if (tmu == null)
         {
@@ -141,17 +140,7 @@ public class AnimationPlanner extends AbstractPlanner<TimedAnimationUnit>
 
         linkSynchs(tmu, sacs);
 
-        for (String sync : tmu.getAvailableSyncs())
-        {
-            TimePeg tp = tmu.getTimePeg(sync);
-            if (tp == null)
-            {
-                tp = new TimePeg(bbPeg);
-                tmu.setTimePeg(sync, tp);
-            }
-            satps.add(new SyncAndTimePeg(b.getBmlId(), b.id, sync, tp));
-        }
-
+        List<SyncAndTimePeg> satps = constructSyncAndTimePegs(bbPeg, b, tmu);
         planManager.addPlanUnit(tmu);
         return satps;
     }
