@@ -2,11 +2,6 @@ package asap.animationengine.ace.lmp;
 
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.junit.Assert.assertEquals;
-import static org.mockito.Matchers.anyString;
-import static org.mockito.Mockito.mock;
-import static org.mockito.Mockito.when;
-import hmi.animation.Hanim;
-import hmi.testutil.animation.HanimBody;
 
 import java.util.ArrayList;
 import java.util.List;

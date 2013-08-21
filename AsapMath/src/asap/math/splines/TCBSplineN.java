@@ -29,8 +29,8 @@ import lombok.Data;
  */
 public class TCBSplineN
 {
-    private double m_fTMin, m_fTMax, m_fTotalLength, m_fTolerance;
-    private int m_iIterations, m_uiMaxLevel, m_iSegments;
+    private double m_fTMin, m_fTMax;
+    private int m_iSegments;
     private List<Double> m_afTime = new ArrayList<>();;
     private List<Double> m_afLength = new ArrayList<>();
     private List<Double> m_afAccumLength = new ArrayList<>();
@@ -52,12 +52,13 @@ public class TCBSplineN
 
         m_fTMin = afTime.get(0);
         m_fTMax = afTime.get(iSegments);
+        /*
         m_fTotalLength = -1.0;
 
         m_iIterations = 32;
         m_fTolerance = 1e-06;
         m_uiMaxLevel = Integer.MAX_VALUE;
-
+        */
         m_iSegments = iSegments;
         m_afTime.addAll(afTime);
 
