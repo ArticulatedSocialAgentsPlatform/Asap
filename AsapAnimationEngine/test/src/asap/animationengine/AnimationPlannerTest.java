@@ -148,6 +148,18 @@ public class AnimationPlannerTest
         List<SyncAndTimePeg> syncAndPegs = animationPlanner.addBehaviour(bbPeg, beh, sacs, pu);
         assertThat(planManager.getBehaviours(BMLID), IsIterableContainingInOrder.contains("nod1"));
         assertEquals(7, syncAndPegs.size());
+        assertEquals("start", syncAndPegs.get(0).sync);
+        assertEquals("ready", syncAndPegs.get(1).sync);
+        assertEquals("strokeStart", syncAndPegs.get(2).sync);
+        assertEquals("stroke", syncAndPegs.get(3).sync);
+        assertEquals("strokeEnd", syncAndPegs.get(4).sync);
+        assertEquals("relax", syncAndPegs.get(5).sync);
+        assertEquals("end", syncAndPegs.get(6).sync);
+        assertEquals(0.3, syncAndPegs.get(0).peg.getGlobalValue(), TIMING_PRECISION);
+        for(int i=1;i<7;i++)
+        {
+            assertEquals(TimePeg.VALUE_UNKNOWN, syncAndPegs.get(i).peg.getGlobalValue(), TIMING_PRECISION);
+        }
     }
 
     @Test
