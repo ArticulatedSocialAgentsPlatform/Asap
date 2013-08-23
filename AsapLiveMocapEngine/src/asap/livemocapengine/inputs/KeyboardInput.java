@@ -131,6 +131,6 @@ public class KeyboardInput implements EulerInput, FACSFaceInput, PositionInput
     @Override
     public float[] getPosition()
     {
-        return pos;
+        return Vec3f.getVec3f(pos);
     }
 }

@@ -83,7 +83,6 @@ public class PicturePlanner extends AbstractPlanner<TimedPictureUnit>
     public List<SyncAndTimePeg> addBehaviour(BMLBlockPeg bbPeg, Behaviour b, List<TimePegAndConstraint> sacs, TimedPictureUnit planElement)
             throws BehaviourPlanningException
     {
-        List<SyncAndTimePeg> satps = new ArrayList<SyncAndTimePeg>();
         TimedPictureUnit tpu;
 
         if (planElement == null)

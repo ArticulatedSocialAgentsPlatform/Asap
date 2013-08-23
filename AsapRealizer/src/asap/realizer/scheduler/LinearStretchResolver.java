@@ -128,7 +128,7 @@ public class LinearStretchResolver implements UniModalResolver
                     }
                     catch (SyncPointNotFoundException e)
                     {
-                        throw new BehaviourPlanningException(b, "RelativeSyncNotFoundException "+sacNext.syncId, e);
+                        throw new BehaviourPlanningException(b, "RelativeSyncNotFoundException "+sacStart.syncId, e);
                     }
                 }
                 else
