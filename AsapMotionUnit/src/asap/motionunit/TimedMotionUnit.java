@@ -18,7 +18,6 @@ import asap.realizer.planunit.TimedPlanUnitPlayException;
 import lombok.Delegate;
 import lombok.extern.slf4j.Slf4j;
 
-
 import saiba.bml.feedback.BMLSyncPointProgressFeedback;
 
 /**
@@ -31,10 +30,10 @@ public class TimedMotionUnit extends TimedAbstractPlanUnit
 {
     public final MotionUnit mu;
     protected List<KeyPosition> progressHandled = new CopyOnWriteArrayList<KeyPosition>();
-    
-    @Delegate protected final PlanUnitTimeManager puTimeManager;    
-    
-    
+
+    @Delegate
+    protected final PlanUnitTimeManager puTimeManager;
+
     /**
      * Constructor
      * @param bmlBlockPeg
@@ -46,14 +45,14 @@ public class TimedMotionUnit extends TimedAbstractPlanUnit
     {
         super(bbf, bmlBlockPeg, bmlId, id);
         mu = m;
-        puTimeManager = new PlanUnitTimeManager(mu);    
+        puTimeManager = new PlanUnitTimeManager(mu);
     }
-    
+
     public KeyPosition getKeyPosition(String kid)
     {
         return getMotionUnit().getKeyPosition(kid);
     }
-    
+
     /**
      * Send progress feedback for all key positions passed at canonical time t.
      * 
@@ -62,8 +61,8 @@ public class TimedMotionUnit extends TimedAbstractPlanUnit
      */
     private void sendProgress(double t, double time)
     {
-        List<BMLSyncPointProgressFeedback> fbToSend = new ArrayList<BMLSyncPointProgressFeedback>();        
-        synchronized(progressHandled)
+        List<BMLSyncPointProgressFeedback> fbToSend = new ArrayList<BMLSyncPointProgressFeedback>();
+        synchronized (progressHandled)
         {
             for (KeyPosition k : mu.getKeyPositions())
             {
@@ -74,26 +73,26 @@ public class TimedMotionUnit extends TimedAbstractPlanUnit
                         String bmlId = getBMLId();
                         String behaviorId = getId();
                         String syncId = k.id;
-                        double bmlBlockTime = time - bmlBlockPeg.getValue();             
+                        double bmlBlockTime = time - bmlBlockPeg.getValue();
                         progressHandled.add(k);
                         fbToSend.add(new BMLSyncPointProgressFeedback(bmlId, behaviorId, syncId, bmlBlockTime, time));
                     }
                 }
             }
         }
-        for(BMLSyncPointProgressFeedback fb:fbToSend)
+        for (BMLSyncPointProgressFeedback fb : fbToSend)
         {
-            feedback(fb);        
+            feedback(fb);
         }
     }
-    
+
     @Override
     protected void playUnit(double time) throws TMUPlayException
     {
-        double t = puTimeManager.getRelativeTime(time);        
+        double t = puTimeManager.getRelativeTime(time);
         try
         {
-            log.debug("Timed Motion Unit play {}",time);
+            log.debug("Timed Motion Unit play {}", time);
             mu.play(t);
         }
         catch (MUPlayException ex)
@@ -115,15 +114,19 @@ public class TimedMotionUnit extends TimedAbstractPlanUnit
             sendProgress(1, time);
         }
     }
-    
+
     @Override
     protected void startUnit(double time) throws TimedPlanUnitPlayException
     {
-        if(getEndTime()==TimePeg.VALUE_UNKNOWN && getPreferedDuration()>0)
+        if (getTimePeg("end") == null)
         {
-            getTimePeg("end").setGlobalValue(time+getPreferedDuration());
+            setTimePeg("end", new TimePeg(getBMLBlockPeg()));
         }
-            
+        if (getEndTime() == TimePeg.VALUE_UNKNOWN && getPreferedDuration() > 0)
+        {
+            getTimePeg("end").setGlobalValue(time + getPreferedDuration());
+        }
+
         try
         {
             mu.startUnit(time);
@@ -131,8 +134,8 @@ public class TimedMotionUnit extends TimedAbstractPlanUnit
         catch (MUPlayException ex)
         {
             throw new TimedPlanUnitPlayException("MUPlayException on mu startUnit", this, ex);
-        }        
-        super.startUnit(time);        
+        }
+        super.startUnit(time);
     }
 
     /**
@@ -142,7 +145,7 @@ public class TimedMotionUnit extends TimedAbstractPlanUnit
     {
         return mu;
     }
-    
+
     /**
      * @deprecated No longer relevant in BML 1.0
      */
@@ -211,10 +214,10 @@ public class TimedMotionUnit extends TimedAbstractPlanUnit
             throw wrapIntoPlanUnitParameterNotFoundException(e);
         }
     }
-    
+
     @Override
     public String toString()
     {
-        return getBMLId()+":"+getId();
+        return getBMLId() + ":" + getId();
     }
 }

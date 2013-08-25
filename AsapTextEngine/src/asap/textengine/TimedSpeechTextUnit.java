@@ -48,7 +48,7 @@ public class TimedSpeechTextUnit extends TimedAbstractTextUnit
     /**
      * @return the syncs
      */
-    public List<String> getSyncs()
+    public List<String> getAvailableSyncs()
     {
         return syncs;
     }
@@ -57,19 +57,6 @@ public class TimedSpeechTextUnit extends TimedAbstractTextUnit
     public TimePeg getTimePeg(String s)
     {
         return pegs.get(s);
-    }
-
-    @Override
-    public List<String> getAvailableSyncs()
-    {
-        List<String> availableSyncs = new ArrayList<String>();
-        availableSyncs.add("start");
-        for (String syncId : syncs)
-        {
-            availableSyncs.add(syncId);
-        }
-        availableSyncs.add("end");
-        return availableSyncs;
     }
 
     @Override

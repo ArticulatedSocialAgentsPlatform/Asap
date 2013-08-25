@@ -12,8 +12,13 @@ import lombok.Data;
 public class SparseVelocityDef
 {
     private final int index;    
-    private final float[] velocity;
+    private final float[] velocity = Vec3f.getVec3f();
     
+    public SparseVelocityDef(int index, float []vel)
+    {
+        this.index = index;
+        Vec3f.set(velocity,vel);
+    }
     public float[] getVelocity()
     {
         return Vec3f.getVec3f(velocity);

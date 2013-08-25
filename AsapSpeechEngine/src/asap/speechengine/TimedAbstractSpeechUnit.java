@@ -7,6 +7,7 @@ import asap.realizer.feedback.FeedbackManager;
 import asap.realizer.pegboard.BMLBlockPeg;
 import asap.realizer.pegboard.TimePeg;
 import asap.realizer.planunit.TimedAbstractPlanUnit;
+import asap.realizer.planunit.TimedPlanUnitPlayException;
 
 import saiba.bml.feedback.BMLSyncPointProgressFeedback;
 
@@ -20,22 +21,22 @@ public abstract class TimedAbstractSpeechUnit extends TimedAbstractPlanUnit
 {
     private TimePeg startSync;
     private TimePeg endSync;
-    
-    protected String speechText;   
+
+    protected String speechText;
     protected double bmlStartTime;
-    
+
     private static Logger logger = LoggerFactory.getLogger(TimedAbstractSpeechUnit.class.getName());
-    
-    TimedAbstractSpeechUnit(FeedbackManager bfm,BMLBlockPeg bbPeg, String text, String bmlId, String id)
+
+    TimedAbstractSpeechUnit(FeedbackManager bfm, BMLBlockPeg bbPeg, String text, String bmlId, String id)
     {
-        super(bfm,bbPeg,bmlId,id);
-        speechText = text;        
+        super(bfm, bbPeg, bmlId, id);
+        speechText = text;
     }
-    
+
     @Override
     public double getStartTime()
     {
-        if(startSync == null)
+        if (startSync == null)
         {
             return TimePeg.VALUE_UNKNOWN;
         }
@@ -46,9 +47,9 @@ public abstract class TimedAbstractSpeechUnit extends TimedAbstractPlanUnit
     public double getEndTime()
     {
         double endTime;
-        if(endSync==null)
+        if (endSync == null)
         {
-            endTime = TimePeg.VALUE_UNKNOWN; 
+            endTime = TimePeg.VALUE_UNKNOWN;
         }
         else
         {
@@ -64,7 +65,7 @@ public abstract class TimedAbstractSpeechUnit extends TimedAbstractPlanUnit
         }
         return endTime;
     }
-    
+
     @Override
     public double getRelaxTime()
     {
@@ -80,7 +81,7 @@ public abstract class TimedAbstractSpeechUnit extends TimedAbstractPlanUnit
     {
         return startSync;
     }
-    
+
     public void setStart(TimePeg s)
     {
         startSync = s;
@@ -90,37 +91,52 @@ public abstract class TimedAbstractSpeechUnit extends TimedAbstractPlanUnit
     {
         endSync = s;
     }
-    
+
     protected void sendStartProgress(double time)
     {
         logger.debug("Sending start progress feedback.");
         String bmlId = getBMLId();
         String behaviorId = getId();
-        
+
         double bmlBlockTime = time - bmlBlockPeg.getValue();
-        feedback(new BMLSyncPointProgressFeedback(bmlId,behaviorId,"start",bmlBlockTime,time));
+        feedback(new BMLSyncPointProgressFeedback(bmlId, behaviorId, "start", bmlBlockTime, time));
     }
-    
+
     /**
      * Checks wether the TimedPlanUnit has sync sync
      */
     public boolean hasSync(String sync)
     {
-        for(String s:getAvailableSyncs())
+        for (String s : getAvailableSyncs())
         {
-            if(s.equals(sync))return true;
+            if (s.equals(sync)) return true;
         }
         return false;
     }
+
     /**
      * Send the end progress feedback info, should be called only from the VerbalPlanPlayer.
-     * @param time time since start of BML execution 
+     * @param time time since start of BML execution
      */
     public void sendEndProgress(double time)
     {
         String bmlId = getBMLId();
-        String behaviorId = getId();        
+        String behaviorId = getId();
         double bmlBlockTime = time - bmlBlockPeg.getValue();
-        feedback(new BMLSyncPointProgressFeedback(bmlId,behaviorId,"end",bmlBlockTime,time));
+        feedback(new BMLSyncPointProgressFeedback(bmlId, behaviorId, "end", bmlBlockTime, time));
+    }
+
+    @Override
+    protected void startUnit(double time) throws TimedPlanUnitPlayException
+    {
+        super.startUnit(time);
+        if (getEndPeg() == null)
+        {
+            setTimePeg("end", new TimePeg(getBMLBlockPeg()));
+        }
+        if (getEndTime() == TimePeg.VALUE_UNKNOWN)
+        {
+            getEndPeg().setGlobalValue(time+getPreferedDuration());
+        }
     }
 }

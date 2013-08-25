@@ -27,6 +27,7 @@ import java.awt.event.ActionListener;
 import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileInputStream;
+import java.io.IOException;
 import java.io.InputStreamReader;
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -210,7 +211,7 @@ public class MultiblockTesterUI extends JFrame
             }
             tok.takeETag("elckerlycmultiblocktester");
         }
-        catch (Exception ex)
+        catch (IOException ex)
         {
             logger.warn("Cannot load specs in multiblockdemo: " + specFileName);
             logger.debug("Error: ", ex);

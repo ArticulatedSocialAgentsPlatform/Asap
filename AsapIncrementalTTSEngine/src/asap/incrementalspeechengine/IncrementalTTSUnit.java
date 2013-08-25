@@ -156,13 +156,13 @@ public class IncrementalTTSUnit extends TimedAbstractPlanUnit
 
     private List<WordIU> getWords()
     {
-        if (synthesisIU == null && hesitation == null)
+        if (synthesisIU == null)
         {
-            return new ArrayList<WordIU>();
-        }
-        if (synthesisIU == null && hesitation != null)
-        {
-            return hesitation.getWords();
+            if(hesitation == null)
+            {
+                return new ArrayList<WordIU>();
+            }            
+            return hesitation.getWords();            
         }
         if (hesitation == null)
         {

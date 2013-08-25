@@ -62,7 +62,7 @@ public class IncrementalTTSEngineLoader implements EngineLoader
         return id;
     }
 
-    private class DispatcherInfo extends XMLStructureAdapter
+    private static class DispatcherInfo extends XMLStructureAdapter
     {
         @Getter
         private String filename;

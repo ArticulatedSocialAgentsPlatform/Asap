@@ -55,11 +55,8 @@ public class FACSVisemeBinding implements VisemeBinding
             viseme = 0;
         FACSConfiguration facsConf = visemeMapping.getFACSConfigurationForViseme(viseme);
         
-        String targetName = "";
-        //visemeFU.setFloatParameterValue("intensity", 1f);
         if(facsConf!=null)
         {
-            //visemeFU.setFloatParameterValue("intensity", desc.getIntensity());
             visemeFU.setConfig(facsConf);
         }
         

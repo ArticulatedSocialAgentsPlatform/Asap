@@ -20,10 +20,10 @@ import asap.realizer.planunit.PlanManager;
 import asap.realizer.scheduler.TimePegAndConstraint;
 
 /**
- * The TextPlanner is used to plan SpeechBehaviours. The TimedPlanUnits it constructs 
- * are more flexible than those constructed by the TTSPlanner. 
+ * The TextPlanner is used to plan SpeechBehaviours. The TimedPlanUnits it constructs
+ * are more flexible than those constructed by the TTSPlanner.
  * @author welberge
- *
+ * 
  */
 public class TextPlanner extends AbstractPlanner<TimedSpeechTextUnit>
 {
@@ -40,7 +40,7 @@ public class TextPlanner extends AbstractPlanner<TimedSpeechTextUnit>
     public TextPlanner(FeedbackManager bfm, TextOutput output, PlanManager<TimedSpeechTextUnit> planManager)
     {
         super(bfm, planManager);
-        textOutput = output;        
+        textOutput = output;
     }
 
     public void setTextOutput(TextOutput to)
@@ -51,7 +51,7 @@ public class TextPlanner extends AbstractPlanner<TimedSpeechTextUnit>
     private TimedSpeechTextUnit createSpeechUnit(BMLBlockPeg bbPeg, Behaviour b)
     {
         SpeechBehaviour bSpeech = (SpeechBehaviour) b;
-        TimedSpeechTextUnit bs = new TimedSpeechTextUnit(fbManager,bbPeg,bSpeech.getContent(), bSpeech.getBmlId(), bSpeech.id, textOutput);
+        TimedSpeechTextUnit bs = new TimedSpeechTextUnit(fbManager, bbPeg, bSpeech.getContent(), bSpeech.getBmlId(), bSpeech.id, textOutput);
         return bs;
     }
 
@@ -59,81 +59,44 @@ public class TextPlanner extends AbstractPlanner<TimedSpeechTextUnit>
     {
         for (TimePegAndConstraint sac : sacs)
         {
-            if(!bs.hasSync(sac.syncId))throw new BehaviourPlanningException(b, 
-                    "Invalid synchronization constraint "+sac+" syncId "+sac.syncId+" not found in speech unit");
+            if (!bs.hasSync(sac.syncId)) throw new BehaviourPlanningException(b, "Invalid synchronization constraint " + sac + " syncId "
+                    + sac.syncId + " not found in speech unit");
         }
     }
-    
+
     /**
      * Creates a SpeechUnit that satisfies sacs and adds it to the motion plan. All registered
      * BMLFeedbackListeners are linked to this SpeechUnit.
      */
     @Override
-    public List<SyncAndTimePeg> addBehaviour(BMLBlockPeg bbPeg, Behaviour b, List<TimePegAndConstraint> sacs,
-            TimedSpeechTextUnit bs) throws BehaviourPlanningException
+    public List<SyncAndTimePeg> addBehaviour(BMLBlockPeg bbPeg, Behaviour b, List<TimePegAndConstraint> sacs, TimedSpeechTextUnit bs)
+            throws BehaviourPlanningException
     {
-        ArrayList<SyncAndTimePeg> satp = new ArrayList<SyncAndTimePeg>();
+        
         if (bs == null)
         {
-            bs = createSpeechUnit(bbPeg,b);
+            bs = createSpeechUnit(bbPeg, b);
         }
         validateSacs(b, bs, sacs);
-        
-        // link start and end sync
-        for (TimePegAndConstraint sac : sacs)
-        {
-            if (sac.syncId.equals("start"))
-            {
-                if (sac.offset == 0)
-                {
-                    bs.setStart(sac.peg);
-                    satp.add(new SyncAndTimePeg(b.getBmlId(), b.id, "start", sac.peg));
-                }
-                else
-                {
-                    OffsetPeg p = new OffsetPeg(sac.peg, -sac.offset);
-                    bs.setStart(p);
-                    satp.add(new SyncAndTimePeg(b.getBmlId(), b.id, "start", p));
-                }
-            }
-            if (sac.syncId.equals("end"))
-            {
-                if (sac.offset == 0)
-                {
-                    bs.setEnd(sac.peg);
-                    satp.add(new SyncAndTimePeg(b.getBmlId(), b.id, "end", sac.peg));
-                }
-                else
-                {
-                    OffsetPeg p = new OffsetPeg(sac.peg, -sac.offset);
-                    bs.setEnd(p);
-                    satp.add(new SyncAndTimePeg(b.getBmlId(), b.id, "end", p));
-                }
-            }
-        }
         linkSyncs(bs, sacs);
 
-        for (String sync : bs.getSyncs())
-        {
-            if (bs.getTimePeg(sync) != null)
-            {
-                satp.add(new SyncAndTimePeg(b.getBmlId(), b.id, sync, bs.getTimePeg(sync)));
-            }
-        }
-        
+        ArrayList<SyncAndTimePeg> satp = constructSyncAndTimePegs(bbPeg, b, bs);
+
         planManager.addPlanUnit(bs);
         return satp;
     }
+
+    
 
     @Override
     public TimedSpeechTextUnit resolveSynchs(BMLBlockPeg bbPeg, Behaviour b, List<TimePegAndConstraint> sacs)
             throws BehaviourPlanningException
     {
-        TimedSpeechTextUnit bs = createSpeechUnit(bbPeg,b);
+        TimedSpeechTextUnit bs = createSpeechUnit(bbPeg, b);
         validateSacs(b, bs, sacs);
         // sort sac
         ArrayList<TimePegAndConstraint> sortedSac = new ArrayList<TimePegAndConstraint>();
-        for (String sync : bs.getSyncs())
+        for (String sync : bs.getAvailableSyncs())
         {
             for (TimePegAndConstraint s : sacs)
             {
@@ -160,7 +123,7 @@ public class TextPlanner extends AbstractPlanner<TimedSpeechTextUnit>
                 {
                     double duration = bs.getTime(s.syncId) - bs.getTime(sPrev.syncId);
                     double startKey = 0, endKey = 0;
-                    for (String sync : bs.getSyncs())
+                    for (String sync : bs.getAvailableSyncs())
                     {
                         TimePeg tp = bs.getTimePeg(sync);
                         if (tp != null)
@@ -260,8 +223,9 @@ public class TextPlanner extends AbstractPlanner<TimedSpeechTextUnit>
                     double keyNext = 1;
                     double keyCurr = bs.getRelativeTime(sacEnd.syncId);
                     double timePrev = bs.getTime(sacPrev.syncId);
-                    double timeNext = timePrev+ (keyNext-keyPrev) * avgStretch * bs.getPreferedDuration();
-                    sacEnd.peg.setGlobalValue(timePrev + ((keyCurr - keyPrev) * (timeNext - timePrev)) / (keyNext - keyPrev)+sacEnd.offset);
+                    double timeNext = timePrev + (keyNext - keyPrev) * avgStretch * bs.getPreferedDuration();
+                    sacEnd.peg.setGlobalValue(timePrev + ((keyCurr - keyPrev) * (timeNext - timePrev)) / (keyNext - keyPrev)
+                            + sacEnd.offset);
                     /*
                      * double prevDur = 1 - bs.getRelativeTime(sacEnd.id);
                      * sacEnd.peg.setValue(bs.getPegTime(sacPrev.id)+prevDur * avgStretch *
@@ -278,8 +242,7 @@ public class TextPlanner extends AbstractPlanner<TimedSpeechTextUnit>
                 if (s.peg.getGlobalValue() == TimePeg.VALUE_UNKNOWN)
                 {
                     // find next
-                    for (TimePegAndConstraint s2 : sortedSac.subList(sortedSac.indexOf(s),
-                            sortedSac.size()))
+                    for (TimePegAndConstraint s2 : sortedSac.subList(sortedSac.indexOf(s), sortedSac.size()))
                     {
                         if (s2.peg.getGlobalValue() != TimePeg.VALUE_UNKNOWN)
                         {
@@ -293,20 +256,20 @@ public class TextPlanner extends AbstractPlanner<TimedSpeechTextUnit>
                     double keyCurr = bs.getRelativeTime(s.syncId);
                     double timePrev = bs.getTime(sacPrev.syncId);
                     double timeNext = bs.getTime(sacNext.syncId);
-                    s.peg.setGlobalValue(timePrev + ((keyCurr - keyPrev) * (timeNext - timePrev)) / (keyNext - keyPrev)+s.offset);
+                    s.peg.setGlobalValue(timePrev + ((keyCurr - keyPrev) * (timeNext - timePrev)) / (keyNext - keyPrev) + s.offset);
                 }
                 sacPrev = s;
             }
-            
-            //resolve end if unknown and not a persistent behavior
-            sacEnd = sortedSac.get(sortedSac.size()-1);
+
+            // resolve end if unknown and not a persistent behavior
+            sacEnd = sortedSac.get(sortedSac.size() - 1);
             logger.debug(sacEnd.syncId);
-            if(!sacEnd.syncId.equals("end") && bs.getPreferedDuration()>0)
+            if (!sacEnd.syncId.equals("end") && bs.getPreferedDuration() > 0)
             {
                 double keyPrev = bs.getRelativeTime(sacEnd.syncId);
-                double keyEnd = bs.getRelativeTime("end");                
-                OffsetPeg op = new OffsetPeg(bs.getTimePeg(sacEnd.syncId),(keyEnd-keyPrev)*avgStretch*bs.getPreferedDuration());                
-                bs.setEnd(op);                
+                double keyEnd = bs.getRelativeTime("end");
+                OffsetPeg op = new OffsetPeg(bs.getTimePeg(sacEnd.syncId), (keyEnd - keyPrev) * avgStretch * bs.getPreferedDuration());
+                bs.setEnd(op);
             }
         }
         return bs;
@@ -316,7 +279,7 @@ public class TextPlanner extends AbstractPlanner<TimedSpeechTextUnit>
     {
         for (TimePegAndConstraint s : sacs)
         {
-            for (String sync : su.getSyncs())
+            for (String sync : su.getAvailableSyncs())
             {
                 if (s.syncId.equals(sync))
                 {
@@ -353,5 +316,5 @@ public class TextPlanner extends AbstractPlanner<TimedSpeechTextUnit>
     public double getRigidity(Behaviour beh)
     {
         return 0.5;
-    }    
+    }
 }

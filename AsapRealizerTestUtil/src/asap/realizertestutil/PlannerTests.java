@@ -73,5 +73,6 @@ public class PlannerTests<T extends TimedPlanUnit>
         
         TimedPlanUnit pu = planner.resolveSynchs(bbPeg, beh, sacs);    
         assertEquals(2, pu.getStartTime(),TIME_PRECISION);
+        assertEquals(startPeg, pu.getTimePeg("start"));
     } 
 }

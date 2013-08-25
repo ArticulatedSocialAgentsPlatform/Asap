@@ -56,8 +56,7 @@ public class VisemeToFACSMapping extends XMLStructureAdapter
             if (!tag.equals("Mapping")) throw new XMLScanException("Unknown element in VisemeToFACSMapping: " + tag);
             HashMap<String, String> attrMap = tokenizer.getAttributes();
             int viseme = getRequiredIntAttribute("viseme", attrMap, tokenizer);
-            String name = getRequiredAttribute("name", attrMap, tokenizer);
-            // System.out.println("viseme name = "+ name);
+
             tokenizer.takeSTag("Mapping");
             FACSConfiguration facsConfig = new FACSConfiguration();
             if (tokenizer.atSTag("FACSConfiguration"))

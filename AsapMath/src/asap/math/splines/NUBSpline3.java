@@ -26,9 +26,11 @@ public class NUBSpline3
     protected List<Double> t = new ArrayList<>(); // knot vector
     protected List<Double> m_afTime = new ArrayList<>(); // vector of control times
     protected List<float[]> c = new ArrayList<>(); // control points
+    /*
     private double knotMax;
     private double m_fTMin, m_fTMax;
-
+    */
+    
     public NUBSpline3(int o)
     {
         reset();
@@ -40,7 +42,7 @@ public class NUBSpline3
         n = 0;
         c.clear();
         t.clear();
-        knotMax = 0;
+        //knotMax = 0;
     }
 
     /**
@@ -109,7 +111,7 @@ public class NUBSpline3
         {
             t.clear();
             t = kv;
-            knotMax = t.get(t.size() - 1);
+            //knotMax = t.get(t.size() - 1);
         }
     }
 
@@ -169,13 +171,13 @@ public class NUBSpline3
                 t.set(i, m_afTime.get(m_afTime.size()-1));
             }
 
-            knotMax = t.get(t.size() - 1);
+            //knotMax = t.get(t.size() - 1);
             // cout << "new knot vector:";
             // printKnotVector(cout);
 
             // set extremal times
-            m_fTMin = m_afTime.get(0);
-            m_fTMax = m_afTime.get(m_afTime.size() - 1);
+            //m_fTMin = m_afTime.get(0);
+            //m_fTMax = m_afTime.get(m_afTime.size() - 1);
         }
     }
 
@@ -835,7 +837,7 @@ public class NUBSpline3
             // cout << "accelerations..." << endl;
             for (int i = 1; i <= l + 1; i++)
             {
-                int row = 2 * l + 1 + i;
+                //int row = 2 * l + 1 + i;
                 int j = 3 * (i + 1);
                 calcDDotBlendFunctionsAt(t.get(j), N);
                 for (j = 0; j <= n; j++)

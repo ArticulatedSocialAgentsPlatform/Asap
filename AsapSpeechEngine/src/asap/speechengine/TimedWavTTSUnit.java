@@ -126,6 +126,7 @@ public class TimedWavTTSUnit extends TimedTTSUnit
     @Override
     protected void startUnit(double time) throws TimedPlanUnitPlayException
     {
+        super.startUnit(time);
         sendStartProgress(time);
         bmlStartTime = time;
         log.debug("Starting TimedWavTTSUnit {}:{} Time: {}, relative startTime: {}", new Object[] { this.getBMLId(), this.getId(), time,

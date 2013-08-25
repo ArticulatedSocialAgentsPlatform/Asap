@@ -51,7 +51,7 @@ public class JComponentPictureEmbodiment implements EmbodimentLoader, PictureEmb
         }
         
         
-        JPanel jPanel = new JPanel();
+        jPanel = new JPanel();
         jPanel.setLayout(new GridLayout(1,1));
         display = new PictureJComponent(jPanel);
         jce.addJComponent(jPanel);

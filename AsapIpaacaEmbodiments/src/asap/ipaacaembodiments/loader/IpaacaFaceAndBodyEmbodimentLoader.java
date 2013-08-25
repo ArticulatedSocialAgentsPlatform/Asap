@@ -13,6 +13,7 @@ import hmi.xml.XMLScanException;
 import hmi.xml.XMLStructureAdapter;
 import hmi.xml.XMLTokenizer;
 
+import java.io.BufferedInputStream;
 import java.io.IOException;
 import java.util.HashMap;
 import java.util.List;
@@ -99,7 +100,12 @@ public class IpaacaFaceAndBodyEmbodimentLoader implements EmbodimentLoader
     private BiMap<String, String> getRenamingMap(String mappingFile) throws IOException
     {
         RenamingXMLMap map = new RenamingXMLMap();
-        map.readXML(new XMLTokenizer(new Resources("").getInputStream(mappingFile)));
+        BufferedInputStream s = new Resources("").getInputStream(mappingFile);
+        if(s==null)
+        {
+            throw new XMLScanException("Cannot find renaming file in IpaacaFaceAndBodyEmbodiment "+mappingFile);
+        }
+        map.readXML(new XMLTokenizer(s));
         return map.getRenamingMap();
     }
 

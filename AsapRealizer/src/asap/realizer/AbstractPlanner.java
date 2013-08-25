@@ -1,8 +1,12 @@
 package asap.realizer;
 
+import java.util.ArrayList;
 import java.util.List;
 
+import saiba.bml.core.Behaviour;
 import asap.realizer.feedback.FeedbackManager;
+import asap.realizer.pegboard.BMLBlockPeg;
+import asap.realizer.pegboard.TimePeg;
 import asap.realizer.planunit.PlanManager;
 import asap.realizer.planunit.TimedPlanUnit;
 import asap.realizer.scheduler.TimePegAndConstraint;
@@ -47,6 +51,22 @@ public abstract class AbstractPlanner<T extends TimedPlanUnit> implements Planne
         fbManager = fbm;
         this.planManager = planManager;
     } 
+    
+    public ArrayList<SyncAndTimePeg> constructSyncAndTimePegs(BMLBlockPeg bbPeg, Behaviour b, T bs)
+    {
+        ArrayList<SyncAndTimePeg> satp = new ArrayList<SyncAndTimePeg>();
+        for (String sync : bs.getAvailableSyncs())
+        {
+            TimePeg p = bs.getTimePeg(sync);
+            if (p == null)
+            {
+                p = new TimePeg(bbPeg);
+                bs.setTimePeg(sync,p);
+            }
+            satp.add(new SyncAndTimePeg(b.getBmlId(), b.id, sync, p));            
+        }
+        return satp;
+    }
     
     @Override
     public void shutdown()

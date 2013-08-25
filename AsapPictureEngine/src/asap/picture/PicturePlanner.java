@@ -83,7 +83,6 @@ public class PicturePlanner extends AbstractPlanner<TimedPictureUnit>
     public List<SyncAndTimePeg> addBehaviour(BMLBlockPeg bbPeg, Behaviour b, List<TimePegAndConstraint> sacs, TimedPictureUnit planElement)
             throws BehaviourPlanningException
     {
-        List<SyncAndTimePeg> satps = new ArrayList<SyncAndTimePeg>();
         TimedPictureUnit tpu;
 
         if (planElement == null)
@@ -113,12 +112,7 @@ public class PicturePlanner extends AbstractPlanner<TimedPictureUnit>
 
         planManager.addPlanUnit(tpu);
 
-        for (KeyPosition kp : tpu.getPegs().keySet())
-        {
-            TimePeg p = tpu.getPegs().get(kp);
-            satps.add(new SyncAndTimePeg(b.getBmlId(), b.id, kp.id, p));
-        }
-        return satps;
+        return constructSyncAndTimePegs(bbPeg,b,tpu);
     }
 
     @Override
