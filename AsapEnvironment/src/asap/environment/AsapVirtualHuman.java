@@ -47,6 +47,7 @@ import asap.environment.impl.InterruptEngineLoader;
 import asap.environment.impl.ParameterValueChangeEngineLoader;
 import asap.environment.impl.WaitEngineLoader;
 import asap.realizer.Engine;
+import asap.realizer.anticipator.Anticipator;
 import asap.realizer.pegboard.PegBoard;
 import asap.realizerembodiments.AsapRealizerEmbodiment;
 import asap.realizerembodiments.EngineLoader;
@@ -376,5 +377,10 @@ public class AsapVirtualHuman
     public RealizerPort getRealizerPort()
     {
         return are.getRealizerPort();
+    }
+    
+    public void addAnticipator(String id, Anticipator ap)
+    {
+        are.getBmlScheduler().addAnticipator(id, ap);
     }
 }
