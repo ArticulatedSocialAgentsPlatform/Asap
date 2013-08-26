@@ -29,9 +29,9 @@ public class PegBoardVisualizer extends JPanel
 {
     private static final long serialVersionUID = 1L;
     private PegBoard pegBoard;
-    private final int BEHAVIOR_HEIGHT = 10;
-    private final int ROOM_BETWEEN_BMLBLOCKS = 10;
-    private final int ROOM_BETWEEN_BEHAVIORS = 2;
+    private static final int BEHAVIOR_HEIGHT = 10;
+    private static final int ROOM_BETWEEN_BMLBLOCKS = 10;
+    private static final int ROOM_BETWEEN_BEHAVIORS = 2;
     
     @Setter
     private double scale = 10;// 10 pixels/sec

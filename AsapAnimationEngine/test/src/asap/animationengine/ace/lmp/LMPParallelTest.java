@@ -33,7 +33,7 @@ public class LMPParallelTest
     private BMLBlockManager bbm = new BMLBlockManager();
     private FeedbackManager fbm = new FeedbackManagerImpl(bbm, "char1");
     private PegBoard pegBoard = new PegBoard();
-    private final double TIME_PRECISION = 0.001;
+    private static final double TIME_PRECISION = 0.001;
 
     private StubLMP createStub(String bmlId, String id, double prepDur, double retrDur, double strokeDur)
     {

@@ -17,8 +17,7 @@ public class GuidingStroke
     private float[] endDir = Vec3f.getVec3f(); // optional
     
     @Getter
-    private double vGain; // velocity gain factor
-    private double stress; // stress/accentuation
+    private double vGain; // velocity gain factor    
     
     @Getter @Setter
     private double eDt; // anticipated duration
@@ -31,17 +30,15 @@ public class GuidingStroke
     {
         phaseId = GStrokePhaseID.STP_PREP;
         vGain = 1;
-        stress = 0.5;
         eDt = 0;
     }
 
     public GuidingStroke(GStrokePhaseID phaseId, float[] ep, float ed[])
     {
-        endPos = ep;
-        endDir = ed;
+        Vec3f.set(endPos,ep);
+        Vec3f.set(endDir, ed);
         this.phaseId = phaseId;
-        vGain = 1;
-        stress = 0.5;
+        vGain = 1;        
         eDt = 0;
 
     }
