@@ -13,6 +13,8 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
+import lombok.Setter;
+
 import com.google.common.base.Joiner;
 import com.google.common.collect.ImmutableSet;
 
@@ -33,7 +35,57 @@ public class BMLABMLBehaviorAttributes implements BMLBehaviorAttributeExtension
     private Set<String> chunkBeforeList = new HashSet<String>();
     private List<String> interruptList = new ArrayList<String>();
     private List<String> onStartList = new ArrayList<String>();
+
+    @Setter
     private boolean prePlan;
+
+    public void addToChunkAfter(String... bmlIds)
+    {
+        for (String bmlId : bmlIds)
+        {
+            chunkAfterList.add(bmlId);
+        }
+    }
+
+    public void addToAppendAfter(String... bmlIds)
+    {
+        for (String bmlId : bmlIds)
+        {
+            appendAfterList.add(bmlId);
+        }
+    }
+
+    public void addToPrependBefore(String... bmlIds)
+    {
+        for (String bmlId : bmlIds)
+        {
+            prependBeforeList.add(bmlId);
+        }
+    }
+
+    public void addToChunkBefore(String... bmlIds)
+    {
+        for (String bmlId : bmlIds)
+        {
+            prependBeforeList.add(bmlId);
+        }
+    }
+
+    public void addToInterrupt(String... bmlIds)
+    {
+        for (String bmlId : bmlIds)
+        {
+            interruptList.add(bmlId);
+        }
+    }
+
+    public void addToOnStart(String... bmlIds)
+    {
+        for (String bmlId : bmlIds)
+        {
+            onStartList.add(bmlId);
+        }
+    }
 
     /**
      * @return an unmodifiable view of the onStartList, that is the list of bml blocks that this
@@ -144,13 +196,19 @@ public class BMLABMLBehaviorAttributes implements BMLBehaviorAttributeExtension
     @Override
     public StringBuilder appendAttributeString(StringBuilder buf, XMLFormatting fmt)
     {
-        XMLStructureAdapter.appendNamespacedAttribute(buf, fmt, "http://www.asap-project.org/bmla", "chunkBefore",Joiner.on(",").join(chunkBeforeList));
-        XMLStructureAdapter.appendNamespacedAttribute(buf, fmt, "http://www.asap-project.org/bmla", "chunkAfter",Joiner.on(",").join(chunkAfterList));
-        XMLStructureAdapter.appendNamespacedAttribute(buf, fmt, "http://www.asap-project.org/bmla", "appendAfter",Joiner.on(",").join(appendAfterList));
-        XMLStructureAdapter.appendNamespacedAttribute(buf, fmt, "http://www.asap-project.org/bmla", "prependBefore",Joiner.on(",").join(prependBeforeList));
-        XMLStructureAdapter.appendNamespacedAttribute(buf, fmt, "http://www.asap-project.org/bmla", "interrupt",Joiner.on(",").join(interruptList));
-        XMLStructureAdapter.appendNamespacedAttribute(buf, fmt, "http://www.asap-project.org/bmla", "onStart",Joiner.on(",").join(onStartList));
-        XMLStructureAdapter.appendNamespacedAttribute(buf, fmt, "http://www.asap-project.org/bmla", "preplan",""+isPrePlanned());
+        XMLStructureAdapter.appendNamespacedAttribute(buf, fmt, "http://www.asap-project.org/bmla", "chunkBefore",
+                Joiner.on(",").join(chunkBeforeList));
+        XMLStructureAdapter.appendNamespacedAttribute(buf, fmt, "http://www.asap-project.org/bmla", "chunkAfter",
+                Joiner.on(",").join(chunkAfterList));
+        XMLStructureAdapter.appendNamespacedAttribute(buf, fmt, "http://www.asap-project.org/bmla", "appendAfter",
+                Joiner.on(",").join(appendAfterList));
+        XMLStructureAdapter.appendNamespacedAttribute(buf, fmt, "http://www.asap-project.org/bmla", "prependBefore",
+                Joiner.on(",").join(prependBeforeList));
+        XMLStructureAdapter.appendNamespacedAttribute(buf, fmt, "http://www.asap-project.org/bmla", "interrupt",
+                Joiner.on(",").join(interruptList));
+        XMLStructureAdapter.appendNamespacedAttribute(buf, fmt, "http://www.asap-project.org/bmla", "onStart",
+                Joiner.on(",").join(onStartList));
+        XMLStructureAdapter.appendNamespacedAttribute(buf, fmt, "http://www.asap-project.org/bmla", "preplan", "" + isPrePlanned());
         return buf;
     }
 }

@@ -1,9 +1,8 @@
 package asap.realizer.anticipator;
 
-import asap.realizer.pegboard.TimePeg;
 import hmi.util.CircularBuffer;
+import hmi.util.Clock;
 import hmi.util.PhysicsSync;
-import hmi.util.SystemClock;
 
 import java.awt.event.KeyEvent;
 import java.awt.event.KeyListener;
@@ -16,6 +15,8 @@ import java.util.Observer;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import asap.realizer.pegboard.TimePeg;
+
 /**
  * Anticipates the tempo of spacebar presses and aligns a list of user provided synchronization points to 
  * this anticipated tempo.
@@ -26,7 +27,7 @@ public class SpaceBarTempoAnticipator extends Anticipator implements KeyListener
 {
     private List<TimePeg> orderedSynchs = Collections.synchronizedList(new ArrayList<TimePeg>());    
 
-    private SystemClock physicsClock;
+    private Clock physicsClock;
     private boolean pressed = false;
     private SBAObservable observable;    
     private static final int PREDICTION_SIZE = 3;
@@ -56,7 +57,7 @@ public class SpaceBarTempoAnticipator extends Anticipator implements KeyListener
         return Collections.unmodifiableList(orderedSynchs);
     }
     
-    public void setPhysicsClock(SystemClock phClock)
+    public void setPhysicsClock(Clock phClock)
     {
         physicsClock = phClock;        
     }

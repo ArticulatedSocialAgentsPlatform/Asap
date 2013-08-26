@@ -21,13 +21,13 @@ package asap.realizer.anticipator;
 
 
 import java.util.Collection;
-import java.util.Collections;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 
+import net.jcip.annotations.ThreadSafe;
 import asap.realizer.pegboard.TimePeg;
 
-import net.jcip.annotations.ThreadSafe;
+import com.google.common.collect.ImmutableList;
 
 /**
  * An Anticipator manages a set of TimePegs that can be used to synchronize behavior to.
@@ -42,24 +42,24 @@ public class Anticipator
     private Map<String,TimePeg> pegs;
     
     /**
-     * Get an unmodifiable view of the time pegs handled by this anticipator  
+     * Get an ImmutableList copy of the time pegs handled by this anticipator  
      */
-    public Collection<TimePeg> getTimePegs()
+    public synchronized Collection<TimePeg> getTimePegs()
     {
-        return Collections.unmodifiableCollection(pegs.values());
+        return ImmutableList.copyOf(pegs.values());
     }
     
-    public TimePeg getSynchronisationPoint(String syncRef)
+    public synchronized TimePeg getSynchronisationPoint(String syncRef)
     {
         return pegs.get(syncRef);
     }
     
-    public void addSynchronisationPoint(String syncRef, TimePeg sp)
+    public synchronized void addSynchronisationPoint(String syncRef, TimePeg sp)
     {
         pegs.put(syncRef, sp);
     }
     
-    public void setSynchronisationPoint(String syncRef, double time)
+    public synchronized void setSynchronisationPoint(String syncRef, double time)
     {
         TimePeg sp = pegs.get(syncRef);
         sp.setGlobalValue(time);
