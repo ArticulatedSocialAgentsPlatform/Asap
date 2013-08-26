@@ -17,7 +17,6 @@ import asap.animationengine.ace.CurvedGStroke;
 import asap.animationengine.ace.GuidingSequence;
 import asap.animationengine.ace.GuidingStroke;
 import asap.animationengine.ace.LinearGStroke;
-import asap.animationengine.ace.TPConstraint;
 import asap.animationengine.procanimation.IKBody;
 import asap.math.splines.NUSSpline3;
 import asap.math.splines.SparseVelocityDef;
@@ -130,7 +129,7 @@ public class LMPWristPos extends LMPPos
         if (gSeq != null && !gSeq.isEmpty())
         {
             gSeq.setStartPos(getGlobalWristPosition());
-            gSeq.setST(new TPConstraint(time));
+            gSeq.setStartTime(time);
             if (scope.equals("left_arm"))
             {
                 startSwivel = ikBodyCurrent.getSwivelLeftArm();
@@ -215,7 +214,7 @@ public class LMPWristPos extends LMPPos
 
             // set start conds
             pv.add(_gSeq.getStartPos());
-            tv.add(_gSeq.getStartTPC().getTime());
+            tv.add(_gSeq.getStartTime());
             vv.add(new SparseVelocityDef(0, Vec3f.getVec3f(0, 0, 0))); // v
 
             // MgcVector3 vStart = _gSeq->getStartDirOfStroke(0);
@@ -225,7 +224,7 @@ public class LMPWristPos extends LMPPos
             // cout << "completing curvilinear strokes..." << endl;
             
             //double sT = getStartTime();
-            double sT = _gSeq.getStartTPC().getTime();
+            double sT = _gSeq.getStartTime();
             double prepDur = getStrokeStartTime() - getStartTime();
             _gSeq.getStroke(0).setEDt(prepDur);
 
@@ -245,7 +244,7 @@ public class LMPWristPos extends LMPPos
             float[] p, v;
 
             //double sT = getStartTime();
-            sT = _gSeq.getStartTPC().getTime();
+            sT = _gSeq.getStartTime();
 
             // double prepDur = getPreparationDuration();
 
