@@ -6,6 +6,7 @@ import hmi.math.Vec3f;
 import java.util.ArrayList;
 import java.util.List;
 
+import lombok.Getter;
 import lombok.Setter;
 import lombok.extern.slf4j.Slf4j;
 
@@ -20,14 +21,17 @@ public class GuidingSequence
     private List<GuidingStroke> strokes = new ArrayList<>();
     private float sPos[] = Vec3f.getVec3f();
 
-    @Setter
-    private TPConstraint sT = new TPConstraint();
-
+//    @Setter
+//    private TPConstraint sT = new TPConstraint();
+    
+    @Getter @Setter
+    private double startTime;
+    
     public void clear()
     {
         strokes.clear();
         Vec3f.setZero(sPos);
-        sT.setTime(0);
+        startTime = 0;
     }
     
     public int size()
@@ -38,12 +42,7 @@ public class GuidingSequence
     public void setStartPos(float[] p)
     {
         Vec3f.set(sPos, p);
-    }
-    
-    public TPConstraint getStartTPC()
-    {
-        return sT;
-    }
+    }    
     
     /**
      * Copies startPos in p

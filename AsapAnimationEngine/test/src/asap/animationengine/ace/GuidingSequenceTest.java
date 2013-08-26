@@ -21,7 +21,7 @@ public class GuidingSequenceTest
     @Before
     public void before()
     {
-        gs.setST(new TPConstraint(0.1, 1));
+        gs.setStartTime(0.1);
         gs.addGuidingStroke(new LinearGStroke(GStrokePhaseID.STP_PREP, Vec3f.getZero()));
         gs.addGuidingStroke(new LinearGStroke(GStrokePhaseID.STP_STROKE, Vec3f.getVec3f(1, 2, 3)));
         gs.addGuidingStroke(new LinearGStroke(GStrokePhaseID.STP_STROKE, Vec3f.getVec3f(2, 3, 4)));

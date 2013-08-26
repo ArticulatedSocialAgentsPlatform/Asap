@@ -23,7 +23,6 @@ import asap.animationengine.ace.LinearGStroke;
 import asap.animationengine.ace.OrientConstraint;
 import asap.animationengine.ace.PoConstraint;
 import asap.animationengine.ace.PostureConstraint;
-import asap.animationengine.ace.TPConstraint;
 import asap.animationengine.ace.lmp.LMP;
 import asap.animationengine.ace.lmp.LMPHandMove;
 import asap.animationengine.ace.lmp.LMPParallel;
@@ -793,9 +792,7 @@ public final class MURMLMUBuilder
             String id, PegBoard pb, AnimationPlayer aniPlayer)
     {
         GuidingSequence trajectory = new GuidingSequence();
-        TPConstraint sT = new TPConstraint();
-        float[] ePos = Vec3f.getVec3f();
-        trajectory.setST(sT);
+        float[] ePos = Vec3f.getVec3f();                
 
         TimedAnimationUnit tmu = null;
 
@@ -875,9 +872,7 @@ public final class MURMLMUBuilder
             return null;
         }
         GuidingSequence trajectory = new GuidingSequence();
-        TPConstraint sT = new TPConstraint();
         float[] ePos = Vec3f.getVec3f();
-        trajectory.setST(sT);
         float swivel = 0;
         LMP tmu = null;
 
@@ -1177,7 +1172,7 @@ public final class MURMLMUBuilder
         }
         if (lmp != null)
         {
-            TimedAnimationUnit tmu = new MotorControlProgram(bbm, bmlBlockPeg, bmlId, id, pb, localPegBoard, aniPlayer, lmp);
+            MotorControlProgram tmu = new MotorControlProgram(bbm, bmlBlockPeg, bmlId, id, pb, localPegBoard, aniPlayer, lmp);
             tmu.setPriority(murmlDescription.getPriority());
             return tmu;
         }

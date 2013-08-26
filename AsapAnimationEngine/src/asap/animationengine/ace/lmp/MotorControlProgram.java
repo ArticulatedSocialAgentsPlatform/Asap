@@ -5,6 +5,7 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
+import lombok.Getter;
 import lombok.extern.slf4j.Slf4j;
 import saiba.bml.core.Behaviour;
 import saiba.bml.core.GestureBehaviour;
@@ -35,6 +36,8 @@ public class MotorControlProgram extends TimedAbstractPlanUnit implements TimedA
 {
     private LMP lmp;
     private final PegBoard globalPegBoard;
+    
+    @Getter
     private final PegBoard localPegBoard;
     private Set<String> syncsHandled = new HashSet<String>();
     private final AnimationPlayer aniPlayer;
