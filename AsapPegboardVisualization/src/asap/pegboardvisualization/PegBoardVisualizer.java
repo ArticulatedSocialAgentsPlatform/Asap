@@ -16,6 +16,7 @@ import javax.swing.JPanel;
 import javax.swing.ToolTipManager;
 
 import lombok.Data;
+import lombok.Setter;
 import asap.realizer.pegboard.BMLBlockPeg;
 import asap.realizer.pegboard.PegBoard;
 
@@ -27,11 +28,13 @@ import asap.realizer.pegboard.PegBoard;
 public class PegBoardVisualizer extends JPanel
 {
     private static final long serialVersionUID = 1L;
-    private final PegBoard pegBoard;
+    private PegBoard pegBoard;
     private final int BEHAVIOR_HEIGHT = 10;
     private final int ROOM_BETWEEN_BMLBLOCKS = 10;
     private final int ROOM_BETWEEN_BEHAVIORS = 2;
-    private double SCALE = 10;// 10 pixels/sec
+    
+    @Setter
+    private double scale = 10;// 10 pixels/sec
 
     @Data
     private static final class TooltipInRectangle
@@ -42,6 +45,12 @@ public class PegBoardVisualizer extends JPanel
 
     private List<TooltipInRectangle> toolTips = new ArrayList<TooltipInRectangle>();
 
+    public void setPegBoard(PegBoard pb)
+    {
+        this.pegBoard = pb;
+        repaint();
+    }
+    
     public PegBoardVisualizer(PegBoard pb)
     {
         this.pegBoard = pb;
@@ -76,7 +85,7 @@ public class PegBoardVisualizer extends JPanel
 
     private int drawBMLBlock(Graphics2D g2, String bmlId, BMLBlockPeg blockPeg, int y, double startTime)
     {
-        g2.drawString(bmlId, (int)((blockPeg.getValue()-startTime)*SCALE), y+20);
+        g2.drawString(bmlId, (int)((blockPeg.getValue()-startTime)*scale), y+20);
         System.out.println("Drawing bml block "+bmlId);
         y += 25;
         
@@ -100,7 +109,7 @@ public class PegBoardVisualizer extends JPanel
     {
         double startTime = start.time - startOffset;
         double endTime = end.time - startOffset;
-        Rectangle behaviorPhaseVis = new Rectangle((int) (startTime * SCALE), y, (int) ((endTime - startTime) * SCALE), BEHAVIOR_HEIGHT);
+        Rectangle behaviorPhaseVis = new Rectangle((int) (startTime * scale), y, (int) ((endTime - startTime) * scale), BEHAVIOR_HEIGHT);
         toolTips.add(new TooltipInRectangle(behaviorPhaseVis, behaviourId + ":" + start.sync + "(" + start.time + ")" + "-" + end.sync
                 + "(" + end.time + ")"));
         g2.draw(behaviorPhaseVis);
@@ -157,8 +166,10 @@ public class PegBoardVisualizer extends JPanel
         toolTips.clear();
         int y = 0;
         double startTime = getStartTime();
+        System.out.println("paintComponent");
         for (Map.Entry<String, BMLBlockPeg> entry : pegBoard.getBMLBlockPegs().entrySet())
         {
+            System.out.println("drawing bml block "+entry.getKey());
             if (entry.getValue() != BMLBlockPeg.GLOBALPEG)
             {
                 y = drawBMLBlock(g2, entry.getKey(), entry.getValue(), y, startTime);

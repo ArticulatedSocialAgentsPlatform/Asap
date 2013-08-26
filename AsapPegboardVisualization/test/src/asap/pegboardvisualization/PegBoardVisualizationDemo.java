@@ -38,5 +38,9 @@ public class PegBoardVisualizationDemo
         jf.add(new PegBoardVisualizer(pb));
         jf.setSize(1024,768);
         jf.setVisible(true);
+        
+        pb.addBMLBlockPeg(new BMLBlockPeg("bml3",30));
+        pb.addTimePeg("bml3","beh1", "start", TimePegUtil.createTimePeg(31));        
+        pb.addTimePeg("bml3","beh1", "end", TimePegUtil.createTimePeg(100));        
     }
 }

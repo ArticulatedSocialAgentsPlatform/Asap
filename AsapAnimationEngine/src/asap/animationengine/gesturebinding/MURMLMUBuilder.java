@@ -1177,7 +1177,7 @@ public final class MURMLMUBuilder
         }
         if (lmp != null)
         {
-            TimedAnimationUnit tmu = new MotorControlProgram(bbm, bmlBlockPeg, bmlId, id, pb, localPegBoard, aniPlayer, lmp);
+            MotorControlProgram tmu = new MotorControlProgram(bbm, bmlBlockPeg, bmlId, id, pb, localPegBoard, aniPlayer, lmp);
             tmu.setPriority(murmlDescription.getPriority());
             return tmu;
         }
