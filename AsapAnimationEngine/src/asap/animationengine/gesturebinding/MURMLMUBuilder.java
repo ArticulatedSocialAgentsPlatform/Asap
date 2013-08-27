@@ -813,13 +813,6 @@ public final class MURMLMUBuilder
                 // //cout << "creating lmp from guiding sequence:" << endl; trajectory.writeTo(cout);
                 // //lmp->overshoot(mcLoc->getEndTPC().time);
 
-                if (tmu == null)
-                {
-                    return wristMove;
-                }
-                // TODO: solve with timepegs
-                // else lmp->activateSuccessorAt( wristMove, trajectory.getStartTPC() );
-                tmu = wristMove;
                 return wristMove;
                 //
                 // // optionally, add special lmp for swivel movement
@@ -845,21 +838,6 @@ public final class MURMLMUBuilder
                 // trajectory.setStartTPC( TPConstraint( scLoc->getEndTPC().time,
                 // TPConstraint::Rigorous ) ); // timing is mandatory
             }
-
-            // TODO: implement retraction, retraction modes
-            // // --- shall we retract at all?
-            // if ( retrMode == RTRCT_FULL || retrMode == RTRCT_INTERMEDIATE )
-            // {
-            // // -- complete ongoing guiding sequence by appending a retracting stroke
-            // // (estimate retraction duration by applying Fitts' law)
-            // ePos = restPos;
-            // MgcReal duration = LMP_WristPos::getPosDurationFromAmplitude( (ePos-sPos).Length()); // * 0.9;
-            // eT = trajectory.getEndTime() + duration;
-            // eT.mode = TPConstraint::Soft; // end time of retraction not of great importance
-            // trajectory.addGuidingStroke( new LinearGStroke (GuidingStroke::STP_RETRACT, eT,ePos) );
-            // }
-
-            // createPosLMP(scope, trajectory, mcp, tmu, bbm, bmlBlockPeg, bmlId, id, pb, aniPlayer);
         }
         return null;
     }

@@ -85,7 +85,7 @@ public class NaoSayNU implements NaoUnit
      */
     public void play(double t) throws NUPlayException
     {
-        nao.Say(text);
+        nao.say(text);
     }
 
     public void cleanup()

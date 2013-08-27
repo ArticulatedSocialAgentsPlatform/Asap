@@ -34,6 +34,7 @@ import asap.realizer.pegboard.BMLBlockPeg;
 import asap.realizer.pegboard.OffsetPeg;
 import asap.realizer.pegboard.TimePeg;
 import asap.realizer.planunit.KeyPosition;
+import asap.realizer.planunit.ParameterException;
 import asap.realizer.planunit.PlanManager;
 import asap.realizer.scheduler.LinearStretchResolver;
 import asap.realizer.scheduler.TimePegAndConstraint;
@@ -84,14 +85,13 @@ public class EmitterPlanner extends AbstractPlanner<TimedEmitterUnit>
                     em.setRealizerPort(realizerPort);
                     eu.setEmitter(em);
                 }
-                catch (Exception e)
+                catch (IllegalAccessException | InstantiationException e)
                 {
                     throw new BehaviourPlanningException(b, "Behavior " + b.id
                             + " could not be constructed because the emitter could not be created, behavior omitted.");
                 }
                 try
                 {
-
                     // set parameters
                     for (String name : emitterInfo.getRequiredParameters())
                     {
@@ -105,11 +105,11 @@ public class EmitterPlanner extends AbstractPlanner<TimedEmitterUnit>
                         }
                     }
                 }
-                catch (Exception e)
+                catch (ParameterException e)
                 {
                     throw new BehaviourPlanningException(b, "Behavior " + b.id
                             + " could not be constructed because the parameters could not be set, behavior omitted.");
-                }
+                }                
                 teu = new TimedEmitterUnit(fbManager, bbPeg, b.getBmlId(), b.id, eu);
                 if (!teu.getEmitterUnit().hasValidParameters())
                 {
@@ -152,7 +152,7 @@ public class EmitterPlanner extends AbstractPlanner<TimedEmitterUnit>
                 em.setRealizerPort(realizerPort);
                 eu.setEmitter(em);
             }
-            catch (Exception e)
+            catch (IllegalAccessException | InstantiationException e)
             {
                 throw new BehaviourPlanningException(b, "Behavior " + b.id
                         + " could not be constructed because the emitter could not be created, behavior omitted.");
@@ -173,12 +173,11 @@ public class EmitterPlanner extends AbstractPlanner<TimedEmitterUnit>
                     }
                 }
             }
-            catch (Exception e)
+            catch (ParameterException e)
             {
-                e.printStackTrace();
                 throw new BehaviourPlanningException(b, "Behavior " + b.id
                         + " could not be constructed because the parameters could not be set, behavior omitted.");
-            }
+            }            
             teu = new TimedEmitterUnit(fbManager, bbPeg, b.getBmlId(), b.id, eu);
             if (!teu.getEmitterUnit().hasValidParameters())
             {

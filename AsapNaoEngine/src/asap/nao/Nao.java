@@ -30,7 +30,7 @@ public class Nao
      * The proof of concept action. It should only print a line, so we know the system is working
      */
 
-    public void DoeIets()
+    public void doeIets()
     {
         System.out.println("Het werkt!");
     }
@@ -40,7 +40,7 @@ public class Nao
      * @param text the text that should be said
      */
 
-    public void Say(String text)
+    public void say(String text)
     {
         naoServer.sendMessage(" DO_SAY:" + text + "\n");
     }

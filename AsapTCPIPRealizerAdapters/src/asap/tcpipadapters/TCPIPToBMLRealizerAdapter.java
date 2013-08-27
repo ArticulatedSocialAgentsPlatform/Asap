@@ -14,6 +14,7 @@ import java.net.SocketException;
 import java.net.SocketTimeoutException;
 import java.nio.channels.IllegalBlockingModeException;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 import java.util.concurrent.ConcurrentLinkedQueue;
 
@@ -22,10 +23,10 @@ import lombok.extern.slf4j.Slf4j;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import com.google.common.base.Charsets;
-
 import asap.realizerport.BMLFeedbackListener;
 import asap.realizerport.RealizerPort;
+
+import com.google.common.base.Charsets;
 
 /**
  * Takes a {@link asap.realizerport.bml.bridge.RealizerPort RealizerBridge}, and exposes access to it through a
@@ -544,17 +545,17 @@ public final class TCPIPToBMLRealizerAdapter implements Runnable, BMLFeedbackLis
         }
         catch (IllegalBlockingModeException e)
         {
-            bmlReader.dropClient("IllegalBlockingModeException; "+e.getMessage()+"\n"+ e.getStackTrace());
+            bmlReader.dropClient("IllegalBlockingModeException; "+e.getMessage()+"\n"+ Arrays.toString(e.getStackTrace()));
             return;
         }
         catch (IllegalArgumentException e)
         {
-            bmlReader.dropClient("IllegalArgumentException: "+e.getMessage()+"\n"+ e.getStackTrace());
+            bmlReader.dropClient("IllegalArgumentException: "+e.getMessage()+"\n"+ Arrays.toString(e.getStackTrace()));
             return;
         }
         catch (IOException e)
         {
-            bmlReader.dropClient("IOException: "+e.getMessage()+"\n"+ e.getStackTrace());
+            bmlReader.dropClient("IOException: "+e.getMessage()+"\n"+ Arrays.toString(e.getStackTrace()));
             return;
         }
         logger.debug("Feedback sender connected");
