@@ -19,11 +19,13 @@ import java.util.List;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
+import org.powermock.api.mockito.PowerMockito;
 import org.powermock.core.classloader.annotations.PrepareForTest;
 import org.powermock.modules.junit4.PowerMockRunner;
 
 import saiba.bml.core.Behaviour;
 import saiba.bml.core.FaceLexemeBehaviour;
+import saiba.bml.feedback.BMLWarningFeedback;
 import saiba.bml.parser.Constraint;
 import asap.bml.ext.murml.MURMLFaceBehaviour;
 import asap.faceengine.facebinding.FaceBinding;
@@ -31,14 +33,20 @@ import asap.faceengine.faceunit.FaceUnit;
 import asap.faceengine.faceunit.KeyframeMorphFU;
 import asap.faceengine.faceunit.TimedFaceUnit;
 import asap.realizer.BehaviourPlanningException;
+import asap.realizer.DefaultPlayer;
+import asap.realizer.Player;
 import asap.realizer.SyncAndTimePeg;
 import asap.realizer.feedback.FeedbackManager;
 import asap.realizer.feedback.FeedbackManagerImpl;
 import asap.realizer.pegboard.BMLBlockPeg;
 import asap.realizer.pegboard.TimePeg;
 import asap.realizer.planunit.PlanManager;
+import asap.realizer.planunit.SingleThreadedPlanPlayer;
+import asap.realizer.planunit.TimedPlanUnitPlayException;
+import asap.realizer.planunit.TimedPlanUnitState;
 import asap.realizer.scheduler.BMLBlockManager;
 import asap.realizer.scheduler.TimePegAndConstraint;
+import asap.realizerport.util.ListBMLFeedbackListener;
 import asap.realizertestutil.PlannerTests;
 import asap.realizertestutil.util.TimePegUtil;
 
@@ -48,7 +56,7 @@ import asap.realizertestutil.util.TimePegUtil;
  * 
  */
 @RunWith(PowerMockRunner.class)
-@PrepareForTest({ BMLBlockManager.class })
+@PrepareForTest({ BMLBlockManager.class, TimedFaceUnit.class })
 public class FacePlannerTest
 {
     private PlannerTests<TimedFaceUnit> plannerTests;
@@ -62,13 +70,17 @@ public class FacePlannerTest
     private FaceBinding mockFaceBinding = mock(FaceBinding.class);
     private static final float PLAN_PRECISION = 0.00001f;
     private FaceUnit stubFaceUnit = new StubFaceUnit();
+    private FaceLexemeBehaviour mockFaceBehaviour = mock(FaceLexemeBehaviour.class);
+    private List<BMLWarningFeedback> beList = new ArrayList<BMLWarningFeedback>();
+    private Player facePlayer;
 
     @Before
     public void setup()
     {
+        facePlayer = new DefaultPlayer(new SingleThreadedPlanPlayer<TimedFaceUnit>(fbManager, planManager));
         facePlanner = new FacePlanner(fbManager, mockFaceController, null, null, mockFaceBinding, planManager);
         plannerTests = new PlannerTests<TimedFaceUnit>(facePlanner, bbPeg);
-
+        fbManager.addFeedbackListener(new ListBMLFeedbackListener.Builder().warningList(beList).build());
         TimedFaceUnit tmu = new TimedFaceUnit(fbManager, bbPeg, BMLID, "nod1", stubFaceUnit);
         final List<TimedFaceUnit> tmus = new ArrayList<TimedFaceUnit>();
         tmus.add(tmu);
@@ -99,6 +111,28 @@ public class FacePlannerTest
     public void testResolveStartOffset() throws IOException, BehaviourPlanningException
     {
         plannerTests.testResolveStartOffset(createFaceBehaviour());
+    }
+
+    @Test
+    public void testException() throws BehaviourPlanningException, TimedPlanUnitPlayException
+    {
+        List<TimePegAndConstraint> sacs = new ArrayList<TimePegAndConstraint>();
+        TimePegAndConstraint tp = new TimePegAndConstraint("start", TimePegUtil.createTimePeg(0), new Constraint(), 0, false);
+        sacs.add(tp);
+        TimedFaceUnit mockTimedFaceUnit = PowerMockito.mock(TimedFaceUnit.class);
+        when(mockTimedFaceUnit.getStartTime()).thenReturn(0d);
+        when(mockTimedFaceUnit.getEndTime()).thenReturn(TimePeg.VALUE_UNKNOWN);
+        when(mockTimedFaceUnit.isLurking()).thenReturn(false);
+        when(mockTimedFaceUnit.isPlaying()).thenReturn(true);
+        when(mockTimedFaceUnit.getState()).thenReturn(TimedPlanUnitState.IN_EXEC);
+        when(mockTimedFaceUnit.getFaceUnit()).thenReturn(stubFaceUnit);
+        when(mockTimedFaceUnit.getId()).thenReturn("fu1");
+        when(mockTimedFaceUnit.getBMLId()).thenReturn("bml1");
+        PowerMockito.doThrow(new TimedPlanUnitPlayException("failure!", mockTimedFaceUnit)).when(mockTimedFaceUnit).play(0);
+
+        facePlanner.addBehaviour(BMLBlockPeg.GLOBALPEG, mockFaceBehaviour, sacs, mockTimedFaceUnit);
+        facePlayer.play(0);
+        assertEquals(1, beList.size());
     }
 
     @Test
@@ -140,7 +174,7 @@ public class FacePlannerTest
         assertEquals(TimePeg.VALUE_UNKNOWN, syncAndPegs.get(2).peg.getGlobalValue(), PLAN_PRECISION);
         assertEquals(TimePeg.VALUE_UNKNOWN, syncAndPegs.get(3).peg.getGlobalValue(), PLAN_PRECISION);
     }
-    
+
     @Test
     public void testAddWithStartConstraint() throws IOException, BehaviourPlanningException
     {
