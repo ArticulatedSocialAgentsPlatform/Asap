@@ -8,8 +8,8 @@ import java.util.ArrayList;
 import java.util.List;
 
 import asap.math.LinearSystem;
+import asap.math.Matrix;
 
-import Jama.Matrix;
 
 import lombok.extern.slf4j.Slf4j;
 

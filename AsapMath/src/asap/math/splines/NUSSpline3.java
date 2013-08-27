@@ -7,8 +7,8 @@ import java.util.ArrayList;
 import java.util.List;
 
 import lombok.extern.slf4j.Slf4j;
-import Jama.Matrix;
 import asap.math.LinearSystem;
+import asap.math.Matrix;
 
 /**
  * S-Spline with B-Spline blending functions
