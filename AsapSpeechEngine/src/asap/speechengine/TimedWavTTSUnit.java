@@ -89,8 +89,7 @@ public class TimedWavTTSUnit extends TimedTTSUnit
         double playTime = time - getStartTime();
         synchronized (this)
         {
-            // logger.debug("PlayTimedWavUnit {}:{})", getBMLId(), getId());
-            // System.out.println("WavSpeechUnit playTime "+playTime);
+            // logger.debug("PlayTimedWavUnit {}:{})", getBMLId(), getId());            
             try
             {
                 wavUnit.play(playTime);

@@ -152,7 +152,7 @@ public class FeedbackManagerImpl implements FeedbackManager
     {
         synchronized (feedbackListeners)
         {
-            String feedbackString = bpf.toXMLString();            
+            String feedbackString = bpf.toXMLString();       
             for (BMLFeedbackListener pl : feedbackListeners)
             {
                 try
@@ -164,7 +164,7 @@ public class FeedbackManagerImpl implements FeedbackManager
                     LOGGER.warn("Broken SchedulingListener: {}", ex);
                 }
             }
-        }
+        }        
     }    
 
     @Override

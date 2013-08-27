@@ -42,6 +42,9 @@ public final class BMLTInfo
             .put(BMLAInterruptBehaviour.xmlTag(), BMLAInterruptBehaviour.class)
             .put(BMLAActivateBehaviour.xmlTag(), BMLAActivateBehaviour.class)
             .put(BMLAParameterValueChangeBehaviour.xmlTag(), BMLAParameterValueChangeBehaviour.class)            
+            .put(SSMLBehaviour.xmlTag(), SSMLBehaviour.class)
+            .put(MSApiBehaviour.xmlTag(), MSApiBehaviour.class)
+            .put(MaryXMLBehaviour.xmlTag(), MaryXMLBehaviour.class)
             .build();
     // /Description levels that can be parsed
     private static final ImmutableMap<String, Class<? extends Behaviour>> DESCRIPTION_EXTENSIONS = 

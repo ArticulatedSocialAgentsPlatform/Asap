@@ -129,7 +129,7 @@ public class BMLASchedulingHandler implements SchedulingHandler
         scheduler.addBMLBlock(bbm);
         bmlBlockPeg.setValue(predictedStart);
 
-        scheduler.planningFinished(bb, predictedStart, scheduler.predictEndTime(bb.id));
+        scheduler.planningFinished(bb, predictedStart, scheduler.predictEndTime(bb.id));        
     }
 
     private void handleComposition(BehaviourBlock bb, BMLScheduler scheduler, BMLABMLBehaviorAttributes bmlaAttr, Set<String> appendAfter,

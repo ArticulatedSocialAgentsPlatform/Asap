@@ -90,7 +90,7 @@ public class SmartBodySchedulingStrategy implements SchedulingStrategy
         {
             scheduleBehaviour(mechanism, bb.id, bmlBlockPeg, scheduler, scheduleTime, scheduledBehaviors, syncMap, b);
         }
-        timeShiftPass(bb, scheduler, scheduledBehaviors, syncMap);
+        timeShiftPass(bb, scheduler, scheduledBehaviors, syncMap);        
     }
 
     /**

@@ -234,9 +234,7 @@ public final class BMLScheduler
         for (Engine e : getEngines())
         {
             e.setBMLBlockState(bbm.getBMLId(), TimedPlanUnitState.PENDING);
-        }
-        //already done earlier
-        //bmlBlocksManager.addBMLBlock(bbm);
+        }        
     }
 
     public Set<String> getBMLBlocks()

@@ -73,7 +73,7 @@ public class BMLACompositionTest
         		"bmla:chunkBefore=\"bml2,bml3\" bmla:prependBefore=\"bml4\" bmla:appendAfter=\"bml6\" bmla:chunkAfter=\"bml7\"/>";
         block.readXML(bmlString);
         String bmlBlock = block.toBMLString();
-        System.out.println(bmlBlock);
+        
         BMLABMLBehaviorAttributes bbmlbExt2 = new BMLABMLBehaviorAttributes();
         BehaviourBlock block2 = new BehaviourBlock(bbmlbExt2);
         block2.readXML(bmlBlock);

@@ -158,10 +158,9 @@ public abstract class TimedTTSUnit extends TimedAbstractSpeechUnit
     {
         if (getBookMark(syncId) != null)
         {
-            setTimePeg(getBookMark(syncId), peg);
+            setTimePeg(getBookMark(syncId), peg);            
         }
-
-        if (BMLGestureSync.isBMLSync(syncId))
+        else if (BMLGestureSync.isBMLSync(syncId))
         {
             if (BMLGestureSync.get(syncId).isAfter(BMLGestureSync.STROKE))
             {

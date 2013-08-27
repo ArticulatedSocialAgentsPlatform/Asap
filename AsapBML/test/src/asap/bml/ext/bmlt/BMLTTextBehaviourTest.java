@@ -55,8 +55,7 @@ public class BMLTTextBehaviourTest extends AbstractBehaviourTest
                 + "id=\"t1\">Hello world.</bmlt:text>";
         BMLTTextBehaviour behIn = new BMLTTextBehaviour("bml1", new XMLTokenizer(str));
         StringBuilder buf = new StringBuilder();
-        behIn.appendXML(buf, new XMLFormatting(), "bmlt", "http://hmi.ewi.utwente.nl/bmlt");
-        System.out.println(buf);
+        behIn.appendXML(buf, new XMLFormatting(), "bmlt", "http://hmi.ewi.utwente.nl/bmlt");        
         
         BMLTTextBehaviour behOut = new BMLTTextBehaviour("bml1", new XMLTokenizer(buf.toString()));
         assertEquals("bml1", behOut.getBmlId());
