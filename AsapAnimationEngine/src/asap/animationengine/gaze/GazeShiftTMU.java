@@ -13,7 +13,7 @@ import asap.realizer.pegboard.PegBoard;
 public class GazeShiftTMU extends TimedAnimationMotionUnit
 {
     private final RestGaze restGaze;
-    private AnimationPlayer aniPlayer;
+    private final AnimationPlayer aniPlayer;
     
     public GazeShiftTMU(BMLBlockPeg bmlBlockPeg, String bmlId, String id, AnimationUnit m, PegBoard pb,
             RestGaze restGaze, AnimationPlayer ap)

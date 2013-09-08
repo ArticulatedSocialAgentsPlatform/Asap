@@ -265,7 +265,7 @@ public abstract class TimedTTSUnit extends TimedAbstractSpeechUnit
             bookmarks.clear();
             bookmarks = ti.getBookmarks();
             visimes.clear();
-            visimes = ti.getVisimes();
+            visimes.addAll(ti.getVisimes());
         }
     }
 
