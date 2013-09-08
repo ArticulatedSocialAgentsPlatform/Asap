@@ -179,14 +179,7 @@ public class DAGUtils
                     pl = longestPaths.get(inc);
                 }
             }
-            if (pl > 0)
-            {
-                longestPaths.put(v, pl + 1);
-            }
-            else
-            {
-                longestPaths.put(v, pl + 1);
-            }
+            longestPaths.put(v, pl + 1);            
         }
         return longestPaths;
     }
