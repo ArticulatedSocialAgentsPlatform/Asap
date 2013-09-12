@@ -40,6 +40,7 @@ public class PointingTMU extends TimedAnimationMotionUnit
 {
     private PointingMU pmu;
     private static Logger logger = LoggerFactory.getLogger(PointingTMU.class.getName());
+    private static final double DEFAULT_STROKE_DURATION = 1;
     
     public PointingTMU(FeedbackManager bfm, BMLBlockPeg bbPeg, String bmlId,String id,PointingMU mu, PegBoard pb)
     {
@@ -99,12 +100,14 @@ public class PointingTMU extends TimedAnimationMotionUnit
                 }
                 TimePeg endPeg = getTimePeg("end");
                 OffsetPeg tpRelax;
-                if(endPeg!=null && getEndTime()!=TimePeg.VALUE_UNKNOWN)
+                
+                if(getEndTime()!=TimePeg.VALUE_UNKNOWN)
                 {
                     //only set relax if end is set, otherwise persistent point
                     tpRelax = new OffsetPeg(endPeg,-relaxDuration);
                     setTimePeg("relax", tpRelax);
                 }
+                
             }
             pmu.setStartPose(readyDuration);
         }

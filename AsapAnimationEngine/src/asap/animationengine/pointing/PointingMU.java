@@ -78,7 +78,7 @@ public class PointingMU implements AnimationUnit
     protected String wristId;
     protected String fingerTipId;
     protected AnalyticalIKSolver solver;
-    protected String hand = "RIGHT";
+    protected String hand = "RIGHT_HAND";
     protected WorldObject woTarget;
     protected double preparationDuration;
     protected AnimationUnit relaxUnit;
@@ -165,6 +165,7 @@ public class PointingMU implements AnimationUnit
         PointingMU pmu = new PointingMU();
         pmu.shoulderId = shoulderId;
         pmu.elbowId = elbowId;
+        pmu.setHand(hand);
         pmu.vjShoulder = p.getVNextPartBySid(shoulderId);
         pmu.vjShoulder = p.getVNextPartBySid(elbowId);
         pmu.vjWrist = p.getVNextPartBySid(wristId);

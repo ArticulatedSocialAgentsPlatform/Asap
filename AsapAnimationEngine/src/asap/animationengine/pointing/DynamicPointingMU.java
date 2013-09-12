@@ -18,6 +18,8 @@
  ******************************************************************************/
 package asap.animationengine.pointing;
 
+import com.google.common.collect.ImmutableSet;
+
 import hmi.animation.AnalyticalIKSolver;
 import hmi.animation.VJoint;
 import hmi.math.Quat4f;
@@ -40,6 +42,8 @@ public class DynamicPointingMU extends PointingMU
     public DynamicPointingMU copy(AnimationPlayer p)
     {
         DynamicPointingMU pmu = new DynamicPointingMU();
+        pmu.player = p;        
+        pmu.setHand(hand);
         pmu.shoulderId = shoulderId; 
         pmu.elbowId = elbowId;
         pmu.vjShoulder = p.getVNextPartBySid(shoulderId);
@@ -47,10 +51,16 @@ public class DynamicPointingMU extends PointingMU
         pmu.vjWrist = p.getVNextPartBySid(wristId);
         pmu.vCurrShoulder = p.getVCurrPartBySid(shoulderId);
         pmu.vCurrElbow = p.getVCurrPartBySid(elbowId);
-        pmu.player = p;
         pmu.woManager = p.getWoManager();        
         pmu.target = target;
         return pmu;
+    }
+    
+    public void setHand(String hand)
+    {
+        super.setHand(hand);
+        vCurrShoulder = player.getVCurrPartBySid(shoulderId);
+        vCurrElbow = player.getVCurrPartBySid(elbowId);       
     }
     
     @Override
