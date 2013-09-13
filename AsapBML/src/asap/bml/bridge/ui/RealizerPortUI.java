@@ -308,7 +308,9 @@ public class RealizerPortUI extends JPanel
         realizerBridge.performBML("<bml xmlns=\"http://www.bml-initiative.org/bml/bml-1.0\" "
                 + "id=\"clear\" composition=\"REPLACE\"></bml>");
         
-        String bmls[] = Iterables.toArray(Splitter.on("</bml>").trimResults().omitEmptyStrings().split(bmlInput.getText()), String.class);
+        String bmlContent = bmlInput.getText();
+        bmlContent = bmlContent.replaceAll("(?s)<!--.*?-->","");
+        String bmls[] = Iterables.toArray(Splitter.on("</bml>").trimResults().omitEmptyStrings().split(bmlContent), String.class);
         for(String bml:bmls)
         {
             realizerBridge.performBML(bml+"</bml>");
