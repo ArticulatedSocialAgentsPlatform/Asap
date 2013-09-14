@@ -5,7 +5,6 @@ import java.util.List;
 
 import saiba.bml.core.Behaviour;
 import asap.realizer.feedback.FeedbackManager;
-import asap.realizer.interrupt.TimedInterruptUnit;
 import asap.realizer.pegboard.BMLBlockPeg;
 import asap.realizer.pegboard.OffsetPeg;
 import asap.realizer.pegboard.TimePeg;

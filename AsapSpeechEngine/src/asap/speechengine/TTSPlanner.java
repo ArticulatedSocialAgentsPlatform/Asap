@@ -254,13 +254,19 @@ public class TTSPlanner extends AbstractPlanner<TimedTTSUnit>
         linkStartAndEnd(b, sacs, bs);
         
         linkBookmarks(bs, sacs, bs.getStartTime(), b);
-
+        if(bs.getStartTime()!=TimePeg.VALUE_UNKNOWN)
+        {
+            resolveUnsetBookmarks(bs);
+            resolveUnsetEndPeg(bs);
+        }
+        
         List<SyncAndTimePeg> satp = constructSyncAndTimePegs(bbPeg, b, bs); 
 
         for (LipSynchProvider ls : lipSynchers)
         {
             ls.addLipSyncMovement(bbPeg, b, bs, bs.visimes);
         }
+        
         planManager.addPlanUnit(bs);
         return satp;
     }
@@ -305,41 +311,67 @@ public class TTSPlanner extends AbstractPlanner<TimedTTSUnit>
         {
             for (TimePegAndConstraint sac : sacs)
             {
-                if (sac.syncId.equals(bm.getName()))
+                linkBookmark(su, startTime, b, bm, sac);
+            }
+        }
+    }
+    
+    private void resolveUnsetEndPeg(TimedTTSUnit su)
+    {
+        if(su.getEndTime()==TimePeg.VALUE_UNKNOWN)
+        {
+            su.setEnd(new OffsetPeg(su.getStartPeg(),su.getPreferedDuration()));
+        }
+    }
+    
+    private void resolveUnsetBookmarks(TimedTTSUnit su)
+    {
+        TimePeg tpStart = su.getStartPeg();
+        for (Bookmark bm : su.getBookmarks())
+        {
+            if(su.getTime(bm.getName())==TimePeg.VALUE_UNKNOWN)
+            {
+                su.setTimePeg(bm, new OffsetPeg(tpStart, bm.getOffset()* 0.001));
+            }
+        }
+    }
+
+    private void linkBookmark(TimedTTSUnit su, double startTime, Behaviour b, Bookmark bm, TimePegAndConstraint sac)
+            throws BehaviourPlanningException
+    {
+        if (sac.syncId.equals(bm.getName()))
+        {
+            if (sac.peg.getGlobalValue() == TimePeg.VALUE_UNKNOWN)
+            {
+                logger.debug("Setting time for bookmark {} : {}", bm.getName(), (-sac.offset + startTime + bm.getOffset() * 0.001));
+                sac.peg.setGlobalValue(sac.offset + startTime + bm.getOffset() * 0.001);
+                if (sac.offset == 0)
                 {
-                    if (sac.peg.getGlobalValue() == TimePeg.VALUE_UNKNOWN)
+                    su.setTimePeg(bm, sac.peg);
+                }
+                else
+                {
+                    su.setTimePeg(bm, new OffsetPeg(sac.peg, -sac.offset));
+                }
+            }
+            else
+            {
+                if (Math.abs((sac.peg.getGlobalValue() - sac.offset) - (startTime + bm.getOffset() * 0.001)) > 0.1)
+                {
+                    throw new BehaviourPlanningException(b, "Can't set bookmark timing for bookmark: " + bm.getName()
+                            + ", functionality not yet supported. Desired time: " + (sac.peg.getGlobalValue() - sac.offset)
+                            + " Speech time: " + (startTime + bm.getOffset() * 0.001f) + ". Behavior omitted.");
+                }
+                else
+                {
+                    if (sac.offset == 0)
                     {
-                        logger.debug("Setting time for bookmark {} : {}", bm.getName(), (-sac.offset + startTime + bm.getOffset() * 0.001));
-                        sac.peg.setGlobalValue(sac.offset + startTime + bm.getOffset() * 0.001);
-                        if (sac.offset == 0)
-                        {
-                            su.setTimePeg(bm, sac.peg);
-                        }
-                        else
-                        {
-                            su.setTimePeg(bm, new OffsetPeg(sac.peg, -sac.offset));
-                        }
+                        su.setTimePeg(bm, sac.peg);
                     }
                     else
                     {
-                        if (Math.abs((sac.peg.getGlobalValue() - sac.offset) - (startTime + bm.getOffset() * 0.001)) > 0.1)
-                        {
-                            throw new BehaviourPlanningException(b, "Can't set bookmark timing for bookmark: " + bm.getName()
-                                    + ", functionality not yet supported. Desired time: " + (sac.peg.getGlobalValue() - sac.offset)
-                                    + " Speech time: " + (startTime + bm.getOffset() * 0.001f) + ". Behavior omitted.");
-                        }
-                        else
-                        {
-                            if (sac.offset == 0)
-                            {
-                                su.setTimePeg(bm, sac.peg);
-                            }
-                            else
-                            {
-                                OffsetPeg p = new OffsetPeg(sac.peg, -sac.offset);
-                                su.setTimePeg(bm, p);
-                            }
-                        }
+                        OffsetPeg p = new OffsetPeg(sac.peg, -sac.offset);
+                        su.setTimePeg(bm, p);
                     }
                 }
             }

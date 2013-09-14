@@ -133,13 +133,14 @@ public abstract class AbstractSpeechPlannerTest<T extends TimedAbstractSpeechUni
         ArrayList<TimePegAndConstraint> sacs = new ArrayList<TimePegAndConstraint>();
         sacs.add(new TimePegAndConstraint("start", new TimePeg(BMLBlockPeg.GLOBALPEG), new Constraint(), 0));
         T pu = speechPlanner.resolveSynchs(bbPeg, beh, sacs);
+        
         List<SyncAndTimePeg> syncAndPegs = speechPlanner.addBehaviour(bbPeg, beh, sacs, pu);
         assertEquals(3, syncAndPegs.size());
         assertEquals("start", syncAndPegs.get(0).sync);
         assertEquals("s1", syncAndPegs.get(1).sync);
         assertEquals("end", syncAndPegs.get(2).sync);
-        assertEquals(0.3, syncAndPegs.get(0).peg.getGlobalValue(), RESOLVE_PRECISION);
-        assertEquals(TimePeg.VALUE_UNKNOWN, syncAndPegs.get(1).peg.getGlobalValue(), RESOLVE_PRECISION);
-        assertEquals(TimePeg.VALUE_UNKNOWN, syncAndPegs.get(2).peg.getGlobalValue(), RESOLVE_PRECISION);
+        assertEquals(0.3, syncAndPegs.get(0).peg.getGlobalValue(), RESOLVE_PRECISION);        
+        assertThat(syncAndPegs.get(1).peg.getGlobalValue(), greaterThan(0.3));
+        assertThat(syncAndPegs.get(2).peg.getGlobalValue(), greaterThan(syncAndPegs.get(1).peg.getGlobalValue()));        
     }
 }

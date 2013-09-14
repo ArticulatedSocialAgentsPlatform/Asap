@@ -54,15 +54,7 @@ public abstract class TimedAbstractSpeechUnit extends TimedAbstractPlanUnit
         else
         {
             endTime = endSync.getGlobalValue();
-        }
-        if (endTime == TimePeg.VALUE_UNKNOWN)
-        {
-            double startTime = getStartTime();
-            if (startTime != TimePeg.VALUE_UNKNOWN)
-            {
-                return startTime + getPreferedDuration();
-            }
-        }
+        }        
         return endTime;
     }
 

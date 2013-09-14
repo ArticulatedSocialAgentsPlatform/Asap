@@ -122,8 +122,7 @@ public abstract class AbstractTTSUnitTest extends AbstractTimedPlanUnitTest
         ttsUnit.setState(TimedPlanUnitState.LURKING);
         ttsUnit.start(2);
         assertEquals(TimedPlanUnitState.IN_EXEC, ttsUnit.getState());
-        ttsUnit.play(2);
-        Thread.sleep(200);
+        ttsUnit.play(2);        
 
         FeedbackAsserts.assertEqualSyncPointProgress(new BMLSyncPointProgressFeedback("bml1", "speech1", "start", 2 - BMLBLOCKSTART, 2),
                 feedbackList.get(0));

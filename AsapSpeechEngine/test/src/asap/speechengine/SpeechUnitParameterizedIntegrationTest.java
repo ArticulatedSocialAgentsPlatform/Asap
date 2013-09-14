@@ -43,6 +43,7 @@ public class SpeechUnitParameterizedIntegrationTest
     private TimedTTSUnitFactory ttsUnitFactory;
     private static FeedbackManager fbManager = new FeedbackManagerImpl(new BMLBlockManager(),"character1");
     private static SoundManager soundManager = new LWJGLJoalSoundManager();
+    private static final double PRECISION = 0.001d;
     
     public SpeechUnitParameterizedIntegrationTest(String label,
             TimedTTSUnitFactory fa, TTSBindingFactory bindingFactory)
@@ -89,8 +90,7 @@ public class SpeechUnitParameterizedIntegrationTest
         TimePeg tpStart = new TimePeg(BMLBlockPeg.GLOBALPEG);
         tpStart.setGlobalValue(0);
         ttsUnit.setStart(tpStart);
-        assertEquals(ttsUnit.getEndTime(),
-                ttsUnit.getStartTime() + ttsUnit.getPreferedDuration(), 0.0001);
+        assertEquals(TimePeg.VALUE_UNKNOWN, ttsUnit.getEndTime(),PRECISION);
         assertTrue(ttsUnit.getPreferedDuration() > 0);
         ttsUnit.setState(TimedPlanUnitState.LURKING);
         ttsUnit.start(0);
