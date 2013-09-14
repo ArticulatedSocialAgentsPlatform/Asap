@@ -165,11 +165,11 @@ public class PointingMU implements AnimationUnit
         PointingMU pmu = new PointingMU();
         pmu.shoulderId = shoulderId;
         pmu.elbowId = elbowId;
-        pmu.setHand(hand);
         pmu.vjShoulder = p.getVNextPartBySid(shoulderId);
         pmu.vjShoulder = p.getVNextPartBySid(elbowId);
         pmu.vjWrist = p.getVNextPartBySid(wristId);
         pmu.player = p;
+        pmu.setHand(hand);        
         pmu.woManager = p.getWoManager();
         pmu.target = target;
         return pmu;

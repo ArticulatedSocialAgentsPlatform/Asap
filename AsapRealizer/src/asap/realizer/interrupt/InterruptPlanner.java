@@ -46,6 +46,20 @@ public class InterruptPlanner extends AbstractPlanner<TimedInterruptUnit>
         scheduler = s;
     }
 
+    private void setStartPeg(TimePegAndConstraint sacStart, TimedInterruptUnit iu)
+    {
+        TimePeg start;
+        if(sacStart.offset==0)
+        {
+            start = sacStart.peg;
+        }
+        else
+        {
+            start = new OffsetPeg(sacStart.peg,-sacStart.offset);
+        }
+        iu.setStartPeg(start);
+    }
+    
     @Override
     public List<SyncAndTimePeg> addBehaviour(BMLBlockPeg bbPeg, Behaviour b, List<TimePegAndConstraint> sac,
             TimedInterruptUnit iu) throws BehaviourPlanningException
@@ -64,12 +78,12 @@ public class InterruptPlanner extends AbstractPlanner<TimedInterruptUnit>
         iu.setExclude(ib.getExclude());
         
         validateSacs(b, sac);
-        iu.setStartPeg(sac.get(0).peg);
+        setStartPeg(sac.get(0), iu);        
 
         planManager.addPlanUnit(iu);
 
         List<SyncAndTimePeg> list = new ArrayList<SyncAndTimePeg>();
-        list.add(new SyncAndTimePeg(b.getBmlId(), b.id, "start", sac.get(0).peg));
+        list.add(new SyncAndTimePeg(b.getBmlId(), b.id, "start", iu.getTimePeg("start")));
         return list;
     }
 
@@ -98,16 +112,7 @@ public class InterruptPlanner extends AbstractPlanner<TimedInterruptUnit>
             sacStart.peg.setLocalValue(0);
         }
 
-        TimePeg start;
-        if(sacStart.offset==0)
-        {
-            start = sacStart.peg;
-        }
-        else
-        {
-            start = new OffsetPeg(sacStart.peg,-sacStart.offset);
-        }
-        iu.setStartPeg(start);
+        setStartPeg(sacStart, iu);        
         return iu;
     }
 
