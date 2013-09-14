@@ -1,17 +1,15 @@
 package asap.realizer.interrupt;
 
-import saiba.bml.core.Behaviour;
-
 import java.util.ArrayList;
 import java.util.List;
 
+import saiba.bml.core.Behaviour;
 import asap.bml.ext.bmla.BMLAInterruptBehaviour;
 import asap.realizer.AbstractPlanner;
 import asap.realizer.BehaviourPlanningException;
 import asap.realizer.SyncAndTimePeg;
 import asap.realizer.feedback.FeedbackManager;
 import asap.realizer.pegboard.BMLBlockPeg;
-import asap.realizer.pegboard.OffsetPeg;
 import asap.realizer.pegboard.TimePeg;
 import asap.realizer.planunit.PlanManager;
 import asap.realizer.scheduler.BMLScheduler;
@@ -44,21 +42,7 @@ public class InterruptPlanner extends AbstractPlanner<TimedInterruptUnit>
     public void setScheduler(BMLScheduler s)
     {
         scheduler = s;
-    }
-
-    private void setStartPeg(TimePegAndConstraint sacStart, TimedInterruptUnit iu)
-    {
-        TimePeg start;
-        if(sacStart.offset==0)
-        {
-            start = sacStart.peg;
-        }
-        else
-        {
-            start = new OffsetPeg(sacStart.peg,-sacStart.offset);
-        }
-        iu.setStartPeg(start);
-    }
+    }    
     
     @Override
     public List<SyncAndTimePeg> addBehaviour(BMLBlockPeg bbPeg, Behaviour b, List<TimePegAndConstraint> sac,
@@ -78,7 +62,8 @@ public class InterruptPlanner extends AbstractPlanner<TimedInterruptUnit>
         iu.setExclude(ib.getExclude());
         
         validateSacs(b, sac);
-        setStartPeg(sac.get(0), iu);        
+        setTimePegFromSac("start",sac.get(0), iu);
+        
 
         planManager.addPlanUnit(iu);
 
@@ -112,7 +97,7 @@ public class InterruptPlanner extends AbstractPlanner<TimedInterruptUnit>
             sacStart.peg.setLocalValue(0);
         }
 
-        setStartPeg(sacStart, iu);        
+        setTimePegFromSac("start",sac.get(0), iu);
         return iu;
     }
 

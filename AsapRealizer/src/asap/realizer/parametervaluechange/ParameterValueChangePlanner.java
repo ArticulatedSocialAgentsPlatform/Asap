@@ -1,17 +1,15 @@
 package asap.realizer.parametervaluechange;
 
-import saiba.bml.core.Behaviour;
-
 import java.util.ArrayList;
 import java.util.List;
 
+import saiba.bml.core.Behaviour;
 import asap.bml.ext.bmla.BMLAParameterValueChangeBehaviour;
 import asap.realizer.AbstractPlanner;
 import asap.realizer.BehaviourPlanningException;
 import asap.realizer.SyncAndTimePeg;
 import asap.realizer.feedback.FeedbackManager;
 import asap.realizer.pegboard.BMLBlockPeg;
-import asap.realizer.pegboard.OffsetPeg;
 import asap.realizer.pegboard.TimePeg;
 import asap.realizer.planunit.PlanManager;
 import asap.realizer.scheduler.BMLScheduler;
@@ -83,16 +81,8 @@ public class ParameterValueChangePlanner extends AbstractPlanner<TimedParameterV
     {
         if (getSacStart(sac) != null)
         {
-            TimePeg start;
-            if (getSacStart(sac).offset == 0)
-            {
-                start = getSacStart(sac).peg;
-            }
-            else
-            {
-                start = new OffsetPeg(getSacStart(sac).peg, -getSacStart(sac).offset);
-            }
-            tpvu.setStartPeg(start);
+            setTimePegFromSac("start",getSacStart(sac), tpvu);
+            TimePeg start = tpvu.getTimePeg("start");
             if (start.getGlobalValue() == TimePeg.VALUE_UNKNOWN)
             {
                 start.setLocalValue(0);
@@ -100,24 +90,15 @@ public class ParameterValueChangePlanner extends AbstractPlanner<TimedParameterV
         }
         else
         {
-            tpvu.setStartPeg(getSacEnd(sac).peg);
+            setTimePegFromSac("start",getSacEnd(sac), tpvu);            
         }
         if (getSacEnd(sac) != null)
         {
-            TimePeg end;
-            if (getSacEnd(sac).offset == 0)
-            {
-                end = getSacEnd(sac).peg;
-            }
-            else
-            {
-                end = new OffsetPeg(getSacEnd(sac).peg, -getSacEnd(sac).offset);
-            }
-            tpvu.setEndPeg(end);
+            setTimePegFromSac("end",getSacEnd(sac), tpvu);            
         }
         else
         {
-            tpvu.setEndPeg(getSacStart(sac).peg);
+            setTimePegFromSac("end",getSacStart(sac), tpvu);                        
         }
     }
 

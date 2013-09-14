@@ -5,7 +5,9 @@ import java.util.List;
 
 import saiba.bml.core.Behaviour;
 import asap.realizer.feedback.FeedbackManager;
+import asap.realizer.interrupt.TimedInterruptUnit;
 import asap.realizer.pegboard.BMLBlockPeg;
+import asap.realizer.pegboard.OffsetPeg;
 import asap.realizer.pegboard.TimePeg;
 import asap.realizer.planunit.PlanManager;
 import asap.realizer.planunit.TimedPlanUnit;
@@ -66,6 +68,20 @@ public abstract class AbstractPlanner<T extends TimedPlanUnit> implements Planne
             satp.add(new SyncAndTimePeg(b.getBmlId(), b.id, sync, p));            
         }
         return satp;
+    }
+    
+    protected void setTimePegFromSac(String syncId, TimePegAndConstraint sac, T iu)
+    {
+        TimePeg tp;
+        if(sac.offset==0)
+        {
+            tp = sac.peg;
+        }
+        else
+        {
+            tp = new OffsetPeg(sac.peg,-sac.offset);
+        }
+        iu.setTimePeg(syncId, tp);
     }
     
     @Override
