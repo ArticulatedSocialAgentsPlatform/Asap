@@ -53,7 +53,7 @@ public class ProcAnimationGestureTMU extends TimedAnimationMotionUnit
     @Override
     public void updateTiming(double time) throws TMUPlayException
     {
-        if(interrupted)return;
+        if (interrupted) return;
         setAllDefaultPegs();
 
         try
@@ -451,8 +451,7 @@ public class ProcAnimationGestureTMU extends TimedAnimationMotionUnit
                 else
                 {
                     double scale = totalDuration
-                            / (preStrokeHoldDuration + postStrokeHoldDuration + 
-                                    strokeStartDuration + strokeEndDuration + prepDuration + relaxDuration);
+                            / (preStrokeHoldDuration + postStrokeHoldDuration + strokeStartDuration + strokeEndDuration + prepDuration + relaxDuration);
                     prepDuration *= scale;
                     relaxDuration *= scale;
                 }
@@ -492,34 +491,15 @@ public class ProcAnimationGestureTMU extends TimedAnimationMotionUnit
         mu.setupRelaxUnit();
     }
 
-     private void gracefullInterrupt(double time) throws TimedPlanUnitPlayException
+    @Override
+    protected void gracefullInterrupt(double time) throws TimedPlanUnitPlayException
     {
         interrupted = true;
         skipPegs(time, "ready", "strokeStart", "stroke", "strokeEnd");
-        
-        //XXX: should relax and end pegs also be detached if other behaviors are connected to them? 
-        getTimePeg("relax").setGlobalValue(time);
-        getTimePeg("end").setGlobalValue(time + mu.getInterruptionDuration());        
-    }
 
-    @Override
-    public void interrupt(double time) throws TimedPlanUnitPlayException
-    {
-        switch (getState())
-        {
-        case IN_PREP:
-        case PENDING:
-        case LURKING:
-            stop(time);
-            break; // just remove yourself
-        case IN_EXEC:
-            gracefullInterrupt(time);
-            break; // gracefully interrupt yourself
-        case SUBSIDING: // nothing to be done
-        case DONE:
-        default:
-            break;
-        }
+        // XXX: should relax and end pegs also be detached if other behaviors are connected to them?
+        getTimePeg("relax").setGlobalValue(time);
+        getTimePeg("end").setGlobalValue(time + mu.getInterruptionDuration());
     }
 
     @Override

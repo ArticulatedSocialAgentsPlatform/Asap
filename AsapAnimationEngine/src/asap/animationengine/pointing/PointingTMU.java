@@ -48,6 +48,8 @@ public class PointingTMU extends TimedAnimationMotionUnit
         pmu = mu;
     }
     
+   
+    
     @Override
     public void startUnit(double time) throws TimedPlanUnitPlayException
     {
@@ -122,5 +124,17 @@ public class PointingTMU extends TimedAnimationMotionUnit
     {
         super.relaxUnit(time);
         pmu.setupRelaxUnit();
+    }
+    
+    protected void gracefullInterrupt(double time) throws TimedPlanUnitPlayException
+    {
+        System.out.println("gracefullInterruptGaze");
+        pmu.setupRelaxUnit();
+        pmu.setInterrupted(true);
+        skipPegs(time, "ready", "strokeStart", "stroke", "strokeEnd");
+
+        // XXX: should relax and end pegs also be detached if other behaviors are connected to them?
+        getTimePeg("relax").setGlobalValue(time);
+        getTimePeg("end").setGlobalValue(time + pmu.getRelaxDuration());
     }
 }

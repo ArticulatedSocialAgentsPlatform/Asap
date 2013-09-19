@@ -163,7 +163,7 @@ public abstract class TimedAbstractPlanUnit implements TimedPlanUnit
         
         if(getRelaxTime()!=TimePeg.VALUE_UNKNOWN)
         {
-            if(time>getRelaxTime() && getState() == TimedPlanUnitState.IN_EXEC)
+            if(time>=getRelaxTime() && getState() == TimedPlanUnitState.IN_EXEC)
             {
                 setState(TimedPlanUnitState.SUBSIDING);
                 relaxUnit(time);

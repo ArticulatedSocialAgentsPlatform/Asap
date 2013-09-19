@@ -38,11 +38,13 @@ public class GazeTMU extends TimedAnimationMotionUnit
 {
     private GazeMU gmu;
     
+    
     public GazeTMU(FeedbackManager bfm,BMLBlockPeg bmlBlockPeg,String bmlId,String id,GazeMU mu, PegBoard pb)
     {
         super(bfm,bmlBlockPeg,bmlId, id,mu,pb);    
         gmu = mu;
     }
+    
     
     @Override
     protected void startUnit(double time) throws TimedPlanUnitPlayException
@@ -113,5 +115,14 @@ public class GazeTMU extends TimedAnimationMotionUnit
         gmu.setupRelaxUnit();        
     }
     
-    
+    protected void gracefullInterrupt(double time) throws TimedPlanUnitPlayException
+    {
+        System.out.println("gracefullInterruptGaze");
+        
+        skipPegs(time, "ready", "strokeStart", "stroke", "strokeEnd");
+
+        // XXX: should relax and end pegs also be detached if other behaviors are connected to them?
+        getTimePeg("relax").setGlobalValue(time);
+        getTimePeg("end").setGlobalValue(time + 1); //for now duration 1, should be dynamically gotten from the rest gaze pos
+    }
 }

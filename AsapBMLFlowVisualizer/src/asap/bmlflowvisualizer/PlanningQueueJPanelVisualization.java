@@ -24,13 +24,21 @@ import asap.bml.ext.bmla.BMLABMLBehaviorAttributes;
  */
 public class PlanningQueueJPanelVisualization implements BMLFlowVisualization
 {
-    private final JPanel panel = new JPanel();
+    private JPanel panel;
     private Map<String, JComponent> planMap = new HashMap<>();
 
     public PlanningQueueJPanelVisualization()
     {
-        panel.setLayout(new BoxLayout(panel, BoxLayout.Y_AXIS));
-        panel.add(new JLabel(" Planning "));
+        SwingUtilities.invokeLater(new Runnable()
+        {
+            @Override
+            public void run()
+            {
+                panel = new JPanel();
+                panel.setLayout(new BoxLayout(panel, BoxLayout.Y_AXIS));
+                panel.add(new JLabel(" Planning "));
+            }
+        });
     }
 
     @Override
@@ -40,20 +48,20 @@ public class PlanningQueueJPanelVisualization implements BMLFlowVisualization
         {
             public void run()
             {
-                JPanel p = new JPanel();                
+                JPanel p = new JPanel();
                 BMLABMLBehaviorAttributes bmlaAttr = bb.getBMLBehaviorAttributeExtension(BMLABMLBehaviorAttributes.class);
                 Border b = new LineBorder(Color.BLACK);
-                if(bmlaAttr!=null)
+                if (bmlaAttr != null)
                 {
-                    if(bmlaAttr.isPrePlanned())
+                    if (bmlaAttr.isPrePlanned())
                     {
-                        b = new LineBorder(Color.BLUE,2);
+                        b = new LineBorder(Color.BLUE, 2);
                     }
                 }
                 JLabel label = new JLabel(bb.getBmlId());
                 p.setBorder(b);
                 p.setBackground(Color.GRAY);
-                                
+
                 p.add(label);
                 planMap.put(bb.getBmlId(), p);
                 panel.add(p);
@@ -88,7 +96,7 @@ public class PlanningQueueJPanelVisualization implements BMLFlowVisualization
     {
         return panel;
     }
-    
+
     @Override
     public void clear()
     {
@@ -108,12 +116,12 @@ public class PlanningQueueJPanelVisualization implements BMLFlowVisualization
     public void finishBlock(BMLBlockProgressFeedback bb)
     {
         removeBlock(bb.getBmlId());
-        
+
     }
 
     @Override
     public void updateBlock(BMLBlockPredictionFeedback pred)
     {
-        removeBlock(pred.getId());        
+        removeBlock(pred.getId());
     }
 }

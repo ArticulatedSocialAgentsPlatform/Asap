@@ -28,15 +28,23 @@ import asap.bmlflowvisualizer.graphutils.Edge;
 
 public class PlayingQueueJPanelVisualization implements BMLFlowVisualization
 {
-    private JPanel panel = new JPanel();
+    private JPanel panel;
     private Map<String, JPanel> blockMap = new HashMap<String, JPanel>();
     private Set<String> preplannedBlocks = new HashSet<String>();
     private Set<BehaviourBlock> behaviorBlocks = new HashSet<BehaviourBlock>();
 
     public PlayingQueueJPanelVisualization()
     {
-        panel.setLayout(new GridBagLayout());
-        panel.add(new JLabel(" Playing "));
+        SwingUtilities.invokeLater(new Runnable()
+        {
+            @Override
+            public void run()
+            {
+                panel = new JPanel();
+                panel.setLayout(new GridBagLayout());
+                panel.add(new JLabel(" Playing "));
+            }
+        });
     }
 
     private JPanel getBlock(String id)
@@ -104,8 +112,8 @@ public class PlayingQueueJPanelVisualization implements BMLFlowVisualization
         panel.removeAll();
         GridBagConstraints c = new GridBagConstraints();
         c.gridx = 1;
-        c.gridy = 1;        
-        panel.add(new JLabel(" Playing "),c);
+        c.gridy = 1;
+        panel.add(new JLabel(" Playing "), c);
         for (Entry<String, Point> entry : layout.entrySet())
         {
             c = new GridBagConstraints();

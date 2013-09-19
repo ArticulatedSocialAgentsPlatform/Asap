@@ -6,6 +6,7 @@ import java.io.IOException;
 
 import javax.swing.JComponent;
 import javax.swing.JPanel;
+import javax.swing.SwingUtilities;
 
 import saiba.bml.core.BehaviourBlock;
 import saiba.bml.core.CoreComposition;
@@ -26,7 +27,7 @@ import asap.realizerport.RealizerPort;
 public class BMLFlowVisualizerPort implements RealizerPort, BMLFeedbackListener
 {
     private final RealizerPort realizerPort;
-    private final JPanel panel = new JPanel();
+    private JPanel panel;
     private BMLFlowVisualization planningQueue;
     private BMLFlowVisualization finishedQueue;
     private BMLFlowVisualization playingQueue;
@@ -35,6 +36,14 @@ public class BMLFlowVisualizerPort implements RealizerPort, BMLFeedbackListener
     {
         realizerPort = port;
         realizerPort.addListeners(this);
+        SwingUtilities.invokeLater(new Runnable()
+        {
+            @Override
+            public void run()
+            {
+                panel = new JPanel();
+            }
+        });
     }
 
     public void addVisualization(BMLFlowVisualization pqvis, BMLFlowVisualization fqvis, BMLFlowVisualization plqvis)
@@ -42,25 +51,34 @@ public class BMLFlowVisualizerPort implements RealizerPort, BMLFeedbackListener
         this.planningQueue = pqvis;
         this.finishedQueue = fqvis;
         this.playingQueue = plqvis;
-        panel.setLayout(new GridBagLayout());
-        
-        GridBagConstraints c = new GridBagConstraints();
-        c.gridx = 1;
-        c.gridy = 1;
-        c.anchor = GridBagConstraints.NORTH;
-        panel.add(planningQueue.getVisualization(),c);
-        
-        c = new GridBagConstraints();
-        c.gridx = 2;
-        c.gridy = 1;
-        c.anchor = GridBagConstraints.NORTH;
-        panel.add(plqvis.getVisualization(),c);
-        
-        c = new GridBagConstraints();
-        c.gridx = 3;
-        c.gridy = 1;
-        c.anchor = GridBagConstraints.NORTH;
-        panel.add(finishedQueue.getVisualization(),c);        
+
+        SwingUtilities.invokeLater(new Runnable()
+        {
+            @Override
+            public void run()
+            {
+                panel.setLayout(new GridBagLayout());
+
+                GridBagConstraints c = new GridBagConstraints();
+                c.gridx = 1;
+                c.gridy = 1;
+                c.anchor = GridBagConstraints.NORTH;
+                panel.add(planningQueue.getVisualization(), c);
+
+                c = new GridBagConstraints();
+                c.gridx = 2;
+                c.gridy = 1;
+                c.anchor = GridBagConstraints.NORTH;
+                panel.add(playingQueue.getVisualization(), c);
+
+                c = new GridBagConstraints();
+                c.gridx = 3;
+                c.gridy = 1;
+                c.anchor = GridBagConstraints.NORTH;
+                panel.add(finishedQueue.getVisualization(), c);
+            }
+        });
+
     }
 
     @Override
@@ -76,26 +94,26 @@ public class BMLFlowVisualizerPort implements RealizerPort, BMLFeedbackListener
             // shouldn't happen since we parse strings
             throw new AssertionError(e);
         }
-        if(fb instanceof BMLBlockProgressFeedback)
+        if (fb instanceof BMLBlockProgressFeedback)
         {
-            BMLBlockProgressFeedback fbBlock = (BMLBlockProgressFeedback)fb;
-            if(fbBlock.getSyncId().equals("end"))
+            BMLBlockProgressFeedback fbBlock = (BMLBlockProgressFeedback) fb;
+            if (fbBlock.getSyncId().equals("end"))
             {
                 finishedQueue.finishBlock(fbBlock);
                 planningQueue.finishBlock(fbBlock);
                 playingQueue.finishBlock(fbBlock);
             }
-            else if(fbBlock.getSyncId().equals("start"))
+            else if (fbBlock.getSyncId().equals("start"))
             {
                 planningQueue.startBlock(fbBlock);
                 playingQueue.startBlock(fbBlock);
                 finishedQueue.startBlock(fbBlock);
             }
         }
-        if(fb instanceof BMLPredictionFeedback)
+        if (fb instanceof BMLPredictionFeedback)
         {
-            BMLPredictionFeedback pf = (BMLPredictionFeedback)fb;
-            for(BMLBlockPredictionFeedback bbp:pf.getBmlBlockPredictions())
+            BMLPredictionFeedback pf = (BMLPredictionFeedback) fb;
+            for (BMLBlockPredictionFeedback bbp : pf.getBmlBlockPredictions())
             {
                 planningQueue.updateBlock(bbp);
                 playingQueue.updateBlock(bbp);
@@ -120,10 +138,10 @@ public class BMLFlowVisualizerPort implements RealizerPort, BMLFeedbackListener
     public void performBML(String bmlString)
     {
         BehaviourBlock bb = new BehaviourBlock(new BMLABMLBehaviorAttributes());
-        
+
         bb.readXML(bmlString);
-        
-        if(bb.getComposition().equals(CoreComposition.REPLACE))
+
+        if (bb.getComposition().equals(CoreComposition.REPLACE))
         {
             planningQueue.clear();
             playingQueue.clear();

@@ -29,6 +29,8 @@ import hmi.worldobjectenvironment.WorldObjectManager;
 import java.util.List;
 import java.util.Set;
 
+import lombok.Getter;
+import lombok.Setter;
 import asap.animationengine.AnimationPlayer;
 import asap.animationengine.motionunit.AnimationUnit;
 import asap.animationengine.motionunit.TimedAnimationMotionUnit;
@@ -49,8 +51,8 @@ import com.google.common.collect.ImmutableSet;
  * Timing: ready: gaze target reached relax: start to move back to rest pose
  * (for now 0 rotation of neck joints)
  * 
- * @author welberge TODO: Fitts' law based default timing 
- * TODO: Double-hand point(?)
+ * @author welberge TODO: Fitts' law based default timing
+ *         TODO: Double-hand point(?)
  */
 public class PointingMU implements AnimationUnit
 {
@@ -84,6 +86,10 @@ public class PointingMU implements AnimationUnit
     protected AnimationUnit relaxUnit;
 
     private final KeyPositionManager keyPositionManager = new KeyPositionManagerImpl();
+
+    @Getter
+    @Setter
+    private volatile boolean interrupted;
 
     public void addKeyPosition(KeyPosition kp)
     {
@@ -169,7 +175,7 @@ public class PointingMU implements AnimationUnit
         pmu.vjShoulder = p.getVNextPartBySid(elbowId);
         pmu.vjWrist = p.getVNextPartBySid(wristId);
         pmu.player = p;
-        pmu.setHand(hand);        
+        pmu.setHand(hand);
         pmu.woManager = p.getWoManager();
         pmu.target = target;
         return pmu;
@@ -258,17 +264,17 @@ public class PointingMU implements AnimationUnit
     @Override
     public void play(double t) throws MUPlayException
     {
-        if (t < 0.25)
+        if (t > 0.75 || isInterrupted())
+        {
+            relaxUnit.play((t - 0.75) / 0.25);
+        }
+        else if (t < 0.25)
         {
             float tManip = (float) tmp.manip(t / 0.25);
             Quat4f.interpolate(qTemp, qShoulderStart, qShoulder, tManip);
             vjShoulder.setRotation(qTemp);
             Quat4f.interpolate(qTemp, qElbowStart, qElbow, tManip);
             vjElbow.setRotation(qTemp);
-        }
-        else if (t > 0.75)
-        {
-            relaxUnit.play( (t-0.75)/0.25 );            
         }
         else
         {
@@ -346,9 +352,14 @@ public class PointingMU implements AnimationUnit
         relaxUnit = player.getRestPose().createTransitionToRest(getKinematicJoints());
     }
 
+    public double getRelaxDuration()
+    {
+        return player.getRestPose().getTransitionToRestDuration(player.getVCurr(), getKinematicJoints());
+    }
+
     @Override
     public void startUnit(double t) throws MUPlayException
     {
-                
+
     }
 }
