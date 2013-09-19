@@ -18,8 +18,6 @@
  ******************************************************************************/
 package asap.animationengine.pointing;
 
-import com.google.common.collect.ImmutableSet;
-
 import hmi.animation.AnalyticalIKSolver;
 import hmi.animation.VJoint;
 import hmi.math.Quat4f;
@@ -70,7 +68,12 @@ public class DynamicPointingMU extends PointingMU
         AnalyticalIKSolver.translateToLocalSystem(null, vjShoulder, vecTemp, vecTemp2);        
         setEndRotation(vecTemp2);
         
-        if(t<0.25)
+        //FIXME: t calculation when interrupted
+        if(t>0.75 || isInterrupted())
+        {
+            relaxUnit.play( (t-0.75)/0.25 );            
+        }
+        else if(t<0.25)
         {
             double remDuration = ( (0.25-t)/0.25)*preparationDuration;
             float deltaT = (float)(player.getStepTime()/remDuration);
@@ -80,10 +83,6 @@ public class DynamicPointingMU extends PointingMU
             vCurrElbow.getRotation(qCurrElb);
             Quat4f.interpolate(qTemp, qCurrElb, qElbow,deltaT);
             vjElbow.setRotation(qTemp);
-        }
-        else if(t>0.75)
-        {
-            relaxUnit.play( (t-0.75)/0.25 );            
         }
         else
         {

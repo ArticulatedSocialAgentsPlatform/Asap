@@ -31,6 +31,7 @@ import asap.realizer.pegboard.BMLBlockPeg;
 import asap.realizer.pegboard.PegBoard;
 import asap.realizer.pegboard.TimePeg;
 import asap.realizer.planunit.Priority;
+import asap.realizer.planunit.TimedPlanUnitPlayException;
 import asap.realizer.scheduler.LinearStretchResolver;
 import asap.realizer.scheduler.TimePegAndConstraint;
 import asap.realizer.scheduler.UniModalResolver;
@@ -124,5 +125,31 @@ public class TimedAnimationMotionUnit extends TimedMotionUnit implements TimedAn
     public double getStrokeDuration()
     {
         return getPreferedDuration() - getPreparationDuration() - getRetractionDuration();
+    }
+    
+    protected void gracefullInterrupt(double time)throws TimedPlanUnitPlayException
+    {
+        
+    }
+    
+    @Override
+    public void interrupt(double time) throws TimedPlanUnitPlayException
+    {
+        System.out.println("interrupt "+"at t="+time+" "+getId()+" state: "+this.getState()+" relax time: "+getTime("relax")+" ready time: "+getTime("ready"));
+        switch (getState())
+        {
+        case IN_PREP:
+        case PENDING:
+        case LURKING:
+            stop(time);
+            break; // just remove yourself
+        case IN_EXEC:
+            gracefullInterrupt(time);
+            break; // gracefully interrupt yourself
+        case SUBSIDING: // nothing to be done
+        case DONE:
+        default:
+            break;
+        }
     }
 }
