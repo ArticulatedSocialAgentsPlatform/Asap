@@ -5,6 +5,7 @@ import java.awt.GridBagConstraints;
 import java.awt.GridBagLayout;
 import java.awt.Point;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
@@ -29,9 +30,9 @@ import asap.bmlflowvisualizer.graphutils.Edge;
 public class PlayingQueueJPanelVisualization implements BMLFlowVisualization
 {
     private JPanel panel;
-    private Map<String, JPanel> blockMap = new HashMap<String, JPanel>();
-    private Set<String> preplannedBlocks = new HashSet<String>();
-    private Set<BehaviourBlock> behaviorBlocks = new HashSet<BehaviourBlock>();
+    private Map<String, JPanel> blockMap = Collections.synchronizedMap(new HashMap<String, JPanel>());
+    private Set<String> preplannedBlocks = Collections.synchronizedSet(new HashSet<String>());
+    private Set<BehaviourBlock> behaviorBlocks = Collections.synchronizedSet(new HashSet<BehaviourBlock>());
 
     public PlayingQueueJPanelVisualization()
     {
@@ -173,9 +174,12 @@ public class PlayingQueueJPanelVisualization implements BMLFlowVisualization
     {
         preplannedBlocks.clear();
         behaviorBlocks.clear();
-        for (String id : blockMap.keySet())
+        synchronized (blockMap)
         {
-            removeBlock(id);
+            for (String id : blockMap.keySet())
+            {
+                removeBlock(id);
+            }
         }
     }
 

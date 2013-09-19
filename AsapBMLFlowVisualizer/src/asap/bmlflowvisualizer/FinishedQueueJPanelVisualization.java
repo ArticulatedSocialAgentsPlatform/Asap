@@ -1,6 +1,7 @@
 package asap.bmlflowvisualizer;
 
 import java.awt.Color;
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Map;
@@ -21,13 +22,14 @@ import asap.bml.ext.bmla.BMLABMLBehaviorAttributes;
 public class FinishedQueueJPanelVisualization implements BMLFlowVisualization
 {
     private JPanel panel;
-    private Map<String, JComponent> planMap = new HashMap<>();
+    private Map<String, JComponent> planMap = Collections.synchronizedMap(new HashMap<String, JComponent>());
 
-    private Set<String> addedBlocks = new HashSet<String>();
-    private Set<String> plannedBlocks = new HashSet<String>();
-    private Set<String> startedBlocks = new HashSet<String>();
-    private Set<String> interruptSet = new HashSet<String>();
+    private Set<String> addedBlocks = Collections.synchronizedSet(new HashSet<String>());
+    private Set<String> plannedBlocks = Collections.synchronizedSet(new HashSet<String>());
+    private Set<String> startedBlocks = Collections.synchronizedSet(new HashSet<String>());
+    private Set<String> interruptSet = Collections.synchronizedSet(new HashSet<String>());
 
+    
     public FinishedQueueJPanelVisualization()
     {
         SwingUtilities.invokeLater(new Runnable()
@@ -88,7 +90,6 @@ public class FinishedQueueJPanelVisualization implements BMLFlowVisualization
                 planMap.remove(id);
                 if (label != null)
                 {
-
                     panel.remove(label);
                     panel.repaint();
                     panel.updateUI();
@@ -111,9 +112,12 @@ public class FinishedQueueJPanelVisualization implements BMLFlowVisualization
         addedBlocks.clear();
         startedBlocks.clear();
         interruptSet.clear();
-        for (String id : planMap.keySet())
+        synchronized(planMap)
         {
-            removeBlock(id);
+            for (String id : planMap.keySet())
+            {
+                removeBlock(id);
+            }
         }
     }
 

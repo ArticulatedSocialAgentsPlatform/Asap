@@ -1,6 +1,7 @@
 package asap.bmlflowvisualizer;
 
 import java.awt.Color;
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -25,7 +26,7 @@ import asap.bml.ext.bmla.BMLABMLBehaviorAttributes;
 public class PlanningQueueJPanelVisualization implements BMLFlowVisualization
 {
     private JPanel panel;
-    private Map<String, JComponent> planMap = new HashMap<>();
+    private Map<String, JComponent> planMap = Collections.synchronizedMap(new HashMap<String, JComponent>());
 
     public PlanningQueueJPanelVisualization()
     {
@@ -82,7 +83,6 @@ public class PlanningQueueJPanelVisualization implements BMLFlowVisualization
                 planMap.remove(id);
                 if (label != null)
                 {
-
                     panel.remove(label);
                     panel.repaint();
                     panel.updateUI();
@@ -100,9 +100,12 @@ public class PlanningQueueJPanelVisualization implements BMLFlowVisualization
     @Override
     public void clear()
     {
-        for (String id : planMap.keySet())
+        synchronized (planMap)
         {
-            removeBlock(id);
+            for (String id : planMap.keySet())
+            {
+                removeBlock(id);
+            }
         }
     }
 
