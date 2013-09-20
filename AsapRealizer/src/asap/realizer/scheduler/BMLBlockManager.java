@@ -79,6 +79,16 @@ public final class BMLBlockManager
         updateBlocks();
     }
 
+    boolean isPending(String bmlId, Set<String> bmlIdsChecked)
+    {
+        BMLBlock b = getBMLBlock(bmlId);
+        if (b == null)
+        {
+            return false;
+        }
+        return b.isPending(bmlIdsChecked);
+    }
+    
     /**
      * A block is pending if this block or any of its append/chunkafter targets are pending
      */
@@ -91,7 +101,8 @@ public final class BMLBlockManager
         }
         return b.isPending();
     }
-
+    
+    
     public void finishBlock(String bmlId)
     {
         BMLBlock b = BMLBlocks.get(bmlId);

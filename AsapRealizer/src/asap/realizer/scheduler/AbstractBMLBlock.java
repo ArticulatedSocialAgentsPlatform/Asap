@@ -46,6 +46,21 @@ public abstract class AbstractBMLBlock implements BMLBlock
         scheduler.blockStartFeedback(bmlId);
     }
 
+    public boolean isPending(Set<String> ids, Set<String> checked)
+    {
+        for (String bmlId : ids)
+        {
+            if(!checked.contains(bmlId))
+            {
+                if (scheduler.isPending(bmlId,checked))
+                {
+                    return true;
+                }
+                checked.add(bmlId);
+            }
+        }
+        return false;
+    }
     
     public void activate()
     {

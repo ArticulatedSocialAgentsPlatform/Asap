@@ -16,6 +16,7 @@ import asap.realizer.pegboard.TimePeg;
 import asap.realizer.planunit.TimedPlanUnitState;
 
 import com.google.common.collect.ImmutableMap;
+import com.google.common.collect.Sets;
 
 /**
  * Manages the state of a BML block used in ASAP.
@@ -39,24 +40,25 @@ public class BMLBBlock extends AbstractBMLBlock
         chunkAfterSet.addAll(chunkAfter);
     }
 
-    private boolean isPending(Set<String> ids)
+   
+
+    @Override
+    public boolean isPending(Set<String> checked)
     {
-        for (String bmlId : ids)
-        {
-            if (scheduler.isPending(bmlId))
-            {
-                return true;
-            }
-        }
+        if (super.isPending()) return true;
+        if (isPending(chunkAfterSet,checked))return true;
+        if (isPending(appendSet, checked))return true;
         return false;
     }
-
+    
     @Override
     public boolean isPending()
     {
         if (super.isPending()) return true;
-        if (isPending(chunkAfterSet))return true;
-        if (isPending(appendSet))return true;
+        Set<String> checked = new HashSet<String>();
+        checked.add(bmlId);
+        if (isPending(Sets.difference(chunkAfterSet,checked),checked))return true;
+        if (isPending(Sets.difference(appendSet,checked), checked))return true;
         return false;
     }
 
@@ -206,5 +208,7 @@ public class BMLBBlock extends AbstractBMLBlock
             finish();
         }
     }
+
+    
 
 }

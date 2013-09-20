@@ -14,6 +14,7 @@ import org.slf4j.LoggerFactory;
 import asap.realizer.planunit.TimedPlanUnitState;
 
 import com.google.common.collect.ImmutableMap;
+import com.google.common.collect.Sets;
 
 /**
  * Captures the feedback of behaviors of a BML Block and sends the BML stop feedback when the block
@@ -111,4 +112,22 @@ public class BMLTBlock extends AbstractBMLBlock
             finish();            
         }
     }    
+    
+    @Override
+    public boolean isPending(Set<String> checked)
+    {
+        if (super.isPending()) return true;
+        if (isPending(appendSet, checked))return true;
+        return false;
+    }
+    
+    @Override
+    public boolean isPending()
+    {
+        if (super.isPending()) return true;
+        Set<String> checked = new HashSet<String>();
+        checked.add(bmlId);
+        if (isPending(Sets.difference(appendSet,checked), checked))return true;
+        return false;
+    }
 }

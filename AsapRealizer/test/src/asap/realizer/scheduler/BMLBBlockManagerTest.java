@@ -5,7 +5,6 @@ import static org.junit.Assert.assertTrue;
 import hmi.util.SystemClock;
 
 import org.junit.Before;
-import org.junit.Ignore;
 import org.junit.Test;
 
 import saiba.bml.parser.BMLParser;
@@ -70,8 +69,6 @@ public class BMLBBlockManagerTest
         assertTrue(bbm.isPending("bml1"));
     }
     
-    //FIXME
-    @Ignore
     @Test(timeout=300)
     public void testIsPendingLoop()
     {
