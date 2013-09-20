@@ -129,7 +129,7 @@ public class TimedAnimationMotionUnit extends TimedMotionUnit implements TimedAn
     
     protected void gracefullInterrupt(double time)throws TimedPlanUnitPlayException
     {
-        
+        stop(time);
     }
     
     @Override
