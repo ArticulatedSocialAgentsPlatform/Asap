@@ -892,23 +892,18 @@ public final class MURMLMUBuilder
             LMPWristPos wristMove = new LMPWristPos(scope, bbf, bmlBlockPeg, bmlId, createLMPId(id), pegBoard, traj, hns.getBaseJoint(),
                     aniPlayer, constructAutoSwivel(scope));
 
-            // TODO
-            // -- set transformation for converting positions into base coordinates
-            // wristMove->setBaseFrame( mp->getBase2Root() );
-
             // -- absolutely new movement, or should we append to previous LMP?
-            if (lmp == null)
+            
+            // TODO: solve with TimePegs
+            /*
+            if (lmp != null)
             {
-                lmp = wristMove;
-
+                lmp->activateSuccessorAt( wristMove,traj.getStartTPC() );                
             }
-            else
-            {
-                // TODO: solve with TimePegs
-                // lmp->activateSuccessorAt( wristMove,traj.getStartTPC() );
-                lmp = wristMove;
-            }
-
+            */
+            
+            lmp = wristMove;
+            
             // TODO
             // // -- extend movement with retractory parts, e.g., overshooting
             // if ( retrMode == RTRCT_FULL || retrMode == RTRCT_INTERMEDIATE )
