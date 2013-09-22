@@ -93,10 +93,4 @@ public class StubPictureUnit implements PictureUnit
     {
         return this;
     }
-
-    @Override
-    public String getReplacementGroup()
-    {
-        return null;
-    }
 }

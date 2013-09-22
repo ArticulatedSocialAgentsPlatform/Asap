@@ -100,16 +100,6 @@ public class MURMLKeyframeMU extends KeyFrameMotionUnit implements AnimationUnit
     }
     
     /**
-     * @deprecated no longer relevant in BML 1.0
-     */
-    @Override
-    @Deprecated
-    public String getReplacementGroup()
-    {
-        return null;
-    }
-
-    /**
      * Prefered duration of retraction + stroke
      */
     @Override

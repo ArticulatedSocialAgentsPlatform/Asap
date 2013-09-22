@@ -67,16 +67,6 @@ public class LMPHandMove extends LMP
         }
 
         @Override
-        @Deprecated
-        /**
-         * @deprecated
-         */
-        public String getReplacementGroup()
-        {
-            return null;
-        }
-
-        @Override
         public double getPreferedDuration()
         {
             return getStrokeDuration() + TRANSITION_TIME * 2;

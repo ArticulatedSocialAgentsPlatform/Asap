@@ -39,7 +39,6 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 import java.util.Vector;
-import java.util.concurrent.atomic.AtomicReference;
 
 import org.lsmp.djep.xjep.XJep;
 import org.nfunk.jep.ParseException;
@@ -119,8 +118,6 @@ public class ProcAnimationMU extends XMLStructureAdapter implements AnimationUni
     private IKBody body;
 
     private KeyPositionManager keyPositionManager = new KeyPositionManagerImpl();
-
-    private AtomicReference<String> replacementGroup = new AtomicReference<String>();
 
     private VJoint vNext, vAdditive;
 
@@ -233,7 +230,6 @@ public class ProcAnimationMU extends XMLStructureAdapter implements AnimationUni
     public ProcAnimationMU deepCopy() throws MUSetupException
     {
         ProcAnimationMU copy = new ProcAnimationMU();
-        copy.replacementGroup = replacementGroup;
         copy.id = id;
 
         ArrayList<KeyPosition> keys = new ArrayList<KeyPosition>();
@@ -1476,11 +1472,7 @@ public class ProcAnimationMU extends XMLStructureAdapter implements AnimationUni
                 bodyPartFilter.add(joint);
             }
             filterBodyParts();
-        }
-        else if (name.equals("replacementgroup"))
-        {
-            replacementGroup.set(value);
-        }
+        }        
         else if (StringUtil.isNumeric(value))
         {
             setFloatParameterValue(name, Float.parseFloat(value));
@@ -1515,12 +1507,6 @@ public class ProcAnimationMU extends XMLStructureAdapter implements AnimationUni
     public TimedAnimationMotionUnit createTMU(FeedbackManager bfm, BMLBlockPeg bbPeg, String bmlId, String id, PegBoard pb)
     {
         return new TimedAnimationMotionUnit(bfm, bbPeg, bmlId, id, this, pb);
-    }
-
-    @Override
-    public String getReplacementGroup()
-    {
-        return replacementGroup.get();
     }
 
     private static final Set<String> PHJOINTS = ImmutableSet.of();

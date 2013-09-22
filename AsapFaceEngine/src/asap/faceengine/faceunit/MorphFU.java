@@ -213,12 +213,6 @@ public class MorphFU implements FaceUnit
         return new TimedFaceUnit(bfm, bbPeg, bmlId, id, this);
     }
 
-    @Override
-    public String getReplacementGroup()
-    {
-        return null;
-    }
-
     /**
      * @return Prefered duration (in seconds) of this face unit, 0 means not
      *         determined/infinite

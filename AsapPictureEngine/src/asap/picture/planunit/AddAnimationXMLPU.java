@@ -218,12 +218,6 @@ public class AddAnimationXMLPU implements PictureUnit
         return new TimedPictureUnit(bfm, bbPeg, bmlId, id, this);
     }
 
-    @Override
-    public String getReplacementGroup()
-    {
-        return "animationfromxmlfile:" + filePath.toString() + fileName.toString();
-    }
-
     /**
      * @return Prefered duration (in seconds) of this face unit, 0 means not
      *         determined/infinite

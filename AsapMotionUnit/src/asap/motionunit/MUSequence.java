@@ -52,13 +52,6 @@ public class MUSequence implements MotionUnit
     }
 
     @Override
-    @Deprecated
-    public String getReplacementGroup()
-    {
-        return null;
-    }
-
-    @Override
     public double getPreferedDuration()
     {
         double duration = 0;

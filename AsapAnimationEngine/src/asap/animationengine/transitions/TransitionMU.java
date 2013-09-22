@@ -166,22 +166,5 @@ public abstract class TransitionMU implements AnimationUnit
         }
         joints.clear();
         joints.addAll(newJoints);
-    }
-
-    
-
-    
-
-    @Override
-    public String getReplacementGroup()
-    {
-        try
-        {
-            return getParameterValue("replacementgroup");
-        }
-        catch (ParameterNotFoundException e)
-        {
-            return null;
-        }
-    }
+    }    
 }

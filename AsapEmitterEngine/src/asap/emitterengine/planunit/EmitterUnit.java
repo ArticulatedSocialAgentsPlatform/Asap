@@ -63,11 +63,4 @@ public interface EmitterUnit extends KeyPositionManager
      * @return Prefered duration (in seconds) of this nabaztag unit, 0 means not determined/infinite 
      */
     double getPreferedDuration();
-    
-    /**
-     * Get the replacement group 
-     * Used to determine the currently active persistent TEU for this group in the player
-     * Only one group is active at a time
-     */
-    String getReplacementGroup();    
 }

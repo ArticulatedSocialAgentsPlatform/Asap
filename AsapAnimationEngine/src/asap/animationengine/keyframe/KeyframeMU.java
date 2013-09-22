@@ -253,19 +253,6 @@ public class KeyframeMU implements AnimationUnit
         return copy(p.getVNext());
     }
 
-    @Override
-    public String getReplacementGroup()
-    {
-        try
-        {
-            return getParameterValue("replacementgroup");
-        }
-        catch (ParameterNotFoundException e)
-        {
-            return null;
-        }
-    }
-    
     private static final Set<String>PHJOINTS = ImmutableSet.of(); 
     
     @Override

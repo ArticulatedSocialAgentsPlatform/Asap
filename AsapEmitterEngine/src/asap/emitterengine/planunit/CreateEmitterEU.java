@@ -18,7 +18,6 @@
  ******************************************************************************/
 package asap.emitterengine.planunit;
 
-
 import java.util.*;
 
 import asap.emitterengine.*;
@@ -34,16 +33,15 @@ import asap.realizer.planunit.TimedPlanUnitPlayException;
 
 import hmi.util.StringUtil;
 
-
 /**
- *  Templated class; unit to create an emitter of type <E>
+ * Templated class; unit to create an emitter of type <E>
  * @author Dennis Reidsma
  */
 public class CreateEmitterEU implements EmitterUnit
 {
     private final KeyPositionManager keyPositionManager = new KeyPositionManagerImpl();
     private Emitter theEmitter;
-    
+
     public CreateEmitterEU()
     {
         KeyPosition start = new KeyPosition("start", 0d, 1d);
@@ -51,15 +49,15 @@ public class CreateEmitterEU implements EmitterUnit
         KeyPosition end = new KeyPosition("end", 1d, 1d);
         addKeyPosition(end);
     }
-    
+
     public void setEmitter(Emitter emitter)
     {
-      theEmitter = emitter;
+        theEmitter = emitter;
     }
-    
+
     public Emitter getEmitter()
     {
-      return theEmitter;
+        return theEmitter;
     }
 
     @Override
@@ -67,7 +65,7 @@ public class CreateEmitterEU implements EmitterUnit
     {
         if (theEmitter.specifiesFloatParameter(name))
         {
-          theEmitter.setFloatParameterValue(name, value);
+            theEmitter.setFloatParameterValue(name, value);
         }
         else throw new ParameterNotFoundException(name);
     }
@@ -77,17 +75,17 @@ public class CreateEmitterEU implements EmitterUnit
     {
         if (theEmitter.specifiesStringParameter(name))
         {
-          theEmitter.setParameterValue(name, value);
+            theEmitter.setParameterValue(name, value);
         }
         else
         {
-            if(StringUtil.isNumeric(value) && theEmitter.specifiesFloatParameter(name))
+            if (StringUtil.isNumeric(value) && theEmitter.specifiesFloatParameter(name))
             {
-              theEmitter.setFloatParameterValue(name, Float.parseFloat(value));
+                theEmitter.setFloatParameterValue(name, Float.parseFloat(value));
             }
             else
             {
-                throw new InvalidParameterException(name,value);
+                throw new InvalidParameterException(name, value);
             }
         }
     }
@@ -115,9 +113,9 @@ public class CreateEmitterEU implements EmitterUnit
     }
 
     public void startUnit(double time) throws TimedPlanUnitPlayException
-    {         
-      //start the emitter
-      theEmitter.start();
+    {
+        // start the emitter
+        theEmitter.start();
     }
 
     /**
@@ -130,12 +128,12 @@ public class CreateEmitterEU implements EmitterUnit
     public void play(double t) throws EUPlayException
     {
     }
-    
+
     public void cleanup()
     {
-      theEmitter.stop();
+        theEmitter.stop();
     }
-    
+
     /**
      * Creates the TimedEmitterUnit corresponding to this face unit
      * 
@@ -152,12 +150,6 @@ public class CreateEmitterEU implements EmitterUnit
         return new TimedEmitterUnit(bfm, bbPeg, bmlId, id, this);
     }
 
-    @Override
-    public String getReplacementGroup()
-    {
-      return null;
-    }
-
     /**
      * @return Prefered duration (in seconds) of this unit, 0 means not determined/infinite
      */
@@ -165,8 +157,6 @@ public class CreateEmitterEU implements EmitterUnit
     {
         return 0d;
     }
-
-   
 
     @Override
     public void addKeyPosition(KeyPosition kp)

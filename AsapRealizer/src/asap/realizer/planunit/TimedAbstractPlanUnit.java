@@ -131,12 +131,6 @@ public abstract class TimedAbstractPlanUnit implements TimedPlanUnit
     }
 
     @Override
-    public String getReplacementGroup()
-    {
-        return null;
-    }
-    
-    @Override
     public void updateTiming(double time) throws TimedPlanUnitPlayException
     {
         

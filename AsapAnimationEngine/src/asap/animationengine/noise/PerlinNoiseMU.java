@@ -224,19 +224,6 @@ public class PerlinNoiseMU implements NoiseMU
         return pmu;
     }
 
-    @Override
-    public String getReplacementGroup()
-    {
-        try
-        {
-            return getParameterValue("replacementgroup");
-        }
-        catch (ParameterNotFoundException e)
-        {
-            return null;
-        }
-    }
-
     private static final Set<String> PHJOINTS = ImmutableSet.of();
 
     @Override

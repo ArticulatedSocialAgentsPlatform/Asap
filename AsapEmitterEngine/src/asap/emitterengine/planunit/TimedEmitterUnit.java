@@ -151,12 +151,6 @@ public class TimedEmitterUnit extends TimedAbstractPlanUnit
     }
 
     @Override
-    public String getReplacementGroup()
-    {
-        return eu.getReplacementGroup();
-    }
-
-    @Override
     public double getPreferedDuration()
     {
         return eu.getPreferedDuration();
