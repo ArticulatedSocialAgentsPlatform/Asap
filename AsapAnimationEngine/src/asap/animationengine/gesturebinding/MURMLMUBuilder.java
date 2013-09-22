@@ -334,30 +334,6 @@ public final class MURMLMUBuilder
                     traj.addGuidingStroke(gs);
                 }
             }
-
-            /*
-             * TODO add swivel LMP when needed (as in code below)
-             * //=== add LMP for moving swivel to zero during prep AND stroke
-             * if (swivel > -99)
-             * {
-             * MgcVectorN q (1);
-             * q[0] = swivel;
-             * deque<MgcVectorN> goalVec;
-             * deque<MgcReal> timeVec;
-             * // start
-             * goalVec.push_back(q);
-             * timeVec.push_back(sT);
-             * // end
-             * goalVec.push_back(q);
-             * timeVec.push_back(eT);
-             * LMP_Swivel *lmpSwiv = new LMP_Swivel ("SW_Prep", scope);
-             * lmpSwiv->setSwivelVec(goalVec);
-             * lmpSwiv->setTimeVec(timeVec);
-             * lmp->activatePeerAt(lmpSwiv, sT-0.2);
-             * mp->addLMP(lmpSwiv);
-             * }
-             * }
-             */
         }
     }
 

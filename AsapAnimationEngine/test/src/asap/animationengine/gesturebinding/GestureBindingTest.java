@@ -207,7 +207,8 @@ public class GestureBindingTest
         GazeBehaviour b = createGazeBehaviour(
                 "bml1",
                 "<gaze xmlns=\"http://www.bml-initiative.org/bml/bml-1.0\""
-                        + "xmlns:bmlt=\"http://hmi.ewi.utwente.nl/bmlt\" bmlt:dynamic=\"true\" id=\"gaze1\" influence=\"NECK\" target=\"greensphere\"/>");
+                        + "xmlns:bmlt=\"http://hmi.ewi.utwente.nl/bmlt\" bmlt:dynamic=\"true\" " +
+                        "id=\"gaze1\" influence=\"NECK\" target=\"greensphere\"/>");
         List<TimedAnimationUnit> m = gestureBinding.getMotionUnit(BMLBlockPeg.GLOBALPEG, b, mockAniPlayer, pegBoard);
         assertEquals(1, m.size());
     }
@@ -262,7 +263,7 @@ public class GestureBindingTest
         GestureBehaviour beh = createGestureBehaviour("bml1", "<gesture xmlns=\"http://www.bml-initiative.org/bml/bml-1.0\" "
                 + "id=\"g1\" lexeme=\"wave\"/>");
         MURMLMUBuilder murmlBuilder = new MURMLMUBuilder(new Hns(), mockHandshapes);
-        List<TimedAnimationUnit> m = gestureBinding.getMotionUnit(BMLBlockPeg.GLOBALPEG, beh, mockAniPlayer, pegBoard,murmlBuilder);
+        List<TimedAnimationUnit> m = gestureBinding.getMotionUnit(BMLBlockPeg.GLOBALPEG, beh, mockAniPlayer, pegBoard, murmlBuilder);
         assertEquals(1, m.size());
         assertEquals("bml1", m.get(0).getBMLId());
         assertEquals("g1", m.get(0).getId());

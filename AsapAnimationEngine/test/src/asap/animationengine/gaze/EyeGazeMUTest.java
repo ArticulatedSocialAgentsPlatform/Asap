@@ -17,19 +17,20 @@ import asap.motionunit.MUPlayException;
 public class EyeGazeMUTest
 {
     private AnimationPlayer mockAnimationPlayer;
-    
-    @Test(expected=MUSetupException.class)
+
+    @Test(expected = MUSetupException.class)
     public void testNoEyes() throws MUPlayException, MUSetupException
     {
-        mockAnimationPlayer = AnimationPlayerMock.createAnimationPlayerMock(HanimBody.getLOA1HanimBody(),HanimBody.getLOA1HanimBody());        
+        mockAnimationPlayer = AnimationPlayerMock.createAnimationPlayerMock(HanimBody.getLOA1HanimBody(), HanimBody.getLOA1HanimBody());
         EyeGazeMU mu = new EyeGazeMU();
-        mu.copy(mockAnimationPlayer);        
+        mu.copy(mockAnimationPlayer);
     }
-    
+
     @Test
     public void testCopy() throws MUSetupException
     {
-        mockAnimationPlayer = AnimationPlayerMock.createAnimationPlayerMock(HanimBody.getLOA1HanimBodyWithEyes(),HanimBody.getLOA1HanimBodyWithEyes());
+        mockAnimationPlayer = AnimationPlayerMock.createAnimationPlayerMock(HanimBody.getLOA1HanimBodyWithEyes(),
+                HanimBody.getLOA1HanimBodyWithEyes());
         EyeGazeMU mu = new EyeGazeMU();
         assertNotNull(mu.copy(mockAnimationPlayer));
     }

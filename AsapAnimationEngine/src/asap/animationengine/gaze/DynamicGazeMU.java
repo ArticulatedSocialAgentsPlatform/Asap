@@ -24,13 +24,16 @@ import com.google.common.collect.ImmutableSet;
  * Provides (up to) full torso gaze to moving targets.
  * 
  * Implementation inspired by:<br>
- * Helena Grillon and Daniel Thalmann, Simulating gaze attention behaviors for crowds (2009), in: Computer Animation and Virtual Worlds, 20 2-3(111-- 119)<br>
+ * Helena Grillon and Daniel Thalmann, Simulating gaze attention behaviors for crowds (2009), in:<br> 
+ * Computer Animation and Virtual Worlds, 20 2-3(111-- 119)<br>
  * 
  * Additions to their work:<br>
- * Eyes reach the target first and then lock on to it, that is, they overshoot their end rotation and then move back while remaining locked on the target (as in
+ * Eyes reach the target first and then lock on to it, that is, they overshoot their end rotation 
+ * and then move back while remaining locked on the target (as in
  * P. Radua, D. Tweed, and T. Vilis. Three-dimensional eye, head, and chest orientations after large gaze shifts and the
  * underlying neural strategies. Journal of Neurophysiology, 72(6):2840–2852, 1994.).
- * The eye max speed and speed profile is biologically motivated (using R. H. S. Carpenter. Movements of the Eyes. Pion Ltd, London, UK, second edition, 1988).
+ * The eye max speed and speed profile is biologically motivated<br> 
+ * (using R. H. S. Carpenter. Movements of the Eyes. Pion Ltd, London, UK, second edition, 1988).
  * Eyes adhere to biologically motivated rotation limits; eye rotation is calculated using Listing's law
  * (using D. Tweed. Three-dimensional model of the human eye-head saccadic system.
  * Journal of Neurophysiology, 77(2):654–666, February 1997).

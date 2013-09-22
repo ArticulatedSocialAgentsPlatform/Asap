@@ -27,6 +27,11 @@ import asap.bml.ext.bmla.BMLABMLBehaviorAttributes;
 import asap.bmlflowvisualizer.graphutils.DAGUtils;
 import asap.bmlflowvisualizer.graphutils.Edge;
 
+/**
+ * UI Element that shows the BML blocks in the scheduling queue.
+ * @author Herwin
+ *
+ */
 public class PlayingQueueJPanelVisualization implements BMLFlowVisualization
 {
     private JPanel panel;

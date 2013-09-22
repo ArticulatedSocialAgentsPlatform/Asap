@@ -14,7 +14,7 @@ import asap.animationengine.gesturebinding.SpeechBinding;
  * @author hvanwelbergen
  *
  */
-class SpeechBindingLoader
+final class SpeechBindingLoader
 {
     private SpeechBindingLoader(){}
     

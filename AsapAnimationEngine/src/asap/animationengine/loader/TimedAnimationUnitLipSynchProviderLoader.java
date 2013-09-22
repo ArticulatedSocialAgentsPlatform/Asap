@@ -2,12 +2,9 @@ package asap.animationengine.loader;
 
 import hmi.environmentbase.Environment;
 import hmi.environmentbase.Loader;
-import hmi.util.Resources;
-import hmi.xml.XMLStructureAdapter;
 import hmi.xml.XMLTokenizer;
 
 import java.io.IOException;
-import java.util.HashMap;
 
 import asap.animationengine.gesturebinding.SpeechBinding;
 import asap.animationengine.lipsync.TimedAnimationUnitLipSynchProvider;
@@ -24,7 +21,7 @@ public class TimedAnimationUnitLipSynchProviderLoader implements LipSynchProvide
 {
     private String id;
     private LipSynchProvider lipSyncProvider;
-    
+
     public void setId(String newId)
     {
         id = newId;
@@ -37,7 +34,8 @@ public class TimedAnimationUnitLipSynchProviderLoader implements LipSynchProvide
     }
 
     @Override
-    public void readXML(XMLTokenizer tokenizer, String loaderId, String vhId, String vhName, Environment[] environments, Loader ... requiredLoaders) throws IOException
+    public void readXML(XMLTokenizer tokenizer, String loaderId, String vhId, String vhName, Environment[] environments,
+            Loader... requiredLoaders) throws IOException
     {
         setId(loaderId);
         AsapRealizerEmbodiment are = null;
@@ -53,14 +51,15 @@ public class TimedAnimationUnitLipSynchProviderLoader implements LipSynchProvide
         }
         if (are == null)
         {
-            throw new RuntimeException("TimedAnimationUnitLipSynchProviderLoader requires an EmbodimentLoader containing a AsapRealizerEmbodiment");
+            throw new RuntimeException(
+                    "TimedAnimationUnitLipSynchProviderLoader requires an EmbodimentLoader containing a AsapRealizerEmbodiment");
         }
         SpeechBinding sb = SpeechBindingLoader.load(tokenizer);
         if (sb == null)
         {
             throw tokenizer.getXMLScanException("TimedAnimationUnitLipSynchProviderLoaderTest requires a speechbinding.");
         }
-        lipSyncProvider = new TimedAnimationUnitLipSynchProvider(sb, ael.getAnimationPlayer(), ael.getPlanManager(),are.getPegBoard());
+        lipSyncProvider = new TimedAnimationUnitLipSynchProvider(sb, ael.getAnimationPlayer(), ael.getPlanManager(), are.getPegBoard());
     }
 
     @Override
