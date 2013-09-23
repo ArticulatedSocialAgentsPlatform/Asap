@@ -111,6 +111,7 @@ public class GestureBindingTest
                 + "<constraint name=\"LEGS\" value=\"LEGS_OPEN\"/>" + "</constraints>" + "<parametermap>"
                 + "<parameter src=\"priority\" dst=\"priority\"/>" + "</parametermap>" + "<parameterdefaults>"
                 + "<parameterdefault name=\"pelvisheight\" value=\"1.7\"/>"
+                + "</parameterdefaults>"
                 + "<MotionUnit type=\"PhysicalController\" class=\"hmi.physics.controller.BalanceController\"/>" + "</MotionUnitSpec>"
 
                 + "<RestPoseSpec>" + "<constraints>" + "<constraint name=\"stance\" value=\"SITTING\"/>"
