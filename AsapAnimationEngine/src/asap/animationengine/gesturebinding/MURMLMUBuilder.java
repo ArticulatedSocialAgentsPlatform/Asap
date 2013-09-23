@@ -334,30 +334,6 @@ public final class MURMLMUBuilder
                     traj.addGuidingStroke(gs);
                 }
             }
-
-            /*
-             * TODO add swivel LMP when needed (as in code below)
-             * //=== add LMP for moving swivel to zero during prep AND stroke
-             * if (swivel > -99)
-             * {
-             * MgcVectorN q (1);
-             * q[0] = swivel;
-             * deque<MgcVectorN> goalVec;
-             * deque<MgcReal> timeVec;
-             * // start
-             * goalVec.push_back(q);
-             * timeVec.push_back(sT);
-             * // end
-             * goalVec.push_back(q);
-             * timeVec.push_back(eT);
-             * LMP_Swivel *lmpSwiv = new LMP_Swivel ("SW_Prep", scope);
-             * lmpSwiv->setSwivelVec(goalVec);
-             * lmpSwiv->setTimeVec(timeVec);
-             * lmp->activatePeerAt(lmpSwiv, sT-0.2);
-             * mp->addLMP(lmpSwiv);
-             * }
-             * }
-             */
         }
     }
 
@@ -892,23 +868,18 @@ public final class MURMLMUBuilder
             LMPWristPos wristMove = new LMPWristPos(scope, bbf, bmlBlockPeg, bmlId, createLMPId(id), pegBoard, traj, hns.getBaseJoint(),
                     aniPlayer, constructAutoSwivel(scope));
 
-            // TODO
-            // -- set transformation for converting positions into base coordinates
-            // wristMove->setBaseFrame( mp->getBase2Root() );
-
             // -- absolutely new movement, or should we append to previous LMP?
-            if (lmp == null)
+            
+            // TODO: solve with TimePegs
+            /*
+            if (lmp != null)
             {
-                lmp = wristMove;
-
+                lmp->activateSuccessorAt( wristMove,traj.getStartTPC() );                
             }
-            else
-            {
-                // TODO: solve with TimePegs
-                // lmp->activateSuccessorAt( wristMove,traj.getStartTPC() );
-                lmp = wristMove;
-            }
-
+            */
+            
+            lmp = wristMove;
+            
             // TODO
             // // -- extend movement with retractory parts, e.g., overshooting
             // if ( retrMode == RTRCT_FULL || retrMode == RTRCT_INTERMEDIATE )

@@ -2,7 +2,6 @@ package asap.animationengine.procanimation;
 
 import static hmi.testutil.math.Quat4fTestUtil.assertQuat4fRotationEquivalent;
 import static hmi.testutil.math.Vec3fTestUtil.assertVec3fEquals;
-import static org.junit.Assert.assertEquals;
 import hmi.animation.VJoint;
 import hmi.math.Quat4f;
 import hmi.math.Vec3f;
@@ -184,13 +183,5 @@ public class ProcAnimationTest
         
         humanCopy.getPart("l_shoulder").getRotation(q);        
         assertQuat4fRotationEquivalent(L_SHOULDER_ROT,q,ANIMATION_PRECISION);
-    }
-    
-    @Test
-    public void setReplacementGroup() throws ParameterException
-    {
-        assertEquals(null,procAnimation.getReplacementGroup());
-        procAnimation.setParameterValue("replacementgroup", "testgroup");
-        assertEquals("testgroup",procAnimation.getReplacementGroup());
     }
 }

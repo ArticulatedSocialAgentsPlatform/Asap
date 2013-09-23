@@ -69,12 +69,5 @@ public interface PictureUnit extends KeyPositionManager
     /**
      * Create a copy of this picture unit
      */
-    PictureUnit copy(PictureDisplay display);
-        
-    /**
-     * Get the pictureunit replacement group 
-     * Used to determine the currently active persistent TPU for this group in the player
-     * Only one group is active at a time
-     */
-    String getReplacementGroup();    
+    PictureUnit copy(PictureDisplay display);  
 }

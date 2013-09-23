@@ -30,6 +30,7 @@ import hmi.mixedanimationenvironment.MixedAnimationEnvironment;
 import hmi.mixedanimationenvironment.MixedAnimationPlayer;
 import hmi.mixedanimationenvironment.MixedAnimationPlayerManager;
 import hmi.physicsembodiments.PhysicalEmbodiment;
+import hmi.util.ArrayUtils;
 import hmi.util.Resources;
 import hmi.worldobjectenvironment.WorldObjectEnvironment;
 import hmi.xml.XMLStructureAdapter;
@@ -75,7 +76,7 @@ public class MixedAnimationEngineLoader implements EngineLoader
     private Hns hns = new Hns();
     private HnsHandshape hnsHandshape = new HnsHandshape(hns);
     private List<String> handShapeDir = new ArrayList<>();
-    
+
     private String id = "";
     // some variables cached during loading
     private GestureBinding gesturebinding = null;
@@ -88,24 +89,25 @@ public class MixedAnimationEngineLoader implements EngineLoader
             Loader... requiredLoaders) throws IOException
     {
         id = loaderId;
-        for (Environment e : environments)
+        mae = ArrayUtils.getFirstClassOfType(environments, MixedAnimationEnvironment.class);
+        we = ArrayUtils.getFirstClassOfType(environments, WorldObjectEnvironment.class);
+
+        for (EmbodimentLoader e : ArrayUtils.getClassesOfType(requiredLoaders, EmbodimentLoader.class))
         {
-            if (e instanceof MixedAnimationEnvironment) mae = (MixedAnimationEnvironment) e;
-            if (e instanceof WorldObjectEnvironment) we = (WorldObjectEnvironment) e;
-        }
-        for (Loader e : requiredLoaders)
-        {
-            if (e instanceof EmbodimentLoader && ((EmbodimentLoader) e).getEmbodiment() instanceof MixedSkeletonEmbodiment)
+            if (e.getEmbodiment() instanceof MixedSkeletonEmbodiment)
             {
-                mse = (MixedSkeletonEmbodiment) ((EmbodimentLoader) e).getEmbodiment();
+                mse = (MixedSkeletonEmbodiment) e.getEmbodiment();                
             }
-            if (e instanceof EmbodimentLoader && ((EmbodimentLoader) e).getEmbodiment() instanceof PhysicalEmbodiment)
+            if (e.getEmbodiment() instanceof PhysicalEmbodiment)
             {
-                pe = (PhysicalEmbodiment) ((EmbodimentLoader) e).getEmbodiment();
+                pe = (PhysicalEmbodiment) e.getEmbodiment();                
             }
-            if (e instanceof EmbodimentLoader && ((EmbodimentLoader) e).getEmbodiment() instanceof AsapRealizerEmbodiment) are = (AsapRealizerEmbodiment) ((EmbodimentLoader) e)
-                    .getEmbodiment();
+            if (e.getEmbodiment() instanceof AsapRealizerEmbodiment)
+            {
+                are = (AsapRealizerEmbodiment) e.getEmbodiment();                
+            }
         }
+
         if (are == null)
         {
             throw new RuntimeException("MixedAnimationEngineLoader requires an EmbodimentLoader containing a AsapRealizerEmbodiment");
@@ -185,15 +187,15 @@ public class MixedAnimationEngineLoader implements EngineLoader
         {
             attrMap = tokenizer.getAttributes();
             Resources res = new Resources(adapter.getOptionalAttribute("resources", attrMap, ""));
-            hns.readXML(res.getReader(adapter.getRequiredAttribute("filename", attrMap,tokenizer)));
-            tokenizer.takeSTag("Hns");            
+            hns.readXML(res.getReader(adapter.getRequiredAttribute("filename", attrMap, tokenizer)));
+            tokenizer.takeSTag("Hns");
             tokenizer.takeETag("Hns");
         }
         else if (tokenizer.atSTag("HnsHandShape"))
         {
             attrMap = tokenizer.getAttributes();
-            handShapeDir.add(adapter.getRequiredAttribute("dir",attrMap, tokenizer));
-            tokenizer.takeSTag("HnsHandShape");            
+            handShapeDir.add(adapter.getRequiredAttribute("dir", attrMap, tokenizer));
+            tokenizer.takeSTag("HnsHandShape");
             tokenizer.takeETag("HnsHandShape");
         }
         else if (tokenizer.atSTag("StartPosition"))
@@ -251,7 +253,7 @@ public class MixedAnimationEngineLoader implements EngineLoader
                 MixedAnimationPlayerManager.getH(), we.getWorldObjectManager(), animationPlanPlayer);
 
         pose.setAnimationPlayer((AnimationPlayer) animationPlayer);
-        
+
         try
         {
             hnsHandshape = new HnsHandshape(hns, this.handShapeDir.toArray(new String[0]));
@@ -260,10 +262,10 @@ public class MixedAnimationEngineLoader implements EngineLoader
         {
             throw new RuntimeException(e);
         }
-        
+
         // make planner
-        animationPlanner = new AnimationPlanner(are.getFeedbackManager(), (AnimationPlayer) animationPlayer, gesturebinding, hns, hnsHandshape,
-                animationPlanManager, are.getPegBoard());
+        animationPlanner = new AnimationPlanner(are.getFeedbackManager(), (AnimationPlayer) animationPlayer, gesturebinding, hns,
+                hnsHandshape, animationPlanManager, are.getPegBoard());
 
         engine = new DefaultEngine<TimedAnimationUnit>(animationPlanner, (AnimationPlayer) animationPlayer, animationPlanManager);
         engine.setId(id);

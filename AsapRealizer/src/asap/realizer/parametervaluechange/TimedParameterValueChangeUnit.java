@@ -2,13 +2,10 @@ package asap.realizer.parametervaluechange;
 
 import java.util.List;
 
-import saiba.bml.BMLGestureSync;
-
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import com.google.common.collect.ImmutableList;
-
+import saiba.bml.BMLGestureSync;
 import asap.realizer.BehaviorNotFoundException;
 import asap.realizer.SyncPointNotFoundException;
 import asap.realizer.feedback.FeedbackManager;
@@ -18,6 +15,8 @@ import asap.realizer.planunit.ParameterException;
 import asap.realizer.planunit.TimedAbstractPlanUnit;
 import asap.realizer.planunit.TimedPlanUnitPlayException;
 import asap.realizer.scheduler.BMLScheduler;
+
+import com.google.common.collect.ImmutableList;
 
 /**
  * TimedPlanUnit for the parametervaluechange bmlt behavior. Changes parameter values in other ongoing behavior.
@@ -32,7 +31,6 @@ public class TimedParameterValueChangeUnit extends TimedAbstractPlanUnit
     private final String paramId;
     private final String targetId;
     private final String targetBmlId;
-    private final String replacementGroup;
     private float initialValue;
     private final float targetValue;
     private final boolean hasInitialValue;
@@ -53,8 +51,7 @@ public class TimedParameterValueChangeUnit extends TimedAbstractPlanUnit
         targetValue = paramValInfo.getTargetValue();
         hasInitialValue = paramValInfo.hasInitialValue();
         endPeg = new TimePeg(bmlPeg);
-        startPeg = new TimePeg(bmlPeg);
-        replacementGroup = targetBmlId+":"+targetId+":"+paramId+":replacementgroup";
+        startPeg = new TimePeg(bmlPeg);        
     }
 
     @Override
@@ -236,12 +233,6 @@ public class TimedParameterValueChangeUnit extends TimedAbstractPlanUnit
         setValue(time);
     }
 
-    @Override
-    public String getReplacementGroup()
-    {
-        return replacementGroup;
-    }
-    
     @Override
     public List<String> getAvailableSyncs()
     {

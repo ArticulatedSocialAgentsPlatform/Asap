@@ -425,15 +425,19 @@ public class LMPWristRot extends LMP
         float[] rkO, rkP, rkQ, rkR, rkA, rkA1, rkB, rkB1, rkRes;
         rkP = orientVec.get(i).getQ();
 
+        /* unused??
         if (i == 0) rkO = orientVec.get(i).getQ();
         else rkO = orientVec.get(i - 1).getQ();
-
+        */
+        
         if (i + 1 >= point_numb) rkQ = orientVec.get(point_numb - 1).getQ();
         else rkQ = orientVec.get(i + 1).getQ();
-
+        
+        /* unused??
         if (i + 2 >= point_numb) rkR = orientVec.get(point_numb - 1).getQ();
         else rkR = orientVec.get(i + 2).getQ();
-
+        */
+        
         rkTarget = rkQ;
 
         // interpolate between rkP and rkQ

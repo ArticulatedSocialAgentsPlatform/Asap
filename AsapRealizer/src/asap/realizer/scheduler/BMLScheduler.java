@@ -430,6 +430,11 @@ public final class BMLScheduler
         pegBoard.removeBehaviour(bmlId, behaviourId);
     }
 
+    boolean isPending(String bmlId, Set<String> bmlIdsChecked)
+    {
+        return bmlBlocksManager.isPending(bmlId, bmlIdsChecked);
+    }
+    
     public boolean isPending(String bmlId)
     {
         return bmlBlocksManager.isPending(bmlId);

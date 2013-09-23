@@ -401,12 +401,6 @@ public class ProcAnimationGestureMU implements GestureUnit
         return copy;
     }
 
-    @Override
-    public String getReplacementGroup()
-    {
-        return gestureUnit.getReplacementGroup();
-    }
-
     public double getRelativeStrokePos()
     {
         return (gestureUnit.getKeyPosition(BMLGestureSync.STROKE.getId()).time - gestureUnit.getKeyPosition(BMLGestureSync.STROKE_START

@@ -1,12 +1,15 @@
 package asap.motionunit.keyframe;
 
+import static org.junit.Assert.assertEquals;
+import static org.mockito.Mockito.mock;
+
+import java.util.List;
+
 import org.junit.Test;
 
-import com.google.common.collect.ImmutableList;
-import java.util.List;
 import asap.motionunit.MUPlayException;
-import static org.junit.Assert.assertEquals;
-import static org.mockito.Mockito.*;
+
+import com.google.common.collect.ImmutableList;
 
 /**
  * Unit test cases for the KeyFrameMotionUnit
@@ -30,12 +33,6 @@ public class KeyFrameMotionUnitTest
         public void startUnit(double t) throws MUPlayException
         {
 
-        }
-
-        @Override
-        public String getReplacementGroup()
-        {
-            return null;
         }
 
         @Override

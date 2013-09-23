@@ -480,12 +480,6 @@ public class GazeMU implements AnimationUnit
     }
 
     @Override
-    public String getReplacementGroup()
-    {
-        return "gaze";
-    }
-
-    @Override
     public void addKeyPosition(KeyPosition kp)
     {
         keyPositionManager.addKeyPosition(kp);

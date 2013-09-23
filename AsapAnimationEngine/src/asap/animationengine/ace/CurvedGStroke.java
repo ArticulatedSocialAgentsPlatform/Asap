@@ -149,11 +149,13 @@ public class CurvedGStroke extends GuidingStroke
         fA3 = fA1;
         fA2 = fA - fA1 - fA3;
 
+        /* unused??
         double fS1 = Math.sqrt(fA1 * fA1 + fB1 * fB1);
         double fS2 = fA2;
         double fS3 = Math.sqrt(fA3 * fA3 + fB2 * fB2);
         double fS = fS1 + fS2 + fS3;
-
+        */
+        
         // -- Schiefe s
         if (s > 0)
         {

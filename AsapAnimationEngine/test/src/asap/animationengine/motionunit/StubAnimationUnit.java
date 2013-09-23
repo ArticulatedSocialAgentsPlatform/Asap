@@ -64,12 +64,6 @@ public class StubAnimationUnit implements AnimationUnit
     }
 
     @Override
-    public String getReplacementGroup()
-    {
-        return null;
-    }
-
-    @Override
     public float getFloatParameterValue(String name)
     {
         return 0;

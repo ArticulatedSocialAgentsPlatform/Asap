@@ -10,7 +10,6 @@ import net.jcip.annotations.ThreadSafe;
 import saiba.bml.feedback.BMLWarningFeedback;
 import asap.realizer.feedback.FeedbackManager;
 import asap.realizer.feedback.NullFeedbackManager;
-import asap.realizer.pegboard.TimePeg;
 import asap.realizer.planunit.DefaultTimedPlanUnitPlayer;
 import asap.realizer.planunit.PlanManager;
 import asap.realizer.planunit.PlanPlayer;
@@ -21,7 +20,7 @@ import asap.realizer.planunit.TimedPlanUnitState;
 import asap.realizerport.BMLFeedbackListener;
 
 /**
- * Generic PlanUnit player. Plays the correct PlanUnit at time t, taking into account replacement groups etc.
+ * Generic PlanUnit player. Plays the correct PlanUnit at time t.
  * 
  * PlanUnits used in the PlanPlayer should have non-blocking play and start functions.
  * 
@@ -64,84 +63,6 @@ public final class SingleThreadedPlanPlayeriSS<T extends TimedPlanUnit> implemen
 
     private List<T> playingPlanUnits = new ArrayList<T>();
 
-    private boolean updatePlayingPU(T pu, double t)
-    {
-        ArrayList<T> remove = new ArrayList<T>();
-        boolean play = true;
-        T replacementOverlap = null;
-        for (T planUnitPlay : playingPlanUnits)
-        {
-            if (planUnitPlay.getReplacementGroup() != null && planUnitPlay.getReplacementGroup().equals(pu.getReplacementGroup()))
-            {
-                boolean runPuPlay = false;
-                double puPlayEnd = planUnitPlay.getEndTime();
-                double puEnd = pu.getEndTime();
-                if (t >= planUnitPlay.getEndTime() && planUnitPlay.getEndTime() != TimePeg.VALUE_UNKNOWN)
-                {
-                    tpuPlayer.stopUnit(planUnitPlay, t);
-                    runPuPlay = false;
-                }
-                else if (t >= pu.getEndTime() && pu.getEndTime() != TimePeg.VALUE_UNKNOWN)
-                {
-                    tpuPlayer.stopUnit(pu, t);
-                    runPuPlay = true;
-                }
-                else if (planUnitPlay.getStartTime() > pu.getStartTime())
-                {
-                    runPuPlay = true;
-                }
-                else if (planUnitPlay.getStartTime() < pu.getStartTime())
-                {
-                    runPuPlay = false;
-                }
-                else if (puEnd == TimePeg.VALUE_UNKNOWN && puPlayEnd != TimePeg.VALUE_UNKNOWN)
-                {
-                    runPuPlay = true;
-                }
-                else if (puEnd != TimePeg.VALUE_UNKNOWN && puPlayEnd == TimePeg.VALUE_UNKNOWN)
-                {
-                    runPuPlay = false;
-                }
-                else if (puEnd == TimePeg.VALUE_UNKNOWN && puPlayEnd == TimePeg.VALUE_UNKNOWN)
-                {
-                    replacementOverlap = planUnitPlay;
-                    runPuPlay = false;
-                }
-                else if (puPlayEnd < puEnd)
-                {
-                    runPuPlay = true;
-                }
-                else if (puPlayEnd == puEnd)
-                {
-                    replacementOverlap = planUnitPlay;
-                    runPuPlay = false;
-                }
-                if (runPuPlay)
-                {
-                    play = false;
-                    break;
-                }
-                else
-                {
-                    remove.add(planUnitPlay);
-                }
-                if (replacementOverlap != null)
-                {
-                    break;
-                }
-            }
-        }
-        playingPlanUnits.removeAll(remove);
-
-        if (replacementOverlap != null)
-        {
-            fbManager.puException(replacementOverlap, "Replacement group overlap between " + pu.getBMLId() + ":" + pu.getId() + " and "
-                    + replacementOverlap.getBMLId() + ":" + replacementOverlap.getId(), t);
-            tmuRemove.add(replacementOverlap);
-        }
-        return play;
-    }
-
     public synchronized void play(double t)
     {
         playingPlanUnits.clear();
@@ -163,10 +84,7 @@ public final class SingleThreadedPlanPlayeriSS<T extends TimedPlanUnit> implemen
             
             if (t >= pu.getStartTime() && (pu.isPlaying() || pu.isLurking()))
             {
-                if (updatePlayingPU(pu, t))
-                {
-                    playingPlanUnits.add(pu);
-                }
+                playingPlanUnits.add(pu);                
             }
         }
 

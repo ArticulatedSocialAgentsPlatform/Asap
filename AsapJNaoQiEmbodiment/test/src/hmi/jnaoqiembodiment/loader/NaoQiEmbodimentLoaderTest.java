@@ -23,7 +23,7 @@ public class NaoQiEmbodimentLoaderTest
     {
         // FIXME: make the NaoQiEmbodiment work in windows
         Assume.assumeTrue(OS.equalsOS(OS.WINDOWS));
-
+        Assume.assumeTrue(System.getProperty("sun.arch.data.model")=="32"); 
         String str = "<Loader id=\"naoqiembodiment\" loader=\"hmi.jnaoqiembodiment.loader.NaoQiEmbodimentLoader\">"
                 + "<naoqi ip=\"localhost\" port=\"10\"/>" + "</Loader>";
         NaoQiEmbodimentLoader loader = new NaoQiEmbodimentLoader();

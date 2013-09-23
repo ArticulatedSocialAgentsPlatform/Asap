@@ -1,6 +1,8 @@
 package asap.realizer.scheduler;
 
 
+import java.util.Set;
+
 import asap.realizer.planunit.TimedPlanUnitState;
 
 import com.google.common.collect.ImmutableMap;
@@ -41,6 +43,8 @@ public interface BMLBlock
     void update(ImmutableMap<String,TimedPlanUnitState> allBlocks);
     
     boolean isPending();
+    
+    boolean isPending(Set<String> bmlIdsChecked);
     
     String getBMLId();
     void setState(TimedPlanUnitState state);

@@ -6,7 +6,6 @@ import java.util.List;
 import java.util.Set;
 
 import lombok.Getter;
-import lombok.extern.slf4j.Slf4j;
 import saiba.bml.core.Behaviour;
 import saiba.bml.core.GestureBehaviour;
 import asap.animationengine.AnimationPlayer;
@@ -24,7 +23,6 @@ import asap.realizer.planunit.TimedPlanUnitPlayException;
 import asap.realizer.planunit.TimedPlanUnitState;
 import asap.realizer.scheduler.TimePegAndConstraint;
 
-import com.google.common.collect.ImmutableList;
 import com.google.common.collect.ImmutableMap;
 
 /**

@@ -19,6 +19,11 @@ import saiba.bml.feedback.BMLBlockPredictionFeedback;
 import saiba.bml.feedback.BMLBlockProgressFeedback;
 import asap.bml.ext.bmla.BMLABMLBehaviorAttributes;
 
+/**
+ * UI element that shows the finished BML blocks
+ * @author Herwin
+ *
+ */
 public class FinishedQueueJPanelVisualization implements BMLFlowVisualization
 {
     private JPanel panel;

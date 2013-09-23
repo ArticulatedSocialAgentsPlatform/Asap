@@ -59,12 +59,6 @@ public class KeyframeMorphFU extends KeyFrameMotionUnit implements FaceUnit
     }
 
     @Override
-    public String getReplacementGroup()
-    {
-        return null;
-    }
-
-    @Override
     public double getPreferedDuration()
     {
         return preferedDuration;

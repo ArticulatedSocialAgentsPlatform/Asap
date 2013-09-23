@@ -146,16 +146,6 @@ public class TimedMotionUnit extends TimedAbstractPlanUnit
         return mu;
     }
 
-    /**
-     * @deprecated No longer relevant in BML 1.0
-     */
-    @Override
-    @Deprecated
-    public String getReplacementGroup()
-    {
-        return mu.getReplacementGroup();
-    }
-
     @Override
     public double getPreferedDuration()
     {

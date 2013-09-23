@@ -9,8 +9,15 @@ import asap.bmlflowvisualizer.PlayingQueueJPanelVisualization;
 import asap.realizerport.BMLFeedbackListener;
 import asap.realizerport.RealizerPort;
 
-public class BMLFlowVisualizationTryout
+/**
+ * Demo, playing around with the BMLFlowVisualization
+ * @author Herwin
+ *
+ */
+public final class BMLFlowVisualizationTryout
 {
+    private BMLFlowVisualizationTryout(){}
+    
     public static void main(String args[])
     {
         JFrame jf = new JFrame();

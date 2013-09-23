@@ -129,13 +129,12 @@ public class TimedAnimationMotionUnit extends TimedMotionUnit implements TimedAn
     
     protected void gracefullInterrupt(double time)throws TimedPlanUnitPlayException
     {
-        
+        stop(time);
     }
     
     @Override
     public void interrupt(double time) throws TimedPlanUnitPlayException
     {
-        System.out.println("interrupt "+"at t="+time+" "+getId()+" state: "+this.getState()+" relax time: "+getTime("relax")+" ready time: "+getTime("ready"));
         switch (getState())
         {
         case IN_PREP:

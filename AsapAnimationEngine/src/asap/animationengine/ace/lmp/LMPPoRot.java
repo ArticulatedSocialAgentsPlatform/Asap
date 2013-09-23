@@ -304,7 +304,7 @@ public class LMPPoRot extends LMP
 
             // create trajectory (MgcNaturalSplineN::BT_CLAMPED)
             int segments = pointVec.size() - 1;
-            float qDotE[] = Vecf.getVecf(1);
+            //float qDotE[] = Vecf.getVecf(1);
             List<Double> t = new ArrayList<>();
             List<Double> b = new ArrayList<>();
             List<Double> c = new ArrayList<>();

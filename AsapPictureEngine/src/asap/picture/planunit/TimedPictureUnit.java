@@ -153,12 +153,6 @@ public class TimedPictureUnit extends TimedAbstractPlanUnit
     }
 
     @Override
-    public String getReplacementGroup()
-    {
-        return pu.getReplacementGroup();
-    }
-
-    @Override
     public double getPreferedDuration()
     {
         return pu.getPreferedDuration();

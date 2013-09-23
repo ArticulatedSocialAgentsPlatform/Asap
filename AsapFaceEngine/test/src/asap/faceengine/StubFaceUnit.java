@@ -82,11 +82,4 @@ public class StubFaceUnit implements FaceUnit
     {
         return this;
     }
-
-    @Override
-    @Deprecated
-    public String getReplacementGroup()
-    {
-        return null;
-    }
 }

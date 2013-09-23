@@ -15,7 +15,7 @@ import java.util.Set;
  * @author Herwin
  * 
  */
-public class DAGUtils
+public final class DAGUtils
 {
     private DAGUtils()
     {

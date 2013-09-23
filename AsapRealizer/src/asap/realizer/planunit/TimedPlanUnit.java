@@ -97,13 +97,6 @@ public interface TimedPlanUnit
     void updateTiming(double time) throws TimedPlanUnitPlayException;
 
     /**
-     * Get the PlanUnit replacement group (=typically the BML behavior) Used to
-     * determine the currently active persistent PlanUnit for this group in the
-     * player Only one group is active at a time null is none
-     */
-    String getReplacementGroup();
-
-    /**
      * Get the global start time of the PlanUnit, TimePeg.VALUEUNKNOWN if not
      * known (yet)
      */

@@ -325,14 +325,6 @@ public class PointingMU implements AnimationUnit
         this.tmp = tmp;
     }
 
-    @Override
-    public String getReplacementGroup()
-    {
-        // return "point";
-        // allow 2 pointing mu's to be active
-        return null;
-    }
-
     private static final Set<String> PHJOINTS = ImmutableSet.of();
 
     @Override

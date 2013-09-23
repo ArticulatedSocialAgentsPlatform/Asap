@@ -51,7 +51,6 @@ import com.google.common.collect.ImmutableSet;
 public class ControllerMU implements AnimationUnit
 {
     private PhysicalController controller;
-    private String replacementgroup = null;
     private KeyPositionManager keyPositionManager = new KeyPositionManagerImpl();
     private AnimationPlayer aPlayer;
     @Getter private int priority = 0;
@@ -94,7 +93,6 @@ public class ControllerMU implements AnimationUnit
     {
         PhysicalController pc = controller.copy(p.getPHuman());
         ControllerMU c = new ControllerMU(pc, p);
-        c.replacementgroup = replacementgroup;
         c.priority = priority;
         return c;
     }
@@ -126,11 +124,7 @@ public class ControllerMU implements AnimationUnit
     @Override
     public void setParameterValue(String name, String value) throws ParameterException
     {
-        if (name.equals("replacementgroup"))
-        {
-            replacementgroup = value;
-        }
-        else if(name.equals("priority"))
+        if(name.equals("priority"))
         {
             priority = Integer.parseInt(value);
         }
@@ -154,10 +148,6 @@ public class ControllerMU implements AnimationUnit
     @Override
     public String getParameterValue(String name) throws ParameterException
     {
-        if (name.equals("replacementgroup"))
-        {
-            return replacementgroup;
-        }
         if(name.equals("priority"))
         {
             return ""+priority;
@@ -193,12 +183,6 @@ public class ControllerMU implements AnimationUnit
     public TimedAnimationMotionUnit createTMU(FeedbackManager bfm, BMLBlockPeg bbPeg, String bmlId, String id, PegBoard pb)
     {
         return new PhysicalTMU(bfm, bbPeg, bmlId, id, this, pb);
-    }
-
-    @Override
-    public String getReplacementGroup()
-    {
-        return replacementgroup;
     }
 
     public void reset()
