@@ -151,12 +151,6 @@ public class TimedNaoUnit extends TimedAbstractPlanUnit
     }
 
     @Override
-    public String getReplacementGroup()
-    {
-        return nu.getReplacementGroup();
-    }
-
-    @Override
     public double getPreferedDuration()
     {
         return nu.getPreferedDuration();

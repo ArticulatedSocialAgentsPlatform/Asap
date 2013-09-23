@@ -70,11 +70,4 @@ public interface NaoUnit extends KeyPositionManager
      * Create a copy of this nao unit and link it to the NAO
      */
     NaoUnit copy(Nao n);
-    
-    /**
-     * Get the naounit replacement group 
-     * Used to determine the currently active persistent TNU for this group in the player
-     * Only one group is active at a time
-     */
-    String getReplacementGroup();    
 }

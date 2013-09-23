@@ -116,12 +116,6 @@ public class PlayChoregrapheClipNU implements NaoUnit
         return new TimedNaoUnit(bfm, bbPeg, bmlId, id, this);
     }
 
-    @Override
-    public String getReplacementGroup()
-    {
-        return "getReplacementGroup";
-    }
-
     /**
      * @return Prefered duration (in seconds) of this face unit, 0 means not determined/infinite
      */
