@@ -24,7 +24,7 @@ public class IpaacaFaceAndBodyEmbodiment implements BodyAndFaceEmbodiment
     private final String id;
 
     @Setter
-    private EyelidMorpherEmbodiment eyelidMorpher = new EyelidMorpherEmbodiment(new ArrayList<String>());
+    private EyelidMorpherEmbodiment eyelidMorpher = new EyelidMorpherEmbodiment("",new ArrayList<String>());
 
     public IpaacaFaceAndBodyEmbodiment(String id, IpaacaEmbodiment ipaacaEmbodiment, IpaacaFaceEmbodiment faceEmbodiment,
             IpaacaBodyEmbodiment bodyEmbodiment)

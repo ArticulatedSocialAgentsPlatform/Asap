@@ -86,7 +86,6 @@ public class PegBoardVisualizer extends JPanel
     private int drawBMLBlock(Graphics2D g2, String bmlId, BMLBlockPeg blockPeg, int y, double startTime)
     {
         g2.drawString(bmlId, (int)((blockPeg.getValue()-startTime)*scale), y+20);
-        System.out.println("Drawing bml block "+bmlId);
         y += 25;
         
         for (String behId : pegBoard.getBehaviours(bmlId))
@@ -166,10 +165,8 @@ public class PegBoardVisualizer extends JPanel
         toolTips.clear();
         int y = 0;
         double startTime = getStartTime();
-        System.out.println("paintComponent");
         for (Map.Entry<String, BMLBlockPeg> entry : pegBoard.getBMLBlockPegs().entrySet())
         {
-            System.out.println("drawing bml block "+entry.getKey());
             if (entry.getValue() != BMLBlockPeg.GLOBALPEG)
             {
                 y = drawBMLBlock(g2, entry.getKey(), entry.getValue(), y, startTime);
