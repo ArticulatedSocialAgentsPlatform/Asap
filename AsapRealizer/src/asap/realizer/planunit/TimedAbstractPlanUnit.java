@@ -172,7 +172,7 @@ public abstract class TimedAbstractPlanUnit implements TimedPlanUnit
         else
         {
             stop(time);
-        }
+        }        
     }
 
     /**

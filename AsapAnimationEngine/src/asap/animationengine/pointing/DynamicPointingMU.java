@@ -68,12 +68,7 @@ public class DynamicPointingMU extends PointingMU
         AnalyticalIKSolver.translateToLocalSystem(null, vjShoulder, vecTemp, vecTemp2);        
         setEndRotation(vecTemp2);
         
-        //FIXME: t calculation when interrupted
-        if(t>0.75 || isInterrupted())
-        {
-            relaxUnit.play( (t-0.75)/0.25 );            
-        }
-        else if(t<0.25)
+        if(t<0.25)
         {
             double remDuration = ( (0.25-t)/0.25)*preparationDuration;
             float deltaT = (float)(player.getStepTime()/remDuration);

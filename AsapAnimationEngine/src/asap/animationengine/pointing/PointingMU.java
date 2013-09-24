@@ -30,7 +30,6 @@ import java.util.List;
 import java.util.Set;
 
 import lombok.Getter;
-import lombok.Setter;
 import asap.animationengine.AnimationPlayer;
 import asap.animationengine.motionunit.AnimationUnit;
 import asap.animationengine.motionunit.TimedAnimationMotionUnit;
@@ -67,7 +66,10 @@ public class PointingMU implements AnimationUnit
 
     protected KeyPosition ready;
     protected KeyPosition relax;
+    
+    @Getter
     protected AnimationPlayer player;
+    
     protected WorldObjectManager woManager;
     protected String target;
     protected TimeManipulator tmp;
@@ -83,13 +85,8 @@ public class PointingMU implements AnimationUnit
     protected String hand = "RIGHT_HAND";
     protected WorldObject woTarget;
     protected double preparationDuration;
-    protected AnimationUnit relaxUnit;
-
+    
     private final KeyPositionManager keyPositionManager = new KeyPositionManagerImpl();
-
-    @Getter
-    @Setter
-    private volatile boolean interrupted;
 
     public void addKeyPosition(KeyPosition kp)
     {
@@ -264,11 +261,7 @@ public class PointingMU implements AnimationUnit
     @Override
     public void play(double t) throws MUPlayException
     {
-        if (t > 0.75 || isInterrupted())
-        {
-            relaxUnit.play((t - 0.75) / 0.25);
-        }
-        else if (t < 0.25)
+        if (t < 0.25)
         {
             float tManip = (float) tmp.manip(t / 0.25);
             Quat4f.interpolate(qTemp, qShoulderStart, qShoulder, tManip);
@@ -337,11 +330,6 @@ public class PointingMU implements AnimationUnit
     public Set<String> getKinematicJoints()
     {
         return ImmutableSet.of(vjShoulder.getSid(), vjElbow.getSid());
-    }
-
-    public void setupRelaxUnit()
-    {
-        relaxUnit = player.getRestPose().createTransitionToRest(getKinematicJoints());
     }
 
     public double getRelaxDuration()
