@@ -256,7 +256,7 @@ public class MixedAnimationEngineLoader implements EngineLoader
 
         try
         {
-            hnsHandshape = new HnsHandshape(hns, this.handShapeDir.toArray(new String[0]));
+            hnsHandshape = new HnsHandshape(hns, handShapeDir.toArray(new String[0]));
         }
         catch (IOException e)
         {
