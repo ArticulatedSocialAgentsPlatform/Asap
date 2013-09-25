@@ -1,5 +1,4 @@
 package asap.realizerintegrationtests;
-
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.number.OrderingComparison.greaterThan;
 import static org.hamcrest.number.OrderingComparison.lessThan;
@@ -217,6 +216,18 @@ public class SchedulerIntegrationTestCases
         readXML("murml/murmlhandlocation.xml");
         assertNoWarnings();
         assertEquals(0, pegBoard.getRelativePegTime("bml1", "gesture1", "start"), PEGBOARD_PRECISION);
+    }
+    
+    @Test(timeout = SCHEDULE_TIMEOUT)
+    public void testMurmlHandLocationStrokeStartSynched()
+    {
+        readXML("murml/murmlhandlocationstrokestartsynched.xml");
+        assertNoWarnings();
+        assertEquals(0, pegBoard.getRelativePegTime("bml1", "gesture1", "start"), PEGBOARD_PRECISION);        
+        assertEquals(pegBoard.getRelativePegTime("bml1", "speech1", "t1"), pegBoard.getRelativePegTime("bml1", "gesture1", "strokeStart"), PEGBOARD_PRECISION);
+        assertThat(pegBoard.getRelativePegTime("bml1", "gesture1", "strokeStart"),greaterThan(0d));
+        assertThat(pegBoard.getRelativePegTime("bml1", "gesture1", "strokeStart"),greaterThan(pegBoard.getRelativePegTime("bml1", "gesture1", "start")));
+        assertThat(pegBoard.getRelativePegTime("bml1", "gesture1", "strokeEnd"),greaterThan(pegBoard.getRelativePegTime("bml1", "gesture1", "strokeStart")));
     }
 
     @Test(timeout = SCHEDULE_TIMEOUT)

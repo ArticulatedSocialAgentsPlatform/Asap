@@ -752,7 +752,7 @@ public final class MURMLMUBuilder
 
     private BiologicalSwivelCostsEvaluator constructAutoSwivel(String scope)
     {
-        if (scope.equals("left_arm"))
+        if ("left_arm".equals(scope))
         {
             return new BiologicalSwivelCostsEvaluator(hns.getMinSwivelLeft(), hns.getMaxSwivelLeft(),
                     hns.getSwivelSigmaOfGaussianCostsDistribution(), hns.getSwivelFreedomOfTheGaussianMeanLeft());

@@ -44,7 +44,7 @@ public class LMPWristPos extends LMPPos
     private IKBody ikBody;
     private IKBody ikBodyCurrent;
 
-    private String scope;
+    private String scope = "right_arm";
     private double startSwivel;
     private double desiredSwivel;
     private final String baseJoint;
@@ -63,14 +63,15 @@ public class LMPWristPos extends LMPPos
         this.ikBodyCurrent = new IKBody(aniPlayer.getVCurr()); // TODO: may also be on additive joint
         this.scope = scope;
 
-        if (scope.equals("left_arm"))
+        if ("left_arm".equals(scope))
         {
             kinematicJoints = ImmutableSet.of(Hanim.l_shoulder, Hanim.l_elbow);
         }
-        else if (scope.equals("right_arm"))
+        else 
         {
             kinematicJoints = ImmutableSet.of(Hanim.r_shoulder, Hanim.r_elbow);
-        }        
+            this.scope = "right_arm";
+        }
     }
 
     public float[] getPosition(double t)
@@ -130,7 +131,7 @@ public class LMPWristPos extends LMPPos
         {
             gSeq.setStartPos(getGlobalWristPosition());
             gSeq.setStartTime(time);
-            if (scope.equals("left_arm"))
+            if ("left_arm".equals(scope))
             {
                 startSwivel = ikBodyCurrent.getSwivelLeftArm();
             }
@@ -222,8 +223,8 @@ public class LMPWristPos extends LMPPos
 
             // complete curvilinear guiding strokes
             // cout << "completing curvilinear strokes..." << endl;
-            
-            //double sT = getStartTime();
+
+            // double sT = getStartTime();
             double sT = _gSeq.getStartTime();
             double prepDur = getStrokeStartTime() - getStartTime();
             _gSeq.getStroke(0).setEDt(prepDur);
@@ -243,7 +244,7 @@ public class LMPWristPos extends LMPPos
             // cout << "setting up trajectory constraints..." << endl;
             float[] p, v;
 
-            //double sT = getStartTime();
+            // double sT = getStartTime();
             sT = _gSeq.getStartTime();
 
             // double prepDur = getPreparationDuration();
@@ -290,13 +291,11 @@ public class LMPWristPos extends LMPPos
             }
 
             _spline = new NUSSpline3(4);
-            _spline.interpolate3(pv, tv, vv);            
+            _spline.interpolate3(pv, tv, vv);
         }
 
         return _spline;
     }
-
-    
 
     @Override
     public double getEndTime()
@@ -344,7 +343,7 @@ public class LMPWristPos extends LMPPos
             }
 
             float pos[] = getPosition(t);
-            if (scope.equals("left_arm"))
+            if ("left_arm".equals(scope))
             {
                 ikBody.setSwivelLeftHand(swivel);
                 ikBody.setLeftHand(pos);
@@ -373,7 +372,7 @@ public class LMPWristPos extends LMPPos
     public Set<String> getPhysicalJoints()
     {
         return ImmutableSet.of();
-    }    
+    }
 
     protected void setInternalStrokeTiming(double time)
     {
@@ -409,7 +408,7 @@ public class LMPWristPos extends LMPPos
         return wristJoint;
     }
 
-    // get estimated preparation duration, given current hand position if not started, start pos otherwise
+    // get estimated preparation duration, given current hand position if not started, start pose otherwise
     public double getPreparationDuration()
     {
         GuidingStroke gstroke = gSeq.getStroke(0);
