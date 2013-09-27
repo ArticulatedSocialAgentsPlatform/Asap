@@ -174,6 +174,10 @@ public class MotorControlProgram extends TimedAbstractPlanUnit implements TimedA
         {
             startTime = getTime(syncs[offset - 1]);
         }
+        else
+        {
+            startTime = -1000;
+        }
         double solvedTimes[] = LinearStretchTemporalResolver.solve(times, prefDurations, weights, startTime);
         for (int i = offset; i < times.length; i++)
         {
