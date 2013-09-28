@@ -170,10 +170,25 @@ public class MotorControlProgram extends TimedAbstractPlanUnit implements TimedA
     {
         double weights[] = { 2, 1, 1, 1, 1, 2 };
 
+        boolean hasKnownTime = false;
+        for(double t:times)
+        {
+            if(t!=LinearStretchTemporalResolver.TIME_UNKNOWN)
+            {
+                hasKnownTime = true;
+                break;
+            }
+        }
+        
         if (offset > 0)
         {
             startTime = getTime(syncs[offset - 1]);
         }
+        else if (hasKnownTime)
+        {
+            startTime = Double.NEGATIVE_INFINITY;
+        }
+        
         double solvedTimes[] = LinearStretchTemporalResolver.solve(times, prefDurations, weights, startTime);
         for (int i = offset; i < times.length; i++)
         {

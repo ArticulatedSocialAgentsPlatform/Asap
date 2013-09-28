@@ -340,10 +340,10 @@ public class LMPHandMove extends LMP
     @Override
     protected void playUnit(double time) throws TimedPlanUnitPlayException
     {
-        double relaxTime = getRelaxTime();
-        if (time < relaxTime)
+        double strokeEndTime = this.getTime("strokeEnd");
+        if (time < strokeEndTime)
         {
-            double t = (time - getStartTime()) / (relaxTime - getStartTime());
+            double t = (time - getStartTime()) / (strokeEndTime - getStartTime());
             try
             {
                 mu.play(t);

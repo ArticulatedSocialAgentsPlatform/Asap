@@ -227,7 +227,7 @@ public class SchedulerIntegrationTestCases
         assertEquals(pegBoard.getRelativePegTime("bml1", "speech1", "t1"), pegBoard.getRelativePegTime("bml1", "gesture1", "strokeStart"), PEGBOARD_PRECISION);
         assertThat(pegBoard.getRelativePegTime("bml1", "gesture1", "strokeStart"),greaterThan(0d));
         assertThat(pegBoard.getRelativePegTime("bml1", "gesture1", "strokeStart"),greaterThan(pegBoard.getRelativePegTime("bml1", "gesture1", "start")));
-        assertThat(pegBoard.getRelativePegTime("bml1", "gesture1", "strokeEnd"),greaterThan(pegBoard.getRelativePegTime("bml1", "gesture1", "strokeStart")));
+        assertEquals(pegBoard.getRelativePegTime("bml1", "gesture1", "strokeEnd"),pegBoard.getRelativePegTime("bml1", "gesture1", "strokeStart"), PEGBOARD_PRECISION);        
     }
 
     @Test(timeout = SCHEDULE_TIMEOUT)

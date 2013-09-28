@@ -240,7 +240,7 @@ public abstract class LMP extends TimedAbstractPlanUnit implements TimedAnimatio
             setInternalStrokeTiming(time);
         }
 
-        if (!isPlaying() && !isDone())
+        if (!isPlaying() && !isDone() && !isPending() && !isInPrep())
         {
             setTpMinimumTime(time);
         }
