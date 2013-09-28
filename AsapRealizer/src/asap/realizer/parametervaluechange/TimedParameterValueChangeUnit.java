@@ -133,7 +133,6 @@ public class TimedParameterValueChangeUnit extends TimedAbstractPlanUnit
     {
         if (endPeg.getGlobalValue() != TimePeg.VALUE_UNKNOWN && startPeg.getGlobalValue() != TimePeg.VALUE_UNKNOWN)
         {
-            System.out.println("pvc hasValidTiming start:"+startPeg.getGlobalValue()+"end: "+endPeg.getGlobalValue());
             return endPeg.getGlobalValue() >= startPeg.getGlobalValue();
         }
         return true;

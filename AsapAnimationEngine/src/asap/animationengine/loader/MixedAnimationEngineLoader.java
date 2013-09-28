@@ -250,7 +250,7 @@ public class MixedAnimationEngineLoader implements EngineLoader
                 new DefaultTimedPlanUnitPlayer(), are.getPegBoard());
 
         animationPlayer = new AnimationPlayer(mse.getPreviousVJoint(), mse.getCurrentVJoint(), mse.getNextVJoint(), pe.getMixedSystems(),
-                MixedAnimationPlayerManager.getH(), we.getWorldObjectManager(), animationPlanPlayer);
+                mae.getH(), we.getWorldObjectManager(), animationPlanPlayer);
 
         pose.setAnimationPlayer((AnimationPlayer) animationPlayer);
 
