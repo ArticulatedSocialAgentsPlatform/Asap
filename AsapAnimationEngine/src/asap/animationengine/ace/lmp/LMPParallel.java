@@ -156,10 +156,12 @@ public class LMPParallel extends LMP
     @Override
     public boolean hasValidTiming()
     {
+        /*
         for (TimedAnimationUnit tmu : lmpQueue)
         {
             if (!tmu.hasValidTiming()) return false;
         }
+        */
         return true;
     }
 
@@ -223,17 +225,17 @@ public class LMPParallel extends LMP
             if (time < getStrokeStartTime() || !isPlaying())
             {
                 double desiredStrokeEnd = getStrokeStartTime() + lmp.getStrokeDuration();
-                System.out.println("desiredStrokeEnd of " + lmp.getId() + ": " + desiredStrokeEnd + "=" + getStrokeStartTime() + "+"
+                log.debug("desiredStrokeEnd of " + lmp.getId() + ": " + desiredStrokeEnd + "=" + getStrokeStartTime() + "+"
                         + lmp.getStrokeDuration());
                 if (desiredStrokeEnd < getStrokeEndTime())
                 {
                     lmp.getTimePeg("strokeEnd").setGlobalValue(desiredStrokeEnd);
-                    System.out.println("strokeEnd set: " + desiredStrokeEnd);
+                    log.debug("strokeEnd set: " + desiredStrokeEnd);
                 }
                 else
                 {
                     lmp.getTimePeg("strokeEnd").setGlobalValue(getStrokeEndTime());
-                    System.out.println("strokeEnd set: " + getStrokeEndTime());
+                    log.debug("strokeEnd set: " + getStrokeEndTime());
                 }
             }
         }
@@ -257,15 +259,8 @@ public class LMPParallel extends LMP
     @Override
     protected void playUnit(double time) throws TimedPlanUnitPlayException
     {
-        System.out.println("time: " + time);
-        System.out.println("parallel: start= " + getTime("start"));
-        System.out.println("parallel: strokeStart= " + getTime("strokeStart"));
-        System.out.println("parallel: strokeEnd= " + getTime("strokeEnd"));
-
         for (TimedAnimationUnit tmu : lmpQueue)
         {
-            System.out.println("inner tmu " + tmu.getId() + " start " + tmu.getStartTime() + " strokeStart: " + tmu.getTime("strokeStart")
-                    + " strokeEnd " + tmu.getTime("strokeEnd"));
             if (time >= tmu.getStartTime())
             {
                 if (!tmu.isPlaying())

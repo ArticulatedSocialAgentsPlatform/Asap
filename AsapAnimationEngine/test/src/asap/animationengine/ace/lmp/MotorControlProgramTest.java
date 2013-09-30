@@ -779,4 +779,42 @@ public class MotorControlProgramTest extends AbstractTimedPlanUnitTest
         assertEquals(3, tmu1.getTime("strokeEnd"), TIME_PRECISION);
         assertEquals(4, tmu1.getTime("relax"), TIME_PRECISION);        
     }
+    
+    @Test
+    public void testParallelTimeShiftTwoLMPs() throws BehaviourPlanningException, TimedPlanUnitPlayException
+    {
+        StubLMP tmu1 = createStub("bml1", "beh1-1", 1, 2, 2);
+        StubLMP tmu2 = createStub("bml1", "beh1-2", 2, 3, 4);
+        LMPParallel par = new LMPParallel(fbManager, bml1Peg, "bml1", "beh1_seq", localPegboard,
+                new ImmutableList.Builder<TimedAnimationUnit>().add(tmu1).add(tmu2).build());
+        MotorControlProgram mcp = setupPlanUnit(fbManager, BMLBlockPeg.GLOBALPEG, "bml1", "beh1", par);
+        
+        List<TimePegAndConstraint> sacs = new ArrayList<>();
+        TimePeg tpStrokeStart = TimePegUtil.createTimePeg(0);
+        TimePeg tpStrokeEnd = TimePegUtil.createTimePeg(3);
+        sacs.add(new TimePegAndConstraint("strokeStart", tpStrokeStart, new Constraint(), 0, false));
+        sacs.add(new TimePegAndConstraint("strokeEnd", tpStrokeEnd, new Constraint(), 0, false));
+        mcp.resolveSynchs(BMLBlockPeg.GLOBALPEG, new MURMLGestureBehaviour("bml1"), sacs);  
+        
+        mcp.setState(TimedPlanUnitState.LURKING);
+        mcp.getTimePeg("start").setGlobalValue(0);
+        tpStrokeStart.setGlobalValue(2);
+        tpStrokeEnd.setGlobalValue(5);        
+        mcp.start(0);
+        mcp.play(0);
+        assertEquals(0, mcp.getStartTime(), TIME_PRECISION);
+        assertEquals(2, mcp.getTime("strokeStart"), TIME_PRECISION);
+        assertEquals(5, mcp.getTime("strokeEnd"), TIME_PRECISION);
+        assertEquals(0, par.getStartTime(), TIME_PRECISION);
+        assertEquals(2, par.getTime("strokeStart"), TIME_PRECISION);
+        assertEquals(5, par.getTime("strokeEnd"), TIME_PRECISION);
+        assertEquals(1, tmu1.getStartTime(), TIME_PRECISION);
+        assertEquals(2, tmu1.getTime("strokeStart"), TIME_PRECISION);
+        assertEquals(4, tmu1.getTime("strokeEnd"), TIME_PRECISION);
+        assertEquals(5, tmu1.getTime("relax"), TIME_PRECISION);    
+        assertEquals(0, tmu2.getStartTime(), TIME_PRECISION);
+        assertEquals(2, tmu2.getTime("strokeStart"), TIME_PRECISION);
+        assertEquals(5, tmu2.getTime("strokeEnd"), TIME_PRECISION);
+        assertEquals(5, tmu2.getTime("relax"), TIME_PRECISION);
+    }
 }

@@ -296,7 +296,8 @@ public class MotorControlProgram extends TimedAbstractPlanUnit implements TimedA
     @Override
     public boolean hasValidTiming()
     {
-        return lmp.hasValidTiming();
+        return true;
+        //return lmp.hasValidTiming();
     }
 
     @Override
