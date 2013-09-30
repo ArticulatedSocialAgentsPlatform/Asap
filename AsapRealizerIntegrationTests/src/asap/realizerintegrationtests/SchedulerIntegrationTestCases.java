@@ -1,4 +1,5 @@
 package asap.realizerintegrationtests;
+
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.number.OrderingComparison.greaterThan;
 import static org.hamcrest.number.OrderingComparison.lessThan;
@@ -33,14 +34,14 @@ import asap.realizerport.util.ListBMLFeedbackListener;
 /**
  * Testcases and generic setup for integration tests with the BMLScheduler
  * @author Herwin
- *
+ * 
  */
 public class SchedulerIntegrationTestCases
 {
     private static final double PEGBOARD_PRECISION = 0.0001;
     private static final int SCHEDULE_TIMEOUT = 10000;
     protected PegBoard pegBoard = new PegBoard();
-    
+
     // test anticipator with one TimePeg 'dummy' at time 1
     public static class DummyAnticipator extends Anticipator
     {
@@ -53,7 +54,7 @@ public class SchedulerIntegrationTestCases
             addSynchronisationPoint("dummy", sp);
         }
     }
-    
+
     static
     {
         BMLTInfo.init();
@@ -62,7 +63,7 @@ public class SchedulerIntegrationTestCases
     protected AsapRealizer realizer;
     protected List<BMLWarningFeedback> warnings = new ArrayList<BMLWarningFeedback>();
     private Set<String> invBeh;
-    
+
     private void readXML(String file)
     {
         try
@@ -81,13 +82,13 @@ public class SchedulerIntegrationTestCases
         BMLScheduler scheduler = realizer.getScheduler();
         scheduler.addAnticipator("dummyanticipator", new DummyAnticipator());
     }
-    
+
     @After
     public void cleanup()
     {
         realizer.shutdown();
     }
-    
+
     private void assertNoWarnings()
     {
         assertTrue("Unexpected warning(s): " + warnings, 0 == warnings.size());
@@ -115,7 +116,7 @@ public class SchedulerIntegrationTestCases
         assertOneWarning();
         assertEquals(expectedBmlId + ":" + expectedBehId, warnings.get(0).getId());
     }
-    
+
     @Test(timeout = SCHEDULE_TIMEOUT)
     public void timepegTestSpeechEndTimed()
     {
@@ -142,7 +143,8 @@ public class SchedulerIntegrationTestCases
         assertEquals(1, nod1Start.getGlobalValue(), PEGBOARD_PRECISION);
     }
 
-    @Test//(timeout = SCHEDULE_TIMEOUT)
+    @Test
+    // (timeout = SCHEDULE_TIMEOUT)
     public void timepegTestSpeechSyncTimed()
     {
         readXML("testspeech_synctimed.xml");
@@ -184,7 +186,7 @@ public class SchedulerIntegrationTestCases
         assertTrue(speechStartNew - speechStartOrig == 5);
         // assertTrue(invBeh.get(0).equals("bml1:speech1"));
     }
-    
+
     @Test(timeout = SCHEDULE_TIMEOUT)
     public void testPostureShiftBehaviour()
     {
@@ -193,7 +195,7 @@ public class SchedulerIntegrationTestCases
         assertEquals(0, pegBoard.getRelativePegTime("bml1", "shift1", "start"), PEGBOARD_PRECISION);
         assertEquals(3, pegBoard.getRelativePegTime("bml1", "shift1", "end"), PEGBOARD_PRECISION);
     }
-    
+
     @Test(timeout = SCHEDULE_TIMEOUT)
     public void testMurmlPalmOrientation()
     {
@@ -201,7 +203,7 @@ public class SchedulerIntegrationTestCases
         assertNoWarnings();
         assertEquals(2, pegBoard.getRelativePegTime("bml1", "gesture1", "start"), PEGBOARD_PRECISION);
     }
-    
+
     @Test(timeout = SCHEDULE_TIMEOUT)
     public void testMurmlRelativePalmOrientation()
     {
@@ -209,7 +211,7 @@ public class SchedulerIntegrationTestCases
         assertNoWarnings();
         assertEquals(2, pegBoard.getRelativePegTime("bml1", "gesture1", "start"), PEGBOARD_PRECISION);
     }
-    
+
     @Test(timeout = SCHEDULE_TIMEOUT)
     public void testMurmlHandLocation()
     {
@@ -217,17 +219,35 @@ public class SchedulerIntegrationTestCases
         assertNoWarnings();
         assertEquals(0, pegBoard.getRelativePegTime("bml1", "gesture1", "start"), PEGBOARD_PRECISION);
     }
-    
+
     @Test(timeout = SCHEDULE_TIMEOUT)
     public void testMurmlHandLocationStrokeStartSynched()
     {
         readXML("murml/murmlhandlocationstrokestartsynched.xml");
         assertNoWarnings();
-        assertEquals(0, pegBoard.getRelativePegTime("bml1", "gesture1", "start"), PEGBOARD_PRECISION);        
-        assertEquals(pegBoard.getRelativePegTime("bml1", "speech1", "t1"), pegBoard.getRelativePegTime("bml1", "gesture1", "strokeStart"), PEGBOARD_PRECISION);
-        assertThat(pegBoard.getRelativePegTime("bml1", "gesture1", "strokeStart"),greaterThan(0d));
-        assertThat(pegBoard.getRelativePegTime("bml1", "gesture1", "strokeStart"),greaterThan(pegBoard.getRelativePegTime("bml1", "gesture1", "start")));
-        assertEquals(pegBoard.getRelativePegTime("bml1", "gesture1", "strokeEnd"),pegBoard.getRelativePegTime("bml1", "gesture1", "strokeStart"), PEGBOARD_PRECISION);        
+        assertEquals(0, pegBoard.getRelativePegTime("bml1", "gesture1", "start"), PEGBOARD_PRECISION);
+        assertEquals(pegBoard.getRelativePegTime("bml1", "speech1", "t1"), pegBoard.getRelativePegTime("bml1", "gesture1", "strokeStart"),
+                PEGBOARD_PRECISION);
+        assertThat(pegBoard.getRelativePegTime("bml1", "gesture1", "strokeStart"), greaterThan(0d));
+        assertThat(pegBoard.getRelativePegTime("bml1", "gesture1", "strokeStart"),
+                greaterThan(pegBoard.getRelativePegTime("bml1", "gesture1", "start")));
+        assertEquals(pegBoard.getRelativePegTime("bml1", "gesture1", "strokeEnd"),
+                pegBoard.getRelativePegTime("bml1", "gesture1", "strokeStart"), PEGBOARD_PRECISION);
+    }
+
+    @Test(timeout = SCHEDULE_TIMEOUT)
+    public void testMurmlHandLocationStrokeStartAndEndSynched()
+    {
+        readXML("murml/murmlhandlocationstrokestartsynchedstrokeendsynched.xml");
+        assertNoWarnings();
+        assertEquals(0, pegBoard.getRelativePegTime("bml1", "gesture1", "start"), PEGBOARD_PRECISION);
+        assertEquals(pegBoard.getRelativePegTime("bml1", "speech1", "t1"), pegBoard.getRelativePegTime("bml1", "gesture1", "strokeStart"),
+                PEGBOARD_PRECISION);
+        assertThat(pegBoard.getRelativePegTime("bml1", "gesture1", "strokeStart"), greaterThan(0d));
+        assertThat(pegBoard.getRelativePegTime("bml1", "gesture1", "strokeStart"),
+                greaterThan(pegBoard.getRelativePegTime("bml1", "gesture1", "start")));
+        assertEquals(pegBoard.getRelativePegTime("bml1", "gesture1", "strokeEnd"), pegBoard.getRelativePegTime("bml1", "speech1", "t2"),
+                PEGBOARD_PRECISION);        
     }
 
     @Test(timeout = SCHEDULE_TIMEOUT)
@@ -499,7 +519,8 @@ public class SchedulerIntegrationTestCases
         assertEquals(pegBoard.getPegTime("bml1", "speech2", "start"), pegBoard.getPegTime("bml1", "speech1", "end"), PEGBOARD_PRECISION);
     }
 
-    @Test//(timeout = SCHEDULE_TIMEOUT)
+    @Test
+    // (timeout = SCHEDULE_TIMEOUT)
     public void testOffset2()
     {
         readXML("testoffset2.xml");
@@ -703,21 +724,23 @@ public class SchedulerIntegrationTestCases
         readXML("testoffsetgaze.xml");
         assertNoWarnings();
 
-        assertEquals(pegBoard.getRelativePegTime("bml1", "gaze1", "start"),2,PEGBOARD_PRECISION);
-        assertEquals(pegBoard.getRelativePegTime("bml1", "speech1", "start"), pegBoard.getRelativePegTime("bml1", "gaze1", "ready"), PEGBOARD_PRECISION);
+        assertEquals(pegBoard.getRelativePegTime("bml1", "gaze1", "start"), 2, PEGBOARD_PRECISION);
+        assertEquals(pegBoard.getRelativePegTime("bml1", "speech1", "start"), pegBoard.getRelativePegTime("bml1", "gaze1", "ready"),
+                PEGBOARD_PRECISION);
         assertTrue(pegBoard.getRelativePegTime("bml1", "speech1", "start") > 2);
     }
-    
+
     @Test(timeout = SCHEDULE_TIMEOUT)
     @Ignore
-    //fails because of smartbody scheduling algorithm
+    // fails because of smartbody scheduling algorithm
     public void testOffsetGazeTimed2()
     {
         readXML("testoffsetgaze2.xml");
         assertNoWarnings();
 
-        assertEquals(pegBoard.getRelativePegTime("bml1", "gaze1", "start"),2,PEGBOARD_PRECISION);
-        assertEquals(pegBoard.getRelativePegTime("bml1", "speech1", "start"), pegBoard.getRelativePegTime("bml1", "gaze1", "ready"), PEGBOARD_PRECISION);
+        assertEquals(pegBoard.getRelativePegTime("bml1", "gaze1", "start"), 2, PEGBOARD_PRECISION);
+        assertEquals(pegBoard.getRelativePegTime("bml1", "speech1", "start"), pegBoard.getRelativePegTime("bml1", "gaze1", "ready"),
+                PEGBOARD_PRECISION);
         assertTrue(pegBoard.getRelativePegTime("bml1", "speech1", "start") > 2);
     }
 
@@ -855,12 +878,12 @@ public class SchedulerIntegrationTestCases
     @Test(timeout = SCHEDULE_TIMEOUT)
     public void testGazeReadyTimed()
     {
-         readXML("testgazereadytimed.xml"); 
-         assertNoWarnings();
-         assertEquals(pegBoard.getRelativePegTime("bml1", "bml1", "gaze1", "ready"), 3, PEGBOARD_PRECISION);
-         assertEquals(pegBoard.getRelativePegTime("bml1", "bml1", "gaze1", "end"), 10, PEGBOARD_PRECISION);
-         assertThat(pegBoard.getRelativePegTime("bml1", "bml1", "gaze1", "start"), greaterThan(-PEGBOARD_PRECISION));
-         assertThat(pegBoard.getRelativePegTime("bml1", "bml1", "gaze1", "start"), lessThan(3d));         
+        readXML("testgazereadytimed.xml");
+        assertNoWarnings();
+        assertEquals(pegBoard.getRelativePegTime("bml1", "bml1", "gaze1", "ready"), 3, PEGBOARD_PRECISION);
+        assertEquals(pegBoard.getRelativePegTime("bml1", "bml1", "gaze1", "end"), 10, PEGBOARD_PRECISION);
+        assertThat(pegBoard.getRelativePegTime("bml1", "bml1", "gaze1", "start"), greaterThan(-PEGBOARD_PRECISION));
+        assertThat(pegBoard.getRelativePegTime("bml1", "bml1", "gaze1", "start"), lessThan(3d));
     }
 
     @Ignore
@@ -877,5 +900,5 @@ public class SchedulerIntegrationTestCases
         assertEquals(pegBoard.getRelativePegTime("bml1", "bml1", "h1", "start"), pegBoard.getRelativePegTime("bml1", "bml1", "g1", "end"),
                 PEGBOARD_PRECISION);
         assertThat(pegBoard.getRelativePegTime("bml1", "bml1", "h1", "start"), greaterThan(4d));
-    }    
+    }
 }
