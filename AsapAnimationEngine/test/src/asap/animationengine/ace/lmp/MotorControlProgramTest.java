@@ -30,6 +30,7 @@ import asap.realizer.BehaviourPlanningException;
 import asap.realizer.feedback.FeedbackManager;
 import asap.realizer.feedback.NullFeedbackManager;
 import asap.realizer.pegboard.BMLBlockPeg;
+import asap.realizer.pegboard.OffsetPeg;
 import asap.realizer.pegboard.PegBoard;
 import asap.realizer.pegboard.TimePeg;
 import asap.realizer.planunit.TimedPlanUnitPlayException;
@@ -272,7 +273,7 @@ public class MotorControlProgramTest extends AbstractTimedPlanUnitTest
         assertEquals(2, mcp.getTime("strokeStart"), TIME_PRECISION);
         assertEquals(2, mcp.getTime("stroke"), TIME_PRECISION);
         assertEquals(3, mcp.getTime("strokeEnd"), TIME_PRECISION);
-        assertEquals(3, mcp.getTime("relax"), TIME_PRECISION);
+        assertEquals(8-LMP_RETRACTIONDUR, mcp.getTime("relax"), TIME_PRECISION);
         assertEquals(10 - 2, mcp.getEndTime(), TIME_PRECISION);
     }
 
@@ -444,6 +445,42 @@ public class MotorControlProgramTest extends AbstractTimedPlanUnitTest
         assertEquals(4, tmu2b.getTime("start"), TIME_PRECISION);
         assertEquals(5, tmu2b.getTime("strokeStart"), TIME_PRECISION);
         assertEquals(8, tmu2b.getTime("strokeEnd"), TIME_PRECISION);
+    }
+
+    @Test
+    public void testResolveSyncStrokeStartStarAndRelaxConstraint() throws BehaviourPlanningException
+    {
+        LMP tmu1 = createStub("bml1", "beh1-1", 1, 3, 2);
+        MotorControlProgram mcp = setupPlanUnit(fbManager, BMLBlockPeg.GLOBALPEG, "bml1", "beh1", tmu1);
+        List<TimePegAndConstraint> sacs = new ArrayList<>();
+        sacs.add(new TimePegAndConstraint("strokeStart", TimePegUtil.createTimePeg(2), new Constraint(), 0, false));
+        sacs.add(new TimePegAndConstraint("relax", TimePegUtil.createTimePeg(5), new Constraint(), 0, false));
+        mcp.resolveSynchs(BMLBlockPeg.GLOBALPEG, new MURMLGestureBehaviour("bml1"), sacs);
+
+        assertEquals(1, mcp.getStartTime(), TIME_PRECISION);
+        assertEquals(2, mcp.getTime("strokeStart"), TIME_PRECISION);
+        assertEquals(4, mcp.getTime("strokeEnd"), TIME_PRECISION);
+        assertEquals(5, mcp.getTime("relax"), TIME_PRECISION);
+    }
+
+    @Test
+    public void testResolveSyncStrokeStartStarAndRelaxOffsetConstraint() throws BehaviourPlanningException
+    {
+        LMP tmu1 = createStub("bml1", "beh1-1", 1, 3, 2);
+        MotorControlProgram mcp = setupPlanUnit(fbManager, BMLBlockPeg.GLOBALPEG, "bml1", "beh1", tmu1);
+        List<TimePegAndConstraint> sacs = new ArrayList<>();
+        sacs.add(new TimePegAndConstraint("strokeStart", TimePegUtil.createTimePeg(2), new Constraint(), 0, false));
+        TimePeg tpStrokeEnd = new TimePeg(BMLBlockPeg.GLOBALPEG);
+        Constraint cons = new Constraint();
+        sacs.add(new TimePegAndConstraint("strokeEnd", tpStrokeEnd, cons, 0, false));
+        sacs.add(new TimePegAndConstraint("relax", tpStrokeEnd, cons, -1, false));
+
+        mcp.resolveSynchs(BMLBlockPeg.GLOBALPEG, new MURMLGestureBehaviour("bml1"), sacs);
+
+        assertEquals(1, mcp.getStartTime(), TIME_PRECISION);
+        assertEquals(2, mcp.getTime("strokeStart"), TIME_PRECISION);
+        assertEquals(4, mcp.getTime("strokeEnd"), TIME_PRECISION);
+        assertEquals(5, mcp.getTime("relax"), TIME_PRECISION);
     }
 
     @Test
@@ -722,7 +759,7 @@ public class MotorControlProgramTest extends AbstractTimedPlanUnitTest
         assertEquals(13, tmu3.getTime("strokeStart"), TIME_PRECISION);
         assertEquals(16, tmu3.getTime("strokeEnd"), TIME_PRECISION);
     }
-    
+
     @Test
     public void testResolveParallelNegativeStartTime() throws BehaviourPlanningException, TimedPlanUnitPlayException
     {
@@ -730,7 +767,7 @@ public class MotorControlProgramTest extends AbstractTimedPlanUnitTest
         LMPParallel par = new LMPParallel(fbManager, bml1Peg, "bml1", "beh1_seq", localPegboard,
                 new ImmutableList.Builder<TimedAnimationUnit>().add(tmu1).build());
         MotorControlProgram mcp = setupPlanUnit(fbManager, BMLBlockPeg.GLOBALPEG, "bml1", "beh1", par);
-        
+
         List<TimePegAndConstraint> sacs = new ArrayList<>();
         TimePeg tpStrokeStart = TimePegUtil.createTimePeg(0);
         TimePeg tpStrokeEnd = TimePegUtil.createTimePeg(3);
@@ -739,14 +776,14 @@ public class MotorControlProgramTest extends AbstractTimedPlanUnitTest
         mcp.resolveSynchs(BMLBlockPeg.GLOBALPEG, new MURMLGestureBehaviour("bml1"), sacs);
         assertEquals(-1, par.getStartTime(), TIME_PRECISION);
         assertEquals(0, par.getTime("strokeStart"), TIME_PRECISION);
-        assertEquals(3, par.getTime("strokeEnd"), TIME_PRECISION);        
-        
+        assertEquals(3, par.getTime("strokeEnd"), TIME_PRECISION);
+
         assertEquals(-1, tmu1.getStartTime(), TIME_PRECISION);
         assertEquals(0, tmu1.getTime("strokeStart"), TIME_PRECISION);
         assertEquals(2, tmu1.getTime("strokeEnd"), TIME_PRECISION);
-        assertEquals(3, tmu1.getTime("relax"), TIME_PRECISION);    
+        assertEquals(3, tmu1.getTime("relax"), TIME_PRECISION);
     }
-    
+
     @Test
     public void testParallelTimeShift() throws BehaviourPlanningException, TimedPlanUnitPlayException
     {
@@ -754,18 +791,18 @@ public class MotorControlProgramTest extends AbstractTimedPlanUnitTest
         LMPParallel par = new LMPParallel(fbManager, bml1Peg, "bml1", "beh1_seq", localPegboard,
                 new ImmutableList.Builder<TimedAnimationUnit>().add(tmu1).build());
         MotorControlProgram mcp = setupPlanUnit(fbManager, BMLBlockPeg.GLOBALPEG, "bml1", "beh1", par);
-        
+
         List<TimePegAndConstraint> sacs = new ArrayList<>();
         TimePeg tpStrokeStart = TimePegUtil.createTimePeg(0);
         TimePeg tpStrokeEnd = TimePegUtil.createTimePeg(3);
         sacs.add(new TimePegAndConstraint("strokeStart", tpStrokeStart, new Constraint(), 0, false));
         sacs.add(new TimePegAndConstraint("strokeEnd", tpStrokeEnd, new Constraint(), 0, false));
-        mcp.resolveSynchs(BMLBlockPeg.GLOBALPEG, new MURMLGestureBehaviour("bml1"), sacs);  
-        
+        mcp.resolveSynchs(BMLBlockPeg.GLOBALPEG, new MURMLGestureBehaviour("bml1"), sacs);
+
         mcp.setState(TimedPlanUnitState.LURKING);
         mcp.getTimePeg("start").setGlobalValue(0);
         tpStrokeStart.setGlobalValue(1);
-        tpStrokeEnd.setGlobalValue(4);        
+        tpStrokeEnd.setGlobalValue(4);
         mcp.start(0);
         mcp.play(0);
         assertEquals(0, mcp.getStartTime(), TIME_PRECISION);
@@ -777,9 +814,9 @@ public class MotorControlProgramTest extends AbstractTimedPlanUnitTest
         assertEquals(0, tmu1.getStartTime(), TIME_PRECISION);
         assertEquals(1, tmu1.getTime("strokeStart"), TIME_PRECISION);
         assertEquals(3, tmu1.getTime("strokeEnd"), TIME_PRECISION);
-        assertEquals(4, tmu1.getTime("relax"), TIME_PRECISION);        
+        assertEquals(4, tmu1.getTime("relax"), TIME_PRECISION);
     }
-    
+
     @Test
     public void testParallelTimeShiftTwoLMPs() throws BehaviourPlanningException, TimedPlanUnitPlayException
     {
@@ -788,18 +825,18 @@ public class MotorControlProgramTest extends AbstractTimedPlanUnitTest
         LMPParallel par = new LMPParallel(fbManager, bml1Peg, "bml1", "beh1_seq", localPegboard,
                 new ImmutableList.Builder<TimedAnimationUnit>().add(tmu1).add(tmu2).build());
         MotorControlProgram mcp = setupPlanUnit(fbManager, BMLBlockPeg.GLOBALPEG, "bml1", "beh1", par);
-        
+
         List<TimePegAndConstraint> sacs = new ArrayList<>();
         TimePeg tpStrokeStart = TimePegUtil.createTimePeg(0);
         TimePeg tpStrokeEnd = TimePegUtil.createTimePeg(3);
         sacs.add(new TimePegAndConstraint("strokeStart", tpStrokeStart, new Constraint(), 0, false));
         sacs.add(new TimePegAndConstraint("strokeEnd", tpStrokeEnd, new Constraint(), 0, false));
-        mcp.resolveSynchs(BMLBlockPeg.GLOBALPEG, new MURMLGestureBehaviour("bml1"), sacs);  
-        
+        mcp.resolveSynchs(BMLBlockPeg.GLOBALPEG, new MURMLGestureBehaviour("bml1"), sacs);
+
         mcp.setState(TimedPlanUnitState.LURKING);
         mcp.getTimePeg("start").setGlobalValue(0);
         tpStrokeStart.setGlobalValue(2);
-        tpStrokeEnd.setGlobalValue(5);        
+        tpStrokeEnd.setGlobalValue(5);
         mcp.start(0);
         mcp.play(0);
         assertEquals(0, mcp.getStartTime(), TIME_PRECISION);
@@ -811,7 +848,7 @@ public class MotorControlProgramTest extends AbstractTimedPlanUnitTest
         assertEquals(1, tmu1.getStartTime(), TIME_PRECISION);
         assertEquals(2, tmu1.getTime("strokeStart"), TIME_PRECISION);
         assertEquals(4, tmu1.getTime("strokeEnd"), TIME_PRECISION);
-        assertEquals(5, tmu1.getTime("relax"), TIME_PRECISION);    
+        assertEquals(5, tmu1.getTime("relax"), TIME_PRECISION);
         assertEquals(0, tmu2.getStartTime(), TIME_PRECISION);
         assertEquals(2, tmu2.getTime("strokeStart"), TIME_PRECISION);
         assertEquals(5, tmu2.getTime("strokeEnd"), TIME_PRECISION);

@@ -77,8 +77,8 @@ public class SmartBodySchedulingStrategy implements SchedulingStrategy
             syncId = s;
             offset = o;
         }
-    }   
-    
+    }
+
     @Override
     public void schedule(BMLBlockComposition mechanism, BehaviourBlock bb, BMLBlockPeg bmlBlockPeg, BMLScheduler scheduler,
             double scheduleTime)
@@ -90,7 +90,7 @@ public class SmartBodySchedulingStrategy implements SchedulingStrategy
         {
             scheduleBehaviour(mechanism, bb.id, bmlBlockPeg, scheduler, scheduleTime, scheduledBehaviors, syncMap, b);
         }
-        timeShiftPass(bb, scheduler, scheduledBehaviors, syncMap);        
+        timeShiftPass(bb, scheduler, scheduledBehaviors, syncMap);
     }
 
     /**
@@ -155,7 +155,7 @@ public class SmartBodySchedulingStrategy implements SchedulingStrategy
             double scheduleTime, ArrayList<Behaviour> scheduledBehaviors, HashMap<Behaviour, ArrayList<TimePegAndConstraint>> syncMap,
             Behaviour b)
     {
-        //constraints to solve for this behavior
+        // constraints to solve for this behavior
         ArrayList<TimePegAndConstraint> syncList = new ArrayList<TimePegAndConstraint>();
 
         // link realizer syncs to behavior syncs (+ constraints)
@@ -198,15 +198,15 @@ public class SmartBodySchedulingStrategy implements SchedulingStrategy
         scheduledBehaviors.add(b);
     }
 
-    private void setupTimePegAndConstraints(String bmlId, BMLBlockPeg bmlBlockPeg, BMLScheduler scheduler, ArrayList<Behaviour> scheduledBehaviors,
-            HashMap<Behaviour, ArrayList<TimePegAndConstraint>> syncMap, Behaviour b, ArrayList<TimePegAndConstraint> syncList,
-            Constraint c, ArrayList<ConstrInfo> constraintInfo)
+    private void setupTimePegAndConstraints(String bmlId, BMLBlockPeg bmlBlockPeg, BMLScheduler scheduler,
+            ArrayList<Behaviour> scheduledBehaviors, HashMap<Behaviour, ArrayList<TimePegAndConstraint>> syncMap, Behaviour b,
+            ArrayList<TimePegAndConstraint> syncList, Constraint c, ArrayList<ConstrInfo> constraintInfo)
     {
         for (ConstrInfo ci : constraintInfo)
         {
             boolean syncExists = false;
 
-            // try to link to an existing TimePegAndConstraint
+            // try to link to an existing Constraint + TimePeg in another behavior
             for (Behaviour b2 : scheduledBehaviors)
             {
                 for (TimePegAndConstraint said : syncMap.get(b2))
@@ -221,7 +221,21 @@ public class SmartBodySchedulingStrategy implements SchedulingStrategy
                 if (syncExists) break;
             }
 
-            // can't be linked to an existing TimePegAndConstraint,
+            if (!syncExists)
+            {
+                // try to link to an existing Constraint + TimePeg in this behavior
+                for (TimePegAndConstraint said : syncList)
+                {
+                    if (said.constr == c)
+                    {
+                        syncList.add(new TimePegAndConstraint(ci.syncId, said.peg, c, ci.offset+said.offset));
+                        syncExists = true;
+                        break;
+                    }
+                }
+            }
+
+            // can't be linked to an existing Constraint + TimePeg,
             // create a new one
             if (!syncExists)
             {
@@ -245,10 +259,8 @@ public class SmartBodySchedulingStrategy implements SchedulingStrategy
                                     TimePeg sp = ap.getSynchronisationPoint(str[1]);
                                     if (sp == null)
                                     {
-                                        String warningText = "Unknown anticipator synchronization point " + s.getName()
-                                                + " sync ignored.";
-                                        scheduler.warn(new BMLWarningFeedback(bmlId + ":" + b.id, "UNKNOWN_ANTICIPATOR_SYNC",
-                                                warningText));
+                                        String warningText = "Unknown anticipator synchronization point " + s.getName() + " sync ignored.";
+                                        scheduler.warn(new BMLWarningFeedback(bmlId + ":" + b.id, "UNKNOWN_ANTICIPATOR_SYNC", warningText));
                                         break;
                                     }
 
