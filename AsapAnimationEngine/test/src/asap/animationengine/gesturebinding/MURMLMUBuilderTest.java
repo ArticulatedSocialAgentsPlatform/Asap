@@ -83,6 +83,8 @@ public class MURMLMUBuilderTest
         when(mockHnsHandshapes.getHNSHandShape(anyString())).thenReturn(mockSkeletonPose);
     }
 
+    
+    
     @Test
     public void testSingleFrame() throws MUPlayException, MUSetupException
     {
@@ -564,7 +566,43 @@ public class MURMLMUBuilderTest
         assertThat(lmp, instanceOf(LMPHandMove.class));
         assertThat(tau.getKinematicJoints(), IsIterableContainingInAnyOrder.containsInAnyOrder(Hanim.LEFTHAND_JOINTS));
     }
+    
+    @Test(expected = TMUSetupException.class)
+    public void testUnknownStaticHandShape() throws TMUSetupException
+    {
+        when(mockHnsHandshapes.getHNSHandShape(anyString())).thenReturn(null);
+        //@formatter:off
+        String murmlString =
+        "<murml-description xmlns=\"http://www.techfak.uni-bielefeld.de/ags/soa/murml\">" +
+        "  <static scope=\"left_arm\" slot=\"HandShape\" value=\"BSfist (ThExt)\"/>"+
+        "</murml-description>";
+        //@formatter:on
+        murmlMuBuilder.setupTMU(murmlString, new FeedbackManagerImpl(new BMLBlockManager(), ""),
+                BMLBlockPeg.GLOBALPEG, "bml1", "gesture1", pb, mockAnimationPlayer);
+    }
 
+    @Test(expected = TMUSetupException.class)
+    public void testUnknownDynamicHandShape() throws TMUSetupException
+    {
+        when(mockHnsHandshapes.getHNSHandShape(anyString())).thenReturn(null);
+        //@formatter:off
+        String murmlString =
+                "<murml-description xmlns=\"http://www.techfak.uni-bielefeld.de/ags/soa/murml\">" +
+                        "<dynamic slot=\"HandShape\" scope=\"right_arm\">"+
+                        "<dynamicElement>"+
+                              "<value type=\"start\" name=\"BSfist (ThExt)\"/>"+
+                              "<value type=\"end\" name=\"ASL5\"/>"+
+                        "</dynamicElement>"+
+                        "<dynamicElement>"+
+                            "<value type=\"start\" name=\"BSfist (ThExt)\"/>"+
+                            "<value type=\"end\" name=\"BSfist (ThExt)\"/>"+
+                        "</dynamicElement>"+
+                        "</dynamic>"+
+                        "</murml-description>";
+        //@formatter:on
+        murmlMuBuilder.setupTMU(murmlString, new FeedbackManagerImpl(new BMLBlockManager(), ""),
+                BMLBlockPeg.GLOBALPEG, "bml1", "gesture1", pb, mockAnimationPlayer);
+    }
     
     @Test
     public void setupDynamicHandshape() throws TMUSetupException
