@@ -22,6 +22,7 @@ import java.util.Set;
 
 import org.hamcrest.collection.IsIterableContainingInAnyOrder;
 import org.junit.Before;
+import org.junit.Ignore;
 import org.junit.Test;
 
 import asap.animationengine.AnimationPlayer;
@@ -526,6 +527,26 @@ public class MURMLMUBuilderTest
 
         TimedAnimationUnit lmp = field("lmp").ofType(TimedAnimationUnit.class).in(tau).get();
         assertThat(lmp, instanceOf(LMPWristRot.class));
+    }
+    
+    @Ignore
+    @Test(expected=TMUSetupException.class)
+    public void setupInvalidTMUStaticPalmOrientation() throws TMUSetupException
+    {
+        when(mockHns.getAbsoluteDirection(startsWith("Palm"), any(float[].class))).thenReturn(false);
+        when(mockHns.getAbsoluteDirection(startsWith("Dir"), any(float[].class))).thenReturn(false);
+        when(mockHns.isPalmOrientation(startsWith("Palm"))).thenReturn(false);
+        //@formatter:off
+        String murmlString = 
+                "<murml-description xmlns=\"http://www.techfak.uni-bielefeld.de/ags/soa/murml\">" +
+                        "<parallel>"+
+                        "<static slot=\"PalmOrientation\" scope=\"right_arm\" value=\"invalid\"/>"+
+                        "<static slot=\"PalmOrientation\" scope=\"left_arm\" value=\"invalid\"/>"+
+                        "</parallel>"+
+                "</murml-description>";
+        // @formatter:on
+        murmlMuBuilder.setupTMU(murmlString, new FeedbackManagerImpl(new BMLBlockManager(), ""),
+                BMLBlockPeg.GLOBALPEG, "bml1", "g1", pb, mockAnimationPlayer);
     }
 
     @Test
