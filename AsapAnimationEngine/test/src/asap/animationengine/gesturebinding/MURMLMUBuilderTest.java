@@ -256,13 +256,32 @@ public class MURMLMUBuilderTest
         Quat4fTestUtil.assertQuat4fRotationEquivalent(qExp, q, ROT_PRECISION);
     }
 
+    @Test(expected=TMUSetupException.class)
+    public void setupInvalidTMUStaticHandLocation() throws TMUSetupException
+    {
+        when(mockHns.getHandLocation(anyString(), any(float[].class))).thenReturn(false);
+        
+        
+        //@formatter:off
+        String murmlString =
+                "<murml-description xmlns=\"http://www.techfak.uni-bielefeld.de/ags/soa/murml\">" +
+                "<parallel>"+
+                  "<static slot=\"HandShape\" value=\"ASL5\"/>"+
+                  "<static slot=\"HandLocation\" value=\"LocShoulder LocCenterRight LocNorm\" scope=\"left_arm\"/>"+
+                "</parallel>"+
+                "</murml-description>";
+        // @formatter:on
+        murmlMuBuilder.setupTMU(murmlString, new FeedbackManagerImpl(new BMLBlockManager(), ""),
+                BMLBlockPeg.GLOBALPEG, "bml1", "g1", pb, mockAnimationPlayer);
+    }
+    
     @Test
     public void setupTMUStaticHandLocation() throws TMUSetupException
     {
         //@formatter:off
         String murmlString =
                 "<murml-description xmlns=\"http://www.techfak.uni-bielefeld.de/ags/soa/murml\">" +
-                "<static slot=\"HandLocation\" value=\"LocShoulder LocCenterRight LocNorm\" scope=\"left_arm\"/>"+
+                "<static slot=\"HandLocation\" value=\"invalid\" scope=\"left_arm\"/>"+
                 "</murml-description>";
         // @formatter:on
 
@@ -273,6 +292,52 @@ public class MURMLMUBuilderTest
         assertThat(tau.getKinematicJoints(), IsIterableContainingInAnyOrder.containsInAnyOrder(Hanim.l_shoulder, Hanim.l_elbow));
     }
 
+    @Test(expected=TMUSetupException.class)
+    public void setupInvalidTMUDynamicHandLocation() throws TMUSetupException
+    {
+        when(mockHns.getHandLocation(anyString(), any(float[].class))).thenReturn(false);
+        //@formatter:off
+        String murmlString =
+                "<murml-description xmlns=\"http://www.techfak.uni-bielefeld.de/ags/soa/murml\">" +
+                        "<parallel>"+
+                        "<static slot=\"HandShape\" value=\"ASL5\"/>"+
+                        "<dynamic slot=\"HandLocation\" scope=\"left_arm\">"+
+                        "<dynamicElement type=\"curve\">"+        
+                            "<value type=\"start\" name=\"LocShoulder LocCenterLeft LocFar\"/>"+
+                            "<value type=\"end\" name=\"LocShoulder LocCenterLeft LocNorm\"/>"+
+                            "<value type=\"normal\" name=\"DirU\"/>"+
+                            "<value type=\"shape\" name=\"LeftC\"/>"+
+                            "<value type=\"extension\" name=\"0.6\"/>"+                                                        
+                        "</dynamicElement>"+
+                        "<dynamicElement type=\"curve\">"+
+                            "<value type=\"start\" name=\"LocShoulder LocCenterLeft LocNorm\"/>"+
+                            "<value type=\"end\" name=\"LocShoulder LocCenterLeft LocFar\"/>"+
+                            "<value type=\"normal\" name=\"DirU\"/>"+
+                            "<value type=\"shape\" name=\"LeftC\"/>"+
+                            "<value type=\"extension\" name=\"0.6\"/>"+
+                        "</dynamicElement>"+
+                        "<dynamicElement type=\"curve\">"+
+                            "<value type=\"start\" name=\"LocShoulder LocCenterLeft LocFar\"/>"+
+                            "<value type=\"end\" name=\"LocShoulder LocCenterLeft LocNorm\"/>"+
+                            "<value type=\"normal\" name=\"DirU\"/>"+
+                            "<value type=\"shape\" name=\"LeftC\"/>"+
+                            "<value type=\"extension\" name=\"0.6\"/>"+
+                        "</dynamicElement>"+
+                        "<dynamicElement type=\"curve\">"+
+                            "<value type=\"start\" name=\"LocShoulder LocCenterLeft LocNorm\"/>"+
+                            "<value type=\"end\" name=\"LocShoulder LocCenterLeft LocFar\"/>"+
+                            "<value type=\"normal\" name=\"DirU\"/>"+
+                            "<value type=\"shape\" name=\"LeftC\"/>"+
+                            "<value type=\"extension\" name=\"0.6\"/>"+
+                       "</dynamicElement>"+
+                        "</dynamic>"+
+                        "</parallel>"+
+                "</murml-description>";
+        // @formatter:on
+        murmlMuBuilder.setupTMU(murmlString, new FeedbackManagerImpl(new BMLBlockManager(), ""),
+                BMLBlockPeg.GLOBALPEG, "bml1", "g1", pb, mockAnimationPlayer);
+    }
+    
     @Test
     public void setupTMUHandLocation() throws TMUSetupException
     {
