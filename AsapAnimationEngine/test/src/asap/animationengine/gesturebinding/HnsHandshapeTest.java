@@ -1,9 +1,13 @@
 package asap.animationengine.gesturebinding;
 
 import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertNull;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
+
+import java.io.IOException;
+
 import hmi.animation.SkeletonPose;
 
 import org.junit.Before;
@@ -45,10 +49,31 @@ public class HnsHandshapeTest
     }
     
     @Test
-    public void test()
+    public void testUnknownHNS()
     {
         HnsHandshape s = new HnsHandshape(mockHns, ImmutableList.of(mockSkeletonPose1, mockSkeletonPose2, mockSkeletonPose3));
         assertEquals(mockSkeletonPose2DeepCopy, s.getHNSHandShape("id2"));
         assertNull(s.getHNSHandShape("unknown"));
+    }
+    
+    @Test
+    public void testHandShape()
+    {
+        HnsHandshape s = new HnsHandshape(mockHns, ImmutableList.of(mockSkeletonPose1, mockSkeletonPose2, mockSkeletonPose3));
+        assertEquals(mockSkeletonPose2DeepCopy, s.getHNSHandShape("id2"));        
+    }
+    
+    @Test
+    public void testHNSinJar() throws IOException
+    {
+        HnsHandshape s = new HnsHandshape(mockHns, "hns/handshapes");
+        assertNotNull(s.getHNSHandShape("curved"));
+    }
+    
+    @Test
+    public void testHNSinResource() throws IOException
+    {
+        HnsHandshape s = new HnsHandshape(mockHns, "handshapes");
+        assertNotNull(s.getHNSHandShape("ASLy"));
     }
 }
