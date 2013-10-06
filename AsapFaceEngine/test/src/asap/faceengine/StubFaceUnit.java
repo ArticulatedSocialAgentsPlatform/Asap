@@ -9,6 +9,7 @@ import asap.faceengine.faceunit.TimedFaceUnit;
 import asap.motionunit.MUPlayException;
 import asap.realizer.feedback.FeedbackManager;
 import asap.realizer.pegboard.BMLBlockPeg;
+import asap.realizer.pegboard.PegBoard;
 import asap.realizer.planunit.KeyPositionManager;
 import asap.realizer.planunit.KeyPositionManagerImpl;
 import asap.realizer.planunit.ParameterException;
@@ -21,7 +22,7 @@ import asap.realizer.planunit.ParameterException;
 public class StubFaceUnit implements FaceUnit
 {
     @Delegate private final KeyPositionManager keyPositionManager = new KeyPositionManagerImpl();
-
+        
     @Override
     public void play(double t) throws MUPlayException
     {
@@ -72,14 +73,20 @@ public class StubFaceUnit implements FaceUnit
     }
 
     @Override
-    public TimedFaceUnit createTFU(FeedbackManager bfm, BMLBlockPeg bbPeg, String bmlId, String id)
+    public TimedFaceUnit createTFU(FeedbackManager bfm, BMLBlockPeg bbPeg, String bmlId, String id, PegBoard pb)
     {
-        return new TimedFaceUnit(bfm, bbPeg, bmlId, id, this);
+        return new TimedFaceUnit(bfm, bbPeg, bmlId, id, this, pb);
     }
 
     @Override
     public FaceUnit copy(FaceController fc, FACSConverter fconv, EmotionConverter econv)
     {
         return this;
+    }
+
+    @Override
+    public void interruptFromHere()
+    {
+                
     }
 }

@@ -2,6 +2,7 @@ package asap.animationengine.loader;
 
 import hmi.environmentbase.Environment;
 import hmi.environmentbase.Loader;
+import hmi.util.ArrayUtils;
 import hmi.xml.XMLTokenizer;
 
 import java.io.IOException;
@@ -32,17 +33,12 @@ public class TimedAnimationUnitIncrementalLipSynchProviderLoader implements Incr
             Loader... requiredLoaders) throws IOException
     {
         this.id = loaderId;
-        MixedAnimationEngineLoader ael = null;
-        AsapRealizerEmbodiment are = null;
-        for (Loader e : requiredLoaders)
-        {
-            if (e instanceof MixedAnimationEngineLoader) ael = (MixedAnimationEngineLoader) e;
-            if (e instanceof AsapRealizerEmbodiment) are = (AsapRealizerEmbodiment) e;
-        }
+        MixedAnimationEngineLoader ael = ArrayUtils.getFirstClassOfType(requiredLoaders, MixedAnimationEngineLoader.class);
         if (ael == null)
         {
             throw tokenizer.getXMLScanException("TimedAnimationUnitLipSynchProviderLoader requires mixedanimationenvironment.");
         }
+        AsapRealizerEmbodiment are = ArrayUtils.getFirstClassOfType(requiredLoaders, AsapRealizerEmbodiment.class);
         if (are == null)
         {
             throw new RuntimeException(

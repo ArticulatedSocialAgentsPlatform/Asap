@@ -29,9 +29,7 @@ import asap.realizer.feedback.FeedbackManager;
 import asap.realizer.feedback.NullFeedbackManager;
 import asap.realizer.pegboard.BMLBlockPeg;
 import asap.realizer.pegboard.PegBoard;
-import asap.realizer.pegboard.TimePeg;
 import asap.realizer.planunit.Priority;
-import asap.realizer.planunit.TimedPlanUnitPlayException;
 import asap.realizer.scheduler.LinearStretchResolver;
 import asap.realizer.scheduler.TimePegAndConstraint;
 import asap.realizer.scheduler.UniModalResolver;
@@ -47,8 +45,7 @@ import asap.realizer.scheduler.UniModalResolver;
 public class TimedAnimationMotionUnit extends TimedMotionUnit implements TimedAnimationUnit
 {
     private final AnimationUnit mu;
-    private final UniModalResolver resolver = new LinearStretchResolver();
-    protected final PegBoard pegBoard;
+    private final UniModalResolver resolver = new LinearStretchResolver();    
 
     public Set<String> getKinematicJoints()
     {
@@ -74,10 +71,9 @@ public class TimedAnimationMotionUnit extends TimedMotionUnit implements TimedAn
      */
     public TimedAnimationMotionUnit(FeedbackManager bbf, BMLBlockPeg bmlBlockPeg, String bmlId, String id, AnimationUnit m, PegBoard pb)
     {
-        super(bbf, bmlBlockPeg, bmlId, id, m);
+        super(bbf, bmlBlockPeg, bmlId, id, m, pb);
         setPriority(Priority.GESTURE);
-        mu = m;
-        pegBoard = pb;
+        mu = m;        
     }
 
     public TimedAnimationMotionUnit(BMLBlockPeg bmlBlockPeg, String bmlId, String id, AnimationUnit m, PegBoard pb)
@@ -88,26 +84,7 @@ public class TimedAnimationMotionUnit extends TimedMotionUnit implements TimedAn
     public void updateTiming(double time) throws TMUPlayException
     {
 
-    }
-
-    protected void skipPegs(double time, String... pegs)
-    {
-        for (String peg : pegs)
-        {
-            if (getTime(peg) > time)
-            {
-                TimePeg tp = getTimePeg(peg);
-                TimePeg tpNew = tp;
-                if (pegBoard.getPegKeys(tp).size() > 1)
-                {
-                    tpNew = new TimePeg(tp.getBmlBlockPeg());
-                    pegBoard.addTimePeg(getBMLId(), getId(), peg, tpNew);
-                }
-                tpNew.setGlobalValue(time - 0.01);
-                setTimePeg(peg, tpNew);
-            }
-        }
-    }
+    }    
 
     @Override
     public double getPreparationDuration()
@@ -127,28 +104,5 @@ public class TimedAnimationMotionUnit extends TimedMotionUnit implements TimedAn
         return getPreferedDuration() - getPreparationDuration() - getRetractionDuration();
     }
     
-    protected void gracefullInterrupt(double time)throws TimedPlanUnitPlayException
-    {
-        stop(time);
-    }
     
-    @Override
-    public void interrupt(double time) throws TimedPlanUnitPlayException
-    {
-        switch (getState())
-        {
-        case IN_PREP:
-        case PENDING:
-        case LURKING:
-            stop(time);
-            break; // just remove yourself
-        case IN_EXEC:
-            gracefullInterrupt(time);
-            break; // gracefully interrupt yourself
-        case SUBSIDING: // nothing to be done
-        case DONE:
-        default:
-            break;
-        }
-    }
 }

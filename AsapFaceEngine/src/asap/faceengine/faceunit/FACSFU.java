@@ -27,12 +27,14 @@ import hmi.util.StringUtil;
 import lombok.Delegate;
 import asap.realizer.feedback.FeedbackManager;
 import asap.realizer.pegboard.BMLBlockPeg;
+import asap.realizer.pegboard.PegBoard;
 import asap.realizer.planunit.InvalidParameterException;
 import asap.realizer.planunit.KeyPosition;
 import asap.realizer.planunit.KeyPositionManager;
 import asap.realizer.planunit.KeyPositionManagerImpl;
 import asap.realizer.planunit.ParameterException;
 import asap.realizer.planunit.ParameterNotFoundException;
+import com.google.common.util.concurrent.AtomicDouble;
 
 /**
  * A basic facial animation unit consisting of one FACS configuration The key
@@ -49,7 +51,8 @@ public class FACSFU implements FaceUnit
     @Delegate
     private final KeyPositionManager keyPositionManager = new KeyPositionManagerImpl();
 
-    protected float intensity = 1f;
+    protected AtomicDouble intensity = new AtomicDouble(1f);
+    protected AtomicDouble prevIntensity = new AtomicDouble(1f);
 
     protected FACSConfiguration facsConfig = new FACSConfiguration();
 
@@ -90,7 +93,11 @@ public class FACSFU implements FaceUnit
     @Override
     public void setFloatParameterValue(String name, float value) throws ParameterException
     {
-        if (name.equals("intensity")) intensity = value;
+        if (name.equals("intensity"))
+        {
+            intensity.set(value);
+            prevIntensity.set(value);
+        }
         else throw new ParameterNotFoundException(name);
     }
 
@@ -116,7 +123,7 @@ public class FACSFU implements FaceUnit
     @Override
     public float getFloatParameterValue(String name) throws ParameterException
     {
-        if (name.equals("intensity")) return intensity;
+        if (name.equals("intensity")) return intensity.floatValue();
         throw new ParameterNotFoundException(name);
     }
 
@@ -151,21 +158,27 @@ public class FACSFU implements FaceUnit
 
         if (t < attackPeak && t > 0)
         {
-            newAppliedWeight = intensity * (float) (t / attackPeak);
+            newAppliedWeight = intensity.floatValue() * (float) (t / attackPeak);
         }
         else if (t >= attackPeak && t <= relax)
         {
-            newAppliedWeight = intensity;
+            newAppliedWeight = intensity.floatValue();
         }
         else if (t > relax && t < 1)
         {
-            newAppliedWeight = intensity * (float) (1 - ((t - relax) / (1 - relax)));
-        }        
-        
+            newAppliedWeight = intensity.floatValue() * (float) (1 - ((t - relax) / (1 - relax)));
+        }
+        prevIntensity.set(newAppliedWeight);
         facsConverter.convert(facsConfig, mpeg4Config);
         mpeg4Config.multiply(newAppliedWeight);
         faceController.addMPEG4Configuration(mpeg4Config);
 
+    }
+
+    @Override
+    public void interruptFromHere()
+    {
+        intensity.set(prevIntensity.get());
     }
 
     /**
@@ -178,9 +191,9 @@ public class FACSFU implements FaceUnit
      * @return the TFU
      */
     @Override
-    public TimedFaceUnit createTFU(FeedbackManager bfm, BMLBlockPeg bbPeg, String bmlId, String id)
+    public TimedFaceUnit createTFU(FeedbackManager bfm, BMLBlockPeg bbPeg, String bmlId, String id, PegBoard pb)
     {
-        return new TimedFaceUnit(bfm, bbPeg, bmlId, id, this);
+        return new TimedFaceUnit(bfm, bbPeg, bmlId, id, this, pb);
     }
 
     /**

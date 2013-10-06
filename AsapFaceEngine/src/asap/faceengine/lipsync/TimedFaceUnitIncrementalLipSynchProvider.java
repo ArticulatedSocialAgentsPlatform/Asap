@@ -11,6 +11,7 @@ import asap.faceengine.faceunit.TimedFaceUnit;
 import asap.faceengine.viseme.VisemeBinding;
 import asap.realizer.lipsync.IncrementalLipSynchProvider;
 import asap.realizer.pegboard.BMLBlockPeg;
+import asap.realizer.pegboard.PegBoard;
 import asap.realizer.pegboard.TimePeg;
 import asap.realizer.planunit.PlanManager;
 import asap.realizer.planunit.TimedPlanUnitState;
@@ -28,12 +29,15 @@ public class TimedFaceUnitIncrementalLipSynchProvider implements IncrementalLipS
 
     private Map<Object, TimedFaceUnit> tfuMap = new HashMap<>();
     private Map<TimedFaceUnit, Visime> tfuToVisimeMap = new HashMap<>();
+    private final PegBoard pegBoard;
 
-    public TimedFaceUnitIncrementalLipSynchProvider(VisemeBinding visBinding, FaceController fc, PlanManager<TimedFaceUnit> facePlanManager)
+    public TimedFaceUnitIncrementalLipSynchProvider(VisemeBinding visBinding, FaceController fc,
+            PlanManager<TimedFaceUnit> facePlanManager, PegBoard pb)
     {
         visimeBinding = visBinding;
         faceController = fc;
         this.facePlanManager = facePlanManager;
+        pegBoard = pb;
     }
 
     private TimedFaceUnit getPrevious(double start, TimedFaceUnit tfuCur)
@@ -58,7 +62,7 @@ public class TimedFaceUnitIncrementalLipSynchProvider implements IncrementalLipS
         TimedFaceUnit tfu = tfuMap.get(identifier);
         if (tfu == null)
         {
-            tfu = visimeBinding.getVisemeUnit(bbPeg, beh, vis.getNumber(), faceController);
+            tfu = visimeBinding.getVisemeUnit(bbPeg, beh, vis.getNumber(), faceController, pegBoard);
             tfu.setTimePeg("start", new TimePeg(bbPeg));
             tfu.setTimePeg("end", new TimePeg(bbPeg));
             tfu.setSubUnit(true);
@@ -80,6 +84,6 @@ public class TimedFaceUnitIncrementalLipSynchProvider implements IncrementalLipS
         }
         tfuToVisimeMap.put(tfu, vis);
         tfu.getTimePeg("end").setGlobalValue(start + (double) vis.getDuration() / 1000d);
-        tfu.setState(TimedPlanUnitState.LURKING);        
+        tfu.setState(TimedPlanUnitState.LURKING);
     }
 }

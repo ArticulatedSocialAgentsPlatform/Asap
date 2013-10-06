@@ -12,6 +12,7 @@ import asap.motionunit.keyframe.KeyFrame;
 import asap.motionunit.keyframe.KeyFrameMotionUnit;
 import asap.realizer.feedback.FeedbackManager;
 import asap.realizer.pegboard.BMLBlockPeg;
+import asap.realizer.pegboard.PegBoard;
 import asap.realizer.planunit.KeyPosition;
 import asap.timemanipulator.TimeManipulator;
 
@@ -76,9 +77,9 @@ public class KeyframeMorphFU extends KeyFrameMotionUnit implements FaceUnit
     }
 
     @Override
-    public TimedFaceUnit createTFU(FeedbackManager bfm, BMLBlockPeg bbPeg, String bmlId, String id)
+    public TimedFaceUnit createTFU(FeedbackManager bfm, BMLBlockPeg bbPeg, String bmlId, String id, PegBoard pb)
     {
-        return new TimedFaceUnit(bfm, bbPeg, bmlId, id, this);
+        return new TimedFaceUnit(bfm, bbPeg, bmlId, id, this, pb);
     }
 
     @Override
@@ -114,5 +115,11 @@ public class KeyframeMorphFU extends KeyFrameMotionUnit implements FaceUnit
     {
         super.setupDynamicStart(keyFrames);
         interp.setKeyFrames(keyFrames, nrOfDofs);
+    }
+
+    @Override
+    public void interruptFromHere()
+    {
+        //TODO: implement this
     }
 }

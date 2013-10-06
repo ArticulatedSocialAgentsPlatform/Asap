@@ -14,6 +14,7 @@ import asap.faceengine.viseme.VisemeBinding;
 import asap.realizer.lipsync.LipSynchProvider;
 import asap.realizer.pegboard.BMLBlockPeg;
 import asap.realizer.pegboard.OffsetPeg;
+import asap.realizer.pegboard.PegBoard;
 import asap.realizer.pegboard.TimePeg;
 import asap.realizer.planunit.PlanManager;
 import asap.realizer.planunit.TimedPlanUnit;
@@ -29,11 +30,13 @@ public class TimedFaceUnitLipSynchProvider implements LipSynchProvider
     private final VisemeBinding visimeBinding;
     private final FaceController faceController;
     private final PlanManager<TimedFaceUnit>facePlanManager;
+    private final PegBoard pegBoard;
     
-    public TimedFaceUnitLipSynchProvider(VisemeBinding visBinding, FaceController fc, PlanManager<TimedFaceUnit>facePlanManager)
+    public TimedFaceUnitLipSynchProvider(VisemeBinding visBinding, FaceController fc, PlanManager<TimedFaceUnit>facePlanManager, PegBoard pb)
     {
         visimeBinding = visBinding;
         faceController = fc;
+        pegBoard = pb;
         this.facePlanManager= facePlanManager; 
     }
     
@@ -62,7 +65,7 @@ public class TimedFaceUnitLipSynchProvider implements LipSynchProvider
                 endTimes.put(tfu, peak); // extend previous tfu to the peak of this
             }
             // one!
-            tfu = visimeBinding.getVisemeUnit(bbPeg, beh, vis.getNumber(), faceController);
+            tfu = visimeBinding.getVisemeUnit(bbPeg, beh, vis.getNumber(), faceController, pegBoard);
 
             startTimes.put(tfu, start);
             endTimes.put(tfu, end);

@@ -29,6 +29,7 @@ import lombok.Delegate;
 import lombok.extern.slf4j.Slf4j;
 import asap.realizer.feedback.FeedbackManager;
 import asap.realizer.pegboard.BMLBlockPeg;
+import asap.realizer.pegboard.PegBoard;
 import asap.realizer.planunit.InvalidParameterException;
 import asap.realizer.planunit.KeyPosition;
 import asap.realizer.planunit.KeyPositionManager;
@@ -37,6 +38,7 @@ import asap.realizer.planunit.ParameterException;
 import asap.realizer.planunit.ParameterNotFoundException;
 
 import com.google.common.base.Joiner;
+import com.google.common.util.concurrent.AtomicDouble;
 
 /**
  * A basic facial animation unit consisting of one morph target. The key
@@ -53,7 +55,8 @@ import com.google.common.base.Joiner;
 @Slf4j
 public class MorphFU implements FaceUnit
 {
-    private float intensity = 1f;
+    private AtomicDouble intensity = new AtomicDouble(1f);
+    private AtomicDouble prevIntensity = new AtomicDouble(1f);
 
     private String targetName = "";
 
@@ -67,19 +70,20 @@ public class MorphFU implements FaceUnit
     {
 
     }
-    @Delegate private final KeyPositionManager keyPositionManager = new KeyPositionManagerImpl();
+
+    @Delegate
+    private final KeyPositionManager keyPositionManager = new KeyPositionManagerImpl();
 
     private String[] morphTargets = new String[] { "" };
 
     private FaceController faceController;
-
 
     public void setMorphTargets(Set<String> targets)
     {
         morphTargets = targets.toArray(new String[targets.size()]);
         setTargetName(Joiner.on(",").join(morphTargets));
     }
-    
+
     public MorphFU()
     {
         KeyPosition attackPeak = new KeyPosition("attackPeak", 0.1d, 1d);
@@ -99,13 +103,17 @@ public class MorphFU implements FaceUnit
 
     public void setIntensity(float intensity)
     {
-        this.intensity = intensity;
+        this.intensity.set(intensity);
     }
 
     @Override
     public void setFloatParameterValue(String name, float value) throws ParameterNotFoundException
     {
-        if (name.equals("intensity")) intensity = value;
+        if (name.equals("intensity"))
+        {
+            intensity.set(value);
+            prevIntensity.set(value);
+        }
         else throw new ParameterNotFoundException(name);
     }
 
@@ -133,14 +141,14 @@ public class MorphFU implements FaceUnit
     @Override
     public String getParameterValue(String name) throws ParameterException
     {
-        if (name.equals("targetname")) return "" + targetName;        
+        if (name.equals("targetname")) return "" + targetName;
         return "" + getFloatParameterValue(name);
     }
 
     @Override
     public float getFloatParameterValue(String name) throws ParameterException
     {
-        if (name.equals("intensity")) return intensity;
+        if (name.equals("intensity")) return intensity.floatValue();
         throw new ParameterNotFoundException(name);
     }
 
@@ -152,7 +160,7 @@ public class MorphFU implements FaceUnit
 
     private void updateMorphTargets()
     {
-        morphTargets = targetName.split(",");        
+        morphTargets = targetName.split(",");
     }
 
     /**
@@ -173,30 +181,27 @@ public class MorphFU implements FaceUnit
 
         double attackPeak = getKeyPosition("attackPeak").time;
         double relax = getKeyPosition("relax").time;
-        // System.out.println("ready: "+ready);
-        // System.out.println("relax: "+relax);
         float newMorphedWeight = 0;
 
         if (t < attackPeak && t > 0)
         {
-            newMorphedWeight = intensity * (float) (t / attackPeak);
+            newMorphedWeight = intensity.floatValue() * (float) (t / attackPeak);
         }
         else if (t >= attackPeak && t <= relax)
         {
-            newMorphedWeight = intensity;
+            newMorphedWeight = intensity.floatValue();
         }
         else if (t > relax && t < 1)
         {
-            newMorphedWeight = intensity * (float) (1 - ((t - relax) / (1 - relax)));
+            newMorphedWeight = intensity.floatValue() * (float) (1 - ((t - relax) / (1 - relax)));
         }
 
         float[] newWeights = new float[morphTargets.length];
         for (int i = 0; i < newWeights.length; i++)
             newWeights[i] = newMorphedWeight;
         faceController.addMorphTargets(morphTargets, newWeights);
+        prevIntensity.set(newMorphedWeight);
     }
-
-    
 
     /**
      * Creates the TimedFaceUnit corresponding to this face unit
@@ -208,9 +213,9 @@ public class MorphFU implements FaceUnit
      * @return the TFU
      */
     @Override
-    public TimedFaceUnit createTFU(FeedbackManager bfm, BMLBlockPeg bbPeg, String bmlId, String id)
+    public TimedFaceUnit createTFU(FeedbackManager bfm, BMLBlockPeg bbPeg, String bmlId, String id, PegBoard pb)
     {
-        return new TimedFaceUnit(bfm, bbPeg, bmlId, id, this);
+        return new TimedFaceUnit(bfm, bbPeg, bmlId, id, this, pb);
     }
 
     /**
@@ -230,7 +235,7 @@ public class MorphFU implements FaceUnit
         MorphFU result = new MorphFU();
         result.setFaceController(fc);
         result.intensity = intensity;
-        result.targetName = targetName;        
+        result.targetName = targetName;
 
         for (KeyPosition keypos : getKeyPositions())
         {
@@ -238,5 +243,11 @@ public class MorphFU implements FaceUnit
         }
         result.updateMorphTargets();
         return result;
+    }
+
+    @Override
+    public void interruptFromHere()
+    {
+        intensity.set(prevIntensity.get());        
     }
 }

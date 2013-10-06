@@ -46,15 +46,20 @@ public class AUFU extends FACSFU
     {
         LEFT, RIGHT, BOTH
     }
+
     private AUFUSide side = null;
     private int aunr = -1;
-    
+
     @Override
     public void setFloatParameterValue(String name, float value) throws ParameterException
     {
-        if (name.equals("intensity")) intensity = value;
+        if (name.equals("intensity"))
+        {
+            intensity.set(value);
+            prevIntensity.set(value);
+        }
         else throw new ParameterNotFoundException(name);
-        setAU(side, aunr, intensity);
+        setAU(side, aunr, intensity.floatValue());
     }
 
     @Override
@@ -74,9 +79,9 @@ public class AUFU extends FACSFU
         }
         else
         {
-            super.setParameterValue(name, value);            
+            super.setParameterValue(name, value);
         }
-        setAU(side, aunr, intensity);
+        setAU(side, aunr, intensity.floatValue());
     }
 
     @Override
@@ -105,7 +110,7 @@ public class AUFU extends FACSFU
     {
         ActionUnit au = FACS.getActionUnit(aunr);
         if (au == null) return false;
-        if (intensity > 1) return false;
+        if (intensity.floatValue() > 1) return false;
         if (au.getSymmetry() != Symmetry.ASYMMETRIC) return (side == AUFUSide.BOTH) || (side == null);
 
         return (side != null);
@@ -115,25 +120,28 @@ public class AUFU extends FACSFU
     {
         side = s;
         aunr = i;
-        intensity = intens;
+        intensity.set(intens);
+        prevIntensity.set(intens);
         if (!hasValidParameters())
         {
             return;
         }
         facsConfig = new FACSConfiguration();
         ActionUnit au = FACS.getActionUnit(aunr);
+        float newval = intensity.floatValue();
         if (au.getSymmetry() != Symmetry.ASYMMETRIC)
         {
-            facsConfig.setValue(Side.NONE, au.getIndex(), intensity);
+            facsConfig.setValue(Side.NONE, au.getIndex(), newval);
         }
         else
         {
-            if (side == AUFUSide.LEFT) facsConfig.setValue(Side.LEFT, au.getIndex(), intensity);
-            if (side == AUFUSide.RIGHT) facsConfig.setValue(Side.RIGHT, au.getIndex(), intensity);
+            if (side == AUFUSide.LEFT) facsConfig.setValue(Side.LEFT, au.getIndex(), newval);
+            if (side == AUFUSide.RIGHT) facsConfig.setValue(Side.RIGHT, au.getIndex(), newval);
             if (side == AUFUSide.BOTH)
             {
-                facsConfig.setValue(Side.LEFT, au.getIndex(), intensity);
-                facsConfig.setValue(Side.RIGHT, au.getIndex(), intensity);
+                
+                facsConfig.setValue(Side.LEFT, au.getIndex(), newval);
+                facsConfig.setValue(Side.RIGHT, au.getIndex(), newval);
             }
         }        
     }
@@ -146,7 +154,7 @@ public class AUFU extends FACSFU
         AUFU result = new AUFU();
         result.setFaceController(fc);
         result.setFACSConverter(fconv);
-        result.setAU(side, aunr, intensity);
+        result.setAU(side, aunr, intensity.floatValue());
         for (KeyPosition keypos : getKeyPositions())
         {
             result.addKeyPosition(keypos.deepCopy());

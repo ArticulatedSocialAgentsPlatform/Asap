@@ -21,6 +21,7 @@ import asap.motionunit.MUPlayException;
 import asap.realizer.feedback.FeedbackManager;
 import asap.realizer.feedback.FeedbackManagerImpl;
 import asap.realizer.pegboard.BMLBlockPeg;
+import asap.realizer.pegboard.PegBoard;
 import asap.realizer.pegboard.TimePeg;
 import asap.realizer.planunit.KeyPosition;
 import asap.realizer.planunit.PlanManager;
@@ -46,14 +47,14 @@ public class FacePlanPlayerTest
     private FeedbackManager fbManager = new FeedbackManagerImpl(mockBmlBlockManager,"character1");
     private FeedbackManager mockFeedbackManager = mock(FeedbackManager.class);
     private PlanManager<TimedFaceUnit> planManager = new PlanManager<TimedFaceUnit>();
-    
+    private final PegBoard pegBoard = new PegBoard();
     @Test
     public void testPlayTfu() throws MUPlayException 
     {
         //Playing one face unit at t=0, checking for state transition, feedback calls, no warnings
         List<BMLSyncPointProgressFeedback> fbList = new ArrayList<BMLSyncPointProgressFeedback>();
         SingleThreadedPlanPlayer<TimedFaceUnit>fpp = new SingleThreadedPlanPlayer<TimedFaceUnit>(mockFeedbackManager, planManager);
-        TimedFaceUnit tfu1 = new TimedFaceUnit(fbManager,BMLBlockPeg.GLOBALPEG, "bml1", "behaviour1", fuMock1);        
+        TimedFaceUnit tfu1 = new TimedFaceUnit(fbManager,BMLBlockPeg.GLOBALPEG, "bml1", "behaviour1", fuMock1, pegBoard);        
         fbManager.addFeedbackListener(new ListBMLFeedbackListener.Builder().feedBackList(fbList).build());
         planManager.addPlanUnit(tfu1);
         KeyPositionMocker.stubKeyPositions(fuMock1, new KeyPosition("start",0,1), new KeyPosition("end",1,1));

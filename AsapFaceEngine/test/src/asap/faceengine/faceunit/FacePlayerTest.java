@@ -21,6 +21,7 @@ import asap.realizer.Player;
 import asap.realizer.feedback.FeedbackManager;
 import asap.realizer.feedback.FeedbackManagerImpl;
 import asap.realizer.pegboard.BMLBlockPeg;
+import asap.realizer.pegboard.PegBoard;
 import asap.realizer.planunit.KeyPosition;
 import asap.realizer.planunit.PlanManager;
 import asap.realizer.planunit.SingleThreadedPlanPlayer;
@@ -45,7 +46,7 @@ public class FacePlayerTest
 
     private BMLBlockManager mockBmlBlockManager = mock(BMLBlockManager.class);
     private FeedbackManager fbManager = new FeedbackManagerImpl(mockBmlBlockManager,"character1");
-
+    private final PegBoard pegBoard = new PegBoard();
 
     private FaceUnit mockFaceUnit = mock(FaceUnit.class);
 
@@ -62,7 +63,7 @@ public class FacePlayerTest
     @Test
     public void testPlanUnitException() throws TimedPlanUnitPlayException
     {
-        TimedFaceUnit tfu = new TimedFaceUnit(fbManager, BMLBlockPeg.GLOBALPEG, "bml1", "id1", mockFaceUnit);
+        TimedFaceUnit tfu = new TimedFaceUnit(fbManager, BMLBlockPeg.GLOBALPEG, "bml1", "id1", mockFaceUnit, pegBoard);
         KeyPositionMocker.stubKeyPositions(mockFaceUnit, new KeyPosition("start",0,1),new KeyPosition("end",1,1));
         tfu.setTimePeg("start", TimePegUtil.createTimePeg(0));
         tfu.setTimePeg("end", TimePegUtil.createTimePeg(1));

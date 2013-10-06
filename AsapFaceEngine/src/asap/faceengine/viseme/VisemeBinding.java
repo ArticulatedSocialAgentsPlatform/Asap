@@ -18,11 +18,12 @@
  ******************************************************************************/
 package asap.faceengine.viseme;
 
+import hmi.faceanimation.FaceController;
+import saiba.bml.core.Behaviour;
 import asap.faceengine.faceunit.TimedFaceUnit;
 import asap.realizer.feedback.FeedbackManager;
 import asap.realizer.pegboard.BMLBlockPeg;
-import saiba.bml.core.Behaviour;
-import hmi.faceanimation.FaceController;
+import asap.realizer.pegboard.PegBoard;
 
 /**
  * The VisemeBinding maps from visemes to FaceUnits. different avatars have
@@ -41,7 +42,7 @@ public interface VisemeBinding
      * 
      */
     TimedFaceUnit getVisemeUnit(FeedbackManager bfm,BMLBlockPeg bbPeg, Behaviour b, int viseme,
-            FaceController fc);
+            FaceController fc, PegBoard pb);
     
     /**
      * Get a visime unit that is not hooked up to the feedbackmanager
@@ -51,5 +52,5 @@ public interface VisemeBinding
      * end=next.peak for timing. Ugly but effective.<br>
      */
     TimedFaceUnit getVisemeUnit(BMLBlockPeg bbPeg, Behaviour b, int viseme,            
-            FaceController fc);
+            FaceController fc, PegBoard pb);
 }

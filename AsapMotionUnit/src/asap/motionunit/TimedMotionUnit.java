@@ -7,6 +7,7 @@ import java.util.concurrent.CopyOnWriteArrayList;
 
 import asap.realizer.feedback.FeedbackManager;
 import asap.realizer.pegboard.BMLBlockPeg;
+import asap.realizer.pegboard.PegBoard;
 import asap.realizer.pegboard.TimePeg;
 import asap.realizer.planunit.KeyPosition;
 import asap.realizer.planunit.ParameterException;
@@ -30,6 +31,7 @@ public class TimedMotionUnit extends TimedAbstractPlanUnit
 {
     public final MotionUnit mu;
     protected List<KeyPosition> progressHandled = new CopyOnWriteArrayList<KeyPosition>();
+    protected final PegBoard pegBoard;
 
     @Delegate
     protected final PlanUnitTimeManager puTimeManager;
@@ -41,10 +43,11 @@ public class TimedMotionUnit extends TimedAbstractPlanUnit
      * @param id behaviour id
      * @param m motion unit
      */
-    public TimedMotionUnit(FeedbackManager bbf, BMLBlockPeg bmlBlockPeg, String bmlId, String id, MotionUnit m)
+    public TimedMotionUnit(FeedbackManager bbf, BMLBlockPeg bmlBlockPeg, String bmlId, String id, MotionUnit m, PegBoard pb)
     {
         super(bbf, bmlBlockPeg, bmlId, id);
         mu = m;
+        pegBoard = pb;
         puTimeManager = new PlanUnitTimeManager(mu);
     }
 
@@ -209,5 +212,49 @@ public class TimedMotionUnit extends TimedAbstractPlanUnit
     public String toString()
     {
         return getBMLId() + ":" + getId();
+    }
+
+    protected void skipPegs(double time, String... pegs)
+    {
+        for (String peg : pegs)
+        {
+            if (getTime(peg) > time)
+            {
+                TimePeg tp = getTimePeg(peg);
+                TimePeg tpNew = tp;
+                if (pegBoard.getPegKeys(tp).size() > 1)
+                {
+                    tpNew = new TimePeg(tp.getBmlBlockPeg());
+                    pegBoard.addTimePeg(getBMLId(), getId(), peg, tpNew);
+                }
+                tpNew.setGlobalValue(time - 0.01);
+                setTimePeg(peg, tpNew);
+            }
+        }
+    }
+
+    protected void gracefullInterrupt(double time) throws TimedPlanUnitPlayException
+    {
+        stop(time);
+    }
+
+    @Override
+    public void interrupt(double time) throws TimedPlanUnitPlayException
+    {
+        switch (getState())
+        {
+        case IN_PREP:
+        case PENDING:
+        case LURKING:
+            stop(time);
+            break; // just remove yourself
+        case IN_EXEC:
+            gracefullInterrupt(time);
+            break; // gracefully interrupt yourself
+        case SUBSIDING: // nothing to be done
+        case DONE:
+        default:
+            break;
+        }
     }
 }

@@ -18,6 +18,8 @@
  ******************************************************************************/
 package asap.faceengine.faceunit;
 
+import com.google.common.util.concurrent.AtomicDouble;
+
 import hmi.faceanimation.FaceController;
 import hmi.faceanimation.converters.EmotionConverter;
 import hmi.faceanimation.converters.FACSConverter;
@@ -26,6 +28,7 @@ import hmi.util.StringUtil;
 import lombok.Delegate;
 import asap.realizer.feedback.FeedbackManager;
 import asap.realizer.pegboard.BMLBlockPeg;
+import asap.realizer.pegboard.PegBoard;
 import asap.realizer.planunit.InvalidParameterException;
 import asap.realizer.planunit.KeyPosition;
 import asap.realizer.planunit.KeyPositionManager;
@@ -49,8 +52,9 @@ public class PlutchikFU implements FaceUnit
     @Delegate
     private final KeyPositionManager keyPositionManager = new KeyPositionManagerImpl();
 
-    private float intensity = 1f;
-
+    private AtomicDouble intensity = new AtomicDouble(1f);
+    private AtomicDouble prevIntensity = new AtomicDouble(1f);
+    
     private float angle = -1f;
 
     private float activation = -1f;
@@ -91,7 +95,8 @@ public class PlutchikFU implements FaceUnit
     {
         if (name.equals("intensity"))
         {
-            intensity = value;
+            intensity.set(value);
+            prevIntensity.set(value);
         }
         else if (name.equals("angle")) angle = value;
         else if (name.equals("activation")) activation = value;
@@ -123,7 +128,7 @@ public class PlutchikFU implements FaceUnit
     @Override
     public float getFloatParameterValue(String name) throws ParameterException
     {
-        if (name.equals("intensity")) return intensity;
+        if (name.equals("intensity")) return intensity.floatValue();
         if (name.equals("angle")) return angle;
         if (name.equals("activation")) return activation;
         throw new ParameterNotFoundException(name);
@@ -155,19 +160,19 @@ public class PlutchikFU implements FaceUnit
 
         if (t < attackPeak && t > 0)
         {
-            newAppliedWeight = intensity * (float) (t / attackPeak);
+            newAppliedWeight = intensity.floatValue() * (float) (t / attackPeak);
         }
         else if (t >= attackPeak && t <= relax)
         {
-            newAppliedWeight = intensity;
+            newAppliedWeight = intensity.floatValue();
         }
         else if (t > relax && t < 1)
         {
-            newAppliedWeight = intensity * (float) (1 - ((t - relax) / (1 - relax)));
+            newAppliedWeight = intensity.floatValue() * (float) (1 - ((t - relax) / (1 - relax)));
         }
-
         MPEG4Configuration config = emotionConverter.convert(angle, activation * newAppliedWeight);
         faceController.addMPEG4Configuration(config);
+        prevIntensity.set(newAppliedWeight);
     }
 
     /**
@@ -180,9 +185,9 @@ public class PlutchikFU implements FaceUnit
      * @return the TFU
      */
     @Override
-    public TimedFaceUnit createTFU(FeedbackManager bfm, BMLBlockPeg bbPeg, String bmlId, String id)
+    public TimedFaceUnit createTFU(FeedbackManager bfm, BMLBlockPeg bbPeg, String bmlId, String id, PegBoard pb)
     {
-        return new TimedFaceUnit(bfm, bbPeg, bmlId, id, this);
+        return new TimedFaceUnit(bfm, bbPeg, bmlId, id, this, pb);
     }
 
     /**
@@ -210,5 +215,11 @@ public class PlutchikFU implements FaceUnit
             result.addKeyPosition(keypos.deepCopy());
         }
         return result;
+    }
+
+    @Override
+    public void interruptFromHere()
+    {
+        intensity.set(prevIntensity.get());        
     }
 }

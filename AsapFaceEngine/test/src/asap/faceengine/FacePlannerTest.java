@@ -5,6 +5,7 @@ import static org.hamcrest.MatcherAssert.assertThat;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
 import static org.mockito.Matchers.any;
+import static org.mockito.Matchers.eq;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
 import hmi.faceanimation.FaceController;
@@ -39,6 +40,7 @@ import asap.realizer.SyncAndTimePeg;
 import asap.realizer.feedback.FeedbackManager;
 import asap.realizer.feedback.FeedbackManagerImpl;
 import asap.realizer.pegboard.BMLBlockPeg;
+import asap.realizer.pegboard.PegBoard;
 import asap.realizer.pegboard.TimePeg;
 import asap.realizer.planunit.PlanManager;
 import asap.realizer.planunit.SingleThreadedPlanPlayer;
@@ -73,20 +75,21 @@ public class FacePlannerTest
     private FaceLexemeBehaviour mockFaceBehaviour = mock(FaceLexemeBehaviour.class);
     private List<BMLWarningFeedback> beList = new ArrayList<BMLWarningFeedback>();
     private Player facePlayer;
+    private final PegBoard pegBoard = new PegBoard();
 
     @Before
     public void setup()
     {
         facePlayer = new DefaultPlayer(new SingleThreadedPlanPlayer<TimedFaceUnit>(fbManager, planManager));
-        facePlanner = new FacePlanner(fbManager, mockFaceController, null, null, mockFaceBinding, planManager);
+        facePlanner = new FacePlanner(fbManager, mockFaceController, null, null, mockFaceBinding, planManager, pegBoard);
         plannerTests = new PlannerTests<TimedFaceUnit>(facePlanner, bbPeg);
         fbManager.addFeedbackListener(new ListBMLFeedbackListener.Builder().warningList(beList).build());
-        TimedFaceUnit tmu = new TimedFaceUnit(fbManager, bbPeg, BMLID, "nod1", stubFaceUnit);
+        TimedFaceUnit tmu = new TimedFaceUnit(fbManager, bbPeg, BMLID, "nod1", stubFaceUnit, pegBoard);
         final List<TimedFaceUnit> tmus = new ArrayList<TimedFaceUnit>();
         tmus.add(tmu);
         when(
                 mockFaceBinding.getFaceUnit((FeedbackManager) any(), (BMLBlockPeg) any(), (Behaviour) any(), (FaceController) any(),
-                        (FACSConverter) any(), (EmotionConverter) any())).thenReturn(tmus);
+                        (FACSConverter) any(), (EmotionConverter) any(),eq(pegBoard))).thenReturn(tmus);
     }
 
     public FaceLexemeBehaviour createFaceBehaviour() throws IOException

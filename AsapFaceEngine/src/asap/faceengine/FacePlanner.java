@@ -41,6 +41,7 @@ import asap.realizer.SyncAndTimePeg;
 import asap.realizer.feedback.FeedbackManager;
 import asap.realizer.pegboard.BMLBlockPeg;
 import asap.realizer.pegboard.OffsetPeg;
+import asap.realizer.pegboard.PegBoard;
 import asap.realizer.planunit.KeyPosition;
 import asap.realizer.planunit.PlanManager;
 import asap.realizer.scheduler.LinearStretchResolver;
@@ -60,7 +61,8 @@ public class FacePlanner extends AbstractPlanner<TimedFaceUnit>
 
     private final FaceBinding faceBinding;
     private UniModalResolver resolver;
-
+    private final PegBoard pegBoard;
+    
     /* register the MURML BML face behaviors with the BML parser... */
     static
     {
@@ -69,14 +71,14 @@ public class FacePlanner extends AbstractPlanner<TimedFaceUnit>
     }
 
     public FacePlanner(FeedbackManager bfm, FaceController fc, FACSConverter fconv, EmotionConverter econv, FaceBinding fb,
-            PlanManager<TimedFaceUnit> planManager)
+            PlanManager<TimedFaceUnit> planManager, PegBoard pb)
     {
         super(bfm, planManager);
         faceBinding = fb;
         faceController = fc;
         facsConverter = fconv;
         emotionConverter = econv;
-
+        pegBoard = pb;
         resolver = new LinearStretchResolver();
     }
 
@@ -92,11 +94,11 @@ public class FacePlanner extends AbstractPlanner<TimedFaceUnit>
         {
             FaceUnit fu = MURMLFUBuilder.setup(((MURMLFaceBehaviour) b).getMurmlDescription());
             FaceUnit fuCopy = fu.copy(faceController, facsConverter, emotionConverter);
-            tfu = fuCopy.createTFU(fbManager, bbPeg, b.getBmlId(), b.id);
+            tfu = fuCopy.createTFU(fbManager, bbPeg, b.getBmlId(), b.id,pegBoard);
         }
         else
         {
-            List<TimedFaceUnit> tfus = faceBinding.getFaceUnit(fbManager, bbPeg, b, faceController, facsConverter, emotionConverter);
+            List<TimedFaceUnit> tfus = faceBinding.getFaceUnit(fbManager, bbPeg, b, faceController, facsConverter, emotionConverter, pegBoard);
             if (tfus.isEmpty())
             {
                 throw new BehaviourPlanningException(b, "Behavior " + b.id

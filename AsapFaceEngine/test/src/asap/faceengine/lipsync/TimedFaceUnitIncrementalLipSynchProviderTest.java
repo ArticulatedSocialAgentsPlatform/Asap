@@ -18,6 +18,7 @@ import asap.faceengine.viseme.MorphVisemeBinding;
 import asap.faceengine.viseme.VisemeBinding;
 import asap.faceengine.viseme.VisemeToMorphMapping;
 import asap.realizer.pegboard.BMLBlockPeg;
+import asap.realizer.pegboard.PegBoard;
 import asap.realizer.planunit.PlanManager;
 
 /**
@@ -34,7 +35,7 @@ public class TimedFaceUnitIncrementalLipSynchProviderTest
     private BMLBlockPeg bbPeg = BMLBlockPeg.GLOBALPEG;
     private static final double TIMING_PRECISION = 0.0001;
     private TimedFaceUnitIncrementalLipSynchProvider provider; 
-    
+    private final PegBoard pegBoard = new PegBoard();
     @Before
     public void before() throws IOException
     {
@@ -45,7 +46,7 @@ public class TimedFaceUnitIncrementalLipSynchProviderTest
         visemeBinding = new MorphVisemeBinding(mapping);
         String str = "<speech xmlns=\"http://www.bml-initiative.org/bml/bml-1.0\" " + "id=\"s1\"><text>Hello world</text></speech>";
         speechBehavior = new SpeechBehaviour("bml1", new XMLTokenizer(str));
-        provider = new TimedFaceUnitIncrementalLipSynchProvider(visemeBinding, mockFaceController, faceManager);
+        provider = new TimedFaceUnitIncrementalLipSynchProvider(visemeBinding, mockFaceController, faceManager, pegBoard);
     }
     
     @Test

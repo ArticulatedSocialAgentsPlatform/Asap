@@ -2,6 +2,7 @@ package asap.faceengine.loader;
 
 import hmi.environmentbase.Environment;
 import hmi.environmentbase.Loader;
+import hmi.util.ArrayUtils;
 import hmi.xml.XMLTokenizer;
 
 import java.io.IOException;
@@ -9,6 +10,7 @@ import java.io.IOException;
 import asap.faceengine.lipsync.TimedFaceUnitIncrementalLipSynchProvider;
 import asap.faceengine.viseme.VisemeBinding;
 import asap.realizer.lipsync.IncrementalLipSynchProvider;
+import asap.realizerembodiments.AsapRealizerEmbodiment;
 import asap.realizerembodiments.IncrementalLipSynchProviderLoader;
 
 /**
@@ -39,15 +41,19 @@ public class TimeFaceUnitIncrementalLipSynchProviderLoader implements Incrementa
     {
         this.id = loaderId;
         
-        FaceEngineLoader fal = null;
-        for (Loader e : requiredLoaders)
+        AsapRealizerEmbodiment are = ArrayUtils.getFirstClassOfType(requiredLoaders, AsapRealizerEmbodiment.class);
+        if (are == null)
         {
-            if (e instanceof FaceEngineLoader) fal = (FaceEngineLoader) e;
+            throw new RuntimeException(
+                    "TimeFaceUnitIncrementalLipSynchProviderLoader requires an EmbodimentLoader containing a AsapRealizerEmbodiment");
         }
+        
+        FaceEngineLoader fal = ArrayUtils.getFirstClassOfType(requiredLoaders, FaceEngineLoader.class);
         if (fal == null)
         {
             throw tokenizer.getXMLScanException("TimedFaceUnitLipSynchProviderLoader requires FaceEngineLoader.");
         }
+        
         VisemeBinding visBinding = VisemeBindingLoader.load(tokenizer, fal.getFACSConverter());
         
         if (visBinding == null)
@@ -55,7 +61,7 @@ public class TimeFaceUnitIncrementalLipSynchProviderLoader implements Incrementa
             throw tokenizer.getXMLScanException("TimedFaceUnitIncrementalLipSynchProvider requires a visimebinding.");
         }
 
-        lipSyncProvider = new TimedFaceUnitIncrementalLipSynchProvider(visBinding, fal.getFaceController(), fal.getPlanManager());
+        lipSyncProvider = new TimedFaceUnitIncrementalLipSynchProvider(visBinding, fal.getFaceController(), fal.getPlanManager(), are.getPegBoard());
         
     }
 

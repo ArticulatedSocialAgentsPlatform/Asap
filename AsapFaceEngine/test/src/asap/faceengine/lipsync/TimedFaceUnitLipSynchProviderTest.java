@@ -21,6 +21,7 @@ import asap.faceengine.viseme.MorphVisemeBinding;
 import asap.faceengine.viseme.VisemeBinding;
 import asap.faceengine.viseme.VisemeToMorphMapping;
 import asap.realizer.pegboard.BMLBlockPeg;
+import asap.realizer.pegboard.PegBoard;
 import asap.realizer.pegboard.TimePeg;
 import asap.realizer.planunit.PlanManager;
 import asap.realizer.planunit.TimedPlanUnit;
@@ -42,7 +43,7 @@ public class TimedFaceUnitLipSynchProviderTest
     private BMLBlockPeg bbPeg = BMLBlockPeg.GLOBALPEG;
     private static final double TIMING_PRECISION = 0.0001;
     private TimedFaceUnitLipSynchProvider provider;
-    
+    private final PegBoard pegBoard = new PegBoard();
     @Before
     public void before() throws IOException
     {
@@ -60,7 +61,7 @@ public class TimedFaceUnitLipSynchProviderTest
         endPeg.setLocalValue(10);
         when(mockSpeechUnit.getTimePeg("start")).thenReturn(startPeg);
         when(mockSpeechUnit.getTimePeg("end")).thenReturn(endPeg);
-        provider = new TimedFaceUnitLipSynchProvider(visemeBinding, mockFaceController, faceManager);
+        provider = new TimedFaceUnitLipSynchProvider(visemeBinding, mockFaceController, faceManager,pegBoard);
     }
 
     @Test

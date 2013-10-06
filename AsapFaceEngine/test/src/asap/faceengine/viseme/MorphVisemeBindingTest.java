@@ -13,6 +13,7 @@ import org.junit.Test;
 
 import asap.faceengine.faceunit.TimedFaceUnit;
 import asap.realizer.pegboard.BMLBlockPeg;
+import asap.realizer.pegboard.PegBoard;
 import asap.realizer.planunit.ParameterException;
 
 /**
@@ -24,6 +25,7 @@ public class MorphVisemeBindingTest
     private FaceController mockFaceController = mock(FaceController.class);
     private SpeechBehaviour speechBehaviour;
     private BMLBlockPeg bbPeg = new BMLBlockPeg("bb", 0);
+    private final PegBoard pegBoard = new PegBoard();
 
     @Before
     public void setup() throws IOException
@@ -41,7 +43,7 @@ public class MorphVisemeBindingTest
     @Test
     public void getNonExistingViseme() throws ParameterException
     {
-        TimedFaceUnit tfu = getVisemeBinding().getVisemeUnit(bbPeg, speechBehaviour, 999, mockFaceController);
+        TimedFaceUnit tfu = getVisemeBinding().getVisemeUnit(bbPeg, speechBehaviour, 999, mockFaceController, pegBoard);
         assertEquals("", tfu.getParameterValue("targetname"));
     }
 }

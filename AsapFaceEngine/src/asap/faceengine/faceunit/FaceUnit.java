@@ -24,6 +24,7 @@ import hmi.faceanimation.converters.FACSConverter;
 import asap.motionunit.MotionUnit;
 import asap.realizer.feedback.FeedbackManager;
 import asap.realizer.pegboard.BMLBlockPeg;
+import asap.realizer.pegboard.PegBoard;
 
 /**
  * A facial animation, typically with a peak-like structure. 
@@ -40,10 +41,12 @@ public interface FaceUnit extends MotionUnit
      * @param id         behaviour id
      * @return          the TFU
      */
-    TimedFaceUnit createTFU(FeedbackManager bfm, BMLBlockPeg bbPeg,String bmlId,String id);    
+    TimedFaceUnit createTFU(FeedbackManager bfm, BMLBlockPeg bbPeg,String bmlId,String id, PegBoard pb);    
     
     /**
      * Create a copy of this face unit and link it to the faceplayer
      */
     FaceUnit copy(FaceController fc, FACSConverter fconv, EmotionConverter econv); 
+    
+    void interruptFromHere();
 }

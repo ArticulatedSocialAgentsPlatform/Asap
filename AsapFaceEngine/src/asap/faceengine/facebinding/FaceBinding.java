@@ -18,8 +18,6 @@
  ******************************************************************************/
 package asap.faceengine.facebinding;
 
-import saiba.bml.BMLInfo;
-import saiba.bml.core.Behaviour;
 import hmi.faceanimation.FaceController;
 import hmi.faceanimation.converters.EmotionConverter;
 import hmi.faceanimation.converters.FACSConverter;
@@ -33,11 +31,14 @@ import java.util.List;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import saiba.bml.BMLInfo;
+import saiba.bml.core.Behaviour;
 import asap.binding.SpecParameterDefault;
 import asap.faceengine.faceunit.FaceUnit;
 import asap.faceengine.faceunit.TimedFaceUnit;
 import asap.realizer.feedback.FeedbackManager;
 import asap.realizer.pegboard.BMLBlockPeg;
+import asap.realizer.pegboard.PegBoard;
 import asap.realizer.planunit.ParameterException;
 
 /**
@@ -64,7 +65,7 @@ public class FaceBinding extends XMLStructureAdapter
      * Gets a list of timed face units that satisfy the constraints of behaviour b
      */
     public List<TimedFaceUnit> getFaceUnit(FeedbackManager fbManager, BMLBlockPeg bbPeg, Behaviour b, FaceController fc,
-            FACSConverter fconv, EmotionConverter econv)
+            FACSConverter fconv, EmotionConverter econv, PegBoard pb)
     {
         ArrayList<TimedFaceUnit> fus = new ArrayList<TimedFaceUnit>();
         // System.out.println("Mapping face binding for "+b.getXMLTag());
@@ -78,7 +79,7 @@ public class FaceBinding extends XMLStructureAdapter
                 {
                     // System.out.println("Found type and constraint match");
                     FaceUnit fuCopy = s.faceUnit.copy(fc, fconv, econv);
-                    TimedFaceUnit tfu = fuCopy.createTFU(fbManager, bbPeg, b.getBmlId(), b.id);
+                    TimedFaceUnit tfu = fuCopy.createTFU(fbManager, bbPeg, b.getBmlId(), b.id, pb);
                     fus.add(tfu);
 
                     // System.out.println("set def params");

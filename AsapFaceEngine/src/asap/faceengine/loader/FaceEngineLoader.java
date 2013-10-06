@@ -156,7 +156,7 @@ public class FaceEngineLoader implements EngineLoader
         econv = new EmotionConverter();
         if (fconv==null)fconv = new FACSConverter();
         FacePlanner facePlanner = new FacePlanner(are.getFeedbackManager(), fcp, fconv, econv,
-                facebinding, planManager);
+                facebinding, planManager, are.getPegBoard());
         engine = new DefaultEngine<TimedFaceUnit>(facePlanner, facePlayer, planManager);
         engine.setId(id);
 
