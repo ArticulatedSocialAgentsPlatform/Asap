@@ -15,6 +15,7 @@ import asap.realizer.BehaviourPlanningException;
 import asap.realizer.feedback.FeedbackManager;
 import asap.realizer.feedback.NullFeedbackManager;
 import asap.realizer.pegboard.BMLBlockPeg;
+import asap.realizer.pegboard.OffsetPeg;
 import asap.realizer.pegboard.PegBoard;
 import asap.realizer.pegboard.PegKey;
 import asap.realizer.pegboard.TimePeg;
@@ -76,7 +77,7 @@ public class MotorControlProgram extends TimedAbstractPlanUnit implements TimedA
         {
             for (String sync : lmp.getAvailableSyncs())
             {
-                if (mcpSync.equals(sync) && !mcpSync.equals("end"))
+                if (mcpSync.equals(sync) && !mcpSync.equals("end") && !mcpSync.equals("relax"))
                 {
                     lmp.setTimePeg(sync, localPegBoard.getTimePeg(getBMLId(), getId(), sync));
                 }
@@ -154,21 +155,47 @@ public class MotorControlProgram extends TimedAbstractPlanUnit implements TimedA
         solvePegTiming(offset, syncs, times);
     }
 
+    private double getPostStrokeHoldDuration()
+    {
+        TimePeg strokeEndPeg = getTimePeg("strokeEnd");
+        TimePeg relaxPeg = getTimePeg("relax");
+        if(strokeEndPeg instanceof OffsetPeg)
+        {
+            OffsetPeg op = (OffsetPeg)strokeEndPeg;
+            if(op.getLink().equals(relaxPeg))
+            {
+                return -op.getOffset();
+            }
+        }
+        
+        
+        if(relaxPeg instanceof OffsetPeg)
+        {
+            OffsetPeg op = (OffsetPeg)relaxPeg;
+            if(op.getLink().equals(strokeEndPeg))
+            {
+                return op.getOffset();
+            }
+        }
+        
+        return 0;
+    }
+    
     private void solvePegTiming(int offset, String[] syncs, double[] times)
     {
-        double prefDurations[] = { getPreparationDuration(), 0, 0, getStrokeDuration(), 0, getRetractionDuration() };
+        double prefDurations[] = { getPreparationDuration(), 0, 0, getStrokeDuration(), getPostStrokeHoldDuration(), getRetractionDuration() };
         resolvePegTimes(offset, syncs, times, prefDurations, bmlBlockPeg.getValue());
     }
 
     private void solvePegTiming(int offset, String[] syncs, double[] times, double time)
     {
-        double prefDurations[] = { getPreparationDuration(), 0, 0, getStrokeDuration(time), 0, getRetractionDuration() };
+        double prefDurations[] = { getPreparationDuration(), 0, 0, getStrokeDuration(time), getPostStrokeHoldDuration(), getRetractionDuration() };
         resolvePegTimes(offset, syncs, times, prefDurations, time);
     }
 
     private void resolvePegTimes(int offset, String[] syncs, double[] times, double[] prefDurations, double startTime)
     {
-        double weights[] = { 2, 1, 1, 1, 1, 2 };
+        double weights[] = { 2, 1, 1, 1, 3, 2 };
 
         boolean hasKnownTime = false;
         for(double t:times)
@@ -190,9 +217,35 @@ public class MotorControlProgram extends TimedAbstractPlanUnit implements TimedA
         }
         
         double solvedTimes[] = LinearStretchTemporalResolver.solve(times, prefDurations, weights, startTime);
+        
+        
+        //only set the TimePeg if it's not an OffsetPeg that is connected to another TimePeg in this MCP
+        Set<TimePeg> tpegs = new HashSet<TimePeg>();
         for (int i = offset; i < times.length; i++)
         {
-            getTimePeg(syncs[i]).setGlobalValue(solvedTimes[i]);
+            if (! (getTimePeg(syncs[i]) instanceof OffsetPeg))
+            {
+                tpegs.add(getTimePeg(syncs[i]));
+            }
+        }        
+        for (int i = offset; i < times.length; i++)
+        {
+            if ((getTimePeg(syncs[i]) instanceof OffsetPeg))
+            {
+                OffsetPeg op = (OffsetPeg)getTimePeg(syncs[i]);
+                if(!tpegs.contains(op.getLink()))
+                {
+                    tpegs.add(op);
+                }                        
+            }
+        }
+        
+        for (int i = offset; i < times.length; i++)
+        {
+            if (tpegs.contains(getTimePeg(syncs[i])))
+            {
+                getTimePeg(syncs[i]).setGlobalValue(solvedTimes[i]);            
+            }
         }
     }
 

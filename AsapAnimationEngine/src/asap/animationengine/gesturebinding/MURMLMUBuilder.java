@@ -340,9 +340,9 @@ public final class MURMLMUBuilder
     private List<OrientConstraint> formWristMovement(String scope, Static staticElem, FeedbackManager bbm, BMLBlockPeg bmlBlockPeg,
             String bmlId, String id, PegBoard pb, AnimationPlayer aniPlayer)
     {
-        OrientConstraint oc1 = new OrientConstraint("strokeStart",GStrokePhaseID.STP_STROKE);
-        OrientConstraint oc2 = new OrientConstraint("strokeEnd",GStrokePhaseID.STP_RETRACT);
-        
+        OrientConstraint oc1 = new OrientConstraint("strokeStart", GStrokePhaseID.STP_STROKE);
+        OrientConstraint oc2 = new OrientConstraint("strokeEnd", GStrokePhaseID.STP_RETRACT);
+
         float[] vec = Vec3f.getVec3f();
 
         if (staticElem.getSlot() == Slot.ExtFingerOrientation && hns.getAbsoluteDirection(staticElem.getValue(), vec))
@@ -357,7 +357,7 @@ public final class MURMLMUBuilder
             oc1.setP(vec);
             oc2.setP(vec);
         }
-        else
+        else 
         {
             return ImmutableList.of();
         }
@@ -413,7 +413,6 @@ public final class MURMLMUBuilder
                 // force first and last ids to be strokeStart and strokeEnd respectively
                 if (i == 0) cid = "strokeStart";
                 if (i == lastValue - 1) cid = "strokeEnd";
-                
 
                 OrientConstraint oc = new OrientConstraint(cid, GStrokePhaseID.STP_STROKE);
                 vec = Vec3f.getVec3f();
@@ -644,35 +643,40 @@ public final class MURMLMUBuilder
     }
 
     public LMP getDynamicHandShapeTMU(Dynamic dyn, FeedbackManager bbm, BMLBlockPeg bmlBlockPeg, String bmlId, String id, PegBoard pb,
-            AnimationPlayer aniPlayer)
+            AnimationPlayer aniPlayer) throws TMUSetupException
     {
         List<PostureConstraint> phaseVec = new ArrayList<>();
-        
+
         int i = 0;
         int lastValue = getNumberOfValues(dyn);
 
         for (DynamicElement dynElem : dyn.getDynamicElements())
         {
-            for(Value v:dynElem.getValues())
+            for (Value v : dynElem.getValues())
             {
                 String cid = v.getId();
                 if (cid.isEmpty())
                 {
-                    cid = "stroke" + i;                    
+                    cid = "stroke" + i;
                 }
                 if (i == 0) cid = "strokeStart";
                 if (i == lastValue - 1) cid = "strokeEnd";
                 SkeletonPose pose = hnsHandshapes.getHNSHandShape(v.getName());
+                if (pose == null)
+                {
+                    throw new TMUSetupException("Cannot find HandShape " + v.getName(), null);
+                }
+
                 phaseVec.add(new PostureConstraint(cid, pose));
                 i++;
             }
         }
-        
+
         return new LMPHandMove(dyn.getScope(), phaseVec, bbm, bmlBlockPeg, bmlId, createLMPId(id), pb, aniPlayer, false);
     }
 
     public LMP getStaticHandShapeElementTMU(String scope, Static staticElem, FeedbackManager bbm, BMLBlockPeg bmlBlockPeg, String bmlId,
-            String id, PegBoard pb, AnimationPlayer aniPlayer)
+            String id, PegBoard pb, AnimationPlayer aniPlayer) throws TMUSetupException
     {
 
         // // --- preparations
@@ -682,6 +686,11 @@ public final class MURMLMUBuilder
 
         List<PostureConstraint> phaseVec = new ArrayList<>();
         SkeletonPose pose = hnsHandshapes.getHNSHandShape(staticElem.getValue());
+        if (pose == null)
+        {
+            throw new TMUSetupException("Cannot find HandShape " + staticElem.getValue(), null);
+        }
+
         phaseVec.add(new PostureConstraint("strokeStart", pose));
         pose = hnsHandshapes.getHNSHandShape(staticElem.getValue()); // make sure this is a copy!
         phaseVec.add(new PostureConstraint("strokeEnd", pose));
@@ -765,57 +774,57 @@ public final class MURMLMUBuilder
     }
 
     public LMP getStaticHandLocationElementTMU(String scope, Static staticElem, FeedbackManager bbm, BMLBlockPeg bmlBlockPeg, String bmlId,
-            String id, PegBoard pb, AnimationPlayer aniPlayer)
+            String id, PegBoard pb, AnimationPlayer aniPlayer) throws TMUSetupException
     {
         GuidingSequence trajectory = new GuidingSequence();
-        float[] ePos = Vec3f.getVec3f();                
+        float[] ePos = Vec3f.getVec3f();
 
         TimedAnimationUnit tmu = null;
 
         if (getStartConf(ePos, staticElem, hns))
         {
-            if (getStartConf(ePos, staticElem, hns))
-            {
-                hns.transFormLocation(ePos, staticElem.getSymmetryTransform());
+            hns.transFormLocation(ePos, staticElem.getSymmetryTransform());
 
-                // --- create linear guiding stroke for the preparatory movement which
-                // ends with the constraints start configuration
-                trajectory.addGuidingStroke(new LinearGStroke(GStrokePhaseID.STP_PREP, ePos));
+            // --- create linear guiding stroke for the preparatory movement which
+            // ends with the constraints start configuration
+            trajectory.addGuidingStroke(new LinearGStroke(GStrokePhaseID.STP_PREP, ePos));
 
-                // create local motor program for anticipated stroke sequence
-                LMPWristPos wristMove = new LMPWristPos(scope, bbm, bmlBlockPeg, bmlId, createLMPId(id), pb, trajectory,
-                        hns.getBaseJoint(), aniPlayer, constructAutoSwivel(scope));
+            // create local motor program for anticipated stroke sequence
+            LMPWristPos wristMove = new LMPWristPos(scope, bbm, bmlBlockPeg, bmlId, createLMPId(id), pb, trajectory, hns.getBaseJoint(),
+                    aniPlayer, constructAutoSwivel(scope));
 
-                // //cout << "creating lmp from guiding sequence:" << endl; trajectory.writeTo(cout);
-                // //lmp->overshoot(mcLoc->getEndTPC().time);
+            // //cout << "creating lmp from guiding sequence:" << endl; trajectory.writeTo(cout);
+            // //lmp->overshoot(mcLoc->getEndTPC().time);
 
-                return wristMove;
-                //
-                // // optionally, add special lmp for swivel movement
-                // if (swivel != 0.)
-                // {
-                // MgcVectorN q (1);
-                // q[0] = swivel;
-                // deque<MgcVectorN> goalVec;
-                // deque<MgcReal> timeVec;
-                // goalVec.push_back(q);
-                // timeVec.push_back( trajectory.getEndTime() );
-                // LMP_Swivel *lmpSwiv = new LMP_Swivel ( "SW_Prep", scope );
-                // lmpSwiv->setSwivelVec(goalVec);
-                // lmpSwiv->setTimeVec(timeVec);
-                // lmp->activatePeerAt( lmpSwiv, trajectory.getEndTime()-0.2 );
-                // mp->addLMP( lmpSwiv );
-                // }
-                //
+            return wristMove;
+            //
+            // // optionally, add special lmp for swivel movement
+            // if (swivel != 0.)
+            // {
+            // MgcVectorN q (1);
+            // q[0] = swivel;
+            // deque<MgcVectorN> goalVec;
+            // deque<MgcReal> timeVec;
+            // goalVec.push_back(q);
+            // timeVec.push_back( trajectory.getEndTime() );
+            // LMP_Swivel *lmpSwiv = new LMP_Swivel ( "SW_Prep", scope );
+            // lmpSwiv->setSwivelVec(goalVec);
+            // lmpSwiv->setTimeVec(timeVec);
+            // lmp->activatePeerAt( lmpSwiv, trajectory.getEndTime()-0.2 );
+            // mp->addLMP( lmpSwiv );
+            // }
+            //
 
-                // clear trajectory plan and set origin for subsequent trajectory
-                // trajectory.clear();
-                // trajectory.setStartPos( ePos );
-                // trajectory.setStartTPC( TPConstraint( scLoc->getEndTPC().time,
-                // TPConstraint::Rigorous ) ); // timing is mandatory
-            }
+            // clear trajectory plan and set origin for subsequent trajectory
+            // trajectory.clear();
+            // trajectory.setStartPos( ePos );
+            // trajectory.setStartTPC( TPConstraint( scLoc->getEndTPC().time,
+            // TPConstraint::Rigorous ) ); // timing is mandatory
         }
-        return null;
+        else
+        {
+            throw new TMUSetupException("Invalid location " + staticElem.getValue(), null);
+        }
     }
 
     public LMP getDynamicHandLocationElementsTMU(Dynamic dyn, FeedbackManager bbm, BMLBlockPeg bmlBlockPeg, String bmlId, String id,
@@ -839,7 +848,10 @@ public final class MURMLMUBuilder
 
             appendSubTrajectory(dyn, trajectory, tmu, bbm, bmlBlockPeg, bmlId, id, pb, aniPlayer);
         }
-
+        else
+        {
+            throw new TMUSetupException("Invalid location "+dyn.getDynamicElements().get(0).getName("start"),null);
+        }
         // TODO: implement retraction, retraction modes
         // // --- shall we retract at all?
         // if ( retrMode == RTRCT_FULL || retrMode == RTRCT_INTERMEDIATE )
@@ -869,17 +881,17 @@ public final class MURMLMUBuilder
                     aniPlayer, constructAutoSwivel(scope));
 
             // -- absolutely new movement, or should we append to previous LMP?
-            
+
             // TODO: solve with TimePegs
             /*
-            if (lmp != null)
-            {
-                lmp->activateSuccessorAt( wristMove,traj.getStartTPC() );                
-            }
-            */
-            
+             * if (lmp != null)
+             * {
+             * lmp->activateSuccessorAt( wristMove,traj.getStartTPC() );
+             * }
+             */
+
             lmp = wristMove;
-            
+
             // TODO
             // // -- extend movement with retractory parts, e.g., overshooting
             // if ( retrMode == RTRCT_FULL || retrMode == RTRCT_INTERMEDIATE )
@@ -1252,7 +1264,7 @@ public final class MURMLMUBuilder
     }
 
     private LMP parseStaticElement(FeedbackManager bbm, BMLBlockPeg bmlBlockPeg, String bmlId, String id, AnimationPlayer aniPlayer,
-            PegBoard localPegBoard, Static staticElem, List<OrientConstraint> ocVec)
+            PegBoard localPegBoard, Static staticElem, List<OrientConstraint> ocVec) throws TMUSetupException
     {
         switch (staticElem.getSlot())
         {
@@ -1273,7 +1285,7 @@ public final class MURMLMUBuilder
                     aniPlayer));
             return formPOMovement(staticElem.getScope(), staticElem, bbm, bmlBlockPeg, bmlId, id, localPegBoard, aniPlayer);
         }
-        return null;
+        throw new TMUSetupException("Invalid slot " + staticElem.getSlot() + " in static.", null);
     }
 
     private LMP parseProceduralDynamic(FeedbackManager bbm, BMLBlockPeg bmlBlockPeg, String bmlId, String id, AnimationPlayer aniPlayer,
@@ -1296,6 +1308,6 @@ public final class MURMLMUBuilder
             ocVec.addAll(getDynamicPalmOrientationElementsTMU(dyn, bbm, bmlBlockPeg, bmlId, id, localPegBoard, aniPlayer));
             return formPOMovement(dyn, bbm, bmlBlockPeg, bmlId, id, localPegBoard, aniPlayer);
         }
-        return null;
+        throw new TMUSetupException("Invalid slot " + dyn.getSlot() + " in dynamic.", null);
     }
 }

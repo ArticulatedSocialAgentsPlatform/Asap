@@ -37,6 +37,10 @@ public final class OffsetPeg extends TimePeg
     @GuardedBy("this")
     private double offset = 0;
     
+    public synchronized double getOffset()
+    {
+        return offset;
+    }
     
     public OffsetPeg(TimePeg l, double o)
     {

@@ -235,6 +235,24 @@ public class SchedulerIntegrationTestCases
                 pegBoard.getRelativePegTime("bml1", "gesture1", "strokeStart"), PEGBOARD_PRECISION);
     }
 
+    @Test
+    // (timeout = SCHEDULE_TIMEOUT)
+    public void testMurmlHandLocationStrokeStartSynchedPostStrokeHold()
+    {
+        readXML("murml/murmlhandlocationstrokestartsynchedpoststrokehold.xml");
+        assertNoWarnings();
+        assertEquals(0, pegBoard.getRelativePegTime("bml1", "gesture1", "start"), PEGBOARD_PRECISION);
+        assertEquals(pegBoard.getRelativePegTime("bml1", "speech1", "t1"), pegBoard.getRelativePegTime("bml1", "gesture1", "strokeStart"),
+                PEGBOARD_PRECISION);
+        assertThat(pegBoard.getRelativePegTime("bml1", "gesture1", "strokeStart"), greaterThan(0d));
+        assertThat(pegBoard.getRelativePegTime("bml1", "gesture1", "strokeStart"),
+                greaterThan(pegBoard.getRelativePegTime("bml1", "gesture1", "start")));
+        assertEquals(pegBoard.getRelativePegTime("bml1", "gesture1", "strokeEnd") + 2,
+                pegBoard.getRelativePegTime("bml1", "gesture1", "relax"), PEGBOARD_PRECISION);
+        assertEquals(pegBoard.getRelativePegTime("bml1", "gesture1", "strokeStart"),
+                pegBoard.getRelativePegTime("bml1", "gesture1", "strokeEnd"), PEGBOARD_PRECISION);        
+    }
+
     @Test(timeout = SCHEDULE_TIMEOUT)
     public void testMurmlHandLocationStrokeStartAndEndSynched()
     {
@@ -247,7 +265,7 @@ public class SchedulerIntegrationTestCases
         assertThat(pegBoard.getRelativePegTime("bml1", "gesture1", "strokeStart"),
                 greaterThan(pegBoard.getRelativePegTime("bml1", "gesture1", "start")));
         assertEquals(pegBoard.getRelativePegTime("bml1", "gesture1", "strokeEnd"), pegBoard.getRelativePegTime("bml1", "speech1", "t2"),
-                PEGBOARD_PRECISION);        
+                PEGBOARD_PRECISION);
     }
 
     @Test(timeout = SCHEDULE_TIMEOUT)
@@ -371,10 +389,12 @@ public class SchedulerIntegrationTestCases
         assertEquals(pegBoard.getRelativePegTime("b", "b", "n", "end"), 5000, PEGBOARD_PRECISION);
     }
 
-    @Test(timeout = SCHEDULE_TIMEOUT)
+    @Test
+    // (timeout = SCHEDULE_TIMEOUT)
     public void testBMLTTightMergedParamChange()
     {
         readXML("bmlt/testnoise.xml");
+        assertNoWarnings();
         readXML("bmlt/testnoisechange.xml");
         assertNoWarnings();
         assertEquals(0, pegBoard.getRelativePegTime("b", "b", "n", "start"), PEGBOARD_PRECISION);

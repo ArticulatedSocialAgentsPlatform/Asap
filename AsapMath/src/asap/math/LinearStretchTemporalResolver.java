@@ -6,6 +6,11 @@ import java.util.TreeSet;
 
 import com.google.common.primitives.Doubles;
 
+/**
+ * Solves the timing of several points, given the preferred duration between these points, the importance of maintaining each
+ * preferred duration and the (fixed) timing of a subset of the points.
+ * @author hvanwelbergen
+ */
 public final class LinearStretchTemporalResolver
 {
     private LinearStretchTemporalResolver()
@@ -97,17 +102,52 @@ public final class LinearStretchTemporalResolver
         double stretchPartDur = 0;
         double nonStretchPartDur = 0;
 
+        int numPartsStretch = 0;
         for (int i = startIndex; i < endIndex; i++)
         {
             if (weights[i] == maxWeight)
             {
                 stretchPartDur += prefDurations[i];
+                numPartsStretch++;
             }
             else
             {
                 nonStretchPartDur += prefDurations[i];
             }
         }
+        if (stretchPartDur > 0)
+        {
+            scaledStretch(startIndex, endIndex, times, prefDurations, weights, intervalDuration, maxWeight, stretchPartDur,
+                    nonStretchPartDur);
+        }
+        else
+        {
+            equidistantStretch(startIndex, endIndex, times, prefDurations, weights, intervalDuration, maxWeight, 
+                    nonStretchPartDur, numPartsStretch);
+        }
+    }
+
+    private static void equidistantStretch(int startIndex, int endIndex, double[] times, double[] prefDurations, double[] weights,
+            double intervalDuration, double maxWeight, double nonStretchPartDur, int numPartsStretch)
+    {
+        double partDuration = (intervalDuration - nonStretchPartDur) / (double) numPartsStretch;
+
+        for (int i = startIndex; i < endIndex - 1; i++)
+        {
+            if (weights[i] == maxWeight)
+            {
+                times[i + 1] = times[i] + partDuration;
+            }
+            else
+            {
+                times[i + 1] = times[i] + prefDurations[i];
+            }
+        }
+    }
+
+    private static void scaledStretch(int startIndex, int endIndex, double[] times, double[] prefDurations, double[] weights,
+            double intervalDuration, double maxWeight, double stretchPartDur, double nonStretchPartDur)
+    {
         double scale = (intervalDuration - nonStretchPartDur) / stretchPartDur;
 
         for (int i = startIndex; i < endIndex - 1; i++)
@@ -211,7 +251,7 @@ public final class LinearStretchTemporalResolver
     public static double[] solve(double[] times, double[] preferedDurations, double[] weights, double minStart)
     {
         double[] solution = Arrays.copyOf(times, times.length);
-        if(times.length>0)
+        if (times.length > 0)
         {
             setStart(solution, preferedDurations, weights, minStart);
             forwardSolve(solution, preferedDurations, weights, 0);

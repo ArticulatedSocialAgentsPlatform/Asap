@@ -22,6 +22,7 @@ import java.util.Set;
 
 import org.hamcrest.collection.IsIterableContainingInAnyOrder;
 import org.junit.Before;
+import org.junit.Ignore;
 import org.junit.Test;
 
 import asap.animationengine.AnimationPlayer;
@@ -83,6 +84,8 @@ public class MURMLMUBuilderTest
         when(mockHnsHandshapes.getHNSHandShape(anyString())).thenReturn(mockSkeletonPose);
     }
 
+    
+    
     @Test
     public void testSingleFrame() throws MUPlayException, MUSetupException
     {
@@ -254,13 +257,32 @@ public class MURMLMUBuilderTest
         Quat4fTestUtil.assertQuat4fRotationEquivalent(qExp, q, ROT_PRECISION);
     }
 
+    @Test(expected=TMUSetupException.class)
+    public void setupInvalidTMUStaticHandLocation() throws TMUSetupException
+    {
+        when(mockHns.getHandLocation(anyString(), any(float[].class))).thenReturn(false);
+        
+        
+        //@formatter:off
+        String murmlString =
+                "<murml-description xmlns=\"http://www.techfak.uni-bielefeld.de/ags/soa/murml\">" +
+                "<parallel>"+
+                  "<static slot=\"HandShape\" value=\"ASL5\"/>"+
+                  "<static slot=\"HandLocation\" value=\"LocShoulder LocCenterRight LocNorm\" scope=\"left_arm\"/>"+
+                "</parallel>"+
+                "</murml-description>";
+        // @formatter:on
+        murmlMuBuilder.setupTMU(murmlString, new FeedbackManagerImpl(new BMLBlockManager(), ""),
+                BMLBlockPeg.GLOBALPEG, "bml1", "g1", pb, mockAnimationPlayer);
+    }
+    
     @Test
     public void setupTMUStaticHandLocation() throws TMUSetupException
     {
         //@formatter:off
         String murmlString =
                 "<murml-description xmlns=\"http://www.techfak.uni-bielefeld.de/ags/soa/murml\">" +
-                "<static slot=\"HandLocation\" value=\"LocShoulder LocCenterRight LocNorm\" scope=\"left_arm\"/>"+
+                "<static slot=\"HandLocation\" value=\"invalid\" scope=\"left_arm\"/>"+
                 "</murml-description>";
         // @formatter:on
 
@@ -271,6 +293,52 @@ public class MURMLMUBuilderTest
         assertThat(tau.getKinematicJoints(), IsIterableContainingInAnyOrder.containsInAnyOrder(Hanim.l_shoulder, Hanim.l_elbow));
     }
 
+    @Test(expected=TMUSetupException.class)
+    public void setupInvalidTMUDynamicHandLocation() throws TMUSetupException
+    {
+        when(mockHns.getHandLocation(anyString(), any(float[].class))).thenReturn(false);
+        //@formatter:off
+        String murmlString =
+                "<murml-description xmlns=\"http://www.techfak.uni-bielefeld.de/ags/soa/murml\">" +
+                        "<parallel>"+
+                        "<static slot=\"HandShape\" value=\"ASL5\"/>"+
+                        "<dynamic slot=\"HandLocation\" scope=\"left_arm\">"+
+                        "<dynamicElement type=\"curve\">"+        
+                            "<value type=\"start\" name=\"LocShoulder LocCenterLeft LocFar\"/>"+
+                            "<value type=\"end\" name=\"LocShoulder LocCenterLeft LocNorm\"/>"+
+                            "<value type=\"normal\" name=\"DirU\"/>"+
+                            "<value type=\"shape\" name=\"LeftC\"/>"+
+                            "<value type=\"extension\" name=\"0.6\"/>"+                                                        
+                        "</dynamicElement>"+
+                        "<dynamicElement type=\"curve\">"+
+                            "<value type=\"start\" name=\"LocShoulder LocCenterLeft LocNorm\"/>"+
+                            "<value type=\"end\" name=\"LocShoulder LocCenterLeft LocFar\"/>"+
+                            "<value type=\"normal\" name=\"DirU\"/>"+
+                            "<value type=\"shape\" name=\"LeftC\"/>"+
+                            "<value type=\"extension\" name=\"0.6\"/>"+
+                        "</dynamicElement>"+
+                        "<dynamicElement type=\"curve\">"+
+                            "<value type=\"start\" name=\"LocShoulder LocCenterLeft LocFar\"/>"+
+                            "<value type=\"end\" name=\"LocShoulder LocCenterLeft LocNorm\"/>"+
+                            "<value type=\"normal\" name=\"DirU\"/>"+
+                            "<value type=\"shape\" name=\"LeftC\"/>"+
+                            "<value type=\"extension\" name=\"0.6\"/>"+
+                        "</dynamicElement>"+
+                        "<dynamicElement type=\"curve\">"+
+                            "<value type=\"start\" name=\"LocShoulder LocCenterLeft LocNorm\"/>"+
+                            "<value type=\"end\" name=\"LocShoulder LocCenterLeft LocFar\"/>"+
+                            "<value type=\"normal\" name=\"DirU\"/>"+
+                            "<value type=\"shape\" name=\"LeftC\"/>"+
+                            "<value type=\"extension\" name=\"0.6\"/>"+
+                       "</dynamicElement>"+
+                        "</dynamic>"+
+                        "</parallel>"+
+                "</murml-description>";
+        // @formatter:on
+        murmlMuBuilder.setupTMU(murmlString, new FeedbackManagerImpl(new BMLBlockManager(), ""),
+                BMLBlockPeg.GLOBALPEG, "bml1", "g1", pb, mockAnimationPlayer);
+    }
+    
     @Test
     public void setupTMUHandLocation() throws TMUSetupException
     {
@@ -460,6 +528,26 @@ public class MURMLMUBuilderTest
         TimedAnimationUnit lmp = field("lmp").ofType(TimedAnimationUnit.class).in(tau).get();
         assertThat(lmp, instanceOf(LMPWristRot.class));
     }
+    
+    @Ignore
+    @Test(expected=TMUSetupException.class)
+    public void setupInvalidTMUStaticPalmOrientation() throws TMUSetupException
+    {
+        when(mockHns.getAbsoluteDirection(startsWith("Palm"), any(float[].class))).thenReturn(false);
+        when(mockHns.getAbsoluteDirection(startsWith("Dir"), any(float[].class))).thenReturn(false);
+        when(mockHns.isPalmOrientation(startsWith("Palm"))).thenReturn(false);
+        //@formatter:off
+        String murmlString = 
+                "<murml-description xmlns=\"http://www.techfak.uni-bielefeld.de/ags/soa/murml\">" +
+                        "<parallel>"+
+                        "<static slot=\"PalmOrientation\" scope=\"right_arm\" value=\"invalid\"/>"+
+                        "<static slot=\"PalmOrientation\" scope=\"left_arm\" value=\"invalid\"/>"+
+                        "</parallel>"+
+                "</murml-description>";
+        // @formatter:on
+        murmlMuBuilder.setupTMU(murmlString, new FeedbackManagerImpl(new BMLBlockManager(), ""),
+                BMLBlockPeg.GLOBALPEG, "bml1", "g1", pb, mockAnimationPlayer);
+    }
 
     @Test
     public void testPriorityOther() throws MUPlayException, MUSetupException, TMUSetupException
@@ -564,7 +652,43 @@ public class MURMLMUBuilderTest
         assertThat(lmp, instanceOf(LMPHandMove.class));
         assertThat(tau.getKinematicJoints(), IsIterableContainingInAnyOrder.containsInAnyOrder(Hanim.LEFTHAND_JOINTS));
     }
+    
+    @Test(expected = TMUSetupException.class)
+    public void testUnknownStaticHandShape() throws TMUSetupException
+    {
+        when(mockHnsHandshapes.getHNSHandShape(anyString())).thenReturn(null);
+        //@formatter:off
+        String murmlString =
+        "<murml-description xmlns=\"http://www.techfak.uni-bielefeld.de/ags/soa/murml\">" +
+        "  <static scope=\"left_arm\" slot=\"HandShape\" value=\"BSfist (ThExt)\"/>"+
+        "</murml-description>";
+        //@formatter:on
+        murmlMuBuilder.setupTMU(murmlString, new FeedbackManagerImpl(new BMLBlockManager(), ""),
+                BMLBlockPeg.GLOBALPEG, "bml1", "gesture1", pb, mockAnimationPlayer);
+    }
 
+    @Test(expected = TMUSetupException.class)
+    public void testUnknownDynamicHandShape() throws TMUSetupException
+    {
+        when(mockHnsHandshapes.getHNSHandShape(anyString())).thenReturn(null);
+        //@formatter:off
+        String murmlString =
+                "<murml-description xmlns=\"http://www.techfak.uni-bielefeld.de/ags/soa/murml\">" +
+                        "<dynamic slot=\"HandShape\" scope=\"right_arm\">"+
+                        "<dynamicElement>"+
+                              "<value type=\"start\" name=\"BSfist (ThExt)\"/>"+
+                              "<value type=\"end\" name=\"ASL5\"/>"+
+                        "</dynamicElement>"+
+                        "<dynamicElement>"+
+                            "<value type=\"start\" name=\"BSfist (ThExt)\"/>"+
+                            "<value type=\"end\" name=\"BSfist (ThExt)\"/>"+
+                        "</dynamicElement>"+
+                        "</dynamic>"+
+                        "</murml-description>";
+        //@formatter:on
+        murmlMuBuilder.setupTMU(murmlString, new FeedbackManagerImpl(new BMLBlockManager(), ""),
+                BMLBlockPeg.GLOBALPEG, "bml1", "gesture1", pb, mockAnimationPlayer);
+    }
     
     @Test
     public void setupDynamicHandshape() throws TMUSetupException

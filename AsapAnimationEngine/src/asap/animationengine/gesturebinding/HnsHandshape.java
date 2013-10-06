@@ -1,5 +1,9 @@
 package asap.animationengine.gesturebinding;
 
+import hmi.animation.SkeletonPose;
+import hmi.util.Resources;
+import hmi.xml.XMLTokenizer;
+
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Collection;
@@ -9,18 +13,18 @@ import java.util.Map;
 import java.util.Set;
 import java.util.regex.Pattern;
 
+import lombok.extern.slf4j.Slf4j;
+
 import org.reflections.Reflections;
 import org.reflections.scanners.ResourcesScanner;
+import org.reflections.scanners.SubTypesScanner;
+import org.reflections.scanners.TypeAnnotationsScanner;
 import org.reflections.util.ClasspathHelper;
 import org.reflections.util.ConfigurationBuilder;
 
-import com.google.common.collect.ImmutableMap;
-
-import lombok.extern.slf4j.Slf4j;
 import asap.hns.Hns;
-import hmi.animation.SkeletonPose;
-import hmi.util.Resources;
-import hmi.xml.XMLTokenizer;
+
+import com.google.common.collect.ImmutableMap;
 
 /**
  * Utility class for HNS handshapes
@@ -41,18 +45,18 @@ public class HnsHandshape
     public HnsHandshape(Hns hns, String... handshapePaths) throws IOException
     {
         this(hns);
-        Reflections reflections = new Reflections(new ConfigurationBuilder().setUrls(ClasspathHelper.forPackage("")).setScanners(
-                new ResourcesScanner()));
-        Set<String> xmlFiles = reflections.getResources(Pattern.compile(".*\\.xml"));
         List<SkeletonPose> poses = new ArrayList<>();
-        for (String file : xmlFiles)
+        for (String path : handshapePaths)
         {
-            for (String path : handshapePaths)
+            Reflections reflections = new Reflections(new ConfigurationBuilder().addUrls(
+                    ClasspathHelper.forPackage(path.replaceAll("/", "."))).setScanners(new ResourcesScanner()));
+
+            Set<String> xmlFiles = reflections.getResources(Pattern.compile(".*\\.xml"));
+            for (String file : xmlFiles)
             {
                 if (file.startsWith(path))
                 {
                     SkeletonPose p = new SkeletonPose(new XMLTokenizer(new Resources("").getReader(file)));
-
                     if (p.getId() != null)
                     {
                         poses.add(p);
@@ -63,6 +67,7 @@ public class HnsHandshape
                     }
                 }
             }
+
         }
         setHandshapes(poses);
     }
@@ -90,16 +95,12 @@ public class HnsHandshape
         basicSymbol = HNSStr[0];
 
         // parse basic hand shape and retrieve posture
-        if (hns.getBasicHandShapes().contains(basicSymbol) || hns.getSpecificHandShapes().contains(basicSymbol))
+        // if (hns.getBasicHandShapes().contains(basicSymbol) || hns.getSpecificHandShapes().contains(basicSymbol))
+        if (poseMap.containsKey(basicSymbol))
         {
             SkeletonPose p = poseMap.get(basicSymbol);
-            if(p==null)
-            {
-                log.warn("No HNS hand shape description for {} in poseMap.", basicSymbol);
-                return null;
-            }
             return p.untargettedDeepCopy();
-            
+
             // TODO: parse and handle stuff between ()'s
 
             // if (readPostureFile(basicSymbol, poseStr)) {
