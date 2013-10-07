@@ -529,9 +529,37 @@ public class MURMLMUBuilderTest
         assertThat(lmp, instanceOf(LMPWristRot.class));
     }
     
-    @Ignore
     @Test(expected=TMUSetupException.class)
     public void setupInvalidTMUStaticPalmOrientation() throws TMUSetupException
+    {
+        when(mockHns.getAbsoluteDirection(startsWith("Palm"), any(float[].class))).thenReturn(false);
+        when(mockHns.getAbsoluteDirection(startsWith("Dir"), any(float[].class))).thenReturn(false);
+        when(mockHns.isPalmOrientation(startsWith("Palm"))).thenReturn(false);
+        //@formatter:off
+        String murmlString = 
+                "<murml-description xmlns=\"http://www.techfak.uni-bielefeld.de/ags/soa/murml\">" +
+                        "<parallel>"+
+                        "<dynamic slot=\"PalmOrientation\" scope=\"right_arm\">"+
+                        "<dynamicElement>"+
+                              "<value type=\"start\" name=\"unknown\"/>"+
+                              "<value type=\"end\" name=\"unknown\"/>"+
+                        "</dynamicElement>"+                        
+                        "</dynamic>"+
+                        "<dynamic slot=\"PalmOrientation\" scope=\"left_arm\">"+
+                        "<dynamicElement>"+
+                              "<value type=\"start\" name=\"unknown\"/>"+
+                              "<value type=\"end\" name=\"unknown\"/>"+
+                        "</dynamicElement>"+                        
+                        "</dynamic>"+
+                        "</parallel>"+
+                "</murml-description>";
+        // @formatter:on
+        murmlMuBuilder.setupTMU(murmlString, new FeedbackManagerImpl(new BMLBlockManager(), ""),
+                BMLBlockPeg.GLOBALPEG, "bml1", "g1", pb, mockAnimationPlayer);
+    }
+
+    @Test(expected=TMUSetupException.class)
+    public void setupInvalidTMUDynamicPalmOrientation() throws TMUSetupException
     {
         when(mockHns.getAbsoluteDirection(startsWith("Palm"), any(float[].class))).thenReturn(false);
         when(mockHns.getAbsoluteDirection(startsWith("Dir"), any(float[].class))).thenReturn(false);
@@ -548,7 +576,7 @@ public class MURMLMUBuilderTest
         murmlMuBuilder.setupTMU(murmlString, new FeedbackManagerImpl(new BMLBlockManager(), ""),
                 BMLBlockPeg.GLOBALPEG, "bml1", "g1", pb, mockAnimationPlayer);
     }
-
+    
     @Test
     public void testPriorityOther() throws MUPlayException, MUSetupException, TMUSetupException
     {

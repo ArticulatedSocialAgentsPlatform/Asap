@@ -1,5 +1,6 @@
 package asap.murml;
 
+import hmi.xml.XMLFormatting;
 import hmi.xml.XMLScanException;
 import hmi.xml.XMLTokenizer;
 
@@ -51,6 +52,30 @@ public class DynamicElement extends MURMLElement
         {
             type = Type.valueOf(typeString.toUpperCase());
         }
+    }
+    
+    @Override
+    public StringBuilder appendAttributes(StringBuilder buf)
+    {
+        if (scope != null)
+        {
+            appendAttribute(buf, "scope", scope);
+        }
+        if (type != null)
+        {
+            appendAttribute(buf, "type", type.toString());
+        }
+        return buf;
+    }
+    
+    @Override
+    public StringBuilder appendContent(StringBuilder buf, XMLFormatting fmt)
+    {
+        for(Value v:values)
+        {
+            v.appendXML(buf);
+        }
+        return buf;
     }
     
     public String getName(String typeOrId)

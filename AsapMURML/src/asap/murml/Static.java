@@ -65,6 +65,21 @@ public class Static extends MURMLElement implements MovementConstraint
         value = getRequiredAttribute("value", attrMap, tokenizer);        
     }
     
+    @Override
+    public StringBuilder appendAttributes(StringBuilder buf)
+    {
+        if(scope!=null)
+        {
+            appendAttribute(buf, "scope", scope);
+        }
+        if(slot!=null)
+        {
+            appendAttribute(buf, "slot", slot.toString());
+        }
+        appendAttribute(buf, "value", value);
+        return buf;
+    }
+    
     static final String XMLTAG = "static";
 
     public static String xmlTag()

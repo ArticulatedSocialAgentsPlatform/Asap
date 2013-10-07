@@ -357,7 +357,7 @@ public final class MURMLMUBuilder
             oc1.setP(vec);
             oc2.setP(vec);
         }
-        else 
+        else
         {
             return ImmutableList.of();
         }
@@ -850,7 +850,7 @@ public final class MURMLMUBuilder
         }
         else
         {
-            throw new TMUSetupException("Invalid location "+dyn.getDynamicElements().get(0).getName("start"),null);
+            throw new TMUSetupException("Invalid location " + dyn.getDynamicElements().get(0).getName("start"), null);
         }
         // TODO: implement retraction, retraction modes
         // // --- shall we retract at all?
@@ -1118,7 +1118,7 @@ public final class MURMLMUBuilder
             Static staticElem = murmlDescription.getStaticElement();
             List<OrientConstraint> ocVec = new ArrayList<OrientConstraint>();
             lmp = parseStaticElement(bbm, bmlBlockPeg, bmlId, id, aniPlayer, localPegBoard, staticElem, ocVec);
-            if (lmp == null)
+            if (lmp == null) // only ocVec added
             {
                 lmp = createAndAppendLMPWrist(staticElem.getScope(), bbm, bmlBlockPeg, bmlId, id, localPegBoard, aniPlayer, ocVec);
             }
@@ -1281,9 +1281,15 @@ public final class MURMLMUBuilder
                     localPegBoard, aniPlayer));
             return null;
         case PalmOrientation:
-            ocVec.addAll(getStaticPalmOrientationTMU(staticElem.getScope(), staticElem, bbm, bmlBlockPeg, bmlId, id, localPegBoard,
-                    aniPlayer));
-            return formPOMovement(staticElem.getScope(), staticElem, bbm, bmlBlockPeg, bmlId, id, localPegBoard, aniPlayer);
+            List<OrientConstraint> ocVecNew = getStaticPalmOrientationTMU(staticElem.getScope(), staticElem, bbm, bmlBlockPeg, bmlId, id,
+                    localPegBoard, aniPlayer);
+            ocVec.addAll(ocVecNew);
+            LMP lmp = formPOMovement(staticElem.getScope(), staticElem, bbm, bmlBlockPeg, bmlId, id, localPegBoard, aniPlayer);
+            if (ocVecNew.size() == 0 && lmp == null)
+            {
+                throw new TMUSetupException("Invalid PalmOrientation: " + staticElem.toXMLString(), null);
+            }
+            return lmp;
         }
         throw new TMUSetupException("Invalid slot " + staticElem.getSlot() + " in static.", null);
     }
@@ -1305,8 +1311,15 @@ public final class MURMLMUBuilder
             ocVec.addAll(getExtFingerOrientationnElementsTMU(dyn, bbm, bmlBlockPeg, bmlId, id, localPegBoard, aniPlayer));
             return null;
         case PalmOrientation:
-            ocVec.addAll(getDynamicPalmOrientationElementsTMU(dyn, bbm, bmlBlockPeg, bmlId, id, localPegBoard, aniPlayer));
-            return formPOMovement(dyn, bbm, bmlBlockPeg, bmlId, id, localPegBoard, aniPlayer);
+            List<OrientConstraint> ocVecNew = getDynamicPalmOrientationElementsTMU(dyn, bbm, bmlBlockPeg, bmlId, id, localPegBoard,
+                    aniPlayer);
+            ocVec.addAll(ocVecNew);
+            LMP lmp = formPOMovement(dyn, bbm, bmlBlockPeg, bmlId, id, localPegBoard, aniPlayer);
+            if (ocVecNew.size() == 0 && lmp == null)
+            {
+                throw new TMUSetupException("Invalid PalmOrientation: " + dyn.toXMLString(), null);
+            }
+            return lmp;
         }
         throw new TMUSetupException("Invalid slot " + dyn.getSlot() + " in dynamic.", null);
     }

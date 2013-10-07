@@ -1,5 +1,6 @@
 package asap.murml;
 
+import hmi.xml.XMLFormatting;
 import hmi.xml.XMLScanException;
 import hmi.xml.XMLTokenizer;
 
@@ -39,10 +40,10 @@ public class Dynamic extends MURMLElement implements MovementConstraint
         Parallel p = new Parallel();
         d.setScope(dominantHand.toString().toLowerCase());
         p.add(d);
-        p.add(Dynamic.mirror(d, sym));       
+        p.add(Dynamic.mirror(d, sym));
         return p;
     }
-    
+
     public static Dynamic mirror(Dynamic d, Symmetry s)
     {
         Dynamic dMirror = new Dynamic();
@@ -85,6 +86,34 @@ public class Dynamic extends MURMLElement implements MovementConstraint
                 throw new XMLScanException("Unkown tag " + tag + " in <dynamic>");
             }
         }
+    }
+
+    @Override
+    public StringBuilder appendAttributes(StringBuilder buf)
+    {
+        if (scope != null)
+        {
+            appendAttribute(buf, "scope", scope);
+        }
+        if (slot != null)
+        {
+            appendAttribute(buf, "slot", slot.toString());
+        }
+        return buf;
+    }
+
+    @Override
+    public StringBuilder appendContent(StringBuilder buf, XMLFormatting fmt)
+    {
+        if (keyframing != null)
+        {
+            keyframing.appendXML(buf, fmt);
+        }
+        for (DynamicElement dynamicElement : dynamicElements)
+        {
+            dynamicElement.appendXML(buf, fmt);
+        }
+        return buf;
     }
 
     @Override
