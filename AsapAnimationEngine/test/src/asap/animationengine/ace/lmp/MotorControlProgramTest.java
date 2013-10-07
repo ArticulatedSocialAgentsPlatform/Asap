@@ -30,15 +30,16 @@ import asap.realizer.BehaviourPlanningException;
 import asap.realizer.feedback.FeedbackManager;
 import asap.realizer.feedback.NullFeedbackManager;
 import asap.realizer.pegboard.BMLBlockPeg;
-import asap.realizer.pegboard.OffsetPeg;
 import asap.realizer.pegboard.PegBoard;
 import asap.realizer.pegboard.TimePeg;
 import asap.realizer.planunit.TimedPlanUnitPlayException;
 import asap.realizer.planunit.TimedPlanUnitState;
 import asap.realizer.scheduler.BMLBlockManager;
 import asap.realizer.scheduler.TimePegAndConstraint;
+import asap.realizerport.util.ListBMLFeedbackListener;
 import asap.realizertestutil.planunit.AbstractTimedPlanUnitTest;
 import asap.realizertestutil.util.TimePegUtil;
+import asap.testutil.bml.feedback.FeedbackAsserts;
 
 import com.google.common.collect.ImmutableList;
 
@@ -76,6 +77,7 @@ public class MotorControlProgramTest extends AbstractTimedPlanUnitTest
                 mockAnimationPlayer.createTransitionToRest(any(FeedbackManager.class), any(Set.class), any(TimePeg.class),
                         any(TimePeg.class), anyString(), anyString(), any(BMLBlockPeg.class), any(PegBoard.class))).thenReturn(
                 stubTimedAnimationUnit);
+        when(mockAnimationPlayer.getTransitionToRestDuration(any(Set.class))).thenReturn(LMP_RETRACTIONDUR);
     }
 
     private StubLMP createStub(String bmlId, String id, double prepDur, double retrDur, double strokeDur)
@@ -113,6 +115,31 @@ public class MotorControlProgramTest extends AbstractTimedPlanUnitTest
     protected MotorControlProgram setupPlanUnit(FeedbackManager bfm, BMLBlockPeg bbPeg, String id, String bmlId, double startTime)
     {
         return setupPlanUnit(bfm, bbPeg, id, bmlId, startTime, stubTimedAnimationUnit);
+    }
+
+    @Test
+    public void testInterrupt() throws TimedPlanUnitPlayException
+    {
+        MotorControlProgram mcp = setupPlanUnit(fbManager, bml1Peg, "beh1", "bml1", 0);
+        fbManager.addFeedbackListener(new ListBMLFeedbackListener.Builder().feedBackList(fbList).build());
+        mcp.setState(TimedPlanUnitState.LURKING);
+        mcp.updateTiming(0);
+        mcp.start(0);
+        mcp.play(0);
+        mcp.interrupt(LMP_PREPDUR-0.2);
+        mcp.play(LMP_PREPDUR-0.1);
+        assertEquals(TimedPlanUnitState.SUBSIDING, mcp.getState());
+        FeedbackAsserts.assertEqualSyncPointProgress(new BMLSyncPointProgressFeedback("bml1", "beh1", "start", 0, 0), fbList.get(0));
+        FeedbackAsserts.assertEqualSyncPointProgress(new BMLSyncPointProgressFeedback("bml1", "beh1", "ready", LMP_PREPDUR-0.1, LMP_PREPDUR-0.1),
+                fbList.get(1));
+        FeedbackAsserts.assertEqualSyncPointProgress(new BMLSyncPointProgressFeedback("bml1", "beh1", "strokeStart", LMP_PREPDUR-0.1, LMP_PREPDUR-0.1),
+                fbList.get(2));
+        FeedbackAsserts.assertEqualSyncPointProgress(new BMLSyncPointProgressFeedback("bml1", "beh1", "stroke", LMP_PREPDUR-0.1, LMP_PREPDUR-0.1),
+                fbList.get(3));
+        FeedbackAsserts.assertEqualSyncPointProgress(new BMLSyncPointProgressFeedback("bml1", "beh1", "strokeEnd", LMP_PREPDUR-0.1, LMP_PREPDUR-0.1),
+                fbList.get(4));
+        FeedbackAsserts.assertEqualSyncPointProgress(new BMLSyncPointProgressFeedback("bml1", "beh1", "relax", LMP_PREPDUR-0.1, LMP_PREPDUR-0.1),
+                fbList.get(5));
     }
 
     @Test
@@ -273,7 +300,7 @@ public class MotorControlProgramTest extends AbstractTimedPlanUnitTest
         assertEquals(2, mcp.getTime("strokeStart"), TIME_PRECISION);
         assertEquals(2, mcp.getTime("stroke"), TIME_PRECISION);
         assertEquals(3, mcp.getTime("strokeEnd"), TIME_PRECISION);
-        assertEquals(8-LMP_RETRACTIONDUR, mcp.getTime("relax"), TIME_PRECISION);
+        assertEquals(8 - LMP_RETRACTIONDUR, mcp.getTime("relax"), TIME_PRECISION);
         assertEquals(10 - 2, mcp.getEndTime(), TIME_PRECISION);
     }
 

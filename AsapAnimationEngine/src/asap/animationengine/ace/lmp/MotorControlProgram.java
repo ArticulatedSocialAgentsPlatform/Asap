@@ -35,12 +35,13 @@ public class MotorControlProgram extends TimedAbstractPlanUnit implements TimedA
 {
     private LMP lmp;
     private final PegBoard globalPegBoard;
-    
+
     @Getter
     private final PegBoard localPegBoard;
     private Set<String> syncsHandled = new HashSet<String>();
     private final AnimationPlayer aniPlayer;
     private TimedAnimationUnit relaxUnit;
+    private volatile boolean interrupted = false;
 
     @Override
     public double getPreparationDuration()
@@ -159,37 +160,38 @@ public class MotorControlProgram extends TimedAbstractPlanUnit implements TimedA
     {
         TimePeg strokeEndPeg = getTimePeg("strokeEnd");
         TimePeg relaxPeg = getTimePeg("relax");
-        if(strokeEndPeg instanceof OffsetPeg)
+        if (strokeEndPeg instanceof OffsetPeg)
         {
-            OffsetPeg op = (OffsetPeg)strokeEndPeg;
-            if(op.getLink().equals(relaxPeg))
+            OffsetPeg op = (OffsetPeg) strokeEndPeg;
+            if (op.getLink().equals(relaxPeg))
             {
                 return -op.getOffset();
             }
         }
-        
-        
-        if(relaxPeg instanceof OffsetPeg)
+
+        if (relaxPeg instanceof OffsetPeg)
         {
-            OffsetPeg op = (OffsetPeg)relaxPeg;
-            if(op.getLink().equals(strokeEndPeg))
+            OffsetPeg op = (OffsetPeg) relaxPeg;
+            if (op.getLink().equals(strokeEndPeg))
             {
                 return op.getOffset();
             }
         }
-        
+
         return 0;
     }
-    
+
     private void solvePegTiming(int offset, String[] syncs, double[] times)
     {
-        double prefDurations[] = { getPreparationDuration(), 0, 0, getStrokeDuration(), getPostStrokeHoldDuration(), getRetractionDuration() };
+        double prefDurations[] = { getPreparationDuration(), 0, 0, getStrokeDuration(), getPostStrokeHoldDuration(),
+                getRetractionDuration() };
         resolvePegTimes(offset, syncs, times, prefDurations, bmlBlockPeg.getValue());
     }
 
     private void solvePegTiming(int offset, String[] syncs, double[] times, double time)
     {
-        double prefDurations[] = { getPreparationDuration(), 0, 0, getStrokeDuration(time), getPostStrokeHoldDuration(), getRetractionDuration() };
+        double prefDurations[] = { getPreparationDuration(), 0, 0, getStrokeDuration(time), getPostStrokeHoldDuration(),
+                getRetractionDuration() };
         resolvePegTimes(offset, syncs, times, prefDurations, time);
     }
 
@@ -198,15 +200,15 @@ public class MotorControlProgram extends TimedAbstractPlanUnit implements TimedA
         double weights[] = { 2, 1, 1, 1, 3, 2 };
 
         boolean hasKnownTime = false;
-        for(double t:times)
+        for (double t : times)
         {
-            if(t!=LinearStretchTemporalResolver.TIME_UNKNOWN)
+            if (t != LinearStretchTemporalResolver.TIME_UNKNOWN)
             {
                 hasKnownTime = true;
                 break;
             }
         }
-        
+
         if (offset > 0)
         {
             startTime = getTime(syncs[offset - 1]);
@@ -215,36 +217,35 @@ public class MotorControlProgram extends TimedAbstractPlanUnit implements TimedA
         {
             startTime = Double.NEGATIVE_INFINITY;
         }
-        
+
         double solvedTimes[] = LinearStretchTemporalResolver.solve(times, prefDurations, weights, startTime);
-        
-        
-        //only set the TimePeg if it's not an OffsetPeg that is connected to another TimePeg in this MCP
+
+        // only set the TimePeg if it's not an OffsetPeg that is connected to another TimePeg in this MCP
         Set<TimePeg> tpegs = new HashSet<TimePeg>();
         for (int i = offset; i < times.length; i++)
         {
-            if (! (getTimePeg(syncs[i]) instanceof OffsetPeg))
+            if (!(getTimePeg(syncs[i]) instanceof OffsetPeg))
             {
                 tpegs.add(getTimePeg(syncs[i]));
             }
-        }        
+        }
         for (int i = offset; i < times.length; i++)
         {
             if ((getTimePeg(syncs[i]) instanceof OffsetPeg))
             {
-                OffsetPeg op = (OffsetPeg)getTimePeg(syncs[i]);
-                if(!tpegs.contains(op.getLink()))
+                OffsetPeg op = (OffsetPeg) getTimePeg(syncs[i]);
+                if (!tpegs.contains(op.getLink()))
                 {
                     tpegs.add(op);
-                }                        
+                }
             }
         }
-        
+
         for (int i = offset; i < times.length; i++)
         {
             if (tpegs.contains(getTimePeg(syncs[i])))
             {
-                getTimePeg(syncs[i]).setGlobalValue(solvedTimes[i]);            
+                getTimePeg(syncs[i]).setGlobalValue(solvedTimes[i]);
             }
         }
     }
@@ -350,7 +351,7 @@ public class MotorControlProgram extends TimedAbstractPlanUnit implements TimedA
     public boolean hasValidTiming()
     {
         return true;
-        //return lmp.hasValidTiming();
+        // return lmp.hasValidTiming();
     }
 
     @Override
@@ -368,6 +369,7 @@ public class MotorControlProgram extends TimedAbstractPlanUnit implements TimedA
     @Override
     public void updateTiming(double time) throws TimedPlanUnitPlayException
     {
+        if (interrupted) return;
         if (isSubsiding()) return;
         int syncOffset = 0;
         if (!isLurking())
@@ -396,7 +398,7 @@ public class MotorControlProgram extends TimedAbstractPlanUnit implements TimedA
     {
         if (time > getRelaxTime())
         {
-            relaxUnit.play(time);            
+            relaxUnit.play(time);
         }
         else
         {
@@ -439,7 +441,7 @@ public class MotorControlProgram extends TimedAbstractPlanUnit implements TimedA
         Set<String> usedJoints = new HashSet<String>();
         usedJoints.addAll(getKinematicJoints());
         usedJoints.addAll(getPhysicalJoints());
-        double retractionDuration = aniPlayer.getTransitionToRestDuration(usedJoints);        
+        double retractionDuration = aniPlayer.getTransitionToRestDuration(usedJoints);
 
         TimePeg relaxPeg = getTimePeg("relax");
         TimePeg endPeg = getTimePeg("end");
@@ -463,4 +465,59 @@ public class MotorControlProgram extends TimedAbstractPlanUnit implements TimedA
             feedback("end", time);
         }
     }
+
+    protected void skipPegs(double time, String... pegs)
+    {
+        for (String peg : pegs)
+        {
+            if (getTime(peg) > time)
+            {
+                TimePeg tp = getTimePeg(peg);
+                TimePeg tpNew = tp;
+                if (globalPegBoard.getPegKeys(tp).size() > 1)
+                {
+                    tpNew = new TimePeg(tp.getBmlBlockPeg());
+                    globalPegBoard.addTimePeg(getBMLId(), getId(), peg, tpNew);
+                    localPegBoard.addTimePeg(getBMLId(), getId(), peg, tpNew);
+                }
+                tpNew.setGlobalValue(time - 0.01);
+                setTimePeg(peg, tpNew);
+            }
+        }
+    }
+    
+    private void gracefullInterrupt(double time)
+    {
+        skipPegs(time, "ready", "strokeStart", "stroke", "strokeEnd");
+
+        // XXX: should relax and end pegs also be detached if other behaviors are connected to them?
+        getTimePeg("relax").setGlobalValue(time);
+
+        Set<String> usedJoints = new HashSet<String>();
+        usedJoints.addAll(getKinematicJoints());
+        usedJoints.addAll(getPhysicalJoints());
+        double retractionDuration = aniPlayer.getTransitionToRestDuration(usedJoints);
+        getTimePeg("end").setGlobalValue(time + retractionDuration);
+    }
+
+    @Override
+    public void interrupt(double time) throws TimedPlanUnitPlayException
+    {
+        switch (getState())
+        {
+        case IN_PREP:
+        case PENDING:
+        case LURKING:
+            stop(time);
+            break; // just remove yourself
+        case IN_EXEC:
+            gracefullInterrupt(time);
+            break; // gracefully interrupt yourself
+        case SUBSIDING: // nothing to be done
+        case DONE:
+        default:
+            break;
+        }
+    }
+
 }
