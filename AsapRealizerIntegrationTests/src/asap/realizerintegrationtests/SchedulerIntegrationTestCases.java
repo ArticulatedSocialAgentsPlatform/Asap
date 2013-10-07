@@ -235,8 +235,7 @@ public class SchedulerIntegrationTestCases
                 pegBoard.getRelativePegTime("bml1", "gesture1", "strokeStart"), PEGBOARD_PRECISION);
     }
 
-    @Test
-    // (timeout = SCHEDULE_TIMEOUT)
+    @Test(timeout = SCHEDULE_TIMEOUT)
     public void testMurmlHandLocationStrokeStartSynchedPostStrokeHold()
     {
         readXML("murml/murmlhandlocationstrokestartsynchedpoststrokehold.xml");
@@ -257,6 +256,21 @@ public class SchedulerIntegrationTestCases
     public void testMurmlHandLocationStrokeStartAndEndSynched()
     {
         readXML("murml/murmlhandlocationstrokestartsynchedstrokeendsynched.xml");
+        assertNoWarnings();
+        assertEquals(0, pegBoard.getRelativePegTime("bml1", "gesture1", "start"), PEGBOARD_PRECISION);
+        assertEquals(pegBoard.getRelativePegTime("bml1", "speech1", "t1"), pegBoard.getRelativePegTime("bml1", "gesture1", "strokeStart"),
+                PEGBOARD_PRECISION);
+        assertThat(pegBoard.getRelativePegTime("bml1", "gesture1", "strokeStart"), greaterThan(0d));
+        assertThat(pegBoard.getRelativePegTime("bml1", "gesture1", "strokeStart"),
+                greaterThan(pegBoard.getRelativePegTime("bml1", "gesture1", "start")));
+        assertEquals(pegBoard.getRelativePegTime("bml1", "gesture1", "strokeEnd"), pegBoard.getRelativePegTime("bml1", "speech1", "t2"),
+                PEGBOARD_PRECISION);
+    }
+    
+    @Test(timeout = SCHEDULE_TIMEOUT)
+    public void testMurmlHandLocationStrokeStartAndEndSynchedSeq()
+    {
+        readXML("murml/murmlhandlocationstrokestartsynchedstrokeendsynchedseq.xml");
         assertNoWarnings();
         assertEquals(0, pegBoard.getRelativePegTime("bml1", "gesture1", "start"), PEGBOARD_PRECISION);
         assertEquals(pegBoard.getRelativePegTime("bml1", "speech1", "t1"), pegBoard.getRelativePegTime("bml1", "gesture1", "strokeStart"),
