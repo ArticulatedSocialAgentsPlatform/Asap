@@ -32,8 +32,10 @@ public class KeyframeMorphFU extends KeyFrameMotionUnit implements FaceUnit
     private boolean allowDynamicStart;
     private int nrOfDofs;
     private List<KeyFrame> keyFrames;
+    private KeyFrame kfPrev;
     private double preferedDuration = 1;
     private TimeManipulator manip;
+    private volatile boolean interrupted = false;
 
     public KeyframeMorphFU(List<String> targets, Interpolator interp, TimeManipulator manip, List<KeyFrame> keyFrames, int nrOfDofs,
             boolean allowDynamicStart)
@@ -45,6 +47,8 @@ public class KeyframeMorphFU extends KeyFrameMotionUnit implements FaceUnit
         this.allowDynamicStart = allowDynamicStart;
         this.keyFrames = Lists.newArrayList(keyFrames);
         preferedDuration = unifyKeyFrames(keyFrames);
+        float dofs[] = new float[nrOfDofs];
+        kfPrev = new KeyFrame(0, dofs);
 
         interp.setKeyFrames(keyFrames, nrOfDofs);
 
@@ -99,7 +103,8 @@ public class KeyframeMorphFU extends KeyFrameMotionUnit implements FaceUnit
     @Override
     public void applyKeyFrame(KeyFrame kf)
     {
-        faceController.addMorphTargets(targets, kf.getDofs());        
+        kfPrev = kf;
+        faceController.addMorphTargets(targets, kf.getDofs());
     }
 
     @Override
@@ -111,6 +116,24 @@ public class KeyframeMorphFU extends KeyFrameMotionUnit implements FaceUnit
     }
 
     @Override
+    public void play(double t) throws MUPlayException
+    {
+        if(interrupted)
+        {
+            KeyFrame kfEnd = keyFrames.get(keyFrames.size()-1);
+            KeyFrame kfStart = new KeyFrame(0, kfPrev.getDofs());
+            kfPrev.setFrameTime(manip.manip(t));
+            keyFrames.clear();
+            keyFrames.add(kfStart);
+            keyFrames.add(kfPrev);
+            keyFrames.add(kfEnd);
+            interp.setKeyFrames(keyFrames, nrOfDofs);
+            interrupted = false;
+        }
+        super.play(t);
+    }
+    
+    @Override
     public void startUnit(double t) throws MUPlayException
     {
         super.setupDynamicStart(keyFrames);
@@ -120,6 +143,6 @@ public class KeyframeMorphFU extends KeyFrameMotionUnit implements FaceUnit
     @Override
     public void interruptFromHere()
     {
-        //TODO: implement this
+        interrupted = true;
     }
 }

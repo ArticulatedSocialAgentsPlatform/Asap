@@ -67,7 +67,7 @@ public class TimedFaceUnit extends TimedMotionUnit
         {
             skipPegs(time, "attackPeak");
             getTimePeg("relax").setGlobalValue(time);
-            getTimePeg("end").setGlobalValue(time + 0.1);
+            getTimePeg("end").setGlobalValue(time + 0.15);
             handleGracefulInterrupt = false;
         }
         super.playUnit(time);
