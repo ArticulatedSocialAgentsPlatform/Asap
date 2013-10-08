@@ -22,7 +22,6 @@ import java.util.Set;
 
 import org.hamcrest.collection.IsIterableContainingInAnyOrder;
 import org.junit.Before;
-import org.junit.Ignore;
 import org.junit.Test;
 
 import asap.animationengine.AnimationPlayer;
@@ -530,7 +529,7 @@ public class MURMLMUBuilderTest
     }
     
     @Test(expected=TMUSetupException.class)
-    public void setupInvalidTMUStaticPalmOrientation() throws TMUSetupException
+    public void setupInvalidTMUDynamicPalmOrientation() throws TMUSetupException
     {
         when(mockHns.getAbsoluteDirection(startsWith("Palm"), any(float[].class))).thenReturn(false);
         when(mockHns.getAbsoluteDirection(startsWith("Dir"), any(float[].class))).thenReturn(false);
@@ -557,9 +556,36 @@ public class MURMLMUBuilderTest
         murmlMuBuilder.setupTMU(murmlString, new FeedbackManagerImpl(new BMLBlockManager(), ""),
                 BMLBlockPeg.GLOBALPEG, "bml1", "g1", pb, mockAnimationPlayer);
     }
+    
+    @Test(expected=TMUSetupException.class)
+    public void setupInvalidTMUDynamicExtFingerOrientation() throws TMUSetupException
+    {
+        when(mockHns.getAbsoluteDirection(startsWith("Dir"), any(float[].class))).thenReturn(false);
+        //@formatter:off
+        String murmlString = 
+                "<murml-description xmlns=\"http://www.techfak.uni-bielefeld.de/ags/soa/murml\">" +
+                        "<parallel>"+
+                        "<dynamic slot=\"ExtFingerOrientation\" scope=\"right_arm\">"+
+                        "<dynamicElement>"+
+                              "<value type=\"start\" name=\"unknown\"/>"+
+                              "<value type=\"end\" name=\"unknown\"/>"+
+                        "</dynamicElement>"+                        
+                        "</dynamic>"+
+                        "<dynamic slot=\"ExtFingerOrientation\" scope=\"left_arm\">"+
+                        "<dynamicElement>"+
+                              "<value type=\"start\" name=\"unknown\"/>"+
+                              "<value type=\"end\" name=\"unknown\"/>"+
+                        "</dynamicElement>"+                        
+                        "</dynamic>"+
+                        "</parallel>"+
+                "</murml-description>";
+        // @formatter:on
+        murmlMuBuilder.setupTMU(murmlString, new FeedbackManagerImpl(new BMLBlockManager(), ""),
+                BMLBlockPeg.GLOBALPEG, "bml1", "g1", pb, mockAnimationPlayer);
+    }
 
     @Test(expected=TMUSetupException.class)
-    public void setupInvalidTMUDynamicPalmOrientation() throws TMUSetupException
+    public void setupInvalidTMUStaticPalmOrientation() throws TMUSetupException
     {
         when(mockHns.getAbsoluteDirection(startsWith("Palm"), any(float[].class))).thenReturn(false);
         when(mockHns.getAbsoluteDirection(startsWith("Dir"), any(float[].class))).thenReturn(false);
@@ -570,6 +596,25 @@ public class MURMLMUBuilderTest
                         "<parallel>"+
                         "<static slot=\"PalmOrientation\" scope=\"right_arm\" value=\"invalid\"/>"+
                         "<static slot=\"PalmOrientation\" scope=\"left_arm\" value=\"invalid\"/>"+
+                        "</parallel>"+
+                "</murml-description>";
+        // @formatter:on
+        murmlMuBuilder.setupTMU(murmlString, new FeedbackManagerImpl(new BMLBlockManager(), ""),
+                BMLBlockPeg.GLOBALPEG, "bml1", "g1", pb, mockAnimationPlayer);
+    }
+    
+    @Test(expected=TMUSetupException.class)
+    public void setupInvalidTMUStaticExtFingerOrientation() throws TMUSetupException
+    {
+        when(mockHns.getAbsoluteDirection(startsWith("Palm"), any(float[].class))).thenReturn(false);
+        when(mockHns.getAbsoluteDirection(startsWith("Dir"), any(float[].class))).thenReturn(false);
+        when(mockHns.isPalmOrientation(startsWith("Palm"))).thenReturn(false);
+        //@formatter:off
+        String murmlString = 
+                "<murml-description xmlns=\"http://www.techfak.uni-bielefeld.de/ags/soa/murml\">" +
+                        "<parallel>"+
+                        "<static slot=\"ExtFingerOrientation\" scope=\"right_arm\" value=\"invalid\"/>"+
+                        "<static slot=\"ExtFingerOrientation\" scope=\"left_arm\" value=\"invalid\"/>"+
                         "</parallel>"+
                 "</murml-description>";
         // @formatter:on

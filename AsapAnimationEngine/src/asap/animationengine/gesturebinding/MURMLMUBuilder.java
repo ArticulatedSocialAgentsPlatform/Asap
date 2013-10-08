@@ -338,7 +338,7 @@ public final class MURMLMUBuilder
     }
 
     private List<OrientConstraint> formWristMovement(String scope, Static staticElem, FeedbackManager bbm, BMLBlockPeg bmlBlockPeg,
-            String bmlId, String id, PegBoard pb, AnimationPlayer aniPlayer)
+            String bmlId, String id, PegBoard pb, AnimationPlayer aniPlayer) throws TMUSetupException
     {
         OrientConstraint oc1 = new OrientConstraint("strokeStart", GStrokePhaseID.STP_STROKE);
         OrientConstraint oc2 = new OrientConstraint("strokeEnd", GStrokePhaseID.STP_RETRACT);
@@ -356,6 +356,10 @@ public final class MURMLMUBuilder
             hns.transFormDirection(vec, staticElem.getSymmetryTransform());
             oc1.setP(vec);
             oc2.setP(vec);
+        }
+        else if (staticElem.getSlot() == Slot.ExtFingerOrientation)
+        {
+            throw new TMUSetupException("Invalid ExtFingerOrientation " + staticElem.getValue(), null);
         }
         else
         {
@@ -375,7 +379,7 @@ public final class MURMLMUBuilder
     }
 
     private List<OrientConstraint> formWristMovement(Dynamic dyn, FeedbackManager bbm, BMLBlockPeg bmlBlockPeg, String bmlId, String id,
-            PegBoard pb, AnimationPlayer aniPlayer)
+            PegBoard pb, AnimationPlayer aniPlayer) throws TMUSetupException
     {
         float vec[] = Vec3f.getVec3f();
         List<OrientConstraint> ocVec = new ArrayList<>();
@@ -432,6 +436,10 @@ public final class MURMLMUBuilder
                         log.warn("cannot construct wrist movement from " + dyn.getSlot() + " slot.");
                     }
                     ocVec.add(oc);
+                }
+                else if (dyn.getSlot() == Slot.ExtFingerOrientation)
+                {
+                    throw new TMUSetupException("Invalid ExtFingerOrientation " + v.getName(), null);
                 }
                 i++;
             }
@@ -619,25 +627,25 @@ public final class MURMLMUBuilder
     }
 
     public List<OrientConstraint> getDynamicPalmOrientationElementsTMU(Dynamic dyn, FeedbackManager bbm, BMLBlockPeg bmlBlockPeg,
-            String bmlId, String id, PegBoard pb, AnimationPlayer aniPlayer)
+            String bmlId, String id, PegBoard pb, AnimationPlayer aniPlayer) throws TMUSetupException
     {
         return formWristMovement(dyn, bbm, bmlBlockPeg, bmlId, id, pb, aniPlayer);
     }
 
     public List<OrientConstraint> getExtFingerOrientationnElementsTMU(Dynamic dyn, FeedbackManager bbm, BMLBlockPeg bmlBlockPeg,
-            String bmlId, String id, PegBoard pb, AnimationPlayer aniPlayer)
+            String bmlId, String id, PegBoard pb, AnimationPlayer aniPlayer) throws TMUSetupException
     {
         return formWristMovement(dyn, bbm, bmlBlockPeg, bmlId, id, pb, aniPlayer);
     }
 
     public List<OrientConstraint> getStaticPalmOrientationTMU(String scope, Static staticElem, FeedbackManager bbm,
-            BMLBlockPeg bmlBlockPeg, String bmlId, String id, PegBoard pb, AnimationPlayer aniPlayer)
+            BMLBlockPeg bmlBlockPeg, String bmlId, String id, PegBoard pb, AnimationPlayer aniPlayer) throws TMUSetupException
     {
         return formWristMovement(scope, staticElem, bbm, bmlBlockPeg, bmlId, id, pb, aniPlayer);
     }
 
     public List<OrientConstraint> getStaticExtFingerOrientationOrientationTMU(String scope, Static staticElem, FeedbackManager bbm,
-            BMLBlockPeg bmlBlockPeg, String bmlId, String id, PegBoard pb, AnimationPlayer aniPlayer)
+            BMLBlockPeg bmlBlockPeg, String bmlId, String id, PegBoard pb, AnimationPlayer aniPlayer) throws TMUSetupException
     {
         return formWristMovement(scope, staticElem, bbm, bmlBlockPeg, bmlId, id, pb, aniPlayer);
     }
