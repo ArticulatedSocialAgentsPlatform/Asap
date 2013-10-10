@@ -121,6 +121,10 @@ public class Hns extends XMLStructureAdapter
     {
         String values[] = value.split("\\s+");
         if (values.length != 3) return false;
+        for(String val:values)
+        {
+            if(!StringUtil.isNumeric(val))return false;
+        }
         Vec3f.set(vec, Float.parseFloat(values[0]), Float.parseFloat(values[1]), Float.parseFloat(values[2]));
         return true;
     }
