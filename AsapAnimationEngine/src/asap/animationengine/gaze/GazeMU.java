@@ -26,6 +26,7 @@ import hmi.neurophysics.DondersLaw;
 import hmi.neurophysics.EyeSaturation;
 import hmi.neurophysics.ListingsLaw;
 import hmi.util.StringUtil;
+import hmi.worldobjectenvironment.AbsolutePositionWorldObject;
 import hmi.worldobjectenvironment.WorldObject;
 import hmi.worldobjectenvironment.WorldObjectManager;
 
@@ -244,11 +245,17 @@ public class GazeMU implements AnimationUnit
         setTarget();
     }
 
-    protected void setTarget() throws MUPlayException
+    protected void setTarget()
     {
         woTarget.getTranslation2(localGaze, neck);
         Quat4f.transformVec3f(getOffsetRotation(), localGaze);
         setEndRotation(localGaze);
+    }
+
+    protected void setTarget(float[] absTarget)
+    {
+        woTarget = new AbsolutePositionWorldObject(absTarget);
+        setTarget();
     }
 
     public void setStartPose() throws MUPlayException
@@ -273,7 +280,7 @@ public class GazeMU implements AnimationUnit
      * @param gazeDir
      *            gaze direction
      */
-    void setEndRotation(float[] gazeDir) throws MUPlayException
+    void setEndRotation(float[] gazeDir)
     {
         float normDir[] = new float[3];
         Vec3f.normalize(normDir, gazeDir);

@@ -70,7 +70,7 @@ public class DynamicRestGaze implements RestGaze
     }
 
     @Override
-    public TimedAnimationMotionUnit createTransitionToRest(FeedbackManager fbm, Set<String> joints, double startTime, String bmlId, String id,
+    public TimedAnimationMotionUnit createTransitionToRest(FeedbackManager fbm, double startTime, String bmlId, String id,
             BMLBlockPeg bmlBlockPeg, PegBoard pb)
     {
         // TODO Auto-generated method stub
@@ -78,7 +78,7 @@ public class DynamicRestGaze implements RestGaze
     }
 
     @Override
-    public TimedAnimationMotionUnit createTransitionToRest(FeedbackManager fbm, Set<String> joints, double startTime, double duration,
+    public TimedAnimationMotionUnit createTransitionToRest(FeedbackManager fbm, double startTime, double duration,
             String bmlId, String id, BMLBlockPeg bmlBlockPeg, PegBoard pb)
     {
         // TODO Auto-generated method stub
@@ -86,14 +86,14 @@ public class DynamicRestGaze implements RestGaze
     }
 
     @Override
-    public double getTransitionToRestDuration(VJoint vCurrent, Set<String> joints)
+    public double getTransitionToRestDuration()
     {
         // TODO Auto-generated method stub
         return 0;
     }
 
     @Override
-    public AnimationUnit createTransitionToRest(Set<String> joints)
+    public AnimationUnit createTransitionToRest()
     {
         // TODO Auto-generated method stub
         return null;

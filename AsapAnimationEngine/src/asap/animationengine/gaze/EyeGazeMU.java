@@ -71,13 +71,8 @@ public class EyeGazeMU extends GazeMU
     }
     
     @Override
-    void setEndRotation(float[] gazeDir)throws MUPlayException
+    void setEndRotation(float[] gazeDir)
     {
-        woTarget = woManager.getWorldObject(target);
-        if (woTarget == null)
-        {
-            throw new MUPlayException("Gaze target not found", this);
-        }        
         woTarget.getTranslation2(gazeDir, rEye);
         Quat4f.transformVec3f(getOffsetRotation(), gazeDir);
         Vec3f.normalize(gazeDir);

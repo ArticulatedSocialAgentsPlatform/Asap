@@ -248,7 +248,7 @@ public class DynamicGazeMU extends GazeMU
     }
 
     @Override
-    protected void setTarget() throws MUPlayException
+    protected void setTarget()
     {
         VJoint neck = joints.get(joints.size() - 1);
         woTarget.getTranslation2(localGaze, neck);

@@ -1,7 +1,5 @@
 package asap.animationengine.gaze;
 
-import hmi.animation.VJoint;
-
 import java.util.Set;
 
 import asap.animationengine.AnimationPlayer;
@@ -34,27 +32,23 @@ public interface RestGaze
      * Create a transition TMU that moves the joints from their current position 
      * to a position dictated by this resting pose.  
      */
-    TimedAnimationMotionUnit createTransitionToRest(FeedbackManager fbm, Set<String>joints, double startTime, 
+    TimedAnimationMotionUnit createTransitionToRest(FeedbackManager fbm, double startTime, 
             String bmlId, String id, BMLBlockPeg bmlBlockPeg, PegBoard pb);
     
     /**
      * Create a transition TMU that moves the joints from their current position 
      * to a position dictated by this resting pose.  
      */
-    TimedAnimationMotionUnit createTransitionToRest(FeedbackManager fbm, Set<String>joints, double startTime, double duration, 
+    TimedAnimationMotionUnit createTransitionToRest(FeedbackManager fbm, double startTime, double duration, 
             String bmlId, String id, BMLBlockPeg bmlBlockPeg, PegBoard pb);
     
-    /**
-     * Determine the duration of a transition from vCurrent to the rest pose, taking
-     * into account only information from joints
-     */
-    double getTransitionToRestDuration(VJoint vCurrent, Set<String>joints);
+    double getTransitionToRestDuration();
     
     /**
      * Create a MotionUnit that moves the joints from their current position 
      * to a position dictated by this resting pose.  
      */
-    AnimationUnit createTransitionToRest(Set<String>joints);
+    AnimationUnit createTransitionToRest();
     
     /**
      * Sets the restpose to prev, next, curr on the animationplayer 
