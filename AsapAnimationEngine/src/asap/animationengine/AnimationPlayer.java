@@ -24,7 +24,6 @@ import hmi.animation.Skeleton;
 import hmi.animation.SkeletonPose;
 import hmi.animation.VJoint;
 import hmi.animation.VJointPartsMap;
-import hmi.animation.VJointUtils;
 import hmi.animation.VObjectTransformCopier;
 import hmi.math.Quat4f;
 import hmi.mixedanimationenvironment.MixedAnimationPlayer;
