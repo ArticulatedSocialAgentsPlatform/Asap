@@ -4,6 +4,8 @@ import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.number.OrderingComparison.greaterThan;
 import static org.junit.Assert.assertEquals;
 import static org.mockito.Matchers.any;
+import static org.mockito.Matchers.anyString;
+import static org.mockito.Matchers.eq;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
 import hmi.animation.Hanim;
@@ -29,6 +31,7 @@ import saiba.bml.parser.Constraint;
 import asap.animationengine.AnimationPlayer;
 import asap.animationengine.AnimationPlayerMock;
 import asap.animationengine.motionunit.AnimationUnit;
+import asap.animationengine.motionunit.TimedAnimationMotionUnit;
 import asap.animationengine.restpose.RestPose;
 import asap.realizer.BehaviourPlanningException;
 import asap.realizer.feedback.FeedbackManager;
@@ -73,13 +76,15 @@ public class GazeTMUTest extends AbstractTimedPlanUnitTest
         mu.woManager = woManager;
         mu.neck = vNext.getPartBySid(Hanim.skullbase);
 
-        RestPose mockRestPose = mock(RestPose.class);
-        AnimationUnit mockRelaxMU = mock(AnimationUnit.class);
-        when(mockAnimationPlayer.getRestPose()).thenReturn(mockRestPose);
-        when(mockRestPose.createTransitionToRest((Set<String>) any())).thenReturn(mockRelaxMU);
-        mu.setupRelaxUnit();
+        RestGaze mockRestGaze = mock(RestGaze.class);
+        TimedAnimationMotionUnit mockTMU = mock(TimedAnimationMotionUnit.class);
+        when(mockAnimationPlayer.getGazeTransitionToRestDuration()).thenReturn(2d);
+        when(mockAnimationPlayer.getRestGaze()).thenReturn(mockRestGaze);
+        when(
+                mockRestGaze.createTransitionToRest(any(FeedbackManager.class), any(TimePeg.class), any(TimePeg.class), anyString(),
+                        anyString(), any(BMLBlockPeg.class), eq(pegBoard))).thenReturn(mockTMU);
 
-        return new GazeTMU(bfm, bbPeg, bmlId, id, mu, pegBoard);
+        return new GazeTMU(bfm, bbPeg, bmlId, id, mu, pegBoard, mockAnimationPlayer);
     }
 
     @Override

@@ -73,7 +73,6 @@ import com.google.common.collect.ImmutableSet;
  *         Graf, & P. Vidal (Eds.), The Head-Neck Sensory-Motor System (pp.
  *         387-391). New York: Oxford University Press.
  */
-@Slf4j
 public class GazeMU implements AnimationUnit
 {
     protected static final double TARGET_IMPORTANCE = 8;
@@ -127,10 +126,9 @@ public class GazeMU implements AnimationUnit
     protected GazeInfluence influence = GazeInfluence.NECK;
 
     protected static final double RELATIVE_READY_TIME = 0.25;
-    protected static final double RELATIVE_RELAX_TIME = 0.75;
-
-    protected AnimationUnit relaxUnit;
-
+    protected static final double RELATIVE_RELAX_TIME = 0.75;    
+    protected boolean isLocal = false;
+    
     public GazeMU()
     {
         qTemp = new float[4];
@@ -201,12 +199,14 @@ public class GazeMU implements AnimationUnit
     protected float[] getUnsaturizedEyeRotation(VJoint eye) throws MUPlayException
     {
         float gazeDir[] = Vec3f.getVec3f();
-        woTarget = woManager.getWorldObject(target);
-        if (woTarget == null)
+        if(isLocal)
         {
-            throw new MUPlayException("Gaze target not found", this);
+            Vec3f.set(gazeDir, localGaze);//just parallel for now
         }
-        woTarget.getTranslation2(gazeDir, eye);
+        else
+        {
+            woTarget.getTranslation2(gazeDir, eye);
+        }
         Quat4f.transformVec3f(getOffsetRotation(), gazeDir);
         Vec3f.normalize(gazeDir);
         float q[] = Quat4f.getQuat4f();
@@ -247,11 +247,20 @@ public class GazeMU implements AnimationUnit
 
     protected void setTarget()
     {
-        woTarget.getTranslation2(localGaze, neck);
+        if(!isLocal)
+        {
+            woTarget.getTranslation2(localGaze, neck);
+        }
         Quat4f.transformVec3f(getOffsetRotation(), localGaze);
         setEndRotation(localGaze);
     }
 
+    protected void setGazeDirection(float[] direction)
+    {
+        isLocal = true;
+        Vec3f.set(localGaze,direction);
+    }
+    
     protected void setTarget(float[] absTarget)
     {
         woTarget = new AbsolutePositionWorldObject(absTarget);
@@ -403,11 +412,6 @@ public class GazeMU implements AnimationUnit
             neck.setRotation(qTemp);
             playEyes(t);
         }
-        else if (t > 0.75)
-        {
-            relaxUnit.play((t - 0.75) / 0.25);
-            log.debug("play relax {}", (t - 0.75) / 0.25);
-        }
         else
         {
             neck.setRotation(qGaze);
@@ -418,7 +422,7 @@ public class GazeMU implements AnimationUnit
     @Override
     public TimedAnimationMotionUnit createTMU(FeedbackManager bfm, BMLBlockPeg bmlBlockPeg, String bmlId, String id, PegBoard pb)
     {
-        return new GazeTMU(bfm, bmlBlockPeg, bmlId, id, this, pb);
+        return new GazeTMU(bfm, bmlBlockPeg, bmlId, id, this, pb, player);
     }
 
     protected void setInfluence(GazeInfluence influence)
@@ -524,11 +528,6 @@ public class GazeMU implements AnimationUnit
     public Set<String> getPhysicalJoints()
     {
         return PHJOINTS;
-    }
-
-    public void setupRelaxUnit()
-    {
-        relaxUnit = player.getRestPose().createTransitionToRest(getKinematicJoints());
     }
 
     @Override

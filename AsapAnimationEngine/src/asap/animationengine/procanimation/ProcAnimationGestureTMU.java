@@ -515,7 +515,7 @@ public class ProcAnimationGestureTMU extends TimedAnimationMotionUnit
     }
 
     @Override
-    public void playUnit(double time) throws TMUPlayException
+    public void playUnit(double time) throws TimedPlanUnitPlayException
     {
         super.playUnit(time);
         setPriority(mu.getPriority());

@@ -16,6 +16,7 @@ import asap.animationengine.motionunit.TimedAnimationMotionUnit;
 import asap.realizer.feedback.FeedbackManager;
 import asap.realizer.pegboard.BMLBlockPeg;
 import asap.realizer.pegboard.PegBoard;
+import asap.realizer.pegboard.TimePeg;
 import asap.realizer.planunit.ParameterException;
 
 /**
@@ -116,6 +117,14 @@ public class DynamicRestGaze implements RestGaze
     @Override
     public GazeShiftTMU createGazeShiftTMU(FeedbackManager bbf, BMLBlockPeg bmlBlockPeg, String bmlId, String id, PegBoard pb)
             throws MUSetupException
+    {
+        // TODO Auto-generated method stub
+        return null;
+    }
+
+    @Override
+    public TimedAnimationMotionUnit createTransitionToRest(FeedbackManager fbm, TimePeg startPeg, TimePeg endPeg, String bmlId, String id,
+            BMLBlockPeg bmlBlockPeg, PegBoard pb)
     {
         // TODO Auto-generated method stub
         return null;

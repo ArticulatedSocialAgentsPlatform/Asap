@@ -9,6 +9,7 @@ import asap.animationengine.motionunit.TimedAnimationMotionUnit;
 import asap.realizer.feedback.FeedbackManager;
 import asap.realizer.pegboard.BMLBlockPeg;
 import asap.realizer.pegboard.PegBoard;
+import asap.realizer.pegboard.TimePeg;
 import asap.realizer.planunit.ParameterException;
 
 /**
@@ -40,6 +41,13 @@ public interface RestGaze
      * to a position dictated by this resting pose.  
      */
     TimedAnimationMotionUnit createTransitionToRest(FeedbackManager fbm, double startTime, double duration, 
+            String bmlId, String id, BMLBlockPeg bmlBlockPeg, PegBoard pb);
+    
+    /**
+     * Create a transition TMU that moves the joints from their current position 
+     * to a position dictated by this resting pose.  
+     */
+    TimedAnimationMotionUnit createTransitionToRest(FeedbackManager fbm, TimePeg startPeg, TimePeg endPeg,
             String bmlId, String id, BMLBlockPeg bmlBlockPeg, PegBoard pb);
     
     double getTransitionToRestDuration();

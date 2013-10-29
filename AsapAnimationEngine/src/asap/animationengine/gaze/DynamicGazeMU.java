@@ -74,28 +74,33 @@ public class DynamicGazeMU extends GazeMU
         float[] spineRots = new float[joints.size() * 4];
         
         int i=0;
-        if(Quat4f.getAngle(spineGaze)<EYE_ONLY)
+//        if(Quat4f.getAngle(spineGaze)<EYE_ONLY)
+//        {
+//            for (VJoint vj : joints)
+//            {
+//                player.getVCurrPartBySid(vj.getSid()).getRotation(spineRots,i);
+//                i+=4;
+//            }
+//            return spineRots;
+//        }
+        
+        
+        if(!isLocal)
         {
-            for (VJoint vj : joints)
-            {
-                player.getVCurrPartBySid(vj.getSid()).getRotation(spineRots,i);
-                i+=4;
-            }
-            return spineRots;
+            float aa[] = Quat4f.getAxisAngle4fFromQuat4f(spineGaze);
+            Quat4f.setFromAxisAngle4f(spineGaze, aa[0],aa[1],aa[2],aa[3]-(float)EYE_ONLY);
         }
-        float aa[] = Quat4f.getAxisAngle4fFromQuat4f(spineGaze);
-        Quat4f.setFromAxisAngle4f(spineGaze, aa[0],aa[1],aa[2],aa[3]-(float)EYE_ONLY);
         
         List<VJoint> jointsToSteer = joints;
-        if(Quat4f.getAngle(spineGaze)<CERVICAL_ONLY)
-        {
-            jointsToSteer = cervicalJoints;
-            for (VJoint vj : thoracicJoints)
-            {
-                player.getVCurrPartBySid(vj.getSid()).getRotation(spineRots,i);
-                i+=4;
-            }            
-        }
+//        if(Quat4f.getAngle(spineGaze)<CERVICAL_ONLY)
+//        {
+//            jointsToSteer = cervicalJoints;
+//            for (VJoint vj : thoracicJoints)
+//            {
+//                player.getVCurrPartBySid(vj.getSid()).getRotation(spineRots,i);
+//                i+=4;
+//            }            
+//        }
         
         
         
@@ -217,10 +222,6 @@ public class DynamicGazeMU extends GazeMU
                 setCervical(qStart, qSpine, tRel);
             }
         }
-        else if (t > RELATIVE_RELAX_TIME)
-        {
-            relaxUnit.play((t - RELATIVE_RELAX_TIME) / (1 - RELATIVE_RELAX_TIME));
-        }
         else
         {
             setSpine(qSpine);
@@ -244,26 +245,32 @@ public class DynamicGazeMU extends GazeMU
             }
             i += 4;
         }
-        setTarget(target);
+        if(woTarget == null && !isLocal)
+        {
+            setTarget(target);
+        }
     }
 
     @Override
     protected void setTarget()
     {
-        VJoint neck = joints.get(joints.size() - 1);
-        woTarget.getTranslation2(localGaze, neck);
-
-        // lgazeneck = gazepos - neck
-        // lgazeeyes = gazepos - eye = gazepos - (neck+localeye) = gazepos-neck-localeye = lgazeneck - localeye
-        float rOffset[] = Vec3f.getVec3f();
-        float lOffset[] = Vec3f.getVec3f();
-        rEye.getPathTranslation(neck, rOffset);
-        lEye.getPathTranslation(neck, lOffset);
-        Vec3f.scale(-0.5f, rOffset);
-        Vec3f.scale(-0.5f, lOffset);
-        Vec3f.add(localGaze, rOffset);
-        Vec3f.add(localGaze, lOffset);
-        Quat4f.transformVec3f(getOffsetRotation(), localGaze);
+        if(!isLocal)
+        {    
+            VJoint neck = joints.get(joints.size() - 1);        
+            woTarget.getTranslation2(localGaze, neck);
+    
+            // lgazeneck = gazepos - neck
+            // lgazeeyes = gazepos - eye = gazepos - (neck+localeye) = gazepos-neck-localeye = lgazeneck - localeye
+            float rOffset[] = Vec3f.getVec3f();
+            float lOffset[] = Vec3f.getVec3f();
+            rEye.getPathTranslation(neck, rOffset);
+            lEye.getPathTranslation(neck, lOffset);
+            Vec3f.scale(-0.5f, rOffset);
+            Vec3f.scale(-0.5f, lOffset);
+            Vec3f.add(localGaze, rOffset);
+            Vec3f.add(localGaze, lOffset);
+            Quat4f.transformVec3f(getOffsetRotation(), localGaze);
+        }
         setEndRotation(localGaze);
     }
 
@@ -361,21 +368,26 @@ public class DynamicGazeMU extends GazeMU
         gatherJoints();
     }
     
+    public void setPlayer(AnimationPlayer p) 
+    {
+        player = p;
+        lEye = p.getVNextPartBySid(Hanim.l_eyeball_joint);
+        rEye = p.getVNextPartBySid(Hanim.r_eyeball_joint);
+        lEyeCurr = p.getVCurrPartBySid(Hanim.l_eyeball_joint);
+        rEyeCurr = p.getVCurrPartBySid(Hanim.r_eyeball_joint);
+        woManager = p.getWoManager();
+    }
+    
     @Override
     public DynamicGazeMU copy(AnimationPlayer p) throws MUSetupException
     {
         DynamicGazeMU copy = new DynamicGazeMU();
-        copy.player = p;
         copy.influence = influence;
-        copy.gatherJoints();
         copy.offsetAngle = offsetAngle;
         copy.offsetDirection = offsetDirection;
-        copy.woManager = p.getWoManager();
         copy.target = target;
-        copy.lEye = p.getVNextPartBySid(Hanim.l_eyeball_joint);
-        copy.rEye = p.getVNextPartBySid(Hanim.r_eyeball_joint);
-        copy.lEyeCurr = p.getVCurrPartBySid(Hanim.l_eyeball_joint);
-        copy.rEyeCurr = p.getVCurrPartBySid(Hanim.r_eyeball_joint);
+        copy.setPlayer(p);
+        copy.gatherJoints();        
         return copy;
     }
 

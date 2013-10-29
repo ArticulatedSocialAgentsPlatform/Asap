@@ -18,7 +18,6 @@
  ******************************************************************************/
 package asap.faceengine.faceunit;
 
-import asap.motionunit.TMUPlayException;
 import asap.motionunit.TimedMotionUnit;
 import asap.realizer.feedback.FeedbackManager;
 import asap.realizer.pegboard.BMLBlockPeg;
@@ -61,7 +60,7 @@ public class TimedFaceUnit extends TimedMotionUnit
     }     
     
     @Override
-    public void playUnit(double time) throws TMUPlayException
+    public void playUnit(double time) throws TimedPlanUnitPlayException
     {
         if (handleGracefulInterrupt)
         {

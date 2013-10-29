@@ -90,7 +90,7 @@ public class TimedMotionUnit extends TimedAbstractPlanUnit
     }
 
     @Override
-    protected void playUnit(double time) throws TMUPlayException
+    protected void playUnit(double time) throws TimedPlanUnitPlayException
     {
         double t = puTimeManager.getRelativeTime(time);
         try

@@ -39,10 +39,9 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Set;
 
-import lombok.Getter;
-import lombok.Setter;
 import lombok.extern.slf4j.Slf4j;
 import net.jcip.annotations.GuardedBy;
+import asap.animationengine.gaze.RestGaze;
 import asap.animationengine.mixed.MixedPlayer;
 import asap.animationengine.motionunit.AnimationUnit;
 import asap.animationengine.motionunit.TimedAnimationUnit;
@@ -72,10 +71,6 @@ public class AnimationPlayer implements Player, MixedAnimationPlayer
     private final VJointPartsMap vCurrMap;
     private final VJoint vAdditive;
     private final VJointPartsMap vAdditiveMap;
-
-    @Getter
-    @Setter
-    private String gazeTarget;
 
     private PhysicalHumanoid pHuman;
 
@@ -109,7 +104,14 @@ public class AnimationPlayer implements Player, MixedAnimationPlayer
     {
         return app.getRestPose();
     }
+    
+    public RestGaze getRestGaze()
+    {
+        
+        return app.getRestGaze();
+    }
 
+    
     public AnimationPlayer(VJoint vP, VJoint vC, VJoint vN, List<MixedSystem> m, float h, AnimationPlanPlayer planPlayer)
     {
         this(vP, vC, vN, m, h, null, planPlayer);
@@ -172,6 +174,7 @@ public class AnimationPlayer implements Player, MixedAnimationPlayer
         nextSkel = new Skeleton("nextSkel", vNext);
 
         woManager = wom;
+        planPlayer.getRestGaze().setAnimationPlayer(this);//XXX ugly..
         // VJoint[] emptyArray = new VJoint[0];
 
         vPrevStartPose = new SkeletonPose("prev", prevSkel, "TR");
@@ -201,6 +204,11 @@ public class AnimationPlayer implements Player, MixedAnimationPlayer
         return app.getRestPose().getTransitionToRestDuration(vCurr, joints);
     }
 
+    public double getGazeTransitionToRestDuration()
+    {
+        return app.getRestGaze().getTransitionToRestDuration();
+    }
+    
     public TimedAnimationUnit createTransitionToRest(FeedbackManager fbm, Set<String> joints, double startTime, double duration,
             String bmlId, String id, BMLBlockPeg bmlBlockPeg, PegBoard pb)
     {
@@ -244,8 +252,8 @@ public class AnimationPlayer implements Player, MixedAnimationPlayer
     @Override
     public synchronized void reset(double time)
     {
-        gazeTarget = null;
         prevValid = false;
+        
         vPrevStartPose.setToTarget();
         vCurrStartPose.setToTarget();
         vNextStartPose.setToTarget();

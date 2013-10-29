@@ -67,7 +67,7 @@ public class EyeGazeMU extends GazeMU
     @Override
     public TimedAnimationMotionUnit createTMU(FeedbackManager bfm, BMLBlockPeg bmlBlockPeg,String bmlId, String id, PegBoard pb)
     {
-        return new GazeTMU(bfm,bmlBlockPeg,bmlId, id, this,pb);
+        return new GazeTMU(bfm,bmlBlockPeg,bmlId, id, this,pb, player);
     }
     
     @Override
@@ -115,11 +115,6 @@ public class EyeGazeMU extends GazeMU
             float relT = (float)t/(float)RELATIVE_READY_TIME;
             Quat4f.interpolate(qLeft, qStartLeftEye, qEyeLeft, relT);            
             Quat4f.interpolate(qRight, qStartRightEye, qEyeRight, relT);
-        }
-        else if(t>RELATIVE_RELAX_TIME)
-        {
-            relaxUnit.play((t - RELATIVE_RELAX_TIME) / (1 - RELATIVE_RELAX_TIME));
-            return;
         }
         else
         {

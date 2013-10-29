@@ -7,6 +7,9 @@ import java.util.List;
 import java.util.Set;
 
 import lombok.extern.slf4j.Slf4j;
+import asap.animationengine.gaze.ForwardRestGaze;
+import asap.animationengine.gaze.GazeInfluence;
+import asap.animationengine.gaze.RestGaze;
 import asap.animationengine.motionunit.TimedAnimationUnit;
 import asap.animationengine.restpose.RestPose;
 import asap.realizer.feedback.FeedbackManager;
@@ -36,7 +39,9 @@ public class AnimationPlanPlayer implements PlanPlayer
     private final FeedbackManager fbManager;
     private final TimedPlanUnitPlayer tpuPlayer;
     private final RestPose defaultRestPose;
+    private final RestGaze defaultRestGaze;
     private RestPose currentRestPose;
+    private RestGaze currentRestGaze;
     private PegBoard pegBoard;
 
     public void setRestPose(RestPose rp)
@@ -49,6 +54,11 @@ public class AnimationPlanPlayer implements PlanPlayer
         return currentRestPose;
     }
 
+    public RestGaze getRestGaze()
+    {
+        return currentRestGaze;
+    }
+    
     public AnimationPlanPlayer(RestPose defaultRestPose, FeedbackManager fbm, PlanManager<TimedAnimationUnit> planManager,
             TimedPlanUnitPlayer tpuCallback, PegBoard pegBoard)
     {
@@ -58,7 +68,9 @@ public class AnimationPlanPlayer implements PlanPlayer
         this.planManager = planManager;
         this.defaultRestPose = defaultRestPose;
         this.pegBoard = pegBoard;
+        defaultRestGaze = new ForwardRestGaze(GazeInfluence.WAIST);
         currentRestPose = defaultRestPose;
+        currentRestGaze = defaultRestGaze;
     }
 
     // /only update 5 seconds in the future (for performance reasons)

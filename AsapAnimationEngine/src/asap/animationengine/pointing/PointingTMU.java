@@ -146,7 +146,7 @@ public class PointingTMU extends TimedAnimationMotionUnit
     }
 
     @Override
-    public void playUnit(double time) throws TMUPlayException
+    public void playUnit(double time) throws TimedPlanUnitPlayException
     {
         if (handleGracefulInterrupt)
         {
