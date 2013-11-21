@@ -88,7 +88,7 @@ public class IpaacaTTSGenerator extends AbstractTTSGenerator
                 BlockingQueue<ImmutableMap<String, String>> queue = replyQueues.get(iu.getPayload().get(FILENAME_KEY));
                 queue.add(ImmutableMap.copyOf(iu.getPayload()));
             }
-        }, EnumSet.of(IUEventType.ADDED, IUEventType.UPDATED), ImmutableSet.of(MARYTTSREPLY_CATEGORY)));
+        }, EnumSet.of(IUEventType.ADDED, IUEventType.UPDATED, IUEventType.MESSAGE), ImmutableSet.of(MARYTTSREPLY_CATEGORY)));
         outBuffer = new OutputBuffer("IpaacaTTSGeneratorOut");
     }
 
