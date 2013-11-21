@@ -92,7 +92,7 @@ public class IpaacaEmbodiment implements Embodiment
         {
             inBuffer = new InputBuffer(COMPONENT_NAME + id, categories);
             outBuffer = new OutputBuffer(COMPONENT_NAME + id);
-            inBuffer.registerHandler(new IUEventHandler(new JointDataConfigReqHandler(), EnumSet.of(IUEventType.ADDED), ImmutableSet
+            inBuffer.registerHandler(new IUEventHandler(new JointDataConfigReqHandler(), EnumSet.of(IUEventType.ADDED, IUEventType.MESSAGE), ImmutableSet
                     .of("jointDataConfigRequest")));            
         }
         ComponentNotifier notifier = new ComponentNotifier(COMPONENT_NAME+id,"animationprovider",  ImmutableSet.of("jointDataConfigReply",
