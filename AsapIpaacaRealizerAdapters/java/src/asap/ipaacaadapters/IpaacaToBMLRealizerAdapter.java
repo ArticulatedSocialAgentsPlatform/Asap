@@ -38,7 +38,7 @@ public class IpaacaToBMLRealizerAdapter implements BMLFeedbackListener
     {
         this.realizerPort = port;        
         realizerPort.addListeners(this);
-        EnumSet<IUEventType> types = EnumSet.of(IUEventType.ADDED);
+        EnumSet<IUEventType> types = EnumSet.of(IUEventType.ADDED, IUEventType.MESSAGE);
         inBuffer.registerHandler(new IUEventHandler(new HandlerFunctor()
         {
             @Override

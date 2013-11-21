@@ -38,7 +38,7 @@ public class BMLRealizerToIpaacaAdapter implements RealizerPort
 
     public BMLRealizerToIpaacaAdapter()
     {
-        EnumSet<IUEventType> types = EnumSet.of(IUEventType.ADDED);
+        EnumSet<IUEventType> types = EnumSet.of(IUEventType.ADDED, IUEventType.MESSAGE);
         inBuffer.registerHandler(new IUEventHandler(new HandlerFunctor()
         {
             @Override
