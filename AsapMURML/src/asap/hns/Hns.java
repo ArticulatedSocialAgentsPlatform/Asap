@@ -394,6 +394,10 @@ public class Hns extends XMLStructureAdapter
      */
     public double getDistance(String value)
     {
+        if (StringUtil.isNumeric(value))
+        {
+            return Double.parseDouble(value);
+        }
         Double distStr = getSymbolValue(DISTANCES, value);
         if (distStr != null)
         {

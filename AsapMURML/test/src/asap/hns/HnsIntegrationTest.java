@@ -55,4 +55,16 @@ public class HnsIntegrationTest
         float vec[] = Vec3f.getVec3f();
         hns.getHandLocation("LocBelowStomach LocCenterRight LocNorm", vec);
     }
+    
+    @Test
+    public void testDistanceAbs()
+    {
+        assertEquals(0.2, hns.getDistance("0.2"), PRECISION);
+    }
+    
+    @Test
+    public void testDistance()
+    {
+        assertEquals(0.4, hns.getDistance("DistFFar"), PRECISION);
+    }
 }

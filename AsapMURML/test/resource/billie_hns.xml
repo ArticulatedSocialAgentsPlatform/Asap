@@ -212,6 +212,11 @@
     <symbol class="palmOrientations" name="PalmD" value="90"/>
 
     <symbol class="offset" name="ellipticDistance" value="100"/>
+     <symbol class="distances" name="DistShort" value="0.10"/>
+    <symbol class="distances" name="DistNorm" value="0.20"/>
+    <symbol class="distances" name="DistFar" value="0.30"/>
+    <symbol class="distances" name="DistFFar" value="0.40"/>
+    
 </symbols>
 
 </hns>
