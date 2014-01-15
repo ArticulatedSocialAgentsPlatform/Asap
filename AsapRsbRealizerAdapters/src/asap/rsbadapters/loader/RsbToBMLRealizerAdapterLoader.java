@@ -19,9 +19,7 @@ public class RsbToBMLRealizerAdapterLoader implements PipeLoader
 {
     private RealizerPort adaptedRealizerPort = null;
     private RsbToBMLRealizerAdapter rsbAdapter;
-    /**
-     * @throws XMLScanException on invalid XML
-     */
+    
     @Override    
     public void readXML(XMLTokenizer theTokenizer, String id, String vhId, String name, RealizerPort realizerPort, Clock theSchedulingClock)
             throws IOException

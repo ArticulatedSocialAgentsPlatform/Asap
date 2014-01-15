@@ -29,19 +29,33 @@ public class RsbToBMLRealizerAdapter implements BMLFeedbackListener
         realizerPort.addListeners(this);
         Factory factory = Factory.getInstance();
 
-        // setup feedback sender
-        informer = factory.createInformer(RsbAdapterConstants.BML_FEEDBACK_SCOPE);        
 
-        // setup BML receiver
-        listener = factory.createListener(RsbAdapterConstants.BML_SCOPE);
-        listener.addHandler(new AbstractEventHandler()
+        try
         {
-            @Override
-            public void handleEvent(Event event)
+            // setup feedback sender
+            informer = factory.createInformer(RsbAdapterConstants.BML_FEEDBACK_SCOPE);
+            
+            // setup BML receiver
+            listener = factory.createListener(RsbAdapterConstants.BML_SCOPE);
+            listener.addHandler(new AbstractEventHandler()
             {
-                realizerPort.performBML(event.getData().toString());
-            }
-        }, true);
+                @Override
+                public void handleEvent(Event event)
+                {
+                    realizerPort.performBML(event.getData().toString());
+                }
+            }, true);
+        }
+        catch (InitializeException e)
+        {
+            throw new RuntimeException(e);
+        }
+        catch (InterruptedException e)
+        {
+            throw new RuntimeException(e);
+        }        
+
+        
         
         try
         {
@@ -49,6 +63,10 @@ public class RsbToBMLRealizerAdapter implements BMLFeedbackListener
             informer.activate();
         }
         catch (InitializeException e)
+        {
+            throw new RuntimeException(e);
+        }
+        catch (RSBException e)
         {
             throw new RuntimeException(e);
         }
@@ -72,7 +90,30 @@ public class RsbToBMLRealizerAdapter implements BMLFeedbackListener
 
     public void close()
     {
-        informer.deactivate();
-        listener.deactivate();
+        try
+        {
+            listener.deactivate();
+        }
+        catch (RSBException e)
+        {
+            log.warn("",e);
+        }
+        catch (InterruptedException e)
+        {
+            Thread.interrupted();
+        }
+        
+        try
+        {
+            informer.deactivate();
+        }
+        catch (RSBException e)
+        {
+            log.warn("",e);
+        }
+        catch (InterruptedException e)
+        {
+            Thread.interrupted();
+        }
     }
 }

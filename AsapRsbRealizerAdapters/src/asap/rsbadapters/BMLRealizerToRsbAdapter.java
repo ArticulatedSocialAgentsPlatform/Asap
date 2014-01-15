@@ -32,25 +32,39 @@ public class BMLRealizerToRsbAdapter implements RealizerPort
     {
         Factory factory = Factory.getInstance();
 
-        // setup bml sender
-        informer = factory.createInformer(RsbAdapterConstants.BML_SCOPE);  
-        
-        // setup feedback receiver
-        listener = factory.createListener(RsbAdapterConstants.BML_FEEDBACK_SCOPE);
-        listener.addHandler(new AbstractEventHandler()
+        try
         {
-            @Override
-            public void handleEvent(Event event)
+            // setup bml sender            
+            informer = factory.createInformer(RsbAdapterConstants.BML_SCOPE);
+            
+            // setup feedback receiver
+            listener = factory.createListener(RsbAdapterConstants.BML_FEEDBACK_SCOPE);
+            listener.addHandler(new AbstractEventHandler()
             {
-                synchronized(feedbackListeners)
+                @Override
+                public void handleEvent(Event event)
                 {
-                    for(BMLFeedbackListener fbl:feedbackListeners)
+                    synchronized(feedbackListeners)
                     {
-                        fbl.feedback(event.getData().toString());
+                        for(BMLFeedbackListener fbl:feedbackListeners)
+                        {
+                            fbl.feedback(event.getData().toString());
+                        }
                     }
                 }
-            }
-        }, true);
+            }, true);
+        }
+        catch (InitializeException ex)
+        {
+            throw new RuntimeException(ex);
+        }
+        catch (InterruptedException ex)
+        {
+            throw new RuntimeException(ex);
+        }  
+        
+        
+        
         
         try
         {
@@ -58,6 +72,10 @@ public class BMLRealizerToRsbAdapter implements RealizerPort
             informer.activate();
         }
         catch (InitializeException e)
+        {
+            throw new RuntimeException(e);
+        }
+        catch (RSBException e)
         {
             throw new RuntimeException(e);
         }
@@ -90,7 +108,31 @@ public class BMLRealizerToRsbAdapter implements RealizerPort
     
     public void close()
     {
-        listener.deactivate();
-        informer.deactivate();
+        try
+        {
+            listener.deactivate();
+        }
+        catch (RSBException e)
+        {
+            log.warn("",e);
+        }
+        catch (InterruptedException e)
+        {
+            Thread.interrupted();
+        }
+        
+        try
+        {
+            informer.deactivate();
+        }
+        catch (RSBException e)
+        {
+            log.warn("",e);
+        }
+        catch (InterruptedException e)
+        {
+            Thread.interrupted();
+        }
+        
     }
 }
