@@ -152,8 +152,8 @@ public class IncrementalTTSUnit extends TimedAbstractPlanUnit
             pegs.put(sync, new TimePeg(bmlPeg));
         }
         behavior = beh;
-    }
-
+    }    
+    
     private List<WordIU> getWords()
     {
         if (synthesisIU == null)
