@@ -3,7 +3,6 @@ package asap.realizertester;
 import hmi.animation.VJoint;
 import hmi.audioenvironment.AudioEnvironment;
 import hmi.environmentbase.Environment;
-import hmi.environmentbase.Loader;
 import hmi.mixedanimationenvironment.MixedAnimationEnvironment;
 import hmi.physicsenvironment.OdePhysicsEnvironment;
 import hmi.renderenvironment.HmiRenderEnvironment;
@@ -33,7 +32,6 @@ import asap.realizer.anticipator.Anticipator;
 import asap.realizer.pegboard.BMLBlockPeg;
 import asap.realizer.pegboard.PegBoard;
 import asap.realizer.pegboard.TimePeg;
-import asap.realizerembodiments.AsapRealizerEmbodiment;
 import asap.realizerport.RealizerPort;
 
 /**
@@ -156,11 +154,6 @@ public class PersistentFixtureAsapRealizerTest extends AbstractASAPRealizerTest
         realizerHandler.setRealizerTestPort(new AsapRealizerPort(realizerPort));
 
         anticipator = new DummyAnticipator("dummyanticipator", vHuman.getPegBoard(), 1000000d, 2000000d);
-        for (Loader l : vHuman.getLoaders().values())
-        {
-            if (l instanceof AsapRealizerEmbodiment) ((AsapRealizerEmbodiment) l).getBmlScheduler().addAnticipator("dummyanticipator",
-                    anticipator);
-        }
         realizerHandler.performBML("<bml xmlns=\"http://www.bml-initiative.org/bml/bml-1.0\" "
                 + "id=\"replacesetup\" composition=\"REPLACE\"/>");
         realizerHandler.waitForBMLEndFeedback("replacesetup");

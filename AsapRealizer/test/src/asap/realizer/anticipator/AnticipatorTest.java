@@ -18,7 +18,8 @@ import asap.realizer.pegboard.TimePeg;
 public class AnticipatorTest
 {
     private PegBoard pegBoard = new PegBoard();
-    private Anticipator anticip = new Anticipator("anticip1", pegBoard);
+    private static final String ANTICIPATOR_ID = "anticip1";
+    private Anticipator anticip = new Anticipator(ANTICIPATOR_ID, pegBoard);
     private static final double PRECISION = 0.01;
     
     @Test
@@ -27,6 +28,7 @@ public class AnticipatorTest
         TimePeg tp = new TimePeg(BMLBlockPeg.GLOBALPEG);
         anticip.addSynchronisationPoint("test1", tp);
         assertEquals(tp, anticip.getSynchronisationPoint("test1"));
+        assertEquals(tp, pegBoard.getTimePeg(BMLBlockPeg.ANTICIPATOR_PEG_ID,ANTICIPATOR_ID,"test1"));
     }
     
     @Test
@@ -36,7 +38,7 @@ public class AnticipatorTest
         anticip.addSynchronisationPoint("test1", tp);
         anticip.setSynchronisationPoint("test1", 10);
         assertEquals(10, anticip.getSynchronisationPoint("test1").getGlobalValue(), PRECISION);
-        assertEquals(10, tp.getGlobalValue(), PRECISION);
+        assertEquals(10, tp.getGlobalValue(), PRECISION);        
     }
     
     @Test

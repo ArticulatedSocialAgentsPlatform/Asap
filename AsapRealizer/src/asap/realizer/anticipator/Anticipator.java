@@ -22,6 +22,7 @@ package asap.realizer.anticipator;
 
 import java.util.Collection;
 
+import lombok.Getter;
 import net.jcip.annotations.ThreadSafe;
 import asap.realizer.pegboard.BMLBlockPeg;
 import asap.realizer.pegboard.PegBoard;
@@ -39,6 +40,8 @@ public class Anticipator
 {
     
     private final PegBoard pegBoard;
+    
+    @Getter
     private final String id;
     
     public Anticipator(String id, PegBoard pb)

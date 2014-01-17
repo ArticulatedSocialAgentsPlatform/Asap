@@ -27,7 +27,6 @@ import com.google.common.collect.ImmutableMap;
  */
 public final class BMLTInfo
 {
-    public static final String ANTICIPATORBLOCKID = "anticipators";
     private BMLTInfo(){}
     // /Behaviors that are parsed
     private static final ImmutableMap<String, Class<? extends Behaviour>> BEHAVIOR_TYPES =
@@ -65,7 +64,6 @@ public final class BMLTInfo
     {
         BMLInfo.addBehaviourTypes(BEHAVIOR_TYPES);
         BMLInfo.addDescriptionExtensions(DESCRIPTION_EXTENSIONS);
-        BMLInfo.addExternalBlockId(ANTICIPATORBLOCKID);
         BMLInfo.addCustomStringAttribute(GazeBehaviour.class, BMLTBehaviour.BMLTNAMESPACE, "dynamic");
         BMLInfo.addCustomStringAttribute(SpeechBehaviour.class, BMLTBehaviour.BMLTNAMESPACE, "voice");
         
