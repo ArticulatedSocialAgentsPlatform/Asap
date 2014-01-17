@@ -47,8 +47,9 @@ public class SchedulerIntegrationTestCases
     {
         TimePeg sp;
 
-        public DummyAnticipator()
+        public DummyAnticipator(String id, PegBoard pb)
         {
+            super(id,pb);
             sp = new TimePeg(BMLBlockPeg.GLOBALPEG);
             sp.setGlobalValue(21);
             addSynchronisationPoint("dummy", sp);
@@ -80,7 +81,7 @@ public class SchedulerIntegrationTestCases
     {
         realizer.setFeedbackListener(new ListBMLFeedbackListener.Builder().warningList(warnings).build());
         BMLScheduler scheduler = realizer.getScheduler();
-        scheduler.addAnticipator("dummyanticipator", new DummyAnticipator());
+        scheduler.addAnticipator("dummyanticipator", new DummyAnticipator("dummyanticipator",pegBoard));
     }
 
     @After
@@ -322,7 +323,7 @@ public class SchedulerIntegrationTestCases
     @Test(timeout = SCHEDULE_TIMEOUT)
     public void bmltConstraintAnticipatorTest()
     {
-        Anticipator antip = new Anticipator();
+        Anticipator antip = new Anticipator("anticipator1", pegBoard);
         realizer.addAnticipator("anticipator1", antip);
         TimePeg s1 = new TimePeg(BMLBlockPeg.GLOBALPEG);
         s1.setGlobalValue(1);

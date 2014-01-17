@@ -24,6 +24,7 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
+import asap.realizer.pegboard.PegBoard;
 import asap.realizer.pegboard.TimePeg;
 
 import net.jcip.annotations.ThreadSafe;
@@ -35,6 +36,11 @@ import net.jcip.annotations.ThreadSafe;
 @ThreadSafe
 public class MetronomeAnticipator extends Anticipator
 {
+    public MetronomeAnticipator(String id, PegBoard pb)
+    {
+        super(id, pb);        
+    }
+
     private List<TimePeg> orderedSynchs = Collections.synchronizedList(new ArrayList<TimePeg>());
     
     @Override

@@ -21,13 +21,11 @@ package asap.realizer.anticipator;
 
 
 import java.util.Collection;
-import java.util.Map;
-import java.util.concurrent.ConcurrentHashMap;
 
 import net.jcip.annotations.ThreadSafe;
+import asap.realizer.pegboard.BMLBlockPeg;
+import asap.realizer.pegboard.PegBoard;
 import asap.realizer.pegboard.TimePeg;
-
-import com.google.common.collect.ImmutableList;
 
 /**
  * An Anticipator manages a set of TimePegs that can be used to synchronize behavior to.
@@ -39,34 +37,36 @@ import com.google.common.collect.ImmutableList;
 @ThreadSafe
 public class Anticipator
 {
-    private Map<String,TimePeg> pegs;
+    
+    private final PegBoard pegBoard;
+    private final String id;
+    
+    public Anticipator(String id, PegBoard pb)
+    {
+        this.pegBoard = pb;
+        this.id = id;
+    }
     
     /**
      * Get an ImmutableList copy of the time pegs handled by this anticipator  
      */
     public synchronized Collection<TimePeg> getTimePegs()
     {
-        return ImmutableList.copyOf(pegs.values());
+        return pegBoard.getTimePegs(BMLBlockPeg.ANTICIPATOR_PEG_ID, id);        
     }
     
-    public synchronized TimePeg getSynchronisationPoint(String syncRef)
+    public synchronized TimePeg getSynchronisationPoint(String syncId)
     {
-        return pegs.get(syncRef);
+        return pegBoard.getTimePeg(BMLBlockPeg.ANTICIPATOR_PEG_ID,id, syncId);        
     }
     
-    public synchronized void addSynchronisationPoint(String syncRef, TimePeg sp)
+    public synchronized void addSynchronisationPoint(String syncId, TimePeg sp)
     {
-        pegs.put(syncRef, sp);
+        pegBoard.addTimePeg(BMLBlockPeg.ANTICIPATOR_PEG_ID,id,syncId, sp);        
     }
     
-    public synchronized void setSynchronisationPoint(String syncRef, double time)
+    public synchronized void setSynchronisationPoint(String syncId, double time)
     {
-        TimePeg sp = pegs.get(syncRef);
-        sp.setGlobalValue(time);
-    }
-    
-    public Anticipator()
-    {
-        pegs = new ConcurrentHashMap<String,TimePeg>();
+        pegBoard.setPegTime(BMLBlockPeg.ANTICIPATOR_PEG_ID,id,syncId, time);
     }
 }

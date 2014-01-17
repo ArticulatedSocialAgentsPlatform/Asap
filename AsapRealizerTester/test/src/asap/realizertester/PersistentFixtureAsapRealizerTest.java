@@ -31,6 +31,7 @@ import asap.environment.AsapEnvironment;
 import asap.environment.AsapVirtualHuman;
 import asap.realizer.anticipator.Anticipator;
 import asap.realizer.pegboard.BMLBlockPeg;
+import asap.realizer.pegboard.PegBoard;
 import asap.realizer.pegboard.TimePeg;
 import asap.realizerembodiments.AsapRealizerEmbodiment;
 import asap.realizerport.RealizerPort;
@@ -57,8 +58,9 @@ public class PersistentFixtureAsapRealizerTest extends AbstractASAPRealizerTest
     {
         private TimePeg sp1, sp2;
 
-        public DummyAnticipator(double absoluteTime1, double absoluteTime2)
+        public DummyAnticipator(String id, PegBoard pb, double absoluteTime1, double absoluteTime2)
         {
+            super(id, pb);
             sp1 = new TimePeg(BMLBlockPeg.GLOBALPEG);
             sp1.setGlobalValue(absoluteTime1);
             sp2 = new TimePeg(BMLBlockPeg.GLOBALPEG);
@@ -114,7 +116,7 @@ public class PersistentFixtureAsapRealizerTest extends AbstractASAPRealizerTest
 
         java.awt.Component canvas = hre.getAWTComponent(); // after init, get canvas and add to window
         mainUI.add(canvas);
-        mainUI.setVisible(true);        
+        mainUI.setVisible(true);
 
         // add worldobject "camera" that we can use to look at user :)
         VJoint camera = hre.getCameraTarget();
@@ -138,7 +140,7 @@ public class PersistentFixtureAsapRealizerTest extends AbstractASAPRealizerTest
         VJoint boxJoint = hre.getObjectRootJoint("bluebox");
         boxJoint.setTranslation(-0.25f, 1.45f, 0.3f);
         we.getWorldObjectManager().addWorldObject("bluebox", new VJointWorldObject(boxJoint));
-        
+
         hre.startRenderClock();
         ope.startPhysicsClock();
         logger.debug("Finished setup");
@@ -153,7 +155,7 @@ public class PersistentFixtureAsapRealizerTest extends AbstractASAPRealizerTest
         realizerPort.addListeners(this);
         realizerHandler.setRealizerTestPort(new AsapRealizerPort(realizerPort));
 
-        anticipator = new DummyAnticipator(1000000d, 2000000d);
+        anticipator = new DummyAnticipator("dummyanticipator", vHuman.getPegBoard(), 1000000d, 2000000d);
         for (Loader l : vHuman.getLoaders().values())
         {
             if (l instanceof AsapRealizerEmbodiment) ((AsapRealizerEmbodiment) l).getBmlScheduler().addAnticipator("dummyanticipator",
