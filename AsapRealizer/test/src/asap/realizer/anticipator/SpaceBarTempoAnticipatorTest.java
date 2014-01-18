@@ -13,6 +13,7 @@ import org.junit.Before;
 import org.junit.Test;
 
 import asap.realizer.pegboard.BMLBlockPeg;
+import asap.realizer.pegboard.PegBoard;
 import asap.realizer.pegboard.TimePeg;
 /**
  * Unit test cases for the SpaceBarTempoAnticipator
@@ -22,7 +23,7 @@ import asap.realizer.pegboard.TimePeg;
 public class SpaceBarTempoAnticipatorTest
 {
     private KeyEvent mockKeyEvent = mock(KeyEvent.class);
-    private SpaceBarTempoAnticipator sbta = new SpaceBarTempoAnticipator();
+    private SpaceBarTempoAnticipator sbta = new SpaceBarTempoAnticipator("sbanticip", new PegBoard());
     private StubSystemClock stubSystemClock = new StubSystemClock();
     private TimePeg managingPegs[];    
     private static final double PRECISION = 0.001;

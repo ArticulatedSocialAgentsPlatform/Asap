@@ -1,6 +1,7 @@
 package asap.realizer.anticipator;
 
 import asap.realizer.pegboard.BMLBlockPeg;
+import asap.realizer.pegboard.PegBoard;
 import asap.realizer.pegboard.TimePeg;
 import hmi.util.PhysicsSync;
 import hmi.util.SystemClock;
@@ -39,8 +40,9 @@ public class SpaceBarAnticipator extends Anticipator implements KeyListener, Key
         press.setGlobalValue(100000000);
     }
     
-    public SpaceBarAnticipator()
+    public SpaceBarAnticipator(String id, PegBoard pb)
     {
+        super(id,pb);
         release = new TimePeg(BMLBlockPeg.GLOBALPEG);
         press = new TimePeg(BMLBlockPeg.GLOBALPEG);
         observable = new SBAObservable();

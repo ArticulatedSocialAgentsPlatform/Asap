@@ -35,7 +35,6 @@ import saiba.bml.core.Behaviour;
 import saiba.bml.core.BehaviourBlock;
 import saiba.bml.feedback.BMLWarningFeedback;
 import saiba.bml.parser.BMLParser;
-import asap.realizer.anticipator.Anticipator;
 import asap.realizer.feedback.FeedbackManager;
 import asap.realizer.pegboard.PegBoard;
 import asap.realizer.planunit.ParameterException;
@@ -205,19 +204,6 @@ public class AsapRealizer
             addEngine(beh, e);
             BMLInfo.supportedExtensions.add(beh);
         }
-    }
-
-    /**
-     * Add an Anticipator to the scheduler, to interact with the synchronisation points in the BML
-     */
-    public void addAnticipator(String id, Anticipator ap)
-    {
-        scheduler.addAnticipator(id, ap);
-    }
-
-    public void removeAnticipator(String aid)
-    {
-        scheduler.removeAnticipator(aid);
     }
 
     /**

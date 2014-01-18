@@ -24,7 +24,7 @@ public class IpaacaFaceAndBodyEmbodiment implements BodyAndFaceEmbodiment
     private final String id;
 
     @Setter
-    private EyelidMorpherEmbodiment eyelidMorpher = new EyelidMorpherEmbodiment("",new ArrayList<String>());
+    private EyelidMorpherEmbodiment eyelidMorpher = new EyelidMorpherEmbodiment("", new ArrayList<String>());
 
     public IpaacaFaceAndBodyEmbodiment(String id, IpaacaEmbodiment ipaacaEmbodiment, IpaacaFaceEmbodiment faceEmbodiment,
             IpaacaBodyEmbodiment bodyEmbodiment)
@@ -38,17 +38,20 @@ public class IpaacaFaceAndBodyEmbodiment implements BodyAndFaceEmbodiment
     @Override
     public void copy()
     {
-        VJoint vjRightEye = getAnimationVJoint().getPartBySid(Hanim.r_eyeball_joint);
-        VJoint vjLeftEye = getAnimationVJoint().getPartBySid(Hanim.l_eyeball_joint);
-        if (vjRightEye != null && vjLeftEye != null)
+        synchronized (faceEmbodiment.getFaceController())
         {
-            float qRight[] = Quat4f.getQuat4f();
-            float qLeft[] = Quat4f.getQuat4f();
-            vjRightEye.getRotation(qRight);
-            vjLeftEye.getRotation(qLeft);
-            eyelidMorpher.setEyeLidMorph(qLeft, qRight, faceEmbodiment.getFaceController());
+            VJoint vjRightEye = getAnimationVJoint().getPartBySid(Hanim.r_eyeball_joint);
+            VJoint vjLeftEye = getAnimationVJoint().getPartBySid(Hanim.l_eyeball_joint);
+            if (vjRightEye != null && vjLeftEye != null)
+            {
+                float qRight[] = Quat4f.getQuat4f();
+                float qLeft[] = Quat4f.getQuat4f();
+                vjRightEye.getRotation(qRight);
+                vjLeftEye.getRotation(qLeft);
+                eyelidMorpher.setEyeLidMorph(qLeft, qRight, faceEmbodiment.getFaceController());
+            }
+            ipaacaEmbodiment.setJointData(bodyEmbodiment.getJointMatrices(), faceEmbodiment.getDesiredMorphTargets());
         }
-        ipaacaEmbodiment.setJointData(bodyEmbodiment.getJointMatrices(), faceEmbodiment.getDesiredMorphTargets());
     }
 
     @Override

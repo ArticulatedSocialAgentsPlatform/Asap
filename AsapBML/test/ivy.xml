@@ -7,5 +7,6 @@
       <dependency org="saiba" name="openbmlparser-test"       rev="latest.release"  />
       <dependency org="hamcrest" name="hamcrest-all"       rev="latest.release"  />
 	<dependency org="HMI" name="HmiTestUtil"      rev="latest.${resolve.status}"   />
+	<dependency org="saiba" name="openbmlparser-testresource"  rev="latest.release" />
    </dependencies>
 </ivy-module>

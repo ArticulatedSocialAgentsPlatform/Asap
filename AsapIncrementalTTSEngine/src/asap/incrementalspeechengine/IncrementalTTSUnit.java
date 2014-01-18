@@ -152,8 +152,8 @@ public class IncrementalTTSUnit extends TimedAbstractPlanUnit
             pegs.put(sync, new TimePeg(bmlPeg));
         }
         behavior = beh;
-    }
-
+    }    
+    
     private List<WordIU> getWords()
     {
         if (synthesisIU == null)
@@ -382,6 +382,7 @@ public class IncrementalTTSUnit extends TimedAbstractPlanUnit
         }
     }
 
+    //update relax sync point timing to actual word timing
     private void updateRelax()
     {
         if (hesitation != null)
@@ -394,6 +395,7 @@ public class IncrementalTTSUnit extends TimedAbstractPlanUnit
         }
     }
 
+    //update end sync point timing to actual word timing
     private void updateEnd()
     {
         endPeg.setGlobalValue(getStartTime() + getDuration() + startDelay);
@@ -584,6 +586,7 @@ public class IncrementalTTSUnit extends TimedAbstractPlanUnit
         return true;
     }
 
+    //update sync point timing to actual word timing
     private void updateSyncTiming()
     {
         for (Entry<Integer, String> entry : syncMap.entrySet())

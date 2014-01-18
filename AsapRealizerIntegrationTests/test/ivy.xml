@@ -2,5 +2,6 @@
    <info organisation="HMI" module="AsapRealizerIntegrationTestsTest"/>
    <dependencies >
       <dependency org="junit" name="junit-dep"  rev="latest.release" />
+      <dependency org="saiba" name="openbmlparser-testresource"  rev="latest.release" />
    </dependencies>
 </ivy-module>

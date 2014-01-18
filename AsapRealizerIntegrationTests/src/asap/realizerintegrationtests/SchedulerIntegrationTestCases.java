@@ -28,7 +28,6 @@ import asap.realizer.anticipator.Anticipator;
 import asap.realizer.pegboard.BMLBlockPeg;
 import asap.realizer.pegboard.PegBoard;
 import asap.realizer.pegboard.TimePeg;
-import asap.realizer.scheduler.BMLScheduler;
 import asap.realizerport.util.ListBMLFeedbackListener;
 
 /**
@@ -47,8 +46,9 @@ public class SchedulerIntegrationTestCases
     {
         TimePeg sp;
 
-        public DummyAnticipator()
+        public DummyAnticipator(String id, PegBoard pb)
         {
+            super(id,pb);
             sp = new TimePeg(BMLBlockPeg.GLOBALPEG);
             sp.setGlobalValue(21);
             addSynchronisationPoint("dummy", sp);
@@ -78,9 +78,8 @@ public class SchedulerIntegrationTestCases
 
     public void setupRealizer()
     {
-        realizer.setFeedbackListener(new ListBMLFeedbackListener.Builder().warningList(warnings).build());
-        BMLScheduler scheduler = realizer.getScheduler();
-        scheduler.addAnticipator("dummyanticipator", new DummyAnticipator());
+        realizer.setFeedbackListener(new ListBMLFeedbackListener.Builder().warningList(warnings).build());        
+        new DummyAnticipator("dummyanticipator",pegBoard);
     }
 
     @After
@@ -305,14 +304,14 @@ public class SchedulerIntegrationTestCases
         assertOneWarningIn("bml1");
     }
 
-    @Test(timeout = SCHEDULE_TIMEOUT)
+    @Test//(timeout = SCHEDULE_TIMEOUT)
     public void testInvalidAnticipator()
     {
         readXML("bmlt/testinvalidanticipator.xml");
         assertOneWarning("bml1", "speech1");
     }
 
-    @Test(timeout = SCHEDULE_TIMEOUT)
+    @Test//(timeout = SCHEDULE_TIMEOUT)
     public void testInvalidAnticipatorSync()
     {
         readXML("bmlt/testinvalidanticipatorsync.xml");
@@ -322,8 +321,7 @@ public class SchedulerIntegrationTestCases
     @Test(timeout = SCHEDULE_TIMEOUT)
     public void bmltConstraintAnticipatorTest()
     {
-        Anticipator antip = new Anticipator();
-        realizer.addAnticipator("anticipator1", antip);
+        Anticipator antip = new Anticipator("anticipator1", pegBoard);
         TimePeg s1 = new TimePeg(BMLBlockPeg.GLOBALPEG);
         s1.setGlobalValue(1);
         antip.addSynchronisationPoint("sync1", s1);
@@ -355,10 +353,7 @@ public class SchedulerIntegrationTestCases
         assertEquals(2.2, pegBoard.getPegTime("bml1", "nod1", "end"), PEGBOARD_PRECISION);
         assertEquals(2.2, pegBoard.getPegTime("bml1", "nod2", "start"), PEGBOARD_PRECISION);
         assertEquals(3.2, pegBoard.getPegTime("bml1", "nod2", "end"), PEGBOARD_PRECISION);
-        assertEquals(3.2, pegBoard.getPegTime("bml1", "nod3", "start"), PEGBOARD_PRECISION);
-
-        realizer.removeAnticipator("anticipator1");
-        assertTrue(realizer.getScheduler().getNumberOfAnticipators() == 1);
+        assertEquals(3.2, pegBoard.getPegTime("bml1", "nod3", "start"), PEGBOARD_PRECISION);        
     }
 
     @Test(timeout = SCHEDULE_TIMEOUT)
@@ -560,11 +555,11 @@ public class SchedulerIntegrationTestCases
         readXML("testoffset2.xml");
         assertNoWarnings();
 
-        assertTrue(pegBoard.getRelativePegTime("bml1", "bml1", "g1", "start") == 4);
-        assertTrue(pegBoard.getRelativePegTime("bml1", "bml1", "g2", "start") == 3);
-        assertTrue(pegBoard.getRelativePegTime("bml1", "bml1", "g2", "end") == 5);
-        assertTrue(pegBoard.getPegTime("bml1", "h1", "start") == pegBoard.getPegTime("bml1", "g1", "end"));
-        assertTrue(pegBoard.getRelativePegTime("bml1", "bml1", "h1", "start") > 4);
+        assertEquals(4, pegBoard.getRelativePegTime("bml1", "bml1", "g1", "start"), PEGBOARD_PRECISION);
+        assertEquals(3, pegBoard.getRelativePegTime("bml1", "bml1", "g2", "start"), PEGBOARD_PRECISION);
+        assertEquals(5, pegBoard.getRelativePegTime("bml1", "bml1", "g2", "end"), PEGBOARD_PRECISION);
+        assertEquals(pegBoard.getPegTime("bml1", "h1", "start"), pegBoard.getPegTime("bml1", "g1", "end"), PEGBOARD_PRECISION);
+        assertThat(pegBoard.getRelativePegTime("bml1", "bml1", "h1", "start"), greaterThan(4d));
     }
 
     @Test(timeout = SCHEDULE_TIMEOUT)

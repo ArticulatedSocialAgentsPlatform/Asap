@@ -15,6 +15,7 @@ import java.util.Observer;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import asap.realizer.pegboard.PegBoard;
 import asap.realizer.pegboard.TimePeg;
 
 /**
@@ -43,8 +44,9 @@ public class SpaceBarTempoAnticipator extends Anticipator implements KeyListener
         }
     }
     
-    public SpaceBarTempoAnticipator()
+    public SpaceBarTempoAnticipator(String id, PegBoard pb)
     {
+        super(id,pb);
         observable = new SBAObservable();
     }
     

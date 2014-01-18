@@ -79,8 +79,6 @@ public final class BMLScheduler
     
     private final Set<Engine> engines;
 
-    private final Map<String, Anticipator> anticipators;
-
     private final PegBoard pegBoard;
 
     private final Clock schedulingClock;
@@ -118,7 +116,6 @@ public final class BMLScheduler
         pegBoard = pb;
         planSelector = new HashMap<Class<? extends Behaviour>, Engine>();
         engines = new HashSet<Engine>();
-        anticipators = new HashMap<String, Anticipator>();
         bmlBlocksManager = bbm;
     }
 
@@ -287,37 +284,6 @@ public final class BMLScheduler
         engines.add(e);
     }
 
-    /**
-     * Adds an anticipator
-     * 
-     * @param id
-     *            anticipator id
-     * @param ap
-     *            anticipator
-     */
-    public void addAnticipator(String id, Anticipator ap)
-    {
-        anticipators.put(id, ap);
-    }
-
-    /**
-     * Removes an anticipator
-     * 
-     * @param aid
-     *            id of the anticipator to remove
-     */
-    public void removeAnticipator(String aid)
-    {
-        anticipators.remove(aid);
-    }
-
-    /**
-     * Get the number of registered anticipators
-     */
-    public int getNumberOfAnticipators()
-    {
-        return anticipators.values().size();
-    }
     
     private void addBehaviorPredictions(BehaviourBlock bb, BMLPredictionFeedback bpf)
     {
@@ -625,11 +591,6 @@ public final class BMLScheduler
     public void activateBlock(String bmlId, double time)
     {
         bmlBlocksManager.activateBlock(bmlId);
-    }
-
-    public Anticipator getAnticipator(String a)
-    {
-        return anticipators.get(a);
     }
 
     public BMLParser getParser()

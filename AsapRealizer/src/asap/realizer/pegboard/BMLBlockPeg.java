@@ -11,6 +11,7 @@ import net.jcip.annotations.ThreadSafe;
 public final class BMLBlockPeg
 {
     public static final String GLOBAL_PEG_ID = "global";
+    public static final String ANTICIPATOR_PEG_ID = "anticipators";
     public static final BMLBlockPeg GLOBALPEG = new BMLBlockPeg(GLOBAL_PEG_ID, 0);  
     
     private final String id;
