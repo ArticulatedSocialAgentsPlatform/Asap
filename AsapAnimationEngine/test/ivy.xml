@@ -14,5 +14,6 @@
       <dependency org="logback" name="logback-core"        rev="latest.release"  />
       <dependency org="fest" name="fest-reflect"        rev="latest.release"  />
       <dependency org="fest" name="fest-util"  rev="latest.release" />
+      <dependency org="HMI"      transitive="false" name="HmiTestResources"        rev="latest.{$resolve.status}"  />
    </dependencies>
 </ivy-module>
