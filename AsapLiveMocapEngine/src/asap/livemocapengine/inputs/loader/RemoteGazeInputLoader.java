@@ -9,16 +9,16 @@ import hmi.xml.XMLTokenizer;
 
 import java.io.IOException;
 
-import asap.livemocapengine.inputs.RemoteHeadInput;
+import asap.livemocapengine.inputs.RemoteGazeInput;
+
 
 /**
- * Loads a RemoteHeadInput sensor
- * @author welberge
+ * Loads a RemoteGazeInput sensor
+ * @author vangennep
  */
-public class RemoteHeadInputLoader implements SensorLoader
-{
+public class RemoteGazeInputLoader implements SensorLoader {
     private String id = "";
-    private RemoteHeadInput headInput;
+    private RemoteGazeInput gazeinput;
 
     @Override
     public String getId()
@@ -39,22 +39,21 @@ public class RemoteHeadInputLoader implements SensorLoader
         }
         if (rh == null)
         {
-            throw new XMLScanException("No inner serverinfo element in RemoteHeadInputLoader");
+            throw new XMLScanException("No inner serverinfo element in RemoteGazeInputLoader");
         }
-        headInput = new RemoteHeadInput(loaderId);
-        headInput.connectToServer(rh.getHostName(), rh.getPort());
+        gazeinput = new RemoteGazeInput(loaderId);
+        gazeinput.connectToServer(rh.getHostName(), rh.getPort());
     }
 
     @Override
     public void unload()
     {
-        headInput.shutdown();
+    	gazeinput.shutdown();
     }
 
     @Override
     public Sensor getSensor()
     {
-        return headInput;
-    }
-
+        return gazeinput;
+    }	
 }

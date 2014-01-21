@@ -1,5 +1,6 @@
 package asap.livemocapengine.inputs;
 
+import hmi.faceanimation.model.FACS;
 import hmi.faceembodiments.AUConfig;
 import hmi.faceembodiments.Side;
 
@@ -28,7 +29,8 @@ public class RemoteFACSFaceInput implements FACSFaceInput
     
     private BufferedReader in;
     private MyThread serverThread;
-    private AUConfig[] aus = new AUConfig[84];
+    private int numAus = FACS.getActionUnits().size();
+    private AUConfig[] aus = new AUConfig[numAus*2];
 
     private String hostName;
     private int port;
@@ -106,22 +108,22 @@ public class RemoteFACSFaceInput implements FACSFaceInput
                     }
 
                     if (line != null)
-                    {
+                    {   	
                         String[] recValues = line.split(" ");
-                        if (recValues.length == 84)
-                        {
+                        int length = recValues.length;
+                        if(length == numAus * 2 ){
                             synchronized (this)
                             {
-                                for (int i = 0; i < 42; i++)
-                                {
-                                    aus[i] = new AUConfig(Side.LEFT, i, Float.valueOf(recValues[i]));
-                                }
-                                for (int i = 42; i < 84; i++)
-                                {
-                                    aus[i] = new AUConfig(Side.RIGHT, i - 42, Float.valueOf(recValues[i]));
-                                }
+                            	for (int i = 0; i < length / 2; i++)
+                            	{
+                            		aus[i] = new AUConfig(Side.LEFT, i, Float.valueOf(recValues[i]));
+                            	}
+                            	for (int i = length / 2; i < length; i++)
+                            	{
+                            		aus[i] = new AUConfig(Side.RIGHT, i - length / 2, Float.valueOf(recValues[i]));
+                            	}
                             }
-                        }
+                        }                        
                     }
                 }
                 else
