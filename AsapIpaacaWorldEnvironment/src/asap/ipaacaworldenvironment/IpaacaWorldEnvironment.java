@@ -59,7 +59,7 @@ public class IpaacaWorldEnvironment implements ClockListener, Environment
         woManager = wm;
         outBuffer = new OutputBuffer("IpaacaWorldEnvironment");
         inBuffer = new InputBuffer("IpaacaWorldEnvironment", ImmutableSet.of(SCENEINFO_CAT));
-        inBuffer.registerHandler(new IUEventHandler(new SceneInfoHandler(), EnumSet.of(IUEventType.ADDED, IUEventType.UPDATED),
+        inBuffer.registerHandler(new IUEventHandler(new SceneInfoHandler(), EnumSet.of(IUEventType.MESSAGE, IUEventType.ADDED, IUEventType.UPDATED),
                 ImmutableSet.of(SCENEINFO_CAT)));
     }
 
@@ -91,7 +91,7 @@ public class IpaacaWorldEnvironment implements ClockListener, Environment
         {
             if (iu.getPayload().get(COMMAND_KEY).equals(REPORTING_CMD))
             {
-                String data = iu.getPayload().get(DATA_KEY);
+                String data = iu.getPayload().get(DATA_KEY);                
                 if (data.length() > 2)
                 {
                     String elems[] = Iterables.toArray(
