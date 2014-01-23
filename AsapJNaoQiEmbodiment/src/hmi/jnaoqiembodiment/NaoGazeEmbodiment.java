@@ -57,4 +57,11 @@ public class NaoGazeEmbodiment implements GazeEmbodiment
         NaoDCMUtils.smoothlyResetStiffness("HeadYaw", dcmProxy);
         NaoDCMUtils.smoothlyResetStiffness("HeadPitch", dcmProxy);
     }
+
+    @Override
+    public void setGazeRollPitchYawDegrees(float roll, float pitch, float yaw)
+    {
+        NaoDCMUtils.setJointRotation("HeadYaw", yaw, 100, dcmProxy);
+        NaoDCMUtils.setJointRotation("HeadPitch", pitch, 100, dcmProxy);
+    }
 }
