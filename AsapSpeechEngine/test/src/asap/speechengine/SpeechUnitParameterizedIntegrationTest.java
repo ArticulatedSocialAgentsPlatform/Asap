@@ -132,10 +132,16 @@ public class SpeechUnitParameterizedIntegrationTest
             ttsBindingFactories.add(new SAPITTSBindingFactory());
         }
         
+        /*
         ttsBindingFactories.add(new
         MaryTTSBindingFactory(System.getProperty("shared.project.root")+"/HmiResource/MARYTTS/resource/MARYTTS",
         new NullPhonemeToVisemeMapping()));
-
+        */
+        
+        ttsBindingFactories.add(new
+                MaryTTSBindingFactory("test/lib/MARYTTS",
+                new NullPhonemeToVisemeMapping()));
+        
         for (TimedTTSUnitFactory ttsF : ttsFactories)
         {
             for (TTSBindingFactory bind : ttsBindingFactories)
