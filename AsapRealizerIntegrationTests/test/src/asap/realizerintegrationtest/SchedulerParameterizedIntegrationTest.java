@@ -192,8 +192,8 @@ public class SchedulerParameterizedIntegrationTest extends SchedulerIntegrationT
                     soundManager));
         }
 
-        speechEngineFactories.add(new TTSEngineFactory(new WavTTSUnitFactory(bfm, soundManager), new MaryTTSBindingFactory(System
-                .getProperty("shared.project.root") + "/HmiResource/MARYTTS/resource/MARYTTS", new NullPhonemeToVisemeMapping()), soundManager));
+        speechEngineFactories.add(new TTSEngineFactory(new WavTTSUnitFactory(bfm, soundManager), 
+                new MaryTTSBindingFactory("test/lib/MARYTTS", new NullPhonemeToVisemeMapping()), soundManager));
         speechEngineFactories.add(new TextEngineFactory());
 
         Collection<Object[]> objs = new ArrayList<Object[]>();
