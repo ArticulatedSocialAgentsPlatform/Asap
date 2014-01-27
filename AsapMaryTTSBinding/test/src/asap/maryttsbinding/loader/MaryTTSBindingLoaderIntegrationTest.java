@@ -29,7 +29,7 @@ public class MaryTTSBindingLoaderIntegrationTest
         //@formatter:off
         String bindingXML=
         "<Loader id=\"l1\" loader=\"asap.maryttsbinding.loader.MaryTTSBindingLoader\">"+
-        "<MaryTTS localdir=\"HmiResource/MARYTTS/resource/MARYTTS\"/>" +
+        "<MaryTTS localdir=\"Asap/AsapMaryTTSBinding/test/lib/MARYTTS\"/>" +
         "<PhonemeToVisemeMapping resources=\"Humanoids/shared/phoneme2viseme/\" filename=\"sampade2ikp.xml\"/>"+
         "</Loader>";            
         //@formatter:on
