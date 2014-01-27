@@ -11,7 +11,8 @@
   <Loader id="graphicalembodiment" loader="hmi.renderenvironment.HmiRenderEmbodimentLoader">
     <Body postprocessing="ARMANDIA" 
           texturedir="Humanoids/armandia/maps" 
-          resourcedir="Humanoids/armandia/bin" 
+          resourcedir="Humanoids/armandia/bin"
+			shaderdir="shaders" 
           filename="armandia_boring_neckfix_light_toplevel.bin"/> <!-- other possible attributes: shaderdir, ... -->
     <PermanentMorphs>
         <PermanentMorph target="Body_NG-mesh-morpher-Body_chest_L-0" amount="4.0"/>
@@ -100,7 +101,6 @@
   </Loader>
 
   <Loader id="ttsbinding" loader="asap.maryttsbinding.loader.MaryTTSBindingLoader">
-    <MaryTTS localdir="HmiResource/MARYTTS/resource/MARYTTS"/>
     <PhonemeToVisemeMapping resources="Humanoids/shared/phoneme2viseme/" filename="sampade2ikp.xml"/>
   </Loader>
 

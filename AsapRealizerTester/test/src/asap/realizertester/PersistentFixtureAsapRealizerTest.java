@@ -199,7 +199,7 @@ public class PersistentFixtureAsapRealizerTest extends AbstractASAPRealizerTest
         realizerHandler.assertNoWarnings();
     }
 
-    @AfterClass
+    //@AfterClass
     public static void cleanup()
     {
         staticEnvironment.requestShutdown();

@@ -39,6 +39,10 @@
       <dependency org="Asap"   name="AsapRealizer"     rev="latest.${resolve.status}"   />    
       <dependency org="Asap"   name="AsapRealizerEmbodiments"     rev="latest.${resolve.status}"   />    
 
+	  <dependency org="HMI" name="HmiHumanoidEmbodimentShared" rev="latest.{$resolve.status}"  />
+	  <dependency org="HMI" name="HmiHumanoidEmbodimentArmandia" rev="latest.{$resolve.status}"  />
+	  <dependency org="HMI" name="DefaultShaders" rev="latest.{$resolve.status}"  />
+	  <dependency org="HMI"   name="MARYTTS"     rev="latest.${resolve.status}"   />
       <dependency org="HMI"   name="HmiAnimationEmbodiments"     rev="latest.${resolve.status}"   />    
       <dependency org="HMI"   name="HmiFaceEmbodiments"     rev="latest.${resolve.status}"   />    
       <dependency org="HMI"   name="HmiPhysicsEmbodiments"     rev="latest.${resolve.status}"   />    
