@@ -11,7 +11,7 @@ import hmi.testutil.xml.XSDValidationTest;
 import hmi.util.Resources;
 
 /**
- * Test validity of visemebinding resources in /HmiResource/HmiHumanoidFaceControl/resource/Humanoids/armandia/facebinding
+ * Test validity of visemebinding resources in /asapresource/AsapHumanoidControlArmandia/resource/Humanoids/armandia/facebinding
  * @author welberge
  * 
  */
