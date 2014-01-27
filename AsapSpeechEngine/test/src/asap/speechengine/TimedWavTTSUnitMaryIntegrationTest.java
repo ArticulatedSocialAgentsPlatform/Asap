@@ -23,7 +23,7 @@ public class TimedWavTTSUnitMaryIntegrationTest extends AbstractTimedWavTTSUnitT
     public void setup()
     {
         super.setup();
-        ttsBinding = new MaryTTSBinding("test/lib/MARYTTS",
+        ttsBinding = new MaryTTSBinding(System.getProperty("shared.project.root")+"/Asap/AsapSpeechEngine/test/lib/MARYTTS",
                 new NullPhonemeToVisemeMapping());
         
     }    

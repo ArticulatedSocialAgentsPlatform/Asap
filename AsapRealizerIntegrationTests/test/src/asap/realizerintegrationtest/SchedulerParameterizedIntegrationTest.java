@@ -151,7 +151,7 @@ public class SchedulerParameterizedIntegrationTest extends SchedulerIntegrationT
 {
     static BMLBlockManager bbm = new BMLBlockManager();
     static FeedbackManager bfm = new FeedbackManagerImpl(bbm, "character1");
-    protected static final SoundManager soundManager = new LWJGLJoalSoundManager();    
+    protected static final SoundManager soundManager = new LWJGLJoalSoundManager();
 
     @Before
     public void setup()
@@ -173,10 +173,6 @@ public class SchedulerParameterizedIntegrationTest extends SchedulerIntegrationT
         soundManager.shutdown();
     }
 
-    
-
-    
-
     @Parameters
     public static Collection<Object[]> configs() throws Exception
     {
@@ -192,8 +188,9 @@ public class SchedulerParameterizedIntegrationTest extends SchedulerIntegrationT
                     soundManager));
         }
 
-        speechEngineFactories.add(new TTSEngineFactory(new WavTTSUnitFactory(bfm, soundManager), 
-                new MaryTTSBindingFactory("test/lib/MARYTTS", new NullPhonemeToVisemeMapping()), soundManager));
+        speechEngineFactories.add(new TTSEngineFactory(new WavTTSUnitFactory(bfm, soundManager), new MaryTTSBindingFactory(System
+                .getProperty("shared.project.root") + "/Asap/AsapRealizerIntegrationTests/test/lib/MARYTTS",
+                new NullPhonemeToVisemeMapping()), soundManager));
         speechEngineFactories.add(new TextEngineFactory());
 
         Collection<Object[]> objs = new ArrayList<Object[]>();
@@ -218,7 +215,6 @@ public class SchedulerParameterizedIntegrationTest extends SchedulerIntegrationT
         float g[] = { 0, 0, 0 };
         OdeHumanoid p = new OdeHumanoid("phuman", null, null);
         m.add(new MixedSystem(g, p));
-        
 
         Resources gres = new Resources("");
         GestureBinding gestureBinding = new GestureBinding(gres, bfm);
@@ -234,10 +230,10 @@ public class SchedulerParameterizedIntegrationTest extends SchedulerIntegrationT
                 new DefaultTimedPlanUnitPlayer(), pegBoard);
         AnimationPlayer aPlayer = new AnimationPlayer(human, human, human, m, 0.001f, animationPlanPlayer);
         pose.setAnimationPlayer(aPlayer);
-        
+
         Hns hns = new Hns();
         hns.readXML(gres.getReader("Humanoids/shared/hns/hns.xml"));
-        HnsHandshape HnsHandshape = new HnsHandshape(hns,"Humanoids/shared/handshapes");
+        HnsHandshape HnsHandshape = new HnsHandshape(hns, "Humanoids/shared/handshapes");
         AnimationPlanner ap = new AnimationPlanner(bfm, aPlayer, gestureBinding, hns, HnsHandshape, animationPlanManager, pegBoard);
         Engine animationEngine = new DefaultEngine<TimedAnimationUnit>(ap, aPlayer, animationPlanManager);
 
@@ -262,8 +258,8 @@ public class SchedulerParameterizedIntegrationTest extends SchedulerIntegrationT
         BMLParser parser = new BMLParser(new ImmutableSet.Builder<Class<? extends BMLBehaviorAttributeExtension>>().add(
                 BMLABMLBehaviorAttributes.class).build());
 
-        realizer = new AsapRealizer("avatar1", parser, bfm, clock, bbm, pegBoard, animationEngine, speechEngine,
-                auEngine, waitEngine, pvpcEngine);
+        realizer = new AsapRealizer("avatar1", parser, bfm, clock, bbm, pegBoard, animationEngine, speechEngine, auEngine, waitEngine,
+                pvpcEngine);
 
         setupRealizer();
     }
