@@ -53,9 +53,6 @@
    </target>
    
    <target name="-setupnightlybuildparams">
-      <echo message="Python release list: ${python.release.list}"/>
-      <echo message="Release list: ${release.list}"/>
-      
       <!-- first some checking for parameters. We require either a version or a build number -->
       <fail message="Asap nightlybuild: No release.list specified" unless="release.list" />
       <ac:if>
