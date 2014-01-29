@@ -57,11 +57,6 @@
    </target>
    
    <target name="-setupnightlybuildparams">
-<<<<<<< HEAD
-      <echo message="Release list: ${release.list}"/>
-      
-=======
->>>>>>> e3472ce510b7396a2b846a732268291224d0ef0e
       <!-- first some checking for parameters. We require either a version or a build number -->
       <fail message="Asap nightlybuild: No release.list specified" unless="release.list" />
       <ac:if>
