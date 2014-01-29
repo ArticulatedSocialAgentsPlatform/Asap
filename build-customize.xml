@@ -2,8 +2,12 @@
         xmlns:ac="antlib:net.sf.antcontrib"	
 	>   
 	
+   <property name="dist.dir"              value="dist"  />
+    <property name="test.dir"               value="test"  />
+    <property name="build.dir"               value="build"  />
+  <property name="test.report.dir"        value="${test.dir}/report" />
 	 <property name="build.test.results.dir" location="${build.dir}/test/results" />
- <property name="test.report.dir"        value="${test.dir}/report" />
+ 
 
   <!-- Settings for "javadoc" -->
    <property name="docs.dir"              value="docs"     />
@@ -22,7 +26,7 @@
    <property name="javadoc.link"          value="http://java.sun.com/javase/6/docs/api/"/>
    <property name="javadoc.linksource"    value="yes"/>
    <property name="javadoc.packages"      value="*"/>
-    <property name="dist.dir"              value="dist"  />
+  
  <fileset id="lib.fileset" dir=".">
       <include name="${lib.dir}/**/*.jar"   />
       <include name="${lib.local}/**/*.jar" />
@@ -53,7 +57,6 @@
    </target>
    
    <target name="-setupnightlybuildparams">
-      <echo message="Python release list: ${python.release.list}"/>
       <echo message="Release list: ${release.list}"/>
       
       <!-- first some checking for parameters. We require either a version or a build number -->

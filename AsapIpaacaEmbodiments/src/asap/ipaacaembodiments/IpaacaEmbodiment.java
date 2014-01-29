@@ -340,6 +340,17 @@ public class IpaacaEmbodiment implements Embodiment
         @Override
         public void handle(AbstractIU iu, IUEventType type, boolean local)
         {
+            if(iu==null) 
+            {
+                log.warn("IpaacaEmbodiment jointDataConfigRequest null iu!");
+                return;
+            }
+            if(iu.getPayload()==null) 
+            {
+                log.warn("IpaacaEmbodiment jointDataConfigRequest null payload!");
+                return;
+            }
+            log.info("IpaacaEmbodiment jointDataConfigRequest, payload: {}",iu.getPayload());
             log.info("IpaacaEmbodiment jointDataConfigRequest, morphs: {}",iu.getPayload().get("morphs"));
             
             String[] joints = iu.getPayload().get("joints").split("\\s*,\\s*");
