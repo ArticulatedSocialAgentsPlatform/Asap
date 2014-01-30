@@ -104,6 +104,27 @@ public class MURMLMUBuilderTest
         Quat4fTestUtil.assertQuat4fRotationEquivalent(qExp, q, ROT_PRECISION);
     }
 
+    @Test(expected=MUSetupException.class)
+    public void testKeyframeGestureMissingJoint() throws MUSetupException
+    {
+        // @formatter:off
+        String murmlString =  "<murml-description xmlns=\"http://www.techfak.uni-bielefeld.de/ags/soa/murml\">"+
+                                "<dynamic>"+
+                                    "<keyframing mode=\"spline\" easescale=\"1.0\" easeturningpoint=\"0.5\">"+
+                                    "<phase>"+
+                                        "<frame ftime=\"0.50\"><posture>Humanoid (missingjoint 3 0.0 0.0 -5.0)</posture></frame>"+
+                                    "</phase>"+
+                                    "</keyframing>"+
+                                "</dynamic>"+
+                                "</murml-description>";
+        // @formatter:on
+        AnimationUnit au = murmlMuBuilder.setup(murmlString);
+        assertThat(au, instanceOf(MURMLKeyframeMU.class));
+        MURMLKeyframeMU kfmu = (MURMLKeyframeMU)au;
+        
+        kfmu = kfmu.copy(mockAnimationPlayer);        
+    }
+    
     @Test
     public void testPriorityKeyframing() throws MUPlayException, MUSetupException, TMUSetupException
     {

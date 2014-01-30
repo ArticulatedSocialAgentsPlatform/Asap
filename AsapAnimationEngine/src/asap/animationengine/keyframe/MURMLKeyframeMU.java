@@ -1,12 +1,13 @@
 package asap.animationengine.keyframe;
 
 import hmi.animation.VJoint;
+import hmi.animation.VJointUtils;
 
+import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
 import lombok.Getter;
-
 import asap.animationengine.AnimationPlayer;
 import asap.animationengine.motionunit.AnimationUnit;
 import asap.animationengine.motionunit.MUSetupException;
@@ -139,6 +140,13 @@ public class MURMLKeyframeMU extends KeyFrameMotionUnit implements AnimationUnit
         copy.aniPlayer = p;
         copy.preferedDuration = preferedDuration;
         copy.preparationDuration = preparationDuration;
+        
+        Set<String> targetCopy = new HashSet<String>(targets);
+        targetCopy.removeAll(VJointUtils.transformToSidSet(p.getVCurr().getParts()));
+        if(!targetCopy.isEmpty())
+        {
+            throw new MUSetupException("target joints "+targetCopy+ " not in animated skeleton ", this);
+        }
         for (KeyPosition keypos : getKeyPositions())
         {
             copy.addKeyPosition(keypos.deepCopy());
