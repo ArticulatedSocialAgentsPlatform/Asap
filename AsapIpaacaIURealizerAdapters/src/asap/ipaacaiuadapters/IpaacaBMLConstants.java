@@ -9,10 +9,12 @@ public final class IpaacaBMLConstants
 {
     private IpaacaBMLConstants(){}
     
-    public static final String BML_CATEGORY = "bml";
-    public static final String BML_FEEDBACK_CATEGORY = "bmlfeedback";
+    public static final String REALIZER_REQUEST_CATEGORY = "realizerRequest";
+    public static final String REALIZER_FEEDBACK_CATEGORY = "realizerFeedback";
+    public static final String REALIZER_REQUEST_KEY = "request";
+    public static final String REALIZER_REQUEST_TYPE_KEY = "type"; // TODO: request type unused atm
+    public static final String REALIZER_REQUEST_TYPE_BML = "bml";  //
     public static final String BML_FEEDBACK_KEY = "bmlfeedback";
-    public static final String BML_KEY = "bml";
     public static final String BML_ID_KEY = "bmlid";
     public static final String IU_STATUS_KEY = "status";
     public static final String IU_PREDICTED_END_TIME_KEY = "predictedEndTime";
