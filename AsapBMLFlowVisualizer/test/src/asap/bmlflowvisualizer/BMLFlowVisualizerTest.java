@@ -96,4 +96,33 @@ public class BMLFlowVisualizerTest
         verify(mockPlayqVis).clear();
         verify(mockFinishedqVis).clear();
     }
+
+    @Test
+    public void testInvalidBML()
+    {
+        String bmlString = "<bml id=\"bml1\" xmlns=\"http://www.bml-initiative.org/bml/bml-1.0\" "
+                + "xmlns:pe=\"http://hmi.ewi.utwente.nl/pictureengine\"> "
+                + "<pe:addAnimationXML id=\"anim\" layer=\"5\" start=\"0\" end=\"5\" "
+                + "filePath=\"pictureengine/example/animations/\" fileName=\"speak.xml\"/>" + "</bml>";
+        vis.performBML(bmlString);
+    }
+
+    @Test
+    public void testInvalidBML2()
+    {
+        vis.performBML("<invalid>");
+    }
+
+    @Test
+    public void testInvalidFeedback2()
+    {
+        vis.feedback("<invalid>");
+    }
+
+    @Test
+    public void testInvalidFeedback()
+    {
+        String feedbackString = "<blockProgress id=\"bml1:start\" globalTime=\"10\" xmlns=\"http://www.bml-initiative.org/bml/bml-1.0\">";
+        vis.feedback(feedbackString);
+    }
 }

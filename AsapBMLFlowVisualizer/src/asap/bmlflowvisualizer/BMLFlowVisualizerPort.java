@@ -1,5 +1,7 @@
 package asap.bmlflowvisualizer;
 
+import hmi.xml.XMLScanException;
+
 import java.awt.GridBagConstraints;
 import java.awt.GridBagLayout;
 import java.io.IOException;
@@ -94,6 +96,11 @@ public class BMLFlowVisualizerPort implements RealizerPort, BMLFeedbackListener
             // shouldn't happen since we parse strings
             throw new AssertionError(e);
         }
+        catch (XMLScanException e)
+        {
+            return;
+        }
+        
         if (fb instanceof BMLBlockProgressFeedback)
         {
             BMLBlockProgressFeedback fbBlock = (BMLBlockProgressFeedback) fb;
@@ -138,8 +145,14 @@ public class BMLFlowVisualizerPort implements RealizerPort, BMLFeedbackListener
     public void performBML(String bmlString)
     {
         BehaviourBlock bb = new BehaviourBlock(new BMLABMLBehaviorAttributes());
-
-        bb.readXML(bmlString);
+        try
+        {
+            bb.readXML(bmlString);
+        }
+        catch (XMLScanException e)
+        {
+            return;
+        }
 
         if (bb.getComposition().equals(CoreComposition.REPLACE))
         {
