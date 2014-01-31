@@ -78,7 +78,7 @@ public class GestureBindingTest
     @Before
     public void setup()
     {
-        human = HanimBody.getLOA1HanimBody();
+        human = HanimBody.getLOA2HanimBody();
         Resources r = new Resources("");
         BMLTInfo.init();
         gestureBinding = new GestureBinding(r, mockFeedbackManager);

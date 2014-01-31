@@ -4,6 +4,8 @@ import static org.junit.Assert.assertEquals;
 import static org.mockito.Matchers.any;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
+import hmi.animation.VJoint;
+import hmi.testutil.animation.HanimBody;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -59,15 +61,18 @@ public class MURMLKeyframeTMUTest extends AbstractTimedPlanUnitTest
     private HnsHandshape mockHnsHandshapes = mock(HnsHandshape.class);
     private MURMLMUBuilder murmlMuBuilder = new MURMLMUBuilder(mockHns, mockHnsHandshapes);
     private MURMLGestureBehaviour mockBeh = mock(MURMLGestureBehaviour.class);
-    
-    
+
     private static final double RETRACTION_DURATION = 1;
     private static final float TIME_PRECISION = 0.001f;
-    
+
     @SuppressWarnings("unchecked")
     @Before
     public void setup()
     {
+        VJoint vCurr = HanimBody.getLOA2HanimBody();
+        VJoint vNext = HanimBody.getLOA2HanimBody();
+        when(mockAniPlayer.getVCurr()).thenReturn(vCurr);
+        when(mockAniPlayer.getVNext()).thenReturn(vNext);
         when(mockAniPlayer.getTransitionToRestDuration(any(Set.class))).thenReturn(RETRACTION_DURATION);
         when(mockAniPlayer.createTransitionToRest(any(Set.class))).thenReturn(mockAnimationUnit);
     }
