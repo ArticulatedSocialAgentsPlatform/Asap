@@ -13,6 +13,7 @@ import asap.bml.ext.bmla.BMLAActivateBehaviour;
 import asap.bml.ext.bmla.BMLAInfo;
 import asap.bml.ext.bmla.BMLAInterruptBehaviour;
 import asap.bml.ext.bmla.BMLAParameterValueChangeBehaviour;
+import asap.bml.ext.bmla.feedback.BMLABlockPredictionFeedback;
 import asap.bml.ext.bmla.feedback.BMLABlockProgressFeedback;
 import asap.bml.ext.bmla.feedback.BMLASyncPointProgressFeedback;
 import asap.bml.ext.maryxml.MaryAllophonesBehaviour;
@@ -76,6 +77,8 @@ public final class BMLTInfo
         BMLInfo.addCustomFeedbackFloatAttribute(BMLSyncPointProgressFeedback.class, BMLAInfo.BMLA_NAMESPACE, "posixTime");
         BMLInfo.addCustomFeedbackFloatAttribute(BMLBlockPredictionFeedback.class, BMLAInfo.BMLA_NAMESPACE, "posixStartTime");
         BMLInfo.addCustomFeedbackFloatAttribute(BMLBlockPredictionFeedback.class, BMLAInfo.BMLA_NAMESPACE, "posixEndTime");
+        BMLInfo.addCustomFeedbackFloatAttribute(BMLABlockPredictionFeedback.class, BMLAInfo.BMLA_NAMESPACE, "posixStartTime");
+        BMLInfo.addCustomFeedbackFloatAttribute(BMLABlockPredictionFeedback.class, BMLAInfo.BMLA_NAMESPACE, "posixEndTime");
         
         
         BMLInfo.addCustomFloatAttribute(GazeBehaviour.class, BMLAInfo.BMLA_NAMESPACE, "priority");
