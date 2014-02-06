@@ -6,11 +6,14 @@ import saiba.bml.core.GazeBehaviour;
 import saiba.bml.core.GestureBehaviour;
 import saiba.bml.core.HeadBehaviour;
 import saiba.bml.core.SpeechBehaviour;
-
+import saiba.bml.feedback.BMLBlockPredictionFeedback;
+import saiba.bml.feedback.BMLBlockProgressFeedback;
+import saiba.bml.feedback.BMLSyncPointProgressFeedback;
+import asap.bml.ext.bmla.BMLAActivateBehaviour;
 import asap.bml.ext.bmla.BMLAInfo;
 import asap.bml.ext.bmla.BMLAInterruptBehaviour;
-import asap.bml.ext.bmla.BMLAActivateBehaviour;
 import asap.bml.ext.bmla.BMLAParameterValueChangeBehaviour;
+import asap.bml.ext.bmla.feedback.BMLABlockProgressFeedback;
 import asap.bml.ext.maryxml.MaryAllophonesBehaviour;
 import asap.bml.ext.maryxml.MaryWordsBehaviour;
 import asap.bml.ext.maryxml.MaryXMLBehaviour;
@@ -66,6 +69,12 @@ public final class BMLTInfo
         BMLInfo.addDescriptionExtensions(DESCRIPTION_EXTENSIONS);
         BMLInfo.addCustomStringAttribute(GazeBehaviour.class, BMLTBehaviour.BMLTNAMESPACE, "dynamic");
         BMLInfo.addCustomStringAttribute(SpeechBehaviour.class, BMLTBehaviour.BMLTNAMESPACE, "voice");
+        BMLInfo.addCustomFeedbackFloatAttribute(BMLABlockProgressFeedback.class, BMLAInfo.BMLA_NAMESPACE, "posixTime");
+        BMLInfo.addCustomFeedbackFloatAttribute(BMLBlockProgressFeedback.class, BMLAInfo.BMLA_NAMESPACE, "posixTime");
+        BMLInfo.addCustomFeedbackFloatAttribute(BMLSyncPointProgressFeedback.class, BMLAInfo.BMLA_NAMESPACE, "posixTime");
+        BMLInfo.addCustomFeedbackFloatAttribute(BMLBlockPredictionFeedback.class, BMLAInfo.BMLA_NAMESPACE, "posixStartTime");
+        BMLInfo.addCustomFeedbackFloatAttribute(BMLBlockPredictionFeedback.class, BMLAInfo.BMLA_NAMESPACE, "posixEndTime");
+        
         
         BMLInfo.addCustomFloatAttribute(GazeBehaviour.class, BMLAInfo.BMLA_NAMESPACE, "priority");
         BMLInfo.addCustomFloatAttribute(HeadBehaviour.class, BMLAInfo.BMLA_NAMESPACE, "priority");
