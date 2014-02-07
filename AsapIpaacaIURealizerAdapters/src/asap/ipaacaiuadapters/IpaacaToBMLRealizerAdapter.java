@@ -13,6 +13,7 @@ import ipaaca.util.ComponentNotifier;
 import java.io.IOException;
 import java.util.EnumSet;
 import java.util.HashMap;
+import java.util.Locale;
 
 import saiba.bml.core.BehaviourBlock;
 import saiba.bml.feedback.BMLBlockPredictionFeedback;
@@ -117,7 +118,7 @@ public class IpaacaToBMLRealizerAdapter implements BMLFeedbackListener
 	                timingIU.getPayload().put("master", master);
 	                timingIU.getPayload().put("master_t1", master_t1);
 	                timingIU.getPayload().put("slave", "ASAPRealizer");
-	                timingIU.getPayload().put("slave_t1", String.format("%.3f", t1));
+	                timingIU.getPayload().put("slave_t1", Double.valueOf(t1).toString());
 	                timingIU.getPayload().put("stage", "1");
 	                //timingIU.getPayload().putAll(items);
 	                outBuffer.add(timingIU);
@@ -135,7 +136,7 @@ public class IpaacaToBMLRealizerAdapter implements BMLFeedbackListener
             	if (stage.equals("2")) {
 					double t2 = System.currentTimeMillis() / 1000.0;
 					HashMap<String, String> items = new HashMap<String, String>();
-	                items.put("slave_t2", String.format("%.3f", t2));
+	                items.put("slave_t2", Double.valueOf(t2).toString());
 	                items.put("stage", "3");
 	                iu.getPayload().merge(items);
 				} else if (stage.equals("4")) {
@@ -213,10 +214,10 @@ public class IpaacaToBMLRealizerAdapter implements BMLFeedbackListener
             	double end = bbp.getGlobalEnd() + initTime;
             	if (end>latestPredictedEndTime) { latestPredictedEndTime = end; }
             	if (start<earliestPredictedStartTime) { earliestPredictedStartTime = start; }
-            	new_payload_items.put(IpaacaBMLConstants.IU_PREDICTED_START_TIME_KEY, String.format("%.3f", start)); 
-            	new_payload_items.put(IpaacaBMLConstants.IU_PREDICTED_END_TIME_KEY, String.format("%.3f", end));
+            	new_payload_items.put(IpaacaBMLConstants.IU_PREDICTED_START_TIME_KEY, Double.valueOf(start).toString()); 
+            	new_payload_items.put(IpaacaBMLConstants.IU_PREDICTED_END_TIME_KEY, Double.valueOf(end).toString());
             	double t = System.currentTimeMillis()/1000.0;
-            	System.out.println("SEND TIME: "+String.format("%.3f", t));
+            	System.out.println("SEND TIME: " + String.format(Locale.ENGLISH, "%.3f", t));
                 if (iu_to_update != null) {
                 	try{
                 		iu_to_update.getPayload().merge(new_payload_items);
