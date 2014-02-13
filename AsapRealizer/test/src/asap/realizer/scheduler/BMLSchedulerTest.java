@@ -33,6 +33,7 @@ import saiba.bml.feedback.BMLPredictionFeedback;
 import saiba.bml.feedback.BMLSyncPointProgressFeedback;
 import saiba.bml.parser.BMLParser;
 import asap.bml.ext.bmla.BMLABMLBehaviorAttributes;
+import asap.bml.ext.bmla.feedback.BMLABlockProgressFeedback;
 import asap.realizer.BehaviorNotFoundException;
 import asap.realizer.BehaviourPlanningException;
 import asap.realizer.Engine;
@@ -396,7 +397,7 @@ public class BMLSchedulerTest
         parseBML("<bml xmlns=\"http://www.bml-initiative.org/bml/bml-1.0\" id=\"bml1\"/>");
         scheduler.schedule();
         assertEquals(1, getBMLIdsFromStartFeedback(blockProgressFeedbackList).size());
-        assertEquals("bml1", getBMLIdsFromStartFeedback(blockProgressFeedbackList).get(0));
+        assertEquals("bml1", getBMLIdsFromStartFeedback(blockProgressFeedbackList).get(0));        
     }
 
     @Test

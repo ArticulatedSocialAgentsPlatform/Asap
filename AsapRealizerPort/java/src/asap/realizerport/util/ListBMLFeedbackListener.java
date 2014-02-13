@@ -5,10 +5,7 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 
-import asap.realizerport.BMLFeedbackListener;
-
 import lombok.extern.slf4j.Slf4j;
-
 import saiba.bml.feedback.BMLBlockPredictionFeedback;
 import saiba.bml.feedback.BMLBlockProgressFeedback;
 import saiba.bml.feedback.BMLFeedback;
@@ -16,6 +13,7 @@ import saiba.bml.feedback.BMLFeedbackParser;
 import saiba.bml.feedback.BMLPredictionFeedback;
 import saiba.bml.feedback.BMLSyncPointProgressFeedback;
 import saiba.bml.feedback.BMLWarningFeedback;
+import asap.realizerport.BMLFeedbackListener;
 
 /**
  * Stores all BMLFeedbacks in the lists it is initialized with.

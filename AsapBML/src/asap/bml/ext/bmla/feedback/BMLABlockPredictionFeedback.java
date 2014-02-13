@@ -4,9 +4,9 @@ import hmi.xml.XMLTokenizer;
 
 import java.util.HashMap;
 
-import asap.bml.ext.bmla.BMLAInfo;
 import lombok.Getter;
 import saiba.bml.feedback.BMLBlockPredictionFeedback;
+import asap.bml.ext.bmla.BMLAInfo;
 
 /**
  * BMLBlockPredictionFeedback extension to provide posix timestamps
@@ -29,13 +29,29 @@ public class BMLABlockPredictionFeedback extends BMLBlockPredictionFeedback
         super();
     }
 
+    public static BMLABlockPredictionFeedback build(BMLBlockPredictionFeedback fb)
+    {
+        double posixStartTime = 0, posixEndTime = 0;
+        if (fb.specifiesCustomFloatParameter(POSIXSTARTTIME_ID))
+        {
+            posixStartTime = fb.getCustomFloatParameterValue(POSIXSTARTTIME_ID);
+        }
+        if (fb.specifiesCustomFloatParameter(POSIXENDTIME_ID))
+        {
+            posixEndTime = fb.getCustomFloatParameterValue(POSIXENDTIME_ID);
+        }
+        BMLABlockPredictionFeedback fbNew = new BMLABlockPredictionFeedback(fb.getId(), fb.getGlobalStart(), fb.getGlobalEnd(),
+                posixStartTime, posixEndTime);        
+        return fbNew;
+    }
+
     public BMLABlockPredictionFeedback(String id, double globalStart, double globalEnd, double posixStart, double posixEnd)
     {
         super(id, globalStart, globalEnd);
         setPosixStartTime(posixStart);
         setPosixEndTime(posixEnd);
     }
-    
+
     private void setPosixStartTime(double time)
     {
         posixStartTime = time;

@@ -29,6 +29,18 @@ public class BMLABlockProgressFeedback extends BMLBlockProgressFeedback
         setPosixTime(posixTime);
     }
     
+    public static BMLABlockProgressFeedback build(BMLBlockProgressFeedback fb)
+    {
+        double posixTime = 0;
+        if(fb.specifiesCustomFloatParameter(POSIXTIME_ID))
+        {
+            posixTime = fb.getCustomFloatParameterValue(POSIXTIME_ID);
+        }
+        BMLABlockProgressFeedback fbNew = new BMLABlockProgressFeedback(fb.getBmlId(), fb.getSyncId(), fb.getGlobalTime(), posixTime);
+        fbNew.setCharacterId(fb.getCharacterId());
+        return fbNew;
+    }
+    
     private void setPosixTime(double time)
     {
         posixTime = time;
