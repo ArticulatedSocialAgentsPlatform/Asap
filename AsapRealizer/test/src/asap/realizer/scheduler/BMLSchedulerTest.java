@@ -51,6 +51,7 @@ import asap.realizer.feedback.FeedbackManagerImpl;
 import asap.realizer.pegboard.BMLBlockPeg;
 import asap.realizer.pegboard.OffsetPeg;
 import asap.realizer.pegboard.PegBoard;
+import asap.realizer.pegboard.TimePeg;
 import asap.realizer.planunit.PlanUnitFloatParameterNotFoundException;
 import asap.realizer.planunit.PlanUnitParameterNotFoundException;
 import asap.realizer.planunit.TimedPlanUnit;
@@ -415,19 +416,43 @@ public class BMLSchedulerTest
         assertEquals("bml1", getBMLIdsFromStartFeedback(blockProgressFeedbackList).get(0));
         BMLABlockProgressFeedback fb = BMLABlockProgressFeedback.build(blockProgressFeedbackList.get(0));
         assertEquals(CTM/1000d, fb.getPosixTime(), PRECISION);
-        
-        
     }
     
     @Test
-    public void testStartPredictionFeedback()
+    public void testStartPredictionFeedbackEmptyBlock()
     {
         parseBML("<bml xmlns=\"http://www.bml-initiative.org/bml/bml-1.0\" id=\"bml1\"/>");
         scheduler.schedule();
         assertEquals(3, predictionFeedback.size()); //delivered, scheduling done, starting
         assertEquals("bml1", predictionFeedback.get(0).getBmlBlockPredictions().get(0).getId());
         assertEquals("bml1", predictionFeedback.get(1).getBmlBlockPredictions().get(0).getId());
-        assertEquals("bml1", predictionFeedback.get(2).getBmlBlockPredictions().get(0).getId());    //should provide predicted end time of block
+        assertEquals("bml1", predictionFeedback.get(2).getBmlBlockPredictions().get(0).getId());
+        
+        assertEquals(0, predictionFeedback.get(0).getBmlBlockPredictions().get(0).getGlobalStart(), PRECISION);
+        assertEquals(TimePeg.VALUE_UNKNOWN, predictionFeedback.get(0).getBmlBlockPredictions().get(0).getGlobalEnd(), PRECISION);
+        assertEquals(0, predictionFeedback.get(1).getBmlBlockPredictions().get(0).getGlobalStart(), PRECISION);
+        assertEquals(0, predictionFeedback.get(2).getBmlBlockPredictions().get(0).getGlobalStart(), PRECISION);
+        
+        assertEquals(0, predictionFeedback.get(1).getBmlBlockPredictions().get(0).getGlobalEnd(), PRECISION);
+        assertEquals(0, predictionFeedback.get(2).getBmlBlockPredictions().get(0).getGlobalEnd(), PRECISION);
+    }
+    
+    @Test
+    public void testStartPredictionFeedback()
+    {
+        stubEngine.addBlockEnd("bml1", 5);
+        parseBML(createNonEmptyBML("bml1"));
+        scheduler.schedule();
+        assertEquals(3, predictionFeedback.size()); //delivered, scheduling done, starting
+        
+        assertEquals(0, predictionFeedback.get(0).getBmlBlockPredictions().get(0).getGlobalStart(), PRECISION);
+        assertEquals(TimePeg.VALUE_UNKNOWN, predictionFeedback.get(0).getBmlBlockPredictions().get(0).getGlobalEnd(), PRECISION);
+        
+        assertEquals(0, predictionFeedback.get(1).getBmlBlockPredictions().get(0).getGlobalStart(), PRECISION);
+        assertEquals(0, predictionFeedback.get(2).getBmlBlockPredictions().get(0).getGlobalStart(), PRECISION);
+        
+        assertEquals(5, predictionFeedback.get(1).getBmlBlockPredictions().get(0).getGlobalEnd(), PRECISION);
+        assertEquals(5, predictionFeedback.get(2).getBmlBlockPredictions().get(0).getGlobalEnd(), PRECISION);
     }
 
     @Test
