@@ -23,6 +23,11 @@ public class BMLABlockProgressFeedback extends BMLBlockProgressFeedback
         super();
     }
     
+    public BMLABlockProgressFeedback(String bmlId, String syncId, double globalTime)
+    {
+        this(bmlId, syncId, globalTime, System.currentTimeMillis()/1000d);
+    }
+    
     public BMLABlockProgressFeedback(String bmlId, String syncId, double globalTime, double posixTime)
     {
         super(bmlId, syncId, globalTime);

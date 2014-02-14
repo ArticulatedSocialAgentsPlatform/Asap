@@ -3,7 +3,7 @@
    <dependencies>
   	   <dependency org="Asap"     name="AsapRealizerPort"           rev="latest.${resolve.status}"    />
       <dependency org="Asap"    name="AsapBML"   		 	rev="latest.${resolve.status}" transitive="false"   />
-      <dependency org="saiba"   name="openbmlparser"           		rev="latest.release"    />
+      <dependency org="saiba"   name="openbmlparser"           		rev="latest.${resolve.status}"    />
 
 	  <dependency org="HMI"     name="HmiAnimation"      	rev="latest.${resolve.status}"    />
 	  <dependency org="HMI"     name="HmiTTS"      			rev="latest.${resolve.status}"    />

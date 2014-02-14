@@ -37,18 +37,17 @@ import org.slf4j.LoggerFactory;
 import saiba.bml.core.Behaviour;
 import saiba.bml.core.BehaviourBlock;
 import saiba.bml.feedback.BMLBlockPredictionFeedback;
-import saiba.bml.feedback.BMLBlockProgressFeedback;
 import saiba.bml.feedback.BMLPredictionFeedback;
 import saiba.bml.feedback.BMLSyncPointProgressFeedback;
 import saiba.bml.feedback.BMLWarningFeedback;
 import saiba.bml.parser.BMLParser;
 import saiba.bml.parser.InvalidSyncRefException;
 import saiba.bml.parser.SyncPoint;
+import asap.bml.ext.bmla.feedback.BMLABlockProgressFeedback;
 import asap.realizer.BehaviorNotFoundException;
 import asap.realizer.Engine;
 import asap.realizer.SyncPointNotFoundException;
 import asap.realizer.TimePegAlreadySetException;
-import asap.realizer.anticipator.Anticipator;
 import asap.realizer.feedback.FeedbackManager;
 import asap.realizer.pegboard.BMLBlockPeg;
 import asap.realizer.pegboard.PegBoard;
@@ -324,9 +323,10 @@ public final class BMLScheduler
         
     }
     
-    private BMLPredictionFeedback createBehaviorPrediction(BehaviourBlock bb)
+    private BMLPredictionFeedback createStartPrediction(BehaviourBlock bb)
     {
         BMLPredictionFeedback bpf = new BMLPredictionFeedback();
+        bpf.addBMLBlockPrediction(new BMLBlockPredictionFeedback(bb.getBmlId(), getSchedulingTime(), predictEndTime(bb.getBmlId())));
         addBehaviorPredictions(bb, bpf);
         return bpf;
     }
@@ -366,14 +366,12 @@ public final class BMLScheduler
      */
     public void blockStopFeedback(String bmlId)
     {
-        BMLBlockProgressFeedback psf = new BMLBlockProgressFeedback(bmlId, "end", schedulingClock.getMediaSeconds());
-        fbManager.blockProgress(psf);
+        fbManager.blockProgress(new BMLABlockProgressFeedback(bmlId, "end", schedulingClock.getMediaSeconds()));
     }
 
     public void blockStartFeedback(String bmlId)
     {
-        BMLBlockProgressFeedback psf = new BMLBlockProgressFeedback(bmlId, "start", schedulingClock.getMediaSeconds());
-        fbManager.blockProgress(psf);
+        fbManager.blockProgress(new BMLABlockProgressFeedback(bmlId, "start", schedulingClock.getMediaSeconds()));
     }
 
     /**
@@ -578,7 +576,7 @@ public final class BMLScheduler
         pegBoard.setBMLBlockTime(bmlId, schedulingClock.getMediaSeconds());
         logger.debug("Starting bml block {}", bmlId);
 
-        prediction(this.createBehaviorPrediction(bmlBlockMap.get(bmlId)));
+        //prediction(createBehaviorPrediction(bmlBlockMap.get(bmlId)));
         bmlBlocksManager.startBlock(bmlId);
 
         for (Engine e : getEngines())
@@ -586,6 +584,7 @@ public final class BMLScheduler
             e.setBMLBlockState(bmlId, TimedPlanUnitState.LURKING);
         }
         bmlBlocksManager.updateBlocks();
+        prediction(createStartPrediction(bmlBlockMap.get(bmlId)));
     }
 
     public void activateBlock(String bmlId, double time)
