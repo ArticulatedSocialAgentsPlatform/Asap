@@ -85,8 +85,6 @@ public class GazeMU implements AnimationUnit
 
     private float qStart[];
 
-    protected float vecTemp[];
-
     protected KeyPosition ready;
 
     protected KeyPosition relax;
@@ -134,7 +132,6 @@ public class GazeMU implements AnimationUnit
         qStart = new float[4];
         qStartLeftEye = new float[4];
         qStartRightEye = new float[4];
-        vecTemp = new float[3];
         setupKeyPositions();
 
         // defaults from presenter

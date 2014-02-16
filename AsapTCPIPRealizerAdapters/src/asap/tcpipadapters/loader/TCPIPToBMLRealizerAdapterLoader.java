@@ -42,7 +42,7 @@ public class TCPIPToBMLRealizerAdapterLoader implements PipeLoader
         XMLStructureAdapter adapter = new XMLStructureAdapter();
         String requestPort = adapter.getRequiredAttribute("bmlport", attrMap, theTokenizer);
         String feedbackPort = adapter.getRequiredAttribute("feedbackport", attrMap, theTokenizer);
-        tcpIpAdapter = new TCPIPToBMLRealizerAdapter(realizerPort, Integer.valueOf(requestPort), Integer.valueOf(feedbackPort));
+        tcpIpAdapter = new TCPIPToBMLRealizerAdapter(realizerPort, Integer.parseInt(requestPort), Integer.parseInt(feedbackPort));
         theTokenizer.takeSTag("ServerOptions");
         theTokenizer.takeETag("ServerOptions");        
     }
