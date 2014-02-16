@@ -1,11 +1,11 @@
 package asap.realizerembodiments;
 
-import java.io.IOException;
-
-import hmi.environmentbase.Environment;
 import hmi.util.Clock;
 import hmi.xml.XMLScanException;
 import hmi.xml.XMLTokenizer;
+
+import java.io.IOException;
+
 import asap.realizerport.RealizerPort;
 
 /**

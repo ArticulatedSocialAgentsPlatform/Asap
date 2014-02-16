@@ -33,7 +33,6 @@ import hmi.worldobjectenvironment.WorldObjectManager;
 import java.util.List;
 import java.util.Set;
 
-import lombok.extern.slf4j.Slf4j;
 import saiba.bml.core.OffsetDirection;
 import asap.animationengine.AnimationPlayer;
 import asap.animationengine.motionunit.AnimationUnit;

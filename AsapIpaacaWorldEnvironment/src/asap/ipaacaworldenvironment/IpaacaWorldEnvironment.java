@@ -19,7 +19,6 @@ import java.util.EnumSet;
 
 import lombok.Getter;
 import lombok.Setter;
-import lombok.extern.slf4j.Slf4j;
 
 import com.google.common.base.Splitter;
 import com.google.common.collect.ImmutableSet;
@@ -31,7 +30,6 @@ import com.google.common.primitives.Floats;
  * @author hvanwelbergen
  * 
  */
-@Slf4j
 public class IpaacaWorldEnvironment implements ClockListener, Environment
 {
     private final WorldObjectManager woManager;
