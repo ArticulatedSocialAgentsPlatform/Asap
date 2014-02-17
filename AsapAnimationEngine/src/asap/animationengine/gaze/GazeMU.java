@@ -33,7 +33,6 @@ import hmi.worldobjectenvironment.WorldObjectManager;
 import java.util.List;
 import java.util.Set;
 
-import lombok.extern.slf4j.Slf4j;
 import saiba.bml.core.OffsetDirection;
 import asap.animationengine.AnimationPlayer;
 import asap.animationengine.motionunit.AnimationUnit;
@@ -86,8 +85,6 @@ public class GazeMU implements AnimationUnit
 
     private float qStart[];
 
-    protected float vecTemp[];
-
     protected KeyPosition ready;
 
     protected KeyPosition relax;
@@ -135,7 +132,6 @@ public class GazeMU implements AnimationUnit
         qStart = new float[4];
         qStartLeftEye = new float[4];
         qStartRightEye = new float[4];
-        vecTemp = new float[3];
         setupKeyPositions();
 
         // defaults from presenter

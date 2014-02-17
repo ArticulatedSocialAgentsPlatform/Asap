@@ -4,7 +4,6 @@ import hmi.faceembodiments.FACSFaceEmbodiment;
 import hmi.headandgazeembodiments.EulerHeadEmbodiment;
 import hmi.headandgazeembodiments.GazeEmbodiment;
 
-import java.util.ArrayList;
 import java.util.List;
 
 import saiba.bml.BMLInfo;

@@ -152,6 +152,7 @@
    	ignoreLiterals="true" ignoreIdentifiers="true">
         <fileset dir=".">
             <include name="**/src/**/*.java"/>
+            <exclude name="**/lib/**/src/**/*.java"/>
         </fileset>
         </cpd>
    </target>

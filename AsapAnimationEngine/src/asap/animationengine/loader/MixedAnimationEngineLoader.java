@@ -28,7 +28,6 @@ import hmi.environmentbase.Loader;
 import hmi.math.Quat4f;
 import hmi.mixedanimationenvironment.MixedAnimationEnvironment;
 import hmi.mixedanimationenvironment.MixedAnimationPlayer;
-import hmi.mixedanimationenvironment.MixedAnimationPlayerManager;
 import hmi.physicsembodiments.PhysicalEmbodiment;
 import hmi.util.ArrayUtils;
 import hmi.util.Resources;

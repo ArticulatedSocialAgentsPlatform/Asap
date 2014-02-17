@@ -19,7 +19,6 @@ import java.util.EnumSet;
 
 import lombok.Getter;
 import lombok.Setter;
-import lombok.extern.slf4j.Slf4j;
 
 import com.google.common.base.Splitter;
 import com.google.common.collect.ImmutableSet;
@@ -31,18 +30,17 @@ import com.google.common.primitives.Floats;
  * @author hvanwelbergen
  * 
  */
-@Slf4j
 public class IpaacaWorldEnvironment implements ClockListener, Environment
 {
     private final WorldObjectManager woManager;
     private final OutputBuffer outBuffer;
     private final InputBuffer inBuffer;
 
-    private final String SCENEINFO_CAT = "sceneinfo";
-    private final String COMMAND_KEY = "cmd";
-    private final String DATA_KEY = "data";
-    private final String REPORT_CMD = "report";
-    private final String REPORTING_CMD = "reporting";
+    private static final String SCENEINFO_CAT = "sceneinfo";
+    private static final String COMMAND_KEY = "cmd";
+    private static final String DATA_KEY = "data";
+    private static final String REPORT_CMD = "report";
+    private static final String REPORTING_CMD = "reporting";
     private volatile boolean shutdown = false;
 
     @Getter

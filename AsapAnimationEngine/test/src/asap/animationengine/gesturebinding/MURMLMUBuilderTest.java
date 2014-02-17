@@ -104,6 +104,9 @@ public class MURMLMUBuilderTest
         Quat4fTestUtil.assertQuat4fRotationEquivalent(qExp, q, ROT_PRECISION);
     }
 
+    @edu.umd.cs.findbugs.annotations.SuppressWarnings(
+            value="RV_RETURN_VALUE_IGNORED_INFERRED", 
+            justification="Return value ignored, should throw exception anyways.")
     @Test(expected=MUSetupException.class)
     public void testKeyframeGestureMissingJoint() throws MUSetupException
     {
@@ -122,7 +125,7 @@ public class MURMLMUBuilderTest
         assertThat(au, instanceOf(MURMLKeyframeMU.class));
         MURMLKeyframeMU kfmu = (MURMLKeyframeMU)au;
         
-        kfmu = kfmu.copy(mockAnimationPlayer);        
+        kfmu.copy(mockAnimationPlayer);        
     }
     
     @Test

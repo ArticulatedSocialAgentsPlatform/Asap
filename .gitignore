@@ -16,3 +16,4 @@ report
 *.swp
 *.log
 .DS_Store
+findbugs.html

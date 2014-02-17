@@ -18,7 +18,6 @@ import hmi.worldobjectenvironment.WorldObjectManager;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Set;
 
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -30,9 +29,7 @@ import saiba.bml.core.GazeBehaviour;
 import saiba.bml.parser.Constraint;
 import asap.animationengine.AnimationPlayer;
 import asap.animationengine.AnimationPlayerMock;
-import asap.animationengine.motionunit.AnimationUnit;
 import asap.animationengine.motionunit.TimedAnimationMotionUnit;
-import asap.animationengine.restpose.RestPose;
 import asap.realizer.BehaviourPlanningException;
 import asap.realizer.feedback.FeedbackManager;
 import asap.realizer.pegboard.BMLBlockPeg;
@@ -60,7 +57,6 @@ public class GazeTMUTest extends AbstractTimedPlanUnitTest
     private static final double TIME_PRECISION = 0.0001;
     private GazeBehaviour mockBeh = mock(GazeBehaviour.class);
 
-    @SuppressWarnings("unchecked")
     private GazeTMU setupPlanUnit(FeedbackManager bfm, BMLBlockPeg bbPeg, String id, String bmlId)
     {
         GazeMU mu = new GazeMU();
