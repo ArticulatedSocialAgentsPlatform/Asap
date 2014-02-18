@@ -38,6 +38,7 @@ import saiba.bml.feedback.BMLPredictionFeedback;
 import saiba.bml.feedback.BMLSyncPointProgressFeedback;
 import saiba.bml.parser.BMLParser;
 import asap.bml.ext.bmla.BMLABMLBehaviorAttributes;
+import asap.bml.ext.bmla.feedback.BMLABlockPredictionFeedback;
 import asap.bml.ext.bmla.feedback.BMLABlockProgressFeedback;
 import asap.bml.ext.bmlt.BMLTInfo;
 import asap.realizer.BehaviorNotFoundException;
@@ -67,7 +68,7 @@ import com.google.common.collect.ImmutableSet;
  * 
  */
 @RunWith(PowerMockRunner.class)
-@PrepareForTest({System.class, BMLABlockProgressFeedback.class})
+@PrepareForTest({System.class, BMLABlockProgressFeedback.class, BMLScheduler.class})
 public class BMLSchedulerTest
 {
     private StubEngine stubEngine;
@@ -435,6 +436,16 @@ public class BMLSchedulerTest
         
         assertEquals(0, predictionFeedback.get(1).getBmlBlockPredictions().get(0).getGlobalEnd(), PRECISION);
         assertEquals(0, predictionFeedback.get(2).getBmlBlockPredictions().get(0).getGlobalEnd(), PRECISION);
+        
+        BMLABlockPredictionFeedback fb0 = BMLABlockPredictionFeedback.build(predictionFeedback.get(0).getBmlBlockPredictions().get(0));
+        BMLABlockPredictionFeedback fb1 = BMLABlockPredictionFeedback.build(predictionFeedback.get(1).getBmlBlockPredictions().get(0));
+        BMLABlockPredictionFeedback fb2 = BMLABlockPredictionFeedback.build(predictionFeedback.get(2).getBmlBlockPredictions().get(0));
+        assertEquals(CTM/1000d, fb0.getPosixStartTime(), PRECISION);
+        assertEquals(CTM/1000d, fb1.getPosixStartTime(), PRECISION);
+        assertEquals(CTM/1000d, fb2.getPosixStartTime(), PRECISION);
+        assertEquals(0, fb0.getPosixEndTime(), PRECISION);
+        assertEquals(CTM/1000d, fb1.getPosixEndTime(), PRECISION);
+        assertEquals(CTM/1000d, fb2.getPosixEndTime(), PRECISION);
     }
     
     @Test
@@ -453,6 +464,16 @@ public class BMLSchedulerTest
         
         assertEquals(5, predictionFeedback.get(1).getBmlBlockPredictions().get(0).getGlobalEnd(), PRECISION);
         assertEquals(5, predictionFeedback.get(2).getBmlBlockPredictions().get(0).getGlobalEnd(), PRECISION);
+        
+        BMLABlockPredictionFeedback fb0 = BMLABlockPredictionFeedback.build(predictionFeedback.get(0).getBmlBlockPredictions().get(0));
+        BMLABlockPredictionFeedback fb1 = BMLABlockPredictionFeedback.build(predictionFeedback.get(1).getBmlBlockPredictions().get(0));
+        BMLABlockPredictionFeedback fb2 = BMLABlockPredictionFeedback.build(predictionFeedback.get(2).getBmlBlockPredictions().get(0));
+        assertEquals(CTM/1000d, fb0.getPosixStartTime(), PRECISION);
+        assertEquals(CTM/1000d, fb1.getPosixStartTime(), PRECISION);
+        assertEquals(CTM/1000d, fb2.getPosixStartTime(), PRECISION);
+        assertEquals(0, fb0.getPosixEndTime(), PRECISION);
+        assertEquals(CTM/1000d+5, fb1.getPosixEndTime(), PRECISION);
+        assertEquals(CTM/1000d+5, fb2.getPosixEndTime(), PRECISION);
     }
 
     @Test

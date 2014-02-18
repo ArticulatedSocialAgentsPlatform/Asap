@@ -1,0 +1,15 @@
+package asap.rsbembodiments;
+
+message Joint{
+  required string sid = 1;
+}
+
+message JointDataConfigReply {
+  repeated Joint joint = 1;
+}
+
+message JointData {
+  repeated float data = 1 [packed=true];
+}
+
+

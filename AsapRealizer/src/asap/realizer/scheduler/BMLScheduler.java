@@ -43,6 +43,7 @@ import saiba.bml.feedback.BMLWarningFeedback;
 import saiba.bml.parser.BMLParser;
 import saiba.bml.parser.InvalidSyncRefException;
 import saiba.bml.parser.SyncPoint;
+import asap.bml.ext.bmla.feedback.BMLABlockPredictionFeedback;
 import asap.bml.ext.bmla.feedback.BMLABlockProgressFeedback;
 import asap.realizer.BehaviorNotFoundException;
 import asap.realizer.Engine;
@@ -66,8 +67,8 @@ import com.google.common.collect.ImmutableSet;
  */
 public final class BMLScheduler
 {
-    private Map<String,BehaviourBlock> bmlBlockMap = new HashMap<String,BehaviourBlock>();
-    
+    private Map<String, BehaviourBlock> bmlBlockMap = new HashMap<String, BehaviourBlock>();
+
     private final Logger logger = LoggerFactory.getLogger(BMLScheduler.class.getName());
 
     private final BMLParser parser;
@@ -75,7 +76,7 @@ public final class BMLScheduler
     private final BMLBlockManager bmlBlocksManager;
 
     private final Map<Class<? extends Behaviour>, Engine> planSelector;
-    
+
     private final Set<Engine> engines;
 
     private final PegBoard pegBoard;
@@ -88,7 +89,7 @@ public final class BMLScheduler
     {
         void warn(BMLWarningFeedback w);
 
-        void prediction(BMLPredictionFeedback bpf);        
+        void prediction(BMLPredictionFeedback bpf);
 
         void addFeedbackListener(BMLFeedbackListener e);
 
@@ -209,20 +210,20 @@ public final class BMLScheduler
         throw new BehaviorNotFoundException(bmlId, behId);
     }
 
-    public void updateTiming(String bmlId) 
+    public void updateTiming(String bmlId)
     {
-        for(Engine e:getEngines())
+        for (Engine e : getEngines())
         {
             e.updateTiming(bmlId);
         }
     }
-    
+
     /**
      * Get the list of engines
      */
     public ImmutableSet<Engine> getEngines()
     {
-        return ImmutableSet.copyOf(engines);        
+        return ImmutableSet.copyOf(engines);
     }
 
     public void addBMLBlock(BMLBlock bbm)
@@ -230,7 +231,7 @@ public final class BMLScheduler
         for (Engine e : getEngines())
         {
             e.setBMLBlockState(bbm.getBMLId(), TimedPlanUnitState.PENDING);
-        }        
+        }
     }
 
     public Set<String> getBMLBlocks()
@@ -283,21 +284,20 @@ public final class BMLScheduler
         engines.add(e);
     }
 
-    
     private void addBehaviorPredictions(BehaviourBlock bb, BMLPredictionFeedback bpf)
     {
-        for(Behaviour b:bb.behaviours)
+        for (Behaviour b : bb.behaviours)
         {
             Behaviour bPred = b;
             bPred.removeSyncPoints(b.getSyncPoints());
             double start = pegBoard.getRelativePegTime(bb.id, b.id, "start");
             double end = pegBoard.getRelativePegTime(bb.id, b.id, "end");
-            if(start!=TimePeg.VALUE_UNKNOWN)
+            if (start != TimePeg.VALUE_UNKNOWN)
             {
-                SyncPoint sp = new SyncPoint(bb.getBmlId(),b.id, "start");
+                SyncPoint sp = new SyncPoint(bb.getBmlId(), b.id, "start");
                 try
                 {
-                    sp.setRefString(""+start);
+                    sp.setRefString("" + start);
                 }
                 catch (InvalidSyncRefException e)
                 {
@@ -305,12 +305,12 @@ public final class BMLScheduler
                 }
                 bPred.addSyncPoint(sp);
             }
-            if(end!=TimePeg.VALUE_UNKNOWN)
+            if (end != TimePeg.VALUE_UNKNOWN)
             {
-                SyncPoint sp = new SyncPoint(bb.getBmlId(),b.id, "end");
+                SyncPoint sp = new SyncPoint(bb.getBmlId(), b.id, "end");
                 try
                 {
-                    sp.setRefString(""+end);
+                    sp.setRefString("" + end);
                 }
                 catch (InvalidSyncRefException e)
                 {
@@ -320,42 +320,51 @@ public final class BMLScheduler
             }
             bpf.addBehaviorPrediction(bPred);
         }
-        
+
     }
-    
+
+    private BMLABlockPredictionFeedback createBMLABlockPredictionFeedback(String bmlId, double predictedStart, double predictedEnd)
+    {
+        double timeOffset = System.currentTimeMillis() / 1000d - getSchedulingTime();
+        double posixStart = predictedStart + timeOffset, posixEnd = 0;
+        if (predictedEnd != BMLBlockPredictionFeedback.UNKNOWN_TIME)
+        {
+            posixEnd = predictedEnd + timeOffset;
+        }
+        return new BMLABlockPredictionFeedback(bmlId, predictedStart, predictedEnd, posixStart, posixEnd);
+    }
+
     private BMLPredictionFeedback createStartPrediction(BehaviourBlock bb)
     {
         BMLPredictionFeedback bpf = new BMLPredictionFeedback();
-        bpf.addBMLBlockPrediction(new BMLBlockPredictionFeedback(bb.getBmlId(), getSchedulingTime(), predictEndTime(bb.getBmlId())));
+        bpf.addBMLBlockPrediction(createBMLABlockPredictionFeedback(bb.getBmlId(), getSchedulingTime(), predictEndTime(bb.getBmlId())));
         addBehaviorPredictions(bb, bpf);
         return bpf;
     }
-    
+
     private BMLPredictionFeedback createFilledBlockPrediction(BehaviourBlock bb, double predictedStart, double predictedEnd)
     {
         BMLPredictionFeedback bpf = new BMLPredictionFeedback();
-        BMLBlockPredictionFeedback bp = new BMLBlockPredictionFeedback(bb.getBmlId(), predictedStart, predictedEnd);
-        bpf.addBMLBlockPrediction(bp);        
-        addBehaviorPredictions(bb,bpf);
+        bpf.addBMLBlockPrediction(createBMLABlockPredictionFeedback(bb.getBmlId(), predictedStart, predictedEnd));
+        addBehaviorPredictions(bb, bpf);
         return bpf;
     }
 
     private BMLPredictionFeedback createSingleBlockPrediction(String bmlId, double predictedStart, double predictedEnd)
     {
         BMLPredictionFeedback bpf = new BMLPredictionFeedback();
-        BMLBlockPredictionFeedback bp = new BMLBlockPredictionFeedback(bmlId, predictedStart, predictedEnd);
-        bpf.addBMLBlockPrediction(bp);
+        bpf.addBMLBlockPrediction(createBMLABlockPredictionFeedback(bmlId, predictedStart, predictedEnd));
         return bpf;
     }
-    
+
     public void planningStart(String bmlId, double predictedStart)
     {
-        prediction(createSingleBlockPrediction(bmlId,predictedStart,BMLBlockPredictionFeedback.UNKNOWN_TIME));
+        prediction(createSingleBlockPrediction(bmlId, predictedStart, BMLBlockPredictionFeedback.UNKNOWN_TIME));
     }
 
     public void planningFinished(BehaviourBlock bb, double predictedStart, double predictedEnd)
     {
-        prediction(createFilledBlockPrediction(bb,predictedStart,predictedEnd));        
+        prediction(createFilledBlockPrediction(bb, predictedStart, predictedEnd));
     }
 
     /**
@@ -398,17 +407,17 @@ public final class BMLScheduler
     {
         return bmlBlocksManager.isPending(bmlId, bmlIdsChecked);
     }
-    
+
     public boolean isPending(String bmlId)
     {
         return bmlBlocksManager.isPending(bmlId);
     }
-    
+
     public double getStartTime(String bmlId)
     {
         return pegBoard.getBMLBlockTime(bmlId);
     }
-    
+
     public double getEndTime(String bmlId, String behId)
     {
         for (Engine e : getEngines())
@@ -497,7 +506,7 @@ public final class BMLScheduler
         for (BehaviourBlock bb : parser.getBehaviourBlocks())
         {
             bmlBlockMap.put(bb.id, bb);
-            schedulingHandler.schedule(bb, this);            
+            schedulingHandler.schedule(bb, this);
         }
         parser.clear();
     }
@@ -510,7 +519,7 @@ public final class BMLScheduler
         }
         bmlBlocksManager.updateBlocks();
     }
-    
+
     public void interruptBehavior(String bmlId, String behaviourId)
     {
         for (Engine e : getEngines())
@@ -537,12 +546,12 @@ public final class BMLScheduler
         }
 
         /*
-        if (bmlBlocksManager.getBMLBlockState(bmlId) == TimedPlanUnitState.IN_EXEC
-                || bmlBlocksManager.getBMLBlockState(bmlId) == TimedPlanUnitState.SUBSIDING)
-        {
-            bmlBlocksManager.finishBlock(bmlId);
-        }
-        */
+         * if (bmlBlocksManager.getBMLBlockState(bmlId) == TimedPlanUnitState.IN_EXEC
+         * || bmlBlocksManager.getBMLBlockState(bmlId) == TimedPlanUnitState.SUBSIDING)
+         * {
+         * bmlBlocksManager.finishBlock(bmlId);
+         * }
+         */
         bmlBlocksManager.finishBlock(bmlId);
         bmlBlocksManager.removeBMLBlock(bmlId);
     }
@@ -576,7 +585,7 @@ public final class BMLScheduler
         pegBoard.setBMLBlockTime(bmlId, schedulingClock.getMediaSeconds());
         logger.debug("Starting bml block {}", bmlId);
 
-        //prediction(createBehaviorPrediction(bmlBlockMap.get(bmlId)));
+        // prediction(createBehaviorPrediction(bmlBlockMap.get(bmlId)));
         bmlBlocksManager.startBlock(bmlId);
 
         for (Engine e : getEngines())
@@ -610,7 +619,7 @@ public final class BMLScheduler
                 {
                     String behId = id.substring(bmlId.length() + 1);
                     String warningText = "Invalid timing for behavior " + id + ", behavior ommitted";
-                    warn(new BMLWarningFeedback(bmlId+":"+behId, "INVALID_TIMING", warningText));
+                    warn(new BMLWarningFeedback(bmlId + ":" + behId, "INVALID_TIMING", warningText));
                     removeBehaviour(bmlId, behId);
                 }
             }
@@ -630,7 +639,7 @@ public final class BMLScheduler
                 String bmlId = id.split(":")[0];
                 String behId = id.substring(bmlId.length() + 1);
                 String warningText = "Invalid timing for behavior " + id + ", behavior ommitted";
-                warn(new BMLWarningFeedback(bmlId+":"+behId, "INVALID_TIMING", warningText));
+                warn(new BMLWarningFeedback(bmlId + ":" + behId, "INVALID_TIMING", warningText));
                 removeBehaviour(bmlId, behId);
             }
         }
