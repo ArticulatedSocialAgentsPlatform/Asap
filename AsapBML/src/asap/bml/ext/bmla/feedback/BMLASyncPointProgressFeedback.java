@@ -16,7 +16,7 @@ import asap.bml.ext.bmla.BMLAInfo;
 public class BMLASyncPointProgressFeedback extends BMLSyncPointProgressFeedback
 {
     @Getter
-    private double posixTime = 0;
+    private long posixTime = 0;
     private static final String POSIXTIME_ID = BMLAInfo.BMLA_NAMESPACE + ":" + "posixTime";
 
     public BMLASyncPointProgressFeedback()
@@ -24,7 +24,7 @@ public class BMLASyncPointProgressFeedback extends BMLSyncPointProgressFeedback
         super();
     }
 
-    public BMLASyncPointProgressFeedback(String bmlId, String behaviorId, String syncId, double time, double globalTime, double posixTime)
+    public BMLASyncPointProgressFeedback(String bmlId, String behaviorId, String syncId, double time, double globalTime, long posixTime)
     {
         super(bmlId, behaviorId, syncId, time, globalTime);
         setPosixTime(posixTime);
@@ -32,10 +32,10 @@ public class BMLASyncPointProgressFeedback extends BMLSyncPointProgressFeedback
 
     public static BMLASyncPointProgressFeedback build(BMLSyncPointProgressFeedback fb)
     {
-        double posixTime = 0;
-        if (fb.specifiesCustomFloatParameter(POSIXTIME_ID))
+        long posixTime = 0;
+        if (fb.specifiesCustomStringParameter(POSIXTIME_ID))
         {
-            posixTime = fb.getCustomFloatParameterValue(POSIXTIME_ID);
+            posixTime = Long.parseLong(fb.getCustomStringParameterValue(POSIXTIME_ID));
         }
         BMLASyncPointProgressFeedback fbNew = new BMLASyncPointProgressFeedback(fb.getBMLId(), fb.getBehaviourId(), fb.getSyncId(),
                 fb.getTime(), fb.getGlobalTime(), posixTime);
@@ -43,12 +43,12 @@ public class BMLASyncPointProgressFeedback extends BMLSyncPointProgressFeedback
         return fbNew;
     }
 
-    private void setPosixTime(double time)
+    private void setPosixTime(long time)
     {
         posixTime = time;
         if (posixTime > 0)
         {
-            addCustomFloatParameterValue(POSIXTIME_ID, (float) posixTime);
+            addCustomStringParameterValue(POSIXTIME_ID, ""+posixTime);
         }
     }
 
@@ -56,9 +56,9 @@ public class BMLASyncPointProgressFeedback extends BMLSyncPointProgressFeedback
     public void decodeAttributes(HashMap<String, String> attrMap, XMLTokenizer tokenizer)
     {
         super.decodeAttributes(attrMap, tokenizer);
-        if (specifiesCustomFloatParameter(POSIXTIME_ID))
+        if (specifiesCustomStringParameter(POSIXTIME_ID))
         {
-            setPosixTime(getCustomFloatParameterValue(POSIXTIME_ID));
+            setPosixTime(Long.parseLong(getCustomStringParameterValue(POSIXTIME_ID)));
         }
     }
 

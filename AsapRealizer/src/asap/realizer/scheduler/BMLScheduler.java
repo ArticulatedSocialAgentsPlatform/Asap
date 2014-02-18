@@ -325,11 +325,11 @@ public final class BMLScheduler
 
     private BMLABlockPredictionFeedback createBMLABlockPredictionFeedback(String bmlId, double predictedStart, double predictedEnd)
     {
-        double timeOffset = System.currentTimeMillis() / 1000d - getSchedulingTime();
-        double posixStart = predictedStart + timeOffset, posixEnd = 0;
+        long timeOffset = System.currentTimeMillis() - (long)(getSchedulingTime()*1000);
+        long posixStart = (long)(predictedStart*1000) + timeOffset, posixEnd = 0;
         if (predictedEnd != BMLBlockPredictionFeedback.UNKNOWN_TIME)
         {
-            posixEnd = predictedEnd + timeOffset;
+            posixEnd = (long)(predictedEnd*1000) + timeOffset;
         }
         return new BMLABlockPredictionFeedback(bmlId, predictedStart, predictedEnd, posixStart, posixEnd);
     }

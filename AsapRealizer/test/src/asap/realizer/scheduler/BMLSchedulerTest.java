@@ -416,7 +416,7 @@ public class BMLSchedulerTest
         assertEquals(1, getBMLIdsFromStartFeedback(blockProgressFeedbackList).size());
         assertEquals("bml1", getBMLIdsFromStartFeedback(blockProgressFeedbackList).get(0));
         BMLABlockProgressFeedback fb = BMLABlockProgressFeedback.build(blockProgressFeedbackList.get(0));
-        assertEquals(CTM/1000d, fb.getPosixTime(), PRECISION);
+        assertEquals(CTM, fb.getPosixTime(), PRECISION);
     }
     
     @Test
@@ -440,12 +440,12 @@ public class BMLSchedulerTest
         BMLABlockPredictionFeedback fb0 = BMLABlockPredictionFeedback.build(predictionFeedback.get(0).getBmlBlockPredictions().get(0));
         BMLABlockPredictionFeedback fb1 = BMLABlockPredictionFeedback.build(predictionFeedback.get(1).getBmlBlockPredictions().get(0));
         BMLABlockPredictionFeedback fb2 = BMLABlockPredictionFeedback.build(predictionFeedback.get(2).getBmlBlockPredictions().get(0));
-        assertEquals(CTM/1000d, fb0.getPosixStartTime(), PRECISION);
-        assertEquals(CTM/1000d, fb1.getPosixStartTime(), PRECISION);
-        assertEquals(CTM/1000d, fb2.getPosixStartTime(), PRECISION);
+        assertEquals(CTM, fb0.getPosixStartTime(), PRECISION);
+        assertEquals(CTM, fb1.getPosixStartTime(), PRECISION);
+        assertEquals(CTM, fb2.getPosixStartTime(), PRECISION);
         assertEquals(0, fb0.getPosixEndTime(), PRECISION);
-        assertEquals(CTM/1000d, fb1.getPosixEndTime(), PRECISION);
-        assertEquals(CTM/1000d, fb2.getPosixEndTime(), PRECISION);
+        assertEquals(CTM, fb1.getPosixEndTime(), PRECISION);
+        assertEquals(CTM, fb2.getPosixEndTime(), PRECISION);
     }
     
     @Test
@@ -468,12 +468,12 @@ public class BMLSchedulerTest
         BMLABlockPredictionFeedback fb0 = BMLABlockPredictionFeedback.build(predictionFeedback.get(0).getBmlBlockPredictions().get(0));
         BMLABlockPredictionFeedback fb1 = BMLABlockPredictionFeedback.build(predictionFeedback.get(1).getBmlBlockPredictions().get(0));
         BMLABlockPredictionFeedback fb2 = BMLABlockPredictionFeedback.build(predictionFeedback.get(2).getBmlBlockPredictions().get(0));
-        assertEquals(CTM/1000d, fb0.getPosixStartTime(), PRECISION);
-        assertEquals(CTM/1000d, fb1.getPosixStartTime(), PRECISION);
-        assertEquals(CTM/1000d, fb2.getPosixStartTime(), PRECISION);
+        assertEquals(CTM, fb0.getPosixStartTime(), PRECISION);
+        assertEquals(CTM, fb1.getPosixStartTime(), PRECISION);
+        assertEquals(CTM, fb2.getPosixStartTime(), PRECISION);
         assertEquals(0, fb0.getPosixEndTime(), PRECISION);
-        assertEquals(CTM/1000d+5, fb1.getPosixEndTime(), PRECISION);
-        assertEquals(CTM/1000d+5, fb2.getPosixEndTime(), PRECISION);
+        assertEquals(CTM+5000, fb1.getPosixEndTime(), PRECISION);
+        assertEquals(CTM+5000, fb2.getPosixEndTime(), PRECISION);
     }
 
     @Test
@@ -485,7 +485,7 @@ public class BMLSchedulerTest
         assertEquals(1, getBMLIdsFromEndFeedback(blockProgressFeedbackList).size());
         assertEquals("bml1", getBMLIdsFromEndFeedback(blockProgressFeedbackList).get(0));
         BMLABlockProgressFeedback fb = BMLABlockProgressFeedback.build(blockProgressFeedbackList.get(1));
-        assertEquals(CTM/1000d, fb.getPosixTime(), PRECISION);
+        assertEquals(CTM, fb.getPosixTime(), PRECISION);
     }
     
     @Test

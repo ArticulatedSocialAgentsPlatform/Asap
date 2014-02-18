@@ -19,10 +19,10 @@ public class BMLABlockPredictionFeedback extends BMLBlockPredictionFeedback
     private static final String POSIXENDTIME_ID = BMLAInfo.BMLA_NAMESPACE + ":" + "posixEndTime";
 
     @Getter
-    private double posixStartTime;
+    private long posixStartTime;
 
     @Getter
-    private double posixEndTime;
+    private long posixEndTime;
 
     public BMLABlockPredictionFeedback()
     {
@@ -31,42 +31,42 @@ public class BMLABlockPredictionFeedback extends BMLBlockPredictionFeedback
 
     public static BMLABlockPredictionFeedback build(BMLBlockPredictionFeedback fb)
     {
-        double posixStartTime = 0, posixEndTime = 0;
-        if (fb.specifiesCustomFloatParameter(POSIXSTARTTIME_ID))
+        long posixStartTime = 0, posixEndTime = 0;
+        if (fb.specifiesCustomStringParameter(POSIXSTARTTIME_ID))
         {
-            posixStartTime = fb.getCustomFloatParameterValue(POSIXSTARTTIME_ID);
+            posixStartTime = Long.parseLong(fb.getCustomStringParameterValue(POSIXSTARTTIME_ID));
         }
-        if (fb.specifiesCustomFloatParameter(POSIXENDTIME_ID))
+        if (fb.specifiesCustomStringParameter(POSIXENDTIME_ID))
         {
-            posixEndTime = fb.getCustomFloatParameterValue(POSIXENDTIME_ID);
+            posixEndTime = Long.parseLong(fb.getCustomStringParameterValue(POSIXENDTIME_ID));
         }
         BMLABlockPredictionFeedback fbNew = new BMLABlockPredictionFeedback(fb.getId(), fb.getGlobalStart(), fb.getGlobalEnd(),
                 posixStartTime, posixEndTime);        
         return fbNew;
     }
 
-    public BMLABlockPredictionFeedback(String id, double globalStart, double globalEnd, double posixStart, double posixEnd)
+    public BMLABlockPredictionFeedback(String id, double globalStart, double globalEnd, long posixStart, long posixEnd)
     {
         super(id, globalStart, globalEnd);
         setPosixStartTime(posixStart);
         setPosixEndTime(posixEnd);
     }
 
-    private void setPosixStartTime(double time)
+    private void setPosixStartTime(long time)
     {
         posixStartTime = time;
         if (posixStartTime > 0)
         {
-            addCustomFloatParameterValue(POSIXSTARTTIME_ID, (float) posixStartTime);
+            addCustomStringParameterValue(POSIXSTARTTIME_ID, ""+posixStartTime);
         }
     }
 
-    private void setPosixEndTime(double time)
+    private void setPosixEndTime(long time)
     {
         posixEndTime = time;
         if (posixStartTime > 0)
         {
-            addCustomFloatParameterValue(POSIXENDTIME_ID, (float) posixEndTime);
+            addCustomStringParameterValue(POSIXENDTIME_ID, ""+posixEndTime);
         }
     }
 
@@ -74,13 +74,13 @@ public class BMLABlockPredictionFeedback extends BMLBlockPredictionFeedback
     public void decodeAttributes(HashMap<String, String> attrMap, XMLTokenizer tokenizer)
     {
         super.decodeAttributes(attrMap, tokenizer);
-        if (specifiesCustomFloatParameter(POSIXSTARTTIME_ID))
+        if (specifiesCustomStringParameter(POSIXSTARTTIME_ID))
         {
-            setPosixStartTime(getCustomFloatParameterValue(POSIXSTARTTIME_ID));
+            setPosixStartTime(Long.parseLong(getCustomStringParameterValue(POSIXSTARTTIME_ID)));
         }
-        if (specifiesCustomFloatParameter(POSIXENDTIME_ID))
+        if (specifiesCustomStringParameter(POSIXENDTIME_ID))
         {
-            setPosixEndTime(getCustomFloatParameterValue(POSIXENDTIME_ID));
+            setPosixEndTime(Long.parseLong(getCustomStringParameterValue(POSIXENDTIME_ID)));
         }
     }
 }

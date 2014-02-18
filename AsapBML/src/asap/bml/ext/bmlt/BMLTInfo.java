@@ -71,14 +71,14 @@ public final class BMLTInfo
         BMLInfo.addDescriptionExtensions(DESCRIPTION_EXTENSIONS);
         BMLInfo.addCustomStringAttribute(GazeBehaviour.class, BMLTBehaviour.BMLTNAMESPACE, "dynamic");
         BMLInfo.addCustomStringAttribute(SpeechBehaviour.class, BMLTBehaviour.BMLTNAMESPACE, "voice");
-        BMLInfo.addCustomFeedbackFloatAttribute(BMLABlockProgressFeedback.class, BMLAInfo.BMLA_NAMESPACE, "posixTime");
-        BMLInfo.addCustomFeedbackFloatAttribute(BMLBlockProgressFeedback.class, BMLAInfo.BMLA_NAMESPACE, "posixTime");
-        BMLInfo.addCustomFeedbackFloatAttribute(BMLASyncPointProgressFeedback.class, BMLAInfo.BMLA_NAMESPACE, "posixTime");
-        BMLInfo.addCustomFeedbackFloatAttribute(BMLSyncPointProgressFeedback.class, BMLAInfo.BMLA_NAMESPACE, "posixTime");
-        BMLInfo.addCustomFeedbackFloatAttribute(BMLBlockPredictionFeedback.class, BMLAInfo.BMLA_NAMESPACE, "posixStartTime");
-        BMLInfo.addCustomFeedbackFloatAttribute(BMLBlockPredictionFeedback.class, BMLAInfo.BMLA_NAMESPACE, "posixEndTime");
-        BMLInfo.addCustomFeedbackFloatAttribute(BMLABlockPredictionFeedback.class, BMLAInfo.BMLA_NAMESPACE, "posixStartTime");
-        BMLInfo.addCustomFeedbackFloatAttribute(BMLABlockPredictionFeedback.class, BMLAInfo.BMLA_NAMESPACE, "posixEndTime");
+        BMLInfo.addCustomFeedbackStringAttribute(BMLABlockProgressFeedback.class, BMLAInfo.BMLA_NAMESPACE, "posixTime");
+        BMLInfo.addCustomFeedbackStringAttribute(BMLBlockProgressFeedback.class, BMLAInfo.BMLA_NAMESPACE, "posixTime");
+        BMLInfo.addCustomFeedbackStringAttribute(BMLASyncPointProgressFeedback.class, BMLAInfo.BMLA_NAMESPACE, "posixTime");
+        BMLInfo.addCustomFeedbackStringAttribute(BMLSyncPointProgressFeedback.class, BMLAInfo.BMLA_NAMESPACE, "posixTime");
+        BMLInfo.addCustomFeedbackStringAttribute(BMLBlockPredictionFeedback.class, BMLAInfo.BMLA_NAMESPACE, "posixStartTime");
+        BMLInfo.addCustomFeedbackStringAttribute(BMLBlockPredictionFeedback.class, BMLAInfo.BMLA_NAMESPACE, "posixEndTime");
+        BMLInfo.addCustomFeedbackStringAttribute(BMLABlockPredictionFeedback.class, BMLAInfo.BMLA_NAMESPACE, "posixStartTime");
+        BMLInfo.addCustomFeedbackStringAttribute(BMLABlockPredictionFeedback.class, BMLAInfo.BMLA_NAMESPACE, "posixEndTime");
         
         
         BMLInfo.addCustomFloatAttribute(GazeBehaviour.class, BMLAInfo.BMLA_NAMESPACE, "priority");

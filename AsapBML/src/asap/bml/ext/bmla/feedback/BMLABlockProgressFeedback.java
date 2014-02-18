@@ -15,7 +15,7 @@ import asap.bml.ext.bmla.BMLAInfo;
 public class BMLABlockProgressFeedback extends BMLBlockProgressFeedback
 {
     @Getter
-    private double posixTime = 0;    
+    private long posixTime = 0;    
     private static final String POSIXTIME_ID = BMLAInfo.BMLA_NAMESPACE+":"+"posixTime";
     
     public BMLABlockProgressFeedback()
@@ -25,10 +25,10 @@ public class BMLABlockProgressFeedback extends BMLBlockProgressFeedback
     
     public BMLABlockProgressFeedback(String bmlId, String syncId, double globalTime)
     {
-        this(bmlId, syncId, globalTime, System.currentTimeMillis()/1000d);
+        this(bmlId, syncId, globalTime, System.currentTimeMillis());
     }
     
-    public BMLABlockProgressFeedback(String bmlId, String syncId, double globalTime, double posixTime)
+    public BMLABlockProgressFeedback(String bmlId, String syncId, double globalTime, long posixTime)
     {
         super(bmlId, syncId, globalTime);
         setPosixTime(posixTime);
@@ -36,22 +36,22 @@ public class BMLABlockProgressFeedback extends BMLBlockProgressFeedback
     
     public static BMLABlockProgressFeedback build(BMLBlockProgressFeedback fb)
     {
-        double posixTime = 0;
-        if(fb.specifiesCustomFloatParameter(POSIXTIME_ID))
+        long posixTime = 0;
+        if(fb.specifiesCustomStringParameter(POSIXTIME_ID))
         {
-            posixTime = fb.getCustomFloatParameterValue(POSIXTIME_ID);
+            posixTime = Long.parseLong(fb.getCustomStringParameterValue(POSIXTIME_ID));
         }
         BMLABlockProgressFeedback fbNew = new BMLABlockProgressFeedback(fb.getBmlId(), fb.getSyncId(), fb.getGlobalTime(), posixTime);
         fbNew.setCharacterId(fb.getCharacterId());
         return fbNew;
     }
     
-    private void setPosixTime(double time)
+    private void setPosixTime(long time)
     {
         posixTime = time;
         if(posixTime>0)
         {
-            addCustomFloatParameterValue(POSIXTIME_ID, (float)posixTime);
+            addCustomStringParameterValue(POSIXTIME_ID, ""+posixTime);
         }
     }
     
@@ -59,9 +59,9 @@ public class BMLABlockProgressFeedback extends BMLBlockProgressFeedback
     public void decodeAttributes(HashMap<String, String> attrMap, XMLTokenizer tokenizer)
     {
         super.decodeAttributes(attrMap, tokenizer);
-        if (specifiesCustomFloatParameter(POSIXTIME_ID))
+        if (specifiesCustomStringParameter(POSIXTIME_ID))
         {
-            setPosixTime(getCustomFloatParameterValue(POSIXTIME_ID));
+            setPosixTime(Long.parseLong(getCustomStringParameterValue(POSIXTIME_ID)));
         }
     }
 }
