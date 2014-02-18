@@ -20,6 +20,7 @@ import asap.bml.ext.maryxml.MaryAllophonesBehaviour;
 import asap.bml.ext.maryxml.MaryWordsBehaviour;
 import asap.bml.ext.maryxml.MaryXMLBehaviour;
 import asap.bml.ext.msapi.MSApiBehaviour;
+import asap.bml.ext.murml.MURMLFaceBehaviour;
 import asap.bml.ext.murml.MURMLGestureBehaviour;
 import asap.bml.ext.ssml.SSMLBehaviour;
 
@@ -43,12 +44,14 @@ public final class BMLTInfo
             .put(BMLTKeyframeBehaviour.xmlTag(), BMLTKeyframeBehaviour.class)
             .put(BMLTAudioFileBehaviour.xmlTag(), BMLTAudioFileBehaviour.class)
             .put(BMLTFaceMorphBehaviour.xmlTag(), BMLTFaceMorphBehaviour.class)
+            .put(MURMLGestureBehaviour.xmlTag(), MURMLGestureBehaviour.class)
+            .put(MURMLFaceBehaviour.xmlTag(), MURMLFaceBehaviour.class)
             .put(BMLAInterruptBehaviour.xmlTag(), BMLAInterruptBehaviour.class)
             .put(BMLAActivateBehaviour.xmlTag(), BMLAActivateBehaviour.class)
             .put(BMLAParameterValueChangeBehaviour.xmlTag(), BMLAParameterValueChangeBehaviour.class)            
             .put(SSMLBehaviour.xmlTag(), SSMLBehaviour.class)
             .put(MSApiBehaviour.xmlTag(), MSApiBehaviour.class)
-            .put(MaryXMLBehaviour.xmlTag(), MaryXMLBehaviour.class)
+            .put(MaryXMLBehaviour.xmlTag(), MaryXMLBehaviour.class)            
             .build();
     // /Description levels that can be parsed
     private static final ImmutableMap<String, Class<? extends Behaviour>> DESCRIPTION_EXTENSIONS = 
@@ -61,8 +64,7 @@ public final class BMLTInfo
             .put("maryxml", MaryXMLBehaviour.class)
             .put("marywords", MaryWordsBehaviour.class)
             .put("maryallophones", MaryAllophonesBehaviour.class)
-            .put(BMLTAudioFileBehaviour.xmlTag(), BMLTAudioFileBehaviour.class)
-            
+            .put(BMLTAudioFileBehaviour.xmlTag(), BMLTAudioFileBehaviour.class)            
             .build();
     
     public static void init()
