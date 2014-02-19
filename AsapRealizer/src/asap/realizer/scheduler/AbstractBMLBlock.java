@@ -69,8 +69,10 @@ public abstract class AbstractBMLBlock implements BMLBlock
 
     public void finish()
     {
-        state.set(TimedPlanUnitState.DONE);
-        scheduler.blockStopFeedback(bmlId);
+        if(state.getAndSet(TimedPlanUnitState.DONE)!=TimedPlanUnitState.DONE)
+        {
+            scheduler.blockStopFeedback(bmlId);
+        }
     }
 
     @Override
