@@ -63,10 +63,5 @@ public final class NullFeedbackManager implements FeedbackManager
     @Override
     public void warn(BMLWarningFeedback w)
     {
-    }
-
-    @Override
-    public void blockStartPrediction(String bmlId, double time)
-    {
-    }   
+    }    
 }

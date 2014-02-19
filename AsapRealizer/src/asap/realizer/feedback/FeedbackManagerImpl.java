@@ -4,11 +4,8 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
+import lombok.extern.slf4j.Slf4j;
 import net.jcip.annotations.GuardedBy;
-
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
 import saiba.bml.feedback.BMLBlockProgressFeedback;
 import saiba.bml.feedback.BMLPredictionFeedback;
 import saiba.bml.feedback.BMLSyncPointProgressFeedback;
@@ -24,11 +21,10 @@ import com.google.common.collect.ImmutableSet;
  * @author Herwin
  *
  */
+@Slf4j
 public class FeedbackManagerImpl implements FeedbackManager
 {
     private final BMLBlockManager bmlBlockManager;
-
-    private final static Logger LOGGER = LoggerFactory.getLogger(FeedbackManagerImpl.class.getName());
 
     @GuardedBy("feedbackListeners")
     private final List<BMLFeedbackListener> feedbackListeners = Collections.synchronizedList(new ArrayList<BMLFeedbackListener>());
@@ -69,7 +65,7 @@ public class FeedbackManagerImpl implements FeedbackManager
                 }
                 catch (Exception ex)
                 {
-                    LOGGER.warn("Broken FeedbackListener: {}", ex);
+                    log.warn("Exception in FeedbackListener: {}, feedback: {}", ex, fb.toXMLString());
                 }
             }
         }
@@ -97,7 +93,7 @@ public class FeedbackManagerImpl implements FeedbackManager
                     }
                     catch (Exception ex)
                     {
-                        LOGGER.warn("Broken FeedbackListener: {}", ex);
+                        log.warn("Exception in FeedbackListener: {}, feedback: {}", ex, fb.toXMLString());
                     }
                 }
             }
@@ -139,7 +135,7 @@ public class FeedbackManagerImpl implements FeedbackManager
                 }
                 catch (Exception ex)
                 {
-                    LOGGER.warn("Broken FeedbackListener: {}", ex);
+                    log.warn("Exception in FeedbackListener: {}, feedback: {}", ex, psf);
                 }
             }
         }
@@ -161,7 +157,7 @@ public class FeedbackManagerImpl implements FeedbackManager
                 }
                 catch (Exception ex)
                 {
-                    LOGGER.warn("Broken SchedulingListener: {}", ex);
+                    log.warn("Exception in FeedbackListener: {}, feedback: {}", ex, feedbackString);
                 }
             }
         }        
@@ -181,17 +177,10 @@ public class FeedbackManagerImpl implements FeedbackManager
                 }
                 catch (Exception ex)
                 {
-                    LOGGER.warn("Broken WarningListener: {}", ex);
+                    log.warn("Exception in WarningListener: {}, feedback: {}", ex, w.toXMLString());
                 }
             }
         }
         bmlBlockManager.warn(w);
-    }
-
-    @Override
-    public void blockStartPrediction(String bmlId, double time)
-    {
-        // TODO Auto-generated method stub
-
-    }
+    }    
 }

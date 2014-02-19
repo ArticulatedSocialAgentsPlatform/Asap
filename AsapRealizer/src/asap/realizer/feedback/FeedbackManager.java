@@ -36,10 +36,7 @@ public interface FeedbackManager
     
     void prediction(BMLPredictionFeedback bpsf);    
     
-    /**
-     * Generates a feedback message on only the start time of a BML block
-     */
-    void blockStartPrediction(String bmlId, double time);
+    
     
     void warn(BMLWarningFeedback w);
 }
