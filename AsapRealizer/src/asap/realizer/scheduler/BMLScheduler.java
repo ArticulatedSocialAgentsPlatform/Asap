@@ -325,11 +325,11 @@ public final class BMLScheduler
 
     private BMLABlockPredictionFeedback createBMLABlockPredictionFeedback(String bmlId, double predictedStart, double predictedEnd)
     {
-        long timeOffset = System.currentTimeMillis() - (long)(getSchedulingTime()*1000);
-        long posixStart = (long)(predictedStart*1000) + timeOffset, posixEnd = 0;
+        long timeOffset = System.currentTimeMillis() - (long) (getSchedulingTime() * 1000);
+        long posixStart = (long) (predictedStart * 1000) + timeOffset, posixEnd = 0;
         if (predictedEnd != BMLBlockPredictionFeedback.UNKNOWN_TIME)
         {
-            posixEnd = (long)(predictedEnd*1000) + timeOffset;
+            posixEnd = (long) (predictedEnd * 1000) + timeOffset;
         }
         return new BMLABlockPredictionFeedback(bmlId, predictedStart, predictedEnd, posixStart, posixEnd);
     }
@@ -355,6 +355,11 @@ public final class BMLScheduler
         BMLPredictionFeedback bpf = new BMLPredictionFeedback();
         bpf.addBMLBlockPrediction(createBMLABlockPredictionFeedback(bmlId, predictedStart, predictedEnd));
         return bpf;
+    }
+
+    public void updatePredictions(String bmlId)
+    {
+        //TODO: implement this
     }
 
     public void planningStart(String bmlId, double predictedStart)
@@ -495,6 +500,10 @@ public final class BMLScheduler
         {
             endTimes.add(e.getBlockEndTime(blockId));
         }
+        if (endTimes.size() == 0)
+        {
+            return BMLPredictionFeedback.UNKNOWN_TIME;
+        }
         return Collections.max(endTimes);
     }
 
@@ -544,7 +553,7 @@ public final class BMLScheduler
         {
             e.interruptBehaviourBlock(bmlId, schedulingClock.getMediaSeconds());
         }
-        
+
         bmlBlocksManager.finishBlock(bmlId);
         bmlBlocksManager.removeBMLBlock(bmlId);
     }

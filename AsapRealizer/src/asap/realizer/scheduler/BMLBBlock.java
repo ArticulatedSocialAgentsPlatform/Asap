@@ -70,6 +70,7 @@ public class BMLBBlock extends AbstractBMLBlock
     public void addAppendTarget(String bmlId)
     {
         appendSet.add(bmlId);
+        scheduler.updatePredictions(this.bmlId);
     }
 
     public List<String> getOnStartSet()
