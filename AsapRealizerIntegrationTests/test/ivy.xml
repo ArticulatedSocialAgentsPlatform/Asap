@@ -2,6 +2,7 @@
    <info organisation="HMI" module="AsapRealizerIntegrationTestsTest"/>
    <dependencies >
       <dependency org="junit" name="junit-dep"  rev="latest.release" />
+      <dependency org="HMI"   name="LogbackConfigs"     rev="latest.${resolve.status}"   />
       <dependency org="saiba" name="openbmlparser-testresource"  rev="latest.release" />
 	  <dependency org="HMI"   name="MARYTTS"     rev="latest.${resolve.status}"   />   
    </dependencies>
