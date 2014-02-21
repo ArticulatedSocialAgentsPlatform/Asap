@@ -1,7 +1,14 @@
 package asap.rsbembodiments;
 
-message Joint{
-  required string sid = 1;
+message Joint {
+  required string id = 1;
+  required string parentId = 2;
+  repeated float localRotation = 3 [packed=true];
+  repeated float localTranslation = 4 [packed=true];
+}
+
+message JointDataConfigRequest {
+  required string id = 1;
 }
 
 message JointDataConfigReply {
