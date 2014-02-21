@@ -426,28 +426,22 @@ public class BMLSchedulerTest
     {
         parseBML("<bml xmlns=\"http://www.bml-initiative.org/bml/bml-1.0\" id=\"bml1\"/>");
         scheduler.schedule();
-        assertEquals(3, predictionFeedback.size()); //delivered, scheduling done, starting
+        assertEquals(2, predictionFeedback.size()); //delivered, scheduling done, (no starting, since it finishes instantly)
         assertEquals("bml1", predictionFeedback.get(0).getBmlBlockPredictions().get(0).getId());
         assertEquals("bml1", predictionFeedback.get(1).getBmlBlockPredictions().get(0).getId());
-        assertEquals("bml1", predictionFeedback.get(2).getBmlBlockPredictions().get(0).getId());
         
         assertEquals(0, predictionFeedback.get(0).getBmlBlockPredictions().get(0).getGlobalStart(), PRECISION);
         assertEquals(TimePeg.VALUE_UNKNOWN, predictionFeedback.get(0).getBmlBlockPredictions().get(0).getGlobalEnd(), PRECISION);
         assertEquals(0, predictionFeedback.get(1).getBmlBlockPredictions().get(0).getGlobalStart(), PRECISION);
-        assertEquals(0, predictionFeedback.get(2).getBmlBlockPredictions().get(0).getGlobalStart(), PRECISION);
         
         assertEquals(0, predictionFeedback.get(1).getBmlBlockPredictions().get(0).getGlobalEnd(), PRECISION);
-        assertEquals(0, predictionFeedback.get(2).getBmlBlockPredictions().get(0).getGlobalEnd(), PRECISION);
         
         BMLABlockPredictionFeedback fb0 = BMLABlockPredictionFeedback.build(predictionFeedback.get(0).getBmlBlockPredictions().get(0));
         BMLABlockPredictionFeedback fb1 = BMLABlockPredictionFeedback.build(predictionFeedback.get(1).getBmlBlockPredictions().get(0));
-        BMLABlockPredictionFeedback fb2 = BMLABlockPredictionFeedback.build(predictionFeedback.get(2).getBmlBlockPredictions().get(0));
         assertEquals(CTM, fb0.getPosixStartTime(), PRECISION);
         assertEquals(CTM, fb1.getPosixStartTime(), PRECISION);
-        assertEquals(CTM, fb2.getPosixStartTime(), PRECISION);
         assertEquals(0, fb0.getPosixEndTime(), PRECISION);
-        assertEquals(CTM, fb1.getPosixEndTime(), PRECISION);
-        assertEquals(CTM, fb2.getPosixEndTime(), PRECISION);
+        assertEquals(CTM, fb1.getPosixEndTime(), PRECISION);        
     }
     
     @Test
