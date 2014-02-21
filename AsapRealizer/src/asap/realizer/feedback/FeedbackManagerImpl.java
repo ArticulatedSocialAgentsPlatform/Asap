@@ -10,6 +10,7 @@ import saiba.bml.feedback.BMLBlockProgressFeedback;
 import saiba.bml.feedback.BMLPredictionFeedback;
 import saiba.bml.feedback.BMLSyncPointProgressFeedback;
 import saiba.bml.feedback.BMLWarningFeedback;
+import asap.bml.ext.bmla.feedback.BMLASyncPointProgressFeedback;
 import asap.realizer.planunit.TimedPlanUnit;
 import asap.realizer.scheduler.BMLBlockManager;
 import asap.realizerport.BMLFeedbackListener;
@@ -51,17 +52,25 @@ public class FeedbackManagerImpl implements FeedbackManager
         warn(new BMLWarningFeedback(bmlId+":"+timedMU.getId(), "EXECUTION_FAILURE",exceptionText));
     }
     
+    private BMLASyncPointProgressFeedback constructBMLASyncPointProgressFeedback(BMLSyncPointProgressFeedback fb)
+    {
+        BMLASyncPointProgressFeedback fba = BMLASyncPointProgressFeedback.build(fb);        
+        fba.setCharacterId(characterId);
+        fba.setPosixTime(System.currentTimeMillis());
+        return fba;
+    }
+    
     @Override
     public void feedback(BMLSyncPointProgressFeedback fb)
     {
-        fb.setCharacterId(characterId);
+        BMLASyncPointProgressFeedback fba = constructBMLASyncPointProgressFeedback(fb);
         synchronized (feedbackListeners)
         {
             for (BMLFeedbackListener fbl : feedbackListeners)
             {
                 try
                 {
-                    fbl.feedback(fb.toXMLString());
+                    fbl.feedback(fba.toXMLString());
                 }
                 catch (Exception ex)
                 {
@@ -69,14 +78,10 @@ public class FeedbackManagerImpl implements FeedbackManager
                 }
             }
         }
-        bmlBlockManager.syncProgress(fb);
+        bmlBlockManager.syncProgress(fba);
     }
 
-    /**
-     * Send a list of feedback (in list-order) to the BMLFeedbackListeners. The listeners will
-     * receive all feedbacks in the list before any subsequent feedback is sent using the feedback
-     * functions.
-     */
+    
     @Override
     public void feedback(List<BMLSyncPointProgressFeedback> fbs)
     {
@@ -84,12 +89,12 @@ public class FeedbackManagerImpl implements FeedbackManager
         {
             for (BMLSyncPointProgressFeedback fb : fbs)
             {
-                fb.setCharacterId(characterId);
+                BMLASyncPointProgressFeedback fba = constructBMLASyncPointProgressFeedback(fb);
                 for (BMLFeedbackListener fbl : feedbackListeners)
                 {
                     try
                     {
-                        fbl.feedback(fb.toXMLString());
+                        fbl.feedback(fba.toXMLString());
                     }
                     catch (Exception ex)
                     {
@@ -100,7 +105,7 @@ public class FeedbackManagerImpl implements FeedbackManager
         }
         for (BMLSyncPointProgressFeedback fb : fbs)
         {
-            bmlBlockManager.syncProgress(fb);
+            bmlBlockManager.syncProgress(constructBMLASyncPointProgressFeedback(fb));
         }
     }
 

@@ -22,6 +22,11 @@ public interface FeedbackManager
     
     void feedback(BMLSyncPointProgressFeedback fb);
     
+    /**
+     * Send a list of feedback (in list-order) to the BMLFeedbackListeners. The listeners will
+     * receive all feedbacks in the list before any subsequent feedback is sent using the feedback
+     * functions.
+     */
     void feedback(List<BMLSyncPointProgressFeedback> fbs);
     
     void removeAllFeedbackListeners();
@@ -35,8 +40,6 @@ public interface FeedbackManager
     void puException(TimedPlanUnit timedMU, String message, double time);
     
     void prediction(BMLPredictionFeedback bpsf);    
-    
-    
     
     void warn(BMLWarningFeedback w);
 }

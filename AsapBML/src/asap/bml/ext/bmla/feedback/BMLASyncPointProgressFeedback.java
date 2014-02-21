@@ -43,7 +43,7 @@ public class BMLASyncPointProgressFeedback extends BMLSyncPointProgressFeedback
         return fbNew;
     }
 
-    private void setPosixTime(long time)
+    public void setPosixTime(long time)
     {
         posixTime = time;
         if (posixTime > 0)
