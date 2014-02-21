@@ -8,6 +8,11 @@ import saiba.bml.feedback.BMLFeedbackParser;
 import saiba.bml.feedback.BMLPredictionFeedback;
 import saiba.bml.feedback.BMLSyncPointProgressFeedback;
 
+/**
+ * Wraps the BMLFeedbackParser to provide BMLAFeedback
+ * @author hvanwelbergen
+ *
+ */
 public class BMLAFeedbackParser
 {
     private BMLAFeedbackParser()
