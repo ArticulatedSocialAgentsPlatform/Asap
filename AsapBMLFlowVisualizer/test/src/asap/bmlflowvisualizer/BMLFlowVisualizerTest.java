@@ -35,7 +35,7 @@ public class BMLFlowVisualizerTest
         when(mockFinishedqVis.getVisualization()).thenReturn(new JPanel());
         when(mockPlayqVis.getVisualization()).thenReturn(new JPanel());
         vis = new BMLFlowVisualizerPort(mockPort);
-        vis.addVisualization(mockPlanqVis, mockFinishedqVis, mockPlayqVis);
+        vis.setVisualization(mockPlanqVis, mockFinishedqVis, mockPlayqVis);
     }
 
     @Test

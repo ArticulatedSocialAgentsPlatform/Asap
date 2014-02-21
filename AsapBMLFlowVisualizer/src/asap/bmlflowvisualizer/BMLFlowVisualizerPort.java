@@ -5,10 +5,14 @@ import hmi.xml.XMLScanException;
 import java.awt.GridBagConstraints;
 import java.awt.GridBagLayout;
 import java.io.IOException;
+import java.util.ArrayList;
+import java.util.List;
 
 import javax.swing.JComponent;
 import javax.swing.JPanel;
 import javax.swing.SwingUtilities;
+
+import com.google.common.collect.Lists;
 
 import saiba.bml.core.BehaviourBlock;
 import saiba.bml.core.CoreComposition;
@@ -30,9 +34,7 @@ public class BMLFlowVisualizerPort implements RealizerPort, BMLFeedbackListener
 {
     private final RealizerPort realizerPort;
     private JPanel panel;
-    private BMLFlowVisualization planningQueue;
-    private BMLFlowVisualization finishedQueue;
-    private BMLFlowVisualization playingQueue;
+    private List<BMLFlowVisualization> visualizations = new ArrayList<BMLFlowVisualization>();
 
     public BMLFlowVisualizerPort(RealizerPort port)
     {
@@ -48,11 +50,9 @@ public class BMLFlowVisualizerPort implements RealizerPort, BMLFeedbackListener
         });
     }
 
-    public void addVisualization(BMLFlowVisualization pqvis, BMLFlowVisualization fqvis, BMLFlowVisualization plqvis)
+    public void setVisualization(BMLFlowVisualization... vis)
     {
-        this.planningQueue = pqvis;
-        this.finishedQueue = fqvis;
-        this.playingQueue = plqvis;
+        visualizations = Lists.newArrayList(vis);
 
         SwingUtilities.invokeLater(new Runnable()
         {
@@ -60,24 +60,16 @@ public class BMLFlowVisualizerPort implements RealizerPort, BMLFeedbackListener
             public void run()
             {
                 panel.setLayout(new GridBagLayout());
-
-                GridBagConstraints c = new GridBagConstraints();
-                c.gridx = 1;
-                c.gridy = 1;
-                c.anchor = GridBagConstraints.NORTH;
-                panel.add(planningQueue.getVisualization(), c);
-
-                c = new GridBagConstraints();
-                c.gridx = 2;
-                c.gridy = 1;
-                c.anchor = GridBagConstraints.NORTH;
-                panel.add(playingQueue.getVisualization(), c);
-
-                c = new GridBagConstraints();
-                c.gridx = 3;
-                c.gridy = 1;
-                c.anchor = GridBagConstraints.NORTH;
-                panel.add(finishedQueue.getVisualization(), c);
+                int i = 1;
+                for (BMLFlowVisualization v : visualizations)
+                {
+                    GridBagConstraints c = new GridBagConstraints();
+                    c.gridx = i;
+                    c.gridy = 1;
+                    c.anchor = GridBagConstraints.NORTH;
+                    panel.add(v.getVisualization(), c);
+                    i++;
+                }
             }
         });
 
@@ -100,21 +92,23 @@ public class BMLFlowVisualizerPort implements RealizerPort, BMLFeedbackListener
         {
             return;
         }
-        
+
         if (fb instanceof BMLBlockProgressFeedback)
         {
             BMLBlockProgressFeedback fbBlock = (BMLBlockProgressFeedback) fb;
             if (fbBlock.getSyncId().equals("end"))
             {
-                finishedQueue.finishBlock(fbBlock);
-                planningQueue.finishBlock(fbBlock);
-                playingQueue.finishBlock(fbBlock);
+                for (BMLFlowVisualization v : visualizations)
+                {
+                    v.finishBlock(fbBlock);
+                }
             }
             else if (fbBlock.getSyncId().equals("start"))
             {
-                planningQueue.startBlock(fbBlock);
-                playingQueue.startBlock(fbBlock);
-                finishedQueue.startBlock(fbBlock);
+                for (BMLFlowVisualization v : visualizations)
+                {
+                    v.startBlock(fbBlock);
+                }
             }
         }
         if (fb instanceof BMLPredictionFeedback)
@@ -122,9 +116,10 @@ public class BMLFlowVisualizerPort implements RealizerPort, BMLFeedbackListener
             BMLPredictionFeedback pf = (BMLPredictionFeedback) fb;
             for (BMLBlockPredictionFeedback bbp : pf.getBmlBlockPredictions())
             {
-                planningQueue.updateBlock(bbp);
-                playingQueue.updateBlock(bbp);
-                finishedQueue.updateBlock(bbp);
+                for (BMLFlowVisualization v : visualizations)
+                {
+                    v.updateBlock(bbp);
+                }
             }
         }
     }
@@ -156,13 +151,15 @@ public class BMLFlowVisualizerPort implements RealizerPort, BMLFeedbackListener
 
         if (bb.getComposition().equals(CoreComposition.REPLACE))
         {
-            planningQueue.clear();
-            playingQueue.clear();
-            finishedQueue.clear();
+            for (BMLFlowVisualization v : visualizations)
+            {
+                v.clear();
+            }            
         }
-        planningQueue.planBlock(bb);
-        playingQueue.planBlock(bb);
-        finishedQueue.planBlock(bb);
+        for (BMLFlowVisualization v : visualizations)
+        {
+            v.planBlock(bb);
+        }
         realizerPort.performBML(bmlString);
     }
 

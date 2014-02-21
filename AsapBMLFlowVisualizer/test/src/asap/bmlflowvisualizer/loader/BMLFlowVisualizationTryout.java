@@ -12,39 +12,42 @@ import asap.realizerport.RealizerPort;
 /**
  * Demo, playing around with the BMLFlowVisualization
  * @author Herwin
- *
+ * 
  */
 public final class BMLFlowVisualizationTryout
 {
-    private BMLFlowVisualizationTryout(){}
-    
+    private BMLFlowVisualizationTryout()
+    {
+    }
+
     public static void main(String args[])
     {
         JFrame jf = new JFrame();
-        
+
         RealizerPort rp = new RealizerPort()
         {
             @Override
             public void addListeners(BMLFeedbackListener... listeners)
             {
-                
+
             }
 
             @Override
             public void removeAllListeners()
             {
-                
+
             }
 
             @Override
             public void performBML(String bmlString)
             {
-                
+
             }
         };
 
         BMLFlowVisualizerPort port = new BMLFlowVisualizerPort(rp);
-        port.addVisualization(new PlanningQueueJPanelVisualization(), new FinishedQueueJPanelVisualization(), new PlayingQueueJPanelVisualization());
+        port.setVisualization(new PlanningQueueJPanelVisualization(), new PlayingQueueJPanelVisualization(),
+                new FinishedQueueJPanelVisualization());
         jf.add(port.getVisualization());
         jf.setSize(1024, 768);
         jf.setVisible(true);
@@ -54,21 +57,20 @@ public final class BMLFlowVisualizationTryout
         port.performBML("<bml xmlns=\"http://www.bml-initiative.org/bml/bml-1.0\" id=\"bml4\"/>");
         port.performBML("<bml xmlns=\"http://www.bml-initiative.org/bml/bml-1.0\" id=\"bml5\"/>");
         port.performBML("<bml xmlns=\"http://www.bml-initiative.org/bml/bml-1.0\" id=\"bml6\"/>");
-        
-        
-        port.feedback("<predictionFeedback xmlns=\"http://www.bml-initiative.org/bml/bml-1.0\">" +
-                "<bml id=\"bml1\" globalStart=\"1\" globalEnd=\"7\"/></predictionFeedback>");
-        port.feedback("<predictionFeedback xmlns=\"http://www.bml-initiative.org/bml/bml-1.0\">" +
-                "<bml id=\"bml2\" globalStart=\"1\" globalEnd=\"7\"/></predictionFeedback>");
-        port.feedback("<predictionFeedback xmlns=\"http://www.bml-initiative.org/bml/bml-1.0\">" +
-                "<bml id=\"bml3\" globalStart=\"1\" globalEnd=\"7\"/></predictionFeedback>");
-        port.feedback("<predictionFeedback xmlns=\"http://www.bml-initiative.org/bml/bml-1.0\">" +
-                "<bml id=\"bml4\" globalStart=\"1\" globalEnd=\"7\"/></predictionFeedback>");
-        
+
+        port.feedback("<predictionFeedback xmlns=\"http://www.bml-initiative.org/bml/bml-1.0\">"
+                + "<bml id=\"bml1\" globalStart=\"1\" globalEnd=\"7\"/></predictionFeedback>");
+        port.feedback("<predictionFeedback xmlns=\"http://www.bml-initiative.org/bml/bml-1.0\">"
+                + "<bml id=\"bml2\" globalStart=\"1\" globalEnd=\"7\"/></predictionFeedback>");
+        port.feedback("<predictionFeedback xmlns=\"http://www.bml-initiative.org/bml/bml-1.0\">"
+                + "<bml id=\"bml3\" globalStart=\"1\" globalEnd=\"7\"/></predictionFeedback>");
+        port.feedback("<predictionFeedback xmlns=\"http://www.bml-initiative.org/bml/bml-1.0\">"
+                + "<bml id=\"bml4\" globalStart=\"1\" globalEnd=\"7\"/></predictionFeedback>");
+
         port.feedback("<blockProgress id=\"bml1:start\" globalTime=\"1\" xmlns=\"http://www.bml-initiative.org/bml/bml-1.0\"/>");
         port.feedback("<blockProgress id=\"bml2:start\" globalTime=\"1\" xmlns=\"http://www.bml-initiative.org/bml/bml-1.0\"/>");
         port.feedback("<blockProgress id=\"bml3:start\" globalTime=\"3\" xmlns=\"http://www.bml-initiative.org/bml/bml-1.0\"/>");
-        
+
         port.feedback("<blockProgress id=\"bml1:end\" globalTime=\"10\" xmlns=\"http://www.bml-initiative.org/bml/bml-1.0\"/>");
     }
 }

@@ -20,6 +20,7 @@ import javax.swing.SwingUtilities;
 import javax.swing.border.Border;
 import javax.swing.border.LineBorder;
 
+import lombok.extern.slf4j.Slf4j;
 import saiba.bml.core.BehaviourBlock;
 import saiba.bml.feedback.BMLBlockPredictionFeedback;
 import saiba.bml.feedback.BMLBlockProgressFeedback;
@@ -30,8 +31,9 @@ import asap.bmlflowvisualizer.graphutils.Edge;
 /**
  * UI Element that shows the BML blocks in the scheduling queue.
  * @author Herwin
- *
+ * 
  */
+@Slf4j
 public class PlayingQueueJPanelVisualization implements BMLFlowVisualization
 {
     private JPanel panel;
@@ -215,7 +217,11 @@ public class PlayingQueueJPanelVisualization implements BMLFlowVisualization
         {
             public void run()
             {
-                JPanel p = getBlock(pf.getId());
+                JPanel p = blockMap.get(pf.getId());
+                if (p == null)
+                {
+                    log.warn("Update (=prediction feedback) on block that didn't start yet {}"+pf.getId());
+                }
                 p.setBackground(Color.YELLOW);
                 layout();
                 panel.repaint();

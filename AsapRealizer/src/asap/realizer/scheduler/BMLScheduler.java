@@ -595,7 +595,10 @@ public final class BMLScheduler
             e.setBMLBlockState(bmlId, TimedPlanUnitState.LURKING);
         }
         bmlBlocksManager.updateBlocks();
-        prediction(createStartPrediction(bmlBlockMap.get(bmlId)));
+        if(bmlBlocksManager.getBMLBlock(bmlId).getState()!=TimedPlanUnitState.DONE)
+        {
+            prediction(createStartPrediction(bmlBlockMap.get(bmlId)));
+        }
     }
 
     public void activateBlock(String bmlId, double time)
