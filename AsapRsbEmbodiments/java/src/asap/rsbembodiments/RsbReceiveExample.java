@@ -1,34 +1,30 @@
 package asap.rsbembodiments;
 
-import rsb.AbstractEventHandler;
-import rsb.Event;
+import rsb.AbstractDataHandler;
 import rsb.Factory;
 import rsb.Listener;
+import rsb.converter.DefaultConverterRepository;
+import rsb.converter.ProtocolBufferConverter;
+import asap.rsbembodiments.Rsbembodiments.JointData;
 
-public class RsbReceiveExample extends AbstractEventHandler
+public class RsbReceiveExample extends AbstractDataHandler<JointData>
 {
     @Override
-    public void handleEvent(final Event event)
+    public void handleEvent(final JointData data)
     {
-        System.out.println("Received event " + event.toString());
-        System.out.println("Data: "+ event.getData());
+        System.out.println("jointData: "+data.getDataList());
     }
 
     public static void main(final String[] args) throws Throwable
     {
-        // Get a factory instance to create new RSB objects.
+        final ProtocolBufferConverter<JointData> converter = new ProtocolBufferConverter<JointData>(JointData.getDefaultInstance());
+        DefaultConverterRepository.getDefaultConverterRepository().addConverter(converter);
         final Factory factory = Factory.getInstance();
-
-        // Create a Listener instance on the specified scope that will
-        // receive events and dispatch them asynchronously to all
-        // registered handlers; activate the listener.
         final Listener listener = factory.createListener("/example/informer");
         listener.activate();
 
         try
         {
-            // Add an EventHandler that will print events when they
-            // are received.
             listener.addHandler(new RsbReceiveExample(), true);
 
             // Wait for events.
