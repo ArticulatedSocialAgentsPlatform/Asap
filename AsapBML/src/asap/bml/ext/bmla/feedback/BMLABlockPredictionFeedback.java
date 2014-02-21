@@ -31,17 +31,8 @@ public class BMLABlockPredictionFeedback extends BMLBlockPredictionFeedback
 
     public static BMLABlockPredictionFeedback build(BMLBlockPredictionFeedback fb)
     {
-        long posixStartTime = 0, posixEndTime = 0;
-        if (fb.specifiesCustomStringParameter(POSIXSTARTTIME_ID))
-        {
-            posixStartTime = Long.parseLong(fb.getCustomStringParameterValue(POSIXSTARTTIME_ID));
-        }
-        if (fb.specifiesCustomStringParameter(POSIXENDTIME_ID))
-        {
-            posixEndTime = Long.parseLong(fb.getCustomStringParameterValue(POSIXENDTIME_ID));
-        }
-        BMLABlockPredictionFeedback fbNew = new BMLABlockPredictionFeedback(fb.getId(), fb.getGlobalStart(), fb.getGlobalEnd(),
-                posixStartTime, posixEndTime);        
+        BMLABlockPredictionFeedback fbNew = new BMLABlockPredictionFeedback();
+        fbNew.readXML(fb.toXMLString());
         return fbNew;
     }
 

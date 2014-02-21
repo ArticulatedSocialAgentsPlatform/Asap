@@ -36,13 +36,8 @@ public class BMLABlockProgressFeedback extends BMLBlockProgressFeedback
     
     public static BMLABlockProgressFeedback build(BMLBlockProgressFeedback fb)
     {
-        long posixTime = 0;
-        if(fb.specifiesCustomStringParameter(POSIXTIME_ID))
-        {
-            posixTime = Long.parseLong(fb.getCustomStringParameterValue(POSIXTIME_ID));
-        }
-        BMLABlockProgressFeedback fbNew = new BMLABlockProgressFeedback(fb.getBmlId(), fb.getSyncId(), fb.getGlobalTime(), posixTime);
-        fbNew.setCharacterId(fb.getCharacterId());
+        BMLABlockProgressFeedback fbNew = new BMLABlockProgressFeedback();
+        fbNew.readXML(fb.toXMLString());
         return fbNew;
     }
     

@@ -32,14 +32,8 @@ public class BMLASyncPointProgressFeedback extends BMLSyncPointProgressFeedback
 
     public static BMLASyncPointProgressFeedback build(BMLSyncPointProgressFeedback fb)
     {
-        long posixTime = 0;
-        if (fb.specifiesCustomStringParameter(POSIXTIME_ID))
-        {
-            posixTime = Long.parseLong(fb.getCustomStringParameterValue(POSIXTIME_ID));
-        }
-        BMLASyncPointProgressFeedback fbNew = new BMLASyncPointProgressFeedback(fb.getBMLId(), fb.getBehaviourId(), fb.getSyncId(),
-                fb.getTime(), fb.getGlobalTime(), posixTime);
-        fbNew.setCharacterId(fb.getCharacterId());
+        BMLASyncPointProgressFeedback fbNew = new BMLASyncPointProgressFeedback();
+        fbNew.readXML(fb.toXMLString());
         return fbNew;
     }
 
