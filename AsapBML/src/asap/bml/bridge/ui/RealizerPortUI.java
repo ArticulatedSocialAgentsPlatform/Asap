@@ -60,6 +60,7 @@ import javax.swing.undo.UndoManager;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import saiba.bml.builder.BehaviourBlockBuilder;
 import asap.realizerport.RealizerPort;
 
 import com.google.common.base.Charsets;
@@ -305,9 +306,7 @@ public class RealizerPortUI extends JPanel
     /** Play the content of the BML input box; set the resulting output in the outputArea */
     public void playBMLContent()
     {
-        realizerBridge.performBML("<bml xmlns=\"http://www.bml-initiative.org/bml/bml-1.0\" "
-                + "id=\"clear\" composition=\"REPLACE\"></bml>");
-        
+        realizerBridge.performBML(BehaviourBlockBuilder.resetBlock().toXMLString());        
         String bmlContent = bmlInput.getText();
         bmlContent = bmlContent.replaceAll("(?s)<!--.*?-->","");
         String bmls[] = Iterables.toArray(Splitter.on("</bml>").trimResults().omitEmptyStrings().split(bmlContent), String.class);
