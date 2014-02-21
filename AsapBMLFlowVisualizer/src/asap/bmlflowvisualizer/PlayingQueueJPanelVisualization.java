@@ -40,6 +40,7 @@ public class PlayingQueueJPanelVisualization implements BMLFlowVisualization
     private Map<String, JPanel> blockMap = Collections.synchronizedMap(new HashMap<String, JPanel>());
     private Set<String> preplannedBlocks = Collections.synchronizedSet(new HashSet<String>());
     private Set<String> finishedBlocks = Collections.synchronizedSet(new HashSet<String>());
+    private Set<String> startedBlocks = Collections.synchronizedSet(new HashSet<String>());
     private Set<BehaviourBlock> behaviorBlocks = Collections.synchronizedSet(new HashSet<BehaviourBlock>());
 
     public PlayingQueueJPanelVisualization()
@@ -137,6 +138,7 @@ public class PlayingQueueJPanelVisualization implements BMLFlowVisualization
     @Override
     public void startBlock(final BMLBlockProgressFeedback bb)
     {
+        startedBlocks.add(bb.getBmlId());        
         SwingUtilities.invokeLater(new Runnable()
         {
             public void run()
@@ -183,6 +185,7 @@ public class PlayingQueueJPanelVisualization implements BMLFlowVisualization
         preplannedBlocks.clear();
         behaviorBlocks.clear();
         finishedBlocks.clear();
+        startedBlocks.clear();
         synchronized (blockMap)
         {
             for (String id : blockMap.keySet())
@@ -216,15 +219,24 @@ public class PlayingQueueJPanelVisualization implements BMLFlowVisualization
     @Override
     public void updateBlock(final BMLBlockPredictionFeedback pf)
     {
+        if (finishedBlocks.contains(pf.getId()))
+        {
+            log.warn("Update (=prediction feedback) on block that's already finished {}", pf.getId());
+            return;
+        }
+        if (startedBlocks.contains(pf.getId()))
+        {
+            return;
+        }
         SwingUtilities.invokeLater(new Runnable()
         {
             public void run()
             {
-                if (finishedBlocks.contains(pf.getId()))
+                if (startedBlocks.contains(pf.getId())||finishedBlocks.contains(pf.getId()))
                 {
-                    log.warn("Update (=prediction feedback) on block that's already finished {}",pf.getId());
                     return;
-                }                
+                }
+                
                 JPanel p = getBlock(pf.getId());
                 p.setBackground(Color.YELLOW);
                 layout();
@@ -233,5 +245,4 @@ public class PlayingQueueJPanelVisualization implements BMLFlowVisualization
             }
         });
     }
-
 }
