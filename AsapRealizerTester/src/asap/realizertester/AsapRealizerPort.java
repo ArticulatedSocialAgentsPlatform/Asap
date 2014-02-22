@@ -2,7 +2,7 @@ package asap.realizertester;
 
 import asap.realizerport.BMLFeedbackListener;
 import asap.realizerport.RealizerPort;
-import bml.realizertestport.XMLRealizerTestPort;
+import saiba.realizertestport.XMLRealizerTestPort;
 
 /**
  * Maps RealizerPort feedback to RealizerTestPort feedback

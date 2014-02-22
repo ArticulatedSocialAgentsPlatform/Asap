@@ -16,8 +16,8 @@ import saiba.bml.feedback.BMLPredictionFeedback;
 import asap.bml.ext.bmla.BMLAParameterValueChangeBehaviour;
 import asap.bml.ext.bmlt.BMLTAudioFileBehaviour;
 import asap.realizerport.BMLFeedbackListener;
-import bml.bmlinfo.DefaultSyncPoints;
-import bml.realizertest.AbstractBML1RealizerTest;
+import saiba.bmlinfo.DefaultSyncPoints;
+import saiba.realizertest.AbstractBML1RealizerTest;
 
 /**
  * Asap/MURML specific testcases for the AsapRealizer

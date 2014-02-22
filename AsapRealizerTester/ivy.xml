@@ -82,8 +82,8 @@
       <dependency org="google"   name="guava"                rev="latest.release"  />
       <dependency org="junit"    name="junit-dep"                rev="latest.release" />
       <dependency org="hamcrest" name="hamcrest-all"         rev="latest.release"  />
-      <dependency org="bml" name="realizertester"         rev="latest.${resolve.status}"  />
-      <dependency org="bml" name="realizertester-utils-bml1"         rev="latest.${resolve.status}"  />
+      <dependency org="saiba" name="realizertester"         rev="latest.${resolve.status}"  />
+      <dependency org="saiba" name="realizertester-utils-bml1"         rev="latest.${resolve.status}"  />
       <dependency org="lwjgl" name="lwjgl" rev="latest.release"  />
       <dependency org="reflections"   name="reflections"         rev="latest.release"  />
 
