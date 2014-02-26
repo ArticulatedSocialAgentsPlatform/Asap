@@ -21,16 +21,16 @@ import com.google.common.collect.SetMultimap;
 
 /**
  * Manages the state of BML blocks on the basis of behavior feedback, warnings and exceptions.
- * The BMLBlockManager manages the transition from PENDING to LURKING;
- * all other transitions are managed in the BMLBlock (extensions) themselves.
+ * The BMLBBlockManager manages the transition from PENDING to LURKING;
+ * all other transitions are managed in the BMLBBlock (extensions) themselves.
  * @author welberge
  */
 @Slf4j
 public final class BMLBlockManager
 {
-    private final ConcurrentHashMap<String, BMLBlock> finishedBMLBlocks = new ConcurrentHashMap<String, BMLBlock>();
+    private final ConcurrentHashMap<String, BMLBBlock> finishedBMLBBlocks = new ConcurrentHashMap<String, BMLBBlock>();
 
-    private final ConcurrentHashMap<String, BMLBlock> bmlBlocks = new ConcurrentHashMap<String, BMLBlock>();
+    private final ConcurrentHashMap<String, BMLBBlock> bmlBlocks = new ConcurrentHashMap<String, BMLBBlock>();
 
     private final SetMultimap<BehaviorKey, BMLSyncPointProgressFeedback> behaviorProgress;
 
@@ -67,7 +67,7 @@ public final class BMLBlockManager
         final String bmlId;
     }
 
-    public synchronized void addBMLBlock(BMLBlock bbm)
+    public synchronized void addBMLBlock(BMLBBlock bbm)
     {
         bmlBlocks.put(bbm.getBMLId(), bbm);
     }
@@ -75,13 +75,13 @@ public final class BMLBlockManager
     public synchronized void removeBMLBlock(String bmlId)
     {
         bmlBlocks.remove(bmlId);
-        finishedBMLBlocks.remove(bmlId);        
+        finishedBMLBBlocks.remove(bmlId);        
         updateBlocks();
     }
 
     boolean isPending(String bmlId, Set<String> bmlIdsChecked)
     {
-        BMLBlock b = getBMLBlock(bmlId);
+        BMLBBlock b = getBMLBlock(bmlId);
         if (b == null)
         {
             return false;
@@ -94,7 +94,7 @@ public final class BMLBlockManager
      */
     public boolean isPending(String bmlId)
     {
-        BMLBlock b = getBMLBlock(bmlId);
+        BMLBBlock b = getBMLBlock(bmlId);
         if (b == null)
         {
             return false;
@@ -105,7 +105,7 @@ public final class BMLBlockManager
     
     public void finishBlock(String bmlId)
     {
-        BMLBlock b = bmlBlocks.get(bmlId);
+        BMLBBlock b = bmlBlocks.get(bmlId);
         if (b != null)
         {
             b.finish();
@@ -114,7 +114,7 @@ public final class BMLBlockManager
 
     public synchronized void startBlock(String bmlId)
     {
-        BMLBlock b = bmlBlocks.get(bmlId);
+        BMLBBlock b = bmlBlocks.get(bmlId);
         if (b != null)
         {
             b.start();
@@ -129,7 +129,7 @@ public final class BMLBlockManager
      */
     public synchronized TimedPlanUnitState getBMLBlockState(String bmlId)
     {
-        BMLBlock b = bmlBlocks.get(bmlId);
+        BMLBBlock b = bmlBlocks.get(bmlId);
         if (b == null)
         {
             return TimedPlanUnitState.DONE;
@@ -150,7 +150,7 @@ public final class BMLBlockManager
     private ImmutableMap<String, TimedPlanUnitState> getBlockStates()
     {
         Map<String, TimedPlanUnitState> blockStates = new HashMap<String, TimedPlanUnitState>();
-        for (BMLBlock block : bmlBlocks.values())
+        for (BMLBBlock block : bmlBlocks.values())
         {
             blockStates.put(block.getBMLId(), block.getState());
         }
@@ -160,27 +160,27 @@ public final class BMLBlockManager
     public synchronized void updateBlocks()
     {
         ImmutableMap<String, TimedPlanUnitState> m = getBlockStates();
-        for (BMLBlock block : bmlBlocks.values())
+        for (BMLBBlock block : bmlBlocks.values())
         {
             block.update(m);
         }
     }
 
-    public BMLBlock getBMLBlock(String bmlId)
+    public BMLBBlock getBMLBlock(String bmlId)
     {
         return bmlBlocks.get(bmlId);
     }
 
     public synchronized void clear()
     {
-        finishedBMLBlocks.clear();
+        finishedBMLBBlocks.clear();
         bmlBlocks.clear();
         behaviorProgress.clear();
     }
 
     public synchronized void activateBlock(String bmlId)
     {
-        BMLBlock bb = bmlBlocks.get(bmlId);
+        BMLBBlock bb = bmlBlocks.get(bmlId);
         if (bb == null)
         {
             log.warn("Attempting to activate unknown block {}", bmlId);
@@ -194,10 +194,10 @@ public final class BMLBlockManager
     {
         if (psf.getSyncId().equals("end"))
         {
-            BMLBlock block = bmlBlocks.get(psf.getBmlId());
+            BMLBBlock block = bmlBlocks.get(psf.getBmlId());
             if (block == null)
             {
-                log.warn("Performance stop of block " + psf.getBmlId() + " not managed by the BMLBlockManager");
+                log.warn("Performance stop of block " + psf.getBmlId() + " not managed by the BMLBBlockManager");
                 return;
             }
         }
@@ -209,7 +209,7 @@ public final class BMLBlockManager
         String idSplit[] = bw.getId().split(":");
         if (idSplit.length == 2)
         {
-            for (BMLBlock block : bmlBlocks.values())
+            for (BMLBBlock block : bmlBlocks.values())
             {
                 if (block.getBMLId().equals(idSplit[0]))
                 {
@@ -224,7 +224,7 @@ public final class BMLBlockManager
     {
         behaviorProgress.put(new BehaviorKey(spp.getBMLId(), spp.getBehaviourId()), spp);
         log.debug("Adding sync {}:{}:{} to behaviorProgress", new String[] { spp.getBMLId(), spp.getBehaviourId(), spp.getSyncId() });
-        for (BMLBlock block : bmlBlocks.values())
+        for (BMLBBlock block : bmlBlocks.values())
         {
             if (block.getBMLId().equals(spp.getBMLId()))
             {
@@ -264,7 +264,7 @@ public final class BMLBlockManager
     
     public synchronized void predictionUpdate(String bmlId)
     {
-        for (BMLBlock block : bmlBlocks.values())
+        for (BMLBBlock block : bmlBlocks.values())
         {
             block.predictionUpdate(bmlId);
         }

@@ -47,7 +47,7 @@ public class BMLBlockManagerFeedbackTest
     @Test
     public void testFeedbackOnEmpty()
     {
-        BMLTBlock bb = new BMLTBlock("bml1", mockScheduler);
+        BMLBBlock bb = new BMLBBlock("bml1", mockScheduler, pegBoard);
         bbm.addBMLBlock(bb);
         bbm.startBlock("bml1");
         final Set<String> behs = new HashSet<String>();
@@ -68,7 +68,7 @@ public class BMLBlockManagerFeedbackTest
     @Test
     public void testFeedbackGiven1()
     {
-        BMLTBlock bb = new BMLTBlock("bml1", mockScheduler);
+        BMLBBlock bb = new BMLBBlock("bml1", mockScheduler, pegBoard);
         bbm.addBMLBlock(bb);
         bbm.startBlock("bml1");
 
@@ -112,7 +112,7 @@ public class BMLBlockManagerFeedbackTest
         // bml1:beh2:stroke = 1
         // bml1:beh2:end = 2
         // bml2:beh1:start = 6
-        BMLTBlock bb = new BMLTBlock("bml1", mockScheduler);
+        BMLBBlock bb = new BMLBBlock("bml1", mockScheduler, pegBoard);
         bbm.addBMLBlock(bb);
         bbm.startBlock("bml1");
 
@@ -141,7 +141,7 @@ public class BMLBlockManagerFeedbackTest
     @Test
     public void testNoFeedbackOnEnd()
     {
-        BMLTBlock bb = new BMLTBlock("bml1", mockScheduler);
+        BMLBBlock bb = new BMLBBlock("bml1", mockScheduler, pegBoard);
         bbm.addBMLBlock(bb);
         bbm.startBlock("bml1");
 
@@ -159,7 +159,7 @@ public class BMLBlockManagerFeedbackTest
     @Test
     public void testFeedbackOnEnd()
     {
-        BMLTBlock bb = new BMLTBlock("bml1", mockScheduler);
+        BMLBBlock bb = new BMLBBlock("bml1", mockScheduler, pegBoard);
         bbm.addBMLBlock(bb);
         bbm.startBlock("bml1");
 
@@ -179,7 +179,7 @@ public class BMLBlockManagerFeedbackTest
     @Test
     public void testTwoBehaviours()
     {
-        BMLTBlock bb = new BMLTBlock("bml1", mockScheduler);
+        BMLBBlock bb = new BMLBBlock("bml1", mockScheduler, pegBoard);
         bbm.addBMLBlock(bb);
         bbm.startBlock("bml1");
 
@@ -204,7 +204,7 @@ public class BMLBlockManagerFeedbackTest
     @Test
     public void testFeedbackOnException()
     {
-        BMLTBlock bb = new BMLTBlock("bml1", mockScheduler);
+        BMLBBlock bb = new BMLBBlock("bml1", mockScheduler, pegBoard);
         bbm.addBMLBlock(bb);
         bbm.startBlock("bml1");
         when(mockScheduler.getBehaviours("bml1")).thenReturn(new HashSet<String>());
@@ -216,7 +216,7 @@ public class BMLBlockManagerFeedbackTest
     @Test
     public void testTwoBehavioursReverse()
     {
-        BMLTBlock bb = new BMLTBlock("bml1", mockScheduler);
+        BMLBBlock bb = new BMLBBlock("bml1", mockScheduler, pegBoard);
         bbm.addBMLBlock(bb);
         bbm.startBlock("bml1");
 
@@ -244,9 +244,9 @@ public class BMLBlockManagerFeedbackTest
         HashSet<String> appendAfter = new HashSet<String>();
         appendAfter.add("bml2");
         appendAfter.add("bml3");
-        bbm.addBMLBlock(new BMLTBlock("bml1", mockScheduler, appendAfter, new ArrayList<String>()));
-        bbm.addBMLBlock(new BMLTBlock("bml2", mockScheduler));
-        bbm.addBMLBlock(new BMLTBlock("bml3", mockScheduler));
+        bbm.addBMLBlock(new BMLBBlock("bml1", mockScheduler, pegBoard, appendAfter, new ArrayList<String>(), new HashSet<String>()));
+        bbm.addBMLBlock(new BMLBBlock("bml2", mockScheduler, pegBoard));
+        bbm.addBMLBlock(new BMLBBlock("bml3", mockScheduler, pegBoard));
 
         bbm.activateBlock("bml1");
         bbm.startBlock("bml2");
@@ -266,9 +266,9 @@ public class BMLBlockManagerFeedbackTest
         HashSet<String> appendAfter = new HashSet<String>();
         appendAfter.add("bml2");
         appendAfter.add("bml3");
-        bbm.addBMLBlock(new BMLTBlock("bml1", mockScheduler, appendAfter, new ArrayList<String>()));
-        bbm.addBMLBlock(new BMLTBlock("bml2", mockScheduler));
-        bbm.addBMLBlock(new BMLTBlock("bml3", mockScheduler));
+        bbm.addBMLBlock(new BMLBBlock("bml1", mockScheduler, pegBoard, appendAfter, new ArrayList<String>(), new HashSet<String>()));
+        bbm.addBMLBlock(new BMLBBlock("bml2", mockScheduler, pegBoard));
+        bbm.addBMLBlock(new BMLBBlock("bml3", mockScheduler, pegBoard));
 
         bbm.activateBlock("bml1");
         bbm.startBlock("bml2");
@@ -287,10 +287,10 @@ public class BMLBlockManagerFeedbackTest
         HashSet<String> appendAfter = new HashSet<String>();
         appendAfter.add("bml2");
         appendAfter.add("bml3");
-        BMLTBlock bml1 = new BMLTBlock("bml1", mockScheduler, appendAfter, new ArrayList<String>());
+        BMLBBlock bml1 = new BMLBBlock("bml1", mockScheduler, pegBoard, appendAfter, new ArrayList<String>(), new HashSet<String>());
         bbm.addBMLBlock(bml1);
-        bbm.addBMLBlock(new BMLTBlock("bml2", mockScheduler));
-        bbm.addBMLBlock(new BMLTBlock("bml3", mockScheduler));
+        bbm.addBMLBlock(new BMLBBlock("bml2", mockScheduler, pegBoard));
+        bbm.addBMLBlock(new BMLBBlock("bml3", mockScheduler, pegBoard));
 
         bml1.setState(TimedPlanUnitState.PENDING);
         bbm.startBlock("bml2");

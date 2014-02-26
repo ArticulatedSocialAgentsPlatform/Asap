@@ -1085,33 +1085,48 @@ public class BMLSchedulerTest
         
         //bml1 scheduling start
         assertEquals("bml1", predictionFeedback.get(0).getBmlBlockPredictions().get(0).getId());
+        assertEquals(0,predictionFeedback.get(0).getBmlBlockPredictions().get(0).getGlobalStart(),PRECISION);
         
         //bml1 scheduling done
         assertEquals("bml1", predictionFeedback.get(1).getBmlBlockPredictions().get(0).getId());
+        assertEquals(0,predictionFeedback.get(1).getBmlBlockPredictions().get(0).getGlobalStart(),PRECISION);
+        assertEquals(5,predictionFeedback.get(1).getBmlBlockPredictions().get(0).getGlobalEnd(),PRECISION);
         
         //bml1 start
         assertEquals("bml1", predictionFeedback.get(2).getBmlBlockPredictions().get(0).getId());
+        assertEquals(0,predictionFeedback.get(2).getBmlBlockPredictions().get(0).getGlobalStart(),PRECISION);
+        assertEquals(5,predictionFeedback.get(2).getBmlBlockPredictions().get(0).getGlobalEnd(),PRECISION);
         
         //bml2 scheduling start        
         assertEquals("bml2", predictionFeedback.get(3).getBmlBlockPredictions().get(0).getId());
-        
+        assertEquals(5,predictionFeedback.get(3).getBmlBlockPredictions().get(0).getGlobalStart(),PRECISION);
+                
         //bml2 scheduling done
         assertEquals("bml2", predictionFeedback.get(4).getBmlBlockPredictions().get(0).getId());
+        assertEquals(5,predictionFeedback.get(4).getBmlBlockPredictions().get(0).getGlobalStart(),PRECISION);
+        assertEquals(10,predictionFeedback.get(4).getBmlBlockPredictions().get(0).getGlobalEnd(),PRECISION);
         
         //bml3 scheduling start        
         assertEquals("bml3", predictionFeedback.get(5).getBmlBlockPredictions().get(0).getId());
+        assertEquals(0,predictionFeedback.get(5).getBmlBlockPredictions().get(0).getGlobalStart(),PRECISION);
         
         //bml2 timing update
         assertEquals("bml2", predictionFeedback.get(6).getBmlBlockPredictions().get(0).getId());
+        assertEquals(20,predictionFeedback.get(6).getBmlBlockPredictions().get(0).getGlobalStart(),PRECISION);
         
         //bml3 scheduling done
         assertEquals("bml3", predictionFeedback.get(7).getBmlBlockPredictions().get(0).getId());
+        assertEquals(0,predictionFeedback.get(7).getBmlBlockPredictions().get(0).getGlobalStart(),PRECISION);
+        assertEquals(20,predictionFeedback.get(7).getBmlBlockPredictions().get(0).getGlobalEnd(),PRECISION);
         
         //bml2 timing update        
         assertEquals("bml2", predictionFeedback.get(8).getBmlBlockPredictions().get(0).getId());
+        assertEquals(20,predictionFeedback.get(8).getBmlBlockPredictions().get(0).getGlobalStart(),PRECISION);
         
         //bml3 start
         assertEquals("bml3", predictionFeedback.get(9).getBmlBlockPredictions().get(0).getId());
+        assertEquals(0,predictionFeedback.get(7).getBmlBlockPredictions().get(0).getGlobalStart(),PRECISION);
+        assertEquals(20,predictionFeedback.get(7).getBmlBlockPredictions().get(0).getGlobalEnd(),PRECISION);
         
         //bml2 timing update?
         //assertEquals("bml2", predictionFeedback.get(9).getBmlBlockPredictions().get(0).getId());

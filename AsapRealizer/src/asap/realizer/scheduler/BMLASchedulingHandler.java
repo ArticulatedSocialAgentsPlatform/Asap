@@ -32,38 +32,31 @@ public class BMLASchedulingHandler implements SchedulingHandler
 
     private boolean addBMLBlockAppendAfterTarget(String bmlId, String appender, BMLBlockManager bbm)
     {
-        BMLBlock b = bbm.getBMLBlock(bmlId);
+        BMLBBlock b = bbm.getBMLBlock(bmlId);
         if (b == null)
         {
             return false;
         }
         if (b.getState().equals(TimedPlanUnitState.IN_PREP) || b.getState().equals(TimedPlanUnitState.LURKING))
         {
-            if (b instanceof BMLBBlock)
-            {
-                BMLBBlock bb = (BMLBBlock) b;
-                bb.addAppendTarget(appender);
-                return true;
-            }
+            b.addAppendTarget(appender);
+            return true;
         }
         return false;
     }
 
     private boolean addBMLBlockChunkAfterTarget(String bmlId, String appender, BMLBlockManager bbm)
     {
-        BMLBlock b = bbm.getBMLBlock(bmlId);
+        BMLBBlock b = bbm.getBMLBlock(bmlId);
         if (b == null)
         {
             return false;
         }
         if (b.getState().equals(TimedPlanUnitState.IN_PREP) || b.getState().equals(TimedPlanUnitState.LURKING))
         {
-            if (b instanceof BMLBBlock)
-            {
-                BMLBBlock bb = (BMLBBlock) b;
-                bb.addChunkTarget(appender);
-                return true;
-            }
+            b.addChunkTarget(appender);
+            return true;
+
         }
         return false;
     }

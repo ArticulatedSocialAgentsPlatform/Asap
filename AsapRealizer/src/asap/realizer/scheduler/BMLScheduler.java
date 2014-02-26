@@ -56,6 +56,7 @@ import asap.realizer.planunit.TimedPlanUnitState;
 import asap.realizerport.BMLFeedbackListener;
 
 import com.google.common.collect.ImmutableSet;
+import com.google.common.primitives.Doubles;
 
 /**
  * BMLScheduler, handles BML block states, feedback listeners and maintains engines and
@@ -357,10 +358,20 @@ public final class BMLScheduler
 
     public void updatePredictions(String bmlId)
     {
-        if(bmlBlockMap.containsKey(bmlId))
+        if (bmlBlockMap.containsKey(bmlId))
         {
-            prediction(createFilledBlockPrediction(bmlBlockMap.get(bmlId), getStartTime(bmlId), predictEndTime(bmlId)));
+            prediction(createFilledBlockPrediction(bmlBlockMap.get(bmlId), predictStartTime(bmlId), predictEndTime(bmlId)));
         }
+    }
+
+    public double predictStartTime(String bmlId)
+    {
+        BMLBBlock bb = getBMLBlockManager().getBMLBlock(bmlId);
+        if (bb.getState().isPlaying())
+        {
+            return this.getStartTime(bmlId);
+        }
+        return Doubles.max(predictEndTime(bb.getAppendSet()), predictSubsidingTime(bb.getChunkAfterSet()), getSchedulingTime());
     }
 
     public void planningStart(String bmlId, double predictedStart)
@@ -371,7 +382,7 @@ public final class BMLScheduler
     public void planningFinished(BehaviourBlock bb, double predictedStart, double predictedEnd)
     {
         prediction(createFilledBlockPrediction(bb, predictedStart, predictedEnd));
-        bmlBlocksManager.predictionUpdate(bb.getBmlId());        
+        bmlBlocksManager.predictionUpdate(bb.getBmlId());
     }
 
     /**

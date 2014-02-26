@@ -33,7 +33,7 @@ public class BMLBBlockManagerTest
     @Test
     public void testIsPendingOneBlock()
     {
-        BMLTBlock bb1 = new BMLTBlock("bml1", scheduler);
+        BMLBBlock bb1 = new BMLBBlock("bml1", scheduler, pegBoard);
         bb1.setState(TimedPlanUnitState.PENDING);
         bbm.addBMLBlock(bb1);
         assertTrue(bbm.isPending("bml1"));
