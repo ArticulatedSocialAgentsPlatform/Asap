@@ -357,7 +357,10 @@ public final class BMLScheduler
 
     public void updatePredictions(String bmlId)
     {
-        prediction(createFilledBlockPrediction(bmlBlockMap.get(bmlId), getStartTime(bmlId), predictEndTime(bmlId)));
+        if(bmlBlockMap.containsKey(bmlId))
+        {
+            prediction(createFilledBlockPrediction(bmlBlockMap.get(bmlId), getStartTime(bmlId), predictEndTime(bmlId)));
+        }
     }
 
     public void planningStart(String bmlId, double predictedStart)
