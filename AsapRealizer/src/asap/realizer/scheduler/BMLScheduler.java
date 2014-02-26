@@ -28,12 +28,10 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
+import java.util.concurrent.ConcurrentHashMap;
 
 import lombok.Delegate;
-
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
+import lombok.extern.slf4j.Slf4j;
 import saiba.bml.core.Behaviour;
 import saiba.bml.core.BehaviourBlock;
 import saiba.bml.feedback.BMLBlockPredictionFeedback;
@@ -65,11 +63,10 @@ import com.google.common.collect.ImmutableSet;
  * 
  * @author Herwin van Welbergen
  */
+@Slf4j
 public final class BMLScheduler
 {
-    private Map<String, BehaviourBlock> bmlBlockMap = new HashMap<String, BehaviourBlock>();
-
-    private final Logger logger = LoggerFactory.getLogger(BMLScheduler.class.getName());
+    private Map<String, BehaviourBlock> bmlBlockMap = new ConcurrentHashMap<String, BehaviourBlock>();
 
     private final BMLParser parser;
 
@@ -259,6 +256,7 @@ public final class BMLScheduler
         }
         bmlBlocksManager.updateBlocks();
         bmlBlocksManager.clear();
+        // FIXME: bmlBlockMap.clear();
         pegBoard.clear();
     }
 
@@ -359,7 +357,7 @@ public final class BMLScheduler
 
     public void updatePredictions(String bmlId)
     {
-        //TODO: implement this
+        prediction(createFilledBlockPrediction(bmlBlockMap.get(bmlId), getStartTime(bmlId), predictEndTime(bmlId)));
     }
 
     public void planningStart(String bmlId, double predictedStart)
@@ -370,6 +368,7 @@ public final class BMLScheduler
     public void planningFinished(BehaviourBlock bb, double predictedStart, double predictedEnd)
     {
         prediction(createFilledBlockPrediction(bb, predictedStart, predictedEnd));
+        bmlBlocksManager.predictionUpdate(bb.getBmlId());        
     }
 
     /**
@@ -545,7 +544,7 @@ public final class BMLScheduler
     {
         if (!bmlBlocksManager.getBMLBlocks().contains(bmlId))
         {
-            logger.debug("Attempting to stop non existing bml block {}", bmlId);
+            log.debug("Attempting to stop non existing bml block {}", bmlId);
             return;
         }
 
@@ -580,12 +579,12 @@ public final class BMLScheduler
     {
         if (!bmlBlocksManager.getBMLBlocks().contains(bmlId))
         {
-            logger.warn("Attempting to start non existing bml block {}", bmlId);
+            log.warn("Attempting to start non existing bml block {}", bmlId);
             return;
         }
 
         pegBoard.setBMLBlockTime(bmlId, schedulingClock.getMediaSeconds());
-        logger.debug("Starting bml block {}", bmlId);
+        log.debug("Starting bml block {}", bmlId);
 
         // prediction(createBehaviorPrediction(bmlBlockMap.get(bmlId)));
         bmlBlocksManager.startBlock(bmlId);
@@ -595,7 +594,7 @@ public final class BMLScheduler
             e.setBMLBlockState(bmlId, TimedPlanUnitState.LURKING);
         }
         bmlBlocksManager.updateBlocks();
-        if(bmlBlocksManager.getBMLBlock(bmlId).getState()!=TimedPlanUnitState.DONE)
+        if (bmlBlocksManager.getBMLBlock(bmlId).getState() != TimedPlanUnitState.DONE)
         {
             prediction(createStartPrediction(bmlBlockMap.get(bmlId)));
         }
@@ -615,7 +614,7 @@ public final class BMLScheduler
     {
         for (Engine e : getEngines())
         {
-            logger.debug("Checking behavior validity for engine {}", e.getClass());
+            log.debug("Checking behavior validity for engine {}", e.getClass());
             Collection<String> invalidBehaviours = e.getInvalidBehaviours();
             for (String id : invalidBehaviours)
             {
@@ -633,11 +632,11 @@ public final class BMLScheduler
 
     public void removeInvalidBehaviors()
     {
-        logger.debug("Checking behavior validity");
+        log.debug("Checking behavior validity");
         // remove all invalid behaviours and warn
         for (Engine e : getEngines())
         {
-            logger.debug("Checking behavior validity for engine {}", e.getClass());
+            log.debug("Checking behavior validity for engine {}", e.getClass());
             Collection<String> invalidBehaviours = e.getInvalidBehaviours();
             for (String id : invalidBehaviours)
             {

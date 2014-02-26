@@ -49,4 +49,9 @@ public interface BMLBlock
     String getBMLId();
     void setState(TimedPlanUnitState state);
     TimedPlanUnitState getState();
+    
+    /**
+     * Prediction of timing block bmlId is updated
+     */
+    void predictionUpdate(String bmlId);
 }

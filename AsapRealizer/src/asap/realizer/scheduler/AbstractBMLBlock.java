@@ -154,4 +154,10 @@ public abstract class AbstractBMLBlock implements BMLBlock
         if (behInfo == null) behInfo = newSet;
         behInfo.add(syncId);
     }
+    
+    @Override
+    public void predictionUpdate(String bmlId)
+    {
+        
+    }
 }

@@ -68,7 +68,7 @@ public class BMLASchedulingHandler implements SchedulingHandler
         return false;
     }
 
-    public boolean checkBlockConstraints(BehaviourBlock bb, BMLScheduler scheduler, BMLABMLBehaviorAttributes bmlaAttr)
+    public boolean checkAndApplyBlockBeforeConstraints(BehaviourBlock bb, BMLScheduler scheduler, BMLABMLBehaviorAttributes bmlaAttr)
     {
         for (String chunkBefore : bmlaAttr.getChunkBeforeList())
         {
@@ -101,22 +101,22 @@ public class BMLASchedulingHandler implements SchedulingHandler
         Set<String> chunkAfter = new HashSet<String>();
         handleComposition(bb, scheduler, bmlaAttr, appendAfter, chunkAfter);
 
+        double predictedStart = Math.max(scheduler.predictEndTime(appendAfter), scheduler.predictSubsidingTime(chunkAfter));
+        scheduler.planningStart(bb.id, predictedStart);
+
         BMLBBlock bbm = new BMLBBlock(bb.id, scheduler, pegBoard, appendAfter, bmlaAttr.getOnStartList(), chunkAfter);
         scheduler.getBMLBlockManager().addBMLBlock(bbm);
-        if (!checkBlockConstraints(bb, scheduler, bmlaAttr))
+        if (!checkAndApplyBlockBeforeConstraints(bb, scheduler, bmlaAttr))
         {
             return;
         }
-        
-        schedule(bb, scheduler, appendAfter, chunkAfter, bbm);
-
+        schedule(bb, scheduler, appendAfter, chunkAfter, bbm, predictedStart);
         setupBlockStartState(bb, scheduler, bmlaAttr, appendAfter, chunkAfter, bbm);
     }
 
-    private void schedule(BehaviourBlock bb, BMLScheduler scheduler, Set<String> appendAfter, Set<String> chunkAfter, BMLBBlock bbm)
+    private void schedule(BehaviourBlock bb, BMLScheduler scheduler, Set<String> appendAfter, Set<String> chunkAfter, BMLBBlock bbm,
+            double predictedStart)
     {
-        double predictedStart = Math.max(scheduler.predictEndTime(appendAfter), scheduler.predictSubsidingTime(chunkAfter));
-        scheduler.planningStart(bb.id, predictedStart);
 
         BMLBlockPeg bmlBlockPeg = new BMLBlockPeg(bb.id, predictedStart);
         scheduler.addBMLBlockPeg(bmlBlockPeg);
@@ -124,12 +124,12 @@ public class BMLASchedulingHandler implements SchedulingHandler
         strategy.schedule(bb.getComposition(), bb, bmlBlockPeg, scheduler, scheduler.getSchedulingTime());
         log.debug("Scheduling finished at: {}", scheduler.getSchedulingTime());
         scheduler.removeInvalidBehaviors(bb.id);
-        
+
         predictedStart = Math.max(scheduler.predictEndTime(appendAfter), scheduler.predictSubsidingTime(chunkAfter));
         scheduler.addBMLBlock(bbm);
         bmlBlockPeg.setValue(predictedStart);
 
-        scheduler.planningFinished(bb, predictedStart, scheduler.predictEndTime(bb.id));        
+        scheduler.planningFinished(bb, predictedStart, scheduler.predictEndTime(bb.id));
     }
 
     private void handleComposition(BehaviourBlock bb, BMLScheduler scheduler, BMLABMLBehaviorAttributes bmlaAttr, Set<String> appendAfter,

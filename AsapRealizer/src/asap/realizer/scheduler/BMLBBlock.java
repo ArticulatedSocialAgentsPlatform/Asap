@@ -40,25 +40,23 @@ public class BMLBBlock extends AbstractBMLBlock
         chunkAfterSet.addAll(chunkAfter);
     }
 
-   
-
     @Override
     public boolean isPending(Set<String> checked)
     {
         if (super.isPending()) return true;
-        if (isPending(chunkAfterSet,checked))return true;
-        if (isPending(appendSet, checked))return true;
+        if (isPending(chunkAfterSet, checked)) return true;
+        if (isPending(appendSet, checked)) return true;
         return false;
     }
-    
+
     @Override
     public boolean isPending()
     {
         if (super.isPending()) return true;
         Set<String> checked = new HashSet<String>();
         checked.add(bmlId);
-        if (isPending(Sets.difference(chunkAfterSet,checked),checked))return true;
-        if (isPending(Sets.difference(appendSet,checked), checked))return true;
+        if (isPending(Sets.difference(chunkAfterSet, checked), checked)) return true;
+        if (isPending(Sets.difference(appendSet, checked), checked)) return true;
         return false;
     }
 
@@ -210,6 +208,17 @@ public class BMLBBlock extends AbstractBMLBlock
         }
     }
 
-    
-
+    @Override
+    public void predictionUpdate(String bmlId)
+    {
+        if (bmlId.equals(getBMLId()))
+        {
+            return;
+        }
+        
+        if(getAppendSet().contains(bmlId) || getChunkAfterSet().contains(bmlId))
+        {
+            scheduler.updatePredictions(getBMLId());
+        }
+    }
 }
