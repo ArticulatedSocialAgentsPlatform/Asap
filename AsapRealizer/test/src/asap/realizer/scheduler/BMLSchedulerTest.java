@@ -1069,7 +1069,6 @@ public class BMLSchedulerTest
         assertEquals(5, pegBoard.getBMLBlockPeg("bml3").getValue(), PRECISION);
     }
 
-    //TODO: further develop these tests
     @Test
     public void testPredictionUpdatePrepend()
     {
@@ -1081,7 +1080,7 @@ public class BMLSchedulerTest
         parseBML(createNonEmptyBML("bml3", "xmlns:bmla=\""+BMLAInfo.BMLA_NAMESPACE +"\" bmla:prependBefore=\"bml2\""));
         scheduler.schedule();
         
-        assertEquals(10, predictionFeedback.size());
+        assertEquals(11, predictionFeedback.size());
         
         //bml1 scheduling start
         assertEquals("bml1", predictionFeedback.get(0).getBmlBlockPredictions().get(0).getId());
@@ -1125,11 +1124,12 @@ public class BMLSchedulerTest
         
         //bml3 start
         assertEquals("bml3", predictionFeedback.get(9).getBmlBlockPredictions().get(0).getId());
-        assertEquals(0,predictionFeedback.get(7).getBmlBlockPredictions().get(0).getGlobalStart(),PRECISION);
-        assertEquals(20,predictionFeedback.get(7).getBmlBlockPredictions().get(0).getGlobalEnd(),PRECISION);
+        assertEquals(0,predictionFeedback.get(9).getBmlBlockPredictions().get(0).getGlobalStart(),PRECISION);
+        assertEquals(20,predictionFeedback.get(9).getBmlBlockPredictions().get(0).getGlobalEnd(),PRECISION);
         
-        //bml2 timing update?
-        //assertEquals("bml2", predictionFeedback.get(9).getBmlBlockPredictions().get(0).getId());
+        //bml2 timing update
+        assertEquals("bml2", predictionFeedback.get(10).getBmlBlockPredictions().get(0).getId());
+        assertEquals(20,predictionFeedback.get(10).getBmlBlockPredictions().get(0).getGlobalStart(),PRECISION);
     }
     
     @Test

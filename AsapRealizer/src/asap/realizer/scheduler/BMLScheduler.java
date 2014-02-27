@@ -600,7 +600,6 @@ public final class BMLScheduler
         pegBoard.setBMLBlockTime(bmlId, schedulingClock.getMediaSeconds());
         log.debug("Starting bml block {}", bmlId);
 
-        // prediction(createBehaviorPrediction(bmlBlockMap.get(bmlId)));
         bmlBlocksManager.startBlock(bmlId);
 
         for (Engine e : getEngines())
@@ -612,6 +611,7 @@ public final class BMLScheduler
         {
             prediction(createStartPrediction(bmlBlockMap.get(bmlId)));
         }
+        bmlBlocksManager.predictionUpdate(bmlId);
     }
 
     public void activateBlock(String bmlId, double time)
