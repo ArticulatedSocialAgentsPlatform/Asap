@@ -78,9 +78,9 @@ public class BMLASchedulingHandlerTest
         assertEquals(time, blockPegArgument.getValue().getValue(), TIMING_PRECISION);
     }
 
-    private BMLBlock captureBMLBlock()
+    private BMLBBlock captureBMLBlock()
     {
-        ArgumentCaptor<BMLBlock> bmlBlockArgument = ArgumentCaptor.forClass(BMLBlock.class);
+        ArgumentCaptor<BMLBBlock> bmlBlockArgument = ArgumentCaptor.forClass(BMLBBlock.class);
         verify(mockScheduler, times(1)).addBMLBlock(bmlBlockArgument.capture());
         return bmlBlockArgument.getValue();
     }
@@ -91,7 +91,7 @@ public class BMLASchedulingHandlerTest
         BehaviourBlock bb = createBehaviourBlock("bml1");
         handler.schedule(bb, mockScheduler);
 
-        BMLBlock block = captureBMLBlock();
+        BMLBBlock block = captureBMLBlock();
         assertEquals("bml1", block.getBMLId());
         assertThat(block, instanceOf(BMLBBlock.class));
         assertBlockPegAdded("bml1", 0d);
@@ -107,7 +107,7 @@ public class BMLASchedulingHandlerTest
         when(mockScheduler.predictEndTime((Set<String>) any())).thenReturn(3d);
         handler.schedule(bb, mockScheduler);
 
-        BMLBlock block = captureBMLBlock();
+        BMLBBlock block = captureBMLBlock();
         assertEquals("bml1", block.getBMLId());
         assertThat(block, instanceOf(BMLBBlock.class));
         assertEquals(TimedPlanUnitState.LURKING, block.getState());
@@ -122,7 +122,7 @@ public class BMLASchedulingHandlerTest
         BehaviourBlock bb = createBehaviourBlock("bml1", "composition=\"APPEND-AFTER(bml2,bml3)\"");
         handler.schedule(bb, mockScheduler);
 
-        BMLBlock block = captureBMLBlock();
+        BMLBBlock block = captureBMLBlock();
         assertEquals("bml1", block.getBMLId());
         assertThat(block, instanceOf(BMLBBlock.class));
         assertEquals(TimedPlanUnitState.LURKING, block.getState());
@@ -140,7 +140,7 @@ public class BMLASchedulingHandlerTest
         when(mockScheduler.predictSubsidingTime((Set<String>) any())).thenReturn(3d);
         handler.schedule(bb, mockScheduler);
 
-        BMLBlock block = captureBMLBlock();
+        BMLBBlock block = captureBMLBlock();
         assertEquals("bml1", block.getBMLId());
         assertThat(block, instanceOf(BMLBBlock.class));
         assertEquals(TimedPlanUnitState.LURKING, block.getState());
@@ -157,7 +157,7 @@ public class BMLASchedulingHandlerTest
         when(mockScheduler.predictEndTime((Set<String>) any())).thenReturn(3d);
         handler.schedule(bb, mockScheduler);
 
-        BMLBlock block = captureBMLBlock();
+        BMLBBlock block = captureBMLBlock();
         assertEquals("bml1", block.getBMLId());
         assertThat(block, instanceOf(BMLBBlock.class));
         assertEquals(TimedPlanUnitState.LURKING, block.getState());

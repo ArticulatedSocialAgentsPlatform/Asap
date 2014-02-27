@@ -5,9 +5,12 @@ import java.util.Collections;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
+import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.CopyOnWriteArrayList;
 import java.util.concurrent.CopyOnWriteArraySet;
+import java.util.concurrent.atomic.AtomicReference;
 
+import saiba.bml.BMLGestureSync;
 import lombok.extern.slf4j.Slf4j;
 import asap.realizer.pegboard.BehaviorCluster;
 import asap.realizer.pegboard.BehaviorKey;
@@ -20,39 +23,85 @@ import com.google.common.collect.Sets;
 
 /**
  * Manages the state of a BML block used in ASAP.
- * @author hvanwelbergen
- * 
+ * Captures the feedback of behaviors of a BML Block, and update the BML block state accordingly.
+ * @author hvanwelbergen 
  */
 @Slf4j
-public class BMLBBlock extends AbstractBMLBlock
+public class BMLBBlock
 {
+    private final String bmlId;
+    private final BMLScheduler scheduler;
+    private AtomicReference<TimedPlanUnitState> state = new AtomicReference<TimedPlanUnitState>();
+    private final Set<String> droppedBehaviours = new CopyOnWriteArraySet<String>();
+    private final ConcurrentHashMap<String, Set<String>> behaviorSyncsPassed = new ConcurrentHashMap<String, Set<String>>();
+
+    
     private final Set<String> appendSet = new CopyOnWriteArraySet<String>();
     private final List<String> onStartList = new CopyOnWriteArrayList<String>();
     private final Set<String> chunkAfterSet = new CopyOnWriteArraySet<String>();
     private final PegBoard pegBoard;
+    
 
     public BMLBBlock(String id, BMLScheduler s, PegBoard pb, Set<String> appendAfter, List<String> onStart, Set<String> chunkAfter)
     {
-        super(id, s);
+        bmlId = id;
+        scheduler = s;
+        state.set(TimedPlanUnitState.IN_PREP);
         pegBoard = pb;
         appendSet.addAll(appendAfter);
         onStartList.addAll(onStart);
         chunkAfterSet.addAll(chunkAfter);
     }
 
-    @Override
+    /**
+     * @return the bmlId
+     */
+    public String getBMLId()
+    {
+        return bmlId;
+    }
+    
+    /**
+     * @param state
+     *            the state to set
+     */
+    public void setState(TimedPlanUnitState state)
+    {
+        this.state.set(state);
+    }
+    
+    public TimedPlanUnitState getState()
+    {
+        return state.get();
+    }
+    
     public boolean isPending(Set<String> checked)
     {
-        if (super.isPending()) return true;
+        if (getState().equals(TimedPlanUnitState.PENDING)) return true;
         if (isPending(chunkAfterSet, checked)) return true;
         if (isPending(appendSet, checked)) return true;
         return false;
     }
 
-    @Override
+    public boolean isPending(Set<String> ids, Set<String> checked)
+    {
+        for (String bmlId : ids)
+        {
+            if(!checked.contains(bmlId))
+            {
+                if (scheduler.isPending(bmlId,checked))
+                {
+                    return true;
+                }
+                checked.add(bmlId);
+            }
+        }
+        return false;
+    }
+    
     public boolean isPending()
     {
-        if (super.isPending()) return true;
+        if (getState().equals(TimedPlanUnitState.PENDING)) return true;
         Set<String> checked = new HashSet<String>();
         checked.add(bmlId);
         if (isPending(Sets.difference(chunkAfterSet, checked), checked)) return true;
@@ -135,15 +184,21 @@ public class BMLBBlock extends AbstractBMLBlock
         }
     }
 
-    @Override
+    /**
+     * Set IN_EXEC state and generate appropriate feedback 
+     */
     public void start()
     {
         scheduler.updateTiming(getBMLId());
         reAlignBlock();
-        super.start();
+        state.set(TimedPlanUnitState.IN_EXEC);
+        scheduler.blockStartFeedback(bmlId);
         activateOnStartBlocks();
     }
 
+    /**
+     * Called to potentially update the BMLBlock's state 
+     */
     public void update(ImmutableMap<String, TimedPlanUnitState> allBlocks)
     {
         if (state.get() == TimedPlanUnitState.LURKING)
@@ -208,7 +263,86 @@ public class BMLBBlock extends AbstractBMLBlock
         }
     }
 
-    @Override
+    private boolean isFinished()
+    {
+        for (String behId : scheduler.getBehaviours(bmlId))
+        {
+            if (droppedBehaviours.contains(behId)) continue;
+            log.debug("checking isFinished {}:{}", bmlId, behId);
+
+            Set<String> finishedInfo = behaviorSyncsPassed.get(behId);
+            if (finishedInfo == null)
+            {
+                return false;
+            }            
+            if (!finishedInfo.contains(BMLGestureSync.END.getId()))
+            {
+                return false;
+            }
+        }
+        return true;
+    }
+    
+    /**
+     * Set DONE state and generate appropriate feedback
+     */
+    public void finish()
+    {
+        if(state.getAndSet(TimedPlanUnitState.DONE)!=TimedPlanUnitState.DONE)
+        {
+            scheduler.blockStopFeedback(bmlId);
+        }
+    }
+    
+    private boolean isSubsiding()
+    {
+        for (String behId : scheduler.getBehaviours(bmlId))
+        {
+            if (droppedBehaviours.contains(behId)) continue;
+            Set<String> finishedInfo = behaviorSyncsPassed.get(behId);
+            if (finishedInfo == null)
+            {
+                return false;
+            }
+            if (!finishedInfo.contains(BMLGestureSync.RELAX.getId()) && !finishedInfo.contains("end"))
+            {
+                return false;
+            }
+        }
+        log.debug("{} is subsiding at {}", bmlId, scheduler.getSchedulingTime());
+        return true;
+    }
+    
+    /**
+     * Called to inform the BMLBlock that on of its behaviors is dropped 
+     */
+    public void dropBehaviour(String beh)
+    {
+        droppedBehaviours.add(beh);
+    }
+    
+    /**
+     * Called to inform the BMLBlock that sync point behaviorId:syncId has occurred 
+     */
+    public void behaviorProgress(String behaviorId, String syncId)
+    {
+        Set<String> newSet = new HashSet<String>();
+        Set<String> behInfo = behaviorSyncsPassed.putIfAbsent(behaviorId, newSet);
+        if (behInfo == null) behInfo = newSet;
+        behInfo.add(syncId);
+    }
+    
+    /**
+     * Set Lurking state
+     */
+    public void activate()
+    {
+        state.set(TimedPlanUnitState.LURKING);
+    }
+    
+    /**
+     * Prediction of timing block bmlId is updated
+     */
     public void predictionUpdate(String bmlId)
     {
         if (bmlId.equals(getBMLId()))

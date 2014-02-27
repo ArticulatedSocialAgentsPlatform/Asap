@@ -19,7 +19,6 @@ import java.util.concurrent.LinkedBlockingQueue;
 import lombok.Data;
 import lombok.extern.slf4j.Slf4j;
 import asap.realizer.scheduler.BMLBBlock;
-import asap.realizer.scheduler.BMLBlock;
 import asap.realizer.scheduler.BMLScheduler;
 
 class MyIUModule extends IUModule
@@ -144,18 +143,14 @@ public class PhraseIUManager
         IncrementalTTSUnit top = currentTTSUnits.get(currentTTSUnits.size() - 1);
         if (ttsCandidate.getTimePeg("start").getLocalValue() == 0 && !isPending(ttsCandidate.getBMLId()))
         {
-            BMLBlock b = scheduler.getBMLBlockManager().getBMLBlock(ttsCandidate.getBMLId());
-            if (b instanceof BMLBBlock)
+            BMLBBlock b = scheduler.getBMLBlockManager().getBMLBlock(ttsCandidate.getBMLId());
+            if (b.getChunkAfterSet().contains(top.getBMLId()))
             {
-                BMLBBlock bb = (BMLBBlock) b;
-                if (bb.getChunkAfterSet().contains(top.getBMLId()))
-                {
-                    // TODO: check if top aligns with end/relax of its block
+                // TODO: check if top aligns with end/relax of its block
 
-                    System.out.println("updateTiming: adding " + ttsCandidate.getBMLId() + " to buffer");
-                    addIU(synthesisIU, hes, ttsCandidate);
-                    return true;
-                }
+                System.out.println("updateTiming: adding " + ttsCandidate.getBMLId() + " to buffer");
+                addIU(synthesisIU, hes, ttsCandidate);
+                return true;
             }
         }
         else
@@ -213,7 +208,7 @@ public class PhraseIUManager
     {
         synchronized (iuModule)
         {
-            //iuModule.clearBuffer();
+            // iuModule.clearBuffer();
             asm.stopAfterOngoingPhoneme();
             System.out.println("stopAfterOngoingPhoneme");
             phraseQueue.clear();

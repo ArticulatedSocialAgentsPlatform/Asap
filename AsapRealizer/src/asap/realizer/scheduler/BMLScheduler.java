@@ -224,7 +224,7 @@ public final class BMLScheduler
         return ImmutableSet.copyOf(engines);
     }
 
-    public void addBMLBlock(BMLBlock bbm)
+    public void addBMLBlock(BMLBBlock bbm)
     {
         for (Engine e : getEngines())
         {
