@@ -34,6 +34,7 @@ public final class DAGUtils
         return outgoing;
     }
 
+    ///Get all vertices that have an edge that ends at v, so vertics w for which w->v 
     private static <V> Set<V> getIncomingNeighbours(V v, Collection<Edge<V>> edges)
     {
         Set<V> incoming = new HashSet<V>();
@@ -166,12 +167,14 @@ public final class DAGUtils
      */
     public static <V> Map<V, Integer> longestPaths(Collection<V> vertices, Collection<Edge<V>> ed)
     {
+        //sort by topological order: for every directed edge uv from vertex u to vertex v, u comes before v in the ordering.
         List<V> topologicalOrder = topologicalSort(vertices, ed);
 
         Map<V, Integer> longestPaths = new HashMap<V, Integer>();
         for (V v : topologicalOrder)
         {
             int pl = 0;
+            //find all inc's for which uv is an edge
             for (V inc : getIncomingNeighbours(v, ed))
             {
                 if (longestPaths.get(inc) > pl)
@@ -179,6 +182,7 @@ public final class DAGUtils
                     pl = longestPaths.get(inc);
                 }
             }
+            //path is argmax u longestPath(u)+1
             longestPaths.put(v, pl + 1);            
         }
         return longestPaths;
@@ -210,8 +214,19 @@ public final class DAGUtils
         return clusters;
     }
 
+    /**
+     * Creates a layout in which each vertex is assigned a x and y position such that vertices that follow another 
+     * are aligned vertically, and those that may occur simultaneously align horizontally.
+     * 
+     */
     public synchronized static <V> Map<V, Point> layout(Collection<V> vertices, Collection<Edge<V>> ed)
     {
+        /*
+         * 1. Divide in clusters
+         * 2. Get longest path to each vertex
+         * 3. Align such that y = pathlength, x increases with each vertex at y
+         * 4. Set some horizontal room between clusters
+         */
         Map<V, Point> pos = new HashMap<V, Point>();
         Map<V, Integer> paths = longestPaths(vertices, ed);
         Map<Integer, Integer> width = new HashMap<Integer, Integer>();

@@ -29,9 +29,11 @@ import asap.bmlflowvisualizer.graphutils.DAGUtils;
 import asap.bmlflowvisualizer.graphutils.Edge;
 
 /**
- * UI Element that shows the BML blocks in the scheduling queue.
+ * UI Element that shows the BML blocks in the playing queue.
+ * Elements that play in parallel are shown on the same y-position (but different x positions), 
+ * bmlblocks that have after constraints are aligned vertically.
+ *  
  * @author Herwin
- * 
  */
 @Slf4j
 public class PlayingQueueJPanelVisualization implements BMLFlowVisualization
