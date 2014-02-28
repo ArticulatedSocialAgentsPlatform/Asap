@@ -45,7 +45,6 @@ public class IpaacaBodyEmbodiment implements SkeletonEmbodiment
     private List<String> jointList = new ArrayList<String>();// same order as availableJoints
 
     @GuardedBy("submitJointLock")
-    // private AdditiveT1RBlend blend;
     private Skeleton skel;
 
     private Object submitJointLock = new Object();
@@ -111,7 +110,6 @@ public class IpaacaBodyEmbodiment implements SkeletonEmbodiment
 
             VJoint vjDummy = new VJoint();
             vjDummy.addChild(submitJoint);
-            // VJointUtils.setHAnimPose(submitJoint);
             VJointUtils.setHAnimPose(vjDummy);
 
             skel = new Skeleton(submitJoint.getId() + "skel", submitJoint);
