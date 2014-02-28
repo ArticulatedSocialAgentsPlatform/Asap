@@ -25,7 +25,7 @@ public class RsbRpcReceive
 
         // Add method an "echo" method, implemented by EchoCallback.
         server.addMethod("echo", new EchoCallback());
-
+        
         // Block until server.deactivate or process shutdown
         server.waitForShutdown();
     }
