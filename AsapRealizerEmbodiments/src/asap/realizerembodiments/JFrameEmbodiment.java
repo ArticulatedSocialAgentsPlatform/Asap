@@ -120,7 +120,7 @@ public class JFrameEmbodiment implements EmbodimentLoader
                     // make UI frame
                     theUI = new JFrame(finalName);
                     theUI.setLocation(650, 50);
-                    theUI.setSize(600, 500);
+                    theUI.setSize(800, 600);
                     theUI.setDefaultCloseOperation(JFrame.DO_NOTHING_ON_CLOSE);
                     theUI.setVisible(true);
                     contentPanel.setLayout(new BoxLayout(contentPanel, BoxLayout.PAGE_AXIS));

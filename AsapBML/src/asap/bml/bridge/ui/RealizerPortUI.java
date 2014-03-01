@@ -31,6 +31,8 @@ import java.io.InputStreamReader;
 import java.net.JarURLConnection;
 import java.net.URL;
 import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Comparator;
 import java.util.Enumeration;
 import java.util.Locale;
 import java.util.jar.JarEntry;
@@ -57,6 +59,8 @@ import javax.swing.undo.CannotRedoException;
 import javax.swing.undo.CannotUndoException;
 import javax.swing.undo.UndoManager;
 
+import lombok.Data;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -71,10 +75,31 @@ import com.google.common.collect.Iterables;
  * A graphical UI to a RealizerPort, allowing for a few simple interactions with it such as
  * sending BML to it.
  * 
- * @author Dennis Reidsma
+ * @author Dennis Reidsma, Herwin van Welbergen
  */
 public class RealizerPortUI extends JPanel
 {
+    @Data
+    private static final class DemoScript
+    {
+        final String name;
+        final String filename;
+
+        @Override
+        public String toString()
+        {
+            return name;
+        }
+    }
+
+    private static final class DemoScriptComparator implements Comparator<DemoScript>
+    {
+        @Override
+        public int compare(DemoScript o1, DemoScript o2)
+        {
+            return o1.getName().compareTo(o2.getName());
+        }
+    }
 
     private static Logger logger = LoggerFactory.getLogger(RealizerPortUI.class.getName());
 
@@ -88,10 +113,7 @@ public class RealizerPortUI extends JPanel
      * choose a script from the list, this script is loaded into the bml input box, and parsed /
      * played.
      */
-    public ArrayList<String> demoScripts = null;
-
-    /** names for the demo scripts, to be used in the drop down list */
-    public ArrayList<String> demoScriptNames = null;
+    public ArrayList<DemoScript> demoScripts = null;
 
     // XXX class is not serializable (see findbugs). Better to make this class HAVE a panel rather
     // than BE a panel
@@ -104,7 +126,7 @@ public class RealizerPortUI extends JPanel
     protected JTextArea bmlInput = null;
 
     /** combobox for demo scripts */
-    protected JComboBox<String> demoScriptList = null;
+    protected JComboBox<DemoScript> demoScriptList = null;
 
     /** The realizerbridge */
     protected RealizerPort realizerBridge = null;
@@ -140,86 +162,20 @@ public class RealizerPortUI extends JPanel
         JButton loadButton = new JButton("LOAD");
         loadButton.addActionListener(new LoadListener());
 
-        demoScripts = new ArrayList<String>();
-        demoScriptNames = new ArrayList<String>();
+        demoScripts = new ArrayList<DemoScript>();
 
         buttonPanel.add(playButton);
         buttonPanel.add(loadButton);
         buttonPanel.add(Box.createRigidArea(new Dimension(5, 0)));
 
-        // find the demoscripts, based on the URL
-        if (demoScriptUrl != null)
-        {
-            // is it a jar or not?
-            if (demoScriptUrl.getProtocol().toLowerCase(Locale.US).equals("jar"))
-            { // it is in a jar. open jar, enumerate entries and add them.
-                try
-                {
-                    logger.debug("Loading demo scripts from JAR");
-                    JarURLConnection connection = (JarURLConnection) demoScriptUrl.openConnection();
-                    JarFile jarFile = connection.getJarFile();
-                    String resourceDirName = connection.getEntryName();
-                    Enumeration<JarEntry> entries = jarFile.entries();
-                    while (entries.hasMoreElements())
-                    {
-                        JarEntry entry = entries.nextElement();
-                        String name = entry.getName();
-                        if (name.endsWith(".xml") && name.startsWith(resourceDirName))
-                        {
-                            String shortName = name.substring(resourceDirName.length());
-                            while (shortName.startsWith("/"))
-                                shortName = shortName.substring(1); // strip remaining "/" from start
-                            demoScripts.add(shortName);
-                            demoScriptNames.add(shortName.replaceAll("-", ": ").replaceAll("_", " ").replaceAll(".xml", ""));
-                        }
-                    }
-                }
-                catch (Exception ex)
-                {
-                    logger.debug("Error reading demo scripts from jar", ex);
-                }
-            }
-            else
-            { // a file, not from jar. try to list directory contents
-                logger.debug("Loading demo scripts from file");
-                File demoScriptDir = null;
-                try
-                {
-                    demoScriptDir = new File(demoScriptUrl.toURI());
-                    if (!demoScriptDir.isDirectory())
-                    {
-                        logger.debug("Demo script directory is not a directory");
-                        demoScriptDir = null;
-                    }
-                }
-                catch (Exception ex)
-                {
-                    logger.debug("Cannot open demo script directory", ex);
-                }
-                if (demoScriptDir != null)
-                {
-                    logger.debug(demoScriptUrl + " found ");
-                    for (File f : demoScriptDir.listFiles())
-                    {
-                        if (f.isFile() && f.getName().endsWith(".xml"))
-                        {
-                            demoScripts.add(f.getName());
-                            demoScriptNames.add(f.getName().replaceAll("-", ": ").replaceAll("_", " ").replaceAll(".xml", ""));
-                        }
-                    }
-                }
-                else
-                {
-                    logger.debug(demoScriptUrl + " not found ");
-                }
-            }
-        }
+        getDemoScripts();
 
         // did we obtain demoscripts? if so, load them to GUI
         if (demoScripts.size() > 0)
         {
-            demoScriptList = new JComboBox<String>(demoScriptNames.toArray(new String[demoScriptNames.size()]));
-            demoScriptList.insertItemAt("", 0);
+            Collections.sort(demoScripts, new DemoScriptComparator());
+            demoScriptList = new JComboBox<DemoScript>(demoScripts.toArray(new DemoScript[demoScripts.size()]));
+            demoScriptList.insertItemAt(new DemoScript("",""), 0);
             demoScriptList.setEditable(false);
             demoScriptList.setSelectedItem("");
             demoScriptList.addActionListener(new DemoScriptSelectionListener());
@@ -303,32 +259,102 @@ public class RealizerPortUI extends JPanel
 
     }
 
-    /** Play the content of the BML input box; set the resulting output in the outputArea */
-    public void playBMLContent()
+    private void getDemoScripts()
     {
-        realizerBridge.performBML(BehaviourBlockBuilder.resetBlock().toXMLString());        
-        String bmlContent = bmlInput.getText();
-        bmlContent = bmlContent.replaceAll("(?s)<!--.*?-->","");
-        String bmls[] = Iterables.toArray(Splitter.on("</bml>").trimResults().omitEmptyStrings().split(bmlContent), String.class);
-        for(String bml:bmls)
+        // find the demoscripts, based on the URL
+        if (demoScriptUrl != null)
         {
-            realizerBridge.performBML(bml+"</bml>");
+            // is it a jar or not?
+            if (demoScriptUrl.getProtocol().toLowerCase(Locale.US).equals("jar"))
+            { // it is in a jar. open jar, enumerate entries and add them.
+                try
+                {
+                    logger.debug("Loading demo scripts from JAR");
+                    JarURLConnection connection = (JarURLConnection) demoScriptUrl.openConnection();
+                    JarFile jarFile = connection.getJarFile();
+                    String resourceDirName = connection.getEntryName();
+                    Enumeration<JarEntry> entries = jarFile.entries();
+                    while (entries.hasMoreElements())
+                    {
+                        JarEntry entry = entries.nextElement();
+                        String name = entry.getName();
+                        if (name.endsWith(".xml") && name.startsWith(resourceDirName))
+                        {
+                            String filename = name.substring(resourceDirName.length());
+                            while (filename.startsWith("/"))
+                                filename = filename.substring(1); // strip remaining "/" from start
+                            String n = filename.replaceAll("-", ": ").replaceAll("_", " ").replaceAll(".xml", "");
+                            demoScripts.add(new DemoScript(n, filename));
+                        }
+                    }
+                }
+                catch (Exception ex)
+                {
+                    logger.debug("Error reading demo scripts from jar", ex);
+                }
+            }
+            else
+            { // a file, not from jar. try to list directory contents
+                logger.debug("Loading demo scripts from file");
+                File demoScriptDir = null;
+                try
+                {
+                    demoScriptDir = new File(demoScriptUrl.toURI());
+                    if (!demoScriptDir.isDirectory())
+                    {
+                        logger.debug("Demo script directory is not a directory");
+                        demoScriptDir = null;
+                    }
+                }
+                catch (Exception ex)
+                {
+                    logger.debug("Cannot open demo script directory", ex);
+                }
+                if (demoScriptDir != null)
+                {
+                    logger.debug(demoScriptUrl + " found ");
+                    for (File f : demoScriptDir.listFiles())
+                    {
+                        if (f.isFile() && f.getName().endsWith(".xml"))
+                        {
+                            String n = f.getName().replaceAll("-", ": ").replaceAll("_", " ").replaceAll(".xml", "");
+                            demoScripts.add(new DemoScript(n, f.getName()));
+                        }
+                    }
+                }
+                else
+                {
+                    logger.debug(demoScriptUrl + " not found ");
+                }
+            }
         }
     }
 
-    public void loadDemoScript(String scriptName)
+    /** Play the content of the BML input box; set the resulting output in the outputArea */
+    public void playBMLContent()
     {
-        if (scriptName.equals("")) return;
+        realizerBridge.performBML(BehaviourBlockBuilder.resetBlock().toXMLString());
+        String bmlContent = bmlInput.getText();
+        bmlContent = bmlContent.replaceAll("(?s)<!--.*?-->", "");
+        String bmls[] = Iterables.toArray(Splitter.on("</bml>").trimResults().omitEmptyStrings().split(bmlContent), String.class);
+        for (String bml : bmls)
+        {
+            realizerBridge.performBML(bml + "</bml>");
+        }
+    }
+
+    public void loadDemoScript(DemoScript script)
+    {
+        if (script.getName().equals("")) return;
         try
         {
-            String fileName = demoScripts.get(demoScriptNames.indexOf(scriptName));
             Resources r = new Resources("");
             if (demoScriptResource != null)
             {
                 r = new Resources(demoScriptResource);
             }
-            String script = r.read(fileName);
-            bmlInput.setText(script);
+            String scriptContent = r.read(script.getFilename());
+            bmlInput.setText(scriptContent);
             playBMLContent();
         }
         catch (IOException ex)
@@ -350,7 +376,7 @@ public class RealizerPortUI extends JPanel
         @Override
         public void actionPerformed(ActionEvent e)
         {
-            loadDemoScript((String) demoScriptList.getSelectedItem());
+            loadDemoScript((DemoScript) demoScriptList.getSelectedItem());
         }
     }
 
