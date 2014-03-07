@@ -1,6 +1,7 @@
 package asap.rsbembodiments;
 
 import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertNotNull;
 import hmi.animation.Hanim;
 import hmi.testutil.animation.HanimBody;
 
@@ -15,7 +16,7 @@ import rsb.RSBException;
  */
 public class RsbBodyEmbodimentTest
 {
-    @Test(timeout=500)
+    @Test(timeout=1000)
     public void test() throws RSBException, InterruptedException
     {
         StubBody sb = new StubBody(HanimBody.getLOA1HanimBody());
@@ -24,5 +25,6 @@ public class RsbBodyEmbodimentTest
         body.initialize();        
         sb.deactivate();
         assertEquals(Hanim.HumanoidRoot, body.getAnimationVJoint().getSid());
+        assertNotNull(body.getAnimationVJoint().getPartBySid(Hanim.l_shoulder));
     }
 }
