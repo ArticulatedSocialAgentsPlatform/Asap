@@ -7,20 +7,20 @@ import rsb.Informer;
 import rsb.RSBException;
 import rsb.converter.DefaultConverterRepository;
 import rsb.converter.ProtocolBufferConverter;
-import asap.rsbembodiments.Rsbembodiments.JointData;
+import asap.rsbembodiments.Rsbembodiments.AnimationData;
 
 public class RsbSendExample
 {
     public static void main(String args[]) throws RSBException, InterruptedException
     {
-        final ProtocolBufferConverter<JointData> converter = new ProtocolBufferConverter<JointData>(JointData.getDefaultInstance());
+        final ProtocolBufferConverter<AnimationData> converter = new ProtocolBufferConverter<AnimationData>(AnimationData.getDefaultInstance());
         DefaultConverterRepository.getDefaultConverterRepository().addConverter(converter);
         
         final Factory factory = Factory.getInstance();
-        final Informer<JointData> informer = factory.createInformer("/example/informer");
+        final Informer<AnimationData> informer = factory.createInformer("/example/informer");
         informer.activate();
 
-        JointData jd = JointData.newBuilder().addAllData(Arrays.asList(1f,2f,3f)).build();
+        AnimationData jd = AnimationData.newBuilder().addAllJointData(Arrays.asList(1f,2f,3f)).build();
         informer.send(jd);
         informer.deactivate();
     }

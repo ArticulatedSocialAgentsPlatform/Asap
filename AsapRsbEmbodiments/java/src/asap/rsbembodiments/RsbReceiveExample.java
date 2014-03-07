@@ -5,19 +5,19 @@ import rsb.Factory;
 import rsb.Listener;
 import rsb.converter.DefaultConverterRepository;
 import rsb.converter.ProtocolBufferConverter;
-import asap.rsbembodiments.Rsbembodiments.JointData;
+import asap.rsbembodiments.Rsbembodiments.AnimationData;
 
-public class RsbReceiveExample extends AbstractDataHandler<JointData>
+public class RsbReceiveExample extends AbstractDataHandler<AnimationData>
 {
     @Override
-    public void handleEvent(final JointData data)
+    public void handleEvent(final AnimationData data)
     {
-        System.out.println("jointData: "+data.getDataList());
+        System.out.println("jointData: "+data.getJointDataList());
     }
 
     public static void main(final String[] args) throws Throwable
     {
-        final ProtocolBufferConverter<JointData> converter = new ProtocolBufferConverter<JointData>(JointData.getDefaultInstance());
+        final ProtocolBufferConverter<AnimationData> converter = new ProtocolBufferConverter<AnimationData>(AnimationData.getDefaultInstance());
         DefaultConverterRepository.getDefaultConverterRepository().addConverter(converter);
         final Factory factory = Factory.getInstance();
         final Listener listener = factory.createListener("/example/informer");

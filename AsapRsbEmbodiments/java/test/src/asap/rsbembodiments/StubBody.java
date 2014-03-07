@@ -8,7 +8,7 @@ import rsb.converter.DefaultConverterRepository;
 import rsb.converter.ProtocolBufferConverter;
 import rsb.patterns.EventCallback;
 import rsb.patterns.LocalServer;
-import asap.rsbembodiments.Rsbembodiments.JointData;
+import asap.rsbembodiments.Rsbembodiments.AnimationData;
 import asap.rsbembodiments.Rsbembodiments.JointDataConfigReply;
 import asap.rsbembodiments.Rsbembodiments.JointDataConfigRequest;
 import asap.rsbembodiments.util.VJointRsbUtils;
@@ -24,7 +24,7 @@ public class StubBody
         public Event invoke(final Event request) throws Throwable
         {
             return new Event(JointDataConfigReply.class, JointDataConfigReply.newBuilder()
-                    .addAllJoint(VJointRsbUtils.toRsbJointList(vjoint)).build());
+                    .addAllJoints(VJointRsbUtils.toRsbJointList(vjoint)).build());
         }
     }
 
@@ -49,7 +49,7 @@ public class StubBody
     public StubBody(VJoint root) throws RSBException
     {
         this.vjoint = root;
-        final ProtocolBufferConverter<JointData> jointDataConverter = new ProtocolBufferConverter<JointData>(JointData.getDefaultInstance());
+        final ProtocolBufferConverter<AnimationData> jointDataConverter = new ProtocolBufferConverter<AnimationData>(AnimationData.getDefaultInstance());
         final ProtocolBufferConverter<JointDataConfigRequest> jointDataReqConverter = new ProtocolBufferConverter<JointDataConfigRequest>(
                 JointDataConfigRequest.getDefaultInstance());
         final ProtocolBufferConverter<JointDataConfigReply> jointDataConfigReplyConverter = new ProtocolBufferConverter<JointDataConfigReply>(

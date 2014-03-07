@@ -7,16 +7,32 @@ message Joint {
   repeated float localTranslation = 4 [packed=true];
 }
 
+message MorphTarget {
+  required string id = 1;
+}
+
 message JointDataConfigRequest {
   required string id = 1;
 }
 
 message JointDataConfigReply {
-  repeated Joint joint = 1;
+  repeated Joint joints = 1;
+  repeated MorphTarget morphs = 2;
 }
 
-message JointData {
-  repeated float data = 1 [packed=true];
+message AnimationSelection {
+  repeated string selectedJoints = 1;
+  enum JointDataEncoding {
+    T1R = 0;				//3 floats for translation on the first joint, followed by rotations (as quaternions) on all joints
+    R = 0;				//rotations only
+  }
+  optional JointDataEncoding jointDataEncoding = 2 [default = T1R];
+  repeated string selectedMorphs = 3;
+}
+
+message AnimationData {
+  repeated float jointData = 1 [packed=true];
+  repeated float morphData = 2 [packed=true];
 }
 
 

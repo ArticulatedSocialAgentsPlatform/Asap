@@ -29,7 +29,7 @@ public class RsbRpcSend
             Rsbembodiments.JointDataConfigReply reply = server.call("jointDataConfigRequest", Rsbembodiments.JointDataConfigRequest
                     .newBuilder().setId("billie").build());
 
-            System.out.println("Server replied: " + reply.getJointList().get(0).getId());
+            System.out.println("Server replied: " + reply.getJointsList().get(0).getId());
         }
         finally
         {
