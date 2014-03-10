@@ -25,7 +25,7 @@ public final class VJointRsbUtils
     {
         VJoint vj = new VJoint(skeleton.getJoints(i), skeleton.getJoints(i));
         float transformations[] = Floats.toArray(skeleton.getLocalTransformationList());
-        vj.setLocalTransform(transformations, i);
+        vj.setLocalTransform(transformations, i*16);
         return vj;
     }
 
@@ -58,9 +58,9 @@ public final class VJointRsbUtils
     {
         int rootIndex = findRoot(skeleton);
         VJoint vjRoot = new VJoint(skeleton.getJoints(rootIndex), skeleton.getJoints(rootIndex));
-        float transormations[] = Floats.toArray(skeleton.getLocalTransformationList());
+        float transformations[] = Floats.toArray(skeleton.getLocalTransformationList());
         float q[] = Quat4f.getQuat4f();
-        Quat4f.setFromMat4f(q, 0, transormations, rootIndex);
+        Quat4f.setFromMat4f(q, 0, transformations, rootIndex*16);
         vjRoot.setRotation(q);
         setupChildren(vjRoot, skeleton);
         return vjRoot;

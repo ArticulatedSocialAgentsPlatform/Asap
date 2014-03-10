@@ -163,7 +163,7 @@ public class RsbBodyEmbodiment implements SkeletonEmbodiment
         initInformer();
     }
 
-    private List<Float> getJointData()
+    private List<Float> getJointQuats()
     {
         List<Float> jointData = new ArrayList<>();
         synchronized (submitJointLock)
@@ -176,7 +176,6 @@ public class RsbBodyEmbodiment implements SkeletonEmbodiment
 
             for (int i = 0; i < jointList.size(); i++)
             {
-
                 VJoint vj = submitJoint.getPartBySid(jointList.get(i));
                 VJoint vjParent = vj.getParent();
 
@@ -197,12 +196,7 @@ public class RsbBodyEmbodiment implements SkeletonEmbodiment
                         Mat4f.invertRigid(pInverse, vjParent.getGlobalMatrix());
                     }
                     Mat4f.mul(m, pInverse, transformMatrices[i]);
-                }
-                if (i == 0)
-                {
-                    Mat4f.getTranslation(t, m);
-                    jointData.addAll(Floats.asList(t));
-                }
+                }                
                 Quat4f.setFromMat4f(q, m);
                 jointData.addAll(Floats.asList(q));
             }
@@ -214,7 +208,7 @@ public class RsbBodyEmbodiment implements SkeletonEmbodiment
     public void copy()
     {
         // construct float list for rotations, send with informer
-        AnimationData jd = AnimationData.newBuilder().addAllJointQuats(getJointData()).build();
+        AnimationData jd = AnimationData.newBuilder().addAllJointQuats(getJointQuats()).build();
         try
         {
             jointDataInformer.send(jd);
