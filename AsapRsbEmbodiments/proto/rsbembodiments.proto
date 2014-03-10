@@ -16,8 +16,8 @@ message JointDataConfigRequest {
 }
 
 message JointDataConfigReply {
-  repeated Joint joints = 1;
-  repeated MorphTarget morphs = 2;
+  repeated Joint skeleton = 1;
+  repeated MorphTarget availableMorphs = 2;
 }
 
 message AnimationSelection {

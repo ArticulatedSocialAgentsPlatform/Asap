@@ -21,7 +21,7 @@ public class RsbRpcReceive
             System.out.println("invoke");
             JointDataConfigRequest jdcr = (JointDataConfigRequest)request.getData();
             Joint j = Joint.newBuilder().setId(jdcr.getId()+"-HumanoidRood").setParentId("parent").build();
-            return new Event(JointDataConfigReply.class, JointDataConfigReply.newBuilder().addJoints(j).build());            
+            return new Event(JointDataConfigReply.class, JointDataConfigReply.newBuilder().addSkeleton(j).build());            
         }
 
     }

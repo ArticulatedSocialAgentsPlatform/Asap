@@ -97,7 +97,7 @@ public class RsbBodyEmbodiment implements SkeletonEmbodiment
                     Rsbembodiments.JointDataConfigRequest.newBuilder().setId(characterId).build());
             synchronized (submitJointLock)
             {
-                submitJoint = VJointRsbUtils.toVJoint(reply.getJointsList());
+                submitJoint = VJointRsbUtils.toVJoint(reply.getSkeletonList());
                 // apply renaming
                 for (VJoint vj : submitJoint.getParts())
                 {

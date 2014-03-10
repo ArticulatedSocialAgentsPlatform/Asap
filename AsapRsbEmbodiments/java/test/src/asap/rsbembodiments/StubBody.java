@@ -24,7 +24,7 @@ public class StubBody
         public Event invoke(final Event request) throws Throwable
         {
             return new Event(JointDataConfigReply.class, JointDataConfigReply.newBuilder()
-                    .addAllJoints(VJointRsbUtils.toRsbJointList(vjoint)).build());
+                    .addAllSkeleton(VJointRsbUtils.toRsbJointList(vjoint)).build());
         }
     }
 
