@@ -2,13 +2,10 @@ package asap.rsbembodiments.util;
 
 import hmi.animation.VJoint;
 import hmi.animation.VJointUtils;
+import hmi.math.Mat4f;
 import hmi.math.Quat4f;
 import hmi.math.Vec3f;
-
-import java.util.ArrayList;
-import java.util.List;
-
-import asap.rsbembodiments.Rsbembodiments.Joint;
+import asap.rsbembodiments.Rsbembodiments.Skeleton;
 
 import com.google.common.primitives.Floats;
 
@@ -24,60 +21,74 @@ public final class VJointRsbUtils
 
     }
 
-    private static VJoint createVJoint(Joint j)
+    private static VJoint createVJoint(int i, Skeleton skeleton)
     {
-        VJoint vj = new VJoint(j.getId(), j.getId());
-        vj.setRotation(Floats.toArray(j.getLocalRotationList()));
-        vj.setTranslation(Floats.toArray(j.getLocalTranslationList()));
+        VJoint vj = new VJoint(skeleton.getJoints(i), skeleton.getJoints(i));
+        float transformations[] = Floats.toArray(skeleton.getLocalTransformationList());
+        vj.setLocalTransform(transformations, i);
         return vj;
     }
 
-    private static void setupChildren(VJoint parent, List<Joint> joints)
+    private static void setupChildren(VJoint parent, Skeleton skeleton)
     {
-        for (Joint j : joints)
+        for (int i = 0; i < skeleton.getJointsCount(); i++)
         {
-            if (j.getParentId().equals(parent.getId()))
+            if (skeleton.getParents(i).equals(parent.getId()))
             {
-                VJoint vj = createVJoint(j);
+                VJoint vj = createVJoint(i, skeleton);
                 parent.addChild(vj);
-                setupChildren(vj, joints);
+                setupChildren(vj, skeleton);
             }
         }
     }
 
-    public static VJoint toVJoint(List<Joint> joints)
+    private static int findRoot(Skeleton skeleton)
     {
-        Joint rootJoint = joints.get(0);
-        VJoint vjRoot = new VJoint(rootJoint.getId(), rootJoint.getId());
-        vjRoot.setRotation(Floats.toArray(rootJoint.getLocalRotationList()));
-        setupChildren(vjRoot, joints);
+        for (int i = 0; i < skeleton.getJointsCount(); i++)
+        {
+            if (!skeleton.getJointsList().contains(skeleton.getParents(i)))
+            {
+                return i;
+            }
+        }
+        return -1;
+    }
+
+    public static VJoint toVJoint(Skeleton skeleton)
+    {
+        int rootIndex = findRoot(skeleton);
+        VJoint vjRoot = new VJoint(skeleton.getJoints(rootIndex), skeleton.getJoints(rootIndex));
+        float transormations[] = Floats.toArray(skeleton.getLocalTransformationList());
+        float q[] = Quat4f.getQuat4f();
+        Quat4f.setFromMat4f(q, 0, transormations, rootIndex);
+        vjRoot.setRotation(q);
+        setupChildren(vjRoot, skeleton);
         return vjRoot;
     }
 
-    public static List<Joint> toRsbJointList(VJoint root)
+    public static Skeleton toRsbSkeleton(VJoint root)
     {
-        List<Joint> jointList = new ArrayList<asap.rsbembodiments.Rsbembodiments.Joint>();
+        Skeleton.Builder sBuilder = Skeleton.newBuilder();
         for (VJoint vj : root.getParts())
         {
             String id = VJointUtils.getSidNameId(vj);
-            Joint.Builder builder = Joint.newBuilder().setId(id);
+            sBuilder.addJoints(id);
+            float[] v = Vec3f.getVec3f(0, 0, 0);
             if (vj != root)
             {
-                builder.setParentId(VJointUtils.getSidNameId(vj.getParent()));
-                float[] v = Vec3f.getVec3f();
+                sBuilder.addParents(VJointUtils.getSidNameId(vj.getParent()));
                 vj.getTranslation(v);
-                builder.addAllLocalTranslation(Floats.asList(v));
             }
             else
             {
-                builder.setParentId("-");
-                builder.addAllLocalTranslation(Floats.asList(0,0,0));
+                sBuilder.addParents("root");
             }
+            float m[] = Mat4f.getMat4f();
             float q[] = Quat4f.getQuat4f();
             vj.getRotation(q);
-            builder.addAllLocalRotation(Floats.asList(q));
-            jointList.add(builder.build());
+            Mat4f.setFromTR(m, v, q);
+            sBuilder.addAllLocalTransformation(Floats.asList(m));
         }
-        return jointList;
+        return sBuilder.build();
     }
 }

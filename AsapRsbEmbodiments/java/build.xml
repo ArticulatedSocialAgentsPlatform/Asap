@@ -1,7 +1,8 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project name="AsapRsbEmbodiments"  default="run">
 	<import file="../../../hmibuild/build.xml" />
-	<target name="-pre-compilation">
+	<target name="-pre-compilation" depends="proto"/>	    
+      <target name="proto">
 	    <echo message="Compiling protobuf file" />
 	    <mkdir dir="generatedsrc"/>
 	    <exec executable="protoc">

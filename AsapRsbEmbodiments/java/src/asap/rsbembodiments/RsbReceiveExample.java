@@ -12,7 +12,7 @@ public class RsbReceiveExample extends AbstractDataHandler<AnimationData>
     @Override
     public void handleEvent(final AnimationData data)
     {
-        System.out.println("jointData: "+data.getJointDataList());
+        System.out.println("jointData: "+data.getJointQuatsList());
     }
 
     public static void main(final String[] args) throws Throwable

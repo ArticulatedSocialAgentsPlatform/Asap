@@ -27,9 +27,9 @@ public class RsbRpcSend
         try
         {
             Rsbembodiments.JointDataConfigReply reply = server.call("jointDataConfigRequest", Rsbembodiments.JointDataConfigRequest
-                    .newBuilder().setId("billie").build());
+                    .newBuilder().setCharacterId("billie").build());
 
-            System.out.println("Server replied: " + reply.getSkeletonList().get(0).getId());
+            System.out.println("Server replied: " + reply.getSkeleton().getJoints(0));
         }
         finally
         {

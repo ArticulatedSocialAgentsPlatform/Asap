@@ -24,7 +24,7 @@ public class StubBody
         public Event invoke(final Event request) throws Throwable
         {
             return new Event(JointDataConfigReply.class, JointDataConfigReply.newBuilder()
-                    .addAllSkeleton(VJointRsbUtils.toRsbJointList(vjoint)).build());
+                    .setSkeleton(VJointRsbUtils.toRsbSkeleton(vjoint)).build());
         }
     }
 
@@ -49,7 +49,8 @@ public class StubBody
     public StubBody(VJoint root) throws RSBException
     {
         this.vjoint = root;
-        final ProtocolBufferConverter<AnimationData> jointDataConverter = new ProtocolBufferConverter<AnimationData>(AnimationData.getDefaultInstance());
+        final ProtocolBufferConverter<AnimationData> jointDataConverter = new ProtocolBufferConverter<AnimationData>(
+                AnimationData.getDefaultInstance());
         final ProtocolBufferConverter<JointDataConfigRequest> jointDataReqConverter = new ProtocolBufferConverter<JointDataConfigRequest>(
                 JointDataConfigRequest.getDefaultInstance());
         final ProtocolBufferConverter<JointDataConfigReply> jointDataConfigReplyConverter = new ProtocolBufferConverter<JointDataConfigReply>(

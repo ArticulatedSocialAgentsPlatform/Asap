@@ -94,10 +94,10 @@ public class RsbBodyEmbodiment implements SkeletonEmbodiment
         {
             server.activate();
             Rsbembodiments.JointDataConfigReply reply = server.call(RSBEmbodimentConstants.JOINTDATACONFIG_REQUEST_FUNCTION,
-                    Rsbembodiments.JointDataConfigRequest.newBuilder().setId(characterId).build());
+                    Rsbembodiments.JointDataConfigRequest.newBuilder().setCharacterId(characterId).build());
             synchronized (submitJointLock)
             {
-                submitJoint = VJointRsbUtils.toVJoint(reply.getSkeletonList());
+                submitJoint = VJointRsbUtils.toVJoint(reply.getSkeleton());
                 // apply renaming
                 for (VJoint vj : submitJoint.getParts())
                 {
@@ -214,7 +214,7 @@ public class RsbBodyEmbodiment implements SkeletonEmbodiment
     public void copy()
     {
         // construct float list for rotations, send with informer
-        AnimationData jd = AnimationData.newBuilder().addAllJointData(getJointData()).build();
+        AnimationData jd = AnimationData.newBuilder().addAllJointQuats(getJointData()).build();
         try
         {
             jointDataInformer.send(jd);

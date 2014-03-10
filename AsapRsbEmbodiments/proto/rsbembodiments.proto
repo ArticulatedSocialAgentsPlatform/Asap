@@ -1,38 +1,34 @@
 package asap.rsbembodiments;
 
-message Joint {
-  required string id = 1;
-  required string parentId = 2;
-  repeated float localRotation = 3 [packed=true];
-  repeated float localTranslation = 4 [packed=true];
-}
 
-message MorphTarget {
-  required string id = 1;
-}
 
 message JointDataConfigRequest {
-  required string id = 1;
+  optional string characterId = 1;
+}
+
+message Skeleton {
+  repeated string joints = 1; // n strings
+  repeated string parents = 2; // n strings
+  repeated float localTransformation = 3 [packed=true]; // n*16 floats; row-major?
 }
 
 message JointDataConfigReply {
-  repeated Joint skeleton = 1;
-  repeated MorphTarget availableMorphs = 2;
+  optional Skeleton skeleton = 1;
+  repeated string availableMorphs = 2;
 }
 
 message AnimationSelection {
   repeated string selectedJoints = 1;
-  enum JointDataEncoding {
-    T1R = 0;				//3 floats for translation on the first joint, followed by rotations (as quaternions) on all joints
-    R = 0;				//rotations only
-  }
-  optional JointDataEncoding jointDataEncoding = 2 [default = T1R];
-  repeated string selectedMorphs = 3;
+  repeated string selectedMorphs = 2;
+  optional string characterId = 3;
 }
 
 message AnimationData {
-  repeated float jointData = 1 [packed=true];
-  repeated float morphData = 2 [packed=true];
+  repeated float jointQuats = 1 [packed=true]; // (w,x,y,z) * n
+  repeated float morphWeights = 2 [packed=true]; // m
+  repeated float rootTranslation = 3 [packed=true]; // 1* (x,y,z)
+  repeated float confidence = 4; // n
+  optional string characterId = 5;
 }
 
 

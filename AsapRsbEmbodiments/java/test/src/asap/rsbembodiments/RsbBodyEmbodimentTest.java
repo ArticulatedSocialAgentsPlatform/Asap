@@ -16,7 +16,7 @@ import rsb.RSBException;
  */
 public class RsbBodyEmbodimentTest
 {
-    @Test(timeout=1000)
+    @Test//(timeout=1000)
     public void test() throws RSBException, InterruptedException
     {
         StubBody sb = new StubBody(HanimBody.getLOA1HanimBody());

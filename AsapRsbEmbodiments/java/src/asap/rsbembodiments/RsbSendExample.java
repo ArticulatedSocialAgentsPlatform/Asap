@@ -20,7 +20,7 @@ public class RsbSendExample
         final Informer<AnimationData> informer = factory.createInformer("/example/informer");
         informer.activate();
 
-        AnimationData jd = AnimationData.newBuilder().addAllJointData(Arrays.asList(1f,2f,3f)).build();
+        AnimationData jd = AnimationData.newBuilder().addAllJointQuats(Arrays.asList(1f,2f,3f,4f)).build();
         informer.send(jd);
         informer.deactivate();
     }

@@ -8,1110 +8,12 @@ public final class Rsbembodiments {
   public static void registerAllExtensions(
       com.google.protobuf.ExtensionRegistry registry) {
   }
-  public interface JointOrBuilder
-      extends com.google.protobuf.MessageOrBuilder {
-    
-    // required string id = 1;
-    boolean hasId();
-    String getId();
-    
-    // required string parentId = 2;
-    boolean hasParentId();
-    String getParentId();
-    
-    // repeated float localRotation = 3 [packed = true];
-    java.util.List<java.lang.Float> getLocalRotationList();
-    int getLocalRotationCount();
-    float getLocalRotation(int index);
-    
-    // repeated float localTranslation = 4 [packed = true];
-    java.util.List<java.lang.Float> getLocalTranslationList();
-    int getLocalTranslationCount();
-    float getLocalTranslation(int index);
-  }
-  public static final class Joint extends
-      com.google.protobuf.GeneratedMessage
-      implements JointOrBuilder {
-    // Use Joint.newBuilder() to construct.
-    private Joint(Builder builder) {
-      super(builder);
-    }
-    private Joint(boolean noInit) {}
-    
-    private static final Joint defaultInstance;
-    public static Joint getDefaultInstance() {
-      return defaultInstance;
-    }
-    
-    public Joint getDefaultInstanceForType() {
-      return defaultInstance;
-    }
-    
-    public static final com.google.protobuf.Descriptors.Descriptor
-        getDescriptor() {
-      return asap.rsbembodiments.Rsbembodiments.internal_static_asap_rsbembodiments_Joint_descriptor;
-    }
-    
-    protected com.google.protobuf.GeneratedMessage.FieldAccessorTable
-        internalGetFieldAccessorTable() {
-      return asap.rsbembodiments.Rsbembodiments.internal_static_asap_rsbembodiments_Joint_fieldAccessorTable;
-    }
-    
-    private int bitField0_;
-    // required string id = 1;
-    public static final int ID_FIELD_NUMBER = 1;
-    private java.lang.Object id_;
-    public boolean hasId() {
-      return ((bitField0_ & 0x00000001) == 0x00000001);
-    }
-    public String getId() {
-      java.lang.Object ref = id_;
-      if (ref instanceof String) {
-        return (String) ref;
-      } else {
-        com.google.protobuf.ByteString bs = 
-            (com.google.protobuf.ByteString) ref;
-        String s = bs.toStringUtf8();
-        if (com.google.protobuf.Internal.isValidUtf8(bs)) {
-          id_ = s;
-        }
-        return s;
-      }
-    }
-    private com.google.protobuf.ByteString getIdBytes() {
-      java.lang.Object ref = id_;
-      if (ref instanceof String) {
-        com.google.protobuf.ByteString b = 
-            com.google.protobuf.ByteString.copyFromUtf8((String) ref);
-        id_ = b;
-        return b;
-      } else {
-        return (com.google.protobuf.ByteString) ref;
-      }
-    }
-    
-    // required string parentId = 2;
-    public static final int PARENTID_FIELD_NUMBER = 2;
-    private java.lang.Object parentId_;
-    public boolean hasParentId() {
-      return ((bitField0_ & 0x00000002) == 0x00000002);
-    }
-    public String getParentId() {
-      java.lang.Object ref = parentId_;
-      if (ref instanceof String) {
-        return (String) ref;
-      } else {
-        com.google.protobuf.ByteString bs = 
-            (com.google.protobuf.ByteString) ref;
-        String s = bs.toStringUtf8();
-        if (com.google.protobuf.Internal.isValidUtf8(bs)) {
-          parentId_ = s;
-        }
-        return s;
-      }
-    }
-    private com.google.protobuf.ByteString getParentIdBytes() {
-      java.lang.Object ref = parentId_;
-      if (ref instanceof String) {
-        com.google.protobuf.ByteString b = 
-            com.google.protobuf.ByteString.copyFromUtf8((String) ref);
-        parentId_ = b;
-        return b;
-      } else {
-        return (com.google.protobuf.ByteString) ref;
-      }
-    }
-    
-    // repeated float localRotation = 3 [packed = true];
-    public static final int LOCALROTATION_FIELD_NUMBER = 3;
-    private java.util.List<java.lang.Float> localRotation_;
-    public java.util.List<java.lang.Float>
-        getLocalRotationList() {
-      return localRotation_;
-    }
-    public int getLocalRotationCount() {
-      return localRotation_.size();
-    }
-    public float getLocalRotation(int index) {
-      return localRotation_.get(index);
-    }
-    private int localRotationMemoizedSerializedSize = -1;
-    
-    // repeated float localTranslation = 4 [packed = true];
-    public static final int LOCALTRANSLATION_FIELD_NUMBER = 4;
-    private java.util.List<java.lang.Float> localTranslation_;
-    public java.util.List<java.lang.Float>
-        getLocalTranslationList() {
-      return localTranslation_;
-    }
-    public int getLocalTranslationCount() {
-      return localTranslation_.size();
-    }
-    public float getLocalTranslation(int index) {
-      return localTranslation_.get(index);
-    }
-    private int localTranslationMemoizedSerializedSize = -1;
-    
-    private void initFields() {
-      id_ = "";
-      parentId_ = "";
-      localRotation_ = java.util.Collections.emptyList();;
-      localTranslation_ = java.util.Collections.emptyList();;
-    }
-    private byte memoizedIsInitialized = -1;
-    public final boolean isInitialized() {
-      byte isInitialized = memoizedIsInitialized;
-      if (isInitialized != -1) return isInitialized == 1;
-      
-      if (!hasId()) {
-        memoizedIsInitialized = 0;
-        return false;
-      }
-      if (!hasParentId()) {
-        memoizedIsInitialized = 0;
-        return false;
-      }
-      memoizedIsInitialized = 1;
-      return true;
-    }
-    
-    public void writeTo(com.google.protobuf.CodedOutputStream output)
-                        throws java.io.IOException {
-      getSerializedSize();
-      if (((bitField0_ & 0x00000001) == 0x00000001)) {
-        output.writeBytes(1, getIdBytes());
-      }
-      if (((bitField0_ & 0x00000002) == 0x00000002)) {
-        output.writeBytes(2, getParentIdBytes());
-      }
-      if (getLocalRotationList().size() > 0) {
-        output.writeRawVarint32(26);
-        output.writeRawVarint32(localRotationMemoizedSerializedSize);
-      }
-      for (int i = 0; i < localRotation_.size(); i++) {
-        output.writeFloatNoTag(localRotation_.get(i));
-      }
-      if (getLocalTranslationList().size() > 0) {
-        output.writeRawVarint32(34);
-        output.writeRawVarint32(localTranslationMemoizedSerializedSize);
-      }
-      for (int i = 0; i < localTranslation_.size(); i++) {
-        output.writeFloatNoTag(localTranslation_.get(i));
-      }
-      getUnknownFields().writeTo(output);
-    }
-    
-    private int memoizedSerializedSize = -1;
-    public int getSerializedSize() {
-      int size = memoizedSerializedSize;
-      if (size != -1) return size;
-    
-      size = 0;
-      if (((bitField0_ & 0x00000001) == 0x00000001)) {
-        size += com.google.protobuf.CodedOutputStream
-          .computeBytesSize(1, getIdBytes());
-      }
-      if (((bitField0_ & 0x00000002) == 0x00000002)) {
-        size += com.google.protobuf.CodedOutputStream
-          .computeBytesSize(2, getParentIdBytes());
-      }
-      {
-        int dataSize = 0;
-        dataSize = 4 * getLocalRotationList().size();
-        size += dataSize;
-        if (!getLocalRotationList().isEmpty()) {
-          size += 1;
-          size += com.google.protobuf.CodedOutputStream
-              .computeInt32SizeNoTag(dataSize);
-        }
-        localRotationMemoizedSerializedSize = dataSize;
-      }
-      {
-        int dataSize = 0;
-        dataSize = 4 * getLocalTranslationList().size();
-        size += dataSize;
-        if (!getLocalTranslationList().isEmpty()) {
-          size += 1;
-          size += com.google.protobuf.CodedOutputStream
-              .computeInt32SizeNoTag(dataSize);
-        }
-        localTranslationMemoizedSerializedSize = dataSize;
-      }
-      size += getUnknownFields().getSerializedSize();
-      memoizedSerializedSize = size;
-      return size;
-    }
-    
-    private static final long serialVersionUID = 0L;
-    @java.lang.Override
-    protected java.lang.Object writeReplace()
-        throws java.io.ObjectStreamException {
-      return super.writeReplace();
-    }
-    
-    public static asap.rsbembodiments.Rsbembodiments.Joint parseFrom(
-        com.google.protobuf.ByteString data)
-        throws com.google.protobuf.InvalidProtocolBufferException {
-      return newBuilder().mergeFrom(data).buildParsed();
-    }
-    public static asap.rsbembodiments.Rsbembodiments.Joint parseFrom(
-        com.google.protobuf.ByteString data,
-        com.google.protobuf.ExtensionRegistryLite extensionRegistry)
-        throws com.google.protobuf.InvalidProtocolBufferException {
-      return newBuilder().mergeFrom(data, extensionRegistry)
-               .buildParsed();
-    }
-    public static asap.rsbembodiments.Rsbembodiments.Joint parseFrom(byte[] data)
-        throws com.google.protobuf.InvalidProtocolBufferException {
-      return newBuilder().mergeFrom(data).buildParsed();
-    }
-    public static asap.rsbembodiments.Rsbembodiments.Joint parseFrom(
-        byte[] data,
-        com.google.protobuf.ExtensionRegistryLite extensionRegistry)
-        throws com.google.protobuf.InvalidProtocolBufferException {
-      return newBuilder().mergeFrom(data, extensionRegistry)
-               .buildParsed();
-    }
-    public static asap.rsbembodiments.Rsbembodiments.Joint parseFrom(java.io.InputStream input)
-        throws java.io.IOException {
-      return newBuilder().mergeFrom(input).buildParsed();
-    }
-    public static asap.rsbembodiments.Rsbembodiments.Joint parseFrom(
-        java.io.InputStream input,
-        com.google.protobuf.ExtensionRegistryLite extensionRegistry)
-        throws java.io.IOException {
-      return newBuilder().mergeFrom(input, extensionRegistry)
-               .buildParsed();
-    }
-    public static asap.rsbembodiments.Rsbembodiments.Joint parseDelimitedFrom(java.io.InputStream input)
-        throws java.io.IOException {
-      Builder builder = newBuilder();
-      if (builder.mergeDelimitedFrom(input)) {
-        return builder.buildParsed();
-      } else {
-        return null;
-      }
-    }
-    public static asap.rsbembodiments.Rsbembodiments.Joint parseDelimitedFrom(
-        java.io.InputStream input,
-        com.google.protobuf.ExtensionRegistryLite extensionRegistry)
-        throws java.io.IOException {
-      Builder builder = newBuilder();
-      if (builder.mergeDelimitedFrom(input, extensionRegistry)) {
-        return builder.buildParsed();
-      } else {
-        return null;
-      }
-    }
-    public static asap.rsbembodiments.Rsbembodiments.Joint parseFrom(
-        com.google.protobuf.CodedInputStream input)
-        throws java.io.IOException {
-      return newBuilder().mergeFrom(input).buildParsed();
-    }
-    public static asap.rsbembodiments.Rsbembodiments.Joint parseFrom(
-        com.google.protobuf.CodedInputStream input,
-        com.google.protobuf.ExtensionRegistryLite extensionRegistry)
-        throws java.io.IOException {
-      return newBuilder().mergeFrom(input, extensionRegistry)
-               .buildParsed();
-    }
-    
-    public static Builder newBuilder() { return Builder.create(); }
-    public Builder newBuilderForType() { return newBuilder(); }
-    public static Builder newBuilder(asap.rsbembodiments.Rsbembodiments.Joint prototype) {
-      return newBuilder().mergeFrom(prototype);
-    }
-    public Builder toBuilder() { return newBuilder(this); }
-    
-    @java.lang.Override
-    protected Builder newBuilderForType(
-        com.google.protobuf.GeneratedMessage.BuilderParent parent) {
-      Builder builder = new Builder(parent);
-      return builder;
-    }
-    public static final class Builder extends
-        com.google.protobuf.GeneratedMessage.Builder<Builder>
-       implements asap.rsbembodiments.Rsbembodiments.JointOrBuilder {
-      public static final com.google.protobuf.Descriptors.Descriptor
-          getDescriptor() {
-        return asap.rsbembodiments.Rsbembodiments.internal_static_asap_rsbembodiments_Joint_descriptor;
-      }
-      
-      protected com.google.protobuf.GeneratedMessage.FieldAccessorTable
-          internalGetFieldAccessorTable() {
-        return asap.rsbembodiments.Rsbembodiments.internal_static_asap_rsbembodiments_Joint_fieldAccessorTable;
-      }
-      
-      // Construct using asap.rsbembodiments.Rsbembodiments.Joint.newBuilder()
-      private Builder() {
-        maybeForceBuilderInitialization();
-      }
-      
-      private Builder(BuilderParent parent) {
-        super(parent);
-        maybeForceBuilderInitialization();
-      }
-      private void maybeForceBuilderInitialization() {
-        if (com.google.protobuf.GeneratedMessage.alwaysUseFieldBuilders) {
-        }
-      }
-      private static Builder create() {
-        return new Builder();
-      }
-      
-      public Builder clear() {
-        super.clear();
-        id_ = "";
-        bitField0_ = (bitField0_ & ~0x00000001);
-        parentId_ = "";
-        bitField0_ = (bitField0_ & ~0x00000002);
-        localRotation_ = java.util.Collections.emptyList();;
-        bitField0_ = (bitField0_ & ~0x00000004);
-        localTranslation_ = java.util.Collections.emptyList();;
-        bitField0_ = (bitField0_ & ~0x00000008);
-        return this;
-      }
-      
-      public Builder clone() {
-        return create().mergeFrom(buildPartial());
-      }
-      
-      public com.google.protobuf.Descriptors.Descriptor
-          getDescriptorForType() {
-        return asap.rsbembodiments.Rsbembodiments.Joint.getDescriptor();
-      }
-      
-      public asap.rsbembodiments.Rsbembodiments.Joint getDefaultInstanceForType() {
-        return asap.rsbembodiments.Rsbembodiments.Joint.getDefaultInstance();
-      }
-      
-      public asap.rsbembodiments.Rsbembodiments.Joint build() {
-        asap.rsbembodiments.Rsbembodiments.Joint result = buildPartial();
-        if (!result.isInitialized()) {
-          throw newUninitializedMessageException(result);
-        }
-        return result;
-      }
-      
-      private asap.rsbembodiments.Rsbembodiments.Joint buildParsed()
-          throws com.google.protobuf.InvalidProtocolBufferException {
-        asap.rsbembodiments.Rsbembodiments.Joint result = buildPartial();
-        if (!result.isInitialized()) {
-          throw newUninitializedMessageException(
-            result).asInvalidProtocolBufferException();
-        }
-        return result;
-      }
-      
-      public asap.rsbembodiments.Rsbembodiments.Joint buildPartial() {
-        asap.rsbembodiments.Rsbembodiments.Joint result = new asap.rsbembodiments.Rsbembodiments.Joint(this);
-        int from_bitField0_ = bitField0_;
-        int to_bitField0_ = 0;
-        if (((from_bitField0_ & 0x00000001) == 0x00000001)) {
-          to_bitField0_ |= 0x00000001;
-        }
-        result.id_ = id_;
-        if (((from_bitField0_ & 0x00000002) == 0x00000002)) {
-          to_bitField0_ |= 0x00000002;
-        }
-        result.parentId_ = parentId_;
-        if (((bitField0_ & 0x00000004) == 0x00000004)) {
-          localRotation_ = java.util.Collections.unmodifiableList(localRotation_);
-          bitField0_ = (bitField0_ & ~0x00000004);
-        }
-        result.localRotation_ = localRotation_;
-        if (((bitField0_ & 0x00000008) == 0x00000008)) {
-          localTranslation_ = java.util.Collections.unmodifiableList(localTranslation_);
-          bitField0_ = (bitField0_ & ~0x00000008);
-        }
-        result.localTranslation_ = localTranslation_;
-        result.bitField0_ = to_bitField0_;
-        onBuilt();
-        return result;
-      }
-      
-      public Builder mergeFrom(com.google.protobuf.Message other) {
-        if (other instanceof asap.rsbembodiments.Rsbembodiments.Joint) {
-          return mergeFrom((asap.rsbembodiments.Rsbembodiments.Joint)other);
-        } else {
-          super.mergeFrom(other);
-          return this;
-        }
-      }
-      
-      public Builder mergeFrom(asap.rsbembodiments.Rsbembodiments.Joint other) {
-        if (other == asap.rsbembodiments.Rsbembodiments.Joint.getDefaultInstance()) return this;
-        if (other.hasId()) {
-          setId(other.getId());
-        }
-        if (other.hasParentId()) {
-          setParentId(other.getParentId());
-        }
-        if (!other.localRotation_.isEmpty()) {
-          if (localRotation_.isEmpty()) {
-            localRotation_ = other.localRotation_;
-            bitField0_ = (bitField0_ & ~0x00000004);
-          } else {
-            ensureLocalRotationIsMutable();
-            localRotation_.addAll(other.localRotation_);
-          }
-          onChanged();
-        }
-        if (!other.localTranslation_.isEmpty()) {
-          if (localTranslation_.isEmpty()) {
-            localTranslation_ = other.localTranslation_;
-            bitField0_ = (bitField0_ & ~0x00000008);
-          } else {
-            ensureLocalTranslationIsMutable();
-            localTranslation_.addAll(other.localTranslation_);
-          }
-          onChanged();
-        }
-        this.mergeUnknownFields(other.getUnknownFields());
-        return this;
-      }
-      
-      public final boolean isInitialized() {
-        if (!hasId()) {
-          
-          return false;
-        }
-        if (!hasParentId()) {
-          
-          return false;
-        }
-        return true;
-      }
-      
-      public Builder mergeFrom(
-          com.google.protobuf.CodedInputStream input,
-          com.google.protobuf.ExtensionRegistryLite extensionRegistry)
-          throws java.io.IOException {
-        com.google.protobuf.UnknownFieldSet.Builder unknownFields =
-          com.google.protobuf.UnknownFieldSet.newBuilder(
-            this.getUnknownFields());
-        while (true) {
-          int tag = input.readTag();
-          switch (tag) {
-            case 0:
-              this.setUnknownFields(unknownFields.build());
-              onChanged();
-              return this;
-            default: {
-              if (!parseUnknownField(input, unknownFields,
-                                     extensionRegistry, tag)) {
-                this.setUnknownFields(unknownFields.build());
-                onChanged();
-                return this;
-              }
-              break;
-            }
-            case 10: {
-              bitField0_ |= 0x00000001;
-              id_ = input.readBytes();
-              break;
-            }
-            case 18: {
-              bitField0_ |= 0x00000002;
-              parentId_ = input.readBytes();
-              break;
-            }
-            case 29: {
-              ensureLocalRotationIsMutable();
-              localRotation_.add(input.readFloat());
-              break;
-            }
-            case 26: {
-              int length = input.readRawVarint32();
-              int limit = input.pushLimit(length);
-              while (input.getBytesUntilLimit() > 0) {
-                addLocalRotation(input.readFloat());
-              }
-              input.popLimit(limit);
-              break;
-            }
-            case 37: {
-              ensureLocalTranslationIsMutable();
-              localTranslation_.add(input.readFloat());
-              break;
-            }
-            case 34: {
-              int length = input.readRawVarint32();
-              int limit = input.pushLimit(length);
-              while (input.getBytesUntilLimit() > 0) {
-                addLocalTranslation(input.readFloat());
-              }
-              input.popLimit(limit);
-              break;
-            }
-          }
-        }
-      }
-      
-      private int bitField0_;
-      
-      // required string id = 1;
-      private java.lang.Object id_ = "";
-      public boolean hasId() {
-        return ((bitField0_ & 0x00000001) == 0x00000001);
-      }
-      public String getId() {
-        java.lang.Object ref = id_;
-        if (!(ref instanceof String)) {
-          String s = ((com.google.protobuf.ByteString) ref).toStringUtf8();
-          id_ = s;
-          return s;
-        } else {
-          return (String) ref;
-        }
-      }
-      public Builder setId(String value) {
-        if (value == null) {
-    throw new NullPointerException();
-  }
-  bitField0_ |= 0x00000001;
-        id_ = value;
-        onChanged();
-        return this;
-      }
-      public Builder clearId() {
-        bitField0_ = (bitField0_ & ~0x00000001);
-        id_ = getDefaultInstance().getId();
-        onChanged();
-        return this;
-      }
-      void setId(com.google.protobuf.ByteString value) {
-        bitField0_ |= 0x00000001;
-        id_ = value;
-        onChanged();
-      }
-      
-      // required string parentId = 2;
-      private java.lang.Object parentId_ = "";
-      public boolean hasParentId() {
-        return ((bitField0_ & 0x00000002) == 0x00000002);
-      }
-      public String getParentId() {
-        java.lang.Object ref = parentId_;
-        if (!(ref instanceof String)) {
-          String s = ((com.google.protobuf.ByteString) ref).toStringUtf8();
-          parentId_ = s;
-          return s;
-        } else {
-          return (String) ref;
-        }
-      }
-      public Builder setParentId(String value) {
-        if (value == null) {
-    throw new NullPointerException();
-  }
-  bitField0_ |= 0x00000002;
-        parentId_ = value;
-        onChanged();
-        return this;
-      }
-      public Builder clearParentId() {
-        bitField0_ = (bitField0_ & ~0x00000002);
-        parentId_ = getDefaultInstance().getParentId();
-        onChanged();
-        return this;
-      }
-      void setParentId(com.google.protobuf.ByteString value) {
-        bitField0_ |= 0x00000002;
-        parentId_ = value;
-        onChanged();
-      }
-      
-      // repeated float localRotation = 3 [packed = true];
-      private java.util.List<java.lang.Float> localRotation_ = java.util.Collections.emptyList();;
-      private void ensureLocalRotationIsMutable() {
-        if (!((bitField0_ & 0x00000004) == 0x00000004)) {
-          localRotation_ = new java.util.ArrayList<java.lang.Float>(localRotation_);
-          bitField0_ |= 0x00000004;
-         }
-      }
-      public java.util.List<java.lang.Float>
-          getLocalRotationList() {
-        return java.util.Collections.unmodifiableList(localRotation_);
-      }
-      public int getLocalRotationCount() {
-        return localRotation_.size();
-      }
-      public float getLocalRotation(int index) {
-        return localRotation_.get(index);
-      }
-      public Builder setLocalRotation(
-          int index, float value) {
-        ensureLocalRotationIsMutable();
-        localRotation_.set(index, value);
-        onChanged();
-        return this;
-      }
-      public Builder addLocalRotation(float value) {
-        ensureLocalRotationIsMutable();
-        localRotation_.add(value);
-        onChanged();
-        return this;
-      }
-      public Builder addAllLocalRotation(
-          java.lang.Iterable<? extends java.lang.Float> values) {
-        ensureLocalRotationIsMutable();
-        super.addAll(values, localRotation_);
-        onChanged();
-        return this;
-      }
-      public Builder clearLocalRotation() {
-        localRotation_ = java.util.Collections.emptyList();;
-        bitField0_ = (bitField0_ & ~0x00000004);
-        onChanged();
-        return this;
-      }
-      
-      // repeated float localTranslation = 4 [packed = true];
-      private java.util.List<java.lang.Float> localTranslation_ = java.util.Collections.emptyList();;
-      private void ensureLocalTranslationIsMutable() {
-        if (!((bitField0_ & 0x00000008) == 0x00000008)) {
-          localTranslation_ = new java.util.ArrayList<java.lang.Float>(localTranslation_);
-          bitField0_ |= 0x00000008;
-         }
-      }
-      public java.util.List<java.lang.Float>
-          getLocalTranslationList() {
-        return java.util.Collections.unmodifiableList(localTranslation_);
-      }
-      public int getLocalTranslationCount() {
-        return localTranslation_.size();
-      }
-      public float getLocalTranslation(int index) {
-        return localTranslation_.get(index);
-      }
-      public Builder setLocalTranslation(
-          int index, float value) {
-        ensureLocalTranslationIsMutable();
-        localTranslation_.set(index, value);
-        onChanged();
-        return this;
-      }
-      public Builder addLocalTranslation(float value) {
-        ensureLocalTranslationIsMutable();
-        localTranslation_.add(value);
-        onChanged();
-        return this;
-      }
-      public Builder addAllLocalTranslation(
-          java.lang.Iterable<? extends java.lang.Float> values) {
-        ensureLocalTranslationIsMutable();
-        super.addAll(values, localTranslation_);
-        onChanged();
-        return this;
-      }
-      public Builder clearLocalTranslation() {
-        localTranslation_ = java.util.Collections.emptyList();;
-        bitField0_ = (bitField0_ & ~0x00000008);
-        onChanged();
-        return this;
-      }
-      
-      // @@protoc_insertion_point(builder_scope:asap.rsbembodiments.Joint)
-    }
-    
-    static {
-      defaultInstance = new Joint(true);
-      defaultInstance.initFields();
-    }
-    
-    // @@protoc_insertion_point(class_scope:asap.rsbembodiments.Joint)
-  }
-  
-  public interface MorphTargetOrBuilder
-      extends com.google.protobuf.MessageOrBuilder {
-    
-    // required string id = 1;
-    boolean hasId();
-    String getId();
-  }
-  public static final class MorphTarget extends
-      com.google.protobuf.GeneratedMessage
-      implements MorphTargetOrBuilder {
-    // Use MorphTarget.newBuilder() to construct.
-    private MorphTarget(Builder builder) {
-      super(builder);
-    }
-    private MorphTarget(boolean noInit) {}
-    
-    private static final MorphTarget defaultInstance;
-    public static MorphTarget getDefaultInstance() {
-      return defaultInstance;
-    }
-    
-    public MorphTarget getDefaultInstanceForType() {
-      return defaultInstance;
-    }
-    
-    public static final com.google.protobuf.Descriptors.Descriptor
-        getDescriptor() {
-      return asap.rsbembodiments.Rsbembodiments.internal_static_asap_rsbembodiments_MorphTarget_descriptor;
-    }
-    
-    protected com.google.protobuf.GeneratedMessage.FieldAccessorTable
-        internalGetFieldAccessorTable() {
-      return asap.rsbembodiments.Rsbembodiments.internal_static_asap_rsbembodiments_MorphTarget_fieldAccessorTable;
-    }
-    
-    private int bitField0_;
-    // required string id = 1;
-    public static final int ID_FIELD_NUMBER = 1;
-    private java.lang.Object id_;
-    public boolean hasId() {
-      return ((bitField0_ & 0x00000001) == 0x00000001);
-    }
-    public String getId() {
-      java.lang.Object ref = id_;
-      if (ref instanceof String) {
-        return (String) ref;
-      } else {
-        com.google.protobuf.ByteString bs = 
-            (com.google.protobuf.ByteString) ref;
-        String s = bs.toStringUtf8();
-        if (com.google.protobuf.Internal.isValidUtf8(bs)) {
-          id_ = s;
-        }
-        return s;
-      }
-    }
-    private com.google.protobuf.ByteString getIdBytes() {
-      java.lang.Object ref = id_;
-      if (ref instanceof String) {
-        com.google.protobuf.ByteString b = 
-            com.google.protobuf.ByteString.copyFromUtf8((String) ref);
-        id_ = b;
-        return b;
-      } else {
-        return (com.google.protobuf.ByteString) ref;
-      }
-    }
-    
-    private void initFields() {
-      id_ = "";
-    }
-    private byte memoizedIsInitialized = -1;
-    public final boolean isInitialized() {
-      byte isInitialized = memoizedIsInitialized;
-      if (isInitialized != -1) return isInitialized == 1;
-      
-      if (!hasId()) {
-        memoizedIsInitialized = 0;
-        return false;
-      }
-      memoizedIsInitialized = 1;
-      return true;
-    }
-    
-    public void writeTo(com.google.protobuf.CodedOutputStream output)
-                        throws java.io.IOException {
-      getSerializedSize();
-      if (((bitField0_ & 0x00000001) == 0x00000001)) {
-        output.writeBytes(1, getIdBytes());
-      }
-      getUnknownFields().writeTo(output);
-    }
-    
-    private int memoizedSerializedSize = -1;
-    public int getSerializedSize() {
-      int size = memoizedSerializedSize;
-      if (size != -1) return size;
-    
-      size = 0;
-      if (((bitField0_ & 0x00000001) == 0x00000001)) {
-        size += com.google.protobuf.CodedOutputStream
-          .computeBytesSize(1, getIdBytes());
-      }
-      size += getUnknownFields().getSerializedSize();
-      memoizedSerializedSize = size;
-      return size;
-    }
-    
-    private static final long serialVersionUID = 0L;
-    @java.lang.Override
-    protected java.lang.Object writeReplace()
-        throws java.io.ObjectStreamException {
-      return super.writeReplace();
-    }
-    
-    public static asap.rsbembodiments.Rsbembodiments.MorphTarget parseFrom(
-        com.google.protobuf.ByteString data)
-        throws com.google.protobuf.InvalidProtocolBufferException {
-      return newBuilder().mergeFrom(data).buildParsed();
-    }
-    public static asap.rsbembodiments.Rsbembodiments.MorphTarget parseFrom(
-        com.google.protobuf.ByteString data,
-        com.google.protobuf.ExtensionRegistryLite extensionRegistry)
-        throws com.google.protobuf.InvalidProtocolBufferException {
-      return newBuilder().mergeFrom(data, extensionRegistry)
-               .buildParsed();
-    }
-    public static asap.rsbembodiments.Rsbembodiments.MorphTarget parseFrom(byte[] data)
-        throws com.google.protobuf.InvalidProtocolBufferException {
-      return newBuilder().mergeFrom(data).buildParsed();
-    }
-    public static asap.rsbembodiments.Rsbembodiments.MorphTarget parseFrom(
-        byte[] data,
-        com.google.protobuf.ExtensionRegistryLite extensionRegistry)
-        throws com.google.protobuf.InvalidProtocolBufferException {
-      return newBuilder().mergeFrom(data, extensionRegistry)
-               .buildParsed();
-    }
-    public static asap.rsbembodiments.Rsbembodiments.MorphTarget parseFrom(java.io.InputStream input)
-        throws java.io.IOException {
-      return newBuilder().mergeFrom(input).buildParsed();
-    }
-    public static asap.rsbembodiments.Rsbembodiments.MorphTarget parseFrom(
-        java.io.InputStream input,
-        com.google.protobuf.ExtensionRegistryLite extensionRegistry)
-        throws java.io.IOException {
-      return newBuilder().mergeFrom(input, extensionRegistry)
-               .buildParsed();
-    }
-    public static asap.rsbembodiments.Rsbembodiments.MorphTarget parseDelimitedFrom(java.io.InputStream input)
-        throws java.io.IOException {
-      Builder builder = newBuilder();
-      if (builder.mergeDelimitedFrom(input)) {
-        return builder.buildParsed();
-      } else {
-        return null;
-      }
-    }
-    public static asap.rsbembodiments.Rsbembodiments.MorphTarget parseDelimitedFrom(
-        java.io.InputStream input,
-        com.google.protobuf.ExtensionRegistryLite extensionRegistry)
-        throws java.io.IOException {
-      Builder builder = newBuilder();
-      if (builder.mergeDelimitedFrom(input, extensionRegistry)) {
-        return builder.buildParsed();
-      } else {
-        return null;
-      }
-    }
-    public static asap.rsbembodiments.Rsbembodiments.MorphTarget parseFrom(
-        com.google.protobuf.CodedInputStream input)
-        throws java.io.IOException {
-      return newBuilder().mergeFrom(input).buildParsed();
-    }
-    public static asap.rsbembodiments.Rsbembodiments.MorphTarget parseFrom(
-        com.google.protobuf.CodedInputStream input,
-        com.google.protobuf.ExtensionRegistryLite extensionRegistry)
-        throws java.io.IOException {
-      return newBuilder().mergeFrom(input, extensionRegistry)
-               .buildParsed();
-    }
-    
-    public static Builder newBuilder() { return Builder.create(); }
-    public Builder newBuilderForType() { return newBuilder(); }
-    public static Builder newBuilder(asap.rsbembodiments.Rsbembodiments.MorphTarget prototype) {
-      return newBuilder().mergeFrom(prototype);
-    }
-    public Builder toBuilder() { return newBuilder(this); }
-    
-    @java.lang.Override
-    protected Builder newBuilderForType(
-        com.google.protobuf.GeneratedMessage.BuilderParent parent) {
-      Builder builder = new Builder(parent);
-      return builder;
-    }
-    public static final class Builder extends
-        com.google.protobuf.GeneratedMessage.Builder<Builder>
-       implements asap.rsbembodiments.Rsbembodiments.MorphTargetOrBuilder {
-      public static final com.google.protobuf.Descriptors.Descriptor
-          getDescriptor() {
-        return asap.rsbembodiments.Rsbembodiments.internal_static_asap_rsbembodiments_MorphTarget_descriptor;
-      }
-      
-      protected com.google.protobuf.GeneratedMessage.FieldAccessorTable
-          internalGetFieldAccessorTable() {
-        return asap.rsbembodiments.Rsbembodiments.internal_static_asap_rsbembodiments_MorphTarget_fieldAccessorTable;
-      }
-      
-      // Construct using asap.rsbembodiments.Rsbembodiments.MorphTarget.newBuilder()
-      private Builder() {
-        maybeForceBuilderInitialization();
-      }
-      
-      private Builder(BuilderParent parent) {
-        super(parent);
-        maybeForceBuilderInitialization();
-      }
-      private void maybeForceBuilderInitialization() {
-        if (com.google.protobuf.GeneratedMessage.alwaysUseFieldBuilders) {
-        }
-      }
-      private static Builder create() {
-        return new Builder();
-      }
-      
-      public Builder clear() {
-        super.clear();
-        id_ = "";
-        bitField0_ = (bitField0_ & ~0x00000001);
-        return this;
-      }
-      
-      public Builder clone() {
-        return create().mergeFrom(buildPartial());
-      }
-      
-      public com.google.protobuf.Descriptors.Descriptor
-          getDescriptorForType() {
-        return asap.rsbembodiments.Rsbembodiments.MorphTarget.getDescriptor();
-      }
-      
-      public asap.rsbembodiments.Rsbembodiments.MorphTarget getDefaultInstanceForType() {
-        return asap.rsbembodiments.Rsbembodiments.MorphTarget.getDefaultInstance();
-      }
-      
-      public asap.rsbembodiments.Rsbembodiments.MorphTarget build() {
-        asap.rsbembodiments.Rsbembodiments.MorphTarget result = buildPartial();
-        if (!result.isInitialized()) {
-          throw newUninitializedMessageException(result);
-        }
-        return result;
-      }
-      
-      private asap.rsbembodiments.Rsbembodiments.MorphTarget buildParsed()
-          throws com.google.protobuf.InvalidProtocolBufferException {
-        asap.rsbembodiments.Rsbembodiments.MorphTarget result = buildPartial();
-        if (!result.isInitialized()) {
-          throw newUninitializedMessageException(
-            result).asInvalidProtocolBufferException();
-        }
-        return result;
-      }
-      
-      public asap.rsbembodiments.Rsbembodiments.MorphTarget buildPartial() {
-        asap.rsbembodiments.Rsbembodiments.MorphTarget result = new asap.rsbembodiments.Rsbembodiments.MorphTarget(this);
-        int from_bitField0_ = bitField0_;
-        int to_bitField0_ = 0;
-        if (((from_bitField0_ & 0x00000001) == 0x00000001)) {
-          to_bitField0_ |= 0x00000001;
-        }
-        result.id_ = id_;
-        result.bitField0_ = to_bitField0_;
-        onBuilt();
-        return result;
-      }
-      
-      public Builder mergeFrom(com.google.protobuf.Message other) {
-        if (other instanceof asap.rsbembodiments.Rsbembodiments.MorphTarget) {
-          return mergeFrom((asap.rsbembodiments.Rsbembodiments.MorphTarget)other);
-        } else {
-          super.mergeFrom(other);
-          return this;
-        }
-      }
-      
-      public Builder mergeFrom(asap.rsbembodiments.Rsbembodiments.MorphTarget other) {
-        if (other == asap.rsbembodiments.Rsbembodiments.MorphTarget.getDefaultInstance()) return this;
-        if (other.hasId()) {
-          setId(other.getId());
-        }
-        this.mergeUnknownFields(other.getUnknownFields());
-        return this;
-      }
-      
-      public final boolean isInitialized() {
-        if (!hasId()) {
-          
-          return false;
-        }
-        return true;
-      }
-      
-      public Builder mergeFrom(
-          com.google.protobuf.CodedInputStream input,
-          com.google.protobuf.ExtensionRegistryLite extensionRegistry)
-          throws java.io.IOException {
-        com.google.protobuf.UnknownFieldSet.Builder unknownFields =
-          com.google.protobuf.UnknownFieldSet.newBuilder(
-            this.getUnknownFields());
-        while (true) {
-          int tag = input.readTag();
-          switch (tag) {
-            case 0:
-              this.setUnknownFields(unknownFields.build());
-              onChanged();
-              return this;
-            default: {
-              if (!parseUnknownField(input, unknownFields,
-                                     extensionRegistry, tag)) {
-                this.setUnknownFields(unknownFields.build());
-                onChanged();
-                return this;
-              }
-              break;
-            }
-            case 10: {
-              bitField0_ |= 0x00000001;
-              id_ = input.readBytes();
-              break;
-            }
-          }
-        }
-      }
-      
-      private int bitField0_;
-      
-      // required string id = 1;
-      private java.lang.Object id_ = "";
-      public boolean hasId() {
-        return ((bitField0_ & 0x00000001) == 0x00000001);
-      }
-      public String getId() {
-        java.lang.Object ref = id_;
-        if (!(ref instanceof String)) {
-          String s = ((com.google.protobuf.ByteString) ref).toStringUtf8();
-          id_ = s;
-          return s;
-        } else {
-          return (String) ref;
-        }
-      }
-      public Builder setId(String value) {
-        if (value == null) {
-    throw new NullPointerException();
-  }
-  bitField0_ |= 0x00000001;
-        id_ = value;
-        onChanged();
-        return this;
-      }
-      public Builder clearId() {
-        bitField0_ = (bitField0_ & ~0x00000001);
-        id_ = getDefaultInstance().getId();
-        onChanged();
-        return this;
-      }
-      void setId(com.google.protobuf.ByteString value) {
-        bitField0_ |= 0x00000001;
-        id_ = value;
-        onChanged();
-      }
-      
-      // @@protoc_insertion_point(builder_scope:asap.rsbembodiments.MorphTarget)
-    }
-    
-    static {
-      defaultInstance = new MorphTarget(true);
-      defaultInstance.initFields();
-    }
-    
-    // @@protoc_insertion_point(class_scope:asap.rsbembodiments.MorphTarget)
-  }
-  
   public interface JointDataConfigRequestOrBuilder
       extends com.google.protobuf.MessageOrBuilder {
     
-    // required string id = 1;
-    boolean hasId();
-    String getId();
+    // optional string characterId = 1;
+    boolean hasCharacterId();
+    String getCharacterId();
   }
   public static final class JointDataConfigRequest extends
       com.google.protobuf.GeneratedMessage
@@ -1142,14 +44,14 @@ public final class Rsbembodiments {
     }
     
     private int bitField0_;
-    // required string id = 1;
-    public static final int ID_FIELD_NUMBER = 1;
-    private java.lang.Object id_;
-    public boolean hasId() {
+    // optional string characterId = 1;
+    public static final int CHARACTERID_FIELD_NUMBER = 1;
+    private java.lang.Object characterId_;
+    public boolean hasCharacterId() {
       return ((bitField0_ & 0x00000001) == 0x00000001);
     }
-    public String getId() {
-      java.lang.Object ref = id_;
+    public String getCharacterId() {
+      java.lang.Object ref = characterId_;
       if (ref instanceof String) {
         return (String) ref;
       } else {
@@ -1157,17 +59,17 @@ public final class Rsbembodiments {
             (com.google.protobuf.ByteString) ref;
         String s = bs.toStringUtf8();
         if (com.google.protobuf.Internal.isValidUtf8(bs)) {
-          id_ = s;
+          characterId_ = s;
         }
         return s;
       }
     }
-    private com.google.protobuf.ByteString getIdBytes() {
-      java.lang.Object ref = id_;
+    private com.google.protobuf.ByteString getCharacterIdBytes() {
+      java.lang.Object ref = characterId_;
       if (ref instanceof String) {
         com.google.protobuf.ByteString b = 
             com.google.protobuf.ByteString.copyFromUtf8((String) ref);
-        id_ = b;
+        characterId_ = b;
         return b;
       } else {
         return (com.google.protobuf.ByteString) ref;
@@ -1175,17 +77,13 @@ public final class Rsbembodiments {
     }
     
     private void initFields() {
-      id_ = "";
+      characterId_ = "";
     }
     private byte memoizedIsInitialized = -1;
     public final boolean isInitialized() {
       byte isInitialized = memoizedIsInitialized;
       if (isInitialized != -1) return isInitialized == 1;
       
-      if (!hasId()) {
-        memoizedIsInitialized = 0;
-        return false;
-      }
       memoizedIsInitialized = 1;
       return true;
     }
@@ -1194,7 +92,7 @@ public final class Rsbembodiments {
                         throws java.io.IOException {
       getSerializedSize();
       if (((bitField0_ & 0x00000001) == 0x00000001)) {
-        output.writeBytes(1, getIdBytes());
+        output.writeBytes(1, getCharacterIdBytes());
       }
       getUnknownFields().writeTo(output);
     }
@@ -1207,7 +105,7 @@ public final class Rsbembodiments {
       size = 0;
       if (((bitField0_ & 0x00000001) == 0x00000001)) {
         size += com.google.protobuf.CodedOutputStream
-          .computeBytesSize(1, getIdBytes());
+          .computeBytesSize(1, getCharacterIdBytes());
       }
       size += getUnknownFields().getSerializedSize();
       memoizedSerializedSize = size;
@@ -1333,7 +231,7 @@ public final class Rsbembodiments {
       
       public Builder clear() {
         super.clear();
-        id_ = "";
+        characterId_ = "";
         bitField0_ = (bitField0_ & ~0x00000001);
         return this;
       }
@@ -1376,7 +274,7 @@ public final class Rsbembodiments {
         if (((from_bitField0_ & 0x00000001) == 0x00000001)) {
           to_bitField0_ |= 0x00000001;
         }
-        result.id_ = id_;
+        result.characterId_ = characterId_;
         result.bitField0_ = to_bitField0_;
         onBuilt();
         return result;
@@ -1393,18 +291,14 @@ public final class Rsbembodiments {
       
       public Builder mergeFrom(asap.rsbembodiments.Rsbembodiments.JointDataConfigRequest other) {
         if (other == asap.rsbembodiments.Rsbembodiments.JointDataConfigRequest.getDefaultInstance()) return this;
-        if (other.hasId()) {
-          setId(other.getId());
+        if (other.hasCharacterId()) {
+          setCharacterId(other.getCharacterId());
         }
         this.mergeUnknownFields(other.getUnknownFields());
         return this;
       }
       
       public final boolean isInitialized() {
-        if (!hasId()) {
-          
-          return false;
-        }
         return true;
       }
       
@@ -1433,7 +327,7 @@ public final class Rsbembodiments {
             }
             case 10: {
               bitField0_ |= 0x00000001;
-              id_ = input.readBytes();
+              characterId_ = input.readBytes();
               break;
             }
           }
@@ -1442,39 +336,39 @@ public final class Rsbembodiments {
       
       private int bitField0_;
       
-      // required string id = 1;
-      private java.lang.Object id_ = "";
-      public boolean hasId() {
+      // optional string characterId = 1;
+      private java.lang.Object characterId_ = "";
+      public boolean hasCharacterId() {
         return ((bitField0_ & 0x00000001) == 0x00000001);
       }
-      public String getId() {
-        java.lang.Object ref = id_;
+      public String getCharacterId() {
+        java.lang.Object ref = characterId_;
         if (!(ref instanceof String)) {
           String s = ((com.google.protobuf.ByteString) ref).toStringUtf8();
-          id_ = s;
+          characterId_ = s;
           return s;
         } else {
           return (String) ref;
         }
       }
-      public Builder setId(String value) {
+      public Builder setCharacterId(String value) {
         if (value == null) {
     throw new NullPointerException();
   }
   bitField0_ |= 0x00000001;
-        id_ = value;
+        characterId_ = value;
         onChanged();
         return this;
       }
-      public Builder clearId() {
+      public Builder clearCharacterId() {
         bitField0_ = (bitField0_ & ~0x00000001);
-        id_ = getDefaultInstance().getId();
+        characterId_ = getDefaultInstance().getCharacterId();
         onChanged();
         return this;
       }
-      void setId(com.google.protobuf.ByteString value) {
+      void setCharacterId(com.google.protobuf.ByteString value) {
         bitField0_ |= 0x00000001;
-        id_ = value;
+        characterId_ = value;
         onChanged();
       }
       
@@ -1489,28 +383,633 @@ public final class Rsbembodiments {
     // @@protoc_insertion_point(class_scope:asap.rsbembodiments.JointDataConfigRequest)
   }
   
+  public interface SkeletonOrBuilder
+      extends com.google.protobuf.MessageOrBuilder {
+    
+    // repeated string joints = 1;
+    java.util.List<String> getJointsList();
+    int getJointsCount();
+    String getJoints(int index);
+    
+    // repeated string parents = 2;
+    java.util.List<String> getParentsList();
+    int getParentsCount();
+    String getParents(int index);
+    
+    // repeated float localTransformation = 3 [packed = true];
+    java.util.List<java.lang.Float> getLocalTransformationList();
+    int getLocalTransformationCount();
+    float getLocalTransformation(int index);
+  }
+  public static final class Skeleton extends
+      com.google.protobuf.GeneratedMessage
+      implements SkeletonOrBuilder {
+    // Use Skeleton.newBuilder() to construct.
+    private Skeleton(Builder builder) {
+      super(builder);
+    }
+    private Skeleton(boolean noInit) {}
+    
+    private static final Skeleton defaultInstance;
+    public static Skeleton getDefaultInstance() {
+      return defaultInstance;
+    }
+    
+    public Skeleton getDefaultInstanceForType() {
+      return defaultInstance;
+    }
+    
+    public static final com.google.protobuf.Descriptors.Descriptor
+        getDescriptor() {
+      return asap.rsbembodiments.Rsbembodiments.internal_static_asap_rsbembodiments_Skeleton_descriptor;
+    }
+    
+    protected com.google.protobuf.GeneratedMessage.FieldAccessorTable
+        internalGetFieldAccessorTable() {
+      return asap.rsbembodiments.Rsbembodiments.internal_static_asap_rsbembodiments_Skeleton_fieldAccessorTable;
+    }
+    
+    // repeated string joints = 1;
+    public static final int JOINTS_FIELD_NUMBER = 1;
+    private com.google.protobuf.LazyStringList joints_;
+    public java.util.List<String>
+        getJointsList() {
+      return joints_;
+    }
+    public int getJointsCount() {
+      return joints_.size();
+    }
+    public String getJoints(int index) {
+      return joints_.get(index);
+    }
+    
+    // repeated string parents = 2;
+    public static final int PARENTS_FIELD_NUMBER = 2;
+    private com.google.protobuf.LazyStringList parents_;
+    public java.util.List<String>
+        getParentsList() {
+      return parents_;
+    }
+    public int getParentsCount() {
+      return parents_.size();
+    }
+    public String getParents(int index) {
+      return parents_.get(index);
+    }
+    
+    // repeated float localTransformation = 3 [packed = true];
+    public static final int LOCALTRANSFORMATION_FIELD_NUMBER = 3;
+    private java.util.List<java.lang.Float> localTransformation_;
+    public java.util.List<java.lang.Float>
+        getLocalTransformationList() {
+      return localTransformation_;
+    }
+    public int getLocalTransformationCount() {
+      return localTransformation_.size();
+    }
+    public float getLocalTransformation(int index) {
+      return localTransformation_.get(index);
+    }
+    private int localTransformationMemoizedSerializedSize = -1;
+    
+    private void initFields() {
+      joints_ = com.google.protobuf.LazyStringArrayList.EMPTY;
+      parents_ = com.google.protobuf.LazyStringArrayList.EMPTY;
+      localTransformation_ = java.util.Collections.emptyList();;
+    }
+    private byte memoizedIsInitialized = -1;
+    public final boolean isInitialized() {
+      byte isInitialized = memoizedIsInitialized;
+      if (isInitialized != -1) return isInitialized == 1;
+      
+      memoizedIsInitialized = 1;
+      return true;
+    }
+    
+    public void writeTo(com.google.protobuf.CodedOutputStream output)
+                        throws java.io.IOException {
+      getSerializedSize();
+      for (int i = 0; i < joints_.size(); i++) {
+        output.writeBytes(1, joints_.getByteString(i));
+      }
+      for (int i = 0; i < parents_.size(); i++) {
+        output.writeBytes(2, parents_.getByteString(i));
+      }
+      if (getLocalTransformationList().size() > 0) {
+        output.writeRawVarint32(26);
+        output.writeRawVarint32(localTransformationMemoizedSerializedSize);
+      }
+      for (int i = 0; i < localTransformation_.size(); i++) {
+        output.writeFloatNoTag(localTransformation_.get(i));
+      }
+      getUnknownFields().writeTo(output);
+    }
+    
+    private int memoizedSerializedSize = -1;
+    public int getSerializedSize() {
+      int size = memoizedSerializedSize;
+      if (size != -1) return size;
+    
+      size = 0;
+      {
+        int dataSize = 0;
+        for (int i = 0; i < joints_.size(); i++) {
+          dataSize += com.google.protobuf.CodedOutputStream
+            .computeBytesSizeNoTag(joints_.getByteString(i));
+        }
+        size += dataSize;
+        size += 1 * getJointsList().size();
+      }
+      {
+        int dataSize = 0;
+        for (int i = 0; i < parents_.size(); i++) {
+          dataSize += com.google.protobuf.CodedOutputStream
+            .computeBytesSizeNoTag(parents_.getByteString(i));
+        }
+        size += dataSize;
+        size += 1 * getParentsList().size();
+      }
+      {
+        int dataSize = 0;
+        dataSize = 4 * getLocalTransformationList().size();
+        size += dataSize;
+        if (!getLocalTransformationList().isEmpty()) {
+          size += 1;
+          size += com.google.protobuf.CodedOutputStream
+              .computeInt32SizeNoTag(dataSize);
+        }
+        localTransformationMemoizedSerializedSize = dataSize;
+      }
+      size += getUnknownFields().getSerializedSize();
+      memoizedSerializedSize = size;
+      return size;
+    }
+    
+    private static final long serialVersionUID = 0L;
+    @java.lang.Override
+    protected java.lang.Object writeReplace()
+        throws java.io.ObjectStreamException {
+      return super.writeReplace();
+    }
+    
+    public static asap.rsbembodiments.Rsbembodiments.Skeleton parseFrom(
+        com.google.protobuf.ByteString data)
+        throws com.google.protobuf.InvalidProtocolBufferException {
+      return newBuilder().mergeFrom(data).buildParsed();
+    }
+    public static asap.rsbembodiments.Rsbembodiments.Skeleton parseFrom(
+        com.google.protobuf.ByteString data,
+        com.google.protobuf.ExtensionRegistryLite extensionRegistry)
+        throws com.google.protobuf.InvalidProtocolBufferException {
+      return newBuilder().mergeFrom(data, extensionRegistry)
+               .buildParsed();
+    }
+    public static asap.rsbembodiments.Rsbembodiments.Skeleton parseFrom(byte[] data)
+        throws com.google.protobuf.InvalidProtocolBufferException {
+      return newBuilder().mergeFrom(data).buildParsed();
+    }
+    public static asap.rsbembodiments.Rsbembodiments.Skeleton parseFrom(
+        byte[] data,
+        com.google.protobuf.ExtensionRegistryLite extensionRegistry)
+        throws com.google.protobuf.InvalidProtocolBufferException {
+      return newBuilder().mergeFrom(data, extensionRegistry)
+               .buildParsed();
+    }
+    public static asap.rsbembodiments.Rsbembodiments.Skeleton parseFrom(java.io.InputStream input)
+        throws java.io.IOException {
+      return newBuilder().mergeFrom(input).buildParsed();
+    }
+    public static asap.rsbembodiments.Rsbembodiments.Skeleton parseFrom(
+        java.io.InputStream input,
+        com.google.protobuf.ExtensionRegistryLite extensionRegistry)
+        throws java.io.IOException {
+      return newBuilder().mergeFrom(input, extensionRegistry)
+               .buildParsed();
+    }
+    public static asap.rsbembodiments.Rsbembodiments.Skeleton parseDelimitedFrom(java.io.InputStream input)
+        throws java.io.IOException {
+      Builder builder = newBuilder();
+      if (builder.mergeDelimitedFrom(input)) {
+        return builder.buildParsed();
+      } else {
+        return null;
+      }
+    }
+    public static asap.rsbembodiments.Rsbembodiments.Skeleton parseDelimitedFrom(
+        java.io.InputStream input,
+        com.google.protobuf.ExtensionRegistryLite extensionRegistry)
+        throws java.io.IOException {
+      Builder builder = newBuilder();
+      if (builder.mergeDelimitedFrom(input, extensionRegistry)) {
+        return builder.buildParsed();
+      } else {
+        return null;
+      }
+    }
+    public static asap.rsbembodiments.Rsbembodiments.Skeleton parseFrom(
+        com.google.protobuf.CodedInputStream input)
+        throws java.io.IOException {
+      return newBuilder().mergeFrom(input).buildParsed();
+    }
+    public static asap.rsbembodiments.Rsbembodiments.Skeleton parseFrom(
+        com.google.protobuf.CodedInputStream input,
+        com.google.protobuf.ExtensionRegistryLite extensionRegistry)
+        throws java.io.IOException {
+      return newBuilder().mergeFrom(input, extensionRegistry)
+               .buildParsed();
+    }
+    
+    public static Builder newBuilder() { return Builder.create(); }
+    public Builder newBuilderForType() { return newBuilder(); }
+    public static Builder newBuilder(asap.rsbembodiments.Rsbembodiments.Skeleton prototype) {
+      return newBuilder().mergeFrom(prototype);
+    }
+    public Builder toBuilder() { return newBuilder(this); }
+    
+    @java.lang.Override
+    protected Builder newBuilderForType(
+        com.google.protobuf.GeneratedMessage.BuilderParent parent) {
+      Builder builder = new Builder(parent);
+      return builder;
+    }
+    public static final class Builder extends
+        com.google.protobuf.GeneratedMessage.Builder<Builder>
+       implements asap.rsbembodiments.Rsbembodiments.SkeletonOrBuilder {
+      public static final com.google.protobuf.Descriptors.Descriptor
+          getDescriptor() {
+        return asap.rsbembodiments.Rsbembodiments.internal_static_asap_rsbembodiments_Skeleton_descriptor;
+      }
+      
+      protected com.google.protobuf.GeneratedMessage.FieldAccessorTable
+          internalGetFieldAccessorTable() {
+        return asap.rsbembodiments.Rsbembodiments.internal_static_asap_rsbembodiments_Skeleton_fieldAccessorTable;
+      }
+      
+      // Construct using asap.rsbembodiments.Rsbembodiments.Skeleton.newBuilder()
+      private Builder() {
+        maybeForceBuilderInitialization();
+      }
+      
+      private Builder(BuilderParent parent) {
+        super(parent);
+        maybeForceBuilderInitialization();
+      }
+      private void maybeForceBuilderInitialization() {
+        if (com.google.protobuf.GeneratedMessage.alwaysUseFieldBuilders) {
+        }
+      }
+      private static Builder create() {
+        return new Builder();
+      }
+      
+      public Builder clear() {
+        super.clear();
+        joints_ = com.google.protobuf.LazyStringArrayList.EMPTY;
+        bitField0_ = (bitField0_ & ~0x00000001);
+        parents_ = com.google.protobuf.LazyStringArrayList.EMPTY;
+        bitField0_ = (bitField0_ & ~0x00000002);
+        localTransformation_ = java.util.Collections.emptyList();;
+        bitField0_ = (bitField0_ & ~0x00000004);
+        return this;
+      }
+      
+      public Builder clone() {
+        return create().mergeFrom(buildPartial());
+      }
+      
+      public com.google.protobuf.Descriptors.Descriptor
+          getDescriptorForType() {
+        return asap.rsbembodiments.Rsbembodiments.Skeleton.getDescriptor();
+      }
+      
+      public asap.rsbembodiments.Rsbembodiments.Skeleton getDefaultInstanceForType() {
+        return asap.rsbembodiments.Rsbembodiments.Skeleton.getDefaultInstance();
+      }
+      
+      public asap.rsbembodiments.Rsbembodiments.Skeleton build() {
+        asap.rsbembodiments.Rsbembodiments.Skeleton result = buildPartial();
+        if (!result.isInitialized()) {
+          throw newUninitializedMessageException(result);
+        }
+        return result;
+      }
+      
+      private asap.rsbembodiments.Rsbembodiments.Skeleton buildParsed()
+          throws com.google.protobuf.InvalidProtocolBufferException {
+        asap.rsbembodiments.Rsbembodiments.Skeleton result = buildPartial();
+        if (!result.isInitialized()) {
+          throw newUninitializedMessageException(
+            result).asInvalidProtocolBufferException();
+        }
+        return result;
+      }
+      
+      public asap.rsbembodiments.Rsbembodiments.Skeleton buildPartial() {
+        asap.rsbembodiments.Rsbembodiments.Skeleton result = new asap.rsbembodiments.Rsbembodiments.Skeleton(this);
+        int from_bitField0_ = bitField0_;
+        if (((bitField0_ & 0x00000001) == 0x00000001)) {
+          joints_ = new com.google.protobuf.UnmodifiableLazyStringList(
+              joints_);
+          bitField0_ = (bitField0_ & ~0x00000001);
+        }
+        result.joints_ = joints_;
+        if (((bitField0_ & 0x00000002) == 0x00000002)) {
+          parents_ = new com.google.protobuf.UnmodifiableLazyStringList(
+              parents_);
+          bitField0_ = (bitField0_ & ~0x00000002);
+        }
+        result.parents_ = parents_;
+        if (((bitField0_ & 0x00000004) == 0x00000004)) {
+          localTransformation_ = java.util.Collections.unmodifiableList(localTransformation_);
+          bitField0_ = (bitField0_ & ~0x00000004);
+        }
+        result.localTransformation_ = localTransformation_;
+        onBuilt();
+        return result;
+      }
+      
+      public Builder mergeFrom(com.google.protobuf.Message other) {
+        if (other instanceof asap.rsbembodiments.Rsbembodiments.Skeleton) {
+          return mergeFrom((asap.rsbembodiments.Rsbembodiments.Skeleton)other);
+        } else {
+          super.mergeFrom(other);
+          return this;
+        }
+      }
+      
+      public Builder mergeFrom(asap.rsbembodiments.Rsbembodiments.Skeleton other) {
+        if (other == asap.rsbembodiments.Rsbembodiments.Skeleton.getDefaultInstance()) return this;
+        if (!other.joints_.isEmpty()) {
+          if (joints_.isEmpty()) {
+            joints_ = other.joints_;
+            bitField0_ = (bitField0_ & ~0x00000001);
+          } else {
+            ensureJointsIsMutable();
+            joints_.addAll(other.joints_);
+          }
+          onChanged();
+        }
+        if (!other.parents_.isEmpty()) {
+          if (parents_.isEmpty()) {
+            parents_ = other.parents_;
+            bitField0_ = (bitField0_ & ~0x00000002);
+          } else {
+            ensureParentsIsMutable();
+            parents_.addAll(other.parents_);
+          }
+          onChanged();
+        }
+        if (!other.localTransformation_.isEmpty()) {
+          if (localTransformation_.isEmpty()) {
+            localTransformation_ = other.localTransformation_;
+            bitField0_ = (bitField0_ & ~0x00000004);
+          } else {
+            ensureLocalTransformationIsMutable();
+            localTransformation_.addAll(other.localTransformation_);
+          }
+          onChanged();
+        }
+        this.mergeUnknownFields(other.getUnknownFields());
+        return this;
+      }
+      
+      public final boolean isInitialized() {
+        return true;
+      }
+      
+      public Builder mergeFrom(
+          com.google.protobuf.CodedInputStream input,
+          com.google.protobuf.ExtensionRegistryLite extensionRegistry)
+          throws java.io.IOException {
+        com.google.protobuf.UnknownFieldSet.Builder unknownFields =
+          com.google.protobuf.UnknownFieldSet.newBuilder(
+            this.getUnknownFields());
+        while (true) {
+          int tag = input.readTag();
+          switch (tag) {
+            case 0:
+              this.setUnknownFields(unknownFields.build());
+              onChanged();
+              return this;
+            default: {
+              if (!parseUnknownField(input, unknownFields,
+                                     extensionRegistry, tag)) {
+                this.setUnknownFields(unknownFields.build());
+                onChanged();
+                return this;
+              }
+              break;
+            }
+            case 10: {
+              ensureJointsIsMutable();
+              joints_.add(input.readBytes());
+              break;
+            }
+            case 18: {
+              ensureParentsIsMutable();
+              parents_.add(input.readBytes());
+              break;
+            }
+            case 29: {
+              ensureLocalTransformationIsMutable();
+              localTransformation_.add(input.readFloat());
+              break;
+            }
+            case 26: {
+              int length = input.readRawVarint32();
+              int limit = input.pushLimit(length);
+              while (input.getBytesUntilLimit() > 0) {
+                addLocalTransformation(input.readFloat());
+              }
+              input.popLimit(limit);
+              break;
+            }
+          }
+        }
+      }
+      
+      private int bitField0_;
+      
+      // repeated string joints = 1;
+      private com.google.protobuf.LazyStringList joints_ = com.google.protobuf.LazyStringArrayList.EMPTY;
+      private void ensureJointsIsMutable() {
+        if (!((bitField0_ & 0x00000001) == 0x00000001)) {
+          joints_ = new com.google.protobuf.LazyStringArrayList(joints_);
+          bitField0_ |= 0x00000001;
+         }
+      }
+      public java.util.List<String>
+          getJointsList() {
+        return java.util.Collections.unmodifiableList(joints_);
+      }
+      public int getJointsCount() {
+        return joints_.size();
+      }
+      public String getJoints(int index) {
+        return joints_.get(index);
+      }
+      public Builder setJoints(
+          int index, String value) {
+        if (value == null) {
+    throw new NullPointerException();
+  }
+  ensureJointsIsMutable();
+        joints_.set(index, value);
+        onChanged();
+        return this;
+      }
+      public Builder addJoints(String value) {
+        if (value == null) {
+    throw new NullPointerException();
+  }
+  ensureJointsIsMutable();
+        joints_.add(value);
+        onChanged();
+        return this;
+      }
+      public Builder addAllJoints(
+          java.lang.Iterable<String> values) {
+        ensureJointsIsMutable();
+        super.addAll(values, joints_);
+        onChanged();
+        return this;
+      }
+      public Builder clearJoints() {
+        joints_ = com.google.protobuf.LazyStringArrayList.EMPTY;
+        bitField0_ = (bitField0_ & ~0x00000001);
+        onChanged();
+        return this;
+      }
+      void addJoints(com.google.protobuf.ByteString value) {
+        ensureJointsIsMutable();
+        joints_.add(value);
+        onChanged();
+      }
+      
+      // repeated string parents = 2;
+      private com.google.protobuf.LazyStringList parents_ = com.google.protobuf.LazyStringArrayList.EMPTY;
+      private void ensureParentsIsMutable() {
+        if (!((bitField0_ & 0x00000002) == 0x00000002)) {
+          parents_ = new com.google.protobuf.LazyStringArrayList(parents_);
+          bitField0_ |= 0x00000002;
+         }
+      }
+      public java.util.List<String>
+          getParentsList() {
+        return java.util.Collections.unmodifiableList(parents_);
+      }
+      public int getParentsCount() {
+        return parents_.size();
+      }
+      public String getParents(int index) {
+        return parents_.get(index);
+      }
+      public Builder setParents(
+          int index, String value) {
+        if (value == null) {
+    throw new NullPointerException();
+  }
+  ensureParentsIsMutable();
+        parents_.set(index, value);
+        onChanged();
+        return this;
+      }
+      public Builder addParents(String value) {
+        if (value == null) {
+    throw new NullPointerException();
+  }
+  ensureParentsIsMutable();
+        parents_.add(value);
+        onChanged();
+        return this;
+      }
+      public Builder addAllParents(
+          java.lang.Iterable<String> values) {
+        ensureParentsIsMutable();
+        super.addAll(values, parents_);
+        onChanged();
+        return this;
+      }
+      public Builder clearParents() {
+        parents_ = com.google.protobuf.LazyStringArrayList.EMPTY;
+        bitField0_ = (bitField0_ & ~0x00000002);
+        onChanged();
+        return this;
+      }
+      void addParents(com.google.protobuf.ByteString value) {
+        ensureParentsIsMutable();
+        parents_.add(value);
+        onChanged();
+      }
+      
+      // repeated float localTransformation = 3 [packed = true];
+      private java.util.List<java.lang.Float> localTransformation_ = java.util.Collections.emptyList();;
+      private void ensureLocalTransformationIsMutable() {
+        if (!((bitField0_ & 0x00000004) == 0x00000004)) {
+          localTransformation_ = new java.util.ArrayList<java.lang.Float>(localTransformation_);
+          bitField0_ |= 0x00000004;
+         }
+      }
+      public java.util.List<java.lang.Float>
+          getLocalTransformationList() {
+        return java.util.Collections.unmodifiableList(localTransformation_);
+      }
+      public int getLocalTransformationCount() {
+        return localTransformation_.size();
+      }
+      public float getLocalTransformation(int index) {
+        return localTransformation_.get(index);
+      }
+      public Builder setLocalTransformation(
+          int index, float value) {
+        ensureLocalTransformationIsMutable();
+        localTransformation_.set(index, value);
+        onChanged();
+        return this;
+      }
+      public Builder addLocalTransformation(float value) {
+        ensureLocalTransformationIsMutable();
+        localTransformation_.add(value);
+        onChanged();
+        return this;
+      }
+      public Builder addAllLocalTransformation(
+          java.lang.Iterable<? extends java.lang.Float> values) {
+        ensureLocalTransformationIsMutable();
+        super.addAll(values, localTransformation_);
+        onChanged();
+        return this;
+      }
+      public Builder clearLocalTransformation() {
+        localTransformation_ = java.util.Collections.emptyList();;
+        bitField0_ = (bitField0_ & ~0x00000004);
+        onChanged();
+        return this;
+      }
+      
+      // @@protoc_insertion_point(builder_scope:asap.rsbembodiments.Skeleton)
+    }
+    
+    static {
+      defaultInstance = new Skeleton(true);
+      defaultInstance.initFields();
+    }
+    
+    // @@protoc_insertion_point(class_scope:asap.rsbembodiments.Skeleton)
+  }
+  
   public interface JointDataConfigReplyOrBuilder
       extends com.google.protobuf.MessageOrBuilder {
     
-    // repeated .asap.rsbembodiments.Joint skeleton = 1;
-    java.util.List<asap.rsbembodiments.Rsbembodiments.Joint> 
-        getSkeletonList();
-    asap.rsbembodiments.Rsbembodiments.Joint getSkeleton(int index);
-    int getSkeletonCount();
-    java.util.List<? extends asap.rsbembodiments.Rsbembodiments.JointOrBuilder> 
-        getSkeletonOrBuilderList();
-    asap.rsbembodiments.Rsbembodiments.JointOrBuilder getSkeletonOrBuilder(
-        int index);
+    // optional .asap.rsbembodiments.Skeleton skeleton = 1;
+    boolean hasSkeleton();
+    asap.rsbembodiments.Rsbembodiments.Skeleton getSkeleton();
+    asap.rsbembodiments.Rsbembodiments.SkeletonOrBuilder getSkeletonOrBuilder();
     
-    // repeated .asap.rsbembodiments.MorphTarget availableMorphs = 2;
-    java.util.List<asap.rsbembodiments.Rsbembodiments.MorphTarget> 
-        getAvailableMorphsList();
-    asap.rsbembodiments.Rsbembodiments.MorphTarget getAvailableMorphs(int index);
+    // repeated string availableMorphs = 2;
+    java.util.List<String> getAvailableMorphsList();
     int getAvailableMorphsCount();
-    java.util.List<? extends asap.rsbembodiments.Rsbembodiments.MorphTargetOrBuilder> 
-        getAvailableMorphsOrBuilderList();
-    asap.rsbembodiments.Rsbembodiments.MorphTargetOrBuilder getAvailableMorphsOrBuilder(
-        int index);
+    String getAvailableMorphs(int index);
   }
   public static final class JointDataConfigReply extends
       com.google.protobuf.GeneratedMessage
@@ -1540,69 +1039,43 @@ public final class Rsbembodiments {
       return asap.rsbembodiments.Rsbembodiments.internal_static_asap_rsbembodiments_JointDataConfigReply_fieldAccessorTable;
     }
     
-    // repeated .asap.rsbembodiments.Joint skeleton = 1;
+    private int bitField0_;
+    // optional .asap.rsbembodiments.Skeleton skeleton = 1;
     public static final int SKELETON_FIELD_NUMBER = 1;
-    private java.util.List<asap.rsbembodiments.Rsbembodiments.Joint> skeleton_;
-    public java.util.List<asap.rsbembodiments.Rsbembodiments.Joint> getSkeletonList() {
+    private asap.rsbembodiments.Rsbembodiments.Skeleton skeleton_;
+    public boolean hasSkeleton() {
+      return ((bitField0_ & 0x00000001) == 0x00000001);
+    }
+    public asap.rsbembodiments.Rsbembodiments.Skeleton getSkeleton() {
       return skeleton_;
     }
-    public java.util.List<? extends asap.rsbembodiments.Rsbembodiments.JointOrBuilder> 
-        getSkeletonOrBuilderList() {
+    public asap.rsbembodiments.Rsbembodiments.SkeletonOrBuilder getSkeletonOrBuilder() {
       return skeleton_;
-    }
-    public int getSkeletonCount() {
-      return skeleton_.size();
-    }
-    public asap.rsbembodiments.Rsbembodiments.Joint getSkeleton(int index) {
-      return skeleton_.get(index);
-    }
-    public asap.rsbembodiments.Rsbembodiments.JointOrBuilder getSkeletonOrBuilder(
-        int index) {
-      return skeleton_.get(index);
     }
     
-    // repeated .asap.rsbembodiments.MorphTarget availableMorphs = 2;
+    // repeated string availableMorphs = 2;
     public static final int AVAILABLEMORPHS_FIELD_NUMBER = 2;
-    private java.util.List<asap.rsbembodiments.Rsbembodiments.MorphTarget> availableMorphs_;
-    public java.util.List<asap.rsbembodiments.Rsbembodiments.MorphTarget> getAvailableMorphsList() {
-      return availableMorphs_;
-    }
-    public java.util.List<? extends asap.rsbembodiments.Rsbembodiments.MorphTargetOrBuilder> 
-        getAvailableMorphsOrBuilderList() {
+    private com.google.protobuf.LazyStringList availableMorphs_;
+    public java.util.List<String>
+        getAvailableMorphsList() {
       return availableMorphs_;
     }
     public int getAvailableMorphsCount() {
       return availableMorphs_.size();
     }
-    public asap.rsbembodiments.Rsbembodiments.MorphTarget getAvailableMorphs(int index) {
-      return availableMorphs_.get(index);
-    }
-    public asap.rsbembodiments.Rsbembodiments.MorphTargetOrBuilder getAvailableMorphsOrBuilder(
-        int index) {
+    public String getAvailableMorphs(int index) {
       return availableMorphs_.get(index);
     }
     
     private void initFields() {
-      skeleton_ = java.util.Collections.emptyList();
-      availableMorphs_ = java.util.Collections.emptyList();
+      skeleton_ = asap.rsbembodiments.Rsbembodiments.Skeleton.getDefaultInstance();
+      availableMorphs_ = com.google.protobuf.LazyStringArrayList.EMPTY;
     }
     private byte memoizedIsInitialized = -1;
     public final boolean isInitialized() {
       byte isInitialized = memoizedIsInitialized;
       if (isInitialized != -1) return isInitialized == 1;
       
-      for (int i = 0; i < getSkeletonCount(); i++) {
-        if (!getSkeleton(i).isInitialized()) {
-          memoizedIsInitialized = 0;
-          return false;
-        }
-      }
-      for (int i = 0; i < getAvailableMorphsCount(); i++) {
-        if (!getAvailableMorphs(i).isInitialized()) {
-          memoizedIsInitialized = 0;
-          return false;
-        }
-      }
       memoizedIsInitialized = 1;
       return true;
     }
@@ -1610,11 +1083,11 @@ public final class Rsbembodiments {
     public void writeTo(com.google.protobuf.CodedOutputStream output)
                         throws java.io.IOException {
       getSerializedSize();
-      for (int i = 0; i < skeleton_.size(); i++) {
-        output.writeMessage(1, skeleton_.get(i));
+      if (((bitField0_ & 0x00000001) == 0x00000001)) {
+        output.writeMessage(1, skeleton_);
       }
       for (int i = 0; i < availableMorphs_.size(); i++) {
-        output.writeMessage(2, availableMorphs_.get(i));
+        output.writeBytes(2, availableMorphs_.getByteString(i));
       }
       getUnknownFields().writeTo(output);
     }
@@ -1625,13 +1098,18 @@ public final class Rsbembodiments {
       if (size != -1) return size;
     
       size = 0;
-      for (int i = 0; i < skeleton_.size(); i++) {
+      if (((bitField0_ & 0x00000001) == 0x00000001)) {
         size += com.google.protobuf.CodedOutputStream
-          .computeMessageSize(1, skeleton_.get(i));
+          .computeMessageSize(1, skeleton_);
       }
-      for (int i = 0; i < availableMorphs_.size(); i++) {
-        size += com.google.protobuf.CodedOutputStream
-          .computeMessageSize(2, availableMorphs_.get(i));
+      {
+        int dataSize = 0;
+        for (int i = 0; i < availableMorphs_.size(); i++) {
+          dataSize += com.google.protobuf.CodedOutputStream
+            .computeBytesSizeNoTag(availableMorphs_.getByteString(i));
+        }
+        size += dataSize;
+        size += 1 * getAvailableMorphsList().size();
       }
       size += getUnknownFields().getSerializedSize();
       memoizedSerializedSize = size;
@@ -1750,7 +1228,6 @@ public final class Rsbembodiments {
       private void maybeForceBuilderInitialization() {
         if (com.google.protobuf.GeneratedMessage.alwaysUseFieldBuilders) {
           getSkeletonFieldBuilder();
-          getAvailableMorphsFieldBuilder();
         }
       }
       private static Builder create() {
@@ -1760,17 +1237,13 @@ public final class Rsbembodiments {
       public Builder clear() {
         super.clear();
         if (skeletonBuilder_ == null) {
-          skeleton_ = java.util.Collections.emptyList();
-          bitField0_ = (bitField0_ & ~0x00000001);
+          skeleton_ = asap.rsbembodiments.Rsbembodiments.Skeleton.getDefaultInstance();
         } else {
           skeletonBuilder_.clear();
         }
-        if (availableMorphsBuilder_ == null) {
-          availableMorphs_ = java.util.Collections.emptyList();
-          bitField0_ = (bitField0_ & ~0x00000002);
-        } else {
-          availableMorphsBuilder_.clear();
-        }
+        bitField0_ = (bitField0_ & ~0x00000001);
+        availableMorphs_ = com.google.protobuf.LazyStringArrayList.EMPTY;
+        bitField0_ = (bitField0_ & ~0x00000002);
         return this;
       }
       
@@ -1808,24 +1281,22 @@ public final class Rsbembodiments {
       public asap.rsbembodiments.Rsbembodiments.JointDataConfigReply buildPartial() {
         asap.rsbembodiments.Rsbembodiments.JointDataConfigReply result = new asap.rsbembodiments.Rsbembodiments.JointDataConfigReply(this);
         int from_bitField0_ = bitField0_;
+        int to_bitField0_ = 0;
+        if (((from_bitField0_ & 0x00000001) == 0x00000001)) {
+          to_bitField0_ |= 0x00000001;
+        }
         if (skeletonBuilder_ == null) {
-          if (((bitField0_ & 0x00000001) == 0x00000001)) {
-            skeleton_ = java.util.Collections.unmodifiableList(skeleton_);
-            bitField0_ = (bitField0_ & ~0x00000001);
-          }
           result.skeleton_ = skeleton_;
         } else {
           result.skeleton_ = skeletonBuilder_.build();
         }
-        if (availableMorphsBuilder_ == null) {
-          if (((bitField0_ & 0x00000002) == 0x00000002)) {
-            availableMorphs_ = java.util.Collections.unmodifiableList(availableMorphs_);
-            bitField0_ = (bitField0_ & ~0x00000002);
-          }
-          result.availableMorphs_ = availableMorphs_;
-        } else {
-          result.availableMorphs_ = availableMorphsBuilder_.build();
+        if (((bitField0_ & 0x00000002) == 0x00000002)) {
+          availableMorphs_ = new com.google.protobuf.UnmodifiableLazyStringList(
+              availableMorphs_);
+          bitField0_ = (bitField0_ & ~0x00000002);
         }
+        result.availableMorphs_ = availableMorphs_;
+        result.bitField0_ = to_bitField0_;
         onBuilt();
         return result;
       }
@@ -1841,75 +1312,24 @@ public final class Rsbembodiments {
       
       public Builder mergeFrom(asap.rsbembodiments.Rsbembodiments.JointDataConfigReply other) {
         if (other == asap.rsbembodiments.Rsbembodiments.JointDataConfigReply.getDefaultInstance()) return this;
-        if (skeletonBuilder_ == null) {
-          if (!other.skeleton_.isEmpty()) {
-            if (skeleton_.isEmpty()) {
-              skeleton_ = other.skeleton_;
-              bitField0_ = (bitField0_ & ~0x00000001);
-            } else {
-              ensureSkeletonIsMutable();
-              skeleton_.addAll(other.skeleton_);
-            }
-            onChanged();
-          }
-        } else {
-          if (!other.skeleton_.isEmpty()) {
-            if (skeletonBuilder_.isEmpty()) {
-              skeletonBuilder_.dispose();
-              skeletonBuilder_ = null;
-              skeleton_ = other.skeleton_;
-              bitField0_ = (bitField0_ & ~0x00000001);
-              skeletonBuilder_ = 
-                com.google.protobuf.GeneratedMessage.alwaysUseFieldBuilders ?
-                   getSkeletonFieldBuilder() : null;
-            } else {
-              skeletonBuilder_.addAllMessages(other.skeleton_);
-            }
-          }
+        if (other.hasSkeleton()) {
+          mergeSkeleton(other.getSkeleton());
         }
-        if (availableMorphsBuilder_ == null) {
-          if (!other.availableMorphs_.isEmpty()) {
-            if (availableMorphs_.isEmpty()) {
-              availableMorphs_ = other.availableMorphs_;
-              bitField0_ = (bitField0_ & ~0x00000002);
-            } else {
-              ensureAvailableMorphsIsMutable();
-              availableMorphs_.addAll(other.availableMorphs_);
-            }
-            onChanged();
+        if (!other.availableMorphs_.isEmpty()) {
+          if (availableMorphs_.isEmpty()) {
+            availableMorphs_ = other.availableMorphs_;
+            bitField0_ = (bitField0_ & ~0x00000002);
+          } else {
+            ensureAvailableMorphsIsMutable();
+            availableMorphs_.addAll(other.availableMorphs_);
           }
-        } else {
-          if (!other.availableMorphs_.isEmpty()) {
-            if (availableMorphsBuilder_.isEmpty()) {
-              availableMorphsBuilder_.dispose();
-              availableMorphsBuilder_ = null;
-              availableMorphs_ = other.availableMorphs_;
-              bitField0_ = (bitField0_ & ~0x00000002);
-              availableMorphsBuilder_ = 
-                com.google.protobuf.GeneratedMessage.alwaysUseFieldBuilders ?
-                   getAvailableMorphsFieldBuilder() : null;
-            } else {
-              availableMorphsBuilder_.addAllMessages(other.availableMorphs_);
-            }
-          }
+          onChanged();
         }
         this.mergeUnknownFields(other.getUnknownFields());
         return this;
       }
       
       public final boolean isInitialized() {
-        for (int i = 0; i < getSkeletonCount(); i++) {
-          if (!getSkeleton(i).isInitialized()) {
-            
-            return false;
-          }
-        }
-        for (int i = 0; i < getAvailableMorphsCount(); i++) {
-          if (!getAvailableMorphs(i).isInitialized()) {
-            
-            return false;
-          }
-        }
         return true;
       }
       
@@ -1937,15 +1357,17 @@ public final class Rsbembodiments {
               break;
             }
             case 10: {
-              asap.rsbembodiments.Rsbembodiments.Joint.Builder subBuilder = asap.rsbembodiments.Rsbembodiments.Joint.newBuilder();
+              asap.rsbembodiments.Rsbembodiments.Skeleton.Builder subBuilder = asap.rsbembodiments.Rsbembodiments.Skeleton.newBuilder();
+              if (hasSkeleton()) {
+                subBuilder.mergeFrom(getSkeleton());
+              }
               input.readMessage(subBuilder, extensionRegistry);
-              addSkeleton(subBuilder.buildPartial());
+              setSkeleton(subBuilder.buildPartial());
               break;
             }
             case 18: {
-              asap.rsbembodiments.Rsbembodiments.MorphTarget.Builder subBuilder = asap.rsbembodiments.Rsbembodiments.MorphTarget.newBuilder();
-              input.readMessage(subBuilder, extensionRegistry);
-              addAvailableMorphs(subBuilder.buildPartial());
+              ensureAvailableMorphsIsMutable();
+              availableMorphs_.add(input.readBytes());
               break;
             }
           }
@@ -1954,185 +1376,89 @@ public final class Rsbembodiments {
       
       private int bitField0_;
       
-      // repeated .asap.rsbembodiments.Joint skeleton = 1;
-      private java.util.List<asap.rsbembodiments.Rsbembodiments.Joint> skeleton_ =
-        java.util.Collections.emptyList();
-      private void ensureSkeletonIsMutable() {
-        if (!((bitField0_ & 0x00000001) == 0x00000001)) {
-          skeleton_ = new java.util.ArrayList<asap.rsbembodiments.Rsbembodiments.Joint>(skeleton_);
-          bitField0_ |= 0x00000001;
-         }
+      // optional .asap.rsbembodiments.Skeleton skeleton = 1;
+      private asap.rsbembodiments.Rsbembodiments.Skeleton skeleton_ = asap.rsbembodiments.Rsbembodiments.Skeleton.getDefaultInstance();
+      private com.google.protobuf.SingleFieldBuilder<
+          asap.rsbembodiments.Rsbembodiments.Skeleton, asap.rsbembodiments.Rsbembodiments.Skeleton.Builder, asap.rsbembodiments.Rsbembodiments.SkeletonOrBuilder> skeletonBuilder_;
+      public boolean hasSkeleton() {
+        return ((bitField0_ & 0x00000001) == 0x00000001);
       }
-      
-      private com.google.protobuf.RepeatedFieldBuilder<
-          asap.rsbembodiments.Rsbembodiments.Joint, asap.rsbembodiments.Rsbembodiments.Joint.Builder, asap.rsbembodiments.Rsbembodiments.JointOrBuilder> skeletonBuilder_;
-      
-      public java.util.List<asap.rsbembodiments.Rsbembodiments.Joint> getSkeletonList() {
+      public asap.rsbembodiments.Rsbembodiments.Skeleton getSkeleton() {
         if (skeletonBuilder_ == null) {
-          return java.util.Collections.unmodifiableList(skeleton_);
+          return skeleton_;
         } else {
-          return skeletonBuilder_.getMessageList();
+          return skeletonBuilder_.getMessage();
         }
       }
-      public int getSkeletonCount() {
-        if (skeletonBuilder_ == null) {
-          return skeleton_.size();
-        } else {
-          return skeletonBuilder_.getCount();
-        }
-      }
-      public asap.rsbembodiments.Rsbembodiments.Joint getSkeleton(int index) {
-        if (skeletonBuilder_ == null) {
-          return skeleton_.get(index);
-        } else {
-          return skeletonBuilder_.getMessage(index);
-        }
-      }
-      public Builder setSkeleton(
-          int index, asap.rsbembodiments.Rsbembodiments.Joint value) {
+      public Builder setSkeleton(asap.rsbembodiments.Rsbembodiments.Skeleton value) {
         if (skeletonBuilder_ == null) {
           if (value == null) {
             throw new NullPointerException();
           }
-          ensureSkeletonIsMutable();
-          skeleton_.set(index, value);
+          skeleton_ = value;
           onChanged();
         } else {
-          skeletonBuilder_.setMessage(index, value);
+          skeletonBuilder_.setMessage(value);
         }
+        bitField0_ |= 0x00000001;
         return this;
       }
       public Builder setSkeleton(
-          int index, asap.rsbembodiments.Rsbembodiments.Joint.Builder builderForValue) {
+          asap.rsbembodiments.Rsbembodiments.Skeleton.Builder builderForValue) {
         if (skeletonBuilder_ == null) {
-          ensureSkeletonIsMutable();
-          skeleton_.set(index, builderForValue.build());
+          skeleton_ = builderForValue.build();
           onChanged();
         } else {
-          skeletonBuilder_.setMessage(index, builderForValue.build());
+          skeletonBuilder_.setMessage(builderForValue.build());
         }
+        bitField0_ |= 0x00000001;
         return this;
       }
-      public Builder addSkeleton(asap.rsbembodiments.Rsbembodiments.Joint value) {
+      public Builder mergeSkeleton(asap.rsbembodiments.Rsbembodiments.Skeleton value) {
         if (skeletonBuilder_ == null) {
-          if (value == null) {
-            throw new NullPointerException();
+          if (((bitField0_ & 0x00000001) == 0x00000001) &&
+              skeleton_ != asap.rsbembodiments.Rsbembodiments.Skeleton.getDefaultInstance()) {
+            skeleton_ =
+              asap.rsbembodiments.Rsbembodiments.Skeleton.newBuilder(skeleton_).mergeFrom(value).buildPartial();
+          } else {
+            skeleton_ = value;
           }
-          ensureSkeletonIsMutable();
-          skeleton_.add(value);
           onChanged();
         } else {
-          skeletonBuilder_.addMessage(value);
+          skeletonBuilder_.mergeFrom(value);
         }
-        return this;
-      }
-      public Builder addSkeleton(
-          int index, asap.rsbembodiments.Rsbembodiments.Joint value) {
-        if (skeletonBuilder_ == null) {
-          if (value == null) {
-            throw new NullPointerException();
-          }
-          ensureSkeletonIsMutable();
-          skeleton_.add(index, value);
-          onChanged();
-        } else {
-          skeletonBuilder_.addMessage(index, value);
-        }
-        return this;
-      }
-      public Builder addSkeleton(
-          asap.rsbembodiments.Rsbembodiments.Joint.Builder builderForValue) {
-        if (skeletonBuilder_ == null) {
-          ensureSkeletonIsMutable();
-          skeleton_.add(builderForValue.build());
-          onChanged();
-        } else {
-          skeletonBuilder_.addMessage(builderForValue.build());
-        }
-        return this;
-      }
-      public Builder addSkeleton(
-          int index, asap.rsbembodiments.Rsbembodiments.Joint.Builder builderForValue) {
-        if (skeletonBuilder_ == null) {
-          ensureSkeletonIsMutable();
-          skeleton_.add(index, builderForValue.build());
-          onChanged();
-        } else {
-          skeletonBuilder_.addMessage(index, builderForValue.build());
-        }
-        return this;
-      }
-      public Builder addAllSkeleton(
-          java.lang.Iterable<? extends asap.rsbembodiments.Rsbembodiments.Joint> values) {
-        if (skeletonBuilder_ == null) {
-          ensureSkeletonIsMutable();
-          super.addAll(values, skeleton_);
-          onChanged();
-        } else {
-          skeletonBuilder_.addAllMessages(values);
-        }
+        bitField0_ |= 0x00000001;
         return this;
       }
       public Builder clearSkeleton() {
         if (skeletonBuilder_ == null) {
-          skeleton_ = java.util.Collections.emptyList();
-          bitField0_ = (bitField0_ & ~0x00000001);
+          skeleton_ = asap.rsbembodiments.Rsbembodiments.Skeleton.getDefaultInstance();
           onChanged();
         } else {
           skeletonBuilder_.clear();
         }
+        bitField0_ = (bitField0_ & ~0x00000001);
         return this;
       }
-      public Builder removeSkeleton(int index) {
-        if (skeletonBuilder_ == null) {
-          ensureSkeletonIsMutable();
-          skeleton_.remove(index);
-          onChanged();
-        } else {
-          skeletonBuilder_.remove(index);
-        }
-        return this;
+      public asap.rsbembodiments.Rsbembodiments.Skeleton.Builder getSkeletonBuilder() {
+        bitField0_ |= 0x00000001;
+        onChanged();
+        return getSkeletonFieldBuilder().getBuilder();
       }
-      public asap.rsbembodiments.Rsbembodiments.Joint.Builder getSkeletonBuilder(
-          int index) {
-        return getSkeletonFieldBuilder().getBuilder(index);
-      }
-      public asap.rsbembodiments.Rsbembodiments.JointOrBuilder getSkeletonOrBuilder(
-          int index) {
-        if (skeletonBuilder_ == null) {
-          return skeleton_.get(index);  } else {
-          return skeletonBuilder_.getMessageOrBuilder(index);
-        }
-      }
-      public java.util.List<? extends asap.rsbembodiments.Rsbembodiments.JointOrBuilder> 
-           getSkeletonOrBuilderList() {
+      public asap.rsbembodiments.Rsbembodiments.SkeletonOrBuilder getSkeletonOrBuilder() {
         if (skeletonBuilder_ != null) {
-          return skeletonBuilder_.getMessageOrBuilderList();
+          return skeletonBuilder_.getMessageOrBuilder();
         } else {
-          return java.util.Collections.unmodifiableList(skeleton_);
+          return skeleton_;
         }
       }
-      public asap.rsbembodiments.Rsbembodiments.Joint.Builder addSkeletonBuilder() {
-        return getSkeletonFieldBuilder().addBuilder(
-            asap.rsbembodiments.Rsbembodiments.Joint.getDefaultInstance());
-      }
-      public asap.rsbembodiments.Rsbembodiments.Joint.Builder addSkeletonBuilder(
-          int index) {
-        return getSkeletonFieldBuilder().addBuilder(
-            index, asap.rsbembodiments.Rsbembodiments.Joint.getDefaultInstance());
-      }
-      public java.util.List<asap.rsbembodiments.Rsbembodiments.Joint.Builder> 
-           getSkeletonBuilderList() {
-        return getSkeletonFieldBuilder().getBuilderList();
-      }
-      private com.google.protobuf.RepeatedFieldBuilder<
-          asap.rsbembodiments.Rsbembodiments.Joint, asap.rsbembodiments.Rsbembodiments.Joint.Builder, asap.rsbembodiments.Rsbembodiments.JointOrBuilder> 
+      private com.google.protobuf.SingleFieldBuilder<
+          asap.rsbembodiments.Rsbembodiments.Skeleton, asap.rsbembodiments.Rsbembodiments.Skeleton.Builder, asap.rsbembodiments.Rsbembodiments.SkeletonOrBuilder> 
           getSkeletonFieldBuilder() {
         if (skeletonBuilder_ == null) {
-          skeletonBuilder_ = new com.google.protobuf.RepeatedFieldBuilder<
-              asap.rsbembodiments.Rsbembodiments.Joint, asap.rsbembodiments.Rsbembodiments.Joint.Builder, asap.rsbembodiments.Rsbembodiments.JointOrBuilder>(
+          skeletonBuilder_ = new com.google.protobuf.SingleFieldBuilder<
+              asap.rsbembodiments.Rsbembodiments.Skeleton, asap.rsbembodiments.Rsbembodiments.Skeleton.Builder, asap.rsbembodiments.Rsbembodiments.SkeletonOrBuilder>(
                   skeleton_,
-                  ((bitField0_ & 0x00000001) == 0x00000001),
                   getParentForChildren(),
                   isClean());
           skeleton_ = null;
@@ -2140,190 +1466,60 @@ public final class Rsbembodiments {
         return skeletonBuilder_;
       }
       
-      // repeated .asap.rsbembodiments.MorphTarget availableMorphs = 2;
-      private java.util.List<asap.rsbembodiments.Rsbembodiments.MorphTarget> availableMorphs_ =
-        java.util.Collections.emptyList();
+      // repeated string availableMorphs = 2;
+      private com.google.protobuf.LazyStringList availableMorphs_ = com.google.protobuf.LazyStringArrayList.EMPTY;
       private void ensureAvailableMorphsIsMutable() {
         if (!((bitField0_ & 0x00000002) == 0x00000002)) {
-          availableMorphs_ = new java.util.ArrayList<asap.rsbembodiments.Rsbembodiments.MorphTarget>(availableMorphs_);
+          availableMorphs_ = new com.google.protobuf.LazyStringArrayList(availableMorphs_);
           bitField0_ |= 0x00000002;
          }
       }
-      
-      private com.google.protobuf.RepeatedFieldBuilder<
-          asap.rsbembodiments.Rsbembodiments.MorphTarget, asap.rsbembodiments.Rsbembodiments.MorphTarget.Builder, asap.rsbembodiments.Rsbembodiments.MorphTargetOrBuilder> availableMorphsBuilder_;
-      
-      public java.util.List<asap.rsbembodiments.Rsbembodiments.MorphTarget> getAvailableMorphsList() {
-        if (availableMorphsBuilder_ == null) {
-          return java.util.Collections.unmodifiableList(availableMorphs_);
-        } else {
-          return availableMorphsBuilder_.getMessageList();
-        }
+      public java.util.List<String>
+          getAvailableMorphsList() {
+        return java.util.Collections.unmodifiableList(availableMorphs_);
       }
       public int getAvailableMorphsCount() {
-        if (availableMorphsBuilder_ == null) {
-          return availableMorphs_.size();
-        } else {
-          return availableMorphsBuilder_.getCount();
-        }
+        return availableMorphs_.size();
       }
-      public asap.rsbembodiments.Rsbembodiments.MorphTarget getAvailableMorphs(int index) {
-        if (availableMorphsBuilder_ == null) {
-          return availableMorphs_.get(index);
-        } else {
-          return availableMorphsBuilder_.getMessage(index);
-        }
+      public String getAvailableMorphs(int index) {
+        return availableMorphs_.get(index);
       }
       public Builder setAvailableMorphs(
-          int index, asap.rsbembodiments.Rsbembodiments.MorphTarget value) {
-        if (availableMorphsBuilder_ == null) {
-          if (value == null) {
-            throw new NullPointerException();
-          }
-          ensureAvailableMorphsIsMutable();
-          availableMorphs_.set(index, value);
-          onChanged();
-        } else {
-          availableMorphsBuilder_.setMessage(index, value);
-        }
+          int index, String value) {
+        if (value == null) {
+    throw new NullPointerException();
+  }
+  ensureAvailableMorphsIsMutable();
+        availableMorphs_.set(index, value);
+        onChanged();
         return this;
       }
-      public Builder setAvailableMorphs(
-          int index, asap.rsbembodiments.Rsbembodiments.MorphTarget.Builder builderForValue) {
-        if (availableMorphsBuilder_ == null) {
-          ensureAvailableMorphsIsMutable();
-          availableMorphs_.set(index, builderForValue.build());
-          onChanged();
-        } else {
-          availableMorphsBuilder_.setMessage(index, builderForValue.build());
-        }
-        return this;
-      }
-      public Builder addAvailableMorphs(asap.rsbembodiments.Rsbembodiments.MorphTarget value) {
-        if (availableMorphsBuilder_ == null) {
-          if (value == null) {
-            throw new NullPointerException();
-          }
-          ensureAvailableMorphsIsMutable();
-          availableMorphs_.add(value);
-          onChanged();
-        } else {
-          availableMorphsBuilder_.addMessage(value);
-        }
-        return this;
-      }
-      public Builder addAvailableMorphs(
-          int index, asap.rsbembodiments.Rsbembodiments.MorphTarget value) {
-        if (availableMorphsBuilder_ == null) {
-          if (value == null) {
-            throw new NullPointerException();
-          }
-          ensureAvailableMorphsIsMutable();
-          availableMorphs_.add(index, value);
-          onChanged();
-        } else {
-          availableMorphsBuilder_.addMessage(index, value);
-        }
-        return this;
-      }
-      public Builder addAvailableMorphs(
-          asap.rsbembodiments.Rsbembodiments.MorphTarget.Builder builderForValue) {
-        if (availableMorphsBuilder_ == null) {
-          ensureAvailableMorphsIsMutable();
-          availableMorphs_.add(builderForValue.build());
-          onChanged();
-        } else {
-          availableMorphsBuilder_.addMessage(builderForValue.build());
-        }
-        return this;
-      }
-      public Builder addAvailableMorphs(
-          int index, asap.rsbembodiments.Rsbembodiments.MorphTarget.Builder builderForValue) {
-        if (availableMorphsBuilder_ == null) {
-          ensureAvailableMorphsIsMutable();
-          availableMorphs_.add(index, builderForValue.build());
-          onChanged();
-        } else {
-          availableMorphsBuilder_.addMessage(index, builderForValue.build());
-        }
+      public Builder addAvailableMorphs(String value) {
+        if (value == null) {
+    throw new NullPointerException();
+  }
+  ensureAvailableMorphsIsMutable();
+        availableMorphs_.add(value);
+        onChanged();
         return this;
       }
       public Builder addAllAvailableMorphs(
-          java.lang.Iterable<? extends asap.rsbembodiments.Rsbembodiments.MorphTarget> values) {
-        if (availableMorphsBuilder_ == null) {
-          ensureAvailableMorphsIsMutable();
-          super.addAll(values, availableMorphs_);
-          onChanged();
-        } else {
-          availableMorphsBuilder_.addAllMessages(values);
-        }
+          java.lang.Iterable<String> values) {
+        ensureAvailableMorphsIsMutable();
+        super.addAll(values, availableMorphs_);
+        onChanged();
         return this;
       }
       public Builder clearAvailableMorphs() {
-        if (availableMorphsBuilder_ == null) {
-          availableMorphs_ = java.util.Collections.emptyList();
-          bitField0_ = (bitField0_ & ~0x00000002);
-          onChanged();
-        } else {
-          availableMorphsBuilder_.clear();
-        }
+        availableMorphs_ = com.google.protobuf.LazyStringArrayList.EMPTY;
+        bitField0_ = (bitField0_ & ~0x00000002);
+        onChanged();
         return this;
       }
-      public Builder removeAvailableMorphs(int index) {
-        if (availableMorphsBuilder_ == null) {
-          ensureAvailableMorphsIsMutable();
-          availableMorphs_.remove(index);
-          onChanged();
-        } else {
-          availableMorphsBuilder_.remove(index);
-        }
-        return this;
-      }
-      public asap.rsbembodiments.Rsbembodiments.MorphTarget.Builder getAvailableMorphsBuilder(
-          int index) {
-        return getAvailableMorphsFieldBuilder().getBuilder(index);
-      }
-      public asap.rsbembodiments.Rsbembodiments.MorphTargetOrBuilder getAvailableMorphsOrBuilder(
-          int index) {
-        if (availableMorphsBuilder_ == null) {
-          return availableMorphs_.get(index);  } else {
-          return availableMorphsBuilder_.getMessageOrBuilder(index);
-        }
-      }
-      public java.util.List<? extends asap.rsbembodiments.Rsbembodiments.MorphTargetOrBuilder> 
-           getAvailableMorphsOrBuilderList() {
-        if (availableMorphsBuilder_ != null) {
-          return availableMorphsBuilder_.getMessageOrBuilderList();
-        } else {
-          return java.util.Collections.unmodifiableList(availableMorphs_);
-        }
-      }
-      public asap.rsbembodiments.Rsbembodiments.MorphTarget.Builder addAvailableMorphsBuilder() {
-        return getAvailableMorphsFieldBuilder().addBuilder(
-            asap.rsbembodiments.Rsbembodiments.MorphTarget.getDefaultInstance());
-      }
-      public asap.rsbembodiments.Rsbembodiments.MorphTarget.Builder addAvailableMorphsBuilder(
-          int index) {
-        return getAvailableMorphsFieldBuilder().addBuilder(
-            index, asap.rsbembodiments.Rsbembodiments.MorphTarget.getDefaultInstance());
-      }
-      public java.util.List<asap.rsbembodiments.Rsbembodiments.MorphTarget.Builder> 
-           getAvailableMorphsBuilderList() {
-        return getAvailableMorphsFieldBuilder().getBuilderList();
-      }
-      private com.google.protobuf.RepeatedFieldBuilder<
-          asap.rsbembodiments.Rsbembodiments.MorphTarget, asap.rsbembodiments.Rsbembodiments.MorphTarget.Builder, asap.rsbembodiments.Rsbembodiments.MorphTargetOrBuilder> 
-          getAvailableMorphsFieldBuilder() {
-        if (availableMorphsBuilder_ == null) {
-          availableMorphsBuilder_ = new com.google.protobuf.RepeatedFieldBuilder<
-              asap.rsbembodiments.Rsbembodiments.MorphTarget, asap.rsbembodiments.Rsbembodiments.MorphTarget.Builder, asap.rsbembodiments.Rsbembodiments.MorphTargetOrBuilder>(
-                  availableMorphs_,
-                  ((bitField0_ & 0x00000002) == 0x00000002),
-                  getParentForChildren(),
-                  isClean());
-          availableMorphs_ = null;
-        }
-        return availableMorphsBuilder_;
+      void addAvailableMorphs(com.google.protobuf.ByteString value) {
+        ensureAvailableMorphsIsMutable();
+        availableMorphs_.add(value);
+        onChanged();
       }
       
       // @@protoc_insertion_point(builder_scope:asap.rsbembodiments.JointDataConfigReply)
@@ -2345,14 +1541,14 @@ public final class Rsbembodiments {
     int getSelectedJointsCount();
     String getSelectedJoints(int index);
     
-    // optional .asap.rsbembodiments.AnimationSelection.JointDataEncoding jointDataEncoding = 2 [default = T1R];
-    boolean hasJointDataEncoding();
-    asap.rsbembodiments.Rsbembodiments.AnimationSelection.JointDataEncoding getJointDataEncoding();
-    
-    // repeated string selectedMorphs = 3;
+    // repeated string selectedMorphs = 2;
     java.util.List<String> getSelectedMorphsList();
     int getSelectedMorphsCount();
     String getSelectedMorphs(int index);
+    
+    // optional string characterId = 3;
+    boolean hasCharacterId();
+    String getCharacterId();
   }
   public static final class AnimationSelection extends
       com.google.protobuf.GeneratedMessage
@@ -2382,74 +1578,6 @@ public final class Rsbembodiments {
       return asap.rsbembodiments.Rsbembodiments.internal_static_asap_rsbembodiments_AnimationSelection_fieldAccessorTable;
     }
     
-    public enum JointDataEncoding
-        implements com.google.protobuf.ProtocolMessageEnum {
-      T1R(0, 0),
-      ;
-      
-      public static final JointDataEncoding R = T1R;
-      public static final int T1R_VALUE = 0;
-      public static final int R_VALUE = 0;
-      
-      
-      public final int getNumber() { return value; }
-      
-      public static JointDataEncoding valueOf(int value) {
-        switch (value) {
-          case 0: return T1R;
-          default: return null;
-        }
-      }
-      
-      public static com.google.protobuf.Internal.EnumLiteMap<JointDataEncoding>
-          internalGetValueMap() {
-        return internalValueMap;
-      }
-      private static com.google.protobuf.Internal.EnumLiteMap<JointDataEncoding>
-          internalValueMap =
-            new com.google.protobuf.Internal.EnumLiteMap<JointDataEncoding>() {
-              public JointDataEncoding findValueByNumber(int number) {
-                return JointDataEncoding.valueOf(number);
-              }
-            };
-      
-      public final com.google.protobuf.Descriptors.EnumValueDescriptor
-          getValueDescriptor() {
-        return getDescriptor().getValues().get(index);
-      }
-      public final com.google.protobuf.Descriptors.EnumDescriptor
-          getDescriptorForType() {
-        return getDescriptor();
-      }
-      public static final com.google.protobuf.Descriptors.EnumDescriptor
-          getDescriptor() {
-        return asap.rsbembodiments.Rsbembodiments.AnimationSelection.getDescriptor().getEnumTypes().get(0);
-      }
-      
-      private static final JointDataEncoding[] VALUES = {
-        T1R, R, 
-      };
-      
-      public static JointDataEncoding valueOf(
-          com.google.protobuf.Descriptors.EnumValueDescriptor desc) {
-        if (desc.getType() != getDescriptor()) {
-          throw new java.lang.IllegalArgumentException(
-            "EnumValueDescriptor is not for this type.");
-        }
-        return VALUES[desc.getIndex()];
-      }
-      
-      private final int index;
-      private final int value;
-      
-      private JointDataEncoding(int index, int value) {
-        this.index = index;
-        this.value = value;
-      }
-      
-      // @@protoc_insertion_point(enum_scope:asap.rsbembodiments.AnimationSelection.JointDataEncoding)
-    }
-    
     private int bitField0_;
     // repeated string selectedJoints = 1;
     public static final int SELECTEDJOINTS_FIELD_NUMBER = 1;
@@ -2465,18 +1593,8 @@ public final class Rsbembodiments {
       return selectedJoints_.get(index);
     }
     
-    // optional .asap.rsbembodiments.AnimationSelection.JointDataEncoding jointDataEncoding = 2 [default = T1R];
-    public static final int JOINTDATAENCODING_FIELD_NUMBER = 2;
-    private asap.rsbembodiments.Rsbembodiments.AnimationSelection.JointDataEncoding jointDataEncoding_;
-    public boolean hasJointDataEncoding() {
-      return ((bitField0_ & 0x00000001) == 0x00000001);
-    }
-    public asap.rsbembodiments.Rsbembodiments.AnimationSelection.JointDataEncoding getJointDataEncoding() {
-      return jointDataEncoding_;
-    }
-    
-    // repeated string selectedMorphs = 3;
-    public static final int SELECTEDMORPHS_FIELD_NUMBER = 3;
+    // repeated string selectedMorphs = 2;
+    public static final int SELECTEDMORPHS_FIELD_NUMBER = 2;
     private com.google.protobuf.LazyStringList selectedMorphs_;
     public java.util.List<String>
         getSelectedMorphsList() {
@@ -2489,10 +1607,42 @@ public final class Rsbembodiments {
       return selectedMorphs_.get(index);
     }
     
+    // optional string characterId = 3;
+    public static final int CHARACTERID_FIELD_NUMBER = 3;
+    private java.lang.Object characterId_;
+    public boolean hasCharacterId() {
+      return ((bitField0_ & 0x00000001) == 0x00000001);
+    }
+    public String getCharacterId() {
+      java.lang.Object ref = characterId_;
+      if (ref instanceof String) {
+        return (String) ref;
+      } else {
+        com.google.protobuf.ByteString bs = 
+            (com.google.protobuf.ByteString) ref;
+        String s = bs.toStringUtf8();
+        if (com.google.protobuf.Internal.isValidUtf8(bs)) {
+          characterId_ = s;
+        }
+        return s;
+      }
+    }
+    private com.google.protobuf.ByteString getCharacterIdBytes() {
+      java.lang.Object ref = characterId_;
+      if (ref instanceof String) {
+        com.google.protobuf.ByteString b = 
+            com.google.protobuf.ByteString.copyFromUtf8((String) ref);
+        characterId_ = b;
+        return b;
+      } else {
+        return (com.google.protobuf.ByteString) ref;
+      }
+    }
+    
     private void initFields() {
       selectedJoints_ = com.google.protobuf.LazyStringArrayList.EMPTY;
-      jointDataEncoding_ = asap.rsbembodiments.Rsbembodiments.AnimationSelection.JointDataEncoding.T1R;
       selectedMorphs_ = com.google.protobuf.LazyStringArrayList.EMPTY;
+      characterId_ = "";
     }
     private byte memoizedIsInitialized = -1;
     public final boolean isInitialized() {
@@ -2509,11 +1659,11 @@ public final class Rsbembodiments {
       for (int i = 0; i < selectedJoints_.size(); i++) {
         output.writeBytes(1, selectedJoints_.getByteString(i));
       }
-      if (((bitField0_ & 0x00000001) == 0x00000001)) {
-        output.writeEnum(2, jointDataEncoding_.getNumber());
-      }
       for (int i = 0; i < selectedMorphs_.size(); i++) {
-        output.writeBytes(3, selectedMorphs_.getByteString(i));
+        output.writeBytes(2, selectedMorphs_.getByteString(i));
+      }
+      if (((bitField0_ & 0x00000001) == 0x00000001)) {
+        output.writeBytes(3, getCharacterIdBytes());
       }
       getUnknownFields().writeTo(output);
     }
@@ -2533,10 +1683,6 @@ public final class Rsbembodiments {
         size += dataSize;
         size += 1 * getSelectedJointsList().size();
       }
-      if (((bitField0_ & 0x00000001) == 0x00000001)) {
-        size += com.google.protobuf.CodedOutputStream
-          .computeEnumSize(2, jointDataEncoding_.getNumber());
-      }
       {
         int dataSize = 0;
         for (int i = 0; i < selectedMorphs_.size(); i++) {
@@ -2545,6 +1691,10 @@ public final class Rsbembodiments {
         }
         size += dataSize;
         size += 1 * getSelectedMorphsList().size();
+      }
+      if (((bitField0_ & 0x00000001) == 0x00000001)) {
+        size += com.google.protobuf.CodedOutputStream
+          .computeBytesSize(3, getCharacterIdBytes());
       }
       size += getUnknownFields().getSerializedSize();
       memoizedSerializedSize = size;
@@ -2672,9 +1822,9 @@ public final class Rsbembodiments {
         super.clear();
         selectedJoints_ = com.google.protobuf.LazyStringArrayList.EMPTY;
         bitField0_ = (bitField0_ & ~0x00000001);
-        jointDataEncoding_ = asap.rsbembodiments.Rsbembodiments.AnimationSelection.JointDataEncoding.T1R;
-        bitField0_ = (bitField0_ & ~0x00000002);
         selectedMorphs_ = com.google.protobuf.LazyStringArrayList.EMPTY;
+        bitField0_ = (bitField0_ & ~0x00000002);
+        characterId_ = "";
         bitField0_ = (bitField0_ & ~0x00000004);
         return this;
       }
@@ -2720,16 +1870,16 @@ public final class Rsbembodiments {
           bitField0_ = (bitField0_ & ~0x00000001);
         }
         result.selectedJoints_ = selectedJoints_;
-        if (((from_bitField0_ & 0x00000002) == 0x00000002)) {
-          to_bitField0_ |= 0x00000001;
-        }
-        result.jointDataEncoding_ = jointDataEncoding_;
-        if (((bitField0_ & 0x00000004) == 0x00000004)) {
+        if (((bitField0_ & 0x00000002) == 0x00000002)) {
           selectedMorphs_ = new com.google.protobuf.UnmodifiableLazyStringList(
               selectedMorphs_);
-          bitField0_ = (bitField0_ & ~0x00000004);
+          bitField0_ = (bitField0_ & ~0x00000002);
         }
         result.selectedMorphs_ = selectedMorphs_;
+        if (((from_bitField0_ & 0x00000004) == 0x00000004)) {
+          to_bitField0_ |= 0x00000001;
+        }
+        result.characterId_ = characterId_;
         result.bitField0_ = to_bitField0_;
         onBuilt();
         return result;
@@ -2756,18 +1906,18 @@ public final class Rsbembodiments {
           }
           onChanged();
         }
-        if (other.hasJointDataEncoding()) {
-          setJointDataEncoding(other.getJointDataEncoding());
-        }
         if (!other.selectedMorphs_.isEmpty()) {
           if (selectedMorphs_.isEmpty()) {
             selectedMorphs_ = other.selectedMorphs_;
-            bitField0_ = (bitField0_ & ~0x00000004);
+            bitField0_ = (bitField0_ & ~0x00000002);
           } else {
             ensureSelectedMorphsIsMutable();
             selectedMorphs_.addAll(other.selectedMorphs_);
           }
           onChanged();
+        }
+        if (other.hasCharacterId()) {
+          setCharacterId(other.getCharacterId());
         }
         this.mergeUnknownFields(other.getUnknownFields());
         return this;
@@ -2805,20 +1955,14 @@ public final class Rsbembodiments {
               selectedJoints_.add(input.readBytes());
               break;
             }
-            case 16: {
-              int rawValue = input.readEnum();
-              asap.rsbembodiments.Rsbembodiments.AnimationSelection.JointDataEncoding value = asap.rsbembodiments.Rsbembodiments.AnimationSelection.JointDataEncoding.valueOf(rawValue);
-              if (value == null) {
-                unknownFields.mergeVarintField(2, rawValue);
-              } else {
-                bitField0_ |= 0x00000002;
-                jointDataEncoding_ = value;
-              }
+            case 18: {
+              ensureSelectedMorphsIsMutable();
+              selectedMorphs_.add(input.readBytes());
               break;
             }
             case 26: {
-              ensureSelectedMorphsIsMutable();
-              selectedMorphs_.add(input.readBytes());
+              bitField0_ |= 0x00000004;
+              characterId_ = input.readBytes();
               break;
             }
           }
@@ -2883,36 +2027,12 @@ public final class Rsbembodiments {
         onChanged();
       }
       
-      // optional .asap.rsbembodiments.AnimationSelection.JointDataEncoding jointDataEncoding = 2 [default = T1R];
-      private asap.rsbembodiments.Rsbembodiments.AnimationSelection.JointDataEncoding jointDataEncoding_ = asap.rsbembodiments.Rsbembodiments.AnimationSelection.JointDataEncoding.T1R;
-      public boolean hasJointDataEncoding() {
-        return ((bitField0_ & 0x00000002) == 0x00000002);
-      }
-      public asap.rsbembodiments.Rsbembodiments.AnimationSelection.JointDataEncoding getJointDataEncoding() {
-        return jointDataEncoding_;
-      }
-      public Builder setJointDataEncoding(asap.rsbembodiments.Rsbembodiments.AnimationSelection.JointDataEncoding value) {
-        if (value == null) {
-          throw new NullPointerException();
-        }
-        bitField0_ |= 0x00000002;
-        jointDataEncoding_ = value;
-        onChanged();
-        return this;
-      }
-      public Builder clearJointDataEncoding() {
-        bitField0_ = (bitField0_ & ~0x00000002);
-        jointDataEncoding_ = asap.rsbembodiments.Rsbembodiments.AnimationSelection.JointDataEncoding.T1R;
-        onChanged();
-        return this;
-      }
-      
-      // repeated string selectedMorphs = 3;
+      // repeated string selectedMorphs = 2;
       private com.google.protobuf.LazyStringList selectedMorphs_ = com.google.protobuf.LazyStringArrayList.EMPTY;
       private void ensureSelectedMorphsIsMutable() {
-        if (!((bitField0_ & 0x00000004) == 0x00000004)) {
+        if (!((bitField0_ & 0x00000002) == 0x00000002)) {
           selectedMorphs_ = new com.google.protobuf.LazyStringArrayList(selectedMorphs_);
-          bitField0_ |= 0x00000004;
+          bitField0_ |= 0x00000002;
          }
       }
       public java.util.List<String>
@@ -2953,13 +2073,49 @@ public final class Rsbembodiments {
       }
       public Builder clearSelectedMorphs() {
         selectedMorphs_ = com.google.protobuf.LazyStringArrayList.EMPTY;
-        bitField0_ = (bitField0_ & ~0x00000004);
+        bitField0_ = (bitField0_ & ~0x00000002);
         onChanged();
         return this;
       }
       void addSelectedMorphs(com.google.protobuf.ByteString value) {
         ensureSelectedMorphsIsMutable();
         selectedMorphs_.add(value);
+        onChanged();
+      }
+      
+      // optional string characterId = 3;
+      private java.lang.Object characterId_ = "";
+      public boolean hasCharacterId() {
+        return ((bitField0_ & 0x00000004) == 0x00000004);
+      }
+      public String getCharacterId() {
+        java.lang.Object ref = characterId_;
+        if (!(ref instanceof String)) {
+          String s = ((com.google.protobuf.ByteString) ref).toStringUtf8();
+          characterId_ = s;
+          return s;
+        } else {
+          return (String) ref;
+        }
+      }
+      public Builder setCharacterId(String value) {
+        if (value == null) {
+    throw new NullPointerException();
+  }
+  bitField0_ |= 0x00000004;
+        characterId_ = value;
+        onChanged();
+        return this;
+      }
+      public Builder clearCharacterId() {
+        bitField0_ = (bitField0_ & ~0x00000004);
+        characterId_ = getDefaultInstance().getCharacterId();
+        onChanged();
+        return this;
+      }
+      void setCharacterId(com.google.protobuf.ByteString value) {
+        bitField0_ |= 0x00000004;
+        characterId_ = value;
         onChanged();
       }
       
@@ -2977,15 +2133,29 @@ public final class Rsbembodiments {
   public interface AnimationDataOrBuilder
       extends com.google.protobuf.MessageOrBuilder {
     
-    // repeated float jointData = 1 [packed = true];
-    java.util.List<java.lang.Float> getJointDataList();
-    int getJointDataCount();
-    float getJointData(int index);
+    // repeated float jointQuats = 1 [packed = true];
+    java.util.List<java.lang.Float> getJointQuatsList();
+    int getJointQuatsCount();
+    float getJointQuats(int index);
     
-    // repeated float morphData = 2 [packed = true];
-    java.util.List<java.lang.Float> getMorphDataList();
-    int getMorphDataCount();
-    float getMorphData(int index);
+    // repeated float morphWeights = 2 [packed = true];
+    java.util.List<java.lang.Float> getMorphWeightsList();
+    int getMorphWeightsCount();
+    float getMorphWeights(int index);
+    
+    // repeated float rootTranslation = 3 [packed = true];
+    java.util.List<java.lang.Float> getRootTranslationList();
+    int getRootTranslationCount();
+    float getRootTranslation(int index);
+    
+    // repeated float confidence = 4;
+    java.util.List<java.lang.Float> getConfidenceList();
+    int getConfidenceCount();
+    float getConfidence(int index);
+    
+    // optional string characterId = 5;
+    boolean hasCharacterId();
+    String getCharacterId();
   }
   public static final class AnimationData extends
       com.google.protobuf.GeneratedMessage
@@ -3015,39 +2185,104 @@ public final class Rsbembodiments {
       return asap.rsbembodiments.Rsbembodiments.internal_static_asap_rsbembodiments_AnimationData_fieldAccessorTable;
     }
     
-    // repeated float jointData = 1 [packed = true];
-    public static final int JOINTDATA_FIELD_NUMBER = 1;
-    private java.util.List<java.lang.Float> jointData_;
+    private int bitField0_;
+    // repeated float jointQuats = 1 [packed = true];
+    public static final int JOINTQUATS_FIELD_NUMBER = 1;
+    private java.util.List<java.lang.Float> jointQuats_;
     public java.util.List<java.lang.Float>
-        getJointDataList() {
-      return jointData_;
+        getJointQuatsList() {
+      return jointQuats_;
     }
-    public int getJointDataCount() {
-      return jointData_.size();
+    public int getJointQuatsCount() {
+      return jointQuats_.size();
     }
-    public float getJointData(int index) {
-      return jointData_.get(index);
+    public float getJointQuats(int index) {
+      return jointQuats_.get(index);
     }
-    private int jointDataMemoizedSerializedSize = -1;
+    private int jointQuatsMemoizedSerializedSize = -1;
     
-    // repeated float morphData = 2 [packed = true];
-    public static final int MORPHDATA_FIELD_NUMBER = 2;
-    private java.util.List<java.lang.Float> morphData_;
+    // repeated float morphWeights = 2 [packed = true];
+    public static final int MORPHWEIGHTS_FIELD_NUMBER = 2;
+    private java.util.List<java.lang.Float> morphWeights_;
     public java.util.List<java.lang.Float>
-        getMorphDataList() {
-      return morphData_;
+        getMorphWeightsList() {
+      return morphWeights_;
     }
-    public int getMorphDataCount() {
-      return morphData_.size();
+    public int getMorphWeightsCount() {
+      return morphWeights_.size();
     }
-    public float getMorphData(int index) {
-      return morphData_.get(index);
+    public float getMorphWeights(int index) {
+      return morphWeights_.get(index);
     }
-    private int morphDataMemoizedSerializedSize = -1;
+    private int morphWeightsMemoizedSerializedSize = -1;
+    
+    // repeated float rootTranslation = 3 [packed = true];
+    public static final int ROOTTRANSLATION_FIELD_NUMBER = 3;
+    private java.util.List<java.lang.Float> rootTranslation_;
+    public java.util.List<java.lang.Float>
+        getRootTranslationList() {
+      return rootTranslation_;
+    }
+    public int getRootTranslationCount() {
+      return rootTranslation_.size();
+    }
+    public float getRootTranslation(int index) {
+      return rootTranslation_.get(index);
+    }
+    private int rootTranslationMemoizedSerializedSize = -1;
+    
+    // repeated float confidence = 4;
+    public static final int CONFIDENCE_FIELD_NUMBER = 4;
+    private java.util.List<java.lang.Float> confidence_;
+    public java.util.List<java.lang.Float>
+        getConfidenceList() {
+      return confidence_;
+    }
+    public int getConfidenceCount() {
+      return confidence_.size();
+    }
+    public float getConfidence(int index) {
+      return confidence_.get(index);
+    }
+    
+    // optional string characterId = 5;
+    public static final int CHARACTERID_FIELD_NUMBER = 5;
+    private java.lang.Object characterId_;
+    public boolean hasCharacterId() {
+      return ((bitField0_ & 0x00000001) == 0x00000001);
+    }
+    public String getCharacterId() {
+      java.lang.Object ref = characterId_;
+      if (ref instanceof String) {
+        return (String) ref;
+      } else {
+        com.google.protobuf.ByteString bs = 
+            (com.google.protobuf.ByteString) ref;
+        String s = bs.toStringUtf8();
+        if (com.google.protobuf.Internal.isValidUtf8(bs)) {
+          characterId_ = s;
+        }
+        return s;
+      }
+    }
+    private com.google.protobuf.ByteString getCharacterIdBytes() {
+      java.lang.Object ref = characterId_;
+      if (ref instanceof String) {
+        com.google.protobuf.ByteString b = 
+            com.google.protobuf.ByteString.copyFromUtf8((String) ref);
+        characterId_ = b;
+        return b;
+      } else {
+        return (com.google.protobuf.ByteString) ref;
+      }
+    }
     
     private void initFields() {
-      jointData_ = java.util.Collections.emptyList();;
-      morphData_ = java.util.Collections.emptyList();;
+      jointQuats_ = java.util.Collections.emptyList();;
+      morphWeights_ = java.util.Collections.emptyList();;
+      rootTranslation_ = java.util.Collections.emptyList();;
+      confidence_ = java.util.Collections.emptyList();;
+      characterId_ = "";
     }
     private byte memoizedIsInitialized = -1;
     public final boolean isInitialized() {
@@ -3061,19 +2296,32 @@ public final class Rsbembodiments {
     public void writeTo(com.google.protobuf.CodedOutputStream output)
                         throws java.io.IOException {
       getSerializedSize();
-      if (getJointDataList().size() > 0) {
+      if (getJointQuatsList().size() > 0) {
         output.writeRawVarint32(10);
-        output.writeRawVarint32(jointDataMemoizedSerializedSize);
+        output.writeRawVarint32(jointQuatsMemoizedSerializedSize);
       }
-      for (int i = 0; i < jointData_.size(); i++) {
-        output.writeFloatNoTag(jointData_.get(i));
+      for (int i = 0; i < jointQuats_.size(); i++) {
+        output.writeFloatNoTag(jointQuats_.get(i));
       }
-      if (getMorphDataList().size() > 0) {
+      if (getMorphWeightsList().size() > 0) {
         output.writeRawVarint32(18);
-        output.writeRawVarint32(morphDataMemoizedSerializedSize);
+        output.writeRawVarint32(morphWeightsMemoizedSerializedSize);
       }
-      for (int i = 0; i < morphData_.size(); i++) {
-        output.writeFloatNoTag(morphData_.get(i));
+      for (int i = 0; i < morphWeights_.size(); i++) {
+        output.writeFloatNoTag(morphWeights_.get(i));
+      }
+      if (getRootTranslationList().size() > 0) {
+        output.writeRawVarint32(26);
+        output.writeRawVarint32(rootTranslationMemoizedSerializedSize);
+      }
+      for (int i = 0; i < rootTranslation_.size(); i++) {
+        output.writeFloatNoTag(rootTranslation_.get(i));
+      }
+      for (int i = 0; i < confidence_.size(); i++) {
+        output.writeFloat(4, confidence_.get(i));
+      }
+      if (((bitField0_ & 0x00000001) == 0x00000001)) {
+        output.writeBytes(5, getCharacterIdBytes());
       }
       getUnknownFields().writeTo(output);
     }
@@ -3086,25 +2334,46 @@ public final class Rsbembodiments {
       size = 0;
       {
         int dataSize = 0;
-        dataSize = 4 * getJointDataList().size();
+        dataSize = 4 * getJointQuatsList().size();
         size += dataSize;
-        if (!getJointDataList().isEmpty()) {
+        if (!getJointQuatsList().isEmpty()) {
           size += 1;
           size += com.google.protobuf.CodedOutputStream
               .computeInt32SizeNoTag(dataSize);
         }
-        jointDataMemoizedSerializedSize = dataSize;
+        jointQuatsMemoizedSerializedSize = dataSize;
       }
       {
         int dataSize = 0;
-        dataSize = 4 * getMorphDataList().size();
+        dataSize = 4 * getMorphWeightsList().size();
         size += dataSize;
-        if (!getMorphDataList().isEmpty()) {
+        if (!getMorphWeightsList().isEmpty()) {
           size += 1;
           size += com.google.protobuf.CodedOutputStream
               .computeInt32SizeNoTag(dataSize);
         }
-        morphDataMemoizedSerializedSize = dataSize;
+        morphWeightsMemoizedSerializedSize = dataSize;
+      }
+      {
+        int dataSize = 0;
+        dataSize = 4 * getRootTranslationList().size();
+        size += dataSize;
+        if (!getRootTranslationList().isEmpty()) {
+          size += 1;
+          size += com.google.protobuf.CodedOutputStream
+              .computeInt32SizeNoTag(dataSize);
+        }
+        rootTranslationMemoizedSerializedSize = dataSize;
+      }
+      {
+        int dataSize = 0;
+        dataSize = 4 * getConfidenceList().size();
+        size += dataSize;
+        size += 1 * getConfidenceList().size();
+      }
+      if (((bitField0_ & 0x00000001) == 0x00000001)) {
+        size += com.google.protobuf.CodedOutputStream
+          .computeBytesSize(5, getCharacterIdBytes());
       }
       size += getUnknownFields().getSerializedSize();
       memoizedSerializedSize = size;
@@ -3230,10 +2499,16 @@ public final class Rsbembodiments {
       
       public Builder clear() {
         super.clear();
-        jointData_ = java.util.Collections.emptyList();;
+        jointQuats_ = java.util.Collections.emptyList();;
         bitField0_ = (bitField0_ & ~0x00000001);
-        morphData_ = java.util.Collections.emptyList();;
+        morphWeights_ = java.util.Collections.emptyList();;
         bitField0_ = (bitField0_ & ~0x00000002);
+        rootTranslation_ = java.util.Collections.emptyList();;
+        bitField0_ = (bitField0_ & ~0x00000004);
+        confidence_ = java.util.Collections.emptyList();;
+        bitField0_ = (bitField0_ & ~0x00000008);
+        characterId_ = "";
+        bitField0_ = (bitField0_ & ~0x00000010);
         return this;
       }
       
@@ -3271,16 +2546,32 @@ public final class Rsbembodiments {
       public asap.rsbembodiments.Rsbembodiments.AnimationData buildPartial() {
         asap.rsbembodiments.Rsbembodiments.AnimationData result = new asap.rsbembodiments.Rsbembodiments.AnimationData(this);
         int from_bitField0_ = bitField0_;
+        int to_bitField0_ = 0;
         if (((bitField0_ & 0x00000001) == 0x00000001)) {
-          jointData_ = java.util.Collections.unmodifiableList(jointData_);
+          jointQuats_ = java.util.Collections.unmodifiableList(jointQuats_);
           bitField0_ = (bitField0_ & ~0x00000001);
         }
-        result.jointData_ = jointData_;
+        result.jointQuats_ = jointQuats_;
         if (((bitField0_ & 0x00000002) == 0x00000002)) {
-          morphData_ = java.util.Collections.unmodifiableList(morphData_);
+          morphWeights_ = java.util.Collections.unmodifiableList(morphWeights_);
           bitField0_ = (bitField0_ & ~0x00000002);
         }
-        result.morphData_ = morphData_;
+        result.morphWeights_ = morphWeights_;
+        if (((bitField0_ & 0x00000004) == 0x00000004)) {
+          rootTranslation_ = java.util.Collections.unmodifiableList(rootTranslation_);
+          bitField0_ = (bitField0_ & ~0x00000004);
+        }
+        result.rootTranslation_ = rootTranslation_;
+        if (((bitField0_ & 0x00000008) == 0x00000008)) {
+          confidence_ = java.util.Collections.unmodifiableList(confidence_);
+          bitField0_ = (bitField0_ & ~0x00000008);
+        }
+        result.confidence_ = confidence_;
+        if (((from_bitField0_ & 0x00000010) == 0x00000010)) {
+          to_bitField0_ |= 0x00000001;
+        }
+        result.characterId_ = characterId_;
+        result.bitField0_ = to_bitField0_;
         onBuilt();
         return result;
       }
@@ -3296,25 +2587,48 @@ public final class Rsbembodiments {
       
       public Builder mergeFrom(asap.rsbembodiments.Rsbembodiments.AnimationData other) {
         if (other == asap.rsbembodiments.Rsbembodiments.AnimationData.getDefaultInstance()) return this;
-        if (!other.jointData_.isEmpty()) {
-          if (jointData_.isEmpty()) {
-            jointData_ = other.jointData_;
+        if (!other.jointQuats_.isEmpty()) {
+          if (jointQuats_.isEmpty()) {
+            jointQuats_ = other.jointQuats_;
             bitField0_ = (bitField0_ & ~0x00000001);
           } else {
-            ensureJointDataIsMutable();
-            jointData_.addAll(other.jointData_);
+            ensureJointQuatsIsMutable();
+            jointQuats_.addAll(other.jointQuats_);
           }
           onChanged();
         }
-        if (!other.morphData_.isEmpty()) {
-          if (morphData_.isEmpty()) {
-            morphData_ = other.morphData_;
+        if (!other.morphWeights_.isEmpty()) {
+          if (morphWeights_.isEmpty()) {
+            morphWeights_ = other.morphWeights_;
             bitField0_ = (bitField0_ & ~0x00000002);
           } else {
-            ensureMorphDataIsMutable();
-            morphData_.addAll(other.morphData_);
+            ensureMorphWeightsIsMutable();
+            morphWeights_.addAll(other.morphWeights_);
           }
           onChanged();
+        }
+        if (!other.rootTranslation_.isEmpty()) {
+          if (rootTranslation_.isEmpty()) {
+            rootTranslation_ = other.rootTranslation_;
+            bitField0_ = (bitField0_ & ~0x00000004);
+          } else {
+            ensureRootTranslationIsMutable();
+            rootTranslation_.addAll(other.rootTranslation_);
+          }
+          onChanged();
+        }
+        if (!other.confidence_.isEmpty()) {
+          if (confidence_.isEmpty()) {
+            confidence_ = other.confidence_;
+            bitField0_ = (bitField0_ & ~0x00000008);
+          } else {
+            ensureConfidenceIsMutable();
+            confidence_.addAll(other.confidence_);
+          }
+          onChanged();
+        }
+        if (other.hasCharacterId()) {
+          setCharacterId(other.getCharacterId());
         }
         this.mergeUnknownFields(other.getUnknownFields());
         return this;
@@ -3348,31 +2662,64 @@ public final class Rsbembodiments {
               break;
             }
             case 13: {
-              ensureJointDataIsMutable();
-              jointData_.add(input.readFloat());
+              ensureJointQuatsIsMutable();
+              jointQuats_.add(input.readFloat());
               break;
             }
             case 10: {
               int length = input.readRawVarint32();
               int limit = input.pushLimit(length);
               while (input.getBytesUntilLimit() > 0) {
-                addJointData(input.readFloat());
+                addJointQuats(input.readFloat());
               }
               input.popLimit(limit);
               break;
             }
             case 21: {
-              ensureMorphDataIsMutable();
-              morphData_.add(input.readFloat());
+              ensureMorphWeightsIsMutable();
+              morphWeights_.add(input.readFloat());
               break;
             }
             case 18: {
               int length = input.readRawVarint32();
               int limit = input.pushLimit(length);
               while (input.getBytesUntilLimit() > 0) {
-                addMorphData(input.readFloat());
+                addMorphWeights(input.readFloat());
               }
               input.popLimit(limit);
+              break;
+            }
+            case 29: {
+              ensureRootTranslationIsMutable();
+              rootTranslation_.add(input.readFloat());
+              break;
+            }
+            case 26: {
+              int length = input.readRawVarint32();
+              int limit = input.pushLimit(length);
+              while (input.getBytesUntilLimit() > 0) {
+                addRootTranslation(input.readFloat());
+              }
+              input.popLimit(limit);
+              break;
+            }
+            case 37: {
+              ensureConfidenceIsMutable();
+              confidence_.add(input.readFloat());
+              break;
+            }
+            case 34: {
+              int length = input.readRawVarint32();
+              int limit = input.pushLimit(length);
+              while (input.getBytesUntilLimit() > 0) {
+                addConfidence(input.readFloat());
+              }
+              input.popLimit(limit);
+              break;
+            }
+            case 42: {
+              bitField0_ |= 0x00000010;
+              characterId_ = input.readBytes();
               break;
             }
           }
@@ -3381,94 +2728,220 @@ public final class Rsbembodiments {
       
       private int bitField0_;
       
-      // repeated float jointData = 1 [packed = true];
-      private java.util.List<java.lang.Float> jointData_ = java.util.Collections.emptyList();;
-      private void ensureJointDataIsMutable() {
+      // repeated float jointQuats = 1 [packed = true];
+      private java.util.List<java.lang.Float> jointQuats_ = java.util.Collections.emptyList();;
+      private void ensureJointQuatsIsMutable() {
         if (!((bitField0_ & 0x00000001) == 0x00000001)) {
-          jointData_ = new java.util.ArrayList<java.lang.Float>(jointData_);
+          jointQuats_ = new java.util.ArrayList<java.lang.Float>(jointQuats_);
           bitField0_ |= 0x00000001;
          }
       }
       public java.util.List<java.lang.Float>
-          getJointDataList() {
-        return java.util.Collections.unmodifiableList(jointData_);
+          getJointQuatsList() {
+        return java.util.Collections.unmodifiableList(jointQuats_);
       }
-      public int getJointDataCount() {
-        return jointData_.size();
+      public int getJointQuatsCount() {
+        return jointQuats_.size();
       }
-      public float getJointData(int index) {
-        return jointData_.get(index);
+      public float getJointQuats(int index) {
+        return jointQuats_.get(index);
       }
-      public Builder setJointData(
+      public Builder setJointQuats(
           int index, float value) {
-        ensureJointDataIsMutable();
-        jointData_.set(index, value);
+        ensureJointQuatsIsMutable();
+        jointQuats_.set(index, value);
         onChanged();
         return this;
       }
-      public Builder addJointData(float value) {
-        ensureJointDataIsMutable();
-        jointData_.add(value);
+      public Builder addJointQuats(float value) {
+        ensureJointQuatsIsMutable();
+        jointQuats_.add(value);
         onChanged();
         return this;
       }
-      public Builder addAllJointData(
+      public Builder addAllJointQuats(
           java.lang.Iterable<? extends java.lang.Float> values) {
-        ensureJointDataIsMutable();
-        super.addAll(values, jointData_);
+        ensureJointQuatsIsMutable();
+        super.addAll(values, jointQuats_);
         onChanged();
         return this;
       }
-      public Builder clearJointData() {
-        jointData_ = java.util.Collections.emptyList();;
+      public Builder clearJointQuats() {
+        jointQuats_ = java.util.Collections.emptyList();;
         bitField0_ = (bitField0_ & ~0x00000001);
         onChanged();
         return this;
       }
       
-      // repeated float morphData = 2 [packed = true];
-      private java.util.List<java.lang.Float> morphData_ = java.util.Collections.emptyList();;
-      private void ensureMorphDataIsMutable() {
+      // repeated float morphWeights = 2 [packed = true];
+      private java.util.List<java.lang.Float> morphWeights_ = java.util.Collections.emptyList();;
+      private void ensureMorphWeightsIsMutable() {
         if (!((bitField0_ & 0x00000002) == 0x00000002)) {
-          morphData_ = new java.util.ArrayList<java.lang.Float>(morphData_);
+          morphWeights_ = new java.util.ArrayList<java.lang.Float>(morphWeights_);
           bitField0_ |= 0x00000002;
          }
       }
       public java.util.List<java.lang.Float>
-          getMorphDataList() {
-        return java.util.Collections.unmodifiableList(morphData_);
+          getMorphWeightsList() {
+        return java.util.Collections.unmodifiableList(morphWeights_);
       }
-      public int getMorphDataCount() {
-        return morphData_.size();
+      public int getMorphWeightsCount() {
+        return morphWeights_.size();
       }
-      public float getMorphData(int index) {
-        return morphData_.get(index);
+      public float getMorphWeights(int index) {
+        return morphWeights_.get(index);
       }
-      public Builder setMorphData(
+      public Builder setMorphWeights(
           int index, float value) {
-        ensureMorphDataIsMutable();
-        morphData_.set(index, value);
+        ensureMorphWeightsIsMutable();
+        morphWeights_.set(index, value);
         onChanged();
         return this;
       }
-      public Builder addMorphData(float value) {
-        ensureMorphDataIsMutable();
-        morphData_.add(value);
+      public Builder addMorphWeights(float value) {
+        ensureMorphWeightsIsMutable();
+        morphWeights_.add(value);
         onChanged();
         return this;
       }
-      public Builder addAllMorphData(
+      public Builder addAllMorphWeights(
           java.lang.Iterable<? extends java.lang.Float> values) {
-        ensureMorphDataIsMutable();
-        super.addAll(values, morphData_);
+        ensureMorphWeightsIsMutable();
+        super.addAll(values, morphWeights_);
         onChanged();
         return this;
       }
-      public Builder clearMorphData() {
-        morphData_ = java.util.Collections.emptyList();;
+      public Builder clearMorphWeights() {
+        morphWeights_ = java.util.Collections.emptyList();;
         bitField0_ = (bitField0_ & ~0x00000002);
         onChanged();
         return this;
+      }
+      
+      // repeated float rootTranslation = 3 [packed = true];
+      private java.util.List<java.lang.Float> rootTranslation_ = java.util.Collections.emptyList();;
+      private void ensureRootTranslationIsMutable() {
+        if (!((bitField0_ & 0x00000004) == 0x00000004)) {
+          rootTranslation_ = new java.util.ArrayList<java.lang.Float>(rootTranslation_);
+          bitField0_ |= 0x00000004;
+         }
+      }
+      public java.util.List<java.lang.Float>
+          getRootTranslationList() {
+        return java.util.Collections.unmodifiableList(rootTranslation_);
+      }
+      public int getRootTranslationCount() {
+        return rootTranslation_.size();
+      }
+      public float getRootTranslation(int index) {
+        return rootTranslation_.get(index);
+      }
+      public Builder setRootTranslation(
+          int index, float value) {
+        ensureRootTranslationIsMutable();
+        rootTranslation_.set(index, value);
+        onChanged();
+        return this;
+      }
+      public Builder addRootTranslation(float value) {
+        ensureRootTranslationIsMutable();
+        rootTranslation_.add(value);
+        onChanged();
+        return this;
+      }
+      public Builder addAllRootTranslation(
+          java.lang.Iterable<? extends java.lang.Float> values) {
+        ensureRootTranslationIsMutable();
+        super.addAll(values, rootTranslation_);
+        onChanged();
+        return this;
+      }
+      public Builder clearRootTranslation() {
+        rootTranslation_ = java.util.Collections.emptyList();;
+        bitField0_ = (bitField0_ & ~0x00000004);
+        onChanged();
+        return this;
+      }
+      
+      // repeated float confidence = 4;
+      private java.util.List<java.lang.Float> confidence_ = java.util.Collections.emptyList();;
+      private void ensureConfidenceIsMutable() {
+        if (!((bitField0_ & 0x00000008) == 0x00000008)) {
+          confidence_ = new java.util.ArrayList<java.lang.Float>(confidence_);
+          bitField0_ |= 0x00000008;
+         }
+      }
+      public java.util.List<java.lang.Float>
+          getConfidenceList() {
+        return java.util.Collections.unmodifiableList(confidence_);
+      }
+      public int getConfidenceCount() {
+        return confidence_.size();
+      }
+      public float getConfidence(int index) {
+        return confidence_.get(index);
+      }
+      public Builder setConfidence(
+          int index, float value) {
+        ensureConfidenceIsMutable();
+        confidence_.set(index, value);
+        onChanged();
+        return this;
+      }
+      public Builder addConfidence(float value) {
+        ensureConfidenceIsMutable();
+        confidence_.add(value);
+        onChanged();
+        return this;
+      }
+      public Builder addAllConfidence(
+          java.lang.Iterable<? extends java.lang.Float> values) {
+        ensureConfidenceIsMutable();
+        super.addAll(values, confidence_);
+        onChanged();
+        return this;
+      }
+      public Builder clearConfidence() {
+        confidence_ = java.util.Collections.emptyList();;
+        bitField0_ = (bitField0_ & ~0x00000008);
+        onChanged();
+        return this;
+      }
+      
+      // optional string characterId = 5;
+      private java.lang.Object characterId_ = "";
+      public boolean hasCharacterId() {
+        return ((bitField0_ & 0x00000010) == 0x00000010);
+      }
+      public String getCharacterId() {
+        java.lang.Object ref = characterId_;
+        if (!(ref instanceof String)) {
+          String s = ((com.google.protobuf.ByteString) ref).toStringUtf8();
+          characterId_ = s;
+          return s;
+        } else {
+          return (String) ref;
+        }
+      }
+      public Builder setCharacterId(String value) {
+        if (value == null) {
+    throw new NullPointerException();
+  }
+  bitField0_ |= 0x00000010;
+        characterId_ = value;
+        onChanged();
+        return this;
+      }
+      public Builder clearCharacterId() {
+        bitField0_ = (bitField0_ & ~0x00000010);
+        characterId_ = getDefaultInstance().getCharacterId();
+        onChanged();
+        return this;
+      }
+      void setCharacterId(com.google.protobuf.ByteString value) {
+        bitField0_ |= 0x00000010;
+        characterId_ = value;
+        onChanged();
       }
       
       // @@protoc_insertion_point(builder_scope:asap.rsbembodiments.AnimationData)
@@ -3483,20 +2956,15 @@ public final class Rsbembodiments {
   }
   
   private static com.google.protobuf.Descriptors.Descriptor
-    internal_static_asap_rsbembodiments_Joint_descriptor;
-  private static
-    com.google.protobuf.GeneratedMessage.FieldAccessorTable
-      internal_static_asap_rsbembodiments_Joint_fieldAccessorTable;
-  private static com.google.protobuf.Descriptors.Descriptor
-    internal_static_asap_rsbembodiments_MorphTarget_descriptor;
-  private static
-    com.google.protobuf.GeneratedMessage.FieldAccessorTable
-      internal_static_asap_rsbembodiments_MorphTarget_fieldAccessorTable;
-  private static com.google.protobuf.Descriptors.Descriptor
     internal_static_asap_rsbembodiments_JointDataConfigRequest_descriptor;
   private static
     com.google.protobuf.GeneratedMessage.FieldAccessorTable
       internal_static_asap_rsbembodiments_JointDataConfigRequest_fieldAccessorTable;
+  private static com.google.protobuf.Descriptors.Descriptor
+    internal_static_asap_rsbembodiments_Skeleton_descriptor;
+  private static
+    com.google.protobuf.GeneratedMessage.FieldAccessorTable
+      internal_static_asap_rsbembodiments_Skeleton_fieldAccessorTable;
   private static com.google.protobuf.Descriptors.Descriptor
     internal_static_asap_rsbembodiments_JointDataConfigReply_descriptor;
   private static
@@ -3522,52 +2990,42 @@ public final class Rsbembodiments {
   static {
     java.lang.String[] descriptorData = {
       "\n\024rsbembodiments.proto\022\023asap.rsbembodime" +
-      "nts\"^\n\005Joint\022\n\n\002id\030\001 \002(\t\022\020\n\010parentId\030\002 \002" +
-      "(\t\022\031\n\rlocalRotation\030\003 \003(\002B\002\020\001\022\034\n\020localTr" +
-      "anslation\030\004 \003(\002B\002\020\001\"\031\n\013MorphTarget\022\n\n\002id" +
-      "\030\001 \002(\t\"$\n\026JointDataConfigRequest\022\n\n\002id\030\001" +
-      " \002(\t\"\177\n\024JointDataConfigReply\022,\n\010skeleton" +
-      "\030\001 \003(\0132\032.asap.rsbembodiments.Joint\0229\n\017av" +
-      "ailableMorphs\030\002 \003(\0132 .asap.rsbembodiment" +
-      "s.MorphTarget\"\304\001\n\022AnimationSelection\022\026\n\016" +
-      "selectedJoints\030\001 \003(\t\022Y\n\021jointDataEncodin",
-      "g\030\002 \001(\01629.asap.rsbembodiments.AnimationS" +
-      "election.JointDataEncoding:\003T1R\022\026\n\016selec" +
-      "tedMorphs\030\003 \003(\t\"#\n\021JointDataEncoding\022\007\n\003" +
-      "T1R\020\000\022\005\n\001R\020\000\"=\n\rAnimationData\022\025\n\tjointDa" +
-      "ta\030\001 \003(\002B\002\020\001\022\025\n\tmorphData\030\002 \003(\002B\002\020\001"
+      "nts\"-\n\026JointDataConfigRequest\022\023\n\013charact" +
+      "erId\030\001 \001(\t\"L\n\010Skeleton\022\016\n\006joints\030\001 \003(\t\022\017" +
+      "\n\007parents\030\002 \003(\t\022\037\n\023localTransformation\030\003" +
+      " \003(\002B\002\020\001\"`\n\024JointDataConfigReply\022/\n\010skel" +
+      "eton\030\001 \001(\0132\035.asap.rsbembodiments.Skeleto" +
+      "n\022\027\n\017availableMorphs\030\002 \003(\t\"Y\n\022AnimationS" +
+      "election\022\026\n\016selectedJoints\030\001 \003(\t\022\026\n\016sele" +
+      "ctedMorphs\030\002 \003(\t\022\023\n\013characterId\030\003 \001(\t\"\207\001" +
+      "\n\rAnimationData\022\026\n\njointQuats\030\001 \003(\002B\002\020\001\022",
+      "\030\n\014morphWeights\030\002 \003(\002B\002\020\001\022\033\n\017rootTransla" +
+      "tion\030\003 \003(\002B\002\020\001\022\022\n\nconfidence\030\004 \003(\002\022\023\n\013ch" +
+      "aracterId\030\005 \001(\t"
     };
     com.google.protobuf.Descriptors.FileDescriptor.InternalDescriptorAssigner assigner =
       new com.google.protobuf.Descriptors.FileDescriptor.InternalDescriptorAssigner() {
         public com.google.protobuf.ExtensionRegistry assignDescriptors(
             com.google.protobuf.Descriptors.FileDescriptor root) {
           descriptor = root;
-          internal_static_asap_rsbembodiments_Joint_descriptor =
-            getDescriptor().getMessageTypes().get(0);
-          internal_static_asap_rsbembodiments_Joint_fieldAccessorTable = new
-            com.google.protobuf.GeneratedMessage.FieldAccessorTable(
-              internal_static_asap_rsbembodiments_Joint_descriptor,
-              new java.lang.String[] { "Id", "ParentId", "LocalRotation", "LocalTranslation", },
-              asap.rsbembodiments.Rsbembodiments.Joint.class,
-              asap.rsbembodiments.Rsbembodiments.Joint.Builder.class);
-          internal_static_asap_rsbembodiments_MorphTarget_descriptor =
-            getDescriptor().getMessageTypes().get(1);
-          internal_static_asap_rsbembodiments_MorphTarget_fieldAccessorTable = new
-            com.google.protobuf.GeneratedMessage.FieldAccessorTable(
-              internal_static_asap_rsbembodiments_MorphTarget_descriptor,
-              new java.lang.String[] { "Id", },
-              asap.rsbembodiments.Rsbembodiments.MorphTarget.class,
-              asap.rsbembodiments.Rsbembodiments.MorphTarget.Builder.class);
           internal_static_asap_rsbembodiments_JointDataConfigRequest_descriptor =
-            getDescriptor().getMessageTypes().get(2);
+            getDescriptor().getMessageTypes().get(0);
           internal_static_asap_rsbembodiments_JointDataConfigRequest_fieldAccessorTable = new
             com.google.protobuf.GeneratedMessage.FieldAccessorTable(
               internal_static_asap_rsbembodiments_JointDataConfigRequest_descriptor,
-              new java.lang.String[] { "Id", },
+              new java.lang.String[] { "CharacterId", },
               asap.rsbembodiments.Rsbembodiments.JointDataConfigRequest.class,
               asap.rsbembodiments.Rsbembodiments.JointDataConfigRequest.Builder.class);
+          internal_static_asap_rsbembodiments_Skeleton_descriptor =
+            getDescriptor().getMessageTypes().get(1);
+          internal_static_asap_rsbembodiments_Skeleton_fieldAccessorTable = new
+            com.google.protobuf.GeneratedMessage.FieldAccessorTable(
+              internal_static_asap_rsbembodiments_Skeleton_descriptor,
+              new java.lang.String[] { "Joints", "Parents", "LocalTransformation", },
+              asap.rsbembodiments.Rsbembodiments.Skeleton.class,
+              asap.rsbembodiments.Rsbembodiments.Skeleton.Builder.class);
           internal_static_asap_rsbembodiments_JointDataConfigReply_descriptor =
-            getDescriptor().getMessageTypes().get(3);
+            getDescriptor().getMessageTypes().get(2);
           internal_static_asap_rsbembodiments_JointDataConfigReply_fieldAccessorTable = new
             com.google.protobuf.GeneratedMessage.FieldAccessorTable(
               internal_static_asap_rsbembodiments_JointDataConfigReply_descriptor,
@@ -3575,19 +3033,19 @@ public final class Rsbembodiments {
               asap.rsbembodiments.Rsbembodiments.JointDataConfigReply.class,
               asap.rsbembodiments.Rsbembodiments.JointDataConfigReply.Builder.class);
           internal_static_asap_rsbembodiments_AnimationSelection_descriptor =
-            getDescriptor().getMessageTypes().get(4);
+            getDescriptor().getMessageTypes().get(3);
           internal_static_asap_rsbembodiments_AnimationSelection_fieldAccessorTable = new
             com.google.protobuf.GeneratedMessage.FieldAccessorTable(
               internal_static_asap_rsbembodiments_AnimationSelection_descriptor,
-              new java.lang.String[] { "SelectedJoints", "JointDataEncoding", "SelectedMorphs", },
+              new java.lang.String[] { "SelectedJoints", "SelectedMorphs", "CharacterId", },
               asap.rsbembodiments.Rsbembodiments.AnimationSelection.class,
               asap.rsbembodiments.Rsbembodiments.AnimationSelection.Builder.class);
           internal_static_asap_rsbembodiments_AnimationData_descriptor =
-            getDescriptor().getMessageTypes().get(5);
+            getDescriptor().getMessageTypes().get(4);
           internal_static_asap_rsbembodiments_AnimationData_fieldAccessorTable = new
             com.google.protobuf.GeneratedMessage.FieldAccessorTable(
               internal_static_asap_rsbembodiments_AnimationData_descriptor,
-              new java.lang.String[] { "JointData", "MorphData", },
+              new java.lang.String[] { "JointQuats", "MorphWeights", "RootTranslation", "Confidence", "CharacterId", },
               asap.rsbembodiments.Rsbembodiments.AnimationData.class,
               asap.rsbembodiments.Rsbembodiments.AnimationData.Builder.class);
           return null;
