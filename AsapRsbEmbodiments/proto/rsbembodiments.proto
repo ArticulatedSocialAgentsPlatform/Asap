@@ -2,7 +2,7 @@ package asap.rsbembodiments;
 
 
 
-message JointDataConfigRequest {
+message AnimationDataConfigRequest {
   optional string characterId = 1;
 }
 
@@ -12,7 +12,7 @@ message Skeleton {
   repeated float localTransformation = 3 [packed=true]; // n*16 floats; row-major?
 }
 
-message JointDataConfigReply {
+message AnimationDataConfigReply {
   optional Skeleton skeleton = 1;
   repeated string availableMorphs = 2;
 }

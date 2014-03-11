@@ -7,7 +7,6 @@ import hmi.animation.VJointUtils;
 import hmi.animationembodiments.SkeletonEmbodiment;
 import hmi.math.Mat4f;
 import hmi.math.Quat4f;
-import hmi.math.Vec3f;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -25,8 +24,9 @@ import rsb.converter.DefaultConverterRepository;
 import rsb.converter.ProtocolBufferConverter;
 import rsb.patterns.RemoteServer;
 import asap.rsbembodiments.Rsbembodiments.AnimationData;
-import asap.rsbembodiments.Rsbembodiments.JointDataConfigReply;
-import asap.rsbembodiments.Rsbembodiments.JointDataConfigRequest;
+import asap.rsbembodiments.Rsbembodiments.AnimationDataConfigReply;
+import asap.rsbembodiments.Rsbembodiments.AnimationDataConfigRequest;
+import asap.rsbembodiments.Rsbembodiments.AnimationSelection;
 import asap.rsbembodiments.util.VJointRsbUtils;
 
 import com.google.common.collect.BiMap;
@@ -46,7 +46,11 @@ public class RsbBodyEmbodiment implements SkeletonEmbodiment
 
     private final String characterId;
     private Informer<AnimationData> jointDataInformer;
+    private Informer<AnimationSelection> animationSelectionInformer;
     private Object submitJointLock = new Object();
+    private BiMap<String, String> renamingMap;
+    private List<String> usedJoints;
+
     @GuardedBy("submitJointLock")
     private VJoint submitJoint;
 
@@ -63,22 +67,26 @@ public class RsbBodyEmbodiment implements SkeletonEmbodiment
 
     private void initRsbConverters()
     {
-        final ProtocolBufferConverter<AnimationData> jointDataConverter = new ProtocolBufferConverter<AnimationData>(AnimationData.getDefaultInstance());
-        final ProtocolBufferConverter<JointDataConfigRequest> jointDataReqConverter = new ProtocolBufferConverter<JointDataConfigRequest>(
-                JointDataConfigRequest.getDefaultInstance());
-        final ProtocolBufferConverter<JointDataConfigReply> jointDataConfigReplyConverter = new ProtocolBufferConverter<JointDataConfigReply>(
-                JointDataConfigReply.getDefaultInstance());
+        final ProtocolBufferConverter<AnimationData> jointDataConverter = new ProtocolBufferConverter<AnimationData>(
+                AnimationData.getDefaultInstance());
+        final ProtocolBufferConverter<AnimationDataConfigRequest> jointDataReqConverter = new ProtocolBufferConverter<AnimationDataConfigRequest>(
+                AnimationDataConfigRequest.getDefaultInstance());
+        final ProtocolBufferConverter<AnimationDataConfigReply> jointDataConfigReplyConverter = new ProtocolBufferConverter<AnimationDataConfigReply>(
+                AnimationDataConfigReply.getDefaultInstance());
+        final ProtocolBufferConverter<AnimationSelection> animationSelection = new ProtocolBufferConverter<AnimationSelection>(
+                AnimationSelection.getDefaultInstance());
         DefaultConverterRepository.getDefaultConverterRepository().addConverter(jointDataConverter);
         DefaultConverterRepository.getDefaultConverterRepository().addConverter(jointDataReqConverter);
         DefaultConverterRepository.getDefaultConverterRepository().addConverter(jointDataConfigReplyConverter);
-
+        DefaultConverterRepository.getDefaultConverterRepository().addConverter(animationSelection);
     }
 
-    private void initInformer()
+    private void initInformers()
     {
         try
         {
-            jointDataInformer = Factory.getInstance().createInformer(RSBEmbodimentConstants.JOINTDATA_CATEGORY);
+            jointDataInformer = Factory.getInstance().createInformer(RSBEmbodimentConstants.ANIMATIONDATA_CATEGORY);
+            animationSelectionInformer = Factory.getInstance().createInformer(RSBEmbodimentConstants.ANIMATIONDATA_CATEGORY);
             jointDataInformer.activate();
         }
         catch (InitializeException e)
@@ -87,14 +95,46 @@ public class RsbBodyEmbodiment implements SkeletonEmbodiment
         }
     }
 
-    private void initJoints(BiMap<String, String> renamingMap)
+    private void updateJointLists(List<String> jointFilter)
     {
-        final RemoteServer server = Factory.getInstance().createRemoteServer(RSBEmbodimentConstants.JOINTDATACONFIG_CATEGORY);
+        List<String> joints = VJointUtils.transformToSidList(submitJoint.getParts());
+        List<String> availableJoints = new ArrayList<>(joints);
+
+        List<String> unusedJoints = new ArrayList<>();
+
+        int i = 0;
+        for (String j : availableJoints)
+        {
+            VJoint vj = submitJoint.getPart(j);
+            if (vj == null)
+            {
+                vj = submitJoint.getPart(renamingMap.get(j));
+            }
+
+            if (vj == null || !jointFilter.contains(vj.getSid()))
+            {
+                unusedJoints.add(joints.get(i));
+            }
+            else
+            {
+                jointList.add(vj.getSid());
+            }
+            i++;
+        }
+        usedJoints = new ArrayList<>(joints);
+        usedJoints.removeAll(unusedJoints);
+
+    }
+
+    private void initJoints(BiMap<String, String> renamingMap, List<String> jointFilter)
+    {
+        this.renamingMap = renamingMap;
+        final RemoteServer server = Factory.getInstance().createRemoteServer(RSBEmbodimentConstants.ANIMATIONDATACONFIG_CATEGORY);
         try
         {
             server.activate();
-            Rsbembodiments.JointDataConfigReply reply = server.call(RSBEmbodimentConstants.JOINTDATACONFIG_REQUEST_FUNCTION,
-                    Rsbembodiments.JointDataConfigRequest.newBuilder().setCharacterId(characterId).build());
+            AnimationDataConfigReply reply = server.call(RSBEmbodimentConstants.ANIMATIONDATACONFIG_REQUEST_FUNCTION,
+            AnimationDataConfigRequest.newBuilder().setCharacterId(characterId).build());
             synchronized (submitJointLock)
             {
                 submitJoint = VJointRsbUtils.toVJoint(reply.getSkeleton());
@@ -109,11 +149,12 @@ public class RsbBodyEmbodiment implements SkeletonEmbodiment
 
                 submitJoint = submitJoint.getPart(Hanim.HumanoidRoot);
 
-                VJoint vjDummy = new VJoint();
+                VJoint vjDummy = new VJoint("dummy");
                 vjDummy.addChild(submitJoint);
                 VJointUtils.setHAnimPose(vjDummy);
 
                 skel = new Skeleton(submitJoint.getId() + "skel", submitJoint);
+                updateJointLists(jointFilter);
                 skel.setJointSids(jointList);
 
                 skel.setNeutralPose();
@@ -151,16 +192,16 @@ public class RsbBodyEmbodiment implements SkeletonEmbodiment
 
     }
 
-    public void initialize()
+    public void initialize(List<String> jointFilter)
     {
-        initialize(HashBiMap.<String, String> create());
+        initialize(HashBiMap.<String, String> create(), jointFilter);
     }
 
-    public void initialize(BiMap<String, String> renamingMap)
+    public void initialize(BiMap<String, String> renamingMap, List<String> jointFilter)
     {
         initRsbConverters();
-        initJoints(renamingMap);
-        initInformer();
+        initJoints(renamingMap, jointFilter);
+        initInformers();
     }
 
     private List<Float> getJointQuats()
@@ -170,7 +211,6 @@ public class RsbBodyEmbodiment implements SkeletonEmbodiment
         {
             skel.putData();
             skel.getData();
-            float t[] = Vec3f.getVec3f();
             float q[] = Quat4f.getQuat4f();
             float m[] = Mat4f.getMat4f();
 
@@ -196,7 +236,7 @@ public class RsbBodyEmbodiment implements SkeletonEmbodiment
                         Mat4f.invertRigid(pInverse, vjParent.getGlobalMatrix());
                     }
                     Mat4f.mul(m, pInverse, transformMatrices[i]);
-                }                
+                }
                 Quat4f.setFromMat4f(q, m);
                 jointData.addAll(Floats.asList(q));
             }

@@ -7,6 +7,8 @@ import hmi.testutil.animation.HanimBody;
 
 import org.junit.Test;
 
+import com.google.common.collect.Lists;
+
 import rsb.RSBException;
 
 /**
@@ -16,13 +18,13 @@ import rsb.RSBException;
  */
 public class RsbBodyEmbodimentTest
 {
-    @Test//(timeout=1000)
+    @Test//(timeout=2000)
     public void test() throws RSBException, InterruptedException
     {
         StubBody sb = new StubBody(HanimBody.getLOA1HanimBody());
         sb.startServer();
         RsbBodyEmbodiment body = new RsbBodyEmbodiment("idx", "billie");
-        body.initialize();        
+        body.initialize(Lists.newArrayList(Hanim.all_body_joints));
         sb.deactivate();
         assertEquals(Hanim.HumanoidRoot, body.getAnimationVJoint().getSid());
         assertNotNull(body.getAnimationVJoint().getPartBySid(Hanim.l_shoulder));

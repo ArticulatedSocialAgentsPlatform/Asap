@@ -11,7 +11,8 @@ public final class RSBEmbodimentConstants
     {
         
     }
-    static final String JOINTDATA_CATEGORY = "/rsbembodiment/jointData";
-    static final String JOINTDATACONFIG_CATEGORY = "/rsbembodiment/jointDataRequest";    
-    static final String JOINTDATACONFIG_REQUEST_FUNCTION ="jointDataConfigRequest";
+    static final String ANIMATIONDATA_CATEGORY = "/rsbembodiment/animationData";
+    static final String ANIMATIONDATACONFIG_CATEGORY = "/rsbembodiment/animationDataRequest";    
+    static final String ANIMATIONSELECTION_CATEGORY = "/rsbembodiment/animationSelection";
+    static final String ANIMATIONDATACONFIG_REQUEST_FUNCTION ="animationDataConfigRequest";
 }

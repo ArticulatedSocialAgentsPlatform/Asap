@@ -108,7 +108,7 @@ public class IpaacaBodyEmbodiment implements SkeletonEmbodiment
             }
             submitJoint = submitJoint.getPart(Hanim.HumanoidRoot);
 
-            VJoint vjDummy = new VJoint();
+            VJoint vjDummy = new VJoint("dummy");
             vjDummy.addChild(submitJoint);
             VJointUtils.setHAnimPose(vjDummy);
 

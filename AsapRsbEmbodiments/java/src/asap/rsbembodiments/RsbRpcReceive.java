@@ -7,8 +7,8 @@ import rsb.converter.DefaultConverterRepository;
 import rsb.converter.ProtocolBufferConverter;
 import rsb.patterns.EventCallback;
 import rsb.patterns.LocalServer;
-import asap.rsbembodiments.Rsbembodiments.JointDataConfigReply;
-import asap.rsbembodiments.Rsbembodiments.JointDataConfigRequest;
+import asap.rsbembodiments.Rsbembodiments.AnimationDataConfigReply;
+import asap.rsbembodiments.Rsbembodiments.AnimationDataConfigRequest;
 import asap.rsbembodiments.Rsbembodiments.Skeleton;
 
 import com.google.common.primitives.Floats;
@@ -21,10 +21,10 @@ public class RsbRpcReceive
         public Event invoke(final Event request) throws Throwable
         {
             System.out.println("invoke");
-            JointDataConfigRequest jdcr = (JointDataConfigRequest) request.getData();
+            AnimationDataConfigRequest jdcr = (AnimationDataConfigRequest) request.getData();
             Skeleton skel = Skeleton.newBuilder().addJoints("HumanoidRoot").addParents("root")
                     .addAllLocalTransformation(Floats.asList(new float[16])).build();
-            return new Event(JointDataConfigReply.class, JointDataConfigReply.newBuilder()
+            return new Event(AnimationDataConfigReply.class, AnimationDataConfigReply.newBuilder()
                     .setSkeleton(skel).build());
         }
 
@@ -32,11 +32,11 @@ public class RsbRpcReceive
 
     public static void main(String args[]) throws RSBException
     {
-        final ProtocolBufferConverter<JointDataConfigRequest> converter = new ProtocolBufferConverter<JointDataConfigRequest>(
-                JointDataConfigRequest.getDefaultInstance());
+        final ProtocolBufferConverter<AnimationDataConfigRequest> converter = new ProtocolBufferConverter<AnimationDataConfigRequest>(
+                AnimationDataConfigRequest.getDefaultInstance());
         DefaultConverterRepository.getDefaultConverterRepository().addConverter(converter);
-        final ProtocolBufferConverter<JointDataConfigReply> converter2 = new ProtocolBufferConverter<JointDataConfigReply>(
-                JointDataConfigReply.getDefaultInstance());
+        final ProtocolBufferConverter<AnimationDataConfigReply> converter2 = new ProtocolBufferConverter<AnimationDataConfigReply>(
+                AnimationDataConfigReply.getDefaultInstance());
         DefaultConverterRepository.getDefaultConverterRepository().addConverter(converter2);
 
         final LocalServer server = Factory.getInstance().createLocalServer("/example/server");

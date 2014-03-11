@@ -4,18 +4,18 @@ import rsb.Factory;
 import rsb.converter.DefaultConverterRepository;
 import rsb.converter.ProtocolBufferConverter;
 import rsb.patterns.RemoteServer;
-import asap.rsbembodiments.Rsbembodiments.JointDataConfigReply;
-import asap.rsbembodiments.Rsbembodiments.JointDataConfigRequest;
+import asap.rsbembodiments.Rsbembodiments.AnimationDataConfigReply;
+import asap.rsbembodiments.Rsbembodiments.AnimationDataConfigRequest;
 
 public class RsbRpcSend
 {
     public static void main(final String[] args) throws Throwable
     {
-        final ProtocolBufferConverter<JointDataConfigRequest> converter = new ProtocolBufferConverter<JointDataConfigRequest>(
-                JointDataConfigRequest.getDefaultInstance());
+        final ProtocolBufferConverter<AnimationDataConfigRequest> converter = new ProtocolBufferConverter<AnimationDataConfigRequest>(
+                AnimationDataConfigRequest.getDefaultInstance());
         DefaultConverterRepository.getDefaultConverterRepository().addConverter(converter);
-        final ProtocolBufferConverter<JointDataConfigReply> converter2 = new ProtocolBufferConverter<JointDataConfigReply>(
-                JointDataConfigReply.getDefaultInstance());
+        final ProtocolBufferConverter<AnimationDataConfigRequest> converter2 = new ProtocolBufferConverter<AnimationDataConfigRequest>(
+                AnimationDataConfigRequest.getDefaultInstance());
         DefaultConverterRepository.getDefaultConverterRepository().addConverter(converter2);
         
         // Get remote server object to call exposed request methods of
@@ -26,7 +26,7 @@ public class RsbRpcSend
         // Call remote method and deactivate the server.
         try
         {
-            Rsbembodiments.JointDataConfigReply reply = server.call("jointDataConfigRequest", Rsbembodiments.JointDataConfigRequest
+            AnimationDataConfigReply reply = server.call("jointDataConfigRequest", Rsbembodiments.AnimationDataConfigRequest
                     .newBuilder().setCharacterId("billie").build());
 
             System.out.println("Server replied: " + reply.getSkeleton().getJoints(0));

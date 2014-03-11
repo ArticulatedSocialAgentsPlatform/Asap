@@ -9,8 +9,8 @@ import rsb.converter.ProtocolBufferConverter;
 import rsb.patterns.EventCallback;
 import rsb.patterns.LocalServer;
 import asap.rsbembodiments.Rsbembodiments.AnimationData;
-import asap.rsbembodiments.Rsbembodiments.JointDataConfigReply;
-import asap.rsbembodiments.Rsbembodiments.JointDataConfigRequest;
+import asap.rsbembodiments.Rsbembodiments.AnimationDataConfigReply;
+import asap.rsbembodiments.Rsbembodiments.AnimationDataConfigRequest;
 import asap.rsbembodiments.util.VJointRsbUtils;
 
 public class StubBody
@@ -23,7 +23,7 @@ public class StubBody
         @Override
         public Event invoke(final Event request) throws Throwable
         {
-            return new Event(JointDataConfigReply.class, JointDataConfigReply.newBuilder()
+            return new Event(AnimationDataConfigReply.class, AnimationDataConfigReply.newBuilder()
                     .setSkeleton(VJointRsbUtils.toRsbSkeleton(vjoint)).build());
         }
     }
@@ -51,17 +51,17 @@ public class StubBody
         this.vjoint = root;
         final ProtocolBufferConverter<AnimationData> jointDataConverter = new ProtocolBufferConverter<AnimationData>(
                 AnimationData.getDefaultInstance());
-        final ProtocolBufferConverter<JointDataConfigRequest> jointDataReqConverter = new ProtocolBufferConverter<JointDataConfigRequest>(
-                JointDataConfigRequest.getDefaultInstance());
-        final ProtocolBufferConverter<JointDataConfigReply> jointDataConfigReplyConverter = new ProtocolBufferConverter<JointDataConfigReply>(
-                JointDataConfigReply.getDefaultInstance());
+        final ProtocolBufferConverter<AnimationDataConfigRequest> jointDataReqConverter = new ProtocolBufferConverter<AnimationDataConfigRequest>(
+                AnimationDataConfigRequest.getDefaultInstance());
+        final ProtocolBufferConverter<AnimationDataConfigReply> jointDataConfigReplyConverter = new ProtocolBufferConverter<AnimationDataConfigReply>(
+                AnimationDataConfigReply.getDefaultInstance());
         DefaultConverterRepository.getDefaultConverterRepository().addConverter(jointDataConverter);
         DefaultConverterRepository.getDefaultConverterRepository().addConverter(jointDataReqConverter);
         DefaultConverterRepository.getDefaultConverterRepository().addConverter(jointDataConfigReplyConverter);
 
-        server = Factory.getInstance().createLocalServer(RSBEmbodimentConstants.JOINTDATACONFIG_CATEGORY);
+        server = Factory.getInstance().createLocalServer(RSBEmbodimentConstants.ANIMATIONDATACONFIG_CATEGORY);
         server.activate();
 
-        server.addMethod(RSBEmbodimentConstants.JOINTDATACONFIG_REQUEST_FUNCTION, new JointDataConfigCallback());
+        server.addMethod(RSBEmbodimentConstants.ANIMATIONDATACONFIG_REQUEST_FUNCTION, new JointDataConfigCallback());
     }
 }

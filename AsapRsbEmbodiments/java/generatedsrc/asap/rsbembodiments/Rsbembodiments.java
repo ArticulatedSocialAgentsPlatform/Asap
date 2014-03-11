@@ -8,39 +8,39 @@ public final class Rsbembodiments {
   public static void registerAllExtensions(
       com.google.protobuf.ExtensionRegistry registry) {
   }
-  public interface JointDataConfigRequestOrBuilder
+  public interface AnimationDataConfigRequestOrBuilder
       extends com.google.protobuf.MessageOrBuilder {
     
     // optional string characterId = 1;
     boolean hasCharacterId();
     String getCharacterId();
   }
-  public static final class JointDataConfigRequest extends
+  public static final class AnimationDataConfigRequest extends
       com.google.protobuf.GeneratedMessage
-      implements JointDataConfigRequestOrBuilder {
-    // Use JointDataConfigRequest.newBuilder() to construct.
-    private JointDataConfigRequest(Builder builder) {
+      implements AnimationDataConfigRequestOrBuilder {
+    // Use AnimationDataConfigRequest.newBuilder() to construct.
+    private AnimationDataConfigRequest(Builder builder) {
       super(builder);
     }
-    private JointDataConfigRequest(boolean noInit) {}
+    private AnimationDataConfigRequest(boolean noInit) {}
     
-    private static final JointDataConfigRequest defaultInstance;
-    public static JointDataConfigRequest getDefaultInstance() {
+    private static final AnimationDataConfigRequest defaultInstance;
+    public static AnimationDataConfigRequest getDefaultInstance() {
       return defaultInstance;
     }
     
-    public JointDataConfigRequest getDefaultInstanceForType() {
+    public AnimationDataConfigRequest getDefaultInstanceForType() {
       return defaultInstance;
     }
     
     public static final com.google.protobuf.Descriptors.Descriptor
         getDescriptor() {
-      return asap.rsbembodiments.Rsbembodiments.internal_static_asap_rsbembodiments_JointDataConfigRequest_descriptor;
+      return asap.rsbembodiments.Rsbembodiments.internal_static_asap_rsbembodiments_AnimationDataConfigRequest_descriptor;
     }
     
     protected com.google.protobuf.GeneratedMessage.FieldAccessorTable
         internalGetFieldAccessorTable() {
-      return asap.rsbembodiments.Rsbembodiments.internal_static_asap_rsbembodiments_JointDataConfigRequest_fieldAccessorTable;
+      return asap.rsbembodiments.Rsbembodiments.internal_static_asap_rsbembodiments_AnimationDataConfigRequest_fieldAccessorTable;
     }
     
     private int bitField0_;
@@ -119,41 +119,41 @@ public final class Rsbembodiments {
       return super.writeReplace();
     }
     
-    public static asap.rsbembodiments.Rsbembodiments.JointDataConfigRequest parseFrom(
+    public static asap.rsbembodiments.Rsbembodiments.AnimationDataConfigRequest parseFrom(
         com.google.protobuf.ByteString data)
         throws com.google.protobuf.InvalidProtocolBufferException {
       return newBuilder().mergeFrom(data).buildParsed();
     }
-    public static asap.rsbembodiments.Rsbembodiments.JointDataConfigRequest parseFrom(
+    public static asap.rsbembodiments.Rsbembodiments.AnimationDataConfigRequest parseFrom(
         com.google.protobuf.ByteString data,
         com.google.protobuf.ExtensionRegistryLite extensionRegistry)
         throws com.google.protobuf.InvalidProtocolBufferException {
       return newBuilder().mergeFrom(data, extensionRegistry)
                .buildParsed();
     }
-    public static asap.rsbembodiments.Rsbembodiments.JointDataConfigRequest parseFrom(byte[] data)
+    public static asap.rsbembodiments.Rsbembodiments.AnimationDataConfigRequest parseFrom(byte[] data)
         throws com.google.protobuf.InvalidProtocolBufferException {
       return newBuilder().mergeFrom(data).buildParsed();
     }
-    public static asap.rsbembodiments.Rsbembodiments.JointDataConfigRequest parseFrom(
+    public static asap.rsbembodiments.Rsbembodiments.AnimationDataConfigRequest parseFrom(
         byte[] data,
         com.google.protobuf.ExtensionRegistryLite extensionRegistry)
         throws com.google.protobuf.InvalidProtocolBufferException {
       return newBuilder().mergeFrom(data, extensionRegistry)
                .buildParsed();
     }
-    public static asap.rsbembodiments.Rsbembodiments.JointDataConfigRequest parseFrom(java.io.InputStream input)
+    public static asap.rsbembodiments.Rsbembodiments.AnimationDataConfigRequest parseFrom(java.io.InputStream input)
         throws java.io.IOException {
       return newBuilder().mergeFrom(input).buildParsed();
     }
-    public static asap.rsbembodiments.Rsbembodiments.JointDataConfigRequest parseFrom(
+    public static asap.rsbembodiments.Rsbembodiments.AnimationDataConfigRequest parseFrom(
         java.io.InputStream input,
         com.google.protobuf.ExtensionRegistryLite extensionRegistry)
         throws java.io.IOException {
       return newBuilder().mergeFrom(input, extensionRegistry)
                .buildParsed();
     }
-    public static asap.rsbembodiments.Rsbembodiments.JointDataConfigRequest parseDelimitedFrom(java.io.InputStream input)
+    public static asap.rsbembodiments.Rsbembodiments.AnimationDataConfigRequest parseDelimitedFrom(java.io.InputStream input)
         throws java.io.IOException {
       Builder builder = newBuilder();
       if (builder.mergeDelimitedFrom(input)) {
@@ -162,7 +162,7 @@ public final class Rsbembodiments {
         return null;
       }
     }
-    public static asap.rsbembodiments.Rsbembodiments.JointDataConfigRequest parseDelimitedFrom(
+    public static asap.rsbembodiments.Rsbembodiments.AnimationDataConfigRequest parseDelimitedFrom(
         java.io.InputStream input,
         com.google.protobuf.ExtensionRegistryLite extensionRegistry)
         throws java.io.IOException {
@@ -173,12 +173,12 @@ public final class Rsbembodiments {
         return null;
       }
     }
-    public static asap.rsbembodiments.Rsbembodiments.JointDataConfigRequest parseFrom(
+    public static asap.rsbembodiments.Rsbembodiments.AnimationDataConfigRequest parseFrom(
         com.google.protobuf.CodedInputStream input)
         throws java.io.IOException {
       return newBuilder().mergeFrom(input).buildParsed();
     }
-    public static asap.rsbembodiments.Rsbembodiments.JointDataConfigRequest parseFrom(
+    public static asap.rsbembodiments.Rsbembodiments.AnimationDataConfigRequest parseFrom(
         com.google.protobuf.CodedInputStream input,
         com.google.protobuf.ExtensionRegistryLite extensionRegistry)
         throws java.io.IOException {
@@ -188,7 +188,7 @@ public final class Rsbembodiments {
     
     public static Builder newBuilder() { return Builder.create(); }
     public Builder newBuilderForType() { return newBuilder(); }
-    public static Builder newBuilder(asap.rsbembodiments.Rsbembodiments.JointDataConfigRequest prototype) {
+    public static Builder newBuilder(asap.rsbembodiments.Rsbembodiments.AnimationDataConfigRequest prototype) {
       return newBuilder().mergeFrom(prototype);
     }
     public Builder toBuilder() { return newBuilder(this); }
@@ -201,18 +201,18 @@ public final class Rsbembodiments {
     }
     public static final class Builder extends
         com.google.protobuf.GeneratedMessage.Builder<Builder>
-       implements asap.rsbembodiments.Rsbembodiments.JointDataConfigRequestOrBuilder {
+       implements asap.rsbembodiments.Rsbembodiments.AnimationDataConfigRequestOrBuilder {
       public static final com.google.protobuf.Descriptors.Descriptor
           getDescriptor() {
-        return asap.rsbembodiments.Rsbembodiments.internal_static_asap_rsbembodiments_JointDataConfigRequest_descriptor;
+        return asap.rsbembodiments.Rsbembodiments.internal_static_asap_rsbembodiments_AnimationDataConfigRequest_descriptor;
       }
       
       protected com.google.protobuf.GeneratedMessage.FieldAccessorTable
           internalGetFieldAccessorTable() {
-        return asap.rsbembodiments.Rsbembodiments.internal_static_asap_rsbembodiments_JointDataConfigRequest_fieldAccessorTable;
+        return asap.rsbembodiments.Rsbembodiments.internal_static_asap_rsbembodiments_AnimationDataConfigRequest_fieldAccessorTable;
       }
       
-      // Construct using asap.rsbembodiments.Rsbembodiments.JointDataConfigRequest.newBuilder()
+      // Construct using asap.rsbembodiments.Rsbembodiments.AnimationDataConfigRequest.newBuilder()
       private Builder() {
         maybeForceBuilderInitialization();
       }
@@ -242,24 +242,24 @@ public final class Rsbembodiments {
       
       public com.google.protobuf.Descriptors.Descriptor
           getDescriptorForType() {
-        return asap.rsbembodiments.Rsbembodiments.JointDataConfigRequest.getDescriptor();
+        return asap.rsbembodiments.Rsbembodiments.AnimationDataConfigRequest.getDescriptor();
       }
       
-      public asap.rsbembodiments.Rsbembodiments.JointDataConfigRequest getDefaultInstanceForType() {
-        return asap.rsbembodiments.Rsbembodiments.JointDataConfigRequest.getDefaultInstance();
+      public asap.rsbembodiments.Rsbembodiments.AnimationDataConfigRequest getDefaultInstanceForType() {
+        return asap.rsbembodiments.Rsbembodiments.AnimationDataConfigRequest.getDefaultInstance();
       }
       
-      public asap.rsbembodiments.Rsbembodiments.JointDataConfigRequest build() {
-        asap.rsbembodiments.Rsbembodiments.JointDataConfigRequest result = buildPartial();
+      public asap.rsbembodiments.Rsbembodiments.AnimationDataConfigRequest build() {
+        asap.rsbembodiments.Rsbembodiments.AnimationDataConfigRequest result = buildPartial();
         if (!result.isInitialized()) {
           throw newUninitializedMessageException(result);
         }
         return result;
       }
       
-      private asap.rsbembodiments.Rsbembodiments.JointDataConfigRequest buildParsed()
+      private asap.rsbembodiments.Rsbembodiments.AnimationDataConfigRequest buildParsed()
           throws com.google.protobuf.InvalidProtocolBufferException {
-        asap.rsbembodiments.Rsbembodiments.JointDataConfigRequest result = buildPartial();
+        asap.rsbembodiments.Rsbembodiments.AnimationDataConfigRequest result = buildPartial();
         if (!result.isInitialized()) {
           throw newUninitializedMessageException(
             result).asInvalidProtocolBufferException();
@@ -267,8 +267,8 @@ public final class Rsbembodiments {
         return result;
       }
       
-      public asap.rsbembodiments.Rsbembodiments.JointDataConfigRequest buildPartial() {
-        asap.rsbembodiments.Rsbembodiments.JointDataConfigRequest result = new asap.rsbembodiments.Rsbembodiments.JointDataConfigRequest(this);
+      public asap.rsbembodiments.Rsbembodiments.AnimationDataConfigRequest buildPartial() {
+        asap.rsbembodiments.Rsbembodiments.AnimationDataConfigRequest result = new asap.rsbembodiments.Rsbembodiments.AnimationDataConfigRequest(this);
         int from_bitField0_ = bitField0_;
         int to_bitField0_ = 0;
         if (((from_bitField0_ & 0x00000001) == 0x00000001)) {
@@ -281,16 +281,16 @@ public final class Rsbembodiments {
       }
       
       public Builder mergeFrom(com.google.protobuf.Message other) {
-        if (other instanceof asap.rsbembodiments.Rsbembodiments.JointDataConfigRequest) {
-          return mergeFrom((asap.rsbembodiments.Rsbembodiments.JointDataConfigRequest)other);
+        if (other instanceof asap.rsbembodiments.Rsbembodiments.AnimationDataConfigRequest) {
+          return mergeFrom((asap.rsbembodiments.Rsbembodiments.AnimationDataConfigRequest)other);
         } else {
           super.mergeFrom(other);
           return this;
         }
       }
       
-      public Builder mergeFrom(asap.rsbembodiments.Rsbembodiments.JointDataConfigRequest other) {
-        if (other == asap.rsbembodiments.Rsbembodiments.JointDataConfigRequest.getDefaultInstance()) return this;
+      public Builder mergeFrom(asap.rsbembodiments.Rsbembodiments.AnimationDataConfigRequest other) {
+        if (other == asap.rsbembodiments.Rsbembodiments.AnimationDataConfigRequest.getDefaultInstance()) return this;
         if (other.hasCharacterId()) {
           setCharacterId(other.getCharacterId());
         }
@@ -372,15 +372,15 @@ public final class Rsbembodiments {
         onChanged();
       }
       
-      // @@protoc_insertion_point(builder_scope:asap.rsbembodiments.JointDataConfigRequest)
+      // @@protoc_insertion_point(builder_scope:asap.rsbembodiments.AnimationDataConfigRequest)
     }
     
     static {
-      defaultInstance = new JointDataConfigRequest(true);
+      defaultInstance = new AnimationDataConfigRequest(true);
       defaultInstance.initFields();
     }
     
-    // @@protoc_insertion_point(class_scope:asap.rsbembodiments.JointDataConfigRequest)
+    // @@protoc_insertion_point(class_scope:asap.rsbembodiments.AnimationDataConfigRequest)
   }
   
   public interface SkeletonOrBuilder
@@ -998,7 +998,7 @@ public final class Rsbembodiments {
     // @@protoc_insertion_point(class_scope:asap.rsbembodiments.Skeleton)
   }
   
-  public interface JointDataConfigReplyOrBuilder
+  public interface AnimationDataConfigReplyOrBuilder
       extends com.google.protobuf.MessageOrBuilder {
     
     // optional .asap.rsbembodiments.Skeleton skeleton = 1;
@@ -1011,32 +1011,32 @@ public final class Rsbembodiments {
     int getAvailableMorphsCount();
     String getAvailableMorphs(int index);
   }
-  public static final class JointDataConfigReply extends
+  public static final class AnimationDataConfigReply extends
       com.google.protobuf.GeneratedMessage
-      implements JointDataConfigReplyOrBuilder {
-    // Use JointDataConfigReply.newBuilder() to construct.
-    private JointDataConfigReply(Builder builder) {
+      implements AnimationDataConfigReplyOrBuilder {
+    // Use AnimationDataConfigReply.newBuilder() to construct.
+    private AnimationDataConfigReply(Builder builder) {
       super(builder);
     }
-    private JointDataConfigReply(boolean noInit) {}
+    private AnimationDataConfigReply(boolean noInit) {}
     
-    private static final JointDataConfigReply defaultInstance;
-    public static JointDataConfigReply getDefaultInstance() {
+    private static final AnimationDataConfigReply defaultInstance;
+    public static AnimationDataConfigReply getDefaultInstance() {
       return defaultInstance;
     }
     
-    public JointDataConfigReply getDefaultInstanceForType() {
+    public AnimationDataConfigReply getDefaultInstanceForType() {
       return defaultInstance;
     }
     
     public static final com.google.protobuf.Descriptors.Descriptor
         getDescriptor() {
-      return asap.rsbembodiments.Rsbembodiments.internal_static_asap_rsbembodiments_JointDataConfigReply_descriptor;
+      return asap.rsbembodiments.Rsbembodiments.internal_static_asap_rsbembodiments_AnimationDataConfigReply_descriptor;
     }
     
     protected com.google.protobuf.GeneratedMessage.FieldAccessorTable
         internalGetFieldAccessorTable() {
-      return asap.rsbembodiments.Rsbembodiments.internal_static_asap_rsbembodiments_JointDataConfigReply_fieldAccessorTable;
+      return asap.rsbembodiments.Rsbembodiments.internal_static_asap_rsbembodiments_AnimationDataConfigReply_fieldAccessorTable;
     }
     
     private int bitField0_;
@@ -1123,41 +1123,41 @@ public final class Rsbembodiments {
       return super.writeReplace();
     }
     
-    public static asap.rsbembodiments.Rsbembodiments.JointDataConfigReply parseFrom(
+    public static asap.rsbembodiments.Rsbembodiments.AnimationDataConfigReply parseFrom(
         com.google.protobuf.ByteString data)
         throws com.google.protobuf.InvalidProtocolBufferException {
       return newBuilder().mergeFrom(data).buildParsed();
     }
-    public static asap.rsbembodiments.Rsbembodiments.JointDataConfigReply parseFrom(
+    public static asap.rsbembodiments.Rsbembodiments.AnimationDataConfigReply parseFrom(
         com.google.protobuf.ByteString data,
         com.google.protobuf.ExtensionRegistryLite extensionRegistry)
         throws com.google.protobuf.InvalidProtocolBufferException {
       return newBuilder().mergeFrom(data, extensionRegistry)
                .buildParsed();
     }
-    public static asap.rsbembodiments.Rsbembodiments.JointDataConfigReply parseFrom(byte[] data)
+    public static asap.rsbembodiments.Rsbembodiments.AnimationDataConfigReply parseFrom(byte[] data)
         throws com.google.protobuf.InvalidProtocolBufferException {
       return newBuilder().mergeFrom(data).buildParsed();
     }
-    public static asap.rsbembodiments.Rsbembodiments.JointDataConfigReply parseFrom(
+    public static asap.rsbembodiments.Rsbembodiments.AnimationDataConfigReply parseFrom(
         byte[] data,
         com.google.protobuf.ExtensionRegistryLite extensionRegistry)
         throws com.google.protobuf.InvalidProtocolBufferException {
       return newBuilder().mergeFrom(data, extensionRegistry)
                .buildParsed();
     }
-    public static asap.rsbembodiments.Rsbembodiments.JointDataConfigReply parseFrom(java.io.InputStream input)
+    public static asap.rsbembodiments.Rsbembodiments.AnimationDataConfigReply parseFrom(java.io.InputStream input)
         throws java.io.IOException {
       return newBuilder().mergeFrom(input).buildParsed();
     }
-    public static asap.rsbembodiments.Rsbembodiments.JointDataConfigReply parseFrom(
+    public static asap.rsbembodiments.Rsbembodiments.AnimationDataConfigReply parseFrom(
         java.io.InputStream input,
         com.google.protobuf.ExtensionRegistryLite extensionRegistry)
         throws java.io.IOException {
       return newBuilder().mergeFrom(input, extensionRegistry)
                .buildParsed();
     }
-    public static asap.rsbembodiments.Rsbembodiments.JointDataConfigReply parseDelimitedFrom(java.io.InputStream input)
+    public static asap.rsbembodiments.Rsbembodiments.AnimationDataConfigReply parseDelimitedFrom(java.io.InputStream input)
         throws java.io.IOException {
       Builder builder = newBuilder();
       if (builder.mergeDelimitedFrom(input)) {
@@ -1166,7 +1166,7 @@ public final class Rsbembodiments {
         return null;
       }
     }
-    public static asap.rsbembodiments.Rsbembodiments.JointDataConfigReply parseDelimitedFrom(
+    public static asap.rsbembodiments.Rsbembodiments.AnimationDataConfigReply parseDelimitedFrom(
         java.io.InputStream input,
         com.google.protobuf.ExtensionRegistryLite extensionRegistry)
         throws java.io.IOException {
@@ -1177,12 +1177,12 @@ public final class Rsbembodiments {
         return null;
       }
     }
-    public static asap.rsbembodiments.Rsbembodiments.JointDataConfigReply parseFrom(
+    public static asap.rsbembodiments.Rsbembodiments.AnimationDataConfigReply parseFrom(
         com.google.protobuf.CodedInputStream input)
         throws java.io.IOException {
       return newBuilder().mergeFrom(input).buildParsed();
     }
-    public static asap.rsbembodiments.Rsbembodiments.JointDataConfigReply parseFrom(
+    public static asap.rsbembodiments.Rsbembodiments.AnimationDataConfigReply parseFrom(
         com.google.protobuf.CodedInputStream input,
         com.google.protobuf.ExtensionRegistryLite extensionRegistry)
         throws java.io.IOException {
@@ -1192,7 +1192,7 @@ public final class Rsbembodiments {
     
     public static Builder newBuilder() { return Builder.create(); }
     public Builder newBuilderForType() { return newBuilder(); }
-    public static Builder newBuilder(asap.rsbembodiments.Rsbembodiments.JointDataConfigReply prototype) {
+    public static Builder newBuilder(asap.rsbembodiments.Rsbembodiments.AnimationDataConfigReply prototype) {
       return newBuilder().mergeFrom(prototype);
     }
     public Builder toBuilder() { return newBuilder(this); }
@@ -1205,18 +1205,18 @@ public final class Rsbembodiments {
     }
     public static final class Builder extends
         com.google.protobuf.GeneratedMessage.Builder<Builder>
-       implements asap.rsbembodiments.Rsbembodiments.JointDataConfigReplyOrBuilder {
+       implements asap.rsbembodiments.Rsbembodiments.AnimationDataConfigReplyOrBuilder {
       public static final com.google.protobuf.Descriptors.Descriptor
           getDescriptor() {
-        return asap.rsbembodiments.Rsbembodiments.internal_static_asap_rsbembodiments_JointDataConfigReply_descriptor;
+        return asap.rsbembodiments.Rsbembodiments.internal_static_asap_rsbembodiments_AnimationDataConfigReply_descriptor;
       }
       
       protected com.google.protobuf.GeneratedMessage.FieldAccessorTable
           internalGetFieldAccessorTable() {
-        return asap.rsbembodiments.Rsbembodiments.internal_static_asap_rsbembodiments_JointDataConfigReply_fieldAccessorTable;
+        return asap.rsbembodiments.Rsbembodiments.internal_static_asap_rsbembodiments_AnimationDataConfigReply_fieldAccessorTable;
       }
       
-      // Construct using asap.rsbembodiments.Rsbembodiments.JointDataConfigReply.newBuilder()
+      // Construct using asap.rsbembodiments.Rsbembodiments.AnimationDataConfigReply.newBuilder()
       private Builder() {
         maybeForceBuilderInitialization();
       }
@@ -1253,24 +1253,24 @@ public final class Rsbembodiments {
       
       public com.google.protobuf.Descriptors.Descriptor
           getDescriptorForType() {
-        return asap.rsbembodiments.Rsbembodiments.JointDataConfigReply.getDescriptor();
+        return asap.rsbembodiments.Rsbembodiments.AnimationDataConfigReply.getDescriptor();
       }
       
-      public asap.rsbembodiments.Rsbembodiments.JointDataConfigReply getDefaultInstanceForType() {
-        return asap.rsbembodiments.Rsbembodiments.JointDataConfigReply.getDefaultInstance();
+      public asap.rsbembodiments.Rsbembodiments.AnimationDataConfigReply getDefaultInstanceForType() {
+        return asap.rsbembodiments.Rsbembodiments.AnimationDataConfigReply.getDefaultInstance();
       }
       
-      public asap.rsbembodiments.Rsbembodiments.JointDataConfigReply build() {
-        asap.rsbembodiments.Rsbembodiments.JointDataConfigReply result = buildPartial();
+      public asap.rsbembodiments.Rsbembodiments.AnimationDataConfigReply build() {
+        asap.rsbembodiments.Rsbembodiments.AnimationDataConfigReply result = buildPartial();
         if (!result.isInitialized()) {
           throw newUninitializedMessageException(result);
         }
         return result;
       }
       
-      private asap.rsbembodiments.Rsbembodiments.JointDataConfigReply buildParsed()
+      private asap.rsbembodiments.Rsbembodiments.AnimationDataConfigReply buildParsed()
           throws com.google.protobuf.InvalidProtocolBufferException {
-        asap.rsbembodiments.Rsbembodiments.JointDataConfigReply result = buildPartial();
+        asap.rsbembodiments.Rsbembodiments.AnimationDataConfigReply result = buildPartial();
         if (!result.isInitialized()) {
           throw newUninitializedMessageException(
             result).asInvalidProtocolBufferException();
@@ -1278,8 +1278,8 @@ public final class Rsbembodiments {
         return result;
       }
       
-      public asap.rsbembodiments.Rsbembodiments.JointDataConfigReply buildPartial() {
-        asap.rsbembodiments.Rsbembodiments.JointDataConfigReply result = new asap.rsbembodiments.Rsbembodiments.JointDataConfigReply(this);
+      public asap.rsbembodiments.Rsbembodiments.AnimationDataConfigReply buildPartial() {
+        asap.rsbembodiments.Rsbembodiments.AnimationDataConfigReply result = new asap.rsbembodiments.Rsbembodiments.AnimationDataConfigReply(this);
         int from_bitField0_ = bitField0_;
         int to_bitField0_ = 0;
         if (((from_bitField0_ & 0x00000001) == 0x00000001)) {
@@ -1302,16 +1302,16 @@ public final class Rsbembodiments {
       }
       
       public Builder mergeFrom(com.google.protobuf.Message other) {
-        if (other instanceof asap.rsbembodiments.Rsbembodiments.JointDataConfigReply) {
-          return mergeFrom((asap.rsbembodiments.Rsbembodiments.JointDataConfigReply)other);
+        if (other instanceof asap.rsbembodiments.Rsbembodiments.AnimationDataConfigReply) {
+          return mergeFrom((asap.rsbembodiments.Rsbembodiments.AnimationDataConfigReply)other);
         } else {
           super.mergeFrom(other);
           return this;
         }
       }
       
-      public Builder mergeFrom(asap.rsbembodiments.Rsbembodiments.JointDataConfigReply other) {
-        if (other == asap.rsbembodiments.Rsbembodiments.JointDataConfigReply.getDefaultInstance()) return this;
+      public Builder mergeFrom(asap.rsbembodiments.Rsbembodiments.AnimationDataConfigReply other) {
+        if (other == asap.rsbembodiments.Rsbembodiments.AnimationDataConfigReply.getDefaultInstance()) return this;
         if (other.hasSkeleton()) {
           mergeSkeleton(other.getSkeleton());
         }
@@ -1522,15 +1522,15 @@ public final class Rsbembodiments {
         onChanged();
       }
       
-      // @@protoc_insertion_point(builder_scope:asap.rsbembodiments.JointDataConfigReply)
+      // @@protoc_insertion_point(builder_scope:asap.rsbembodiments.AnimationDataConfigReply)
     }
     
     static {
-      defaultInstance = new JointDataConfigReply(true);
+      defaultInstance = new AnimationDataConfigReply(true);
       defaultInstance.initFields();
     }
     
-    // @@protoc_insertion_point(class_scope:asap.rsbembodiments.JointDataConfigReply)
+    // @@protoc_insertion_point(class_scope:asap.rsbembodiments.AnimationDataConfigReply)
   }
   
   public interface AnimationSelectionOrBuilder
@@ -2956,20 +2956,20 @@ public final class Rsbembodiments {
   }
   
   private static com.google.protobuf.Descriptors.Descriptor
-    internal_static_asap_rsbembodiments_JointDataConfigRequest_descriptor;
+    internal_static_asap_rsbembodiments_AnimationDataConfigRequest_descriptor;
   private static
     com.google.protobuf.GeneratedMessage.FieldAccessorTable
-      internal_static_asap_rsbembodiments_JointDataConfigRequest_fieldAccessorTable;
+      internal_static_asap_rsbembodiments_AnimationDataConfigRequest_fieldAccessorTable;
   private static com.google.protobuf.Descriptors.Descriptor
     internal_static_asap_rsbembodiments_Skeleton_descriptor;
   private static
     com.google.protobuf.GeneratedMessage.FieldAccessorTable
       internal_static_asap_rsbembodiments_Skeleton_fieldAccessorTable;
   private static com.google.protobuf.Descriptors.Descriptor
-    internal_static_asap_rsbembodiments_JointDataConfigReply_descriptor;
+    internal_static_asap_rsbembodiments_AnimationDataConfigReply_descriptor;
   private static
     com.google.protobuf.GeneratedMessage.FieldAccessorTable
-      internal_static_asap_rsbembodiments_JointDataConfigReply_fieldAccessorTable;
+      internal_static_asap_rsbembodiments_AnimationDataConfigReply_fieldAccessorTable;
   private static com.google.protobuf.Descriptors.Descriptor
     internal_static_asap_rsbembodiments_AnimationSelection_descriptor;
   private static
@@ -2990,32 +2990,32 @@ public final class Rsbembodiments {
   static {
     java.lang.String[] descriptorData = {
       "\n\024rsbembodiments.proto\022\023asap.rsbembodime" +
-      "nts\"-\n\026JointDataConfigRequest\022\023\n\013charact" +
-      "erId\030\001 \001(\t\"L\n\010Skeleton\022\016\n\006joints\030\001 \003(\t\022\017" +
-      "\n\007parents\030\002 \003(\t\022\037\n\023localTransformation\030\003" +
-      " \003(\002B\002\020\001\"`\n\024JointDataConfigReply\022/\n\010skel" +
-      "eton\030\001 \001(\0132\035.asap.rsbembodiments.Skeleto" +
-      "n\022\027\n\017availableMorphs\030\002 \003(\t\"Y\n\022AnimationS" +
-      "election\022\026\n\016selectedJoints\030\001 \003(\t\022\026\n\016sele" +
-      "ctedMorphs\030\002 \003(\t\022\023\n\013characterId\030\003 \001(\t\"\207\001" +
-      "\n\rAnimationData\022\026\n\njointQuats\030\001 \003(\002B\002\020\001\022",
-      "\030\n\014morphWeights\030\002 \003(\002B\002\020\001\022\033\n\017rootTransla" +
-      "tion\030\003 \003(\002B\002\020\001\022\022\n\nconfidence\030\004 \003(\002\022\023\n\013ch" +
-      "aracterId\030\005 \001(\t"
+      "nts\"1\n\032AnimationDataConfigRequest\022\023\n\013cha" +
+      "racterId\030\001 \001(\t\"L\n\010Skeleton\022\016\n\006joints\030\001 \003" +
+      "(\t\022\017\n\007parents\030\002 \003(\t\022\037\n\023localTransformati" +
+      "on\030\003 \003(\002B\002\020\001\"d\n\030AnimationDataConfigReply" +
+      "\022/\n\010skeleton\030\001 \001(\0132\035.asap.rsbembodiments" +
+      ".Skeleton\022\027\n\017availableMorphs\030\002 \003(\t\"Y\n\022An" +
+      "imationSelection\022\026\n\016selectedJoints\030\001 \003(\t" +
+      "\022\026\n\016selectedMorphs\030\002 \003(\t\022\023\n\013characterId\030" +
+      "\003 \001(\t\"\207\001\n\rAnimationData\022\026\n\njointQuats\030\001 ",
+      "\003(\002B\002\020\001\022\030\n\014morphWeights\030\002 \003(\002B\002\020\001\022\033\n\017roo" +
+      "tTranslation\030\003 \003(\002B\002\020\001\022\022\n\nconfidence\030\004 \003" +
+      "(\002\022\023\n\013characterId\030\005 \001(\t"
     };
     com.google.protobuf.Descriptors.FileDescriptor.InternalDescriptorAssigner assigner =
       new com.google.protobuf.Descriptors.FileDescriptor.InternalDescriptorAssigner() {
         public com.google.protobuf.ExtensionRegistry assignDescriptors(
             com.google.protobuf.Descriptors.FileDescriptor root) {
           descriptor = root;
-          internal_static_asap_rsbembodiments_JointDataConfigRequest_descriptor =
+          internal_static_asap_rsbembodiments_AnimationDataConfigRequest_descriptor =
             getDescriptor().getMessageTypes().get(0);
-          internal_static_asap_rsbembodiments_JointDataConfigRequest_fieldAccessorTable = new
+          internal_static_asap_rsbembodiments_AnimationDataConfigRequest_fieldAccessorTable = new
             com.google.protobuf.GeneratedMessage.FieldAccessorTable(
-              internal_static_asap_rsbembodiments_JointDataConfigRequest_descriptor,
+              internal_static_asap_rsbembodiments_AnimationDataConfigRequest_descriptor,
               new java.lang.String[] { "CharacterId", },
-              asap.rsbembodiments.Rsbembodiments.JointDataConfigRequest.class,
-              asap.rsbembodiments.Rsbembodiments.JointDataConfigRequest.Builder.class);
+              asap.rsbembodiments.Rsbembodiments.AnimationDataConfigRequest.class,
+              asap.rsbembodiments.Rsbembodiments.AnimationDataConfigRequest.Builder.class);
           internal_static_asap_rsbembodiments_Skeleton_descriptor =
             getDescriptor().getMessageTypes().get(1);
           internal_static_asap_rsbembodiments_Skeleton_fieldAccessorTable = new
@@ -3024,14 +3024,14 @@ public final class Rsbembodiments {
               new java.lang.String[] { "Joints", "Parents", "LocalTransformation", },
               asap.rsbembodiments.Rsbembodiments.Skeleton.class,
               asap.rsbembodiments.Rsbembodiments.Skeleton.Builder.class);
-          internal_static_asap_rsbembodiments_JointDataConfigReply_descriptor =
+          internal_static_asap_rsbembodiments_AnimationDataConfigReply_descriptor =
             getDescriptor().getMessageTypes().get(2);
-          internal_static_asap_rsbembodiments_JointDataConfigReply_fieldAccessorTable = new
+          internal_static_asap_rsbembodiments_AnimationDataConfigReply_fieldAccessorTable = new
             com.google.protobuf.GeneratedMessage.FieldAccessorTable(
-              internal_static_asap_rsbembodiments_JointDataConfigReply_descriptor,
+              internal_static_asap_rsbembodiments_AnimationDataConfigReply_descriptor,
               new java.lang.String[] { "Skeleton", "AvailableMorphs", },
-              asap.rsbembodiments.Rsbembodiments.JointDataConfigReply.class,
-              asap.rsbembodiments.Rsbembodiments.JointDataConfigReply.Builder.class);
+              asap.rsbembodiments.Rsbembodiments.AnimationDataConfigReply.class,
+              asap.rsbembodiments.Rsbembodiments.AnimationDataConfigReply.Builder.class);
           internal_static_asap_rsbembodiments_AnimationSelection_descriptor =
             getDescriptor().getMessageTypes().get(3);
           internal_static_asap_rsbembodiments_AnimationSelection_fieldAccessorTable = new
