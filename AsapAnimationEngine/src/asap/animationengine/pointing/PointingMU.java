@@ -62,8 +62,7 @@ public class PointingMU implements AnimationUnit
     protected float qTemp[];
     protected float vecTemp[];
     protected float vecTemp2[];
-    // private float vecTemp3[];
-
+    
     protected KeyPosition ready;
     protected KeyPosition relax;
     
@@ -193,7 +192,6 @@ public class PointingMU implements AnimationUnit
         vjWrist.getPathTranslation(null, vecTemp);
         Vec3f.sub(vecTemp2, vecTemp);
         woTarget.getTranslation(vecTemp, null);
-        // Vec3f.sub(vecTemp,vecTemp2);
         AnalyticalIKSolver.translateToLocalSystem(null, vjShoulder, vecTemp, vecTemp2);
         setEndRotation(vecTemp2);
     }

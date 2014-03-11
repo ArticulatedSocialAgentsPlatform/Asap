@@ -47,8 +47,7 @@ public class PointingTMU extends TimedAnimationMotionUnit
     private volatile boolean handleGracefulInterrupt = false;
 
     private static Logger logger = LoggerFactory.getLogger(PointingTMU.class.getName());
-    private static final double DEFAULT_STROKE_DURATION = 1;
-
+    
     public PointingTMU(FeedbackManager bfm, BMLBlockPeg bbPeg, String bmlId, String id, PointingMU mu, PegBoard pb)
     {
         super(bfm, bbPeg, bmlId, id, mu, pb);
