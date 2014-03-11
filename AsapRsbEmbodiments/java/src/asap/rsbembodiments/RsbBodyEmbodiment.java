@@ -16,6 +16,7 @@ import java.util.concurrent.TimeoutException;
 import javax.annotation.concurrent.GuardedBy;
 
 import lombok.Getter;
+import lombok.extern.slf4j.Slf4j;
 import rsb.Factory;
 import rsb.Informer;
 import rsb.InitializeException;
@@ -39,6 +40,7 @@ import com.google.common.primitives.Floats;
  * @author hvanwelbergen
  * 
  */
+@Slf4j
 public class RsbBodyEmbodiment implements SkeletonEmbodiment
 {
     @Getter
@@ -49,7 +51,6 @@ public class RsbBodyEmbodiment implements SkeletonEmbodiment
     private Informer<AnimationSelection> animationSelectionInformer;
     private Object submitJointLock = new Object();
     private BiMap<String, String> renamingMap;
-    private List<String> usedJoints;
 
     @GuardedBy("submitJointLock")
     private VJoint submitJoint;
@@ -86,8 +87,9 @@ public class RsbBodyEmbodiment implements SkeletonEmbodiment
         try
         {
             jointDataInformer = Factory.getInstance().createInformer(RSBEmbodimentConstants.ANIMATIONDATA_CATEGORY);
-            animationSelectionInformer = Factory.getInstance().createInformer(RSBEmbodimentConstants.ANIMATIONDATA_CATEGORY);
+            animationSelectionInformer = Factory.getInstance().createInformer(RSBEmbodimentConstants.ANIMATIONSELECTION_CATEGORY);
             jointDataInformer.activate();
+            animationSelectionInformer.activate();
         }
         catch (InitializeException e)
         {
@@ -95,15 +97,21 @@ public class RsbBodyEmbodiment implements SkeletonEmbodiment
         }
     }
 
+    private void selectJoints()
+    {
+        try
+        {
+            animationSelectionInformer.send(AnimationSelection.newBuilder().addAllSelectedJoints(jointList).build());
+        }
+        catch (RSBException e)
+        {
+            throw new RuntimeException(e);
+        }
+    }
+
     private void updateJointLists(List<String> jointFilter)
     {
-        List<String> joints = VJointUtils.transformToSidList(submitJoint.getParts());
-        List<String> availableJoints = new ArrayList<>(joints);
-
-        List<String> unusedJoints = new ArrayList<>();
-
-        int i = 0;
-        for (String j : availableJoints)
+        for (String j : VJointUtils.transformToSidList(submitJoint.getParts()))
         {
             VJoint vj = submitJoint.getPart(j);
             if (vj == null)
@@ -111,19 +119,12 @@ public class RsbBodyEmbodiment implements SkeletonEmbodiment
                 vj = submitJoint.getPart(renamingMap.get(j));
             }
 
-            if (vj == null || !jointFilter.contains(vj.getSid()))
-            {
-                unusedJoints.add(joints.get(i));
-            }
-            else
+            if (vj != null && jointFilter.contains(vj.getSid()))
             {
                 jointList.add(vj.getSid());
-            }
-            i++;
+            }            
         }
-        usedJoints = new ArrayList<>(joints);
-        usedJoints.removeAll(unusedJoints);
-
+        selectJoints();
     }
 
     private void initJoints(BiMap<String, String> renamingMap, List<String> jointFilter)
@@ -134,7 +135,7 @@ public class RsbBodyEmbodiment implements SkeletonEmbodiment
         {
             server.activate();
             AnimationDataConfigReply reply = server.call(RSBEmbodimentConstants.ANIMATIONDATACONFIG_REQUEST_FUNCTION,
-            AnimationDataConfigRequest.newBuilder().setCharacterId(characterId).build());
+                    AnimationDataConfigRequest.newBuilder().setCharacterId(characterId).build());
             synchronized (submitJointLock)
             {
                 submitJoint = VJointRsbUtils.toVJoint(reply.getSkeleton());
@@ -200,8 +201,8 @@ public class RsbBodyEmbodiment implements SkeletonEmbodiment
     public void initialize(BiMap<String, String> renamingMap, List<String> jointFilter)
     {
         initRsbConverters();
-        initJoints(renamingMap, jointFilter);
         initInformers();
+        initJoints(renamingMap, jointFilter);        
     }
 
     private List<Float> getJointQuats()
@@ -263,5 +264,35 @@ public class RsbBodyEmbodiment implements SkeletonEmbodiment
     public VJoint getAnimationVJoint()
     {
         return submitJoint;
+    }
+
+    public void shutdown()
+    {
+        try
+        {
+            jointDataInformer.deactivate();
+        }
+        catch (RSBException e)
+        {
+            log.warn("RSB Exception", e);
+        }
+        catch (InterruptedException e)
+        {
+            Thread.interrupted();
+            log.warn("InterruptedException", e);
+        }
+        try
+        {
+            animationSelectionInformer.deactivate();
+        }
+        catch (RSBException e)
+        {
+            log.warn("RSB Exception", e);
+        }
+        catch (InterruptedException e)
+        {
+            Thread.interrupted();
+            log.warn("InterruptedException", e);
+        }
     }
 }
