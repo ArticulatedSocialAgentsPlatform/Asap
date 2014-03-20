@@ -30,8 +30,10 @@ import java.util.List;
 import lombok.extern.slf4j.Slf4j;
 import saiba.bml.BMLInfo;
 import saiba.bml.core.Behaviour;
+import saiba.bml.core.GazeShiftBehaviour;
 import saiba.bml.core.PostureShiftBehaviour;
 import asap.animationengine.AnimationPlayer;
+import asap.animationengine.gaze.RestGaze;
 import asap.animationengine.motionunit.AnimationUnit;
 import asap.animationengine.motionunit.MUSetupException;
 import asap.animationengine.motionunit.TMUSetupException;
@@ -54,6 +56,7 @@ public class GestureBinding extends XMLStructureAdapter
     private List<MotionUnitSpec> muSpecs = new ArrayList<>();
     private List<TimedMotionUnitSpec> tmuSpecs = new ArrayList<>();
     private List<RestPoseSpec> restPoseSpecs = new ArrayList<>();
+    private List<RestGazeSpec> restGazeSpecs = new ArrayList<>();
     private final Resources resources;
     private final FeedbackManager fbManager;
 
@@ -72,6 +75,51 @@ public class GestureBinding extends XMLStructureAdapter
         return false;
     }
 
+    public RestGaze getRestGaze(GazeShiftBehaviour b, AnimationPlayer player)
+    {
+        for (RestGazeSpec s : restGazeSpecs)
+        {
+            if (hasEqualNameSpace(b, s.getSpecnamespace()))
+            {
+                if (s.satisfiesConstraints(b))
+                {
+                    RestGaze rg = s.getRestGaze().copy(player);
+                    // set default parameter values
+                    for (SpecParameterDefault mupc : s.getParameterDefaults())
+                    {
+                        try
+                        {
+                            rg.setParameterValue(mupc.name, mupc.value);
+                        }
+                        catch (ParameterException e)
+                        {
+                            log.warn("Error setting up restpose", e);
+                        }
+                    }
+
+                    // map parameters
+                    for (String param : s.getParameters())
+                    {
+                        if (b.specifiesParameter(param))
+                        {
+                            String value = b.getStringParameterValue(param);
+                            try
+                            {
+                                rg.setParameterValue(s.getParameter(param), value);
+                            }
+                            catch (ParameterException e)
+                            {
+                                log.warn("Error setting up restpose", e);
+                            }
+                        }
+                    }
+                    return rg;
+                }
+            }
+        }
+        return null;
+    }
+    
     public RestPose getRestPose(PostureShiftBehaviour b, AnimationPlayer player)
     {
         for (RestPoseSpec s : restPoseSpecs)
@@ -259,6 +307,19 @@ public class GestureBinding extends XMLStructureAdapter
                 else
                 {
                     log.warn("Dropped RestPose spec " + rpSpec + " constraints " + rpSpec.getConstraints());
+                }
+            }
+            else if (tag.equals(RestGazeSpec.xmlTag()))
+            {
+                RestGazeSpec rgSpec = new RestGazeSpec();
+                rgSpec.readXML(tokenizer);
+                if (rgSpec.getRestGaze() != null)
+                {
+                    restGazeSpecs.add(rgSpec);
+                }
+                else
+                {
+                    log.warn("Dropped RestGaze spec " + rgSpec + " constraints " + rgSpec.getConstraints());
                 }
             }
             else

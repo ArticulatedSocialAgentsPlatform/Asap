@@ -19,8 +19,8 @@
 package asap.animationengine.gesturebinding;
 
 import static org.hamcrest.CoreMatchers.instanceOf;
-import static org.hamcrest.MatcherAssert.assertThat;
 import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertThat;
 import static org.junit.Assert.assertTrue;
 import static org.mockito.Matchers.anyString;
 import static org.mockito.Mockito.mock;
@@ -40,12 +40,15 @@ import org.junit.Test;
 
 import saiba.bml.core.Behaviour;
 import saiba.bml.core.GazeBehaviour;
+import saiba.bml.core.GazeShiftBehaviour;
 import saiba.bml.core.GestureBehaviour;
 import saiba.bml.core.HeadBehaviour;
 import saiba.bml.core.PointingBehaviour;
 import saiba.bml.core.PostureBehaviour;
 import saiba.bml.core.PostureShiftBehaviour;
 import asap.animationengine.AnimationPlayer;
+import asap.animationengine.gaze.DynamicRestGaze;
+import asap.animationengine.gaze.RestGaze;
 import asap.animationengine.motionunit.TimedAnimationMotionUnit;
 import asap.animationengine.motionunit.TimedAnimationUnit;
 import asap.animationengine.restpose.RestPose;
@@ -118,6 +121,19 @@ public class GestureBindingTest
                 + "<constraint name=\"LEGS\" value=\"LEGS_OPEN\"/>" + "</constraints>"
                 + "<RestPose type=\"SkeletonPose\" file=\"Humanoids/armandia/restposes/sitting.xml\"/>" + "</RestPoseSpec>"
 
+                +"<RestGazeSpec>"+
+                "<constraints>"+
+                    "<constraint name=\"influence\" value=\"EYES\"/>"+
+                "</constraints>"+
+                "<parametermap>"+
+                    "<parameter src=\"target\" dst=\"target\"/>" +
+                "</parametermap>"+
+                "<parameterdefaults>"+
+                    "<parameterdefault name=\"param1\" value=\"value1\"/>"+
+                "</parameterdefaults>"+
+                "<RestGaze type=\"class\" class=\"asap.animationengine.gaze.DynamicRestGaze\"/>"+    
+                "</RestGazeSpec>"
+                
                 + "<MotionUnitSpec type=\"gaze\">" + "<constraints>" + "<constraint name=\"influence\" value=\"NECK\"/>"
                 + "<constraint namespace=\"http://hmi.ewi.utwente.nl/bmlt\" name=\"dynamic\" value=\"true\"/>" + "</constraints>"
                 + "<parametermap>" + "<parameter src=\"target\" dst=\"target\"/>" + "<parameter src=\"offsetAngle\" dst=\"offsetangle\"/>"
@@ -165,6 +181,11 @@ public class GestureBindingTest
     public PostureShiftBehaviour createPostureShiftBehaviour(String bmlId, String bml) throws IOException
     {
         return new PostureShiftBehaviour(bmlId, new XMLTokenizer(bml));
+    }
+    
+    public GazeShiftBehaviour createGazeShiftBehaviour(String bmlId, String bml) throws IOException
+    {
+        return new GazeShiftBehaviour(bmlId, new XMLTokenizer(bml));
     }
 
     public PostureBehaviour createPostureBehaviour(String bmlId, String bml) throws IOException
@@ -311,5 +332,14 @@ public class GestureBindingTest
         PostureShiftBehaviour beh = createPostureShiftBehaviour("bml1", str);
         RestPose rp = gestureBinding.getRestPose(beh, mockAniPlayer);
         assertThat(rp, instanceOf(SkeletonPoseRestPose.class));
+    }
+    
+    @Test
+    public void testReadGazeShift() throws IOException
+    {
+        String str = "<gazeShift influence=\"EYES\" xmlns=\"http://www.bml-initiative.org/bml/bml-1.0\" target=\"tg\" id=\"g1\"/>";
+        GazeShiftBehaviour beh = createGazeShiftBehaviour("bml1", str);
+        RestGaze rg = gestureBinding.getRestGaze(beh, mockAniPlayer);
+        assertThat(rg, instanceOf(DynamicRestGaze.class));
     }
 }
