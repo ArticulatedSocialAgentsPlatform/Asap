@@ -59,6 +59,11 @@ public class AnimationPlanPlayer implements PlanPlayer
         return currentRestGaze;
     }
     
+    public void setRestGaze(RestGaze g)
+    {
+        currentRestGaze = g;        
+    }
+    
     public AnimationPlanPlayer(RestPose defaultRestPose, FeedbackManager fbm, PlanManager<TimedAnimationUnit> planManager,
             TimedPlanUnitPlayer tpuCallback, PegBoard pegBoard)
     {

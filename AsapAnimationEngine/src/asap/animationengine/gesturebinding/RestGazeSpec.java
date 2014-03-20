@@ -1,6 +1,5 @@
 package asap.animationengine.gesturebinding;
 
-import hmi.util.Resources;
 import hmi.xml.XMLScanException;
 import hmi.xml.XMLStructureAdapter;
 import hmi.xml.XMLTokenizer;
@@ -11,46 +10,41 @@ import java.util.HashMap;
 import java.util.Set;
 
 import lombok.Getter;
-import saiba.bml.core.PostureShiftBehaviour;
-import asap.animationengine.restpose.RestPose;
+import saiba.bml.core.GazeShiftBehaviour;
+import asap.animationengine.gaze.RestGaze;
 import asap.binding.SpecConstraints;
 import asap.binding.SpecParameterDefault;
 import asap.binding.SpecParameterDefaults;
 import asap.binding.SpecParameterMap;
 
 /**
- * XML parser for the RestPoseSpec in a gesturebinding
- * @author welberge
+ * Parses restgazespecs
+ * @author hvanwelbergen
+ * 
  */
-public class RestPoseSpec extends XMLStructureAdapter
+public class RestGazeSpec extends XMLStructureAdapter
 {
-    @Getter private SpecConstraints constraints = new SpecConstraints();
+    @Getter
+    private SpecConstraints constraints = new SpecConstraints();
     private SpecParameterMap parameterMap = new SpecParameterMap();
     private SpecParameterDefaults parameterdefaults = new SpecParameterDefaults();
-    
-    @Getter
-    private RestPose restPose;
-    
-    
+
     @Getter
     private String specnamespace;
-    private final Resources resources;    
 
-    public RestPoseSpec(Resources r)
-    {
-        resources = r;        
-    }
+    @Getter
+    RestGaze restGaze;
 
-    public boolean satisfiesConstraints(PostureShiftBehaviour b)
+    public boolean satisfiesConstraints(GazeShiftBehaviour b)
     {
         return constraints.satisfiesConstraints(b);
     }
-    
+
     public Set<String> getParameters()
     {
         return parameterMap.getParameters();
     }
-    
+
     /**
      * Get motion unit parameter for BML parameter src
      */
@@ -58,12 +52,12 @@ public class RestPoseSpec extends XMLStructureAdapter
     {
         return parameterMap.getParameter(src);
     }
-    
+
     public Collection<SpecParameterDefault> getParameterDefaults()
     {
         return parameterdefaults.getParameterDefaults();
     }
-    
+
     @Override
     public void decodeAttributes(HashMap<String, String> attrMap, XMLTokenizer tokenizer)
     {
@@ -88,20 +82,20 @@ public class RestPoseSpec extends XMLStructureAdapter
             {
                 parameterdefaults.readXML(tokenizer);
             }
-            else if (tag.equals(RestPoseAssembler.xmlTag()))
+            else if (tag.equals(RestGazeAssembler.xmlTag()))
             {
-                RestPoseAssembler rpa = new RestPoseAssembler(resources);
-                rpa.readXML(tokenizer);
-                restPose = rpa.getRestPose();
+                RestGazeAssembler rga = new RestGazeAssembler();
+                rga.readXML(tokenizer);
+                restGaze = rga.getRestGaze();
             }
             else
             {
-                throw new XMLScanException("Invalid tag "+tag +" in RestPoseSpec");
+                throw new XMLScanException("Invalid tag " + tag + " in RestPoseSpec");
             }
         }
     }
 
-    private static final String XMLTAG = "RestPoseSpec";
+    private static final String XMLTAG = "RestGazeSpec";
 
     public static String xmlTag()
     {

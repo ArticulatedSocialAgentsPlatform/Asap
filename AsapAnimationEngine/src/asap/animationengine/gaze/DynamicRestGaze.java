@@ -1,12 +1,5 @@
 package asap.animationengine.gaze;
 
-import hmi.animation.VJoint;
-import hmi.math.Quat4f;
-import hmi.math.Vec3f;
-import hmi.neurophysics.EyeSaturation;
-import hmi.neurophysics.ListingsLaw;
-import hmi.worldobjectenvironment.WorldObject;
-
 import java.util.Set;
 
 import asap.animationengine.AnimationPlayer;
@@ -27,18 +20,17 @@ import asap.realizer.planunit.ParameterException;
 public class DynamicRestGaze implements RestGaze
 {
     private AnimationPlayer aniPlayer;
-    private final WorldObject target;
-    private float[] offsetRotation = Quat4f.getIdentity();
-
-    public DynamicRestGaze(WorldObject target)
+    private String target;
+    
+    public DynamicRestGaze()
     {
-        this.target = target;
+        
     }
 
     @Override
-    public RestGaze copy(AnimationPlayer player)
+    public DynamicRestGaze copy(AnimationPlayer player)
     {
-        RestGaze copy = new DynamicRestGaze(target);
+        DynamicRestGaze copy = new DynamicRestGaze();
         copy.setAnimationPlayer(aniPlayer);
         return copy;
     }
@@ -47,19 +39,6 @@ public class DynamicRestGaze implements RestGaze
     public void setAnimationPlayer(AnimationPlayer player)
     {
         aniPlayer = player;
-    }
-
-    private void setEyeRotation(VJoint eye)
-    {
-        float[] gazeDir = Vec3f.getVec3f();
-        target.getTranslation2(gazeDir, eye);
-        Quat4f.transformVec3f(offsetRotation, gazeDir);
-        Vec3f.normalize(gazeDir);
-        float q[] = Quat4f.getQuat4f();
-        float qEye[] = Quat4f.getQuat4f();
-        ListingsLaw.listingsEye(gazeDir, q);
-        EyeSaturation.sat(q, Quat4f.getIdentity(), qEye);
-        eye.setRotation(qEye);
     }
 
     @Override
@@ -118,8 +97,9 @@ public class DynamicRestGaze implements RestGaze
     public GazeShiftTMU createGazeShiftTMU(FeedbackManager bbf, BMLBlockPeg bmlBlockPeg, String bmlId, String id, PegBoard pb)
             throws MUSetupException
     {
-        // TODO Auto-generated method stub
-        return null;
+        DynamicGazeMU mu = new DynamicGazeMU();
+        mu.target = target;
+        return new GazeShiftTMU(bmlBlockPeg, bmlId, id, mu.copy(aniPlayer), pb, this, aniPlayer);        
     }
 
     @Override

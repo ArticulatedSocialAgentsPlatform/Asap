@@ -111,6 +111,11 @@ public class AnimationPlayer implements Player, MixedAnimationPlayer
         return app.getRestGaze();
     }
 
+    public void setRestGaze(RestGaze g)
+    {
+        app.setRestGaze(g);
+    }
+    
     
     public AnimationPlayer(VJoint vP, VJoint vC, VJoint vN, List<MixedSystem> m, float h, AnimationPlanPlayer planPlayer)
     {

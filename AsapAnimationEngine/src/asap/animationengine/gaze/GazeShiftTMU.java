@@ -27,8 +27,7 @@ public class GazeShiftTMU extends TimedAnimationMotionUnit
     protected void stopUnit(double time)
     {
         super.stopUnit(time);
-        //TODO
-        //aniPlayer.setRestGaze(restGaze);
+        aniPlayer.setRestGaze(restGaze);
     }
 
 }
