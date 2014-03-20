@@ -1,8 +1,9 @@
 package asap.animationengine;
 
-import static org.hamcrest.MatcherAssert.assertThat;
+import static org.hamcrest.CoreMatchers.instanceOf;
 import static org.hamcrest.Matchers.greaterThan;
 import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertThat;
 import static org.junit.Assert.assertTrue;
 import static org.mockito.Matchers.any;
 import static org.mockito.Matchers.anyString;
@@ -28,9 +29,12 @@ import org.powermock.core.classloader.annotations.PrepareForTest;
 import org.powermock.modules.junit4.PowerMockRunner;
 
 import saiba.bml.core.Behaviour;
+import saiba.bml.core.GazeShiftBehaviour;
 import saiba.bml.core.HeadBehaviour;
 import saiba.bml.core.PostureShiftBehaviour;
 import saiba.bml.parser.Constraint;
+import asap.animationengine.gaze.GazeShiftTMU;
+import asap.animationengine.gaze.RestGaze;
 import asap.animationengine.gesturebinding.GestureBinding;
 import asap.animationengine.gesturebinding.MURMLMUBuilder;
 import asap.animationengine.motionunit.MUSetupException;
@@ -69,6 +73,7 @@ public class AnimationPlannerTest
     private AnimationPlayer mockPlayer = mock(AnimationPlayer.class);
     private GestureBinding mockBinding = mock(GestureBinding.class);
     private RestPose mockRestPose = mock(RestPose.class);
+    private RestGaze mockRestGaze = mock(RestGaze.class);
 
     private StubAnimationUnit stubUnit = new StubAnimationUnit();
     private Hns stubHns = new StubHns();
@@ -125,19 +130,23 @@ public class AnimationPlannerTest
     {
         animationPlanner = new AnimationPlanner(fbManager, mockPlayer, mockBinding, stubHns, null, planManager, pegBoard);
         plannerTests = new PlannerTests<TimedAnimationUnit>(animationPlanner, bbPeg);
-        PostureShiftTMU tmups = new PostureShiftTMU(fbManager, bbPeg, BMLID, "shift1", stubUnit, pegBoard, mockRestPose, mockPlayer);
+        PostureShiftTMU tmups = new PostureShiftTMU(fbManager, bbPeg, BMLID, "pshift1", stubUnit, pegBoard, mockRestPose, mockPlayer);
+        GazeShiftTMU tmugs = new GazeShiftTMU(bbPeg, BMLID, "gshift1", stubUnit, pegBoard, mockRestGaze, mockPlayer);
         TimedAnimationMotionUnit tmu = new TimedAnimationMotionUnit(fbManager, bbPeg, BMLID, "nod1", stubUnit, pegBoard);
 
         final List<TimedAnimationUnit> tmus = new ArrayList<>();
         tmus.add(tmu);
-        when(mockBinding.getRestPose((PostureShiftBehaviour) any(), eq(mockPlayer))).thenReturn(mockRestPose);
+        when(mockBinding.getRestPose(any(PostureShiftBehaviour.class), eq(mockPlayer))).thenReturn(mockRestPose);
+        when(mockBinding.getRestGaze(any(GazeShiftBehaviour.class), eq(mockPlayer))).thenReturn(mockRestGaze);
         when(mockBinding.getMotionUnit((BMLBlockPeg) any(), (Behaviour) any(), eq(mockPlayer), eq(pegBoard))).thenReturn(tmus);
         when(mockBinding.getMotionUnit((BMLBlockPeg) any(), (Behaviour) any(), eq(mockPlayer), eq(pegBoard), (MURMLMUBuilder) any()))
                 .thenReturn(tmus);
         when(mockRestPose.copy(eq(mockPlayer))).thenReturn(mockRestPose);
         when(mockRestPose.createPostureShiftTMU(eq(fbManager), (BMLBlockPeg) any(), eq(BMLID), (String) any(), eq(pegBoard))).thenReturn(
                 tmups);
-
+        when(mockRestGaze.createGazeShiftTMU(eq(fbManager), (BMLBlockPeg) any(), eq(BMLID), (String) any(), eq(pegBoard))).thenReturn(
+                tmugs);
+        
         when(mockPlayer.getVCurr()).thenReturn(HanimBody.getLOA1HanimBody());
         when(mockPlayer.getVNext()).thenReturn(HanimBody.getLOA1HanimBody());
         when(mockPlayer.getVCurrPartBySid(anyString())).thenReturn(HanimBody.getLOA1HanimBody().getPartBySid(Hanim.l_shoulder));
@@ -223,12 +232,31 @@ public class AnimationPlannerTest
         sacs.add(new TimePegAndConstraint("start", sp, new Constraint(), 0, false));
 
         TimedAnimationUnit pu = animationPlanner.resolveSynchs(bbPeg, beh, sacs);
+        assertThat(pu, instanceOf(PostureShiftTMU.class));
         assertEquals(0.3, sp.getGlobalValue(), TIMING_PRECISION);
         animationPlanner.addBehaviour(bbPeg, beh, sacs, pu);
         assertEquals(0.3, pu.getStartTime(), TIMING_PRECISION);
         assertEquals(TimePeg.VALUE_UNKNOWN, pu.getEndTime(), TIMING_PRECISION);
     }
 
+    @Test
+    public void testGazeShiftBehaviour() throws BehaviourPlanningException, IOException
+    {
+        String str = "<gazeShift xmlns=\"http://www.bml-initiative.org/bml/bml-1.0\" id=\"shift1\"/>";
+        GazeShiftBehaviour beh = new GazeShiftBehaviour(BMLID, new XMLTokenizer(str));
+
+        ArrayList<TimePegAndConstraint> sacs = new ArrayList<TimePegAndConstraint>();
+        TimePeg sp = new TimePeg(bbPeg);
+        sacs.add(new TimePegAndConstraint("start", sp, new Constraint(), 0, false));
+
+        TimedAnimationUnit pu = animationPlanner.resolveSynchs(bbPeg, beh, sacs);
+        assertThat(pu, instanceOf(GazeShiftTMU.class));
+        assertEquals(0.3, sp.getGlobalValue(), TIMING_PRECISION);
+        animationPlanner.addBehaviour(bbPeg, beh, sacs, pu);
+        assertEquals(0.3, pu.getStartTime(), TIMING_PRECISION);
+        assertEquals(TimePeg.VALUE_UNKNOWN, pu.getEndTime(), TIMING_PRECISION);
+    }
+    
     @Test
     public void testMurmlPalmOrient() throws IOException, BehaviourPlanningException
     {

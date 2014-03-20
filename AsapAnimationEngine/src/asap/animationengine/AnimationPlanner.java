@@ -24,11 +24,13 @@ import java.util.List;
 import saiba.bml.BMLInfo;
 import saiba.bml.core.Behaviour;
 import saiba.bml.core.GazeBehaviour;
+import saiba.bml.core.GazeShiftBehaviour;
 import saiba.bml.core.GestureBehaviour;
 import saiba.bml.core.HeadBehaviour;
 import saiba.bml.core.PointingBehaviour;
 import saiba.bml.core.PostureBehaviour;
 import saiba.bml.core.PostureShiftBehaviour;
+import asap.animationengine.gaze.RestGaze;
 import asap.animationengine.gesturebinding.GestureBinding;
 import asap.animationengine.gesturebinding.HnsHandshape;
 import asap.animationengine.gesturebinding.MURMLMUBuilder;
@@ -185,6 +187,18 @@ public class AnimationPlanner extends AbstractPlanner<TimedAnimationUnit>
                 throw new BehaviourPlanningException(b, "PostureShiftBehaviour " + b.id + " could not be constructed.", e);
             }
         }
+        else if (b instanceof GazeShiftBehaviour)
+        {
+            RestGaze rg = gestureBinding.getRestGaze((GazeShiftBehaviour)b, player);
+            try
+            {
+                tmu = rg.createGazeShiftTMU(fbManager, bbPeg, b.getBmlId(), b.id, pegBoard);
+            }
+            catch (MUSetupException e)
+            {
+                throw new BehaviourPlanningException(b, "GazeShiftBehaviour " + b.id + " could not be constructed.", e);
+            }
+        }
         else
         {
             List<TimedAnimationUnit> tmus = gestureBinding.getMotionUnit(bbPeg, b, player, pegBoard, murmlMUBuilder);
@@ -220,6 +234,7 @@ public class AnimationPlanner extends AbstractPlanner<TimedAnimationUnit>
         List<Class<? extends Behaviour>> list = new ArrayList<Class<? extends Behaviour>>();
         list.add(HeadBehaviour.class);
         list.add(GazeBehaviour.class);
+        list.add(GazeShiftBehaviour.class);
         list.add(GestureBehaviour.class);
         list.add(PostureBehaviour.class);
         list.add(PostureShiftBehaviour.class);
