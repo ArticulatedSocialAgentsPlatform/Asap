@@ -62,40 +62,41 @@ public class Hns extends XMLStructureAdapter
         Round, FunnelS, FunnelE
     }
 
-    public double getMinSwivelLeft()
+    public static double getMinSwivelLeft()
     {
         return -2.5;
     }
     
-    public double getMaxSwivelLeft()
+    public static double getMaxSwivelLeft()
     {
         return 1;
     }
     
-    public double getMinSwivelRight()
+    public static double getMinSwivelRight()
     {
         return -1;
     }
     
-    public double getMaxSwivelRight()
+    public static double getMaxSwivelRight()
     {
         return 2.5;
     }
     
-    public double getSwivelSigmaOfGaussianCostsDistribution()
+    public static double getSwivelSigmaOfGaussianCostsDistribution()
     {
         return 0.4;
     }
     
-    public double getSwivelFreedomOfTheGaussianMeanLeft()
+    public static double getSwivelFreedomOfTheGaussianMeanLeft()
     {
         return 0;
     }
     
-    public double getSwivelFreedomOfTheGaussianMeanRight()
+    public static double getSwivelFreedomOfTheGaussianMeanRight()
     {
         return 0;
-    }
+    }    
+     
     
     public Set<String> getBasicHandShapes()
     {

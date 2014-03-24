@@ -22,6 +22,7 @@ import hmi.animation.AnalyticalIKSolver;
 import hmi.animation.VJoint;
 import hmi.math.Quat4f;
 import asap.animationengine.AnimationPlayer;
+import asap.animationengine.procanimation.IKBody;
 import asap.motionunit.MUPlayException;
 
 /**
@@ -40,10 +41,11 @@ public class DynamicPointingMU extends PointingMU
     public DynamicPointingMU copy(AnimationPlayer p)
     {
         DynamicPointingMU pmu = new DynamicPointingMU();
-        pmu.player = p;        
-        pmu.setHand(hand);
+        pmu.player = p;       
+        pmu.ikBodyCurrent = new IKBody(p.getVCurr());
         pmu.shoulderId = shoulderId; 
         pmu.elbowId = elbowId;
+        pmu.setHand(hand);        
         pmu.vjShoulder = p.getVNextPartBySid(shoulderId);
         pmu.vjElbow = p.getVNextPartBySid(elbowId);
         pmu.vjWrist = p.getVNextPartBySid(wristId);

@@ -126,7 +126,6 @@ public class PointingTMU extends TimedAnimationMotionUnit
     @Override
     protected void relaxUnit(double time) throws TimedPlanUnitPlayException
     {
-        System.out.println("Relax pointing");
         Set<String> usedJoints = new HashSet<String>();
         usedJoints.addAll(getKinematicJoints());
         usedJoints.addAll(getPhysicalJoints());

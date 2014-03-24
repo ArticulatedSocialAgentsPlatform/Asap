@@ -23,6 +23,7 @@ import hmi.animation.Hanim;
 import hmi.animation.VJoint;
 import hmi.math.Quat4f;
 import hmi.math.Vec3f;
+import hmi.neurophysics.BiologicalSwivelCostsEvaluator;
 import hmi.worldobjectenvironment.WorldObject;
 import hmi.worldobjectenvironment.WorldObjectManager;
 
@@ -31,8 +32,10 @@ import java.util.Set;
 
 import lombok.Getter;
 import asap.animationengine.AnimationPlayer;
+import asap.animationengine.gesturebinding.GestureBinding;
 import asap.animationengine.motionunit.AnimationUnit;
 import asap.animationengine.motionunit.TimedAnimationMotionUnit;
+import asap.animationengine.procanimation.IKBody;
 import asap.motionunit.MUPlayException;
 import asap.realizer.feedback.FeedbackManager;
 import asap.realizer.pegboard.BMLBlockPeg;
@@ -62,13 +65,13 @@ public class PointingMU implements AnimationUnit
     protected float qTemp[];
     protected float vecTemp[];
     protected float vecTemp2[];
-    
+
     protected KeyPosition ready;
     protected KeyPosition relax;
-    
+
     @Getter
     protected AnimationPlayer player;
-    
+
     protected WorldObjectManager woManager;
     protected String target;
     protected TimeManipulator tmp;
@@ -84,7 +87,9 @@ public class PointingMU implements AnimationUnit
     protected String hand = "RIGHT_HAND";
     protected WorldObject woTarget;
     protected double preparationDuration;
-    
+    private BiologicalSwivelCostsEvaluator autoSwivel;
+    protected IKBody ikBodyCurrent;
+
     private final KeyPositionManager keyPositionManager = new KeyPositionManagerImpl();
 
     public void addKeyPosition(KeyPosition kp)
@@ -136,6 +141,7 @@ public class PointingMU implements AnimationUnit
 
         // defaults from presenter
         tmp = new SigmoidManipulator(5, 1);
+
     }
 
     public PointingMU(VJoint shoulder, VJoint elbow, VJoint wrist, VJoint fingerTip)
@@ -159,6 +165,14 @@ public class PointingMU implements AnimationUnit
         vjElbow.getPathTranslation(vjShoulder, tv);
         vjWrist.getPathTranslation(vjElbow, sv);
         solver = new AnalyticalIKSolver(sv, tv, AnalyticalIKSolver.LimbPosition.ARM, (Vec3f.length(sv) + Vec3f.length(tv)) * 0.999f);
+        if (shoulderId.equals(Hanim.r_shoulder))
+        {
+            autoSwivel = GestureBinding.constructAutoSwivel("right_arm");
+        }
+        else
+        {
+            autoSwivel = GestureBinding.constructAutoSwivel("left_arm");            
+        }        
     }
 
     @Override
@@ -171,6 +185,7 @@ public class PointingMU implements AnimationUnit
         pmu.vjShoulder = p.getVNextPartBySid(elbowId);
         pmu.vjWrist = p.getVNextPartBySid(wristId);
         pmu.player = p;
+        pmu.ikBodyCurrent = new IKBody(p.getVCurr());
         pmu.setHand(hand);
         pmu.woManager = p.getWoManager();
         pmu.target = target;
@@ -210,6 +225,16 @@ public class PointingMU implements AnimationUnit
      */
     public void setEndRotation(float[] vecPos)
     {
+        double prevSwivel;
+        if (shoulderId.equals(Hanim.l_shoulder))
+        {
+            prevSwivel = ikBodyCurrent.getSwivelLeftArm();
+        }
+        else
+        {
+            prevSwivel = ikBodyCurrent.getSwivelRightArm();
+        }
+        solver.setSwivel(autoSwivel.getSwivelAngleWithMinCost(prevSwivel));
         solver.solve(vecPos, qShoulder, qElbow);
     }
 
@@ -221,6 +246,7 @@ public class PointingMU implements AnimationUnit
 
     public void setHand(String hand)
     {
+        this.hand = hand;
         if (hand.equals("LEFT_HAND"))
         {
             shoulderId = Hanim.l_shoulder;

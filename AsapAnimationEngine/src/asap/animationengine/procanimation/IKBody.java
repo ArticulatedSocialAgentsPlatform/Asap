@@ -387,10 +387,6 @@ public class IKBody
         float e[] = new float[3];
         lelbow.getPathTranslation(null, lElbow);
         AnalyticalIKSolver.translateToLocalSystem(null, lshoulder, lElbow, e);
-        System.out.println("elbow pos: " + Vec3f.toString(e));
-        System.out.println("g: " + Vec3f.toString(g));
-        System.out.println("swivel: " + solverLHand.getSwivelFromShoulderElbowAndGoal(qSho, qElb, g));
-        // return solverLHand.getSwivel(e, g);
 
         return solverLHand.getSwivelFromShoulderElbowAndGoal(qSho, qElb, g);
     }
@@ -421,10 +417,7 @@ public class IKBody
         float e[] = new float[3];
         relbow.getPathTranslation(null, rElbow);
         AnalyticalIKSolver.translateToLocalSystem(null, rshoulder, rElbow, e);
-        System.out.println("elbow pos: " + Vec3f.toString(e));
-        System.out.println("g: " + Vec3f.toString(g));
-        System.out.println("swivel: " + solverRHand.getSwivelFromShoulderElbowAndGoal(qSho, qElb, g));
-
+        
         return solverRHand.getSwivelFromShoulderElbowAndGoal(qSho, qElb, g);
     }
 

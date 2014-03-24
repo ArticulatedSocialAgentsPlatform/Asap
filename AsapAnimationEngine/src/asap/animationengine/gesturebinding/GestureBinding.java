@@ -18,6 +18,7 @@
  ******************************************************************************/
 package asap.animationengine.gesturebinding;
 
+import hmi.neurophysics.BiologicalSwivelCostsEvaluator;
 import hmi.util.Resources;
 import hmi.xml.XMLScanException;
 import hmi.xml.XMLStructureAdapter;
@@ -41,6 +42,7 @@ import asap.animationengine.motionunit.TimedAnimationMotionUnit;
 import asap.animationengine.motionunit.TimedAnimationUnit;
 import asap.animationengine.restpose.RestPose;
 import asap.binding.SpecParameterDefault;
+import asap.hns.Hns;
 import asap.realizer.feedback.FeedbackManager;
 import asap.realizer.pegboard.BMLBlockPeg;
 import asap.realizer.pegboard.PegBoard;
@@ -66,6 +68,17 @@ public class GestureBinding extends XMLStructureAdapter
         resources = r;
     }
 
+    public static BiologicalSwivelCostsEvaluator constructAutoSwivel(String scope)
+    {
+        if ("left_arm".equals(scope))
+        {
+            return new BiologicalSwivelCostsEvaluator(Hns.getMinSwivelLeft(), Hns.getMaxSwivelLeft(),
+                    Hns.getSwivelSigmaOfGaussianCostsDistribution(), Hns.getSwivelFreedomOfTheGaussianMeanLeft());
+        }
+        return new BiologicalSwivelCostsEvaluator(Hns.getMinSwivelRight(), Hns.getMaxSwivelRight(),
+                Hns.getSwivelSigmaOfGaussianCostsDistribution(), Hns.getSwivelFreedomOfTheGaussianMeanRight());        
+    }   
+    
     private boolean hasEqualNameSpace(Behaviour b, String ns)
     {
         if (b.getNamespace() == null && ns == null) return true;

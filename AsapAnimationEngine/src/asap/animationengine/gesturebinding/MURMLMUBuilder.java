@@ -767,20 +767,6 @@ public final class MURMLMUBuilder
         return new LMPHandMove(scope, phaseVec, bbm, bmlBlockPeg, bmlId, createLMPId(id), pb, aniPlayer, true);
     }
 
-    private BiologicalSwivelCostsEvaluator constructAutoSwivel(String scope)
-    {
-        if ("left_arm".equals(scope))
-        {
-            return new BiologicalSwivelCostsEvaluator(hns.getMinSwivelLeft(), hns.getMaxSwivelLeft(),
-                    hns.getSwivelSigmaOfGaussianCostsDistribution(), hns.getSwivelFreedomOfTheGaussianMeanLeft());
-        }
-        else
-        {
-            return new BiologicalSwivelCostsEvaluator(hns.getMinSwivelRight(), hns.getMaxSwivelRight(),
-                    hns.getSwivelSigmaOfGaussianCostsDistribution(), hns.getSwivelFreedomOfTheGaussianMeanRight());
-        }
-    }
-
     public LMP getStaticHandLocationElementTMU(String scope, Static staticElem, FeedbackManager bbm, BMLBlockPeg bmlBlockPeg, String bmlId,
             String id, PegBoard pb, AnimationPlayer aniPlayer) throws TMUSetupException
     {
@@ -799,7 +785,7 @@ public final class MURMLMUBuilder
 
             // create local motor program for anticipated stroke sequence
             LMPWristPos wristMove = new LMPWristPos(scope, bbm, bmlBlockPeg, bmlId, createLMPId(id), pb, trajectory, hns.getBaseJoint(),
-                    aniPlayer, constructAutoSwivel(scope));
+                    aniPlayer, GestureBinding.constructAutoSwivel(scope));
 
             // //cout << "creating lmp from guiding sequence:" << endl; trajectory.writeTo(cout);
             // //lmp->overshoot(mcLoc->getEndTPC().time);
@@ -886,7 +872,7 @@ public final class MURMLMUBuilder
             // cout << "==== creating lmp from: "; traj.writeTo(cout); cout << endl;
 
             LMPWristPos wristMove = new LMPWristPos(scope, bbf, bmlBlockPeg, bmlId, createLMPId(id), pegBoard, traj, hns.getBaseJoint(),
-                    aniPlayer, constructAutoSwivel(scope));
+                    aniPlayer, GestureBinding.constructAutoSwivel(scope));
 
             // -- absolutely new movement, or should we append to previous LMP?
 
