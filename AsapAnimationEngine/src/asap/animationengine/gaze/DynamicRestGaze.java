@@ -31,7 +31,7 @@ public class DynamicRestGaze implements RestGaze
     public DynamicRestGaze copy(AnimationPlayer player)
     {
         DynamicRestGaze copy = new DynamicRestGaze();
-        copy.setAnimationPlayer(aniPlayer);
+        copy.setAnimationPlayer(player);
         return copy;
     }
 

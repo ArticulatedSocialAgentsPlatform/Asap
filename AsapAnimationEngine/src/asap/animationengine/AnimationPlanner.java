@@ -178,6 +178,11 @@ public class AnimationPlanner extends AbstractPlanner<TimedAnimationUnit>
         else if (b instanceof PostureShiftBehaviour)
         {
             RestPose rp = gestureBinding.getRestPose((PostureShiftBehaviour) b, player);
+            if(rp == null)
+            {
+                throw new BehaviourPlanningException(b, "Behavior " + b.id +" "+b.toXMLString()
+                        + " could not be constructed from the gesture binding, behavior omitted.");
+            }
             try
             {
                 tmu = rp.createPostureShiftTMU(fbManager, bbPeg, b.getBmlId(), b.id, pegBoard);
@@ -190,6 +195,11 @@ public class AnimationPlanner extends AbstractPlanner<TimedAnimationUnit>
         else if (b instanceof GazeShiftBehaviour)
         {
             RestGaze rg = gestureBinding.getRestGaze((GazeShiftBehaviour)b, player);
+            if(rg == null)
+            {
+                throw new BehaviourPlanningException(b, "Behavior " + b.id +" "+b.toXMLString()
+                        + " could not be constructed from the gesture binding, behavior omitted.");
+            }
             try
             {
                 tmu = rg.createGazeShiftTMU(fbManager, bbPeg, b.getBmlId(), b.id, pegBoard);
@@ -204,7 +214,7 @@ public class AnimationPlanner extends AbstractPlanner<TimedAnimationUnit>
             List<TimedAnimationUnit> tmus = gestureBinding.getMotionUnit(bbPeg, b, player, pegBoard, murmlMUBuilder);
             if (tmus.isEmpty())
             {
-                throw new BehaviourPlanningException(b, "Behavior " + b.id
+                throw new BehaviourPlanningException(b, "Behavior " + b.id  +" "+b.toXMLString()
                         + " could not be constructed from the gesture binding, behavior omitted.");
             }
             tmu = tmus.get(0);

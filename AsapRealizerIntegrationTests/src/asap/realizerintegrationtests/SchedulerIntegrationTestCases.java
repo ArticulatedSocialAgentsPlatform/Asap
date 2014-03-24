@@ -142,8 +142,7 @@ public class SchedulerIntegrationTestCases
         assertEquals(1, nod1Start.getGlobalValue(), PEGBOARD_PRECISION);
     }
 
-    @Test
-    // (timeout = SCHEDULE_TIMEOUT)
+    @Test(timeout = SCHEDULE_TIMEOUT)
     public void timepegTestSpeechSyncTimed()
     {
         readXML("testspeech_synctimed.xml");
@@ -195,6 +194,15 @@ public class SchedulerIntegrationTestCases
         assertEquals(3, pegBoard.getRelativePegTime("bml1", "shift1", "end"), PEGBOARD_PRECISION);
     }
 
+    @Test(timeout = SCHEDULE_TIMEOUT)
+    public void testGazeShiftBehaviour()
+    {
+        readXML("testgazeshift.xml");
+        assertNoWarnings();
+        assertEquals(0, pegBoard.getRelativePegTime("bml1", "shift1", "start"), PEGBOARD_PRECISION);
+        assertEquals(3, pegBoard.getRelativePegTime("bml1", "shift1", "end"), PEGBOARD_PRECISION);        
+    }
+    
     @Test(timeout = SCHEDULE_TIMEOUT)
     public void testMurmlPalmOrientation()
     {
