@@ -59,20 +59,20 @@ public class PointingTMUTest extends AbstractTimedPlanUnitTest
         VJoint vNext = HanimBody.getLOA1HanimBody();
         PointingMU mu = new PointingMU(vNext.getPartBySid(Hanim.l_shoulder), vNext.getPartBySid(Hanim.l_elbow),
                 vNext.getPartBySid(Hanim.l_wrist), vNext.getPartBySid(Hanim.l_wrist));
-
+        WorldObjectManager woManager = new WorldObjectManager();
+        WorldObject blueBox = new VJointWorldObject(new VJoint());
+        woManager.addWorldObject("bluebox", blueBox);
         when(mockAnimationPlayer.getVCurr()).thenReturn(vCurr);
         when(mockAnimationPlayer.getVNext()).thenReturn(vNext);
         when(mockAnimationPlayer.getVCurrPartBySid(anyString())).thenReturn(HanimBody.getLOA1HanimBody().getPartBySid(Hanim.l_shoulder));
         when(mockAnimationPlayer.getVNextPartBySid(anyString())).thenReturn(HanimBody.getLOA1HanimBody().getPartBySid(Hanim.l_shoulder));
-
-        WorldObjectManager woManager = new WorldObjectManager();
-        WorldObject blueBox = new VJointWorldObject(new VJoint());
-        woManager.addWorldObject("bluebox", blueBox);
-
-        mu.player = mockAnimationPlayer;
+        when(mockAnimationPlayer.getWoManager()).thenReturn(woManager);
+        
+        
+        
         mu.target = "bluebox";
-        mu.woManager = woManager;
-
+        mu = mu.copy(mockAnimationPlayer);
+        
         RestPose mockRestPose = mock(RestPose.class);
         AnimationUnit mockRelaxMU = mock(AnimationUnit.class);
         when(mockAnimationPlayer.getRestPose()).thenReturn(mockRestPose);
