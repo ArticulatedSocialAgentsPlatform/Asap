@@ -121,5 +121,9 @@ public class ForwardRestGaze implements RestGaze
         throw new ParameterException("ForwardRestGaze doesn't support any parameters");
     }
 
-    
+    @Override
+    public void setFloatParameterValue(String name, float value) throws ParameterException
+    {
+        throw new ParameterException("ForwardRestGaze doesn't support any parameters");        
+    }    
 }

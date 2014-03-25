@@ -35,6 +35,7 @@ import saiba.bml.core.PostureShiftBehaviour;
 import saiba.bml.parser.Constraint;
 import asap.animationengine.gaze.GazeShiftTMU;
 import asap.animationengine.gaze.RestGaze;
+import asap.animationengine.gaze.StubGazeMU;
 import asap.animationengine.gesturebinding.GestureBinding;
 import asap.animationengine.gesturebinding.MURMLMUBuilder;
 import asap.animationengine.motionunit.MUSetupException;
@@ -76,6 +77,9 @@ public class AnimationPlannerTest
     private RestGaze mockRestGaze = mock(RestGaze.class);
 
     private StubAnimationUnit stubUnit = new StubAnimationUnit();
+    private StubGazeMU stubGazeUnit = new StubGazeMU();
+    
+    
     private Hns stubHns = new StubHns();
     private PegBoard pegBoard = new PegBoard();
 
@@ -131,7 +135,7 @@ public class AnimationPlannerTest
         animationPlanner = new AnimationPlanner(fbManager, mockPlayer, mockBinding, stubHns, null, planManager, pegBoard);
         plannerTests = new PlannerTests<TimedAnimationUnit>(animationPlanner, bbPeg);
         PostureShiftTMU tmups = new PostureShiftTMU(fbManager, bbPeg, BMLID, "pshift1", stubUnit, pegBoard, mockRestPose, mockPlayer);
-        GazeShiftTMU tmugs = new GazeShiftTMU(bbPeg, BMLID, "gshift1", stubUnit, pegBoard, mockRestGaze, mockPlayer);
+        GazeShiftTMU tmugs = new GazeShiftTMU(bbPeg, BMLID, "gshift1", stubGazeUnit, pegBoard, mockRestGaze, mockPlayer);
         TimedAnimationMotionUnit tmu = new TimedAnimationMotionUnit(fbManager, bbPeg, BMLID, "nod1", stubUnit, pegBoard);
 
         final List<TimedAnimationUnit> tmus = new ArrayList<>();

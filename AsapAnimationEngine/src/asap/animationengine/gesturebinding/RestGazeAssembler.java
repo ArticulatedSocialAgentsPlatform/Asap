@@ -1,13 +1,13 @@
 package asap.animationengine.gesturebinding;
 
-import java.util.HashMap;
-
 import hmi.xml.XMLScanException;
 import hmi.xml.XMLStructureAdapter;
 import hmi.xml.XMLTokenizer;
+
+import java.util.HashMap;
+
 import lombok.Getter;
 import asap.animationengine.gaze.RestGaze;
-import asap.animationengine.restpose.RestPose;
 
 /**
  * Creates a RestGaze from an XML description

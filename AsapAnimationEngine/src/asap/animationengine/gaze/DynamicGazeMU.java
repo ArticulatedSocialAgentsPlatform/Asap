@@ -39,7 +39,7 @@ import com.google.common.collect.ImmutableSet;
  * Journal of Neurophysiology, 77(2):654–666, February 1997).
  * @author Herwin 
  */
-public class DynamicGazeMU extends GazeMU
+public class DynamicGazeMU extends AbstractGazeMU
 {
     // SMAX/Smax(t) in Grillion
 
@@ -65,6 +65,8 @@ public class DynamicGazeMU extends GazeMU
 
     public DynamicGazeMU()
     {
+        tmpThoracic = new ErfManipulator((int) (FPS_THORACIC));
+        tmpCervical = new ErfManipulator((int) (FPS_CERVICAL));
         setupKeyPositions();
     }
 
@@ -252,7 +254,7 @@ public class DynamicGazeMU extends GazeMU
     }
 
     @Override
-    protected void setTarget()
+    public void setTarget()
     {
         if(!isLocal)
         {    
@@ -310,9 +312,7 @@ public class DynamicGazeMU extends GazeMU
     @Override
     public void setDurations(double prepDur, double relaxDur)
     {
-        preparationDuration = prepDur;
-        tmpThoracic = new ErfManipulator((int) (FPS_THORACIC));
-        tmpCervical = new ErfManipulator((int) (FPS_CERVICAL));
+        preparationDuration = prepDur;        
     }
 
     @Override
@@ -361,12 +361,7 @@ public class DynamicGazeMU extends GazeMU
                 .add(Hanim.l_eyeball_joint).build();
     }
 
-    @Override
-    protected void setInfluence(GazeInfluence influence)
-    {
-        super.setInfluence(influence);
-        gatherJoints();
-    }
+    
     
     public void setPlayer(AnimationPlayer p) 
     {
@@ -395,5 +390,22 @@ public class DynamicGazeMU extends GazeMU
     public Set<String> getKinematicJoints()
     {
         return kinematicJoints;
+    }
+    
+    @Override
+    public void startUnit(double t) throws MUPlayException
+    {
+        setStartPose();
+        super.startUnit(t);
+    }
+    
+    
+    /**
+     * Time to stay on target
+     */
+    @Override
+    public double getPreferedStayDuration()
+    {
+        return 2;
     }
 }

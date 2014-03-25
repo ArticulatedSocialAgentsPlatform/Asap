@@ -59,7 +59,7 @@ public class GazeTMUTest extends AbstractTimedPlanUnitTest
 
     private GazeTMU setupPlanUnit(FeedbackManager bfm, BMLBlockPeg bbPeg, String id, String bmlId)
     {
-        GazeMU mu = new GazeMU();
+        TweedGazeMU mu = new TweedGazeMU();
 
         WorldObjectManager woManager = new WorldObjectManager();
         VJoint bluebox = new VJoint();

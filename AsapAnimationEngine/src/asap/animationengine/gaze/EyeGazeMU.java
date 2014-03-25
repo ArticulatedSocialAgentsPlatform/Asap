@@ -41,7 +41,7 @@ import com.google.common.collect.ImmutableSet;
  * Gaze is on target at ready, moves back to rest position at relax.
  * @author Herwin van Welbergen
  */
-public class EyeGazeMU extends GazeMU
+public class EyeGazeMU extends TweedGazeMU
 {
     private float qEyeLeft[] = Quat4f.getQuat4f();
     private float qEyeRight[] = Quat4f.getQuat4f();
@@ -71,7 +71,7 @@ public class EyeGazeMU extends GazeMU
     }
     
     @Override
-    void setEndRotation(float[] gazeDir)
+    public void setEndRotation(float[] gazeDir)
     {
         woTarget.getTranslation2(gazeDir, rEye);
         Quat4f.transformVec3f(getOffsetRotation(), gazeDir);

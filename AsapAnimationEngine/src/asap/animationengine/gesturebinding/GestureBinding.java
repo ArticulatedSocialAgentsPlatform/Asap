@@ -118,6 +118,7 @@ public class GestureBinding extends XMLStructureAdapter
                             String value = b.getStringParameterValue(param);
                             try
                             {
+                                System.out.println("Setting restgaze parameter "+param+"to "+value);
                                 rg.setParameterValue(s.getParameter(param), value);
                             }
                             catch (ParameterException e)

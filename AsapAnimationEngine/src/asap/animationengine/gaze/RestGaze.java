@@ -65,6 +65,8 @@ public interface RestGaze
     
     void setParameterValue(String name, String value) throws ParameterException;
     
+    void setFloatParameterValue(String name, float value) throws ParameterException;
+    
     GazeShiftTMU createGazeShiftTMU(FeedbackManager bbf, BMLBlockPeg bmlBlockPeg, 
             String bmlId, String id, PegBoard pb) throws MUSetupException;
 }

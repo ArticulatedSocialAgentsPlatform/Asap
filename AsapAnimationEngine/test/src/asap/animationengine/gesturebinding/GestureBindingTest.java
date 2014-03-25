@@ -341,5 +341,7 @@ public class GestureBindingTest
         GazeShiftBehaviour beh = createGazeShiftBehaviour("bml1", str);
         RestGaze rg = gestureBinding.getRestGaze(beh, mockAniPlayer);
         assertThat(rg, instanceOf(DynamicRestGaze.class));
+        
+        
     }
 }
