@@ -25,6 +25,7 @@ import asap.realizer.planunit.ParameterException;
 import asap.realizer.planunit.PlanUnitFloatParameterNotFoundException;
 import asap.realizer.planunit.TimedPlanUnit;
 import asap.realizer.planunit.TimedPlanUnitPlayException;
+import asap.realizer.planunit.TimedPlanUnitSetupException;
 import asap.realizer.planunit.TimedPlanUnitState;
 import asap.realizer.scheduler.BMLBlockManager;
 import asap.realizer.scheduler.BMLScheduler;
@@ -78,7 +79,7 @@ public class TimedParameterValueChangeUnitTest extends AbstractTimedPlanUnitTest
     }
 
     @Test
-    public void testPlayAtTimeZero() throws TimedPlanUnitPlayException, ParameterException, BehaviorNotFoundException
+    public void testPlayAtTimeZero() throws TimedPlanUnitPlayException, ParameterException, BehaviorNotFoundException, TimedPlanUnitSetupException
     {
         TimedPlanUnit tpu = setupPlanUnitWithListener(BMLBlockPeg.GLOBALPEG, "id1", "bml1", 0);
         tpu.setState(TimedPlanUnitState.LURKING);
@@ -91,7 +92,7 @@ public class TimedParameterValueChangeUnitTest extends AbstractTimedPlanUnitTest
     }
 
     @Test
-    public void testPlayAtTimeOne() throws TimedPlanUnitPlayException, ParameterException, BehaviorNotFoundException
+    public void testPlayAtTimeOne() throws TimedPlanUnitPlayException, ParameterException, BehaviorNotFoundException, TimedPlanUnitSetupException
     {
         TimedPlanUnit tpu = setupPlanUnitWithListener(BMLBlockPeg.GLOBALPEG, "id1", "bml1", 0);
         tpu.setState(TimedPlanUnitState.LURKING);
@@ -105,7 +106,7 @@ public class TimedParameterValueChangeUnitTest extends AbstractTimedPlanUnitTest
     }
 
     @Test
-    public void testPlayAtTimeZeroNoEndSet() throws TimedPlanUnitPlayException, ParameterException, BehaviorNotFoundException
+    public void testPlayAtTimeZeroNoEndSet() throws TimedPlanUnitPlayException, ParameterException, BehaviorNotFoundException, TimedPlanUnitSetupException
     {
         TimedPlanUnit tpu = setupPlanUnitWithListener(BMLBlockPeg.GLOBALPEG, "id1", "bml1", 0);
         tpu.setState(TimedPlanUnitState.LURKING);
@@ -117,7 +118,7 @@ public class TimedParameterValueChangeUnitTest extends AbstractTimedPlanUnitTest
     }
 
     @Test
-    public void testPlayAtTimeZeroNoInitialValue() throws TimedPlanUnitPlayException, ParameterException, BehaviorNotFoundException
+    public void testPlayAtTimeZeroNoInitialValue() throws TimedPlanUnitPlayException, ParameterException, BehaviorNotFoundException, TimedPlanUnitSetupException
     {
         paramValueInfo = new ParameterValueInfo(TARGETBMLID, TARGETBEHID, TARGETPARAMID, TARGETVALUE);
         TimedPlanUnit tpu = setupPlanUnitWithListener(BMLBlockPeg.GLOBALPEG, "id1", "bml1", 0);
@@ -133,7 +134,7 @@ public class TimedParameterValueChangeUnitTest extends AbstractTimedPlanUnitTest
     }
 
     @Test
-    public void testPlayAfterEnd() throws TimedPlanUnitPlayException, ParameterException, BehaviorNotFoundException
+    public void testPlayAfterEnd() throws TimedPlanUnitPlayException, ParameterException, BehaviorNotFoundException, TimedPlanUnitSetupException
     {
         TimedPlanUnit tpu = setupPlanUnitWithListener(BMLBlockPeg.GLOBALPEG, "id1", "bml1", 0);
         tpu.setState(TimedPlanUnitState.LURKING);
@@ -151,7 +152,7 @@ public class TimedParameterValueChangeUnitTest extends AbstractTimedPlanUnitTest
     }
 
     @Test
-    public void testPlayBeforeEnd() throws TimedPlanUnitPlayException, ParameterException, BehaviorNotFoundException
+    public void testPlayBeforeEnd() throws TimedPlanUnitPlayException, ParameterException, BehaviorNotFoundException, TimedPlanUnitSetupException
     {
         TimedPlanUnit tpu = setupPlanUnitWithListener(BMLBlockPeg.GLOBALPEG, "id1", "bml1", 0);
         tpu.setState(TimedPlanUnitState.LURKING);
@@ -168,7 +169,7 @@ public class TimedParameterValueChangeUnitTest extends AbstractTimedPlanUnitTest
     }
 
     @Test
-    public void testStopAfterTargetFinished() throws TimedPlanUnitPlayException
+    public void testStopAfterTargetFinished() throws TimedPlanUnitPlayException, TimedPlanUnitSetupException
     {
         TimedPlanUnit tpu = setupPlanUnitWithListener(BMLBlockPeg.GLOBALPEG, "id1", "bml1", 0);
         tpu.setState(TimedPlanUnitState.LURKING);
@@ -187,7 +188,7 @@ public class TimedParameterValueChangeUnitTest extends AbstractTimedPlanUnitTest
     }
 
     @Test(expected = TimedPlanUnitPlayException.class)
-    public void testPlayUnknownParameter() throws ParameterException, BehaviorNotFoundException, TimedPlanUnitPlayException
+    public void testPlayUnknownParameter() throws ParameterException, BehaviorNotFoundException, TimedPlanUnitPlayException, TimedPlanUnitSetupException
     {
         TimedPlanUnit tpu = setupPlanUnitWithListener(BMLBlockPeg.GLOBALPEG, "id1", "bml1", 0);
         tpu.setState(TimedPlanUnitState.LURKING);
@@ -203,7 +204,7 @@ public class TimedParameterValueChangeUnitTest extends AbstractTimedPlanUnitTest
     }
 
     @Test(expected = TimedPlanUnitPlayException.class)
-    public void testPlayUnknownBehavior() throws ParameterException, BehaviorNotFoundException, TimedPlanUnitPlayException
+    public void testPlayUnknownBehavior() throws ParameterException, BehaviorNotFoundException, TimedPlanUnitPlayException, TimedPlanUnitSetupException
     {
         TimedPlanUnit tpu = setupPlanUnitWithListener(BMLBlockPeg.GLOBALPEG, "id1", "bml1", 0);
         tpu.setState(TimedPlanUnitState.LURKING);
@@ -219,7 +220,7 @@ public class TimedParameterValueChangeUnitTest extends AbstractTimedPlanUnitTest
     }
 
     @Test
-    public void testInvalid()
+    public void testInvalid() throws TimedPlanUnitSetupException
     {
         TimedPlanUnit tpu = setupPlanUnitWithListener(BMLBlockPeg.GLOBALPEG, "id1", "bml1", 0);
         tpu.setTimePeg("end", createTimePeg(0));
@@ -228,7 +229,7 @@ public class TimedParameterValueChangeUnitTest extends AbstractTimedPlanUnitTest
     }
 
     @Test
-    public void testValid()
+    public void testValid() throws TimedPlanUnitSetupException
     {
         TimedPlanUnit tpu = setupPlanUnitWithListener(BMLBlockPeg.GLOBALPEG, "id1", "bml1", 0);
         tpu.setTimePeg("end", createTimePeg(2));
@@ -244,7 +245,7 @@ public class TimedParameterValueChangeUnitTest extends AbstractTimedPlanUnitTest
     }
     
     @Test
-    public void testSetValueOnFinishedBehavior() throws ParameterException, BehaviorNotFoundException, TimedPlanUnitPlayException
+    public void testSetValueOnFinishedBehavior() throws ParameterException, BehaviorNotFoundException, TimedPlanUnitPlayException, TimedPlanUnitSetupException
     {
         TimedPlanUnit tpu = setupPlanUnitWithListener(BMLBlockPeg.GLOBALPEG, "id1", "bml1", 0);
         when(mockBlockManager.getSyncsPassed(TARGETBMLID, TARGETBEHID)).thenReturn(

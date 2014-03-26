@@ -33,6 +33,7 @@ import asap.realizer.pegboard.BMLBlockPeg;
 import asap.realizer.pegboard.PegBoard;
 import asap.realizer.pegboard.TimePeg;
 import asap.realizer.planunit.TimedPlanUnitPlayException;
+import asap.realizer.planunit.TimedPlanUnitSetupException;
 import asap.realizer.planunit.TimedPlanUnitState;
 import asap.realizer.scheduler.BMLBlockManager;
 import asap.realizer.scheduler.TimePegAndConstraint;
@@ -165,7 +166,7 @@ public class MotorControlProgramTest extends AbstractTimedPlanUnitTest
     }
 
     @Test
-    public void testStrokeFeedback() throws TimedPlanUnitPlayException, BehaviourPlanningException
+    public void testStrokeFeedback() throws TimedPlanUnitPlayException, BehaviourPlanningException, TimedPlanUnitSetupException
     {
         MotorControlProgram mcp = (MotorControlProgram) setupPlanUnitWithListener(BMLBlockPeg.GLOBALPEG, "beh1", "bml1", 0);
         mcp.setState(TimedPlanUnitState.LURKING);
@@ -183,7 +184,7 @@ public class MotorControlProgramTest extends AbstractTimedPlanUnitTest
     }
 
     @Test
-    public void testEndFeedback() throws TimedPlanUnitPlayException
+    public void testEndFeedback() throws TimedPlanUnitPlayException, TimedPlanUnitSetupException
     {
         MotorControlProgram mcp = (MotorControlProgram) setupPlanUnitWithListener(BMLBlockPeg.GLOBALPEG, "beh1", "bml1", 0);
         mcp.setState(TimedPlanUnitState.LURKING);

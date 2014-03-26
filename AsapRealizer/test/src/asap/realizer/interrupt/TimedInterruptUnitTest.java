@@ -18,6 +18,7 @@ import asap.realizer.pegboard.BMLBlockPeg;
 import asap.realizer.pegboard.TimePeg;
 import asap.realizer.planunit.TimedPlanUnit;
 import asap.realizer.planunit.TimedPlanUnitPlayException;
+import asap.realizer.planunit.TimedPlanUnitSetupException;
 import asap.realizer.planunit.TimedPlanUnitState;
 import asap.realizer.scheduler.BMLBlockManager;
 import asap.realizer.scheduler.BMLScheduler;
@@ -62,7 +63,7 @@ public class TimedInterruptUnitTest extends AbstractTimedPlanUnitTest
     }
 
     @Test
-    public void testInterrupt() throws TimedPlanUnitPlayException
+    public void testInterrupt() throws TimedPlanUnitPlayException, TimedPlanUnitSetupException
     {
         TimedPlanUnit tpu = setupPlanUnitWithListener(BMLBlockPeg.GLOBALPEG,"id1","bml1",0);
         tpu.setState(TimedPlanUnitState.LURKING);
