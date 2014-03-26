@@ -29,6 +29,7 @@ import saiba.bml.core.GazeBehaviour;
 import saiba.bml.parser.Constraint;
 import asap.animationengine.AnimationPlayer;
 import asap.animationengine.AnimationPlayerMock;
+import asap.animationengine.motionunit.TMUSetupException;
 import asap.animationengine.motionunit.TimedAnimationMotionUnit;
 import asap.realizer.BehaviourPlanningException;
 import asap.realizer.feedback.FeedbackManager;
@@ -57,7 +58,7 @@ public class GazeTMUTest extends AbstractTimedPlanUnitTest
     private static final double TIME_PRECISION = 0.0001;
     private GazeBehaviour mockBeh = mock(GazeBehaviour.class);
 
-    private GazeTMU setupPlanUnit(FeedbackManager bfm, BMLBlockPeg bbPeg, String id, String bmlId)
+    private GazeTMU setupPlanUnit(FeedbackManager bfm, BMLBlockPeg bbPeg, String id, String bmlId) throws TMUSetupException
     {
         TweedGazeMU mu = new TweedGazeMU();
 
@@ -84,7 +85,7 @@ public class GazeTMUTest extends AbstractTimedPlanUnitTest
     }
 
     @Override
-    protected GazeTMU setupPlanUnit(FeedbackManager bfm, BMLBlockPeg bbPeg, String id, String bmlId, double startTime)
+    protected GazeTMU setupPlanUnit(FeedbackManager bfm, BMLBlockPeg bbPeg, String id, String bmlId, double startTime) throws TMUSetupException
     {
         GazeTMU tmu = setupPlanUnit(bfm, bbPeg, id, bmlId);
         tmu.setTimePeg("start", TimePegUtil.createTimePeg(bbPeg, startTime));
@@ -99,7 +100,7 @@ public class GazeTMUTest extends AbstractTimedPlanUnitTest
     }
 
     @Test
-    public void testResolve() throws BehaviourPlanningException
+    public void testResolve() throws BehaviourPlanningException, TMUSetupException
     {
         GazeTMU tmu = setupPlanUnit(fbManager, BMLBlockPeg.GLOBALPEG, "gaze1", "bml1");
         List<TimePegAndConstraint> sacs = new ArrayList<>();

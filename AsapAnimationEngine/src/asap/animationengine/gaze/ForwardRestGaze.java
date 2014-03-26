@@ -7,6 +7,7 @@ import java.util.Set;
 import asap.animationengine.AnimationPlayer;
 import asap.animationengine.motionunit.AnimationUnit;
 import asap.animationengine.motionunit.MUSetupException;
+import asap.animationengine.motionunit.TMUSetupException;
 import asap.animationengine.motionunit.TimedAnimationMotionUnit;
 import asap.realizer.feedback.FeedbackManager;
 import asap.realizer.pegboard.BMLBlockPeg;
@@ -53,11 +54,20 @@ public class ForwardRestGaze implements RestGaze
                 
     }
 
-    
+    @Override
     public TimedAnimationMotionUnit createTransitionToRest(FeedbackManager fbm, TimePeg startPeg, TimePeg endPeg,
-            String bmlId, String id, BMLBlockPeg bmlBlockPeg, PegBoard pb)
+            String bmlId, String id, BMLBlockPeg bmlBlockPeg, PegBoard pb) throws TMUSetupException
     {
-        AnimationUnit mu = createTransitionToRest();
+        AnimationUnit mu;
+        try
+        {
+            mu = createTransitionToRest();
+        }
+        catch (MUSetupException e)
+        {
+            throw new TMUSetupException("Cannot setup TMU for transition to rest ",null, e);
+        }
+        
         TimedAnimationMotionUnit tmu = mu.createTMU(fbm, bmlBlockPeg, bmlId, id, pb);
         tmu.setTimePeg("start", startPeg);
         tmu.setTimePeg("ready", endPeg);
@@ -66,7 +76,7 @@ public class ForwardRestGaze implements RestGaze
     }
     @Override
     public TimedAnimationMotionUnit createTransitionToRest(FeedbackManager fbm, double startTime, String bmlId,
-            String id, BMLBlockPeg bmlBlockPeg, PegBoard pb)
+            String id, BMLBlockPeg bmlBlockPeg, PegBoard pb) throws TMUSetupException
     {
         TimePeg startPeg = new TimePeg(bmlBlockPeg);
         startPeg.setGlobalValue(startTime);
@@ -76,7 +86,7 @@ public class ForwardRestGaze implements RestGaze
 
     @Override
     public TimedAnimationMotionUnit createTransitionToRest(FeedbackManager fbm, double startTime, double duration,
-            String bmlId, String id, BMLBlockPeg bmlBlockPeg, PegBoard pb)
+            String bmlId, String id, BMLBlockPeg bmlBlockPeg, PegBoard pb) throws TMUSetupException
     {
         TimePeg startPeg = new TimePeg(bmlBlockPeg);
         startPeg.setGlobalValue(startTime);
@@ -91,10 +101,10 @@ public class ForwardRestGaze implements RestGaze
     }
 
     @Override
-    public AnimationUnit createTransitionToRest()
+    public AnimationUnit createTransitionToRest() throws MUSetupException
     {
         DynamicGazeMU mu = new DynamicGazeMU();
-        mu.setPlayer(aPlayer);
+        mu = mu.copy(aPlayer);
         mu.setInfluence(influence);        
         mu.setGazeDirection(Vec3f.getVec3f(0,0,1));        
         return mu;

@@ -22,11 +22,11 @@ import asap.realizer.pegboard.BMLBlockPeg;
 import asap.realizer.pegboard.TimePeg;
 import asap.realizer.planunit.TimedPlanUnit;
 import asap.realizer.planunit.TimedPlanUnitPlayException;
+import asap.realizer.planunit.TimedPlanUnitSetupException;
 import asap.realizer.planunit.TimedPlanUnitState;
 import asap.realizer.scheduler.BMLBlockManager;
 import asap.realizerport.util.ListBMLFeedbackListener;
 import asap.realizertestutil.util.TimePegUtil;
-
 
 /**
  * Generic testcases for TimedPlanUnits.
@@ -37,13 +37,16 @@ import asap.realizertestutil.util.TimePegUtil;
 public abstract class AbstractTimedPlanUnitTest
 {
     private static final double TIME_PRECISION = 0.0001;
-    protected abstract TimedPlanUnit setupPlanUnit(FeedbackManager bfm, BMLBlockPeg bbPeg, String id, String bmlId, double startTime);
+
+    protected abstract TimedPlanUnit setupPlanUnit(FeedbackManager bfm, BMLBlockPeg bbPeg, String id, String bmlId, double startTime)
+            throws TimedPlanUnitSetupException;
 
     protected List<BMLSyncPointProgressFeedback> fbList = new ArrayList<BMLSyncPointProgressFeedback>();
     protected BMLBlockManager mockBlockManager = mock(BMLBlockManager.class);
     protected FeedbackManager fbManager = new FeedbackManagerImpl(mockBlockManager, "character1");
 
     protected TimedPlanUnit setupPlanUnitWithListener(BMLBlockPeg bbPeg, String id, String bmlId, double startTime)
+            throws TimedPlanUnitSetupException
     {
         TimedPlanUnit tpu = setupPlanUnit(fbManager, bbPeg, id, bmlId, startTime);
         fbManager.addFeedbackListener(new ListBMLFeedbackListener.Builder().feedBackList(fbList).build());
@@ -54,9 +57,9 @@ public abstract class AbstractTimedPlanUnitTest
     {
         assertEquals(TimedPlanUnitState.SUBSIDING, tpu.getState());
     }
-    
+
     @Test
-    public void testFeedback()
+    public void testFeedback() throws TimedPlanUnitSetupException
     {
         TimedPlanUnit tpu = setupPlanUnitWithListener(BMLBlockPeg.GLOBALPEG, "id1", "bml1", 0);
         BMLSyncPointProgressFeedback expected = new BMLSyncPointProgressFeedback("bml1", "beh1", "stroke", 0, 0);
@@ -65,7 +68,7 @@ public abstract class AbstractTimedPlanUnitTest
     }
 
     @Test
-    public void testSetup()
+    public void testSetup() throws TimedPlanUnitSetupException
     {
         TimedPlanUnit tpu = setupPlanUnitWithListener(BMLBlockPeg.GLOBALPEG, "id1", "bml1", 0);
         assertEquals(0, tpu.getStartTime(), TIME_PRECISION);
@@ -74,7 +77,7 @@ public abstract class AbstractTimedPlanUnitTest
     }
 
     @Test
-    public void testPlayInPrep() throws TimedPlanUnitPlayException
+    public void testPlayInPrep() throws TimedPlanUnitPlayException, TimedPlanUnitSetupException
     {
         TimedPlanUnit tpu = setupPlanUnitWithListener(BMLBlockPeg.GLOBALPEG, "id1", "bml1", 0);
         tpu.play(0);
@@ -83,7 +86,7 @@ public abstract class AbstractTimedPlanUnitTest
     }
 
     @Test
-    public void testStopInPrep() throws TimedPlanUnitPlayException
+    public void testStopInPrep() throws TimedPlanUnitPlayException, TimedPlanUnitSetupException
     {
         TimedPlanUnit tpu = setupPlanUnitWithListener(BMLBlockPeg.GLOBALPEG, "id1", "bml1", 0);
         tpu.stop(0);
@@ -92,7 +95,7 @@ public abstract class AbstractTimedPlanUnitTest
     }
 
     @Test
-    public void testStartInPrep() throws TimedPlanUnitPlayException
+    public void testStartInPrep() throws TimedPlanUnitPlayException, TimedPlanUnitSetupException
     {
         TimedPlanUnit tpu = setupPlanUnitWithListener(BMLBlockPeg.GLOBALPEG, "id1", "bml1", 0);
         tpu.start(0);
@@ -101,7 +104,7 @@ public abstract class AbstractTimedPlanUnitTest
     }
 
     @Test
-    public void testPlayInPending() throws TimedPlanUnitPlayException
+    public void testPlayInPending() throws TimedPlanUnitPlayException, TimedPlanUnitSetupException
     {
         TimedPlanUnit tpu = setupPlanUnitWithListener(BMLBlockPeg.GLOBALPEG, "id1", "bml1", 0);
         tpu.setState(TimedPlanUnitState.PENDING);
@@ -111,7 +114,7 @@ public abstract class AbstractTimedPlanUnitTest
     }
 
     @Test
-    public void testStartInPending() throws TimedPlanUnitPlayException
+    public void testStartInPending() throws TimedPlanUnitPlayException, TimedPlanUnitSetupException
     {
         TimedPlanUnit tpu = setupPlanUnitWithListener(BMLBlockPeg.GLOBALPEG, "id1", "bml1", 0);
         tpu.setState(TimedPlanUnitState.PENDING);
@@ -121,7 +124,7 @@ public abstract class AbstractTimedPlanUnitTest
     }
 
     @Test
-    public void testStopInPending() throws TimedPlanUnitPlayException
+    public void testStopInPending() throws TimedPlanUnitPlayException, TimedPlanUnitSetupException
     {
         TimedPlanUnit tpu = setupPlanUnitWithListener(BMLBlockPeg.GLOBALPEG, "id1", "bml1", 0);
         tpu.setState(TimedPlanUnitState.PENDING);
@@ -131,7 +134,7 @@ public abstract class AbstractTimedPlanUnitTest
     }
 
     @Test
-    public void testPlayInLurking() throws TimedPlanUnitPlayException
+    public void testPlayInLurking() throws TimedPlanUnitPlayException, TimedPlanUnitSetupException
     {
         TimedPlanUnit tpu = setupPlanUnitWithListener(BMLBlockPeg.GLOBALPEG, "id1", "bml1", 0);
         tpu.setState(TimedPlanUnitState.LURKING);
@@ -141,7 +144,7 @@ public abstract class AbstractTimedPlanUnitTest
     }
 
     @Test
-    public void testStopInLurking() throws TimedPlanUnitPlayException
+    public void testStopInLurking() throws TimedPlanUnitPlayException, TimedPlanUnitSetupException
     {
         TimedPlanUnit tpu = setupPlanUnitWithListener(BMLBlockPeg.GLOBALPEG, "id1", "bml1", 0);
         tpu.setState(TimedPlanUnitState.LURKING);
@@ -151,7 +154,7 @@ public abstract class AbstractTimedPlanUnitTest
     }
 
     @Test
-    public void testStartInLurking() throws TimedPlanUnitPlayException
+    public void testStartInLurking() throws TimedPlanUnitPlayException, TimedPlanUnitSetupException
     {
         TimedPlanUnit tpu = setupPlanUnitWithListener(BMLBlockPeg.GLOBALPEG, "id1", "bml1", 0);
         tpu.setState(TimedPlanUnitState.LURKING);
@@ -161,7 +164,7 @@ public abstract class AbstractTimedPlanUnitTest
 
     @SuppressWarnings("unchecked")
     @Test
-    public void testStartThenPlayInLurking() throws TimedPlanUnitPlayException
+    public void testStartThenPlayInLurking() throws TimedPlanUnitPlayException, TimedPlanUnitSetupException
     {
         TimedPlanUnit tpu = setupPlanUnitWithListener(BMLBlockPeg.GLOBALPEG, "id1", "bml1", 0);
         tpu.setState(TimedPlanUnitState.LURKING);
@@ -175,19 +178,19 @@ public abstract class AbstractTimedPlanUnitTest
 
     @SuppressWarnings("unchecked")
     @Test
-    public void testPlayInExec() throws TimedPlanUnitPlayException
+    public void testPlayInExec() throws TimedPlanUnitPlayException, TimedPlanUnitSetupException
     {
         TimedPlanUnit tpu = setupPlanUnitWithListener(BMLBlockPeg.GLOBALPEG, "id1", "bml1", 0);
         tpu.setState(TimedPlanUnitState.LURKING);
         tpu.start(0);
         tpu.play(0);
         tpu.play(0);
-        assertThat(tpu.getState(), anyOf(equalTo(TimedPlanUnitState.SUBSIDING), 
-                equalTo(TimedPlanUnitState.IN_EXEC), equalTo(TimedPlanUnitState.DONE)));
+        assertThat(tpu.getState(),
+                anyOf(equalTo(TimedPlanUnitState.SUBSIDING), equalTo(TimedPlanUnitState.IN_EXEC), equalTo(TimedPlanUnitState.DONE)));
     }
 
     @Test
-    public void testStartInExec() throws TimedPlanUnitPlayException
+    public void testStartInExec() throws TimedPlanUnitPlayException, TimedPlanUnitSetupException
     {
         TimedPlanUnit tpu = setupPlanUnitWithListener(BMLBlockPeg.GLOBALPEG, "id1", "bml1", 0);
         tpu.setState(TimedPlanUnitState.IN_EXEC);
@@ -197,7 +200,7 @@ public abstract class AbstractTimedPlanUnitTest
     }
 
     @Test
-    public void testSetStrokePeg()
+    public void testSetStrokePeg() throws TimedPlanUnitSetupException
     {
         TimedPlanUnit tpu = setupPlanUnitWithListener(BMLBlockPeg.GLOBALPEG, "id1", "bml1", 0);
         TimePeg strokePeg = new TimePeg(BMLBlockPeg.GLOBALPEG);
@@ -207,7 +210,7 @@ public abstract class AbstractTimedPlanUnitTest
     }
 
     @Test
-    public void testSubsiding() throws TimedPlanUnitPlayException
+    public void testSubsiding() throws TimedPlanUnitPlayException, TimedPlanUnitSetupException
     {
         TimedPlanUnit tpu = setupPlanUnitWithListener(BMLBlockPeg.GLOBALPEG, "id1", "bml1", 0);
         TimePeg relaxPeg = new TimePeg(BMLBlockPeg.GLOBALPEG);
@@ -220,6 +223,6 @@ public abstract class AbstractTimedPlanUnitTest
         tpu.setState(TimedPlanUnitState.LURKING);
         tpu.start(0);
         tpu.play(2.1);
-        assertSubsiding(tpu);        
+        assertSubsiding(tpu);
     }
 }

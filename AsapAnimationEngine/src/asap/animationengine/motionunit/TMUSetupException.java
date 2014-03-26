@@ -1,5 +1,6 @@
 package asap.animationengine.motionunit;
 
+import asap.realizer.planunit.TimedPlanUnitSetupException;
 import lombok.Getter;
 
 /**
@@ -7,7 +8,7 @@ import lombok.Getter;
  * @author hvanwelbergen
  *
  */
-public class TMUSetupException extends Exception
+public class TMUSetupException extends TimedPlanUnitSetupException
 {
     private static final long serialVersionUID = 1L;
     
@@ -16,15 +17,14 @@ public class TMUSetupException extends Exception
     
     public TMUSetupException(String str, TimedAnimationUnit m)
     {
-        super(str);
+        super(str, m);
         tmu = m;        
     }
     
     
     public TMUSetupException(String str, TimedAnimationUnit m, Exception ex)
     {
-        super(str);
-        tmu = m;
-        this.initCause(ex);
+        super(str,m,ex);
+        tmu = m;        
     }
 }

@@ -20,6 +20,7 @@ package asap.animationengine.gaze;
 
 import saiba.bml.BMLGestureSync;
 import asap.animationengine.AnimationPlayer;
+import asap.animationengine.motionunit.TMUSetupException;
 import asap.animationengine.motionunit.TimedAnimationMotionUnit;
 import asap.animationengine.motionunit.TimedAnimationUnit;
 import asap.motionunit.MUPlayException;
@@ -135,8 +136,15 @@ public class GazeTMU extends TimedAnimationMotionUnit
         {
             endPeg.setGlobalValue(relaxPeg.getGlobalValue() + retractionDuration);
         }
-        relaxUnit = aniPlayer.getRestGaze().createTransitionToRest(NullFeedbackManager.getInstance(), relaxPeg, endPeg, getBMLId(),
-                getId(), bmlBlockPeg, pegBoard);
+        try
+        {
+            relaxUnit = aniPlayer.getRestGaze().createTransitionToRest(NullFeedbackManager.getInstance(), relaxPeg, endPeg, getBMLId(),
+                    getId(), bmlBlockPeg, pegBoard);
+        }
+        catch (TMUSetupException e)
+        {
+            throw new TimedPlanUnitPlayException("TMUSetupException in construction of relax unit",this,e);
+        }
         relaxUnit.start(time);
         super.relaxUnit(time);
     }
