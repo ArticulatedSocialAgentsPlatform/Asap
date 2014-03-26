@@ -194,7 +194,7 @@ public class SchedulerIntegrationTestCases
         assertEquals(3, pegBoard.getRelativePegTime("bml1", "shift1", "end"), PEGBOARD_PRECISION);
     }
 
-    @Test(timeout = SCHEDULE_TIMEOUT)
+    @Test//(timeout = SCHEDULE_TIMEOUT)
     public void testGazeShiftBehaviour()
     {
         readXML("testgazeshift.xml");

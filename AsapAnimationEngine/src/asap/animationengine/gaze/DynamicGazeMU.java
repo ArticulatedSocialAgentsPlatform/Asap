@@ -24,20 +24,20 @@ import com.google.common.collect.ImmutableSet;
  * Provides (up to) full torso gaze to moving targets.
  * 
  * Implementation inspired by:<br>
- * Helena Grillon and Daniel Thalmann, Simulating gaze attention behaviors for crowds (2009), in:<br> 
+ * Helena Grillon and Daniel Thalmann, Simulating gaze attention behaviors for crowds (2009), in:<br>
  * Computer Animation and Virtual Worlds, 20 2-3(111-- 119)<br>
  * 
  * Additions to their work:<br>
- * Eyes reach the target first and then lock on to it, that is, they overshoot their end rotation 
+ * Eyes reach the target first and then lock on to it, that is, they overshoot their end rotation
  * and then move back while remaining locked on the target (as in
  * P. Radua, D. Tweed, and T. Vilis. Three-dimensional eye, head, and chest orientations after large gaze shifts and the
  * underlying neural strategies. Journal of Neurophysiology, 72(6):2840–2852, 1994.).
- * The eye max speed and speed profile is biologically motivated<br> 
+ * The eye max speed and speed profile is biologically motivated<br>
  * (using R. H. S. Carpenter. Movements of the Eyes. Pion Ltd, London, UK, second edition, 1988).
  * Eyes adhere to biologically motivated rotation limits; eye rotation is calculated using Listing's law
  * (using D. Tweed. Three-dimensional model of the human eye-head saccadic system.
  * Journal of Neurophysiology, 77(2):654–666, February 1997).
- * @author Herwin 
+ * @author Herwin
  */
 public class DynamicGazeMU extends AbstractGazeMU
 {
@@ -46,11 +46,11 @@ public class DynamicGazeMU extends AbstractGazeMU
     private static final double TORSO_TIME_SCALE = 2; // 2x slower than neck
     private static final int FPS_THORACIC = 3; // used as multiplier for the tmp setup
     private static final int FPS_CERVICAL = 3; // used as multiplier for the tmp setup
-    
+
     private static final double CENTRAL_FOVEAL_AREA = Math.toRadians(30);
     private static final double CERVICAL_ONLY = Math.toRadians(15);
     private static final double EYE_ONLY = Math.toRadians(15);
-    
+
     private TimeManipulator tmpThoracic;
     private TimeManipulator tmpCervical;
 
@@ -72,44 +72,40 @@ public class DynamicGazeMU extends AbstractGazeMU
 
     private float[] getSpine(float q[])
     {
-        float spineGaze[]=Quat4f.getQuat4f(qGaze);
+        float spineGaze[] = Quat4f.getQuat4f(qGaze);
         float[] spineRots = new float[joints.size() * 4];
-        
-        int i=0;
-//        if(Quat4f.getAngle(spineGaze)<EYE_ONLY)
-//        {
-//            for (VJoint vj : joints)
-//            {
-//                player.getVCurrPartBySid(vj.getSid()).getRotation(spineRots,i);
-//                i+=4;
-//            }
-//            return spineRots;
-//        }
-        
-        
-        if(!isLocal)
+
+        int i = 0;
+        // if(Quat4f.getAngle(spineGaze)<EYE_ONLY)
+        // {
+        // for (VJoint vj : joints)
+        // {
+        // player.getVCurrPartBySid(vj.getSid()).getRotation(spineRots,i);
+        // i+=4;
+        // }
+        // return spineRots;
+        // }
+
+        if (!isLocal)
         {
             float aa[] = Quat4f.getAxisAngle4fFromQuat4f(spineGaze);
-            Quat4f.setFromAxisAngle4f(spineGaze, aa[0],aa[1],aa[2],aa[3]-(float)EYE_ONLY);
+            Quat4f.setFromAxisAngle4f(spineGaze, aa[0], aa[1], aa[2], aa[3] - (float) EYE_ONLY);
         }
-        
+
         List<VJoint> jointsToSteer = joints;
-//        if(Quat4f.getAngle(spineGaze)<CERVICAL_ONLY)
-//        {
-//            jointsToSteer = cervicalJoints;
-//            for (VJoint vj : thoracicJoints)
-//            {
-//                player.getVCurrPartBySid(vj.getSid()).getRotation(spineRots,i);
-//                i+=4;
-//            }            
-//        }
-        
-        
-        
+        // if(Quat4f.getAngle(spineGaze)<CERVICAL_ONLY)
+        // {
+        // jointsToSteer = cervicalJoints;
+        // for (VJoint vj : thoracicJoints)
+        // {
+        // player.getVCurrPartBySid(vj.getSid()).getRotation(spineRots,i);
+        // i+=4;
+        // }
+        // }
+
         float[] rpy = Vec3f.getVec3f();
         Quat4f.getRollPitchYaw(spineGaze, rpy);
-        
-        
+
         int n = jointsToSteer.size();
         for (i = 1; i <= jointsToSteer.size(); i++)
         {
@@ -135,7 +131,7 @@ public class DynamicGazeMU extends AbstractGazeMU
         float qCurrLeft[] = Quat4f.getQuat4f();
         lEyeCurr.getRotation(qCurrLeft);
         rEyeCurr.getRotation(qCurrRight);
-        
+
         double dur = Math.max(Saccade.getSaccadeDuration(getAngle(qDesRight, qCurrRight)),
                 Saccade.getSaccadeDuration(getAngle(qDesLeft, qCurrLeft)));
 
@@ -197,9 +193,9 @@ public class DynamicGazeMU extends AbstractGazeMU
         float qDesLeft[] = Quat4f.getQuat4f();
         setEndEyeRotation(lEye, qDesLeft);
         setEndEyeRotation(rEye, qDesRight);
-        
+
         playSpine(t, qSpine);
-        playEye(t,qDesLeft, qDesRight);
+        playEye(t, qDesLeft, qDesRight);
     }
 
     private void playSpine(double t, float[] qSpine) throws MUPlayException
@@ -247,7 +243,7 @@ public class DynamicGazeMU extends AbstractGazeMU
             }
             i += 4;
         }
-        if(woTarget == null && !isLocal)
+        if (woTarget == null && !isLocal)
         {
             setTarget(target);
         }
@@ -256,11 +252,11 @@ public class DynamicGazeMU extends AbstractGazeMU
     @Override
     public void setTarget()
     {
-        if(!isLocal)
-        {    
-            VJoint neck = joints.get(joints.size() - 1);        
+        if (!isLocal)
+        {
+            VJoint neck = joints.get(joints.size() - 1);
             woTarget.getTranslation2(localGaze, neck);
-    
+
             // lgazeneck = gazepos - neck
             // lgazeeyes = gazepos - eye = gazepos - (neck+localeye) = gazepos-neck-localeye = lgazeneck - localeye
             float rOffset[] = Vec3f.getVec3f();
@@ -312,7 +308,7 @@ public class DynamicGazeMU extends AbstractGazeMU
     @Override
     public void setDurations(double prepDur, double relaxDur)
     {
-        preparationDuration = prepDur;        
+        preparationDuration = prepDur;
     }
 
     @Override
@@ -326,34 +322,31 @@ public class DynamicGazeMU extends AbstractGazeMU
 
     private void gatherJoints()
     {
-        if (influence == GazeInfluence.NECK)
-        {
-            cervicalJoints = ImmutableList.copyOf(VJointUtils.gatherJoints(NECK_JOINTS, player.getVNext()));
-        }
-        else
-        {
-            if (influence == GazeInfluence.WAIST)
-            {
-                cervicalJoints = ImmutableList.copyOf(VJointUtils.gatherJoints(Hanim.CERVICAL_JOINTS, player.getVNext()));
-            }
-            else if(influence == GazeInfluence.SHOULDER)
-            {
-                List<VJoint> cerv = VJointUtils.gatherJoints(Hanim.CERVICAL_JOINTS, player.getVNext());
-                List<VJoint> shoulderPath = player.getVNext().getPath(player.getVNextPartBySid(Hanim.r_shoulder));
-                while(!shoulderPath.contains(cerv.get(0)))
-                {
-                    cerv.add(0, cerv.get(0).getParent());
-                }
-                cervicalJoints = ImmutableList.copyOf(cerv);
-            }
-        }
-        if (influence == GazeInfluence.WAIST)
-        {
-            thoracicJoints = ImmutableList.copyOf(VJointUtils.gatherJoints(Hanim.THORACIC_JOINTS, player.getVNext()));
-        }
-        else
-        {
+        switch (influence)
+        {        
+        case EYES:
             thoracicJoints = ImmutableList.of();
+            cervicalJoints = ImmutableList.of();
+            break;
+        default:
+        case NECK:
+            cervicalJoints = ImmutableList.copyOf(VJointUtils.gatherJoints(NECK_JOINTS, player.getVNext()));
+            thoracicJoints = ImmutableList.of();
+            break;
+        case SHOULDER:
+            List<VJoint> cerv = VJointUtils.gatherJoints(Hanim.CERVICAL_JOINTS, player.getVNext());
+            List<VJoint> shoulderPath = player.getVNext().getPath(player.getVNextPartBySid(Hanim.r_shoulder));
+            while (!shoulderPath.contains(cerv.get(0)))
+            {
+                cerv.add(0, cerv.get(0).getParent());
+            }
+            cervicalJoints = ImmutableList.copyOf(cerv);
+            thoracicJoints = ImmutableList.of();
+            break;
+        case WAIST:
+            cervicalJoints = ImmutableList.copyOf(VJointUtils.gatherJoints(Hanim.CERVICAL_JOINTS, player.getVNext()));
+            thoracicJoints = ImmutableList.copyOf(VJointUtils.gatherJoints(Hanim.THORACIC_JOINTS, player.getVNext()));
+            break;
         }
         joints = new ImmutableList.Builder<VJoint>().addAll(thoracicJoints).addAll(cervicalJoints).build();
 
@@ -361,9 +354,7 @@ public class DynamicGazeMU extends AbstractGazeMU
                 .add(Hanim.l_eyeball_joint).build();
     }
 
-    
-    
-    public void setPlayer(AnimationPlayer p) 
+    public void setPlayer(AnimationPlayer p)
     {
         player = p;
         lEye = p.getVNextPartBySid(Hanim.l_eyeball_joint);
@@ -372,7 +363,7 @@ public class DynamicGazeMU extends AbstractGazeMU
         rEyeCurr = p.getVCurrPartBySid(Hanim.r_eyeball_joint);
         woManager = p.getWoManager();
     }
-    
+
     @Override
     public DynamicGazeMU copy(AnimationPlayer p) throws MUSetupException
     {
@@ -382,7 +373,7 @@ public class DynamicGazeMU extends AbstractGazeMU
         copy.offsetDirection = offsetDirection;
         copy.target = target;
         copy.setPlayer(p);
-        copy.gatherJoints();        
+        copy.gatherJoints();
         return copy;
     }
 
@@ -391,15 +382,14 @@ public class DynamicGazeMU extends AbstractGazeMU
     {
         return kinematicJoints;
     }
-    
+
     @Override
     public void startUnit(double t) throws MUPlayException
     {
         setStartPose();
         super.startUnit(t);
     }
-    
-    
+
     /**
      * Time to stay on target
      */
