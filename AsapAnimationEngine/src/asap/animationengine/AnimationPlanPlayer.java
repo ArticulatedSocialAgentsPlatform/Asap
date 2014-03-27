@@ -58,12 +58,12 @@ public class AnimationPlanPlayer implements PlanPlayer
     {
         return currentRestGaze;
     }
-    
+
     public void setRestGaze(RestGaze g)
     {
-        currentRestGaze = g;        
+        currentRestGaze = g;
     }
-    
+
     public AnimationPlanPlayer(RestPose defaultRestPose, FeedbackManager fbm, PlanManager<TimedAnimationUnit> planManager,
             TimedPlanUnitPlayer tpuCallback, PegBoard pegBoard)
     {
@@ -87,7 +87,7 @@ public class AnimationPlanPlayer implements PlanPlayer
         // check which units should be playing
         for (TimedAnimationUnit tmu : planManager.getPlanUnits())
         {
-            if(tmu.isSubUnit())continue;
+            if (tmu.isSubUnit()) continue;
             if (tmu.isPlaying() || tmu.isLurking())
             {
                 if (tmu.getStartTime() < t + UPDATE_BUFFER)
@@ -149,6 +149,9 @@ public class AnimationPlanPlayer implements PlanPlayer
             tpuPlayer.stopUnit(tmuR, t);
         }
         planManager.removeFinishedPlanUnits();
+
+        currentRestGaze.play(t, kinematicJoints, physicalJoints);
+        kinematicJoints.addAll(currentRestGaze.getKinematicJoints());
         currentRestPose.play(t, kinematicJoints, physicalJoints);
     }
 
@@ -163,8 +166,11 @@ public class AnimationPlanPlayer implements PlanPlayer
                     && Sets.intersection(tmu.getPhysicalJoints(), kinematicJoints).isEmpty())
             {
                 tpuPlayer.playUnit(tmu, t);
-                kinematicJoints.addAll(tmu.getKinematicJoints());
-                physicalJoints.addAll(tmu.getPhysicalJoints());
+                if (!tmu.isDone())
+                {
+                    kinematicJoints.addAll(tmu.getKinematicJoints());
+                    physicalJoints.addAll(tmu.getPhysicalJoints());
+                }
             }
             else
             {
@@ -222,6 +228,7 @@ public class AnimationPlanPlayer implements PlanPlayer
     {
         currentRestPose = defaultRestPose;
         defaultRestPose.setRestPose();
+        currentRestGaze = defaultRestGaze;
         defPlayer.reset(time);
     }
 

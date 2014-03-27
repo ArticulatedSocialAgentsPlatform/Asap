@@ -62,7 +62,7 @@ public class TimedMotionUnit extends TimedAbstractPlanUnit
      * @param t canonical time 0 &lt= t &lt=1
      * @param time time since start of BML execution
      */
-    private void sendProgress(double t, double time)
+    protected void sendProgress(double t, double time)
     {
         List<BMLSyncPointProgressFeedback> fbToSend = new ArrayList<BMLSyncPointProgressFeedback>();
         synchronized (progressHandled)

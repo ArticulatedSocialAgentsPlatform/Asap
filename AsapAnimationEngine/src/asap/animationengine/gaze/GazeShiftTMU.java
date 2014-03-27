@@ -1,5 +1,6 @@
 package asap.animationengine.gaze;
 
+import lombok.extern.slf4j.Slf4j;
 import asap.animationengine.AnimationPlayer;
 import asap.animationengine.motionunit.TimedAnimationMotionUnit;
 import asap.motionunit.MUPlayException;
@@ -13,6 +14,7 @@ import asap.realizer.planunit.TimedPlanUnitPlayException;
  * Runs the TimedAnimationUnit, ends with setting the new rest pose gaze. 
  * @author Herwin
  */
+@Slf4j
 public class GazeShiftTMU extends TimedAnimationMotionUnit
 {
     private final RestGaze restGaze;
@@ -26,6 +28,24 @@ public class GazeShiftTMU extends TimedAnimationMotionUnit
         this.restGaze = restGaze;
         this.aniPlayer = ap;
         this.gmu = m;
+    }
+    
+    @Override
+    protected void playUnit(double time) throws TimedPlanUnitPlayException
+    {
+        double t = (time-getStartTime())/(getEndTime()-getStartTime());
+        double tReady = getMotionUnit().getKeyPosition("ready").time;
+        t *= tReady;
+        try
+        {
+            log.debug("Timed Motion Unit play {}", time);
+            getMotionUnit().play(t);
+        }
+        catch (MUPlayException ex)
+        {
+            throw new TMUPlayException(ex.getLocalizedMessage(), this, ex);
+        }
+        sendProgress(t, time);
     }
     
     @Override

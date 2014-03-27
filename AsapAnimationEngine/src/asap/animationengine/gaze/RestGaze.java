@@ -63,15 +63,12 @@ public interface RestGaze
      */
     AnimationUnit createTransitionToRest() throws MUSetupException;
     
-    /**
-     * Sets the restpose to prev, next, curr on the animationplayer 
-     */
-    void setRestPose();
-    
     void setParameterValue(String name, String value) throws ParameterException;
     
     void setFloatParameterValue(String name, float value) throws ParameterException;
     
     GazeShiftTMU createGazeShiftTMU(FeedbackManager bbf, BMLBlockPeg bmlBlockPeg, 
             String bmlId, String id, PegBoard pb) throws MUSetupException;
+    
+    Set<String> getKinematicJoints();    
 }

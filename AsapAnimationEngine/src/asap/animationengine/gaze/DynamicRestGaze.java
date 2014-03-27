@@ -1,5 +1,7 @@
 package asap.animationengine.gaze;
 
+import hmi.animation.Hanim;
+import hmi.math.Quat4f;
 import hmi.util.StringUtil;
 
 import java.util.Set;
@@ -29,7 +31,7 @@ public class DynamicRestGaze implements RestGaze
     private GazeInfluence influence;
     private OffsetDirection offsetDirection = OffsetDirection.NONE;
     private double offsetAngle = 0;
-    
+
     public DynamicRestGaze()
     {
 
@@ -56,7 +58,19 @@ public class DynamicRestGaze implements RestGaze
     @Override
     public void play(double time, Set<String> kinematicJoints, Set<String> physicalJoints)
     {
-
+        //XXX: hack hack: if the eyeball is free, restore it to its previous rotation
+        if (!kinematicJoints.contains(Hanim.r_eyeball_joint) && !kinematicJoints.contains(Hanim.l_eyeball_joint))
+        {
+            if (aniPlayer.getVNextPartBySid(Hanim.r_eyeball_joint) != null && aniPlayer.getVNextPartBySid(Hanim.r_eyeball_joint) != null)
+            {
+                float q[] = Quat4f.getQuat4f();
+                aniPlayer.getVCurrPartBySid(Hanim.r_eyeball_joint).getRotation(q);
+                System.out.println("Left eyeball current rotation: "+Quat4f.explainQuat4f(q));
+                aniPlayer.getVNextPartBySid(Hanim.r_eyeball_joint).setRotation(q);
+                aniPlayer.getVCurrPartBySid(Hanim.l_eyeball_joint).getRotation(q);
+                aniPlayer.getVNextPartBySid(Hanim.l_eyeball_joint).setRotation(q);
+            }
+        }
     }
 
     @Override
@@ -90,13 +104,6 @@ public class DynamicRestGaze implements RestGaze
     }
 
     @Override
-    public void setRestPose()
-    {
-        // TODO Auto-generated method stub
-
-    }
-
-    @Override
     public void setParameterValue(String name, String value) throws ParameterException
     {
         if (name.equals("target"))
@@ -115,9 +122,9 @@ public class DynamicRestGaze implements RestGaze
         {
             setFloatParameterValue(name, Float.parseFloat(value));
         }
-        else throw new InvalidParameterException(name, value);        
+        else throw new InvalidParameterException(name, value);
     }
-    
+
     @Override
     public void setFloatParameterValue(String name, float value) throws ParameterNotFoundException
     {
@@ -149,5 +156,11 @@ public class DynamicRestGaze implements RestGaze
     {
         // TODO Auto-generated method stub
         return null;
+    }
+
+    @Override
+    public Set<String> getKinematicJoints()
+    {
+        return GazeUtils.getJoints(aniPlayer.getVCurr(), influence);
     }
 }

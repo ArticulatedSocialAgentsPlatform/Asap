@@ -26,7 +26,6 @@ public class ForwardRestGaze implements RestGaze
 {
     private AnimationPlayer aPlayer;
     private final GazeInfluence influence;
-    //private ImmutableSet<String> influencedJoints;
     
     public ForwardRestGaze(GazeInfluence influence)
     {
@@ -45,7 +44,6 @@ public class ForwardRestGaze implements RestGaze
     public void setAnimationPlayer(AnimationPlayer player)
     {
         aPlayer = player;    
-        //influencedJoints = GazeUtils.getJoints(player.getVNext(), influence);
     }
 
     @Override
@@ -74,6 +72,7 @@ public class ForwardRestGaze implements RestGaze
         tmu.setState(TimedPlanUnitState.LURKING);
         return tmu;
     }
+    
     @Override
     public TimedAnimationMotionUnit createTransitionToRest(FeedbackManager fbm, double startTime, String bmlId,
             String id, BMLBlockPeg bmlBlockPeg, PegBoard pb) throws TMUSetupException
@@ -114,17 +113,12 @@ public class ForwardRestGaze implements RestGaze
     public GazeShiftTMU createGazeShiftTMU(FeedbackManager bbf, BMLBlockPeg bmlBlockPeg, String bmlId, String id, PegBoard pb)
             throws MUSetupException
     {
-        // TODO Auto-generated method stub
-        return null;
+        DynamicGazeMU mu = new DynamicGazeMU();
+        mu.setGazeDirection(Vec3f.getVec3f(0,0,1));        
+        mu.influence = influence;
+        return new GazeShiftTMU(bmlBlockPeg, bmlId, id, mu.copy(aPlayer), pb, this, aPlayer);
     }
     
-    @Override
-    public void setRestPose()
-    {
-        // TODO Auto-generated method stub
-        
-    }
-
     @Override
     public void setParameterValue(String name, String value) throws ParameterException
     {
@@ -135,5 +129,11 @@ public class ForwardRestGaze implements RestGaze
     public void setFloatParameterValue(String name, float value) throws ParameterException
     {
         throw new ParameterException("ForwardRestGaze doesn't support any parameters");        
+    }
+
+    @Override
+    public Set<String> getKinematicJoints()
+    {
+        return GazeUtils.getJoints(aPlayer.getVCurr(),influence);
     }    
 }
