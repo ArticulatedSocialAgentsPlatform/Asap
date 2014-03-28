@@ -22,6 +22,8 @@ import org.powermock.core.classloader.annotations.PrepareForTest;
 import org.powermock.modules.junit4.PowerMockRunner;
 
 import saiba.bml.feedback.BMLWarningFeedback;
+import asap.animationengine.gaze.ForwardRestGaze;
+import asap.animationengine.gaze.GazeInfluence;
 import asap.animationengine.motionunit.TimedAnimationMotionUnit;
 import asap.animationengine.motionunit.TimedAnimationUnit;
 import asap.animationengine.restpose.SkeletonPoseRestPose;
@@ -70,7 +72,7 @@ public class AnimationPlayerTest
         animationPlayer = new AnimationPlayer(HanimBody.getLOA1HanimBody(),
                 HanimBody.getLOA1HanimBody(), HanimBody.getLOA1HanimBody(),
                 m, 0.01f,
-                new AnimationPlanPlayer(new SkeletonPoseRestPose(), fbManager, planManager,
+                new AnimationPlanPlayer(new SkeletonPoseRestPose(), new ForwardRestGaze(GazeInfluence.WAIST), fbManager, planManager,
                         new DefaultTimedPlanUnitPlayer(),pegBoard)                
                 );
         beList = new ArrayList<BMLWarningFeedback>();

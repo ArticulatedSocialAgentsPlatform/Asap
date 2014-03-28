@@ -28,6 +28,7 @@ import org.powermock.modules.junit4.PowerMockRunner;
 
 import saiba.bml.feedback.BMLSyncPointProgressFeedback;
 import saiba.bml.feedback.BMLWarningFeedback;
+import asap.animationengine.gaze.RestGaze;
 import asap.animationengine.motionunit.AnimationUnit;
 import asap.animationengine.motionunit.TimedAnimationMotionUnit;
 import asap.animationengine.motionunit.TimedAnimationUnit;
@@ -69,6 +70,7 @@ public class AnimationPlanPlayerTest
     private List<BMLWarningFeedback> exList = new ArrayList<>();
     private BMLBlockManager mockBmlBlockManager = mock(BMLBlockManager.class);
     private RestPose mockRestPose = mock(RestPose.class);
+    private RestGaze mockRestGaze = mock(RestGaze.class);
     private FeedbackManager fbManager = new FeedbackManagerImpl(mockBmlBlockManager, "character1");
     private PegBoard pegBoard = new PegBoard();
     PlanManager<TimedAnimationUnit> planManager = new PlanManager<>();
@@ -81,7 +83,7 @@ public class AnimationPlanPlayerTest
     public void setup()
     {
         fbl = new ListBMLFeedbackListener.Builder().feedBackList(fbList).build();
-        app = new AnimationPlanPlayer(mockRestPose, fbManager, planManager, new DefaultTimedPlanUnitPlayer(), pegBoard);
+        app = new AnimationPlanPlayer(mockRestPose, mockRestGaze, fbManager, planManager, new DefaultTimedPlanUnitPlayer(), pegBoard);
         app.addFeedbackListener(new ListBMLFeedbackListener.Builder().warningList(exList).build());
         fbManager.addFeedbackListener(fbl);
     }

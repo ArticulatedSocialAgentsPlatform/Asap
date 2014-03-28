@@ -27,7 +27,6 @@ import hmi.environmentbase.Environment;
 import hmi.environmentbase.Loader;
 import hmi.math.Quat4f;
 import hmi.mixedanimationenvironment.MixedAnimationEnvironment;
-import hmi.mixedanimationenvironment.MixedAnimationPlayer;
 import hmi.physicsembodiments.PhysicalEmbodiment;
 import hmi.util.ArrayUtils;
 import hmi.util.Resources;
@@ -43,6 +42,9 @@ import java.util.List;
 import asap.animationengine.AnimationPlanPlayer;
 import asap.animationengine.AnimationPlanner;
 import asap.animationengine.AnimationPlayer;
+import asap.animationengine.gaze.ForwardRestGaze;
+import asap.animationengine.gaze.GazeInfluence;
+import asap.animationengine.gaze.RestGaze;
 import asap.animationengine.gesturebinding.GestureBinding;
 import asap.animationengine.gesturebinding.HnsHandshape;
 import asap.animationengine.motionunit.TimedAnimationUnit;
@@ -69,7 +71,7 @@ public class MixedAnimationEngineLoader implements EngineLoader
 
     private Engine engine = null;
     private PlanManager<TimedAnimationUnit> animationPlanManager = null;
-    private MixedAnimationPlayer animationPlayer = null;
+    private AnimationPlayer animationPlayer = null;
     private AnimationPlanner animationPlanner = null;
     private SkeletonPose restpose;
     private Hns hns = new Hns();
@@ -245,14 +247,15 @@ public class MixedAnimationEngineLoader implements EngineLoader
         {
             pose = new SkeletonPoseRestPose();
         }
-        AnimationPlanPlayer animationPlanPlayer = new AnimationPlanPlayer(pose, are.getFeedbackManager(), animationPlanManager,
+        RestGaze defRestGaze = new ForwardRestGaze(GazeInfluence.WAIST);
+        AnimationPlanPlayer animationPlanPlayer = new AnimationPlanPlayer(pose, defRestGaze, are.getFeedbackManager(), animationPlanManager,
                 new DefaultTimedPlanUnitPlayer(), are.getPegBoard());
 
         animationPlayer = new AnimationPlayer(mse.getPreviousVJoint(), mse.getCurrentVJoint(), mse.getNextVJoint(), pe.getMixedSystems(),
                 mae.getH(), we.getWorldObjectManager(), animationPlanPlayer);
 
-        pose.setAnimationPlayer((AnimationPlayer) animationPlayer);
-
+        pose.setAnimationPlayer(animationPlayer);
+        defRestGaze.setAnimationPlayer(animationPlayer);
         try
         {
             hnsHandshape = new HnsHandshape(hns, handShapeDir.toArray(new String[0]));
@@ -263,15 +266,15 @@ public class MixedAnimationEngineLoader implements EngineLoader
         }
 
         // make planner
-        animationPlanner = new AnimationPlanner(are.getFeedbackManager(), (AnimationPlayer) animationPlayer, gesturebinding, hns,
+        animationPlanner = new AnimationPlanner(are.getFeedbackManager(), animationPlayer, gesturebinding, hns,
                 hnsHandshape, animationPlanManager, are.getPegBoard());
 
-        engine = new DefaultEngine<TimedAnimationUnit>(animationPlanner, (AnimationPlayer) animationPlayer, animationPlanManager);
+        engine = new DefaultEngine<TimedAnimationUnit>(animationPlanner, animationPlayer, animationPlanManager);
         engine.setId(id);
 
         // propagate avatar resetpose into the animation player, vnext etc, ikbodies,
         // phumans... and also as reset poses for same.
-        ((AnimationPlayer) animationPlayer).setResetPose();
+        animationPlayer.setResetPose();
 
         /**
          * then, after the avatar has been set in the right position, glue the feet to the floor to

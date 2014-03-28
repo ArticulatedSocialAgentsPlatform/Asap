@@ -64,7 +64,7 @@ public class AnimationPlanPlayer implements PlanPlayer
         currentRestGaze = g;
     }
 
-    public AnimationPlanPlayer(RestPose defaultRestPose, FeedbackManager fbm, PlanManager<TimedAnimationUnit> planManager,
+    public AnimationPlanPlayer(RestPose defaultRestPose, RestGaze defaultRestGaze, FeedbackManager fbm, PlanManager<TimedAnimationUnit> planManager,
             TimedPlanUnitPlayer tpuCallback, PegBoard pegBoard)
     {
         defPlayer = new SingleThreadedPlanPlayer<>(fbm, planManager, tpuCallback);
@@ -72,8 +72,8 @@ public class AnimationPlanPlayer implements PlanPlayer
         tpuPlayer = tpuCallback;
         this.planManager = planManager;
         this.defaultRestPose = defaultRestPose;
+        this.defaultRestGaze = defaultRestGaze;
         this.pegBoard = pegBoard;
-        defaultRestGaze = new ForwardRestGaze(GazeInfluence.WAIST);
         currentRestPose = defaultRestPose;
         currentRestGaze = defaultRestGaze;
     }

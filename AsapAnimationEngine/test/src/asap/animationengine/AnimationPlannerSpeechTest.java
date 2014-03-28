@@ -12,6 +12,8 @@ import java.util.List;
 import org.junit.Before;
 import org.junit.Test;
 
+import asap.animationengine.gaze.ForwardRestGaze;
+import asap.animationengine.gaze.GazeInfluence;
 import asap.animationengine.gesturebinding.GestureBinding;
 import asap.animationengine.motionunit.AnimationUnit;
 import asap.animationengine.motionunit.TimedAnimationMotionUnit;
@@ -52,7 +54,7 @@ public class AnimationPlannerSpeechTest
         m.add(ms);
         AnimationPlayer ap = new AnimationPlayer(HanimBody.getLOA1HanimBody(), HanimBody.getLOA1HanimBody(), HanimBody.getLOA1HanimBody(),
                 m, 0.001f,
-                new AnimationPlanPlayer(new SkeletonPoseRestPose(), mockBmlFeedbackManager, planManager,
+                new AnimationPlanPlayer(new SkeletonPoseRestPose(), new ForwardRestGaze(GazeInfluence.WAIST), mockBmlFeedbackManager, planManager,
                         new DefaultTimedPlanUnitPlayer(),pegBoard));
 
         animationPlanner = new AnimationPlanner(mockBmlFeedbackManager, ap, mockBinding, planManager,pegBoard);
