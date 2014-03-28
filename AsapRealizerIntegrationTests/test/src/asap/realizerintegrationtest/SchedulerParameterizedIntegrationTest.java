@@ -46,6 +46,9 @@ import saiba.bml.parser.BMLParser;
 import asap.animationengine.AnimationPlanPlayer;
 import asap.animationengine.AnimationPlanner;
 import asap.animationengine.AnimationPlayer;
+import asap.animationengine.gaze.ForwardRestGaze;
+import asap.animationengine.gaze.GazeInfluence;
+import asap.animationengine.gaze.RestGaze;
 import asap.animationengine.gesturebinding.GestureBinding;
 import asap.animationengine.gesturebinding.HnsHandshape;
 import asap.animationengine.gesturebinding.SpeechBinding;
@@ -226,10 +229,12 @@ public class SchedulerParameterizedIntegrationTest extends SchedulerIntegrationT
         PlanManager<TimedAnimationUnit> animationPlanManager = new PlanManager<>();
 
         RestPose pose = new SkeletonPoseRestPose();
-        AnimationPlanPlayer animationPlanPlayer = new AnimationPlanPlayer(pose, bfm, animationPlanManager,
+        RestGaze gaze = new ForwardRestGaze(GazeInfluence.WAIST); 
+        AnimationPlanPlayer animationPlanPlayer = new AnimationPlanPlayer(pose, gaze, bfm, animationPlanManager,
                 new DefaultTimedPlanUnitPlayer(), pegBoard);
         AnimationPlayer aPlayer = new AnimationPlayer(human, human, human, m, 0.001f, animationPlanPlayer);
         pose.setAnimationPlayer(aPlayer);
+        gaze.setAnimationPlayer(aPlayer);
 
         Hns hns = new Hns();
         hns.readXML(gres.getReader("Humanoids/shared/hns/hns.xml"));
