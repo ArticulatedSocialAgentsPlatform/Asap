@@ -30,6 +30,9 @@ public class Hns extends XMLStructureAdapter
     @Getter
     private String baseJoint = "HumanoidRoot";
     
+    @Getter
+	private String defaultPointingHandshape;
+    
     private static final String XMLTAG = "hns";
     private static final String HAND_REFERENCES = "handReferences";
     private static final String HAND_LOCATORS = "handLocators";
@@ -586,6 +589,11 @@ public class Hns extends XMLStructureAdapter
                 bj.readXML(tokenizer);
                 baseJoint = bj.getSid();
                 break;
+            case DefaultPointingHandshape.XMLTAG:
+            	DefaultPointingHandshape hs = new DefaultPointingHandshape();
+            	hs.readXML(tokenizer);
+            	defaultPointingHandshape = hs.getName();
+            	break;
             case Settings.XMLTAG:
                 Settings set = new Settings();
                 set.readXML(tokenizer);

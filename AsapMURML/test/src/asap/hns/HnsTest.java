@@ -26,6 +26,7 @@ public class HnsTest
     private String hnsXML=
     "<hns>"+
       "<basejoint sid=\"vl5\"/>"+
+      "<defaultPointingHandshape name=\"pointing\"/>"+
       "<symbols>"+
         "<symbol class=\"handReferences\" name=\"LocAboveHead\" value=\"60\"/>"+
         "<symbol class=\"handReferences\" name=\"LocHead\" value=\"54\"/>" +
@@ -60,6 +61,12 @@ public class HnsTest
     public void getBaseJoint()
     {
         assertEquals("vl5", hns.getBaseJoint());
+    }
+    
+    @Test
+    public void getDefaultPointingHandshape()
+    {
+    	assertEquals("pointing",hns.getDefaultPointingHandshape());
     }
     
     @Test

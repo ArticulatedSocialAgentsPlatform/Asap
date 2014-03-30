@@ -7,24 +7,18 @@ import java.util.HashMap;
 
 import lombok.Getter;
 
-
-
-/**
- * Basejoint specification
- * @author hvanwelbergen
- */
-class BaseJoint extends XMLStructureAdapter
+public class DefaultPointingHandshape extends XMLStructureAdapter 
 {
-    @Getter
-    private String sid;
-    
-    @Override
+	@Getter
+	private String name;
+	
+	@Override
     public void decodeAttributes(HashMap<String, String> attrMap, XMLTokenizer tokenizer)
     {
-        sid = getRequiredAttribute("sid", attrMap, tokenizer);                
+        name = getRequiredAttribute("name", attrMap, tokenizer);                
     }
     
-    public static final String XMLTAG = "basejoint";
+    public static final String XMLTAG = "defaultPointingHandshape";
 
     public static String xmlTag()
     {
