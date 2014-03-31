@@ -96,6 +96,7 @@ public class ForwardRestGaze implements RestGaze
     @Override
     public double getTransitionToRestDuration()
     {
+        //FIXME: real duration calcuration here
         return 2;
     }
 

@@ -116,12 +116,12 @@ public class GazeTMU extends TimedAnimationMotionUnit
     @Override
     protected void playUnit(double time) throws TimedPlanUnitPlayException
     {
-        if (time > getRelaxTime())
+        if (time > getRelaxTime() && !isSubUnit())
         {
             relaxUnit.play(time);
         }
         else
-        {            
+        {
             super.playUnit(time);
         }
     }
@@ -129,6 +129,7 @@ public class GazeTMU extends TimedAnimationMotionUnit
     @Override
     protected void relaxUnit(double time) throws TimedPlanUnitPlayException
     {
+        if (isSubUnit()) return;
         TimePeg relaxPeg = getTimePeg("relax");
         TimePeg endPeg = getTimePeg("end");
         double retractionDuration = aniPlayer.getGazeTransitionToRestDuration();
@@ -143,16 +144,18 @@ public class GazeTMU extends TimedAnimationMotionUnit
         }
         catch (TMUSetupException e)
         {
-            throw new TimedPlanUnitPlayException("TMUSetupException in construction of relax unit",this,e);
+            throw new TimedPlanUnitPlayException("TMUSetupException in construction of relax unit", this, e);
         }
+        relaxUnit.setTimePeg("relax", new OffsetPeg(endPeg,1));
+        relaxUnit.setTimePeg("end", new OffsetPeg(endPeg,2));        
+        relaxUnit.setSubUnit(true);
         relaxUnit.start(time);
         super.relaxUnit(time);
     }
 
     protected void gracefullInterrupt(double time) throws TimedPlanUnitPlayException
     {
-        System.out.println("gracefullInterruptGaze");
-
+        
         skipPegs(time, "ready", "strokeStart", "stroke", "strokeEnd");
 
         // XXX: should relax and end pegs also be detached if other behaviors are connected to them?

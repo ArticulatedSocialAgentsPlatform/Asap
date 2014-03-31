@@ -17,6 +17,10 @@ import asap.realizer.planunit.ParameterException;
 
 import com.google.common.collect.ImmutableSet;
 
+/**
+ * Testing stub for the GazeMU
+ * @author hvanwelbergen
+ */
 public class StubGazeMU implements GazeMU
 {
     @Delegate

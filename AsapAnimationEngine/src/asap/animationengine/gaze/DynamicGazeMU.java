@@ -63,6 +63,16 @@ public class DynamicGazeMU extends AbstractGazeMU
     float qStart[];
     float qStartCombined[] = Quat4f.getQuat4f();
 
+    @Override
+    protected void setInfluence(GazeInfluence influence)
+    {
+        super.setInfluence(influence);
+        if (player != null)
+        {
+            gatherJoints();
+        }
+    }
+
     public DynamicGazeMU()
     {
         tmpThoracic = new ErfManipulator((int) (FPS_THORACIC));
@@ -152,7 +162,7 @@ public class DynamicGazeMU extends AbstractGazeMU
                 rEye.setRotation(q);
             }
         }
-        else if (t < RELATIVE_RELAX_TIME)
+        else// if (t < RELATIVE_RELAX_TIME)
         {
             lEye.setRotation(qDesLeft);
             rEye.setRotation(qDesRight);
@@ -323,7 +333,7 @@ public class DynamicGazeMU extends AbstractGazeMU
     private void gatherJoints()
     {
         switch (influence)
-        {        
+        {
         case EYES:
             thoracicJoints = ImmutableList.of();
             cervicalJoints = ImmutableList.of();

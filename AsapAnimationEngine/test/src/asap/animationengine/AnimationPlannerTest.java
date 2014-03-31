@@ -78,8 +78,7 @@ public class AnimationPlannerTest
 
     private StubAnimationUnit stubUnit = new StubAnimationUnit();
     private StubGazeMU stubGazeUnit = new StubGazeMU();
-    
-    
+
     private Hns stubHns = new StubHns();
     private PegBoard pegBoard = new PegBoard();
 
@@ -97,38 +96,38 @@ public class AnimationPlannerTest
         @Override
         public boolean getHandLocation(String location, float pos[])
         {
-            Vec3f.set(pos,1,1,1);
+            Vec3f.set(pos, 1, 1, 1);
             return true;
         }
-        
+
         @Override
         public boolean getAbsoluteDirection(String dir, float dirVec[])
         {
-            if(dir.startsWith("Palm"))return false;
-            if(dir.startsWith("Dir"))return true;
+            if (dir.startsWith("Palm")) return false;
+            if (dir.startsWith("Dir")) return true;
             return true;
         }
-        
+
         @Override
         public boolean isPalmOrientation(String orientation)
         {
-            if(orientation.startsWith("Palm"))return true;
+            if (orientation.startsWith("Palm")) return true;
             return false;
         }
-        
+
         @Override
         public double getPalmOrientation(String value, String scope)
         {
             return 0;
         }
-        
+
         @Override
         public ShapeSymbols getElementShape(String shape)
         {
             return ShapeSymbols.LeftC;
         }
     }
-    
+
     @Before
     public void setup() throws MUSetupException
     {
@@ -148,9 +147,9 @@ public class AnimationPlannerTest
         when(mockRestPose.copy(eq(mockPlayer))).thenReturn(mockRestPose);
         when(mockRestPose.createPostureShiftTMU(eq(fbManager), (BMLBlockPeg) any(), eq(BMLID), (String) any(), eq(pegBoard))).thenReturn(
                 tmups);
-        when(mockRestGaze.createGazeShiftTMU(eq(fbManager), (BMLBlockPeg) any(), eq(BMLID), (String) any(), eq(pegBoard))).thenReturn(
-                tmugs);
-        
+        when(mockRestGaze.createGazeShiftTMU(eq(fbManager), (BMLBlockPeg) any(), eq(BMLID), (String) any(), eq(pegBoard)))
+                .thenReturn(tmugs);
+
         when(mockPlayer.getVCurr()).thenReturn(HanimBody.getLOA1HanimBody());
         when(mockPlayer.getVNext()).thenReturn(HanimBody.getLOA1HanimBody());
         when(mockPlayer.getVCurrPartBySid(anyString())).thenReturn(HanimBody.getLOA1HanimBody().getPartBySid(Hanim.l_shoulder));
@@ -260,7 +259,27 @@ public class AnimationPlannerTest
         assertEquals(0.3, pu.getStartTime(), TIMING_PRECISION);
         assertEquals(TimePeg.VALUE_UNKNOWN, pu.getEndTime(), TIMING_PRECISION);
     }
-    
+
+    @Test
+    public void testGazeShiftBehaviourEndTimed() throws BehaviourPlanningException, IOException
+    {
+        String str = "<gazeShift xmlns=\"http://www.bml-initiative.org/bml/bml-1.0\" id=\"shift1\"/>";
+        GazeShiftBehaviour beh = new GazeShiftBehaviour(BMLID, new XMLTokenizer(str));
+
+        ArrayList<TimePegAndConstraint> sacs = new ArrayList<TimePegAndConstraint>();
+        TimePeg sp = new TimePeg(bbPeg);
+        TimePeg ep = new TimePeg(bbPeg);
+        sacs.add(new TimePegAndConstraint("start", sp, new Constraint(), 0, false));
+        sacs.add(new TimePegAndConstraint("end", ep, new Constraint(), 0, false));
+
+        TimedAnimationUnit pu = animationPlanner.resolveSynchs(bbPeg, beh, sacs);
+        assertThat(pu, instanceOf(GazeShiftTMU.class));
+        assertEquals(0.3, sp.getGlobalValue(), TIMING_PRECISION);
+        animationPlanner.addBehaviour(bbPeg, beh, sacs, pu);
+        assertEquals(0.3, pu.getStartTime(), TIMING_PRECISION);
+        assertEquals(0.3 + stubGazeUnit.getPreferedReadyDuration(), pu.getEndTime(), TIMING_PRECISION);
+    }
+
     @Test
     public void testMurmlPalmOrient() throws IOException, BehaviourPlanningException
     {
@@ -355,7 +374,7 @@ public class AnimationPlannerTest
         assertEquals(0.3, pu.getStartTime(), TIMING_PRECISION);
         assertTrue(pu.hasValidTiming());
     }
-    
+
     @Test
     public void testMURMLHandLocationSynchedStrokeStart() throws IOException, BehaviourPlanningException
     {
@@ -368,13 +387,13 @@ public class AnimationPlannerTest
         "</murmlgesture>";
         //@formatter:on
         MURMLGestureBehaviour beh = new MURMLGestureBehaviour(BMLID, new XMLTokenizer(str));
-        ArrayList<TimePegAndConstraint> sacs = new ArrayList<TimePegAndConstraint>();  
+        ArrayList<TimePegAndConstraint> sacs = new ArrayList<TimePegAndConstraint>();
         sacs.add(new TimePegAndConstraint("strokeStart", TimePegUtil.createTimePeg(4), new Constraint(), 0, false));
-        
+
         TimedAnimationUnit pu = animationPlanner.resolveSynchs(bbPeg, beh, sacs);
         assertEquals(4, pu.getTime("strokeStart"), TIMING_PRECISION);
         assertThat(pu.getTime("strokeStart"), greaterThan(pu.getTime("start")));
-        
+
         animationPlanner.addBehaviour(bbPeg, beh, sacs, pu);
         assertEquals(4, pu.getTime("strokeStart"), TIMING_PRECISION);
         assertThat(pu.getTime("strokeStart"), greaterThan(pu.getTime("start")));
@@ -396,17 +415,17 @@ public class AnimationPlannerTest
         ArrayList<TimePegAndConstraint> sacs = new ArrayList<TimePegAndConstraint>();
         sacs.add(new TimePegAndConstraint("strokeStart", TimePegUtil.createTimePeg(4), new Constraint(), 0, false));
         sacs.add(new TimePegAndConstraint("strokeEnd", TimePegUtil.createTimePeg(6), new Constraint(), 0, false));
-        
+
         TimedAnimationUnit pu = animationPlanner.resolveSynchs(bbPeg, beh, sacs);
         assertEquals(4, pu.getTime("strokeStart"), TIMING_PRECISION);
         assertThat(pu.getTime("strokeStart"), greaterThan(pu.getTime("start")));
-        
+
         animationPlanner.addBehaviour(bbPeg, beh, sacs, pu);
         assertEquals(4, pu.getTime("strokeStart"), TIMING_PRECISION);
         assertEquals(6, pu.getTime("strokeEnd"), TIMING_PRECISION);
-        assertThat(pu.getTime("strokeStart"), greaterThan(pu.getTime("start")));        
+        assertThat(pu.getTime("strokeStart"), greaterThan(pu.getTime("start")));
     }
-    
+
     @Test
     public void testInterrupt() // throws BehaviourPlanningException
     {

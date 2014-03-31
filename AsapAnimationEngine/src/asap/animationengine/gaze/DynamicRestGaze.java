@@ -10,14 +10,18 @@ import saiba.bml.core.OffsetDirection;
 import asap.animationengine.AnimationPlayer;
 import asap.animationengine.motionunit.AnimationUnit;
 import asap.animationengine.motionunit.MUSetupException;
+import asap.animationengine.motionunit.TMUSetupException;
 import asap.animationengine.motionunit.TimedAnimationMotionUnit;
+import asap.motionunit.MUPlayException;
 import asap.realizer.feedback.FeedbackManager;
 import asap.realizer.pegboard.BMLBlockPeg;
+import asap.realizer.pegboard.OffsetPeg;
 import asap.realizer.pegboard.PegBoard;
 import asap.realizer.pegboard.TimePeg;
 import asap.realizer.planunit.InvalidParameterException;
 import asap.realizer.planunit.ParameterException;
 import asap.realizer.planunit.ParameterNotFoundException;
+import asap.realizer.planunit.TimedPlanUnitState;
 
 /**
  * Dynamically keeps the gaze on target. Creates transitions that are also dynamic.
@@ -58,14 +62,13 @@ public class DynamicRestGaze implements RestGaze
     @Override
     public void play(double time, Set<String> kinematicJoints, Set<String> physicalJoints)
     {
-        //XXX: hack hack: if the eyeball is free, restore it to its previous rotation
+        // XXX: hack hack: if the eyeball is free, restore it to its previous rotation
         if (!kinematicJoints.contains(Hanim.r_eyeball_joint) && !kinematicJoints.contains(Hanim.l_eyeball_joint))
         {
             if (aniPlayer.getVNextPartBySid(Hanim.r_eyeball_joint) != null && aniPlayer.getVNextPartBySid(Hanim.r_eyeball_joint) != null)
             {
                 float q[] = Quat4f.getQuat4f();
-                aniPlayer.getVCurrPartBySid(Hanim.r_eyeball_joint).getRotation(q);
-                System.out.println("Left eyeball current rotation: "+Quat4f.explainQuat4f(q));
+                aniPlayer.getVCurrPartBySid(Hanim.r_eyeball_joint).getRotation(q);                
                 aniPlayer.getVNextPartBySid(Hanim.r_eyeball_joint).setRotation(q);
                 aniPlayer.getVCurrPartBySid(Hanim.l_eyeball_joint).getRotation(q);
                 aniPlayer.getVNextPartBySid(Hanim.l_eyeball_joint).setRotation(q);
@@ -75,32 +78,53 @@ public class DynamicRestGaze implements RestGaze
 
     @Override
     public TimedAnimationMotionUnit createTransitionToRest(FeedbackManager fbm, double startTime, String bmlId, String id,
-            BMLBlockPeg bmlBlockPeg, PegBoard pb)
+            BMLBlockPeg bmlBlockPeg, PegBoard pb) throws TMUSetupException
     {
-        // TODO Auto-generated method stub
-        return null;
+        TimePeg startPeg = new TimePeg(bmlBlockPeg);
+        startPeg.setGlobalValue(startTime);
+        TimePeg endPeg = new OffsetPeg(startPeg, getTransitionToRestDuration());
+        return createTransitionToRest(fbm, startPeg, endPeg, bmlId, id, bmlBlockPeg, pb);
     }
 
     @Override
     public TimedAnimationMotionUnit createTransitionToRest(FeedbackManager fbm, double startTime, double duration, String bmlId, String id,
-            BMLBlockPeg bmlBlockPeg, PegBoard pb)
+            BMLBlockPeg bmlBlockPeg, PegBoard pb) throws TMUSetupException
     {
-        // TODO Auto-generated method stub
-        return null;
+        TimePeg startPeg = new TimePeg(bmlBlockPeg);
+        startPeg.setGlobalValue(startTime);
+        TimePeg endPeg = new OffsetPeg(startPeg, duration);
+        return createTransitionToRest(fbm, startPeg, endPeg, bmlId, id, bmlBlockPeg, pb);
     }
 
     @Override
     public double getTransitionToRestDuration()
     {
-        // TODO Auto-generated method stub
-        return 0;
+        try
+        {
+            DynamicGazeMU mu = createTransitionToRest();
+            mu.setStartPose();
+            return mu.getPreferedReadyDuration();
+        }
+        catch (MUSetupException e)
+        {
+            throw new RuntimeException(e);
+        }
+        catch (MUPlayException e)
+        {
+            throw new RuntimeException(e);
+        }        
     }
 
     @Override
-    public AnimationUnit createTransitionToRest()
+    public DynamicGazeMU createTransitionToRest() throws MUSetupException
     {
-        // TODO Auto-generated method stub
-        return null;
+        DynamicGazeMU mu = new DynamicGazeMU();
+        mu.target = target;
+        mu.offsetDirection = offsetDirection;
+        mu.influence = influence;
+        mu.offsetAngle = offsetAngle;
+        mu = mu.copy(aniPlayer);
+        return mu;
     }
 
     @Override
@@ -152,10 +176,23 @@ public class DynamicRestGaze implements RestGaze
 
     @Override
     public TimedAnimationMotionUnit createTransitionToRest(FeedbackManager fbm, TimePeg startPeg, TimePeg endPeg, String bmlId, String id,
-            BMLBlockPeg bmlBlockPeg, PegBoard pb)
+            BMLBlockPeg bmlBlockPeg, PegBoard pb) throws TMUSetupException
     {
-        // TODO Auto-generated method stub
-        return null;
+        AnimationUnit mu;
+        try
+        {
+            mu = createTransitionToRest();
+        }
+        catch (MUSetupException e)
+        {
+            throw new TMUSetupException("Cannot setup TMU for transition to rest ",null, e);
+        }
+        
+        TimedAnimationMotionUnit tmu = mu.createTMU(fbm, bmlBlockPeg, bmlId, id, pb);
+        tmu.setTimePeg("start", startPeg);
+        tmu.setTimePeg("ready", endPeg);
+        tmu.setState(TimedPlanUnitState.LURKING);        
+        return tmu;
     }
 
     @Override
