@@ -171,8 +171,8 @@ public class PointingMU implements AnimationUnit
         }
         else
         {
-            autoSwivel = GestureBinding.constructAutoSwivel("left_arm");            
-        }        
+            autoSwivel = GestureBinding.constructAutoSwivel("left_arm");
+        }
     }
 
     @Override
@@ -309,8 +309,14 @@ public class PointingMU implements AnimationUnit
     @Override
     public void setParameterValue(String name, String value) throws ParameterNotFoundException
     {
-        if (name.equals("target")) target = value;
-        else if (name.equals("hand")) setHand(value);
+        if (name.equals("target"))
+        {
+            target = value;
+        }
+        else if (name.equals("hand"))
+        {
+            setHand(value);
+        }
         else throw new ParameterNotFoundException(name);
     }
 

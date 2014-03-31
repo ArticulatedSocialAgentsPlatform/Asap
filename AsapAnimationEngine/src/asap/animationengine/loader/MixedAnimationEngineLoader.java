@@ -75,7 +75,7 @@ public class MixedAnimationEngineLoader implements EngineLoader
     private AnimationPlanner animationPlanner = null;
     private SkeletonPose restpose;
     private Hns hns = new Hns();
-    private HnsHandshape hnsHandshape = new HnsHandshape(hns);
+    private HnsHandshape hnsHandshape = new HnsHandshape();
     private List<String> handShapeDir = new ArrayList<>();
 
     private String id = "";
@@ -258,7 +258,7 @@ public class MixedAnimationEngineLoader implements EngineLoader
         defRestGaze.setAnimationPlayer(animationPlayer);
         try
         {
-            hnsHandshape = new HnsHandshape(hns, handShapeDir.toArray(new String[0]));
+            hnsHandshape = new HnsHandshape(handShapeDir.toArray(new String[0]));
         }
         catch (IOException e)
         {

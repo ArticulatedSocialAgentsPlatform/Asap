@@ -20,8 +20,6 @@ import org.reflections.scanners.ResourcesScanner;
 import org.reflections.util.ClasspathHelper;
 import org.reflections.util.ConfigurationBuilder;
 
-import asap.hns.Hns;
-
 import com.google.common.collect.ImmutableMap;
 
 /**
@@ -32,17 +30,15 @@ import com.google.common.collect.ImmutableMap;
 @Slf4j
 public class HnsHandshape
 {
-    private final Hns hns;
     private ImmutableMap<String, SkeletonPose> poseMap;
 
-    public HnsHandshape(Hns hns)
+    public HnsHandshape()
     {
-        this.hns = hns;
+        
     }
-
-    public HnsHandshape(Hns hns, String... handshapePaths) throws IOException
+            
+    public HnsHandshape(String... handshapePaths) throws IOException
     {
-        this(hns);
         List<SkeletonPose> poses = new ArrayList<>();
         for (String path : handshapePaths)
         {
@@ -70,9 +66,8 @@ public class HnsHandshape
         setHandshapes(poses);
     }
 
-    public HnsHandshape(Hns hns, Collection<SkeletonPose> shapes)
+    public HnsHandshape(Collection<SkeletonPose> shapes)
     {
-        this(hns);
         setHandshapes(shapes);
     }
 

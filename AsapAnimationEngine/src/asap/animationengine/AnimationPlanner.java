@@ -82,7 +82,7 @@ public class AnimationPlanner extends AbstractPlanner<TimedAnimationUnit>
         player = p;
         Hns hnsNew = hns;
         if (hnsNew == null) hnsNew = new Hns();
-        if (hnsHandshapes == null) hnsHandshapes = new HnsHandshape(hnsNew);
+        if (hnsHandshapes == null) hnsHandshapes = new HnsHandshape();
         murmlMUBuilder = new MURMLMUBuilder(hnsNew, hnsHandshapes);
     }
 
