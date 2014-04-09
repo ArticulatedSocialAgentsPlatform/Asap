@@ -3,12 +3,12 @@ package asap.realizertestutil;
 import static org.hamcrest.number.OrderingComparison.greaterThan;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertThat;
-import saiba.bml.core.Behaviour;
-import saiba.bml.parser.Constraint;
 
 import java.io.IOException;
 import java.util.ArrayList;
 
+import saiba.bml.core.Behaviour;
+import saiba.bml.parser.Constraint;
 import asap.realizer.BehaviourPlanningException;
 import asap.realizer.Planner;
 import asap.realizer.pegboard.BMLBlockPeg;

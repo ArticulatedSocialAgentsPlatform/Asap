@@ -19,8 +19,6 @@
  ******************************************************************************/
 package asap.picture.swing;
 
-import asap.picture.display.PictureDisplay;
-import asap.picture.loader.PictureEmbodiment;
 import hmi.environmentbase.Embodiment;
 import hmi.environmentbase.EmbodimentLoader;
 import hmi.environmentbase.Environment;
@@ -28,6 +26,9 @@ import hmi.environmentbase.Loader;
 import hmi.xml.XMLTokenizer;
 
 import java.io.IOException;
+
+import asap.picture.display.PictureDisplay;
+import asap.picture.loader.PictureEmbodiment;
 
 
 /** Take care of its own loading from XML. */

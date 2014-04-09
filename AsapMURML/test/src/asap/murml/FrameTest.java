@@ -1,11 +1,11 @@
 package asap.murml;
 
+import static asap.murml.testutil.MURMLTestUtil.createJointValue;
 import static org.hamcrest.MatcherAssert.assertThat;
-import static org.junit.Assert.*;
+import static org.junit.Assert.assertEquals;
 
 import org.hamcrest.collection.IsIterableContainingInAnyOrder;
 import org.junit.Test;
-import static asap.murml.testutil.MURMLTestUtil.createJointValue;
 
 /**
  * Unit tests for MURML frame

@@ -18,6 +18,9 @@
  ******************************************************************************/
 package asap.audioengine;
 
+import hmi.audioenvironment.SoundManager;
+import hmi.util.Resources;
+
 import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.List;
@@ -25,18 +28,17 @@ import java.util.List;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import asap.bml.ext.bmlt.*;
-import asap.realizer.*;
+import saiba.bml.core.Behaviour;
+import asap.bml.ext.bmlt.BMLTAudioFileBehaviour;
+import asap.realizer.AbstractPlanner;
+import asap.realizer.BehaviourPlanningException;
+import asap.realizer.SyncAndTimePeg;
 import asap.realizer.feedback.FeedbackManager;
 import asap.realizer.pegboard.BMLBlockPeg;
 import asap.realizer.pegboard.OffsetPeg;
 import asap.realizer.pegboard.TimePeg;
 import asap.realizer.planunit.PlanManager;
 import asap.realizer.scheduler.TimePegAndConstraint;
-
-import hmi.util.Resources;
-import saiba.bml.core.Behaviour;
-import hmi.audioenvironment.*;
 
 /**
  * Planner for BMLT audio behaviours

@@ -8,8 +8,6 @@ import java.io.IOException;
 
 import org.junit.Test;
 
-import asap.bml.ext.bmla.BMLAParameterValueChangeBehaviour;
-
 import saiba.bml.core.AbstractBehaviourTest;
 import saiba.bml.core.Behaviour;
 import saiba.utils.TestUtil;

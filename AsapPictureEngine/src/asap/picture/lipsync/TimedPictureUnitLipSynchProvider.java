@@ -20,7 +20,18 @@
  */
 package asap.picture.lipsync;
 
+import hmi.tts.Visime;
+
+import java.util.List;
+
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import saiba.bml.core.Behaviour;
+import asap.picture.display.PictureDisplay;
+import asap.picture.planunit.AddAnimationXMLPU;
+import asap.picture.planunit.PUPrepareException;
+import asap.picture.planunit.TimedPictureUnit;
 import asap.realizer.feedback.NullFeedbackManager;
 import asap.realizer.lipsync.LipSynchProvider;
 import asap.realizer.pegboard.BMLBlockPeg;
@@ -29,14 +40,6 @@ import asap.realizer.pegboard.TimePeg;
 import asap.realizer.planunit.ParameterException;
 import asap.realizer.planunit.PlanManager;
 import asap.realizer.planunit.TimedPlanUnit;
-import asap.picture.display.PictureDisplay;
-import asap.picture.planunit.AddAnimationXMLPU;
-import asap.picture.planunit.PUPrepareException;
-import asap.picture.planunit.TimedPictureUnit;
-import hmi.tts.Visime;
-import java.util.List;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 /**
  * LipSynchProvider implementation for the picture engine. This very rudimentary

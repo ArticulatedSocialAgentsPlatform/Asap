@@ -6,11 +6,6 @@ import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
-import asap.animationengine.motionunit.TimedAnimationMotionUnit;
-import asap.motionunit.MUPlayException;
-import asap.realizertestutil.planunit.AbstractTimedPlanUnitTest;
-import asap.realizertestutil.util.KeyPositionMocker;
-import asap.realizertestutil.util.TimePegUtil;
 
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -18,6 +13,8 @@ import org.powermock.core.classloader.annotations.PowerMockIgnore;
 import org.powermock.core.classloader.annotations.PrepareForTest;
 import org.powermock.modules.junit4.PowerMockRunner;
 
+import asap.animationengine.motionunit.TimedAnimationMotionUnit;
+import asap.motionunit.MUPlayException;
 import asap.realizer.feedback.FeedbackManager;
 import asap.realizer.pegboard.BMLBlockPeg;
 import asap.realizer.pegboard.PegBoard;
@@ -28,6 +25,9 @@ import asap.realizer.planunit.TimedPlanUnitPlayException;
 import asap.realizer.planunit.TimedPlanUnitState;
 import asap.realizer.scheduler.BMLBlockManager;
 import asap.realizer.scheduler.BMLScheduler;
+import asap.realizertestutil.planunit.AbstractTimedPlanUnitTest;
+import asap.realizertestutil.util.KeyPositionMocker;
+import asap.realizertestutil.util.TimePegUtil;
 
 /**
  * Unit test cases for transition timed motion units

@@ -1,17 +1,17 @@
 package asap.sapittsbinding;
 
+import hmi.tts.BMLTTSBridge;
+import hmi.tts.sapi5.SAPI5SSMLTTSBridge;
+import hmi.tts.sapi5.SAPI5TTSGenerator;
+import hmi.tts.sapi5.SAPITTSBridge;
+import hmi.util.StringUtil;
+import saiba.bml.core.SpeechBehaviour;
 import asap.bml.ext.msapi.MSApiBehaviour;
 import asap.bml.ext.ssml.SSMLBehaviour;
 import asap.realizer.planunit.InvalidParameterException;
 import asap.realizer.planunit.ParameterException;
 import asap.realizer.planunit.ParameterNotFoundException;
 import asap.speechengine.ttsbinding.TTSBinding;
-import saiba.bml.core.SpeechBehaviour;
-import hmi.tts.BMLTTSBridge;
-import hmi.tts.sapi5.SAPI5SSMLTTSBridge;
-import hmi.tts.sapi5.SAPI5TTSGenerator;
-import hmi.tts.sapi5.SAPITTSBridge;
-import hmi.util.StringUtil;
 
 /**
  * Binds BML speech, msapi, ssml behaviors to bridges with a sapi ttsgenerator. 

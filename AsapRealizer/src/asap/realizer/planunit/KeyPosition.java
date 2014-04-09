@@ -18,12 +18,13 @@
  ******************************************************************************/
 package asap.realizer.planunit;
 
-import saiba.bml.BMLGestureSync;
 import hmi.xml.XMLFormatting;
 import hmi.xml.XMLStructureAdapter;
 import hmi.xml.XMLTokenizer;
 
 import java.util.HashMap;
+
+import saiba.bml.BMLGestureSync;
 
 import com.google.common.base.Objects;
 /**

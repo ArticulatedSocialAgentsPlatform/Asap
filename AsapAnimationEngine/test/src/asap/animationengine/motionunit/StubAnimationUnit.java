@@ -4,7 +4,6 @@ package asap.animationengine.motionunit;
 import java.util.Set;
 
 import lombok.Delegate;
-
 import asap.animationengine.AnimationPlayer;
 import asap.motionunit.MUPlayException;
 import asap.realizer.feedback.FeedbackManager;

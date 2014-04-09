@@ -10,8 +10,8 @@ import java.util.concurrent.CopyOnWriteArrayList;
 import java.util.concurrent.CopyOnWriteArraySet;
 import java.util.concurrent.atomic.AtomicReference;
 
-import saiba.bml.BMLGestureSync;
 import lombok.extern.slf4j.Slf4j;
+import saiba.bml.BMLGestureSync;
 import asap.realizer.pegboard.BehaviorCluster;
 import asap.realizer.pegboard.BehaviorKey;
 import asap.realizer.pegboard.PegBoard;

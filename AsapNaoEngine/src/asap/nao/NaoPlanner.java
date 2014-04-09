@@ -18,6 +18,12 @@
  ******************************************************************************/
 package asap.nao;
 
+import java.util.ArrayList;
+import java.util.List;
+
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import saiba.bml.BMLInfo;
 import saiba.bml.core.Behaviour;
 import asap.nao.bml.NaoDoeIetsBehaviour;
@@ -27,22 +33,16 @@ import asap.nao.naobinding.NaoBinding;
 import asap.nao.planunit.TimedNaoUnit;
 import asap.realizer.AbstractPlanner;
 import asap.realizer.BehaviourPlanningException;
+import asap.realizer.SyncAndTimePeg;
+import asap.realizer.feedback.FeedbackManager;
 import asap.realizer.pegboard.BMLBlockPeg;
 import asap.realizer.pegboard.OffsetPeg;
-import asap.realizer.SyncAndTimePeg;
 import asap.realizer.pegboard.TimePeg;
-import asap.realizer.feedback.FeedbackManager;
 import asap.realizer.planunit.KeyPosition;
 import asap.realizer.planunit.PlanManager;
 import asap.realizer.scheduler.LinearStretchResolver;
 import asap.realizer.scheduler.TimePegAndConstraint;
 import asap.realizer.scheduler.UniModalResolver;
-
-import java.util.ArrayList;
-import java.util.List;
-
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 /**
  */

@@ -6,10 +6,6 @@ import static org.hamcrest.Matchers.hasItem;
 import static org.hamcrest.Matchers.hasItems;
 import static org.hamcrest.Matchers.instanceOf;
 import static org.junit.Assert.assertEquals;
-import saiba.bml.BMLInfo;
-import saiba.bml.core.Behaviour;
-import saiba.bml.core.BehaviourBlock;
-import saiba.bml.parser.BMLParser;
 import hmi.util.Resources;
 
 import java.io.IOException;
@@ -20,6 +16,10 @@ import org.hamcrest.collection.IsIterableContainingInOrder;
 import org.junit.Before;
 import org.junit.Test;
 
+import saiba.bml.BMLInfo;
+import saiba.bml.core.Behaviour;
+import saiba.bml.core.BehaviourBlock;
+import saiba.bml.parser.BMLParser;
 import asap.bml.ext.bmla.BMLABMLBehaviorAttributes;
 import asap.bml.ext.bmla.BMLASchedulingMechanism;
 import asap.bml.ext.bmlt.BMLTAudioFileBehaviour;

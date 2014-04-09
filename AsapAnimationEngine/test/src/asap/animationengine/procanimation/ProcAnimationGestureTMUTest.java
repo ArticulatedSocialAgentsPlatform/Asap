@@ -1,8 +1,8 @@
 package asap.animationengine.procanimation;
 
 import static org.hamcrest.MatcherAssert.assertThat;
-import static org.hamcrest.number.OrderingComparison.greaterThanOrEqualTo;
 import static org.hamcrest.number.OrderingComparison.greaterThan;
+import static org.hamcrest.number.OrderingComparison.greaterThanOrEqualTo;
 import static org.hamcrest.number.OrderingComparison.lessThan;
 import static org.junit.Assert.assertEquals;
 import static org.mockito.Matchers.any;
@@ -11,10 +11,6 @@ import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
 import hmi.animation.Hanim;
 import hmi.animation.VJoint;
-import saiba.bml.BMLGestureSync;
-import saiba.bml.parser.Constraint;
-import asap.realizertestutil.util.KeyPositionMocker;
-import asap.realizertestutil.util.TimePegUtil;
 import hmi.testutil.animation.HanimBody;
 
 import java.util.ArrayList;
@@ -27,6 +23,8 @@ import org.powermock.core.classloader.annotations.PowerMockIgnore;
 import org.powermock.core.classloader.annotations.PrepareForTest;
 import org.powermock.modules.junit4.PowerMockRunner;
 
+import saiba.bml.BMLGestureSync;
+import saiba.bml.parser.Constraint;
 import asap.animationengine.AnimationPlayer;
 import asap.animationengine.motionunit.AnimationUnit;
 import asap.animationengine.motionunit.MUSetupException;
@@ -43,6 +41,8 @@ import asap.realizer.planunit.TimedPlanUnitPlayException;
 import asap.realizer.planunit.TimedPlanUnitState;
 import asap.realizer.scheduler.BMLBlockManager;
 import asap.realizer.scheduler.TimePegAndConstraint;
+import asap.realizertestutil.util.KeyPositionMocker;
+import asap.realizertestutil.util.TimePegUtil;
 
 /**
  * Unit test cases for ProcAnimationGestureTMUs

@@ -3,10 +3,10 @@ package asap.bml.ext.bmla.feedback;
 import java.util.ArrayList;
 import java.util.List;
 
-import com.google.common.collect.ImmutableList;
-
 import saiba.bml.feedback.BMLBlockPredictionFeedback;
 import saiba.bml.feedback.BMLPredictionFeedback;
+
+import com.google.common.collect.ImmutableList;
 
 /**
  * BMLPredictionFeedback with BMLABlockPredictions

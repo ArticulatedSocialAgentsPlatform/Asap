@@ -1,20 +1,8 @@
 package asap.speechengine;
 
 import static com.google.common.collect.Sets.newHashSet;
-import asap.audioengine.WavUnit;
-import asap.audioengine.WavUnitImpl;
-import asap.audioengine.WavUnitPlayException;
-import asap.realizer.feedback.FeedbackManager;
-import asap.realizer.pegboard.BMLBlockPeg;
-import asap.realizer.planunit.ParameterException;
-import asap.realizer.planunit.ParameterNotFoundException;
-import asap.realizer.planunit.TimedPlanUnitPlayException;
-import asap.speechengine.ttsbinding.TTSBinding;
 import hmi.audioenvironment.SoundManager;
 import hmi.audioenvironment.WavCreationException;
-import saiba.bml.core.Behaviour;
-import saiba.bml.core.SpeechBehaviour;
-import saiba.bml.feedback.BMLSyncPointProgressFeedback;
 import hmi.tts.Bookmark;
 import hmi.tts.TimingInfo;
 
@@ -26,6 +14,18 @@ import java.util.Set;
 
 import lombok.extern.slf4j.Slf4j;
 import net.jcip.annotations.GuardedBy;
+import saiba.bml.core.Behaviour;
+import saiba.bml.core.SpeechBehaviour;
+import saiba.bml.feedback.BMLSyncPointProgressFeedback;
+import asap.audioengine.WavUnit;
+import asap.audioengine.WavUnitImpl;
+import asap.audioengine.WavUnitPlayException;
+import asap.realizer.feedback.FeedbackManager;
+import asap.realizer.pegboard.BMLBlockPeg;
+import asap.realizer.planunit.ParameterException;
+import asap.realizer.planunit.ParameterNotFoundException;
+import asap.realizer.planunit.TimedPlanUnitPlayException;
+import asap.speechengine.ttsbinding.TTSBinding;
 
 /**
  * Plans speech by generating a .wav file, then uses that .wav file to generate the speech

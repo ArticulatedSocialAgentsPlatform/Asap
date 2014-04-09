@@ -1,7 +1,6 @@
 package asap.livemocapengine.planunit;
 
 import hmi.headandgazeembodiments.GazeEmbodiment;
-
 import asap.livemocapengine.inputs.EulerInput;
 import asap.realizer.feedback.FeedbackManager;
 import asap.realizer.pegboard.BMLBlockPeg;

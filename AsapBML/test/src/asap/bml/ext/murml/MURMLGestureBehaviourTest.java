@@ -9,12 +9,11 @@ import java.io.IOException;
 
 import org.junit.Test;
 
-import asap.bml.ext.bmlt.BMLTInfo;
-
 import saiba.bml.BMLInfo;
 import saiba.bml.core.AbstractBehaviourTest;
 import saiba.bml.core.Behaviour;
 import saiba.bml.core.GestureBehaviour;
+import asap.bml.ext.bmlt.BMLTInfo;
 
 /**
  * Unit test cases for the MURML gesture behaviour

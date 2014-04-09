@@ -4,7 +4,6 @@ import javax.jms.JMSException;
 import javax.jms.TextMessage;
 
 import lombok.extern.slf4j.Slf4j;
-
 import asap.realizerport.BMLFeedbackListener;
 import asap.realizerport.RealizerPort;
 

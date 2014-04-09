@@ -18,7 +18,6 @@
  ******************************************************************************/
 package asap.picture.picturebinding;
 
-import asap.picture.planunit.*;
 import hmi.xml.XMLStructureAdapter;
 import hmi.xml.XMLTokenizer;
 
@@ -26,6 +25,12 @@ import java.util.HashMap;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+
+import asap.picture.planunit.AddAnimationDirPU;
+import asap.picture.planunit.AddAnimationXMLPU;
+import asap.picture.planunit.AddImagePU;
+import asap.picture.planunit.PictureUnit;
+import asap.picture.planunit.SetImagePU;
 
 public class PictureUnitAssembler extends XMLStructureAdapter
 {

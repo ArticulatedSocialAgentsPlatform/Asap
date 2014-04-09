@@ -4,16 +4,15 @@ import static org.mockito.Matchers.any;
 import static org.mockito.Mockito.verify;
 import static org.powermock.api.mockito.PowerMockito.mock;
 import static org.powermock.api.mockito.PowerMockito.when;
-
-import java.io.IOException;
-
-import javax.swing.JComponent;
-
 import hmi.environmentbase.Environment;
 import hmi.environmentbase.Loader;
 import hmi.jcomponentenvironment.JComponentEmbodiment;
 import hmi.jcomponentenvironment.loader.JComponentEmbodimentLoader;
 import hmi.xml.XMLTokenizer;
+
+import java.io.IOException;
+
+import javax.swing.JComponent;
 
 import org.junit.Before;
 import org.junit.Test;

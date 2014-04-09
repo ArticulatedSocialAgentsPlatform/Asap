@@ -7,8 +7,6 @@ import java.util.List;
 import java.util.Set;
 
 import lombok.extern.slf4j.Slf4j;
-import asap.animationengine.gaze.ForwardRestGaze;
-import asap.animationengine.gaze.GazeInfluence;
 import asap.animationengine.gaze.RestGaze;
 import asap.animationengine.motionunit.TimedAnimationUnit;
 import asap.animationengine.restpose.RestPose;

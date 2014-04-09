@@ -18,13 +18,6 @@
  ******************************************************************************/
 package asap.nao.naobinding;
 
-import saiba.bml.core.Behaviour;
-import asap.nao.Nao;
-import asap.nao.planunit.NaoUnit;
-import asap.nao.planunit.TimedNaoUnit;
-import asap.realizer.feedback.FeedbackManager;
-import asap.realizer.pegboard.BMLBlockPeg;
-import asap.realizer.planunit.ParameterException;
 import hmi.xml.XMLStructureAdapter;
 import hmi.xml.XMLTokenizer;
 
@@ -32,11 +25,18 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
+import asap.nao.Nao;
+import asap.nao.planunit.NaoUnit;
+import asap.nao.planunit.TimedNaoUnit;
+import asap.realizer.feedback.FeedbackManager;
+import asap.realizer.pegboard.BMLBlockPeg;
+import asap.realizer.planunit.ParameterException;
 //import nao.NAO;
 //import nabaztag.Rabbit;
-
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+
+import saiba.bml.core.Behaviour;
 
 /**
  * The NaoBinding maps from BML to a set of naounits

@@ -1,11 +1,12 @@
 package asap.realizerembodiments.impl;
 
-import saiba.bml.parser.BMLParser;
+import hmi.util.Clock;
 import hmi.xml.XMLStructureAdapter;
 import hmi.xml.XMLTokenizer;
 
 import java.io.IOException;
 
+import saiba.bml.parser.BMLParser;
 import asap.realizer.feedback.FeedbackManager;
 import asap.realizer.pegboard.PegBoard;
 import asap.realizer.scheduler.BMLASchedulingHandler;
@@ -13,7 +14,6 @@ import asap.realizer.scheduler.BMLBlockManager;
 import asap.realizer.scheduler.BMLScheduler;
 import asap.realizer.scheduler.SchedulingHandler;
 import asap.realizer.scheduler.SortedSmartBodySchedulingStrategy;
-import hmi.util.Clock;
 
 /**
  * Constructs a BMLScheduler from an xml description.

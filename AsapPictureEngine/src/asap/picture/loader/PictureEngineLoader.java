@@ -19,18 +19,6 @@
  ******************************************************************************/
 package asap.picture.loader;
 
-import asap.realizer.DefaultEngine;
-import asap.realizer.DefaultPlayer;
-import asap.realizer.Engine;
-import asap.realizer.Player;
-import asap.realizer.planunit.PlanManager;
-import asap.realizer.planunit.PlanPlayer;
-import asap.realizer.planunit.SingleThreadedPlanPlayer;
-import asap.realizerembodiments.AsapRealizerEmbodiment;
-import asap.realizerembodiments.EngineLoader;
-import asap.picture.PicturePlanner;
-import asap.picture.picturebinding.PictureBinding;
-import asap.picture.planunit.TimedPictureUnit;
 import hmi.environmentbase.EmbodimentLoader;
 import hmi.environmentbase.Environment;
 import hmi.environmentbase.Loader;
@@ -41,6 +29,19 @@ import hmi.xml.XMLTokenizer;
 
 import java.io.IOException;
 import java.util.HashMap;
+
+import asap.picture.PicturePlanner;
+import asap.picture.picturebinding.PictureBinding;
+import asap.picture.planunit.TimedPictureUnit;
+import asap.realizer.DefaultEngine;
+import asap.realizer.DefaultPlayer;
+import asap.realizer.Engine;
+import asap.realizer.Player;
+import asap.realizer.planunit.PlanManager;
+import asap.realizer.planunit.PlanPlayer;
+import asap.realizer.planunit.SingleThreadedPlanPlayer;
+import asap.realizerembodiments.AsapRealizerEmbodiment;
+import asap.realizerembodiments.EngineLoader;
 
 /**
 

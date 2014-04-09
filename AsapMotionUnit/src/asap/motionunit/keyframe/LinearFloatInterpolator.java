@@ -3,9 +3,9 @@ package asap.motionunit.keyframe;
 import java.util.ArrayList;
 import java.util.List;
 
-import com.google.common.collect.ImmutableList;
-
 import asap.math.LinearInterpolator;
+
+import com.google.common.collect.ImmutableList;
 
 /**
  * Linear interpolator for of a list of keyframes. Interpolates each dof seperately. 

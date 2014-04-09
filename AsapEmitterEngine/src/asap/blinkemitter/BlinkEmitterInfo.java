@@ -19,10 +19,11 @@
 package asap.blinkemitter;
 
 
-import java.util.*;
+import java.util.ArrayList;
 
-import asap.emitterengine.*;
-import asap.emitterengine.bml.*;
+import asap.emitterengine.Emitter;
+import asap.emitterengine.EmitterInfo;
+import asap.emitterengine.bml.CreateEmitterBehaviour;
 
 //import org.slf4j.Logger;
 //import org.slf4j.LoggerFactory;

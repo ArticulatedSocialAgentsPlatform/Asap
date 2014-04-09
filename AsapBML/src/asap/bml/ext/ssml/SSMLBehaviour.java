@@ -1,11 +1,12 @@
 package asap.bml.ext.ssml;
 
-import saiba.bml.core.SpeechBehaviour;
 import hmi.xml.XMLFormatting;
 import hmi.xml.XMLTokenizer;
 
 import java.io.IOException;
 import java.util.HashMap;
+
+import saiba.bml.core.SpeechBehaviour;
 
 /**
  * Speech Synthesis Markup Language behaviour.

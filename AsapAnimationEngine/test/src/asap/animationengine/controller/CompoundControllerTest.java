@@ -1,16 +1,15 @@
 package asap.animationengine.controller;
 
-import static org.junit.Assert.*;
+import static org.hamcrest.MatcherAssert.assertThat;
+import static org.hamcrest.collection.IsIterableContainingInAnyOrder.containsInAnyOrder;
+import static org.junit.Assert.assertEquals;
+import static org.mockito.Mockito.mock;
 import hmi.physics.PhysicalHumanoid;
 import hmi.physics.controller.ControllerParameterNotFoundException;
 import hmi.physics.controller.PhysicalController;
 
 import org.junit.Before;
 import org.junit.Test;
-
-import static org.mockito.Mockito.*;
-import static org.hamcrest.MatcherAssert.assertThat;
-import static org.hamcrest.collection.IsIterableContainingInAnyOrder.*;
 
 
 /**

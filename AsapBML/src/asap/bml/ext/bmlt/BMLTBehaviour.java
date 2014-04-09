@@ -18,12 +18,13 @@
  ******************************************************************************/
 package asap.bml.ext.bmlt;
 
-import saiba.bml.core.Behaviour;
 import hmi.xml.XMLFormatting;
 import hmi.xml.XMLTokenizer;
 
 import java.io.IOException;
 import java.util.HashMap;
+
+import saiba.bml.core.Behaviour;
 
 /**
  * Abstract class for all BMLT specific Behaviours

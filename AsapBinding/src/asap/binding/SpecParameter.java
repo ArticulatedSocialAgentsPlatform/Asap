@@ -18,9 +18,10 @@
  ******************************************************************************/
 package asap.binding;
 
-import java.util.HashMap;
+import hmi.xml.XMLStructureAdapter;
+import hmi.xml.XMLTokenizer;
 
-import hmi.xml.*;
+import java.util.HashMap;
 
 /**
  * Connects a BML behavior parameter name (src) to a planunit parameter name (dst)

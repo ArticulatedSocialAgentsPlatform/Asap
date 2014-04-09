@@ -12,8 +12,6 @@ import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 import hmi.animation.Hanim;
 import hmi.animation.VJoint;
-import saiba.bml.BMLGestureSync;
-import asap.realizertestutil.util.KeyPositionMocker;
 import hmi.testutil.animation.HanimBody;
 
 import java.util.Set;
@@ -21,6 +19,7 @@ import java.util.Set;
 import org.junit.Before;
 import org.junit.Test;
 
+import saiba.bml.BMLGestureSync;
 import asap.animationengine.AnimationPlayer;
 import asap.animationengine.motionunit.AnimationUnit;
 import asap.animationengine.motionunit.MUSetupException;
@@ -33,6 +32,7 @@ import asap.realizer.pegboard.PegBoard;
 import asap.realizer.planunit.KeyPosition;
 import asap.realizer.planunit.TimedPlanUnitPlayException;
 import asap.realizer.planunit.TimedPlanUnitState;
+import asap.realizertestutil.util.KeyPositionMocker;
 
 /**
  * Unit test cases for ProcAnimationGestureMU

@@ -19,6 +19,16 @@
  ******************************************************************************/
 package asap.nao.loader;
 
+import hmi.environmentbase.EmbodimentLoader;
+import hmi.environmentbase.Environment;
+import hmi.environmentbase.Loader;
+import hmi.util.Resources;
+import hmi.xml.XMLStructureAdapter;
+import hmi.xml.XMLTokenizer;
+
+import java.io.IOException;
+import java.util.HashMap;
+
 import asap.nao.NaoPlanner;
 import asap.nao.naobinding.NaoBinding;
 import asap.nao.planunit.TimedNaoUnit;
@@ -31,15 +41,6 @@ import asap.realizer.planunit.PlanPlayer;
 import asap.realizer.planunit.SingleThreadedPlanPlayer;
 import asap.realizerembodiments.AsapRealizerEmbodiment;
 import asap.realizerembodiments.EngineLoader;
-import hmi.environmentbase.EmbodimentLoader;
-import hmi.environmentbase.Environment;
-import hmi.environmentbase.Loader;
-import hmi.util.Resources;
-import hmi.xml.XMLStructureAdapter;
-import hmi.xml.XMLTokenizer;
-
-import java.io.IOException;
-import java.util.HashMap;
 
 /**
 

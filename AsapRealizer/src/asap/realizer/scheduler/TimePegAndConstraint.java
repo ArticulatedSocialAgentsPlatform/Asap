@@ -18,8 +18,8 @@
  ******************************************************************************/
 package asap.realizer.scheduler;
 
-import asap.realizer.pegboard.TimePeg;
 import saiba.bml.parser.Constraint;
+import asap.realizer.pegboard.TimePeg;
 
 /**
  * Links a constraint to a timepeg and a behavior sync point id

@@ -1,6 +1,5 @@
 package asap.speechengine.ttsbinding;
 
-import saiba.bml.core.Behaviour;
 import hmi.tts.AbstractTTSGenerator;
 import hmi.tts.TTSBridge;
 import hmi.tts.TTSCallback;
@@ -12,6 +11,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import saiba.bml.core.Behaviour;
 import asap.realizer.planunit.ParameterException;
 import asap.realizer.planunit.ParameterNotFoundException;
 

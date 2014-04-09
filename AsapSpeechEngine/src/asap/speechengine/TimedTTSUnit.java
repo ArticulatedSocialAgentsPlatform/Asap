@@ -18,22 +18,27 @@
  ******************************************************************************/
 package asap.speechengine;
 
-import saiba.bml.BMLGestureSync;
-import saiba.bml.core.Behaviour;
-import hmi.tts.*;
+import hmi.tts.Bookmark;
+import hmi.tts.TimingInfo;
+import hmi.tts.Visime;
 
-import java.util.*;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import com.google.common.collect.ImmutableList;
-
-import asap.realizer.*;
+import saiba.bml.BMLGestureSync;
+import saiba.bml.core.Behaviour;
+import asap.realizer.SyncPointNotFoundException;
 import asap.realizer.feedback.FeedbackManager;
 import asap.realizer.pegboard.BMLBlockPeg;
 import asap.realizer.pegboard.TimePeg;
 import asap.speechengine.ttsbinding.TTSBinding;
+
+import com.google.common.collect.ImmutableList;
 
 /**
  * A TimedPlanUnit that contains speech played back through a TTS system, 

@@ -1,10 +1,11 @@
 package asap.bml.ext.murml;
 
-import saiba.bml.parser.SyncPoint;
 import hmi.xml.XMLTokenizer;
 
 import java.io.IOException;
 import java.util.List;
+
+import saiba.bml.parser.SyncPoint;
 
 import com.google.common.collect.ImmutableList;
 

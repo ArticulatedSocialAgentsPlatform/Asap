@@ -2,18 +2,17 @@ package asap.realizer.wait;
 
 import java.util.List;
 
-import saiba.bml.BMLGestureSync;
-
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import com.google.common.collect.ImmutableList;
-
+import saiba.bml.BMLGestureSync;
 import asap.realizer.feedback.FeedbackManager;
 import asap.realizer.pegboard.BMLBlockPeg;
 import asap.realizer.pegboard.TimePeg;
 import asap.realizer.planunit.TimedAbstractPlanUnit;
 import asap.realizer.planunit.TimedPlanUnitPlayException;
+
+import com.google.common.collect.ImmutableList;
 
 /**
  * TimedPlanUnit realizations of the BML &lt;wait&gt; behavior.

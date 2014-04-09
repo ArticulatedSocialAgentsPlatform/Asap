@@ -18,13 +18,14 @@
  ******************************************************************************/
 package asap.bml.ext.bmlt;
 
-import saiba.bml.parser.SyncPoint;
 import hmi.xml.XMLFormatting;
 import hmi.xml.XMLTokenizer;
 
 import java.io.IOException;
 import java.util.HashMap;
 import java.util.List;
+
+import saiba.bml.parser.SyncPoint;
 
 import com.google.common.collect.ImmutableList;
 

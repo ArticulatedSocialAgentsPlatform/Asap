@@ -1,12 +1,14 @@
 package asap.picture.planunit;
 
-import asap.picture.display.PictureDisplay;
 import hmi.util.Resources;
 
 import java.io.File;
+import java.net.URI;
 import java.net.URISyntaxException;
+import java.net.URL;
 import java.util.ArrayList;
-import java.net.*;
+
+import asap.picture.display.PictureDisplay;
 
 public class AnimationDirLoader {
 

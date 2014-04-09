@@ -1,10 +1,11 @@
 package asap.speechengine.util;
 
-import saiba.bml.core.Behaviour;
 import hmi.tts.Bookmark;
 import hmi.tts.TimingInfo;
+
 import java.util.List;
 
+import saiba.bml.core.Behaviour;
 import asap.realizer.feedback.FeedbackManager;
 import asap.realizer.pegboard.BMLBlockPeg;
 import asap.realizer.planunit.TimedPlanUnitPlayException;

@@ -9,12 +9,12 @@ import java.util.Set;
 
 import org.junit.Test;
 
-import com.google.common.collect.ImmutableSet;
-
 import saiba.bml.core.BMLBehaviorAttributeExtension;
 import saiba.bml.core.BMLBlockComposition;
 import saiba.bml.core.BehaviourBlock;
 import asap.realizerembodiments.impl.BMLParserAssembler;
+
+import com.google.common.collect.ImmutableSet;
 
 /**
  * Unit test cases for BMLParserAssembler

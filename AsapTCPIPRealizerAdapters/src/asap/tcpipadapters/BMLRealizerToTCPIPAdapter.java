@@ -16,13 +16,13 @@ import java.net.SocketTimeoutException;
 import java.nio.channels.IllegalBlockingModeException;
 import java.util.concurrent.ConcurrentLinkedQueue;
 
-import com.google.common.base.Charsets;
-
 import lombok.extern.slf4j.Slf4j;
 import saiba.bml.feedback.BMLWarningFeedback;
 import asap.realizerport.BMLFeedbackListener;
 import asap.realizerport.RealizerPort;
 import asap.realizerport.util.BMLFeedbackManager;
+
+import com.google.common.base.Charsets;
 
 /**
  * A {@link asap.realizerport.bml.bridge.RealizerPort RealizerBridge} that uses a tcp/ip connection to provide

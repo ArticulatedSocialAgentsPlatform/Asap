@@ -18,15 +18,15 @@
  ******************************************************************************/
 package asap.binding;
 
+import hmi.xml.XMLScanException;
+import hmi.xml.XMLStructureAdapter;
+import hmi.xml.XMLTokenizer;
+
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
 import saiba.bml.core.Behaviour;
-
-import hmi.xml.XMLScanException;
-import hmi.xml.XMLStructureAdapter;
-import hmi.xml.XMLTokenizer;
 
 /**
  * An XML element to group SpecConstraint-s

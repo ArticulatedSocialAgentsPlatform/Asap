@@ -20,15 +20,17 @@
  */
 package asap.picture.loader;
 
-import asap.realizer.lipsync.LipSynchProvider;
-import asap.realizerembodiments.LipSynchProviderLoader;
-import asap.picture.lipsync.TimedPictureUnitLipSynchProvider;
 import hmi.environmentbase.Environment;
 import hmi.environmentbase.Loader;
 import hmi.xml.XMLStructureAdapter;
 import hmi.xml.XMLTokenizer;
+
 import java.io.IOException;
 import java.util.HashMap;
+
+import asap.picture.lipsync.TimedPictureUnitLipSynchProvider;
+import asap.realizer.lipsync.LipSynchProvider;
+import asap.realizerembodiments.LipSynchProviderLoader;
 
 /**
  * Loader for a TimedPictureUnitLipSynchProvider. This loader requires an

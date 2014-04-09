@@ -1,13 +1,14 @@
 package asap.realizerembodiments.impl;
 
-import saiba.bml.core.BMLBehaviorAttributeExtension;
-import saiba.bml.parser.BMLParser;
 import hmi.xml.XMLStructureAdapter;
 import hmi.xml.XMLTokenizer;
 
 import java.io.IOException;
 import java.util.HashSet;
 import java.util.Set;
+
+import saiba.bml.core.BMLBehaviorAttributeExtension;
+import saiba.bml.parser.BMLParser;
 
 import com.google.common.collect.ImmutableSet;
 

@@ -1,9 +1,10 @@
 package asap.blinkemitter;
 
+import hmi.xml.XMLTokenizer;
+
 import java.io.IOException;
 
-import asap.emitterengine.bml.*;
-import hmi.xml.XMLTokenizer;
+import asap.emitterengine.bml.CreateEmitterBehaviour;
 
 /**
  * Create Emitter behavior

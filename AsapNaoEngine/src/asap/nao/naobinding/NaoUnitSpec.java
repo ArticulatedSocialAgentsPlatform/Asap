@@ -18,7 +18,6 @@
  ******************************************************************************/
 package asap.nao.naobinding;
 
-import saiba.bml.core.Behaviour;
 import hmi.xml.XMLStructureAdapter;
 import hmi.xml.XMLTokenizer;
 
@@ -28,6 +27,7 @@ import java.util.Collection;
 import java.util.HashMap;
 import java.util.Set;
 
+import saiba.bml.core.Behaviour;
 import asap.nao.planunit.NaoUnit;
 
 public class NaoUnitSpec extends XMLStructureAdapter

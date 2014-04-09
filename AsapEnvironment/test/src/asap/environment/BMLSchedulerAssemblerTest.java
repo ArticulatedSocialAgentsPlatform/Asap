@@ -4,11 +4,12 @@ import static org.hamcrest.CoreMatchers.instanceOf;
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.junit.Assert.assertNotNull;
 import static org.mockito.Mockito.mock;
-import saiba.bml.core.BehaviourBlock;
-import saiba.bml.parser.BMLParser;
+import hmi.util.Clock;
 
 import org.junit.Test;
 
+import saiba.bml.core.BehaviourBlock;
+import saiba.bml.parser.BMLParser;
 import asap.realizer.feedback.FeedbackManager;
 import asap.realizer.pegboard.PegBoard;
 import asap.realizer.scheduler.BMLBlockManager;
@@ -17,7 +18,6 @@ import asap.realizer.scheduler.SchedulingHandler;
 import asap.realizer.scheduler.SchedulingStrategy;
 import asap.realizer.scheduler.SmartBodySchedulingStrategy;
 import asap.realizerembodiments.impl.BMLSchedulerAssembler;
-import hmi.util.Clock;
 
 /**
  * Unit testcases for the BMLSchedulerAssembler

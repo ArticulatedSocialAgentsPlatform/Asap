@@ -1,10 +1,9 @@
 package asap.realizer.scheduler;
 
-import saiba.bml.core.Behaviour;
-
 import java.util.ArrayList;
 import java.util.List;
 
+import saiba.bml.core.Behaviour;
 import asap.realizer.BehaviourPlanningException;
 import asap.realizer.SyncPointNotFoundException;
 import asap.realizer.pegboard.BMLBlockPeg;

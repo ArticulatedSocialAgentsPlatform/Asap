@@ -24,10 +24,9 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
+import net.jcip.annotations.ThreadSafe;
 import asap.realizer.pegboard.PegBoard;
 import asap.realizer.pegboard.TimePeg;
-
-import net.jcip.annotations.ThreadSafe;
 
 /**
  * Anticipates the (may be changing through calls of updateTempo) tempo of a metronome. 

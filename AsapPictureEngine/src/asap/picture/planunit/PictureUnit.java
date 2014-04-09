@@ -18,11 +18,11 @@
  ******************************************************************************/
 package asap.picture.planunit;
 
+import asap.picture.display.PictureDisplay;
 import asap.realizer.feedback.FeedbackManager;
 import asap.realizer.pegboard.BMLBlockPeg;
 import asap.realizer.planunit.KeyPositionManager;
 import asap.realizer.planunit.ParameterException;
-import asap.picture.display.PictureDisplay;
 
 /**
  * Contains a set of keys that map to 'world' time to animation time.

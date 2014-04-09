@@ -1,9 +1,10 @@
 package asap.emitterengine.bml;
+import hmi.xml.XMLTokenizer;
+
 import java.util.HashMap;
 
-import asap.emitterengine.*;
-import asap.bml.ext.bmlt.*;
-import hmi.xml.XMLTokenizer;
+import asap.bml.ext.bmlt.BMLTParameter;
+import asap.emitterengine.EmitterInfo;
 
 /**
  * Create Emitter behavior

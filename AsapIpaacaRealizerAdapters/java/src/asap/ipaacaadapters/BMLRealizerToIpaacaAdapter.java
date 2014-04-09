@@ -1,15 +1,5 @@
 package asap.ipaacaadapters;
 
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.EnumSet;
-import java.util.List;
-
-import com.google.common.collect.ImmutableList;
-import com.google.common.collect.ImmutableSet;
-
-import asap.realizerport.BMLFeedbackListener;
-import asap.realizerport.RealizerPort;
 import ipaaca.AbstractIU;
 import ipaaca.HandlerFunctor;
 import ipaaca.IUEventHandler;
@@ -19,6 +9,17 @@ import ipaaca.InputBuffer;
 import ipaaca.LocalMessageIU;
 import ipaaca.OutputBuffer;
 import ipaaca.util.ComponentNotifier;
+
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.EnumSet;
+import java.util.List;
+
+import asap.realizerport.BMLFeedbackListener;
+import asap.realizerport.RealizerPort;
+
+import com.google.common.collect.ImmutableList;
+import com.google.common.collect.ImmutableSet;
 
 /**
  * Submits BML through ipaaca messages; submits received feedback to registered listeners.

@@ -1,11 +1,5 @@
 package asap.bml.bridge.ui;
 
-import saiba.bml.feedback.BMLBlockProgressFeedback;
-import saiba.bml.feedback.BMLFeedback;
-import saiba.bml.feedback.BMLFeedbackParser;
-import saiba.bml.feedback.BMLPredictionFeedback;
-import saiba.bml.feedback.BMLSyncPointProgressFeedback;
-
 import java.awt.Dimension;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
@@ -17,8 +11,12 @@ import javax.swing.JScrollPane;
 import javax.swing.JTabbedPane;
 import javax.swing.JTextArea;
 
+import saiba.bml.feedback.BMLBlockProgressFeedback;
+import saiba.bml.feedback.BMLFeedback;
+import saiba.bml.feedback.BMLFeedbackParser;
+import saiba.bml.feedback.BMLPredictionFeedback;
+import saiba.bml.feedback.BMLSyncPointProgressFeedback;
 import saiba.bml.feedback.BMLWarningFeedback;
-
 import asap.realizerport.BMLFeedbackListener;
 import asap.realizerport.RealizerPort;
 

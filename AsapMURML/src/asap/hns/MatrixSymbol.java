@@ -8,9 +8,9 @@ import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
 
-import com.google.common.primitives.Floats;
-
 import lombok.Getter;
+
+import com.google.common.primitives.Floats;
 
 /**
  * Parses a symbol inside symbolMatrices

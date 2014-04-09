@@ -18,14 +18,14 @@
  ******************************************************************************/
 package asap.blinkemitter;
 
-import hmi.util.*;
+import hmi.util.StringUtil;
 
-import java.util.*;
+import java.util.ArrayList;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import asap.emitterengine.*;
+import asap.emitterengine.Emitter;
 import asap.realizerport.RealizerPort;
 
 /**

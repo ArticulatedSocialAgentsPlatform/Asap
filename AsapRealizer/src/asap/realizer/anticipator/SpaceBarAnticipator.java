@@ -1,8 +1,5 @@
 package asap.realizer.anticipator;
 
-import asap.realizer.pegboard.BMLBlockPeg;
-import asap.realizer.pegboard.PegBoard;
-import asap.realizer.pegboard.TimePeg;
 import hmi.util.PhysicsSync;
 import hmi.util.SystemClock;
 
@@ -10,6 +7,10 @@ import java.awt.event.KeyEvent;
 import java.awt.event.KeyListener;
 import java.util.Observable;
 import java.util.Observer;
+
+import asap.realizer.pegboard.BMLBlockPeg;
+import asap.realizer.pegboard.PegBoard;
+import asap.realizer.pegboard.TimePeg;
 
 /**
  * Manages two TimePegs, linked to the time of a spacebar press and release. 

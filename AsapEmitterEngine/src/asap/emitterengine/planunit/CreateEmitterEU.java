@@ -18,9 +18,11 @@
  ******************************************************************************/
 package asap.emitterengine.planunit;
 
-import java.util.*;
+import hmi.util.StringUtil;
 
-import asap.emitterengine.*;
+import java.util.List;
+
+import asap.emitterengine.Emitter;
 import asap.realizer.feedback.FeedbackManager;
 import asap.realizer.pegboard.BMLBlockPeg;
 import asap.realizer.planunit.InvalidParameterException;
@@ -30,8 +32,6 @@ import asap.realizer.planunit.KeyPositionManagerImpl;
 import asap.realizer.planunit.ParameterException;
 import asap.realizer.planunit.ParameterNotFoundException;
 import asap.realizer.planunit.TimedPlanUnitPlayException;
-
-import hmi.util.StringUtil;
 
 /**
  * Templated class; unit to create an emitter of type <E>

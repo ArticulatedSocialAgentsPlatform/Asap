@@ -1,10 +1,9 @@
 package asap.realizer.activate;
 
-import saiba.bml.core.Behaviour;
-
 import java.util.ArrayList;
 import java.util.List;
 
+import saiba.bml.core.Behaviour;
 import asap.bml.ext.bmla.BMLAActivateBehaviour;
 import asap.realizer.AbstractPlanner;
 import asap.realizer.BehaviourPlanningException;

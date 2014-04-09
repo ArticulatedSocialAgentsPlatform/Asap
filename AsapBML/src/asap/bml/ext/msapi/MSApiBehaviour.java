@@ -18,12 +18,13 @@
  ******************************************************************************/
 package asap.bml.ext.msapi;
 
-import saiba.bml.core.SpeechBehaviour;
 import hmi.xml.XMLFormatting;
 import hmi.xml.XMLTokenizer;
 
 import java.io.IOException;
 import java.util.HashMap;
+
+import saiba.bml.core.SpeechBehaviour;
 
 /**
  * Microsoft speech API behavior 

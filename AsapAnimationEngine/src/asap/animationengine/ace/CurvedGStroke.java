@@ -1,9 +1,9 @@
 package asap.animationengine.ace;
 
-import lombok.Getter;
-import asap.hns.ShapeSymbols;
 import hmi.math.Mat4f;
 import hmi.math.Vec3f;
+import lombok.Getter;
+import asap.hns.ShapeSymbols;
 
 /**
  * A curved stroke is denoted by three vector parameters, denoting consecutive control points. However, one can

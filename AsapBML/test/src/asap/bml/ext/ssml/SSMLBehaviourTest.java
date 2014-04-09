@@ -8,10 +8,9 @@ import java.io.IOException;
 
 import org.junit.Test;
 
-import asap.bml.ext.bmlt.BMLTInfo;
-
 import saiba.bml.BMLInfo;
 import saiba.bml.core.SpeechBehaviour;
+import asap.bml.ext.bmlt.BMLTInfo;
 
 /**
  * Unit tests for the SSMLBehaviour

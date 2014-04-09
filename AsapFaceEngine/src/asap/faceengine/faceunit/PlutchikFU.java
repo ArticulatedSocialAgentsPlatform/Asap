@@ -18,8 +18,6 @@
  ******************************************************************************/
 package asap.faceengine.faceunit;
 
-import com.google.common.util.concurrent.AtomicDouble;
-
 import hmi.faceanimation.FaceController;
 import hmi.faceanimation.converters.EmotionConverter;
 import hmi.faceanimation.converters.FACSConverter;
@@ -35,6 +33,8 @@ import asap.realizer.planunit.KeyPositionManager;
 import asap.realizer.planunit.KeyPositionManagerImpl;
 import asap.realizer.planunit.ParameterException;
 import asap.realizer.planunit.ParameterNotFoundException;
+
+import com.google.common.util.concurrent.AtomicDouble;
 
 /**
  * A basic facial animation unit consisting of one position on Plutchiks emotion

@@ -10,10 +10,10 @@ import java.io.InputStreamReader;
 import java.net.Socket;
 import java.net.UnknownHostException;
 
-import com.google.common.base.Charsets;
-
 import lombok.Getter;
 import lombok.extern.slf4j.Slf4j;
+
+import com.google.common.base.Charsets;
 
 /**
  * Reads head input from Mark's sensor system

@@ -1,11 +1,12 @@
 package asap.realizerembodiments.impl;
 
-import saiba.bml.core.BMLBehaviorAttributeExtension;
 import hmi.xml.XMLScanException;
 import hmi.xml.XMLStructureAdapter;
 import hmi.xml.XMLTokenizer;
 
 import java.util.HashMap;
+
+import saiba.bml.core.BMLBehaviorAttributeExtension;
 
 /**
  * Creates a BMLAttributeExtension from an XML description

@@ -1,9 +1,9 @@
 package asap.realizertestutil.util;
 
-import saiba.bml.feedback.BMLSyncPointProgressFeedback;
-
 import java.util.ArrayList;
 import java.util.List;
+
+import saiba.bml.feedback.BMLSyncPointProgressFeedback;
 /**
  * Test utilities acting on a list of BMLSyncPointProgressFeedback
  * @author welberge

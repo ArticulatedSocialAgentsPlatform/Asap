@@ -19,9 +19,9 @@
 package asap.emitterengine;
 
 
-import java.util.*;
+import java.util.ArrayList;
 
-import asap.emitterengine.bml.*;
+import asap.emitterengine.bml.CreateEmitterBehaviour;
 
 //import org.slf4j.Logger;
 //import org.slf4j.LoggerFactory;

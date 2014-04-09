@@ -18,9 +18,6 @@
  ******************************************************************************/
 package asap.faceengine.faceunit;
 
-import asap.realizer.planunit.KeyPosition;
-import asap.realizer.planunit.ParameterException;
-import asap.realizer.planunit.ParameterNotFoundException;
 import hmi.faceanimation.FaceController;
 import hmi.faceanimation.converters.EmotionConverter;
 import hmi.faceanimation.converters.FACSConverter;
@@ -29,6 +26,9 @@ import hmi.faceanimation.model.ActionUnit.Symmetry;
 import hmi.faceanimation.model.FACS;
 import hmi.faceanimation.model.FACS.Side;
 import hmi.faceanimation.model.FACSConfiguration;
+import asap.realizer.planunit.KeyPosition;
+import asap.realizer.planunit.ParameterException;
+import asap.realizer.planunit.ParameterNotFoundException;
 
 /**
  * A basic facial animation unit consisting of one AU value. The key positions are: start, attackPeak,

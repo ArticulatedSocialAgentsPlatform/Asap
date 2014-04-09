@@ -18,10 +18,10 @@
  ******************************************************************************/
 package asap.nao.bml;
 
+import java.util.List;
+
 import saiba.bml.core.Behaviour;
 import saiba.bml.parser.SyncPoint;
-
-import java.util.List;
 
 import com.google.common.collect.ImmutableList;
 /**

@@ -18,14 +18,13 @@
  ******************************************************************************/
 package asap.audioengine;
 
-import saiba.bml.BMLGestureSync;
-import saiba.bml.feedback.BMLSyncPointProgressFeedback;
-
 import java.io.InputStream;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import saiba.bml.BMLGestureSync;
+import saiba.bml.feedback.BMLSyncPointProgressFeedback;
 import asap.realizer.feedback.FeedbackManager;
 import asap.realizer.pegboard.BMLBlockPeg;
 import asap.realizer.pegboard.TimePeg;

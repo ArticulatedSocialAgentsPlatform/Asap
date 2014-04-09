@@ -18,9 +18,10 @@
  ******************************************************************************/
 package asap.binding;
 
-import java.util.HashMap;
+import hmi.xml.XMLStructureAdapter;
+import hmi.xml.XMLTokenizer;
 
-import hmi.xml.*;
+import java.util.HashMap;
 
 /**
  * A SpecConstraint is a name/value pair describing a constraint for the embedded spec.<br>

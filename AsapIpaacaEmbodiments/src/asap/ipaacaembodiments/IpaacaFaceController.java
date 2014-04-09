@@ -1,14 +1,15 @@
 package asap.ipaacaembodiments;
 
+import hmi.faceanimation.FaceController;
+import hmi.faceanimation.NullMPEG4FaceController;
+
 import java.util.Collection;
+
+import lombok.Delegate;
 
 import com.google.common.collect.BiMap;
 import com.google.common.collect.HashBiMap;
 import com.google.common.collect.ImmutableMap;
-
-import hmi.faceanimation.FaceController;
-import hmi.faceanimation.NullMPEG4FaceController;
-import lombok.Delegate;
 
 /**
  * Implements morph based face animation through ipaaca (MPEG4 animation is ignored)

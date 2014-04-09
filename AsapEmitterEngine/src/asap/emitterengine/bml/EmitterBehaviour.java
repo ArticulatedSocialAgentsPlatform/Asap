@@ -20,10 +20,10 @@ package asap.emitterengine.bml;
 
 import java.util.List;
 
-import com.google.common.collect.ImmutableList;
-
-import asap.bml.ext.bmlt.*;
 import saiba.bml.parser.SyncPoint;
+import asap.bml.ext.bmlt.BMLTBehaviour;
+
+import com.google.common.collect.ImmutableList;
 /**
  * Abstract class for all emitter engine specific Behaviours.
  * 

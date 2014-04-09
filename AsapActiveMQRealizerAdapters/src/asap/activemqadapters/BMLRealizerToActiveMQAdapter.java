@@ -7,14 +7,12 @@ import java.util.List;
 import javax.jms.JMSException;
 import javax.jms.TextMessage;
 
-import saiba.bml.feedback.BMLWarningFeedback;
-
 import lombok.extern.slf4j.Slf4j;
-
-import com.google.common.collect.ImmutableList;
-
+import saiba.bml.feedback.BMLWarningFeedback;
 import asap.realizerport.BMLFeedbackListener;
 import asap.realizerport.RealizerPort;
+
+import com.google.common.collect.ImmutableList;
 
 /**
  * Submits BML through activemq messages; submits received feedback to registered listeners.

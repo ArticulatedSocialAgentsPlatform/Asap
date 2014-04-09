@@ -18,11 +18,13 @@
  ******************************************************************************/
 package asap.binding;
 
-import java.io.*;
+import hmi.xml.XMLScanException;
+import hmi.xml.XMLStructureAdapter;
+import hmi.xml.XMLTokenizer;
+
+import java.io.IOException;
 import java.util.HashMap;
 import java.util.Set;
-
-import hmi.xml.*;
 
 /**
  * Maps BML behavior parameters to planunit parameters

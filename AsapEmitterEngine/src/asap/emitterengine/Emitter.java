@@ -18,7 +18,7 @@
  ******************************************************************************/
 package asap.emitterengine;
 
-import java.util.*;
+import java.util.ArrayList;
 
 import asap.realizerport.RealizerPort;
 

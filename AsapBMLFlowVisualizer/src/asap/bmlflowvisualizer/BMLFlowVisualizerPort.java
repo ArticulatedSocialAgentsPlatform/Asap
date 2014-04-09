@@ -12,8 +12,6 @@ import javax.swing.JComponent;
 import javax.swing.JPanel;
 import javax.swing.SwingUtilities;
 
-import com.google.common.collect.Lists;
-
 import saiba.bml.core.BehaviourBlock;
 import saiba.bml.core.CoreComposition;
 import saiba.bml.feedback.BMLBlockPredictionFeedback;
@@ -24,6 +22,8 @@ import saiba.bml.feedback.BMLPredictionFeedback;
 import asap.bml.ext.bmla.BMLABMLBehaviorAttributes;
 import asap.realizerport.BMLFeedbackListener;
 import asap.realizerport.RealizerPort;
+
+import com.google.common.collect.Lists;
 
 /**
  * Visualizes the status of the BML blocks submitted to the realizer

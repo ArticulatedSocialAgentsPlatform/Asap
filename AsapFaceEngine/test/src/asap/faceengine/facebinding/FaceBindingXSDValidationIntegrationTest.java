@@ -1,14 +1,14 @@
 package asap.faceengine.facebinding;
 
+import hmi.testutil.xml.XSDValidationTest;
+import hmi.util.Resources;
+
 import java.io.File;
 import java.util.ArrayList;
 import java.util.Collection;
 
 import org.junit.Before;
 import org.junit.runners.Parameterized.Parameters;
-
-import hmi.testutil.xml.XSDValidationTest;
-import hmi.util.Resources;
 
 /**
  * Tests the validity of facebinding resources in /HmiResource/HmiHumanoidFaceControl/resource/Humanoids/armandia/facebinding

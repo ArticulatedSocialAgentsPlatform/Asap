@@ -1,14 +1,13 @@
 package asap.incrementalttsengine;
 
 import static org.mockito.Mockito.mock;
-
-import java.io.IOException;
-
 import hmi.util.Resources;
 import hmi.util.SystemClock;
 import inpro.apps.SimpleMonitor;
 import inpro.audio.DispatchStream;
 import inpro.incremental.unit.PhraseIU;
+
+import java.io.IOException;
 
 import org.junit.Before;
 import org.junit.Test;
