@@ -177,6 +177,7 @@ public class BMLASchedulingHandler implements SchedulingHandler
                 if (appendAfter.size() > 0 || chunkAfter.size() > 0)
                 {
                     bbm.setState(TimedPlanUnitState.LURKING);
+                    scheduler.updatePredictions(bbm.getBMLId());
                     scheduler.updateBMLBlocks();
                 }
                 else
@@ -187,6 +188,7 @@ public class BMLASchedulingHandler implements SchedulingHandler
             case APPEND_AFTER:
             case APPEND:
                 bbm.setState(TimedPlanUnitState.LURKING);
+                scheduler.updatePredictions(bbm.getBMLId());
                 scheduler.updateBMLBlocks();
                 break;
             }

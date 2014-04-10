@@ -323,7 +323,7 @@ public final class BMLScheduler
 
     }
 
-    private BMLABlockPredictionFeedback createBMLABlockPredictionFeedback(String bmlId, double predictedStart, double predictedEnd)
+    private BMLABlockPredictionFeedback createBMLABlockPredictionFeedback(String bmlId, BMLABlockStatus status, double predictedStart, double predictedEnd)
     {
         long timeOffset = System.currentTimeMillis() - (long) (getSchedulingTime() * 1000);
         long posixStart = (long) (predictedStart * 1000) + timeOffset, posixEnd = 0;
@@ -331,29 +331,29 @@ public final class BMLScheduler
         {
             posixEnd = (long) (predictedEnd * 1000) + timeOffset;
         }
-        return new BMLABlockPredictionFeedback(bmlId, predictedStart, predictedEnd, posixStart, posixEnd);
+        return new BMLABlockPredictionFeedback(bmlId, predictedStart, predictedEnd, status, posixStart, posixEnd);
     }
 
     private BMLPredictionFeedback createStartPrediction(BehaviourBlock bb)
     {
         BMLPredictionFeedback bpf = new BMLPredictionFeedback();
-        bpf.addBMLBlockPrediction(createBMLABlockPredictionFeedback(bb.getBmlId(), getSchedulingTime(), predictEndTime(bb.getBmlId())));
+        bpf.addBMLBlockPrediction(createBMLABlockPredictionFeedback(bb.getBmlId(), BMLABlockStatus.IN_EXEC, getSchedulingTime(), predictEndTime(bb.getBmlId())));
         addBehaviorPredictions(bb, bpf);
         return bpf;
     }
 
-    private BMLPredictionFeedback createFilledBlockPrediction(BehaviourBlock bb, double predictedStart, double predictedEnd)
+    private BMLPredictionFeedback createFilledBlockPrediction(BehaviourBlock bb, BMLABlockStatus status, double predictedStart, double predictedEnd)
     {
         BMLPredictionFeedback bpf = new BMLPredictionFeedback();
-        bpf.addBMLBlockPrediction(createBMLABlockPredictionFeedback(bb.getBmlId(), predictedStart, predictedEnd));
+        bpf.addBMLBlockPrediction(createBMLABlockPredictionFeedback(bb.getBmlId(), status, predictedStart, predictedEnd));
         addBehaviorPredictions(bb, bpf);
         return bpf;
     }
 
-    private BMLPredictionFeedback createSingleBlockPrediction(String bmlId, double predictedStart, double predictedEnd)
+    private BMLPredictionFeedback createSingleBlockPrediction(String bmlId, BMLABlockStatus status, double predictedStart, double predictedEnd)
     {
         BMLPredictionFeedback bpf = new BMLPredictionFeedback();
-        bpf.addBMLBlockPrediction(createBMLABlockPredictionFeedback(bmlId, predictedStart, predictedEnd));
+        bpf.addBMLBlockPrediction(createBMLABlockPredictionFeedback(bmlId, status, predictedStart, predictedEnd));
         return bpf;
     }
 
@@ -361,7 +361,8 @@ public final class BMLScheduler
     {
         if (bmlBlockMap.containsKey(bmlId))
         {
-            prediction(createFilledBlockPrediction(bmlBlockMap.get(bmlId), predictStartTime(bmlId), predictEndTime(bmlId)));
+            BMLABlockStatus status = BMLABlockStatus.valueOf(bmlBlocksManager.getBMLBlockState(bmlId).toString());
+            prediction(createFilledBlockPrediction(bmlBlockMap.get(bmlId), status, predictStartTime(bmlId), predictEndTime(bmlId)));
         }
     }
 
@@ -377,12 +378,12 @@ public final class BMLScheduler
 
     public void planningStart(String bmlId, double predictedStart)
     {
-        prediction(createSingleBlockPrediction(bmlId, predictedStart, BMLBlockPredictionFeedback.UNKNOWN_TIME));
+        prediction(createSingleBlockPrediction(bmlId, BMLABlockStatus.IN_PREP, predictedStart, BMLBlockPredictionFeedback.UNKNOWN_TIME));
     }
 
     public void planningFinished(BehaviourBlock bb, double predictedStart, double predictedEnd)
     {
-        prediction(createFilledBlockPrediction(bb, predictedStart, predictedEnd));
+        prediction(createFilledBlockPrediction(bb, BMLABlockStatus.PENDING, predictedStart, predictedEnd));
         bmlBlocksManager.predictionUpdate(bb.getBmlId());
     }
 
