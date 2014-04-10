@@ -102,6 +102,14 @@ public final class BMLBlockManager
         return b.isPending();
     }
     
+    public void interruptBlock(String bmlId)
+    {
+        BMLBBlock b = bmlBlocks.get(bmlId);
+        if (b != null)
+        {
+            b.interrupt();
+        }
+    }
     
     public void finishBlock(String bmlId)
     {

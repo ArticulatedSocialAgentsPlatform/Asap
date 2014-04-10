@@ -12,6 +12,7 @@ import java.util.concurrent.atomic.AtomicReference;
 
 import lombok.extern.slf4j.Slf4j;
 import saiba.bml.BMLGestureSync;
+import asap.bml.ext.bmla.feedback.BMLABlockStatus;
 import asap.realizer.pegboard.BehaviorCluster;
 import asap.realizer.pegboard.BehaviorKey;
 import asap.realizer.pegboard.PegBoard;
@@ -283,6 +284,14 @@ public class BMLBBlock
         return true;
     }
     
+    public void interrupt()
+    {
+        if(state.getAndSet(TimedPlanUnitState.DONE)!=TimedPlanUnitState.DONE)
+        {
+            scheduler.blockStopFeedback(bmlId, BMLABlockStatus.INTERRUPTED);
+        }
+    }
+    
     /**
      * Set DONE state and generate appropriate feedback
      */
@@ -290,7 +299,7 @@ public class BMLBBlock
     {
         if(state.getAndSet(TimedPlanUnitState.DONE)!=TimedPlanUnitState.DONE)
         {
-            scheduler.blockStopFeedback(bmlId);
+            scheduler.blockStopFeedback(bmlId, BMLABlockStatus.DONE);
         }
     }
     

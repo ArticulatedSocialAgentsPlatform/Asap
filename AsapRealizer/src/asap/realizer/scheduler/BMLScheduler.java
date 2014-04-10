@@ -43,6 +43,7 @@ import saiba.bml.parser.InvalidSyncRefException;
 import saiba.bml.parser.SyncPoint;
 import asap.bml.ext.bmla.feedback.BMLABlockPredictionFeedback;
 import asap.bml.ext.bmla.feedback.BMLABlockProgressFeedback;
+import asap.bml.ext.bmla.feedback.BMLABlockStatus;
 import asap.realizer.BehaviorNotFoundException;
 import asap.realizer.Engine;
 import asap.realizer.SyncPointNotFoundException;
@@ -391,14 +392,14 @@ public final class BMLScheduler
      * @param fb
      *            the feedback
      */
-    public void blockStopFeedback(String bmlId)
+    public void blockStopFeedback(String bmlId, BMLABlockStatus status)
     {
-        fbManager.blockProgress(new BMLABlockProgressFeedback(bmlId, "end", schedulingClock.getMediaSeconds()));
+        fbManager.blockProgress(new BMLABlockProgressFeedback(bmlId, "end", schedulingClock.getMediaSeconds(), status));
     }
 
     public void blockStartFeedback(String bmlId)
     {
-        fbManager.blockProgress(new BMLABlockProgressFeedback(bmlId, "start", schedulingClock.getMediaSeconds()));
+        fbManager.blockProgress(new BMLABlockProgressFeedback(bmlId, "start", schedulingClock.getMediaSeconds(), BMLABlockStatus.IN_EXEC));
     }
 
     /**
@@ -566,8 +567,7 @@ public final class BMLScheduler
         {
             e.interruptBehaviourBlock(bmlId, schedulingClock.getMediaSeconds());
         }
-
-        bmlBlocksManager.finishBlock(bmlId);
+        bmlBlocksManager.interruptBlock(bmlId);
         bmlBlocksManager.removeBMLBlock(bmlId);
     }
 

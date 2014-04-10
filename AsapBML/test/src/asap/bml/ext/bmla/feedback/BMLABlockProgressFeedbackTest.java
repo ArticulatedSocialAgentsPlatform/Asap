@@ -31,25 +31,27 @@ public class BMLABlockProgressFeedbackTest
     public void testReadXML()
     {
         String str = "<blockProgress " + TestUtil.getDefNS() + " xmlns:bmla=\""+BMLAInfo.BMLA_NAMESPACE+"\" " +
-        		"bmla:posixTime=\"100\" id=\"bml1:start\" globalTime=\"10\" characterId=\"doctor\"/>";
+        		"bmla:posixTime=\"100\" id=\"bml1:start\" globalTime=\"10\" bmla:status=\"IN_EXEC\" characterId=\"doctor\"/>";
         fb.readXML(str);
         assertEquals("bml1", fb.getBmlId());
         assertEquals("start", fb.getSyncId());
         assertEquals(10, fb.getGlobalTime(), PRECISION);
         assertEquals("doctor", fb.getCharacterId());
         assertEquals(100, fb.getPosixTime(), PRECISION);
+        assertEquals(BMLABlockStatus.IN_EXEC, fb.getStatus());
     }
     
     @Test
     public void testWrite()
     {
-        BMLABlockProgressFeedback fbIn = new BMLABlockProgressFeedback("bml1", "start", 10, 100);
+        BMLABlockProgressFeedback fbIn = new BMLABlockProgressFeedback("bml1", "start", 10, 100, BMLABlockStatus.IN_EXEC);
         StringBuilder buf = new StringBuilder();
         fbIn.appendXML(buf);
         
         BMLABlockProgressFeedback fbOut = new BMLABlockProgressFeedback();
         fbOut.readXML(buf.toString());
         assertEquals(100, fbOut.getPosixTime(), PRECISION);
+        assertEquals(BMLABlockStatus.IN_EXEC, fbOut.getStatus());
     }
     
     @Test
@@ -57,11 +59,12 @@ public class BMLABlockProgressFeedbackTest
     {
         BMLBlockProgressFeedback fbBML = new BMLBlockProgressFeedback();
         String str = "<blockProgress " + TestUtil.getDefNS() + " xmlns:bmla=\""+BMLAInfo.BMLA_NAMESPACE+"\" " +
-                "bmla:posixTime=\"100\" id=\"bml1:start\" globalTime=\"10\" characterId=\"doctor\"/>";
+                "bmla:posixTime=\"100\" id=\"bml1:relax\"  bmla:status=\"SUBSIDING\" globalTime=\"10\" characterId=\"doctor\"/>";
         fbBML.readXML(str);
         fb = BMLABlockProgressFeedback.build(fbBML);
         assertEquals("bml1", fb.getBmlId());
-        assertEquals("start", fb.getSyncId());
+        assertEquals("relax", fb.getSyncId());
+        assertEquals(BMLABlockStatus.SUBSIDING, fb.getStatus());
         assertEquals(10, fb.getGlobalTime(), PRECISION);
         assertEquals("doctor", fb.getCharacterId());
         assertEquals(100, fb.getPosixTime(), PRECISION);
@@ -80,5 +83,6 @@ public class BMLABlockProgressFeedbackTest
         assertEquals(10, fb.getGlobalTime(), PRECISION);
         assertEquals("doctor", fb.getCharacterId());
         assertEquals(0, fb.getPosixTime(), PRECISION);
+        assertEquals(BMLABlockStatus.NONE, fb.getStatus());
     }
 }

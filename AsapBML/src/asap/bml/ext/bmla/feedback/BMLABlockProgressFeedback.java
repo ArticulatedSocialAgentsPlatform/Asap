@@ -15,23 +15,29 @@ import asap.bml.ext.bmla.BMLAInfo;
 public class BMLABlockProgressFeedback extends BMLBlockProgressFeedback
 {
     @Getter
-    private long posixTime = 0;    
+    private long posixTime = 0;   
+    
+    @Getter
+    private BMLABlockStatus status = BMLABlockStatus.NONE;
+    
     private static final String POSIXTIME_ID = BMLAInfo.BMLA_NAMESPACE+":"+"posixTime";
+    private static final String STATUS_ID = BMLAInfo.BMLA_NAMESPACE+":"+"status";
     
     public BMLABlockProgressFeedback()
     {
         super();
     }
     
-    public BMLABlockProgressFeedback(String bmlId, String syncId, double globalTime)
+    public BMLABlockProgressFeedback(String bmlId, String syncId, double globalTime, BMLABlockStatus status)
     {
-        this(bmlId, syncId, globalTime, System.currentTimeMillis());
+        this(bmlId, syncId, globalTime, System.currentTimeMillis(), status);
     }
     
-    public BMLABlockProgressFeedback(String bmlId, String syncId, double globalTime, long posixTime)
+    public BMLABlockProgressFeedback(String bmlId, String syncId, double globalTime, long posixTime, BMLABlockStatus status)
     {
         super(bmlId, syncId, globalTime);
         setPosixTime(posixTime);
+        setStatus(status);
     }
     
     public static BMLABlockProgressFeedback build(BMLBlockProgressFeedback fb)
@@ -39,6 +45,15 @@ public class BMLABlockProgressFeedback extends BMLBlockProgressFeedback
         BMLABlockProgressFeedback fbNew = new BMLABlockProgressFeedback();
         fbNew.readXML(fb.toXMLString());
         return fbNew;
+    }
+    
+    private void setStatus(BMLABlockStatus status)
+    {
+        this.status = status;
+        if(status != BMLABlockStatus.NONE)
+        {
+            addCustomStringParameterValue(STATUS_ID, status.toString());
+        }
     }
     
     private void setPosixTime(long time)
@@ -57,6 +72,10 @@ public class BMLABlockProgressFeedback extends BMLBlockProgressFeedback
         if (specifiesCustomStringParameter(POSIXTIME_ID))
         {
             setPosixTime(Long.parseLong(getCustomStringParameterValue(POSIXTIME_ID)));
+        }
+        if (specifiesCustomStringParameter(STATUS_ID))
+        {
+            setStatus(BMLABlockStatus.valueOf(getCustomStringParameterValue(STATUS_ID)));
         }
     }
 }

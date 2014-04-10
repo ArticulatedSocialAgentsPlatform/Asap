@@ -1,5 +1,7 @@
 package asap.realizer.scheduler;
 
+import static org.mockito.Matchers.any;
+import static org.mockito.Matchers.eq;
 import static org.mockito.Mockito.atLeastOnce;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.never;
@@ -20,6 +22,7 @@ import org.powermock.modules.junit4.PowerMockRunner;
 import saiba.bml.feedback.BMLBlockProgressFeedback;
 import saiba.bml.feedback.BMLSyncPointProgressFeedback;
 import saiba.bml.feedback.BMLWarningFeedback;
+import asap.bml.ext.bmla.feedback.BMLABlockStatus;
 import asap.realizer.pegboard.PegBoard;
 import asap.realizer.pegboard.TimePeg;
 import asap.realizer.planunit.TimedPlanUnitState;
@@ -60,7 +63,7 @@ public class BMLBlockManagerFeedbackTest
         bbm.syncProgress(spp);
         // previous end definition
         // verify(mockScheduler,times(1)).blockStopFeedback("bml1");
-        verify(mockScheduler, times(0)).blockStopFeedback("bml1");
+        verify(mockScheduler, times(0)).blockStopFeedback("bml1", BMLABlockStatus.DONE);
 
         verify(mockScheduler, atLeastOnce()).getBehaviours("bml1");
     }
@@ -99,8 +102,8 @@ public class BMLBlockManagerFeedbackTest
 
         // previous end definition
         // verify(mockScheduler,times(1)).blockStopFeedback("bml1");
-        verify(mockScheduler, times(0)).blockStopFeedback("bml1");
-        verify(mockScheduler, times(0)).blockStopFeedback("bml2");
+        verify(mockScheduler, times(0)).blockStopFeedback(eq("bml1"), any(BMLABlockStatus.class));
+        verify(mockScheduler, times(0)).blockStopFeedback(eq("bml2"), any(BMLABlockStatus.class));
     }
 
     @Test
@@ -135,7 +138,7 @@ public class BMLBlockManagerFeedbackTest
         bbm.syncProgress(new BMLSyncPointProgressFeedback("bml1", "beh2", "stroke", 1.5, 1.5));
         bbm.syncProgress(new BMLSyncPointProgressFeedback("bml1", "beh2", "end", 2, 2));
 
-        verify(mockScheduler, never()).blockStopFeedback("bml1");
+        verify(mockScheduler, never()).blockStopFeedback(eq("bml1"), any(BMLABlockStatus.class));
     }
 
     @Test
@@ -153,7 +156,7 @@ public class BMLBlockManagerFeedbackTest
         when(mockScheduler.getEndTime("bml1", "beh1")).thenReturn(4.0);
 
         bbm.syncProgress(new BMLSyncPointProgressFeedback("bml1", "beh1", "start", 4, 4));
-        verify(mockScheduler, never()).blockStopFeedback("bml1");
+        verify(mockScheduler, never()).blockStopFeedback(eq("bml1"), any(BMLABlockStatus.class));
     }
 
     @Test
@@ -173,7 +176,7 @@ public class BMLBlockManagerFeedbackTest
         bbm.syncProgress(new BMLSyncPointProgressFeedback("bml1", "beh1", "start", 1, 1));
         bbm.syncProgress(new BMLSyncPointProgressFeedback("bml1", "beh1", "end", 4, 4));
 
-        verify(mockScheduler, times(1)).blockStopFeedback("bml1");
+        verify(mockScheduler, times(1)).blockStopFeedback("bml1", BMLABlockStatus.DONE);
     }
 
     @Test
@@ -198,7 +201,7 @@ public class BMLBlockManagerFeedbackTest
         bbm.syncProgress(new BMLSyncPointProgressFeedback("bml1", "beh1", "end", 4, 4));
         bbm.syncProgress(new BMLSyncPointProgressFeedback("bml1", "beh2", "end", 8, 8));
 
-        verify(mockScheduler, times(1)).blockStopFeedback("bml1");
+        verify(mockScheduler, times(1)).blockStopFeedback("bml1", BMLABlockStatus.DONE);
     }
 
     @Test
@@ -210,7 +213,7 @@ public class BMLBlockManagerFeedbackTest
         when(mockScheduler.getBehaviours("bml1")).thenReturn(new HashSet<String>());
 
         bbm.warn(new BMLWarningFeedback("bml1", "TEST", ""));
-        verify(mockScheduler, times(1)).blockStopFeedback("bml1");
+        verify(mockScheduler, times(1)).blockStopFeedback("bml1", BMLABlockStatus.DONE);
     }
 
     @Test
@@ -235,7 +238,7 @@ public class BMLBlockManagerFeedbackTest
         bbm.syncProgress(new BMLSyncPointProgressFeedback("bml1", "beh2", "end", 4, 4));
         bbm.syncProgress(new BMLSyncPointProgressFeedback("bml1", "beh1", "end", 8, 8));
 
-        verify(mockScheduler, times(1)).blockStopFeedback("bml1");
+        verify(mockScheduler, times(1)).blockStopFeedback("bml1", BMLABlockStatus.DONE);
     }
 
     @Test
