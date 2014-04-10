@@ -5,11 +5,10 @@ import hmi.xml.XMLNameSpace;
 import java.util.List;
 import java.util.Set;
 
-import com.google.common.collect.ImmutableList;
-
-import lombok.Delegate;
 import saiba.bml.core.BMLBehaviorAttributeExtension;
 import saiba.bml.core.BehaviourBlock;
+
+import com.google.common.collect.ImmutableList;
 
 /**
  * Enhances BehaviourBlock with some boilerplate code to parse/create BML blocks that contain BMLA elements.
