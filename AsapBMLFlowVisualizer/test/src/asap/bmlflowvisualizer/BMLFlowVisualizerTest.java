@@ -111,6 +111,7 @@ public class BMLFlowVisualizerTest
     public void testInvalidBML2()
     {
         vis.performBML("<invalid>");
+        verify(mockPort).performBML("<invalid>");
     }
 
     @Test

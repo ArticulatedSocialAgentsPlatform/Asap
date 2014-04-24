@@ -151,23 +151,22 @@ public class BMLFlowVisualizerPort implements RealizerPort, BMLFeedbackListener
         try
         {
             bb.readXML(bmlString);
+            if (bb.getComposition().equals(CoreComposition.REPLACE))
+            {
+                for (BMLFlowVisualization v : visualizations)
+                {
+                    v.clear();
+                }            
+            }
+            for (BMLFlowVisualization v : visualizations)
+            {
+                v.planBlock(bb);
+            }
         }
         catch (XMLScanException e)
         {
-            return;
-        }
-
-        if (bb.getComposition().equals(CoreComposition.REPLACE))
-        {
-            for (BMLFlowVisualization v : visualizations)
-            {
-                v.clear();
-            }            
-        }
-        for (BMLFlowVisualization v : visualizations)
-        {
-            v.planBlock(bb);
-        }
+            //handle error at toplevel port
+        }        
         realizerPort.performBML(bmlString);
     }
 
