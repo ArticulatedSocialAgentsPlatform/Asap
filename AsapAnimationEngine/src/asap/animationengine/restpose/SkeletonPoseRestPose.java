@@ -108,7 +108,7 @@ public class SkeletonPoseRestPose implements RestPose
         TransitionMU mu = createTransitionToRest(joints);
         mu.addKeyPosition(new KeyPosition("start", 0));
         mu.addKeyPosition(new KeyPosition("end", 1));
-        TimedAnimationMotionUnit tmu = new TimedAnimationMotionUnit(fbm, bmlBlockPeg, bmlId, id, mu, pb);
+        TimedAnimationMotionUnit tmu = new TimedAnimationMotionUnit(fbm, bmlBlockPeg, bmlId, id, mu, pb, player);
         tmu.setTimePeg("start", startPeg);
         tmu.setTimePeg("end", endPeg);
         tmu.setState(TimedPlanUnitState.LURKING);

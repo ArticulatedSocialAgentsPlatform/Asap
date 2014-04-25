@@ -121,6 +121,8 @@ public class ProcAnimationMU extends XMLStructureAdapter implements AnimationUni
 
     private VJoint vNext, vAdditive;
 
+    private AnimationPlayer aniPlayer;
+
     /**
      * Constructor
      */
@@ -1243,7 +1245,9 @@ public class ProcAnimationMU extends XMLStructureAdapter implements AnimationUni
     @Override
     public synchronized ProcAnimationMU copy(AnimationPlayer p) throws MUSetupException
     {
-        return copy(p.getVNext(), p.getvAdditive());
+        ProcAnimationMU mu = copy(p.getVNext(), p.getvAdditive());
+        mu.aniPlayer = p;
+        return mu;
     }
 
     public void setup(VJoint vNext)
@@ -1472,7 +1476,7 @@ public class ProcAnimationMU extends XMLStructureAdapter implements AnimationUni
                 bodyPartFilter.add(joint);
             }
             filterBodyParts();
-        }        
+        }
         else if (StringUtil.isNumeric(value))
         {
             setFloatParameterValue(name, Float.parseFloat(value));
@@ -1506,7 +1510,7 @@ public class ProcAnimationMU extends XMLStructureAdapter implements AnimationUni
     @Override
     public TimedAnimationMotionUnit createTMU(FeedbackManager bfm, BMLBlockPeg bbPeg, String bmlId, String id, PegBoard pb)
     {
-        return new TimedAnimationMotionUnit(bfm, bbPeg, bmlId, id, this, pb);
+        return new TimedAnimationMotionUnit(bfm, bbPeg, bmlId, id, this, pb, aniPlayer);
     }
 
     private static final Set<String> PHJOINTS = ImmutableSet.of();
@@ -1515,6 +1519,17 @@ public class ProcAnimationMU extends XMLStructureAdapter implements AnimationUni
     public Set<String> getPhysicalJoints()
     {
         return PHJOINTS;
+    }
+
+    @Override
+    public Set<String> getAdditiveJoints()
+    {
+        if (blending.equals(Blending.ADDITIVE))
+        {
+            return VJointUtils.transformToSidSet(bodyParts);
+        }
+
+        return ImmutableSet.of();
     }
 
     @Override

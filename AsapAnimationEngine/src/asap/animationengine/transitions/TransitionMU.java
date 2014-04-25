@@ -53,6 +53,7 @@ public abstract class TransitionMU implements AnimationUnit
     protected List<VJoint> joints;
     private double prefDuration = 2;
     private KeyPositionManager keyPositionManager = new KeyPositionManagerImpl();
+    protected AnimationPlayer aniPlayer;
     
     public void addKeyPosition(KeyPosition kp)
     {
@@ -92,7 +93,7 @@ public abstract class TransitionMU implements AnimationUnit
     @Override
     public TimedAnimationMotionUnit createTMU(FeedbackManager bfm, BMLBlockPeg bbPeg, String bmlId, String id, PegBoard pb)
     {
-        return new TimedAnimationMotionUnit(bfm, bbPeg, bmlId, id, this, pb);
+        return new TimedAnimationMotionUnit(bfm, bbPeg, bmlId, id, this, pb, aniPlayer);
     }
 
     @Override

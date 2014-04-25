@@ -58,7 +58,8 @@ public class KeyframeMU implements AnimationUnit
     private KeyPositionManager keyPositionManager = new KeyPositionManagerImpl();
     private boolean mirror = false;
     private Set<String> filter = new HashSet<String>();
-
+    private AnimationPlayer aniPlayer;
+    
     @Override
     public void addKeyPosition(KeyPosition kp)
     {
@@ -244,12 +245,13 @@ public class KeyframeMU implements AnimationUnit
     @Override
     public TimedAnimationMotionUnit createTMU(FeedbackManager bbm, BMLBlockPeg bbPeg, String bmlId, String id, PegBoard pb)
     {
-        return new TimedAnimationMotionUnit(bbm, bbPeg, bmlId, id, this, pb);
+        return new TimedAnimationMotionUnit(bbm, bbPeg, bmlId, id, this, pb, aniPlayer);
     }
 
     @Override
     public AnimationUnit copy(AnimationPlayer p)
     {
+        this.aniPlayer = p;
         return copy(p.getVNext());
     }
 
@@ -272,4 +274,9 @@ public class KeyframeMU implements AnimationUnit
     {
                 
     } 
+    @Override
+    public Set<String> getAdditiveJoints()
+    {
+        return ImmutableSet.of();
+    }
 }

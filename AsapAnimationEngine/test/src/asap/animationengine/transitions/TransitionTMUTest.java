@@ -13,6 +13,7 @@ import org.powermock.core.classloader.annotations.PowerMockIgnore;
 import org.powermock.core.classloader.annotations.PrepareForTest;
 import org.powermock.modules.junit4.PowerMockRunner;
 
+import asap.animationengine.AnimationPlayer;
 import asap.animationengine.motionunit.TimedAnimationMotionUnit;
 import asap.motionunit.MUPlayException;
 import asap.realizer.feedback.FeedbackManager;
@@ -43,11 +44,12 @@ public class TransitionTMUTest extends AbstractTimedPlanUnitTest
     TransitionMU mockTransitionMU = mock(TransitionMU.class);
     FeedbackManager mockBmlFeedbackManager = mock(FeedbackManager.class);
     private PegBoard pegBoard = new PegBoard();
-
+    private AnimationPlayer mockAnimationPlayer = mock(AnimationPlayer.class);
+    
     @Override
     protected TimedPlanUnit setupPlanUnit(FeedbackManager bfm, BMLBlockPeg bbPeg, String id, String bmlId, double startTime)
     {
-        TimedAnimationMotionUnit tmu = new TimedAnimationMotionUnit(bfm, bbPeg, bmlId, id, mockTransitionMU, pegBoard);
+        TimedAnimationMotionUnit tmu = new TimedAnimationMotionUnit(bfm, bbPeg, bmlId, id, mockTransitionMU, pegBoard, mockAnimationPlayer);
         KeyPositionMocker.stubKeyPositions(mockTransitionMU, new KeyPosition("start", 0, 1), new KeyPosition("ready", 0, 1),
                 new KeyPosition("strokeStart", 0, 1), new KeyPosition("stroke", 0.5, 1), new KeyPosition("strokeEnd", 1, 1),
                 new KeyPosition("relax", 1, 1), new KeyPosition("end", 1, 1));
@@ -60,7 +62,7 @@ public class TransitionTMUTest extends AbstractTimedPlanUnitTest
     public void testExecStates() throws TimedPlanUnitPlayException, MUPlayException
     {
         TimedAnimationMotionUnit tmu = new TimedAnimationMotionUnit(mockBmlFeedbackManager, BMLBlockPeg.GLOBALPEG, "bml1", "behaviour1",
-                mockTransitionMU, pegBoard);
+                mockTransitionMU, pegBoard, mockAnimationPlayer);
         TimePeg tpStart = new TimePeg(BMLBlockPeg.GLOBALPEG);
         tpStart.setGlobalValue(0);
         TimePeg tpEnd = new TimePeg(BMLBlockPeg.GLOBALPEG);

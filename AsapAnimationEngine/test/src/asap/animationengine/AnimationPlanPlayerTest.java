@@ -65,7 +65,7 @@ public class AnimationPlanPlayerTest
     private AnimationUnit muMock1 = mock(AnimationUnit.class);
     private AnimationUnit muMock2 = mock(AnimationUnit.class);
     private TransitionMU muMockTransition = mock(TransitionMU.class);
-
+    private AnimationPlayer mockAnimationPlayer = mock(AnimationPlayer.class);
     private List<BMLSyncPointProgressFeedback> fbList = new ArrayList<>();
     private List<BMLWarningFeedback> exList = new ArrayList<>();
     private BMLBlockManager mockBmlBlockManager = mock(BMLBlockManager.class);
@@ -90,12 +90,12 @@ public class AnimationPlanPlayerTest
 
     private TimedAnimationMotionUnit createMotionUnit(String behId, String bmlId, AnimationUnit mu)
     {
-        return new TimedAnimationMotionUnit(fbManager, BMLBlockPeg.GLOBALPEG, bmlId, behId, mu, pegBoard);
+        return new TimedAnimationMotionUnit(fbManager, BMLBlockPeg.GLOBALPEG, bmlId, behId, mu, pegBoard, mockAnimationPlayer);
     }
 
     private TimedAnimationMotionUnit createTransitionTMU(String behId, String bmlId, TransitionMU mu)
     {
-        return new TimedAnimationMotionUnit(fbManager, BMLBlockPeg.GLOBALPEG, bmlId, behId, mu, pegBoard);
+        return new TimedAnimationMotionUnit(fbManager, BMLBlockPeg.GLOBALPEG, bmlId, behId, mu, pegBoard, mockAnimationPlayer);
     }
 
     @Test

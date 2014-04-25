@@ -182,7 +182,7 @@ public class ControllerMU implements AnimationUnit
     @Override
     public TimedAnimationMotionUnit createTMU(FeedbackManager bfm, BMLBlockPeg bbPeg, String bmlId, String id, PegBoard pb)
     {
-        return new PhysicalTMU(bfm, bbPeg, bmlId, id, this, pb);
+        return new PhysicalTMU(bfm, bbPeg, bmlId, id, this, pb, aPlayer);
     }
 
     public void reset()
@@ -238,5 +238,11 @@ public class ControllerMU implements AnimationUnit
     public void startUnit(double t) throws MUPlayException
     {
 
+    }
+
+    @Override
+    public Set<String> getAdditiveJoints()
+    {
+        return ImmutableSet.of();
     }
 }

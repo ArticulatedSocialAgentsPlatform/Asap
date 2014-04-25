@@ -317,6 +317,11 @@ public class PlanUnitTimeManager
         }
     }
     
+    public void resolveHeadKeyPositions()
+    {
+        resolveGestureKeyPositions();
+    }
+    
     /**
      * Fills out default BML keypositions that are not yet in the TimedMotionUnit. 
      * Conventions:

@@ -21,7 +21,7 @@ public class PostureShiftTMU extends TimedAnimationMotionUnit
     public PostureShiftTMU(FeedbackManager bbf, BMLBlockPeg bmlBlockPeg, String bmlId, String id, AnimationUnit mu, PegBoard pb,
             RestPose restPose, AnimationPlayer ap)
     {
-        super(bbf, bmlBlockPeg, bmlId, id, mu, pb);
+        super(bbf, bmlBlockPeg, bmlId, id, mu, pb, ap);
         this.restPose = restPose;
         aniPlayer = ap;
     }

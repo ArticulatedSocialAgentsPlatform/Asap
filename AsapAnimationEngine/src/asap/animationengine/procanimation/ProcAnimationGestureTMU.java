@@ -8,6 +8,7 @@ import java.util.Set;
 import lombok.extern.slf4j.Slf4j;
 import saiba.bml.BMLGestureSync;
 import saiba.bml.core.Behaviour;
+import asap.animationengine.AnimationPlayer;
 import asap.animationengine.motionunit.TimedAnimationMotionUnit;
 import asap.motionunit.TMUPlayException;
 import asap.realizer.BehaviourPlanningException;
@@ -32,9 +33,9 @@ public class ProcAnimationGestureTMU extends TimedAnimationMotionUnit
     private double prepDuration, preStrokeHoldDuration, strokeStartDuration, strokeEndDuration, postStrokeHoldDuration, relaxDuration;
 
     public ProcAnimationGestureTMU(FeedbackManager bbf, BMLBlockPeg bmlBlockPeg, String bmlId, String id, ProcAnimationGestureMU m,
-            PegBoard pb)
+            PegBoard pb, AnimationPlayer aniPlayer)
     {
-        super(bbf, bmlBlockPeg, bmlId, id, m, pb);
+        super(bbf, bmlBlockPeg, bmlId, id, m, pb, aniPlayer);
         mu = m;
     }
 

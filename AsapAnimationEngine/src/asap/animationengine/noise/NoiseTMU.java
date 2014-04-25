@@ -19,6 +19,7 @@
 package asap.animationengine.noise;
 
 import saiba.bml.feedback.BMLSyncPointProgressFeedback;
+import asap.animationengine.AnimationPlayer;
 import asap.animationengine.motionunit.TimedAnimationMotionUnit;
 import asap.motionunit.MUPlayException;
 import asap.motionunit.TMUPlayException;
@@ -42,9 +43,9 @@ public class NoiseTMU extends TimedAnimationMotionUnit
 
     // double startTime = 0;
 
-    public NoiseTMU(FeedbackManager bfm, BMLBlockPeg bmlBlockPeg, String bmlId, String id, NoiseMU nmu, PegBoard pb)
+    public NoiseTMU(FeedbackManager bfm, BMLBlockPeg bmlBlockPeg, String bmlId, String id, NoiseMU nmu, PegBoard pb, AnimationPlayer aniPlayer)
     {
-        super(bfm, bmlBlockPeg, bmlId, id, nmu, pb);
+        super(bfm, bmlBlockPeg, bmlId, id, nmu, pb, aniPlayer);
         this.nmu = nmu;
     }
 

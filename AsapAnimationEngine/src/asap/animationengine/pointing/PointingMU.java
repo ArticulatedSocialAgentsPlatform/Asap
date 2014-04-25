@@ -303,7 +303,7 @@ public class PointingMU implements AnimationUnit
     @Override
     public TimedAnimationMotionUnit createTMU(FeedbackManager bfm, BMLBlockPeg bbPeg, String bmlId, String id, PegBoard pb)
     {
-        return new PointingTMU(bfm, bbPeg, bmlId, id, this, pb);
+        return new PointingTMU(bfm, bbPeg, bmlId, id, this, pb, player);
     }
 
     @Override
@@ -371,5 +371,11 @@ public class PointingMU implements AnimationUnit
     public void startUnit(double t) throws MUPlayException
     {
 
+    }
+    
+    @Override
+    public Set<String> getAdditiveJoints()
+    {
+        return ImmutableSet.of();
     }
 }

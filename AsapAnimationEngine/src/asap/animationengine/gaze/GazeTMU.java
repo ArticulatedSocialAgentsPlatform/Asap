@@ -46,7 +46,7 @@ public class GazeTMU extends TimedAnimationMotionUnit
 
     public GazeTMU(FeedbackManager bfm, BMLBlockPeg bmlBlockPeg, String bmlId, String id, GazeMU mu, PegBoard pb, AnimationPlayer aniPlayer)
     {
-        super(bfm, bmlBlockPeg, bmlId, id, mu, pb);
+        super(bfm, bmlBlockPeg, bmlId, id, mu, pb, aniPlayer);
         this.aniPlayer = aniPlayer;
         gmu = mu;
     }

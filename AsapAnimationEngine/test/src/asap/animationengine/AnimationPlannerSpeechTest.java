@@ -40,7 +40,8 @@ public class AnimationPlannerSpeechTest
     private PhysicalHumanoid mockPh = mock(PhysicalHumanoid.class);
     private FeedbackManager mockBmlFeedbackManager = mock(FeedbackManager.class);
     private PegBoard pegBoard = new PegBoard();
-    
+    private AnimationPlayer mockAnimationPlayer = mock(AnimationPlayer.class);
+
     private AnimationPlanner animationPlanner;
     PlanManager<TimedAnimationUnit> planManager = new PlanManager<>();
     DefaultEngine<TimedAnimationUnit> animationEngine;
@@ -53,26 +54,26 @@ public class AnimationPlannerSpeechTest
         MixedSystem ms = new MixedSystem(new float[] { 0, -9.8f, 0 }, mockPh);
         m.add(ms);
         AnimationPlayer ap = new AnimationPlayer(HanimBody.getLOA1HanimBody(), HanimBody.getLOA1HanimBody(), HanimBody.getLOA1HanimBody(),
-                m, 0.001f,
-                new AnimationPlanPlayer(new SkeletonPoseRestPose(), new ForwardRestGaze(GazeInfluence.WAIST), mockBmlFeedbackManager, planManager,
-                        new DefaultTimedPlanUnitPlayer(),pegBoard));
+                m, 0.001f, new AnimationPlanPlayer(new SkeletonPoseRestPose(), new ForwardRestGaze(GazeInfluence.WAIST),
+                        mockBmlFeedbackManager, planManager, new DefaultTimedPlanUnitPlayer(), pegBoard));
 
-        animationPlanner = new AnimationPlanner(mockBmlFeedbackManager, ap, mockBinding, planManager,pegBoard);
+        animationPlanner = new AnimationPlanner(mockBmlFeedbackManager, ap, mockBinding, planManager, pegBoard);
         List<TimedAnimationMotionUnit> visemeMUs = new ArrayList<TimedAnimationMotionUnit>();
 
         animationEngine = new DefaultEngine<TimedAnimationUnit>(animationPlanner, ap, planManager);
 
-        TimedAnimationMotionUnit tmu = new TimedAnimationMotionUnit(mockBmlFeedbackManager, bbPeg, "bml1", "speech1", mockUnit1,pegBoard);
+        TimedAnimationMotionUnit tmu = new TimedAnimationMotionUnit(mockBmlFeedbackManager, bbPeg, "bml1", "speech1", mockUnit1, pegBoard,
+                mockAnimationPlayer);
         visemeMUs.add(tmu);
-        tmu = new TimedAnimationMotionUnit(mockBmlFeedbackManager, bbPeg, "bml1", "speech1", mockUnit2,pegBoard);
+        tmu = new TimedAnimationMotionUnit(mockBmlFeedbackManager, bbPeg, "bml1", "speech1", mockUnit2, pegBoard, mockAnimationPlayer);
         tmu.setSubUnit(true);
         visemeMUs.add(tmu);
 
-        tmu = new TimedAnimationMotionUnit(mockBmlFeedbackManager, bbPeg, "bml1", "speech1", mockUnit3,pegBoard);
+        tmu = new TimedAnimationMotionUnit(mockBmlFeedbackManager, bbPeg, "bml1", "speech1", mockUnit3, pegBoard, mockAnimationPlayer);
         visemeMUs.add(tmu);
         tmu.setSubUnit(true);
 
-        tmu = new TimedAnimationMotionUnit(mockBmlFeedbackManager, bbPeg, "bml1", "speech1", mockUnit4,pegBoard);
+        tmu = new TimedAnimationMotionUnit(mockBmlFeedbackManager, bbPeg, "bml1", "speech1", mockUnit4, pegBoard, mockAnimationPlayer);
         visemeMUs.add(tmu);
         tmu.setSubUnit(true);
 

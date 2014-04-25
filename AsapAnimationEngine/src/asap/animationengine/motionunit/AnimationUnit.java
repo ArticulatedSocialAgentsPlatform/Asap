@@ -36,6 +36,7 @@ public interface AnimationUnit extends MotionUnit
     
     Set<String> getPhysicalJoints();
     Set<String> getKinematicJoints();
+    Set<String> getAdditiveJoints();
     
     /**
      * Creates the TimedMotionUnit corresponding to this motion unit

@@ -278,4 +278,10 @@ public class TweedGazeMU extends AbstractGazeMU
             return KINJOINTSALL;
         }
     }
+    
+    @Override
+    public Set<String> getAdditiveJoints()
+    {
+        return ImmutableSet.of();
+    }
 }

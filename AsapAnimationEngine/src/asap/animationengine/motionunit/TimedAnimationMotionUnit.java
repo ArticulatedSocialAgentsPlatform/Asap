@@ -22,6 +22,8 @@ import java.util.List;
 import java.util.Set;
 
 import saiba.bml.core.Behaviour;
+import asap.animationengine.AnimationPlayer;
+import asap.motionunit.MUPlayException;
 import asap.motionunit.TMUPlayException;
 import asap.motionunit.TimedMotionUnit;
 import asap.realizer.BehaviourPlanningException;
@@ -29,10 +31,14 @@ import asap.realizer.feedback.FeedbackManager;
 import asap.realizer.feedback.NullFeedbackManager;
 import asap.realizer.pegboard.BMLBlockPeg;
 import asap.realizer.pegboard.PegBoard;
+import asap.realizer.pegboard.TimePeg;
 import asap.realizer.planunit.Priority;
+import asap.realizer.planunit.TimedPlanUnitPlayException;
 import asap.realizer.scheduler.LinearStretchResolver;
 import asap.realizer.scheduler.TimePegAndConstraint;
 import asap.realizer.scheduler.UniModalResolver;
+
+import com.google.common.collect.Sets;
 
 /**
  * A TimedAnimationUnit implementation that delegates the motion execution etc to an AnimationUnit
@@ -46,7 +52,8 @@ public class TimedAnimationMotionUnit extends TimedMotionUnit implements TimedAn
 {
     private final AnimationUnit mu;
     private final UniModalResolver resolver = new LinearStretchResolver();    
-
+    private final AnimationPlayer aniPlayer;
+    private AnimationUnit retractUnit;
     public Set<String> getKinematicJoints()
     {
         return mu.getKinematicJoints();
@@ -69,16 +76,17 @@ public class TimedAnimationMotionUnit extends TimedMotionUnit implements TimedAn
      * @param id behaviour id
      * @param m motion unit
      */
-    public TimedAnimationMotionUnit(FeedbackManager bbf, BMLBlockPeg bmlBlockPeg, String bmlId, String id, AnimationUnit m, PegBoard pb)
+    public TimedAnimationMotionUnit(FeedbackManager bbf, BMLBlockPeg bmlBlockPeg, String bmlId, String id, AnimationUnit m, PegBoard pb, AnimationPlayer aniPlayer)
     {
         super(bbf, bmlBlockPeg, bmlId, id, m, pb);
+        this.aniPlayer = aniPlayer;
         setPriority(Priority.GESTURE);
         mu = m;        
     }
 
-    public TimedAnimationMotionUnit(BMLBlockPeg bmlBlockPeg, String bmlId, String id, AnimationUnit m, PegBoard pb)
+    public TimedAnimationMotionUnit(BMLBlockPeg bmlBlockPeg, String bmlId, String id, AnimationUnit m, PegBoard pb, AnimationPlayer aniPlayer)
     {
-        this(NullFeedbackManager.getInstance(), bmlBlockPeg, bmlId, id, m, pb);
+        this(NullFeedbackManager.getInstance(), bmlBlockPeg, bmlId, id, m, pb, aniPlayer);
     }
 
     public void updateTiming(double time) throws TMUPlayException
@@ -104,5 +112,35 @@ public class TimedAnimationMotionUnit extends TimedMotionUnit implements TimedAn
         return getPreferedDuration() - getPreparationDuration() - getRetractionDuration();
     }
     
+    @Override
+    protected void playUnit(double time) throws TimedPlanUnitPlayException
+    {
+        if(retractUnit!=null && time>getRelaxTime())
+        {
+            try
+            {
+                double t = (time-getRelaxTime())/(getEndTime()-getRelaxTime());
+                retractUnit.play(t);
+            }
+            catch (MUPlayException e)
+            {
+                throw new TimedPlanUnitPlayException(e.getMessage(),this,e);
+            }            
+        }
+        else
+        {
+            super.playUnit(time);
+        }
+    }
     
+    @Override
+    protected void gracefullInterrupt(double time) throws TimedPlanUnitPlayException
+    {
+        Set<String> joints = Sets.union(Sets.union(mu.getKinematicJoints(),mu.getPhysicalJoints()), mu.getAdditiveJoints());
+        double retractionDuration = aniPlayer.getRestPose().getTransitionToRestDuration(aniPlayer.getVCurr(), joints);        
+        skipPegs(time, "ready", "strokeStart", "stroke", "strokeEnd");
+        getTimePeg("relax").setGlobalValue(time);
+        getTimePeg("end").setGlobalValue(time+retractionDuration);
+        retractUnit = aniPlayer.getRestPose().createTransitionToRest(joints);        
+    }
 }

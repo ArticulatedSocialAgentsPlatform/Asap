@@ -24,6 +24,9 @@ import hmi.math.Quat4f;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
+import java.util.Set;
+
+import com.google.common.collect.ImmutableSet;
 
 import asap.animationengine.AnimationPlayer;
 
@@ -48,6 +51,7 @@ public class SlerpTransitionToPoseMU extends TransitionToPoseMU
     @Override
     public TransitionMU copy(AnimationPlayer player)
     {
+        this.aniPlayer = player;
         ArrayList<VJoint> startPoseJoints = new ArrayList<VJoint>();
         float[] ep = null;
         if (endPose != null)
@@ -118,5 +122,9 @@ public class SlerpTransitionToPoseMU extends TransitionToPoseMU
         }
     }
 
-    
+    @Override
+    public Set<String> getAdditiveJoints()
+    {
+        return ImmutableSet.of();
+    }
 }

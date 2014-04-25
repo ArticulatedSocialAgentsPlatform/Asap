@@ -25,6 +25,9 @@ import hmi.math.Vec3f;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
+import java.util.Set;
+
+import com.google.common.collect.ImmutableSet;
 
 import asap.animationengine.AnimationPlayer;
 
@@ -49,6 +52,7 @@ public class T1RTransitionToPoseMU extends TransitionToPoseMU
     @Override
     public T1RTransitionToPoseMU copy(AnimationPlayer player)
     {
+        this.aniPlayer = player;
         ArrayList<VJoint> startPoseJoints = new ArrayList<VJoint>();
         float[] ep = null;
         if (endPose != null)
@@ -124,5 +128,11 @@ public class T1RTransitionToPoseMU extends TransitionToPoseMU
                 i += 4;
             }
         }
+    }
+    
+    @Override
+    public Set<String> getAdditiveJoints()
+    {
+        return ImmutableSet.of();
     }
 }

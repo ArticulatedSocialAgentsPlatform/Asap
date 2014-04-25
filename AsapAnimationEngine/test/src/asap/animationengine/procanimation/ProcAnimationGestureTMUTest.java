@@ -98,7 +98,7 @@ public class ProcAnimationGestureTMUTest extends TimedAnimationMotionUnitTest
         mu.addKeyPosition(new KeyPosition(BMLGestureSync.STROKE_END.getId(), 0.8, 1.0));
         mu.setAnimationPlayer(mockAnimationPlayer);
 
-        ProcAnimationGestureTMU tmu = new ProcAnimationGestureTMU(bfm, bbPeg, bmlId, id, mu, pegBoard);
+        ProcAnimationGestureTMU tmu = new ProcAnimationGestureTMU(bfm, bbPeg, bmlId, id, mu, pegBoard, mockAnimationPlayer);
         tmu.resolveGestureKeyPositions();
         return tmu;
     }

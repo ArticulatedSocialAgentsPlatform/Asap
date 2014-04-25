@@ -64,6 +64,7 @@ public class PerlinNoiseMU implements NoiseMU
 {
     private HashMap<String, String> parameters = new HashMap<String, String>(); // name => value set
     private KeyPositionManager keyPositionManager = new KeyPositionManagerImpl();
+    private AnimationPlayer aniPlayer;
     private PerlinNoise pnx1 = new PerlinNoise(1024, 0, 1);
     /*
      * private PerlinNoise pnx2 = new PerlinNoise(1024,0,1);
@@ -210,12 +211,13 @@ public class PerlinNoiseMU implements NoiseMU
     @Override
     public TimedAnimationMotionUnit createTMU(FeedbackManager bbm, BMLBlockPeg bbPeg, String bmlId, String id, PegBoard pb)
     {
-        return new NoiseTMU(bbm, bbPeg, bmlId, id, this, pb);
+        return new NoiseTMU(bbm, bbPeg, bmlId, id, this, pb, aniPlayer);
     }
 
     @Override
     public AnimationUnit copy(AnimationPlayer p)
     {
+        this.aniPlayer = p;
         HashMap<String, String> newparam = new HashMap<String, String>();
         newparam.putAll(parameters);
         PerlinNoiseMU pmu = new PerlinNoiseMU();
@@ -246,6 +248,12 @@ public class PerlinNoiseMU implements NoiseMU
         }
         return ImmutableSet.of();
 
+    }
+    
+    @Override
+    public Set<String> getAdditiveJoints()
+    {
+        return ImmutableSet.of();
     }
 
     @Override

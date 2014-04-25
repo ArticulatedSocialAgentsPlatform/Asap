@@ -159,7 +159,7 @@ public class MURMLKeyframeMU extends KeyFrameMotionUnit implements AnimationUnit
     @Override
     public TimedAnimationMotionUnit createTMU(FeedbackManager bbm, BMLBlockPeg bmlBlockPeg, String bmlId, String id, PegBoard pb)
     {
-        return new MURMLKeyframeTMU(bbm,bmlBlockPeg, bmlId, id, this, pb);
+        return new MURMLKeyframeTMU(bbm,bmlBlockPeg, bmlId, id, this, pb, aniPlayer);
     }
 
     @Override
@@ -198,5 +198,11 @@ public class MURMLKeyframeMU extends KeyFrameMotionUnit implements AnimationUnit
     public double getRetractionDurationFromCurrent()
     {
         return aniPlayer.getTransitionToRestDuration(getKinematicJoints());
+    }
+    
+    @Override
+    public Set<String> getAdditiveJoints()
+    {
+        return ImmutableSet.of();
     }
 }

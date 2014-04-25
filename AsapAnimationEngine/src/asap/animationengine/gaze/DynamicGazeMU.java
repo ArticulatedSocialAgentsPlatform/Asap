@@ -408,4 +408,10 @@ public class DynamicGazeMU extends AbstractGazeMU
     {
         return 2;
     }
+    
+    @Override
+    public Set<String> getAdditiveJoints()
+    {
+        return ImmutableSet.of();
+    }
 }

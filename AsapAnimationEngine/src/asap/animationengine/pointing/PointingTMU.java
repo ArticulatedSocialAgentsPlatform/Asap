@@ -24,6 +24,7 @@ import java.util.Set;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import asap.animationengine.AnimationPlayer;
 import asap.animationengine.motionunit.TimedAnimationMotionUnit;
 import asap.animationengine.motionunit.TimedAnimationUnit;
 import asap.motionunit.MUPlayException;
@@ -48,9 +49,9 @@ public class PointingTMU extends TimedAnimationMotionUnit
 
     private static Logger logger = LoggerFactory.getLogger(PointingTMU.class.getName());
     
-    public PointingTMU(FeedbackManager bfm, BMLBlockPeg bbPeg, String bmlId, String id, PointingMU mu, PegBoard pb)
+    public PointingTMU(FeedbackManager bfm, BMLBlockPeg bbPeg, String bmlId, String id, PointingMU mu, PegBoard pb, AnimationPlayer aniPlayer)
     {
-        super(bfm, bbPeg, bmlId, id, mu, pb);
+        super(bfm, bbPeg, bmlId, id, mu, pb, aniPlayer);
         pmu = mu;
     }
 

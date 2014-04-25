@@ -135,7 +135,7 @@ public class AnimationPlannerTest
         plannerTests = new PlannerTests<TimedAnimationUnit>(animationPlanner, bbPeg);
         PostureShiftTMU tmups = new PostureShiftTMU(fbManager, bbPeg, BMLID, "pshift1", stubUnit, pegBoard, mockRestPose, mockPlayer);
         GazeShiftTMU tmugs = new GazeShiftTMU(bbPeg, BMLID, "gshift1", stubGazeUnit, pegBoard, mockRestGaze, mockPlayer);
-        TimedAnimationMotionUnit tmu = new TimedAnimationMotionUnit(fbManager, bbPeg, BMLID, "nod1", stubUnit, pegBoard);
+        TimedAnimationMotionUnit tmu = new TimedAnimationMotionUnit(fbManager, bbPeg, BMLID, "nod1", stubUnit, pegBoard, mockPlayer);
 
         final List<TimedAnimationUnit> tmus = new ArrayList<>();
         tmus.add(tmu);

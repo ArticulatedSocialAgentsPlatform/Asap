@@ -7,6 +7,7 @@ import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
 import static org.mockito.Matchers.anyDouble;
 import static org.mockito.Matchers.doubleThat;
+import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.spy;
 import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
@@ -23,6 +24,7 @@ import org.powermock.modules.junit4.PowerMockRunner;
 
 import saiba.bml.BMLGestureSync;
 import saiba.bml.feedback.BMLSyncPointProgressFeedback;
+import asap.animationengine.AnimationPlayer;
 import asap.motionunit.MUPlayException;
 import asap.realizer.SyncPointNotFoundException;
 import asap.realizer.feedback.FeedbackManager;
@@ -50,7 +52,7 @@ import asap.realizertestutil.util.TimePegUtil;
 public class TimedAnimationMotionUnitTest extends AbstractTimedPlanUnitTest
 {
     private AnimationUnit muMock;
-    
+    private AnimationPlayer mockAnimationPlayer = mock(AnimationPlayer.class);
     private List<BMLSyncPointProgressFeedback> fbList;
     private ListBMLFeedbackListener fbl;
     private TimedAnimationMotionUnit tmu;
@@ -63,7 +65,7 @@ public class TimedAnimationMotionUnitTest extends AbstractTimedPlanUnitTest
         fbList = new ArrayList<BMLSyncPointProgressFeedback>();
         fbl = new ListBMLFeedbackListener.Builder().feedBackList(fbList).build();
         muMock = spy(new StubAnimationUnit());
-        tmu = new TimedAnimationMotionUnit(fbManager, BMLBlockPeg.GLOBALPEG, "bml1", "behaviour1", muMock, pegBoard);
+        tmu = new TimedAnimationMotionUnit(fbManager, BMLBlockPeg.GLOBALPEG, "bml1", "behaviour1", muMock, pegBoard,mockAnimationPlayer);
         fbManager.addFeedbackListener(fbl);
     }
 
@@ -325,7 +327,7 @@ public class TimedAnimationMotionUnitTest extends AbstractTimedPlanUnitTest
     @Override
     protected TimedPlanUnit setupPlanUnit(FeedbackManager bfm, BMLBlockPeg bbPeg, String id, String bmlId, double startTime)
     {
-        tmu = new TimedAnimationMotionUnit(bfm, bbPeg, bmlId, id, new StubAnimationUnit(),pegBoard);
+        tmu = new TimedAnimationMotionUnit(bfm, bbPeg, bmlId, id, new StubAnimationUnit(),pegBoard,mockAnimationPlayer);
         tmu.resolveGestureKeyPositions();
         tmu.setTimePeg("start", TimePegUtil.createTimePeg(bbPeg, startTime));
         return tmu;

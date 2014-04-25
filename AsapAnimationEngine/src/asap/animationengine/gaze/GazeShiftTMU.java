@@ -24,7 +24,7 @@ public class GazeShiftTMU extends TimedAnimationMotionUnit
     public GazeShiftTMU(BMLBlockPeg bmlBlockPeg, String bmlId, String id, GazeMU m, PegBoard pb,
             RestGaze restGaze, AnimationPlayer ap)
     {
-        super(bmlBlockPeg, bmlId, id, m, pb);
+        super(bmlBlockPeg, bmlId, id, m, pb, ap);
         this.restGaze = restGaze;
         this.aniPlayer = ap;
         this.gmu = m;
