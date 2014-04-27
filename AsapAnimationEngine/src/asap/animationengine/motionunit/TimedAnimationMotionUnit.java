@@ -31,7 +31,6 @@ import asap.realizer.feedback.FeedbackManager;
 import asap.realizer.feedback.NullFeedbackManager;
 import asap.realizer.pegboard.BMLBlockPeg;
 import asap.realizer.pegboard.PegBoard;
-import asap.realizer.pegboard.TimePeg;
 import asap.realizer.planunit.Priority;
 import asap.realizer.planunit.TimedPlanUnitPlayException;
 import asap.realizer.scheduler.LinearStretchResolver;
@@ -136,6 +135,11 @@ public class TimedAnimationMotionUnit extends TimedMotionUnit implements TimedAn
     @Override
     protected void gracefullInterrupt(double time) throws TimedPlanUnitPlayException
     {
+        if(getTimePeg("relax")==null)
+        {
+            super.gracefullInterrupt(time);
+            return;
+        }
         Set<String> joints = Sets.union(Sets.union(mu.getKinematicJoints(),mu.getPhysicalJoints()), mu.getAdditiveJoints());
         double retractionDuration = aniPlayer.getRestPose().getTransitionToRestDuration(aniPlayer.getVCurr(), joints);        
         skipPegs(time, "ready", "strokeStart", "stroke", "strokeEnd");

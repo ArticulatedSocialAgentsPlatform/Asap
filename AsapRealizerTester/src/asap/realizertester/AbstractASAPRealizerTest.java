@@ -89,10 +89,10 @@ public abstract class AbstractASAPRealizerTest extends AbstractBML1RealizerTest 
         }
         if (fb instanceof saiba.bml.feedback.BMLPredictionFeedback)
         {
-            prediction((BMLPredictionFeedback)fb);            
+            prediction((BMLPredictionFeedback) fb);
         }
     }
-    
+
     @Test
     public void testParameterValueChangeFromExternalBlock() throws IOException, InterruptedException
     {
@@ -181,7 +181,7 @@ public abstract class AbstractASAPRealizerTest extends AbstractBML1RealizerTest 
         String bmlString3 = readTestFile("asap/appendafter/testspeech3.xml");
         String bmlString4 = readTestFile("asap/appendafter/testnodappendafter.xml");
 
-        realizerHandler.performBML(bmlString1);        
+        realizerHandler.performBML(bmlString1);
         realizerHandler.performBML(bmlString2);
         realizerHandler.performBML(bmlString3);
         realizerHandler.performBML(bmlString4);
@@ -236,8 +236,13 @@ public abstract class AbstractASAPRealizerTest extends AbstractBML1RealizerTest 
         realizerHandler.assertNoWarnings();
         realizerHandler.assertNoDuplicateFeedbacks();
 
-        assertEquals(realizerHandler.getBMLPerformanceStartFeedback("bml2").timeStamp + 2,
-                realizerHandler.getBMLPerformanceStopFeedback("bml1").timeStamp, 0.2);
+        realizerHandler.assertLinkedSyncs("bml2", "i1", "start", "bml1", "speech1", "end");
+        realizerHandler.assertLinkedSyncs("bml2", "i1", "start", "bml1", "nod1", "relax");
+
+        /*
+         * assertEquals(realizerHandler.getBMLPerformanceStartFeedback("bml2").timeStamp + 2,
+         * realizerHandler.getBMLPerformanceStopFeedback("bml1").timeStamp, 0.2);
+         */
     }
 
     @Test
@@ -365,9 +370,8 @@ public abstract class AbstractASAPRealizerTest extends AbstractBML1RealizerTest 
         realizerHandler.assertNoWarnings();
         realizerHandler.assertBlockStartAndStopFeedbacks("bml1");
         realizerHandler.assertSyncsInOrder("bml1", "face1", DefaultSyncPoints.getDefaultSyncPoints("face"));
-    }    
-    
-    
+    }
+
     @Test
     public void testMURMLBody() throws IOException, InterruptedException
     {
@@ -380,7 +384,7 @@ public abstract class AbstractASAPRealizerTest extends AbstractBML1RealizerTest 
         realizerHandler.assertBlockStartAndStopFeedbacks("bml1");
         realizerHandler.assertSyncsInOrder("bml1", "gesture1", DefaultSyncPoints.getDefaultSyncPoints("gesture"));
     }
-    
+
     @Test
     public void testMURMLPalmOrientation() throws IOException, InterruptedException
     {
@@ -393,7 +397,7 @@ public abstract class AbstractASAPRealizerTest extends AbstractBML1RealizerTest 
         realizerHandler.assertBlockStartAndStopFeedbacks("bml1");
         realizerHandler.assertSyncsInOrder("bml1", "gesture1", DefaultSyncPoints.getDefaultSyncPoints("gesture"));
     }
-    
+
     @Test
     public void testMURMLRelativePalmOrientation() throws IOException, InterruptedException
     {
