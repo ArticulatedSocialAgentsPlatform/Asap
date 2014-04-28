@@ -237,12 +237,7 @@ public abstract class AbstractASAPRealizerTest extends AbstractBML1RealizerTest 
         realizerHandler.assertNoDuplicateFeedbacks();
 
         realizerHandler.assertLinkedSyncs("bml2", "i1", "start", "bml1", "speech1", "end");
-        realizerHandler.assertLinkedSyncs("bml2", "i1", "start", "bml1", "nod1", "relax");
-
-        /*
-         * assertEquals(realizerHandler.getBMLPerformanceStartFeedback("bml2").timeStamp + 2,
-         * realizerHandler.getBMLPerformanceStopFeedback("bml1").timeStamp, 0.2);
-         */
+        realizerHandler.assertLinkedSyncs("bml2", "i1", "start", "bml1", "nod1", "relax");        
     }
 
     @Test

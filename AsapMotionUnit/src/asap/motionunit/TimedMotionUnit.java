@@ -80,10 +80,7 @@ public class TimedMotionUnit extends TimedAbstractPlanUnit
                 }
             }
         }
-        for (BMLSyncPointProgressFeedback fb : fbToSend)
-        {
-            feedback(fb);
-        }
+        feedback(fbToSend);        
     }
 
     @Override

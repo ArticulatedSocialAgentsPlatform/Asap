@@ -115,6 +115,6 @@ public abstract class AbstractTimedWavTTSUnitTest extends AbstractTTSUnitTest
         ttsUnit.start(0);
         ttsUnit.stop(bm.getOffset() * 0.001d);
         assertThat(feedbackListener.getFeedbackSyncIds("bml1", "id1"),
-                IsIterableContainingInOrder.contains("start", "s1"));
+                IsIterableContainingInOrder.contains("start", "s1","end"));
     }
 }

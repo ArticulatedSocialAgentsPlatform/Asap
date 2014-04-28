@@ -110,11 +110,8 @@ public class TimedWavTTSUnit extends TimedTTSUnit
     {
         log.debug("StopTimedWavUnit {}:{}", getBMLId(), getId());
         sendProgress(time - getStartTime(), time);
-        if (time >= getEndTime())
-        {
-            sendEndProgress(time);
-        }
-
+        sendEndProgress(time);
+        
         synchronized (this)
         {
             log.debug("StopTimedWavUnit in sync block)");

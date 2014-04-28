@@ -50,9 +50,10 @@ import com.google.common.collect.Sets;
 public class TimedAnimationMotionUnit extends TimedMotionUnit implements TimedAnimationUnit
 {
     private final AnimationUnit mu;
-    private final UniModalResolver resolver = new LinearStretchResolver();    
+    private final UniModalResolver resolver = new LinearStretchResolver();
     private final AnimationPlayer aniPlayer;
     private AnimationUnit retractUnit;
+
     public Set<String> getKinematicJoints()
     {
         return mu.getKinematicJoints();
@@ -75,15 +76,17 @@ public class TimedAnimationMotionUnit extends TimedMotionUnit implements TimedAn
      * @param id behaviour id
      * @param m motion unit
      */
-    public TimedAnimationMotionUnit(FeedbackManager bbf, BMLBlockPeg bmlBlockPeg, String bmlId, String id, AnimationUnit m, PegBoard pb, AnimationPlayer aniPlayer)
+    public TimedAnimationMotionUnit(FeedbackManager bbf, BMLBlockPeg bmlBlockPeg, String bmlId, String id, AnimationUnit m, PegBoard pb,
+            AnimationPlayer aniPlayer)
     {
         super(bbf, bmlBlockPeg, bmlId, id, m, pb);
         this.aniPlayer = aniPlayer;
         setPriority(Priority.GESTURE);
-        mu = m;        
+        mu = m;
     }
 
-    public TimedAnimationMotionUnit(BMLBlockPeg bmlBlockPeg, String bmlId, String id, AnimationUnit m, PegBoard pb, AnimationPlayer aniPlayer)
+    public TimedAnimationMotionUnit(BMLBlockPeg bmlBlockPeg, String bmlId, String id, AnimationUnit m, PegBoard pb,
+            AnimationPlayer aniPlayer)
     {
         this(NullFeedbackManager.getInstance(), bmlBlockPeg, bmlId, id, m, pb, aniPlayer);
     }
@@ -91,7 +94,7 @@ public class TimedAnimationMotionUnit extends TimedMotionUnit implements TimedAn
     public void updateTiming(double time) throws TMUPlayException
     {
 
-    }    
+    }
 
     @Override
     public double getPreparationDuration()
@@ -110,41 +113,47 @@ public class TimedAnimationMotionUnit extends TimedMotionUnit implements TimedAn
     {
         return getPreferedDuration() - getPreparationDuration() - getRetractionDuration();
     }
-    
+
     @Override
     protected void playUnit(double time) throws TimedPlanUnitPlayException
     {
-        if(retractUnit!=null && time>getRelaxTime())
+        if (retractUnit != null && time >= getRelaxTime())
         {
+            if (!progressHandled.contains(getKeyPosition("relax")))
+            {
+                progressHandled.add(getKeyPosition("relax"));
+                feedback("relax", time);
+            }
+
             try
             {
-                double t = (time-getRelaxTime())/(getEndTime()-getRelaxTime());
+                double t = (time - getRelaxTime()) / (getEndTime() - getRelaxTime());
                 retractUnit.play(t);
             }
             catch (MUPlayException e)
             {
-                throw new TimedPlanUnitPlayException(e.getMessage(),this,e);
-            }            
+                throw new TimedPlanUnitPlayException(e.getMessage(), this, e);
+            }
         }
         else
         {
             super.playUnit(time);
         }
     }
-    
+
     @Override
     protected void gracefullInterrupt(double time) throws TimedPlanUnitPlayException
     {
-        if(getTimePeg("relax")==null)
+        if (getTimePeg("relax") == null)
         {
             super.gracefullInterrupt(time);
             return;
         }
-        Set<String> joints = Sets.union(Sets.union(mu.getKinematicJoints(),mu.getPhysicalJoints()), mu.getAdditiveJoints());
-        double retractionDuration = aniPlayer.getRestPose().getTransitionToRestDuration(aniPlayer.getVCurr(), joints);        
+        Set<String> joints = Sets.union(Sets.union(mu.getKinematicJoints(), mu.getPhysicalJoints()), mu.getAdditiveJoints());
+        double retractionDuration = aniPlayer.getRestPose().getTransitionToRestDuration(aniPlayer.getVCurr(), joints);
         skipPegs(time, "ready", "strokeStart", "stroke", "strokeEnd");
         getTimePeg("relax").setGlobalValue(time);
-        getTimePeg("end").setGlobalValue(time+retractionDuration);
-        retractUnit = aniPlayer.getRestPose().createTransitionToRest(joints);        
+        getTimePeg("end").setGlobalValue(time + retractionDuration);
+        retractUnit = aniPlayer.getRestPose().createTransitionToRest(joints);
     }
 }
