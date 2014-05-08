@@ -32,7 +32,7 @@ import asap.realizerport.RealizerPort;
  * Emits blink behaviors to a RealizerBridge with a certain probabilitydistribution. Distribution
  * parameters can be modified on the fly; the emitter will immediately change the blinking behavior.
  * Next blink bml block will always start after the previous blink block (append-after) -- even if
- * it were acceidentally fired too early.
+ * it were accidentally fired too early.
  * 
  * basic implementation: wait time equally distributed over avg-range..avg+range
  * better implementation:
@@ -135,15 +135,7 @@ public class BlinkEmitter extends Emitter implements Runnable
                 + "xmlns:bmla=\"http://www.asap-project.org/bmla\"><faceLexeme id=\"b1\"  lexeme=\"BLINK\" start=\"0\" end=\"0.15\" "
                 + "amount=\"1\" attackPeak=\"0.03\" relax=\"0.12\"/>";        
         realizerBridge.performBML(bml + "</bml>");
-
-        /*
-         * if (blinkcount > 4) {
-         * realizerBridge.performBML("<bml id=\"throwawayblink"+(blinkcount-3)+
-         * "\" interrupt=\"blinkbml"+(blinkcount-3)+"\"></bml>"); }
-         */
         blinkcount++;
-        //System.out.println("Blink! " + blinkcount);
-
     }
 
     protected void setWaitForNextBlink()
@@ -156,13 +148,6 @@ public class BlinkEmitter extends Emitter implements Runnable
         {
             basicMethodSetWaitForNextBlink();
         }
-
-        // long now = System.currentTimeMillis();
-        // if ((double)now-(double)lastblink >= currentwaitingtime*1000d)
-        // {
-        // emitBlink(); //time past to blink -- blink now
-        // setWaitForNextBlink();
-        // }
     }
 
     /**
@@ -243,10 +228,6 @@ public class BlinkEmitter extends Emitter implements Runnable
     {
         return XMLTAG;
     }
-
-    /** start emitter. Needs to be already connected to realizerport. */
-    // @Override
-    // public void start() ... its a thread already...
 
     /**
      * stop and clean up emitter as soon as possible. After stop was called, no new BML should be emitted,
