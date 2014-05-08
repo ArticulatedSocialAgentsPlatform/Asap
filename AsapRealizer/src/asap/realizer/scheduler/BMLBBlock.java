@@ -286,9 +286,15 @@ public class BMLBBlock
     
     public void interrupt()
     {
-        if(state.getAndSet(TimedPlanUnitState.DONE)!=TimedPlanUnitState.DONE)
+        TimedPlanUnitState prevState = state.getAndSet(TimedPlanUnitState.DONE);
+        
+        if(prevState.isPlaying())
         {
             scheduler.blockStopFeedback(bmlId, BMLABlockStatus.INTERRUPTED);
+        }
+        else if(prevState!=TimedPlanUnitState.DONE)
+        {
+            scheduler.blockStopFeedback(bmlId, BMLABlockStatus.REVOKED);
         }
     }
     
