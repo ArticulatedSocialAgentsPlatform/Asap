@@ -5,7 +5,6 @@ import static org.hamcrest.collection.IsCollectionWithSize.hasSize;
 import static org.hamcrest.number.OrderingComparison.greaterThan;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNull;
-import static org.junit.Assert.fail;
 import hmi.util.Clock;
 import hmi.util.ClockListener;
 
@@ -36,6 +35,7 @@ import saiba.bml.feedback.BMLBlockPredictionFeedback;
 import saiba.bml.feedback.BMLBlockProgressFeedback;
 import saiba.bml.feedback.BMLPredictionFeedback;
 import saiba.bml.feedback.BMLSyncPointProgressFeedback;
+import saiba.bml.feedback.BMLWarningFeedback;
 import saiba.bml.parser.BMLParser;
 import asap.bml.ext.bmla.BMLABMLBehaviorAttributes;
 import asap.bml.ext.bmla.BMLAInfo;
@@ -315,6 +315,8 @@ public class BMLSchedulerTest
     private List<BMLSyncPointProgressFeedback> feedBackList;
 
     private List<BMLBlockProgressFeedback> blockProgressFeedbackList;
+    
+    private List<BMLWarningFeedback> warningList;
 
     private List<BMLPredictionFeedback> predictionFeedback = new ArrayList<BMLPredictionFeedback>();
 
@@ -368,6 +370,11 @@ public class BMLSchedulerTest
         return "<bml xmlns=\"http://www.bml-initiative.org/bml/bml-1.0\"" + "xmlns:bmla=\"http://www.asap-project.org/bmla\" id=\"" + bmlId
                 + "\"><speech id=\"s1\"><text/></speech></bml>";
     }
+    
+    private String createInvalidBML()
+    {
+        return "invalid_bml";
+    }
 
     @Before
     public void setup()
@@ -397,9 +404,10 @@ public class BMLSchedulerTest
         scheduler.addEngine(SpeechBehaviour.class, stubEngine);
 
         feedBackList = new ArrayList<BMLSyncPointProgressFeedback>();
-        blockProgressFeedbackList = new ArrayList<BMLBlockProgressFeedback>();
+        blockProgressFeedbackList = new ArrayList<BMLBlockProgressFeedback>();     
+        warningList = new ArrayList<BMLWarningFeedback>();
         listFeedbackListener = new ListBMLFeedbackListener.Builder().predictionList(predictionFeedback).feedBackList(feedBackList)
-                .blockFeedbackList(blockProgressFeedbackList).build();
+                .blockFeedbackList(blockProgressFeedbackList).warningList(warningList).build();
         scheduler.addFeedbackListener(listFeedbackListener);
     }
 
@@ -409,7 +417,7 @@ public class BMLSchedulerTest
         bb.readXML(str);
         parser.addBehaviourBlock(bb);
     }
-
+    
     @Test
     public void testStartFeedback()
     {

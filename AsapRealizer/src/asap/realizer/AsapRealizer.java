@@ -58,14 +58,12 @@ import com.google.common.collect.ImmutableSet;
  * <ul>
  * <li>An AudioPlanner to process BMLTAudioFile elements into audio
  * <li>A ttsPlanner to process SpeechBehaviour elements into speech
- * <li>An AnimationPlanner to process Head and BMLTProcAnimation behaviors into animation 
- * (and more, later?), constructed from an AnimationPlayer (to control the body of the
+ * <li>An AnimationPlanner to process Head and BMLTProcAnimation behaviors into animation (and more, later?), constructed from an AnimationPlayer (to control the body of the
  * VH) and a GestureBinding (to map BML behavior specifications to MotionUnits
  * <li>A facePlanner to control the face
  * <li>And in the future, possibly more planners
  * </ul>
- * <li>A BMLScheduler (e.g. SmartBodyScheduler) that combines the parser and several planners 
- * (verbal, animation) registered for several behaviors (head, BMLTProc, speech) to
+ * <li>A BMLScheduler (e.g. SmartBodyScheduler) that combines the parser and several planners (verbal, animation) registered for several behaviors (head, BMLTProc, speech) to
  * play behavior sent from XML
  * <li>Possibly a number of Anticipators [DOCUMENT WHAT THESE DO!]
  * </ul>
@@ -115,17 +113,16 @@ public class AsapRealizer
     }
 
     /**
-     * Constructs a ElckerlycRealizer facade and hooks up the planners to it Uses a BMLScheduler with a SortedSmartBodySchedulingStrategy
+     * Constructs a AsapRealizer facade and hooks up the planners to it Uses a BMLScheduler with a SortedSmartBodySchedulingStrategy
      */
-    public AsapRealizer(String characterId, BMLParser p, FeedbackManager fbm, Clock c, BMLBlockManager bbm, PegBoard pb,
-            Engine... engines)
+    public AsapRealizer(String characterId, BMLParser p, FeedbackManager fbm, Clock c, BMLBlockManager bbm, PegBoard pb, Engine... engines)
     {
-        this(p, fbm, c, new BMLScheduler(characterId, p, fbm, c, new BMLASchedulingHandler(new SortedSmartBodySchedulingStrategy(pb),pb), bbm,
-                pb), engines);
+        this(p, fbm, c, new BMLScheduler(characterId, p, fbm, c, new BMLASchedulingHandler(new SortedSmartBodySchedulingStrategy(pb), pb),
+                bbm, pb), engines);
     }
 
     /**
-     * Constructs a ElckerlycRealizer facade and hooks up the planners to it Uses the default BMLParser as BMLParser and a BMLScheduler with a
+     * Constructs a AsapRealizer facade and hooks up the planners to it Uses the default BMLParser as BMLParser and a BMLScheduler with a
      * SmartBodySchedulingStrategy.
      */
     public AsapRealizer(String characterId, FeedbackManager fbm, Clock c, BMLBlockManager bbm, PegBoard pb, Engine... engines)
@@ -257,7 +254,7 @@ public class AsapRealizer
         catch (XMLScanException e)
         {
             String bmlId = "<no id>";
-            String exceptionText = "Parsing XML failed: see stack trace for more info. " + e.getLocalizedMessage() + "\n"
+            String exceptionText = "Parsing BML failed: see stack trace for more info. " + e.getLocalizedMessage() + "\n"
                     + Arrays.toString(e.getStackTrace()) + "\n";
             scheduler.warn(new BMLWarningFeedback(bmlId, BMLWarningFeedback.PARSING_FAILURE, exceptionText));
             return;
@@ -265,7 +262,8 @@ public class AsapRealizer
         catch (IOException e)
         {
             String bmlId = "<no id>";
-            String exceptionText = "IO Exception. " + e.getLocalizedMessage() + "\n" + Arrays.toString(e.getStackTrace()) + "\n";
+            String exceptionText = "IO Exception reading BML. " + e.getLocalizedMessage() + "\n" + Arrays.toString(e.getStackTrace())
+                    + "\n";
             scheduler.warn(new BMLWarningFeedback(bmlId, "IOException", exceptionText));
             return;
         }
@@ -276,7 +274,7 @@ public class AsapRealizer
                     + "\n";
             scheduler.warn(new BMLWarningFeedback(bmlId, "Exception", exceptionText));
             return;
-        }        
+        }
         try
         {
             parser.addBehaviourBlock(block);
@@ -291,13 +289,13 @@ public class AsapRealizer
         try
         {
             scheduler.schedule();
-        }        
+        }
         catch (Exception e)
         { // DO NOT REMOVE THIS CLAUSE!
             String exceptionText = "Exception scheduling the BML. " + e + "\n" + Arrays.toString(e.getStackTrace()) + "\n";
             scheduler.warn(new BMLWarningFeedback(block.id, "Scheduling Exception", exceptionText));
             return;
-        }        
+        }
     }
 
     /**
