@@ -8,8 +8,6 @@ import java.util.Set;
 import saiba.bml.core.BMLBehaviorAttributeExtension;
 import saiba.bml.core.BehaviourBlock;
 
-import com.google.common.collect.ImmutableList;
-
 /**
  * Enhances BehaviourBlock with some boilerplate code to parse/create BML blocks that contain BMLA elements.
  * @author hvanwelbergen
@@ -86,37 +84,11 @@ public class BMLABehaviourBlock extends BehaviourBlock
         return null;
     }
     
-    private boolean findPrefix(String prefix, List<XMLNameSpace> xmlNamespaceList)
-    {
-        for(XMLNameSpace ns:xmlNamespaceList)
-        {
-            if(ns.getPrefix().equals(prefix))
-            {
-                return true;
-            }
-        }
-        return false;
-    } 
     
-    private boolean findNameSpace(String nameSpace, List<XMLNameSpace> xmlNamespaceList)
-    {
-        for(XMLNameSpace ns:xmlNamespaceList)
-        {
-            if(ns.getNamespace().equals(nameSpace))
-            {
-                return true;
-            }
-        }
-        return false;
-    }
     
     @Override
     public String toBMLString(List<XMLNameSpace> xmlNamespaceList)
     {
-        if(!findPrefix("bmla", xmlNamespaceList) && !findNameSpace(BMLAInfo.BMLA_NAMESPACE, xmlNamespaceList))
-        {
-            xmlNamespaceList = new ImmutableList.Builder<XMLNameSpace>().addAll(xmlNamespaceList).add(new XMLNameSpace("bmla",BMLAInfo.BMLA_NAMESPACE)).build();            
-        }
-        return super.toBMLString(xmlNamespaceList);
+        return super.toBMLString(BMLAPrefix.insertBMLANamespacePrefix(xmlNamespaceList));
     }    
 }

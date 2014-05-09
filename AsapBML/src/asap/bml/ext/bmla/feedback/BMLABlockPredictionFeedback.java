@@ -1,12 +1,15 @@
 package asap.bml.ext.bmla.feedback;
 
+import hmi.xml.XMLNameSpace;
 import hmi.xml.XMLTokenizer;
 
 import java.util.HashMap;
+import java.util.List;
 
 import lombok.Getter;
 import saiba.bml.feedback.BMLBlockPredictionFeedback;
 import asap.bml.ext.bmla.BMLAInfo;
+import asap.bml.ext.bmla.BMLAPrefix;
 
 /**
  * BMLBlockPredictionFeedback extension to provide posix timestamps
@@ -91,5 +94,11 @@ public class BMLABlockPredictionFeedback extends BMLBlockPredictionFeedback
         {
             setStatus(BMLABlockStatus.valueOf(getCustomStringParameterValue(STATUS_ID)));
         }
+    }
+    
+    @Override
+    public String toBMLFeedbackString(List<XMLNameSpace> xmlNamespaceList)
+    {
+        return super.toBMLFeedbackString(BMLAPrefix.insertBMLANamespacePrefix(xmlNamespaceList));
     }
 }

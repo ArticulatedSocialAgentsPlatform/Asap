@@ -70,11 +70,11 @@ public class FeedbackManagerImpl implements FeedbackManager
             {
                 try
                 {
-                    fbl.feedback(fba.toXMLString());
+                    fbl.feedback(fba.toBMLFeedbackString());
                 }
                 catch (Exception ex)
                 {
-                    log.warn("Exception in FeedbackListener: {}, feedback: {}", ex, fb.toXMLString());
+                    log.warn("Exception in FeedbackListener: {}, feedback: {}", ex, fb.toBMLFeedbackString());
                 }
             }
         }
@@ -94,11 +94,11 @@ public class FeedbackManagerImpl implements FeedbackManager
                 {
                     try
                     {
-                        fbl.feedback(fba.toXMLString());
+                        fbl.feedback(fba.toBMLFeedbackString());
                     }
                     catch (Exception ex)
                     {
-                        log.warn("Exception in FeedbackListener: {}, feedback: {}", ex, fb.toXMLString());
+                        log.warn("Exception in FeedbackListener: {}, feedback: {}", ex, fb.toBMLFeedbackString());
                     }
                 }
             }
@@ -136,7 +136,7 @@ public class FeedbackManagerImpl implements FeedbackManager
             {
                 try
                 {
-                    fbl.feedback(psf.toXMLString());
+                    fbl.feedback(psf.toBMLFeedbackString());
                 }
                 catch (Exception ex)
                 {
@@ -153,7 +153,7 @@ public class FeedbackManagerImpl implements FeedbackManager
     {
         synchronized (feedbackListeners)
         {
-            String feedbackString = bpf.toXMLString();       
+            String feedbackString = bpf.toBMLFeedbackString();       
             for (BMLFeedbackListener pl : feedbackListeners)
             {
                 try
@@ -178,11 +178,11 @@ public class FeedbackManagerImpl implements FeedbackManager
             {
                 try
                 {
-                    wl.feedback(w.toXMLString());
+                    wl.feedback(w.toBMLFeedbackString());
                 }
                 catch (Exception ex)
                 {
-                    log.warn("Exception in WarningListener: {}, feedback: {}", ex, w.toXMLString());
+                    log.warn("Exception in WarningListener: {}, feedback: {}", ex, w.toBMLFeedbackString());
                 }
             }
         }

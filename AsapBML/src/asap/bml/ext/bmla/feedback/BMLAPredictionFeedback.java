@@ -1,10 +1,13 @@
 package asap.bml.ext.bmla.feedback;
 
+import hmi.xml.XMLNameSpace;
+
 import java.util.ArrayList;
 import java.util.List;
 
 import saiba.bml.feedback.BMLBlockPredictionFeedback;
 import saiba.bml.feedback.BMLPredictionFeedback;
+import asap.bml.ext.bmla.BMLAPrefix;
 
 import com.google.common.collect.ImmutableList;
 
@@ -31,5 +34,11 @@ public class BMLAPredictionFeedback extends BMLPredictionFeedback
             fbList.add(BMLABlockPredictionFeedback.build(fb));
         }
         return ImmutableList.copyOf(fbList);
+    }
+    
+    @Override
+    public String toBMLFeedbackString(List<XMLNameSpace> xmlNamespaceList)
+    {
+        return super.toBMLFeedbackString(BMLAPrefix.insertBMLANamespacePrefix(xmlNamespaceList));
     }
 }
