@@ -1,5 +1,7 @@
 package asap.bml.ext.bmla.feedback;
 
+import static org.hamcrest.CoreMatchers.containsString;
+import static org.hamcrest.MatcherAssert.assertThat;
 import static org.junit.Assert.assertEquals;
 
 import org.junit.Test;
@@ -25,7 +27,6 @@ public class BMLAPredictionFeedbackTest
                 + "<bml xmlns=\"http://www.bml-initiative.org/bml/bml-1.0\" " +
                 "id=\"bml2\" bmla:posixStartTime=\"3\" bmla:posixEndTime=\"4\" globalStart=\"1\" globalEnd=\"7\"/>"
                 + "</predictionFeedback>";
-        System.out.println(feedback);
         BMLAPredictionFeedback fb = new  BMLAPredictionFeedback();
         fb.readXML(feedback);
         assertEquals(2, fb.getBMLABlockPredictions().size());
@@ -33,5 +34,12 @@ public class BMLAPredictionFeedbackTest
         assertEquals(2, fb.getBMLABlockPredictions().get(0).getPosixEndTime());
         assertEquals(3, fb.getBMLABlockPredictions().get(1).getPosixStartTime());
         assertEquals(4, fb.getBMLABlockPredictions().get(1).getPosixEndTime());        
+    }
+    
+    @Test
+    public void testWriteBMLAPrefix()
+    {
+        BMLAPredictionFeedback fb = new  BMLAPredictionFeedback();
+        assertThat(fb.toBMLFeedbackString(),containsString("xmlns:bmla=\"http://www.asap-project.org/bmla\""));        
     }
 }

@@ -1,5 +1,7 @@
 package asap.bml.ext.bmla.feedback;
 
+import static org.hamcrest.CoreMatchers.containsString;
+import static org.hamcrest.MatcherAssert.assertThat;
 import static org.junit.Assert.assertEquals;
 
 import org.junit.Before;
@@ -50,6 +52,13 @@ public class BMLASyncPointProgressFeedbackTest
         BMLASyncPointProgressFeedback fbOut = new BMLASyncPointProgressFeedback();
         fbOut.readXML(buf.toString());
         assertEquals(100, fbOut.getPosixTime(), PRECISION);
+    }
+    
+    @Test
+    public void testWriteBMLAPrefix()
+    {
+        BMLASyncPointProgressFeedback fbIn = new BMLASyncPointProgressFeedback("bml1", "beh", "start", 0, 1, 100);
+        assertThat(fbIn.toBMLFeedbackString(),containsString("xmlns:bmla=\"http://www.asap-project.org/bmla\""));        
     }
     
     @Test
