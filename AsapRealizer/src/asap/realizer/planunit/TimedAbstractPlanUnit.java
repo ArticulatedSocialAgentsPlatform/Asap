@@ -3,9 +3,7 @@ package asap.realizer.planunit;
 import java.util.List;
 import java.util.concurrent.atomic.AtomicReference;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
+import lombok.extern.slf4j.Slf4j;
 import saiba.bml.feedback.BMLSyncPointProgressFeedback;
 import asap.realizer.SyncPointNotFoundException;
 import asap.realizer.feedback.FeedbackManager;
@@ -20,13 +18,13 @@ import asap.realizer.scheduler.TimePegAndConstraint;
  * 
  * @author welberge
  */
+@Slf4j
 public abstract class TimedAbstractPlanUnit implements TimedPlanUnit
 {
     protected final BMLBlockPeg bmlBlockPeg;
     private boolean subUnit;
     private final String id;
     private final String bmlBlockId;
-    private static Logger logger = LoggerFactory.getLogger(TimedAbstractPlanUnit.class.getName());
     
     private final AtomicReference<TimedPlanUnitState> state;
     protected final FeedbackManager fbManager;
@@ -141,7 +139,7 @@ public abstract class TimedAbstractPlanUnit implements TimedPlanUnit
     {
         if (!isPlaying())
             return;
-        logger.debug("playing planunit {}:{}, {}", new Object[]{bmlBlockId, id, getClass().getCanonicalName()});
+        log.debug("playing planunit {}:{}, {}", new Object[]{bmlBlockId, id, getClass().getCanonicalName()});
 
         if (time < getStartTime() || getStartTime() == TimePeg.VALUE_UNKNOWN)
         {
@@ -151,7 +149,7 @@ public abstract class TimedAbstractPlanUnit implements TimedPlanUnit
             }
             else
             {
-                logger.warn("Calling sub unit of {}:{} play with time : {} < startTime({}).", new Object[]{getBMLId(),getId(),time, getStartTime()});
+            	log.warn("Calling sub unit of {}:{} play with time : {} < startTime({}).", new Object[]{getBMLId(),getId(),time, getStartTime()});
             }
         }
         
@@ -166,7 +164,7 @@ public abstract class TimedAbstractPlanUnit implements TimedPlanUnit
         
         if (time < getEndTime() || getEndTime() == TimePeg.VALUE_UNKNOWN)
         {
-            logger.debug("Entering playUnit {}:{}", bmlBlockId, id);            
+        	log.debug("Entering playUnit {}:{}", bmlBlockId, id);            
             playUnit(time);
         }
         else
@@ -187,12 +185,12 @@ public abstract class TimedAbstractPlanUnit implements TimedPlanUnit
     @Override
     public final void stop(double time) throws TimedPlanUnitPlayException
     {
-        logger.debug("Entering TimedAbstractPlanUnit {}:{} stop",this.getBMLId(),this.getBMLId());
+    	log.debug("Entering TimedAbstractPlanUnit {}:{} stop",this.getBMLId(),this.getBMLId());
         if (isPlaying())
         {
-            logger.debug("TimedAbstractPlanUnit stop");            
+        	log.debug("TimedAbstractPlanUnit stop");            
             stopUnit(time);
-            logger.debug("TimedAbstractPlanUnit stopUnit done");
+            log.debug("TimedAbstractPlanUnit stopUnit done");
         }
         setState(TimedPlanUnitState.DONE);
     }
@@ -200,7 +198,7 @@ public abstract class TimedAbstractPlanUnit implements TimedPlanUnit
     @Override
     public final void start(double time) throws TimedPlanUnitPlayException
     {
-        logger.debug("attempting to start planunit {}:{}", bmlBlockId, id);
+    	log.debug("attempting to start planunit {}:{}", bmlBlockId, id);
         if (!isLurking())
             return;
 
@@ -214,7 +212,7 @@ public abstract class TimedAbstractPlanUnit implements TimedPlanUnit
             }
             else
             {
-                logger.warn("Starting sub plan unit behaviour {} with id {}:{} at time {} past end time {}, behaviour was never executed. Start time: {}.",
+            	log.warn("Starting sub plan unit behaviour {} with id {}:{} at time {} past end time {}, behaviour was never executed. Start time: {}.",
                         new Object[] { getClass().getName(), bmlBlockId, id, time, getEndTime(), getStartTime()});
             }
         }
@@ -223,7 +221,7 @@ public abstract class TimedAbstractPlanUnit implements TimedPlanUnit
             startUnit(time);
             setState(TimedPlanUnitState.IN_EXEC);            
         }
-        logger.debug("started planunit {}:{}", bmlBlockId, id);
+        log.debug("started planunit {}:{}", bmlBlockId, id);
     }
 
     @Override
