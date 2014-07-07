@@ -27,7 +27,7 @@ public class BMLRealizerToRsbAdapter implements RealizerPort
     private final Informer<String> informer;
     private final Listener listener;
     private List<BMLFeedbackListener> feedbackListeners = Collections.synchronizedList(new ArrayList<BMLFeedbackListener>());
-
+    
     public BMLRealizerToRsbAdapter()
     {
         Factory factory = Factory.getInstance();
