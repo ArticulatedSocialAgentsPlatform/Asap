@@ -43,6 +43,12 @@ public final class BMLFlowVisualizationTryout
             {
 
             }
+
+            @Override
+            public void removeListener(BMLFeedbackListener l)
+            {
+                                
+            }
         };
 
         BMLFlowVisualizerPort port = new BMLFlowVisualizerPort(rp);

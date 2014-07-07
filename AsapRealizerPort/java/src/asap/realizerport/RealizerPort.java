@@ -11,6 +11,9 @@ public interface RealizerPort
      */
     void addListeners(BMLFeedbackListener ... listeners);
     
+    
+    void removeListener(BMLFeedbackListener l);
+    
     /**
      * Removes all BMLListeners
      */

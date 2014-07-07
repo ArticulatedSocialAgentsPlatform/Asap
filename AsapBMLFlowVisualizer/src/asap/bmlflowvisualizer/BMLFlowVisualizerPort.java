@@ -145,6 +145,12 @@ public class BMLFlowVisualizerPort implements RealizerPort, BMLFeedbackListener
     }
 
     @Override
+    public void removeListener(BMLFeedbackListener l)
+    {
+        realizerPort.removeListener(l);        
+    }
+    
+    @Override
     public void performBML(String bmlString)
     {
         BehaviourBlock bb = new BehaviourBlock(new BMLABMLBehaviorAttributes());
@@ -174,5 +180,7 @@ public class BMLFlowVisualizerPort implements RealizerPort, BMLFeedbackListener
     {
         return panel;
     }
+
+    
 
 }

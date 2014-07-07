@@ -61,10 +61,18 @@ public class LoggingRealizerBridge implements RealizerPort, BMLFeedbackListener
     {
         outputBridge.removeAllListeners();
     }
+    
+    @Override
+    public void removeListener(BMLFeedbackListener l)
+    {
+        outputBridge.removeListener(l);        
+    }  
 
     @Override
     public void feedback(String feedback)
     {
         if (logFeedback) logger.info(feedback);        
-    }   
+    }
+
+     
 }

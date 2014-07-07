@@ -74,6 +74,11 @@ public class BMLRealizerToIpaacaAdapter implements RealizerPort
     }
 
     @Override
+    public void removeListener(BMLFeedbackListener l)
+    {
+        feedbackListeners.remove(l);
+    }
+    @Override
     public void performBML(String bmlString)
     {
         LocalMessageIU feedbackIU = new LocalMessageIU();
@@ -87,4 +92,6 @@ public class BMLRealizerToIpaacaAdapter implements RealizerPort
         outBuffer.close();
         inBuffer.close();
     }
+
+    
 }

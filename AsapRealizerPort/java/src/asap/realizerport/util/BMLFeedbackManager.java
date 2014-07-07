@@ -1,6 +1,7 @@
 package asap.realizerport.util;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 
 import asap.realizerport.BMLFeedbackListener;
@@ -11,7 +12,7 @@ import asap.realizerport.BMLFeedbackListener;
  */
 public class BMLFeedbackManager
 {
-    private List<BMLFeedbackListener> listeners = new ArrayList<BMLFeedbackListener>();
+    private List<BMLFeedbackListener> listeners = Collections.synchronizedList(new ArrayList<BMLFeedbackListener>());
     
     public void sendFeedback(String feedback)
     {
@@ -24,6 +25,11 @@ public class BMLFeedbackManager
     public void removeAllListeners()
     {
         listeners.clear();
+    }
+    
+    public void removeListener(BMLFeedbackListener l)
+    {
+        listeners.remove(l);
     }
     
     public void addListeners(BMLFeedbackListener... bmlListeners)

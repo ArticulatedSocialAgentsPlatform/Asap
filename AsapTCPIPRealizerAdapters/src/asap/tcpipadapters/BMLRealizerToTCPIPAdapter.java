@@ -137,6 +137,15 @@ public final class BMLRealizerToTCPIPAdapter implements RealizerPort, Runnable
         }
     }
     
+    @Override
+    public void removeListener(BMLFeedbackListener l)
+    {
+        synchronized (feedbackLock)
+        {
+            fbManager.removeListener(l);
+        }        
+    }
+    
     /** Add BML request to the queue and return. Sending will happen in the main networking loop. */
     @Override
     public void performBML(String bmlString)
@@ -656,6 +665,8 @@ public final class BMLRealizerToTCPIPAdapter implements RealizerPort, Runnable
         feedbackRedirectorThread.start();
         new Thread(this).start();
     }
+
+    
 
     
 
