@@ -49,7 +49,7 @@ public class ForwardRestGaze implements RestGaze
     @Override
     public void play(double time, Set<String> kinematicJoints, Set<String> physicalJoints)
     {
-                
+        
     }
 
     @Override

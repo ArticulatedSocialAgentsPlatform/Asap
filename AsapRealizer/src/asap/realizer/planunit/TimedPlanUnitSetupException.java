@@ -18,7 +18,7 @@ public class TimedPlanUnitSetupException extends Exception
 
     public TimedPlanUnitSetupException(String str, TimedPlanUnit tpu)
     {
-        super(tpu==null?"Unknown classname":tpu.getClass().getName() + ":" + str);
+        super(   (tpu==null?"Unknown TimedPlanUnit classname":tpu.getClass().getName()) + ":" + str);
         planUnit = tpu;
     }
 

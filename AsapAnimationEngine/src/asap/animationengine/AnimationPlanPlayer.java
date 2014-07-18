@@ -1,5 +1,7 @@
 package asap.animationengine;
 
+import hmi.math.Quat4f;
+
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashSet;
@@ -147,10 +149,10 @@ public class AnimationPlanPlayer implements PlanPlayer
             tpuPlayer.stopUnit(tmuR, t);
         }
         planManager.removeFinishedPlanUnits();
-
+        
         currentRestGaze.play(t, kinematicJoints, physicalJoints);
         kinematicJoints.addAll(currentRestGaze.getKinematicJoints());
-        currentRestPose.play(t, kinematicJoints, physicalJoints);
+        currentRestPose.play(t, kinematicJoints, physicalJoints);        
     }
 
     private List<TimedAnimationUnit> playback(double t, List<TimedAnimationUnit> tmuRemove, List<TimedAnimationUnit> playingPlanUnits,
