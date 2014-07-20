@@ -160,6 +160,6 @@ public class GazeTMU extends TimedAnimationMotionUnit
 
         // XXX: should relax and end pegs also be detached if other behaviors are connected to them?
         getTimePeg("relax").setGlobalValue(time);
-        getTimePeg("end").setGlobalValue(time + 1); // for now duration 1, should be dynamically gotten from the rest gaze pos
+        getTimePeg("end").setGlobalValue(time + aniPlayer.getGazeTransitionToRestDuration());
     }
 }

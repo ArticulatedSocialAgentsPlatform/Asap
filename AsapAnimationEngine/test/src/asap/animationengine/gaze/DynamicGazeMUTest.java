@@ -35,4 +35,14 @@ public class DynamicGazeMUTest
         DynamicGazeMU muCopy = mu.copy(mockPlayer);
         assertEquals(muCopy.influence, GazeInfluence.WAIST);
     }
+    
+    @Test
+    public void testPrefDuration() throws MUSetupException
+    {
+        DynamicGazeMU mu = new DynamicGazeMU();
+        mu.setInfluence(GazeInfluence.WAIST);
+        DynamicGazeMU muCopy = mu.copy(mockPlayer);
+        System.out.println(muCopy.getPreferedReadyDuration());
+        System.out.println(muCopy.getPreferedDuration());
+    }
 }

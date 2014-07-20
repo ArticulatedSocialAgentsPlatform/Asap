@@ -29,6 +29,7 @@ import saiba.bml.core.GazeBehaviour;
 import saiba.bml.parser.Constraint;
 import asap.animationengine.AnimationPlayer;
 import asap.animationengine.AnimationPlayerMock;
+import asap.animationengine.motionunit.MUSetupException;
 import asap.animationengine.motionunit.TMUSetupException;
 import asap.animationengine.motionunit.TimedAnimationMotionUnit;
 import asap.realizer.BehaviourPlanningException;
@@ -36,6 +37,8 @@ import asap.realizer.feedback.FeedbackManager;
 import asap.realizer.pegboard.BMLBlockPeg;
 import asap.realizer.pegboard.PegBoard;
 import asap.realizer.pegboard.TimePeg;
+import asap.realizer.planunit.TimedPlanUnitPlayException;
+import asap.realizer.planunit.TimedPlanUnitState;
 import asap.realizer.scheduler.BMLBlockManager;
 import asap.realizer.scheduler.TimePegAndConstraint;
 import asap.realizertestutil.planunit.AbstractTimedPlanUnitTest;
@@ -51,27 +54,29 @@ import asap.realizertestutil.util.TimePegUtil;
 @PrepareForTest(BMLBlockManager.class)
 public class GazeTMUTest extends AbstractTimedPlanUnitTest
 {
-    private VJoint vCurr = HanimBody.getLOA1HanimBody();
-    private VJoint vNext = HanimBody.getLOA1HanimBody();
+    private VJoint vCurr = HanimBody.getLOA1HanimBodyWithEyes();
+    private VJoint vNext = HanimBody.getLOA1HanimBodyWithEyes();
     private AnimationPlayer mockAnimationPlayer = AnimationPlayerMock.createAnimationPlayerMock(vCurr, vNext);
     private PegBoard pegBoard = new PegBoard();
     private static final double TIME_PRECISION = 0.0001;
     private GazeBehaviour mockBeh = mock(GazeBehaviour.class);
 
-    private GazeTMU setupPlanUnit(FeedbackManager bfm, BMLBlockPeg bbPeg, String id, String bmlId) throws TMUSetupException
+    private GazeTMU setupPlanUnit(FeedbackManager bfm, BMLBlockPeg bbPeg, String id, String bmlId) throws TMUSetupException, MUSetupException
     {
         TweedGazeMU mu = new TweedGazeMU();
-
+        //DynamicGazeMU mu = new DynamicGazeMU();
+        
         WorldObjectManager woManager = new WorldObjectManager();
         VJoint bluebox = new VJoint();
         bluebox.setTranslation(Vec3f.getVec3f(1, 1, 1));
         WorldObject blueBox = new VJointWorldObject(bluebox);
         woManager.addWorldObject("bluebox", blueBox);
 
+        mu = mu.copy(mockAnimationPlayer);
         mu.player = mockAnimationPlayer;
         mu.target = "bluebox";
         mu.woManager = woManager;
-        mu.neck = vNext.getPartBySid(Hanim.skullbase);
+        
 
         RestGaze mockRestGaze = mock(RestGaze.class);
         TimedAnimationMotionUnit mockTMU = mock(TimedAnimationMotionUnit.class);
@@ -87,7 +92,15 @@ public class GazeTMUTest extends AbstractTimedPlanUnitTest
     @Override
     protected GazeTMU setupPlanUnit(FeedbackManager bfm, BMLBlockPeg bbPeg, String id, String bmlId, double startTime) throws TMUSetupException
     {
-        GazeTMU tmu = setupPlanUnit(bfm, bbPeg, id, bmlId);
+        GazeTMU tmu;
+        try
+        {
+            tmu = setupPlanUnit(bfm, bbPeg, id, bmlId);
+        }
+        catch (MUSetupException e)
+        {
+            throw new RuntimeException(e);
+        }
         tmu.setTimePeg("start", TimePegUtil.createTimePeg(bbPeg, startTime));
         return tmu;
     }
@@ -100,7 +113,7 @@ public class GazeTMUTest extends AbstractTimedPlanUnitTest
     }
 
     @Test
-    public void testResolve() throws BehaviourPlanningException, TMUSetupException
+    public void testResolve() throws BehaviourPlanningException, TMUSetupException, MUSetupException
     {
         GazeTMU tmu = setupPlanUnit(fbManager, BMLBlockPeg.GLOBALPEG, "gaze1", "bml1");
         List<TimePegAndConstraint> sacs = new ArrayList<>();
@@ -111,5 +124,21 @@ public class GazeTMUTest extends AbstractTimedPlanUnitTest
         assertEquals(1, tmu.getStartTime(), TIME_PRECISION);
         assertThat(tmu.getTime("ready"), greaterThan(1d));
         assertThat(tmu.getTime("end"), greaterThan(1d));
+    }
+    
+    @Test
+    public void testStart() throws TMUSetupException, BehaviourPlanningException, TimedPlanUnitPlayException, MUSetupException
+    {
+        GazeTMU tmu = setupPlanUnit(fbManager, BMLBlockPeg.GLOBALPEG, "gaze1", "bml1");
+        List<TimePegAndConstraint> sacs = new ArrayList<>();
+        sacs.add(new TimePegAndConstraint("start", TimePegUtil.createTimePeg(1), new Constraint(), 0));
+        sacs.add(new TimePegAndConstraint("ready", TimePegUtil.createTimePeg(3), new Constraint(), 0));
+        tmu.resolveSynchs(BMLBlockPeg.GLOBALPEG, mockBeh, sacs);                
+        tmu.setState(TimedPlanUnitState.LURKING);
+        tmu.start(1);
+        System.out.println("tmu start :"+tmu.getStartTime());
+        System.out.println("tmu ready:"+tmu.getTime("ready"));
+        System.out.println("tmu end :"+tmu.getEndTime());
+        System.out.println("tmu relax :"+tmu.getRelaxTime());
     }
 }
