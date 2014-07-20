@@ -8,7 +8,6 @@ import static org.mockito.Matchers.anyString;
 import static org.mockito.Matchers.eq;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
-import hmi.animation.Hanim;
 import hmi.animation.VJoint;
 import hmi.math.Vec3f;
 import hmi.testutil.animation.HanimBody;
@@ -63,12 +62,12 @@ public class GazeTMUTest extends AbstractTimedPlanUnitTest
 
     private GazeTMU setupPlanUnit(FeedbackManager bfm, BMLBlockPeg bbPeg, String id, String bmlId) throws TMUSetupException, MUSetupException
     {
-        TweedGazeMU mu = new TweedGazeMU();
-        //DynamicGazeMU mu = new DynamicGazeMU();
+        //TweedGazeMU mu = new TweedGazeMU();
+        DynamicGazeMU mu = new DynamicGazeMU();
         
         WorldObjectManager woManager = new WorldObjectManager();
         VJoint bluebox = new VJoint();
-        bluebox.setTranslation(Vec3f.getVec3f(1, 1, 1));
+        bluebox.setTranslation(Vec3f.getVec3f(0, 0, 1));
         WorldObject blueBox = new VJointWorldObject(bluebox);
         woManager.addWorldObject("bluebox", blueBox);
 
@@ -136,9 +135,9 @@ public class GazeTMUTest extends AbstractTimedPlanUnitTest
         tmu.resolveSynchs(BMLBlockPeg.GLOBALPEG, mockBeh, sacs);                
         tmu.setState(TimedPlanUnitState.LURKING);
         tmu.start(1);
-        System.out.println("tmu start :"+tmu.getStartTime());
-        System.out.println("tmu ready:"+tmu.getTime("ready"));
-        System.out.println("tmu end :"+tmu.getEndTime());
-        System.out.println("tmu relax :"+tmu.getRelaxTime());
+        assertEquals(1, tmu.getStartTime(), TIME_PRECISION);
+        assertEquals(3, tmu.getTime("ready"), TIME_PRECISION);
+        assertThat(tmu.getTime("relax"), greaterThan(3d));
+        assertThat(tmu.getTime("end"),  greaterThan(tmu.getTime("ready")+1.95));
     }
 }
