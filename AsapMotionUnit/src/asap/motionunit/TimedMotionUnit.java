@@ -83,6 +83,10 @@ public class TimedMotionUnit extends TimedAbstractPlanUnit
         feedback(fbToSend);        
     }
 
+    protected void sendProgress(double time)
+    {
+        sendProgress(puTimeManager.getRelativeTime(time), time);
+    }
     @Override
     protected void playUnit(double time) throws TimedPlanUnitPlayException
     {

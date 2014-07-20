@@ -117,6 +117,7 @@ public class TimedAnimationMotionUnit extends TimedMotionUnit implements TimedAn
     @Override
     protected void relaxUnit(double time) throws TimedPlanUnitPlayException
     {
+        sendProgress(puTimeManager.getRelativeTime(time), time);
         if (!progressHandled.contains(getKeyPosition("relax")))
         {
             progressHandled.add(getKeyPosition("relax"));
@@ -127,11 +128,12 @@ public class TimedAnimationMotionUnit extends TimedMotionUnit implements TimedAn
     @Override
     protected void playUnit(double time) throws TimedPlanUnitPlayException
     {
+        
         if (retractUnit != null && time >= getRelaxTime())
         {
             try
             {
-                double t = (time - getRelaxTime()) / (getEndTime() - getRelaxTime());
+                double t = (time - getRelaxTime()) / (getEndTime() - getRelaxTime());                
                 retractUnit.play(t);
             }
             catch (MUPlayException e)
