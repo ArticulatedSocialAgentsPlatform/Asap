@@ -80,7 +80,7 @@ public class Nao
 	    									"<behavior type=\"str\">%s</behavior>"+
 	    								"</goal>"+
 	        						"</data>", filename);
-    	
+    	this.connection.send(XMLPlayBehaviour, "RunBehaviorGoal");
     }
 
 }
