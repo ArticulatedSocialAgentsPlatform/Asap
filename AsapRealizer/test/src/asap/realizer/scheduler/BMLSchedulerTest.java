@@ -371,11 +371,6 @@ public class BMLSchedulerTest
                 + "\"><speech id=\"s1\"><text/></speech></bml>";
     }
     
-    private String createInvalidBML()
-    {
-        return "invalid_bml";
-    }
-
     @Before
     public void setup()
     {
@@ -904,7 +899,7 @@ public class BMLSchedulerTest
         parseBML(createNonEmptyBML("bml1", "bmla:preplan=\"true\""));
         scheduler.schedule();
 
-        parseBML(createNonEmptyBML("bml2", "bmla:preplan=\"true\" onStart=\"bml1\""));
+        parseBML(createNonEmptyBML("bml2", "bmla:preplan=\"true\" bmla:onStart=\"bml1\""));
         scheduler.schedule();
 
         assertEquals(0, getBMLIdsFromStartFeedback(blockProgressFeedbackList).size());
@@ -919,7 +914,7 @@ public class BMLSchedulerTest
         parseBML(createNonEmptyBML("bml3", "bmla:preplan=\"true\""));
         scheduler.schedule();
 
-        parseBML(createNonEmptyBML("bml2", "bmla:preplan=\"true\" composition=\"APPEND-AFTER(bml1)\" onStart=\"bml3\""));
+        parseBML(createNonEmptyBML("bml2", "bmla:preplan=\"true\" composition=\"APPEND-AFTER(bml1)\" bmla:onStart=\"bml3\""));
         scheduler.schedule();
 
         assertEquals(0, getBMLIdsFromStartFeedback(blockProgressFeedbackList).size());
@@ -1005,7 +1000,7 @@ public class BMLSchedulerTest
     {
         stubEngine.addBlockEnd("bml1", 2);
         stubEngine.addBlockEnd("bml2", 3);
-        parseBML(createNonEmptyBML("bml1", "preplan=\"true\""));
+        parseBML(createNonEmptyBML("bml1", "bmla:preplan=\"true\""));
         parseBML(createNonEmptyBML("bml2", "composition=\"APPEND\""));
         parseBML(createNonEmptyBML("bml3", "composition=\"APPEND\""));
         scheduler.schedule();
