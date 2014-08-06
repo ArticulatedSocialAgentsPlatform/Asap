@@ -44,6 +44,12 @@ public class BMLFlowVisualizerPort implements RealizerPort, BMLFeedbackListener
         return port.getVisualization();
     }
     
+    public void setVisualizations()
+    {
+        setVisualization(new PlanningQueueJPanelVisualization(), new PlayingQueueJPanelVisualization(),
+                new FinishedQueueJPanelVisualization());
+    }
+    
     public BMLFlowVisualizerPort(RealizerPort port)
     {
         realizerPort = port;
