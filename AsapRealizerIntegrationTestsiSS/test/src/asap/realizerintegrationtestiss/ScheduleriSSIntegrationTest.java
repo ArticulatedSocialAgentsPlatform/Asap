@@ -42,6 +42,7 @@ import asap.hns.Hns;
 import asap.incrementalspeechengine.IncrementalTTSPlanner;
 import asap.incrementalspeechengine.IncrementalTTSUnit;
 import asap.incrementalspeechengine.PhraseIUManager;
+import asap.incrementalspeechengine.SingleThreadedPlanPlayeriSS;
 import asap.realizer.AsapRealizer;
 import asap.realizer.DefaultEngine;
 import asap.realizer.DefaultPlayer;
@@ -69,13 +70,14 @@ public class ScheduleriSSIntegrationTest extends SchedulerIntegrationTestCases
     private BMLBlockManager bbm = new BMLBlockManager();
     private FeedbackManager bfm = new FeedbackManagerImpl(bbm, "character1");
     private static final SoundManager soundManager = new LWJGLJoalSoundManager();
-    private DispatchStream dispatcher = SimpleMonitor.setupDispatcher(new Resources("").getURL("sphinx-config.xml"));
+    private static DispatchStream dispatcher;
 
     @BeforeClass
     public static void oneTimeSetUp()
     {
         System.setProperty("mary.base", System.getProperty("shared.project.root")
                 + "/asapresource/MARYTTSIncremental/resource/MARYTTSIncremental");
+        dispatcher = SimpleMonitor.setupDispatcher(new Resources("").getURL("sphinx-config.xml"));
         soundManager.init();
         Odejava.init();
     }
@@ -84,25 +86,20 @@ public class ScheduleriSSIntegrationTest extends SchedulerIntegrationTestCases
     public static void oneTimeCleanup() throws IOException
     {
         Odejava.close();
-        soundManager.shutdown();        
+        soundManager.shutdown();      
+        dispatcher.waitUntilDone();
+        dispatcher.close();
     }
 
     @After
     public void after() throws IOException
     {
-        dispatcher.waitUntilDone();
-        dispatcher.close();
+        
     }
     
     @Before
     public void before() throws IOException
     {
-        PlanManager<IncrementalTTSUnit> planManager = new PlanManager<IncrementalTTSUnit>();
-        IncrementalTTSPlanner planner = new IncrementalTTSPlanner(bfm, planManager, new PhraseIUManager(dispatcher, null, null),
-                new NullPhonemeToVisemeMapping(), new ArrayList<IncrementalLipSynchProvider>());
-        Engine speechEngine = new DefaultEngine<IncrementalTTSUnit>(planner, new DefaultPlayer(
-                new SingleThreadedPlanPlayer<IncrementalTTSUnit>(planManager)), planManager);
-
         VJoint human = HanimBody.getLOA1HanimBody();
 
         ArrayList<MixedSystem> m = new ArrayList<MixedSystem>();
@@ -153,9 +150,16 @@ public class ScheduleriSSIntegrationTest extends SchedulerIntegrationTestCases
         BMLParser parser = new BMLParser(new ImmutableSet.Builder<Class<? extends BMLBehaviorAttributeExtension>>().add(
                 BMLABMLBehaviorAttributes.class).build());
 
-        realizer = new AsapRealizer("avatar1", parser, bfm, clock, bbm, pegBoard, animationEngine, speechEngine, auEngine, waitEngine,
+        realizer = new AsapRealizer("avatar1", parser, bfm, clock, bbm, pegBoard, animationEngine, auEngine, waitEngine,
                 pvpcEngine);
-
+        
+        PlanManager<IncrementalTTSUnit> planManager = new PlanManager<IncrementalTTSUnit>();
+        IncrementalTTSPlanner planner = new IncrementalTTSPlanner(bfm, planManager, new PhraseIUManager(dispatcher, "", realizer.getScheduler()),
+                new NullPhonemeToVisemeMapping(), new ArrayList<IncrementalLipSynchProvider>());
+        Engine speechEngine = new DefaultEngine<IncrementalTTSUnit>(planner, new DefaultPlayer(
+                new SingleThreadedPlanPlayeriSS<IncrementalTTSUnit>(planManager)), planManager);
+        realizer.addEngine(speechEngine);
+        
         setupRealizer();
     }
 }

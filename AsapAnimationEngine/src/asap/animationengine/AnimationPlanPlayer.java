@@ -1,7 +1,5 @@
 package asap.animationengine;
 
-import hmi.math.Quat4f;
-
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashSet;

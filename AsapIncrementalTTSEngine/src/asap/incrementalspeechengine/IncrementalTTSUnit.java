@@ -35,6 +35,7 @@ import asap.realizer.planunit.ParameterException;
 import asap.realizer.planunit.TimedAbstractPlanUnit;
 import asap.realizer.planunit.TimedPlanUnitPlayException;
 import asap.realizer.planunit.TimedPlanUnitState;
+import asap.realizer.scheduler.TimePegAndConstraint;
 
 import com.google.common.base.Splitter;
 import com.google.common.collect.BiMap;
@@ -257,10 +258,12 @@ public class IncrementalTTSUnit extends TimedAbstractPlanUnit
             double duration = getEndTime() - prevTime;
             stretchWords(prevIndex, getWords().size(), duration / defDuration);
         }
+        /* leave unset
         else
         {
             endPeg.setGlobalValue(getStartTime() + totalDuration + defDuration);
         }
+        */
     }
 
     private void setupSyncs(String textNoSync, String text)
@@ -581,7 +584,7 @@ public class IncrementalTTSUnit extends TimedAbstractPlanUnit
                 && endPeg.getGlobalValue() != TimePeg.VALUE_UNKNOWN) return false;
         if (startPeg.getGlobalValue() >= relaxPeg.getGlobalValue() && startPeg.getGlobalValue() != TimePeg.VALUE_UNKNOWN
                 && relaxPeg.getGlobalValue() != TimePeg.VALUE_UNKNOWN) return false;
-        if (relaxPeg.getGlobalValue() >= endPeg.getGlobalValue() && relaxPeg.getGlobalValue() != TimePeg.VALUE_UNKNOWN
+        if (relaxPeg.getGlobalValue() > endPeg.getGlobalValue() && relaxPeg.getGlobalValue() != TimePeg.VALUE_UNKNOWN
                 && endPeg.getGlobalValue() != TimePeg.VALUE_UNKNOWN) return false;
         return true;
     }
@@ -613,6 +616,9 @@ public class IncrementalTTSUnit extends TimedAbstractPlanUnit
         }
         if (!scheduled)// && time > getStartTime() - 3d)
         {
+            updateEnd();
+            updateRelax();
+            updateSyncTiming();
             iuManager.justInTimeAppendIU(synthesisIU, hesitation, this);
         }
 
