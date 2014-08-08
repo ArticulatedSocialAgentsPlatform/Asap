@@ -48,19 +48,28 @@ public class TimedInterruptUnit extends TimedEventUnit
     protected void startUnit(double time) throws TimedPlanUnitPlayException
     {
     	log.debug("Starting interrupt unit {} {}",getBMLId(),getId());
-        Set<String> stopBehs = new HashSet<String>();
+    	
+    	Set<String> stopBehs = new HashSet<String>();
         stopBehs.addAll(scheduler.getBehaviours(target));
+        Set<String> containingBehs = new HashSet<String>(stopBehs);
         if(include.size()>0)
         {
             stopBehs.retainAll(include);
         }
         stopBehs.removeAll(exclude);
         
-        for(String beh:stopBehs)
+        feedback("start",time);
+        if(stopBehs.equals(containingBehs))
         {
-        	log.debug("Interrupting behavior {}:{}",target,beh);
-            scheduler.interruptBehavior(target,beh);            
+            scheduler.interruptBlock(target);
         }
-        feedback("start",time);        
+        else
+        {
+            for(String beh:stopBehs)
+            {
+            	log.debug("Interrupting behavior {}:{}",target,beh);
+                scheduler.interruptBehavior(target,beh);            
+            }
+        }                
     }    
 }
