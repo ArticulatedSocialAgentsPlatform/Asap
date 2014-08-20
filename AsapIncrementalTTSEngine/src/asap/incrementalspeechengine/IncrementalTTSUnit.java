@@ -408,7 +408,7 @@ public class IncrementalTTSUnit extends TimedAbstractPlanUnit
         @Override
         public void update(IU updatedIU)
         {
-            startDelay = (iuManager.getCurrentTime() - getStartTime()) - getIUTime();
+            //startDelay = (iuManager.getCurrentTime() - getStartTime()) - getIUTime();
             updateEnd();
             updateRelax();
             updateSyncTiming();
@@ -648,7 +648,7 @@ public class IncrementalTTSUnit extends TimedAbstractPlanUnit
         
         if (isPlaying())
         {
-            startDelay = (iuManager.getCurrentTime() - getStartTime()) - getIUTime();
+            //startDelay = (iuManager.getCurrentTime() - getStartTime()) - getIUTime();
             
             //TODO: re-enable once sync stretching properly updates timing of syncs
             //applyTimeConstraints();

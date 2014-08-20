@@ -84,6 +84,7 @@ public class IUModuleTest
                 MaryAdapter4internal.getDefaultHMMData(), true)), true);
         // wait for synthesis:
         dispatcher.waitUntilDone();
+        dispatcher.close();
         
         System.setProperty("inpro.tts.voice", "dfki-prudence-hsmm");
         System.setProperty("inpro.tts.language", "en_GB");
