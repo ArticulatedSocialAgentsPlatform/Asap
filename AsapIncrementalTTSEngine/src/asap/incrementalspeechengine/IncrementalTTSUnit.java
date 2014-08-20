@@ -154,19 +154,19 @@ public class IncrementalTTSUnit extends TimedAbstractPlanUnit
         behavior = beh;
     }    
     
-    private List<WordIU> getWords()
+    private ImmutableList<WordIU> getWords()
     {
         if (synthesisIU == null)
         {
             if(hesitation == null)
             {
-                return new ArrayList<WordIU>();
+                return ImmutableList.of();
             }            
-            return hesitation.getWords();            
+            return ImmutableList.copyOf(hesitation.getWords());            
         }
         if (hesitation == null)
         {
-            return synthesisIU.getWords();
+            return ImmutableList.copyOf(synthesisIU.getWords());
         }
         return new ImmutableList.Builder<WordIU>().addAll(synthesisIU.getWords()).addAll(hesitation.getWords()).build();
     }
