@@ -3,10 +3,10 @@ package asap.incrementalspeechengine;
 import inpro.audio.DispatchStream;
 import inpro.incremental.IUModule;
 import inpro.incremental.processor.AdaptableSynthesisModule;
+import inpro.incremental.unit.ChunkIU;
 import inpro.incremental.unit.EditMessage;
 import inpro.incremental.unit.HesitationIU;
 import inpro.incremental.unit.IU;
-import inpro.incremental.unit.PhraseIU;
 import inpro.synthesis.hts.LoudnessPostProcessor;
 
 import java.util.ArrayList;
@@ -73,7 +73,10 @@ class PhraseConsumer implements Runnable
                 if (p.getIu() != null)
                 {
                     System.out.println("addToBuffer");
+                    double t = System.currentTimeMillis();
                     iuModule.addToBuffer(p.getIu());
+                    double tDur = System.currentTimeMillis()-t;
+                    System.out.println("time taken to add " +tDur/1000);
                     System.out.println("end addToBuffer");
                 }
                 if (p.getHes() != null)
@@ -137,7 +140,7 @@ public class PhraseIUManager
      * Appends synthesisIU to the currentIU if currentIU is ongoing, but finishes or relaxes within two phonemes AND
      * synthesisIU is supposed to start at either the relax time or the end time of the currentIU.
      */
-    public synchronized boolean justInTimeAppendIU(PhraseIU synthesisIU, HesitationIU hes, IncrementalTTSUnit ttsCandidate)
+    public synchronized boolean justInTimeAppendIU(ChunkIU synthesisIU, HesitationIU hes, IncrementalTTSUnit ttsCandidate)
     {
         if (currentTTSUnits.isEmpty()) return false;
         IncrementalTTSUnit top = currentTTSUnits.get(currentTTSUnits.size() - 1);
@@ -170,13 +173,13 @@ public class PhraseIUManager
         currentTTSUnits.remove(ttsUnit);
     }
 
-    public synchronized void playIU(PhraseIU synthesisIU, HesitationIU hes, IncrementalTTSUnit ttsUnit)
+    public synchronized void playIU(ChunkIU synthesisIU, HesitationIU hes, IncrementalTTSUnit ttsUnit)
     {
         if (currentTTSUnits.contains(ttsUnit)) return;
         addIU(synthesisIU, hes, ttsUnit);
     }
 
-    private void addIU(PhraseIU synthesisIU, HesitationIU hes, IncrementalTTSUnit ttsUnit)
+    private void addIU(ChunkIU synthesisIU, HesitationIU hes, IncrementalTTSUnit ttsUnit)
     {
         // TODO: move to PhraseConsumer
         if (voice != null)

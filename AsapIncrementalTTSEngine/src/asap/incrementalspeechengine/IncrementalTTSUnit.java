@@ -5,10 +5,10 @@ import hmi.tts.util.BMLTextUtil;
 import hmi.tts.util.PhonemeToVisemeMapping;
 import hmi.tts.util.PhonemeUtil;
 import hmi.tts.util.SyncAndOffset;
+import inpro.incremental.unit.ChunkIU;
 import inpro.incremental.unit.HesitationIU;
 import inpro.incremental.unit.IU;
 import inpro.incremental.unit.IU.IUUpdateListener;
-import inpro.incremental.unit.PhraseIU;
 import inpro.incremental.unit.SegmentIU;
 import inpro.incremental.unit.SysSegmentIU;
 import inpro.incremental.unit.WordIU;
@@ -35,7 +35,6 @@ import asap.realizer.planunit.ParameterException;
 import asap.realizer.planunit.TimedAbstractPlanUnit;
 import asap.realizer.planunit.TimedPlanUnitPlayException;
 import asap.realizer.planunit.TimedPlanUnitState;
-import asap.realizer.scheduler.TimePegAndConstraint;
 
 import com.google.common.base.Splitter;
 import com.google.common.collect.BiMap;
@@ -51,7 +50,7 @@ import com.google.common.collect.Iterables;
 @Slf4j
 public class IncrementalTTSUnit extends TimedAbstractPlanUnit
 {
-    private PhraseIU synthesisIU;
+    private ChunkIU synthesisIU;
     private TimePeg startPeg;
     private TimePeg relaxPeg;
     private TimePeg endPeg;
@@ -89,7 +88,7 @@ public class IncrementalTTSUnit extends TimedAbstractPlanUnit
         }
         if (textNoSync.length() > 0)
         {
-            synthesisIU = new PhraseIU(textNoSync);
+            synthesisIU = new ChunkIU(textNoSync);
             synthesisIU.preSynthesize();
             lastWord = null;
             for (WordIU word : synthesisIU.getWords())
@@ -130,7 +129,7 @@ public class IncrementalTTSUnit extends TimedAbstractPlanUnit
 
         if (textNoSync.length() > 0)
         {
-            synthesisIU = new PhraseIU(textNoSync);
+            synthesisIU = new ChunkIU(textNoSync);
             synthesisIU.preSynthesize();
             lastWord = null;
             for (WordIU word : synthesisIU.getWords())
@@ -230,7 +229,7 @@ public class IncrementalTTSUnit extends TimedAbstractPlanUnit
 
         // apply sync constraints
         int prevIndex = 0;
-        double totalDuration = 0;
+        
 
         double prevTime = startPeg.getGlobalValue()+startDelay;
         for (int i : syncOffsets)
@@ -244,8 +243,7 @@ public class IncrementalTTSUnit extends TimedAbstractPlanUnit
                 stretchWords(prevIndex, i, duration / defDuration);
 
                 prevTime = tp.getGlobalValue();
-                prevIndex = i;
-                totalDuration += duration;
+                prevIndex = i;                
             }
         }
 
@@ -257,13 +255,7 @@ public class IncrementalTTSUnit extends TimedAbstractPlanUnit
         {
             double duration = getEndTime() - prevTime;
             stretchWords(prevIndex, getWords().size(), duration / defDuration);
-        }
-        /* leave unset
-        else
-        {
-            endPeg.setGlobalValue(getStartTime() + totalDuration + defDuration);
-        }
-        */
+        }        
     }
 
     private void setupSyncs(String textNoSync, String text)
@@ -318,6 +310,7 @@ public class IncrementalTTSUnit extends TimedAbstractPlanUnit
 
     private void updateFeedback()
     {
+        System.out.println("startDelay "+startDelay);
         int i = 0;
         IU lastWord = null;
         for (IU word : getWords())
@@ -357,8 +350,8 @@ public class IncrementalTTSUnit extends TimedAbstractPlanUnit
                 {
                     if (ph.isCompleted())
                     {
-                        lastEnd = ph.endTime() - firstWord.startTime();
-                    }
+                        lastEnd = ph.endTime() - firstWord.startTime();                        
+                    }                    
                 }
             }
         }
@@ -420,7 +413,7 @@ public class IncrementalTTSUnit extends TimedAbstractPlanUnit
             updateRelax();
             updateSyncTiming();
             updateLipSync();
-            updateFeedback();
+            updateFeedback();            
         }
     }
 

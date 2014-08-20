@@ -26,6 +26,7 @@
      <dependency org="apache"   name="commons-collections"     rev="latest.${resolve.status}"   />
      <dependency org="apache"   name="commons-lang"     rev="latest.${resolve.status}"   />
      <dependency org="apache"   name="commons-io"     rev="latest.${resolve.status}"   />
+     <dependency org="apache"   name="commons-math3"     rev="latest.${resolve.status}"   />
      <dependency org="opennlp"   name="maxent"                  rev="latest.release"  />
      <dependency org="opennlp"   name="opennlp-tools"           rev="latest.release"  />
    </dependencies>
