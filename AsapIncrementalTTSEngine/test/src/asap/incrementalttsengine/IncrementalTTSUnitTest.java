@@ -81,7 +81,6 @@ public class IncrementalTTSUnitTest extends AbstractTimedPlanUnitTest
         List<IU> wordIUs = MaryAdapter.getInstance().text2IUs("Heating up.");
         dummydispatcher.playStream(new DDS16kAudioInputStream(new VocodingAudioStream(new IUBasedFullPStream(wordIUs.get(0)),
                 MaryAdapter4internal.getDefaultHMMData(), true)), true);
-        // wait for synthesis:
         dummydispatcher.waitUntilDone();
         dummydispatcher.close();
 

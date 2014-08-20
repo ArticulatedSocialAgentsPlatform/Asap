@@ -12,13 +12,20 @@ import hmi.xml.XMLScanException;
 import hmi.xml.XMLStructureAdapter;
 import hmi.xml.XMLTokenizer;
 import inpro.apps.SimpleMonitor;
+import inpro.apps.util.MonitorCommandLineParser;
+import inpro.audio.DDS16kAudioInputStream;
 import inpro.audio.DispatchStream;
+import inpro.incremental.unit.IU;
 import inpro.synthesis.MaryAdapter;
+import inpro.synthesis.MaryAdapter4internal;
+import inpro.synthesis.hts.IUBasedFullPStream;
+import inpro.synthesis.hts.VocodingAudioStream;
 
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.HashMap;
+import java.util.List;
 
 import lombok.Getter;
 import lombok.extern.slf4j.Slf4j;
@@ -146,6 +153,15 @@ public class IncrementalTTSEngineLoader implements EngineLoader
         }
         System.setProperty("mary.base", maryTTS.getConfigDir());
 
+        //heating up the tts so that subsequent speech is processed faster
+        DispatchStream dummydispatcher = SimpleMonitor.setupDispatcher(new MonitorCommandLineParser(new String[] { "-D", "-c",
+                "" + new Resources(di.getResource()).getURL(di.getFilename())}));
+        List<IU> wordIUs = MaryAdapter.getInstance().text2IUs("Heating up.");
+        dummydispatcher.playStream(new DDS16kAudioInputStream(new VocodingAudioStream(new IUBasedFullPStream(wordIUs.get(0)),
+                MaryAdapter4internal.getDefaultHMMData(), true)), true);
+        dummydispatcher.waitUntilDone();
+        dummydispatcher.close();
+        
         dispatcher = SimpleMonitor.setupDispatcher(new Resources(di.getResource()).getURL(di.getFilename()));
         PlanManager<IncrementalTTSUnit> planManager = new PlanManager<IncrementalTTSUnit>();
         IncrementalTTSPlanner planner = new IncrementalTTSPlanner(realizerEmbodiment.getFeedbackManager(), planManager,
