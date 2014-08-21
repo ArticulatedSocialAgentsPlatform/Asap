@@ -68,7 +68,7 @@ public class IncrementalTTSUnit extends TimedAbstractPlanUnit
     private volatile boolean scheduled = false;
     private int numwords;
     private Set<String> feedbackSent = Collections.synchronizedSet(new HashSet<String>());
-    private final WordUpdateListener wul;    
+    private final WordUpdateListener wul;
     private double startDelay = 0;
     private int loudness = 0;
     private String textNoSync;
@@ -152,17 +152,17 @@ public class IncrementalTTSUnit extends TimedAbstractPlanUnit
             pegs.put(sync, new TimePeg(bmlPeg));
         }
         behavior = beh;
-    }    
-    
+    }
+
     private ImmutableList<WordIU> getWords()
     {
         if (synthesisIU == null)
         {
-            if(hesitation == null)
+            if (hesitation == null)
             {
                 return ImmutableList.of();
-            }            
-            return ImmutableList.copyOf(hesitation.getWords());            
+            }
+            return ImmutableList.copyOf(hesitation.getWords());
         }
         if (hesitation == null)
         {
@@ -198,9 +198,9 @@ public class IncrementalTTSUnit extends TimedAbstractPlanUnit
             {
                 fb = true;
                 feedbackSent.add(syncId);
-            }            
-        }        
-        if(fb)
+            }
+        }
+        if (fb)
         {
             super.feedback(syncId, time);
         }
@@ -229,9 +229,8 @@ public class IncrementalTTSUnit extends TimedAbstractPlanUnit
 
         // apply sync constraints
         int prevIndex = 0;
-        
 
-        double prevTime = startPeg.getGlobalValue()+startDelay;
+        double prevTime = startPeg.getGlobalValue() + startDelay;
         for (int i : syncOffsets)
         {
             String sync = syncMap.get(i);
@@ -243,7 +242,7 @@ public class IncrementalTTSUnit extends TimedAbstractPlanUnit
                 stretchWords(prevIndex, i, duration / defDuration);
 
                 prevTime = tp.getGlobalValue();
-                prevIndex = i;                
+                prevIndex = i;
             }
         }
 
@@ -255,7 +254,7 @@ public class IncrementalTTSUnit extends TimedAbstractPlanUnit
         {
             double duration = getEndTime() - prevTime;
             stretchWords(prevIndex, getWords().size(), duration / defDuration);
-        }        
+        }
     }
 
     private void setupSyncs(String textNoSync, String text)
@@ -304,13 +303,12 @@ public class IncrementalTTSUnit extends TimedAbstractPlanUnit
                 fwTime = firstWord.startTime();
             }
             lsp.setLipSyncUnit(getBMLBlockPeg(), behavior, startDelay + phIU.startTime() - fwTime + getStartTime(), viseme, phIU);
-            //lsp.setLipSyncUnit(getBMLBlockPeg(), behavior, startDelay + phIU.startTime() - fwTime + getStartTime(), viseme, phIU);
+            // lsp.setLipSyncUnit(getBMLBlockPeg(), behavior, startDelay + phIU.startTime() - fwTime + getStartTime(), viseme, phIU);
         }
     }
 
     private void updateFeedback()
     {
-        System.out.println("startDelay "+startDelay);
         int i = 0;
         IU lastWord = null;
         for (IU word : getWords())
@@ -350,8 +348,8 @@ public class IncrementalTTSUnit extends TimedAbstractPlanUnit
                 {
                     if (ph.isCompleted())
                     {
-                        lastEnd = ph.endTime() - firstWord.startTime();                        
-                    }                    
+                        lastEnd = ph.endTime() - firstWord.startTime();
+                    }
                 }
             }
         }
@@ -361,24 +359,30 @@ public class IncrementalTTSUnit extends TimedAbstractPlanUnit
     private void updateLipSync()
     {
         int visCount = visemeLookAhead;
-        for (IU word : getWords())
+        for (WordIU word : getWords())
         {
             if (word.isUpcoming() || word.isOngoing())
             {
-                for (IU ph : word.groundedIn())
+                for (IU syllable : word.groundedIn())
                 {
-                    if (ph.isUpcoming())
+                    if (syllable.isUpcoming() || syllable.isOngoing())
                     {
-                        updateLipSyncUnit(ph);
-                        visCount--;
-                        if (visCount == 0) return;
+                        for (IU ph : syllable.groundedIn())
+                        {
+                            if (ph.isUpcoming())
+                            {
+                                updateLipSyncUnit(ph);
+                                visCount--;
+                                if (visCount == 0) return;
+                            }
+                        }
                     }
                 }
             }
         }
     }
 
-    //update relax sync point timing to actual word timing
+    // update relax sync point timing to actual word timing
     private void updateRelax()
     {
         if (hesitation != null)
@@ -391,7 +395,7 @@ public class IncrementalTTSUnit extends TimedAbstractPlanUnit
         }
     }
 
-    //update end sync point timing to actual word timing
+    // update end sync point timing to actual word timing
     private void updateEnd()
     {
         endPeg.setGlobalValue(getStartTime() + getDuration() + startDelay);
@@ -408,21 +412,21 @@ public class IncrementalTTSUnit extends TimedAbstractPlanUnit
         @Override
         public void update(IU updatedIU)
         {
-            //startDelay = (iuManager.getCurrentTime() - getStartTime()) - getIUTime();
+            // startDelay = (iuManager.getCurrentTime() - getStartTime()) - getIUTime();
             updateEnd();
             updateRelax();
             updateSyncTiming();
             updateLipSync();
-            updateFeedback();            
+            updateFeedback();
         }
     }
 
     private void stretch(float value)
     {
         if (stretch == value) return;
-        
-        //TODO: update timing of syncs
-        
+
+        // TODO: update timing of syncs
+
         stretch = value;
         log.debug("set stretch {}", value);
 
@@ -582,7 +586,7 @@ public class IncrementalTTSUnit extends TimedAbstractPlanUnit
         return true;
     }
 
-    //update sync point timing to actual word timing
+    // update sync point timing to actual word timing
     private void updateSyncTiming()
     {
         for (Entry<Integer, String> entry : syncMap.entrySet())
@@ -622,7 +626,6 @@ public class IncrementalTTSUnit extends TimedAbstractPlanUnit
         // inbetween reset
         if (synthesisIU != null && synthesisIU.groundedIn().isEmpty()) return;
 
-        
         if (synthesisIU != null)
         {
             firstWord = synthesisIU.getWords().get(0);
@@ -631,7 +634,7 @@ public class IncrementalTTSUnit extends TimedAbstractPlanUnit
                 word.updateOnGrinUpdates();
                 word.addUpdateListener(wul);
                 lastWord = word;
-            }        
+            }
         }
         if (hesitation != null)
         {
@@ -644,36 +647,35 @@ public class IncrementalTTSUnit extends TimedAbstractPlanUnit
             {
                 firstWord = hesitation.getWords().get(0);
             }
-        }        
-        
+        }
+
         if (isPlaying())
         {
-            //startDelay = (iuManager.getCurrentTime() - getStartTime()) - getIUTime();
-            
-            //TODO: re-enable once sync stretching properly updates timing of syncs
-            //applyTimeConstraints();
-            
+            // startDelay = (iuManager.getCurrentTime() - getStartTime()) - getIUTime();
+
+            // TODO: re-enable once sync stretching properly updates timing of syncs
+            // applyTimeConstraints();
+
             endPeg.setGlobalValue(iuManager.getCurrentTime() + getPreferedDuration());
             relaxPeg.setGlobalValue(getEndTime());
-            
+
             updateSyncTiming();
-            updateLipSync();            
-        }        
+            updateLipSync();
+        }
     }
 
     protected void startUnit(double time) throws TimedPlanUnitPlayException
     {
         endPeg.setGlobalValue(time + getPreferedDuration());
         relaxPeg.setGlobalValue(getEndTime());
-        
+
         iuManager.setLoudness(0);
         feedback("start", time);
-        
+
         scheduled = true;
         iuManager.playIU(synthesisIU, hesitation, this);
         updateSyncTiming();
         updateLipSync();
-        
 
         super.startUnit(time);
     }
