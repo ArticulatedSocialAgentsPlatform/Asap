@@ -1,0 +1,14 @@
+<bml id="bml1" xmlns="http://www.bml-initiative.org/bml/bml-1.0" xmlns:srne="http://hmi.ewi.utwente.nl/stomprosnaoengine">
+    <srne:runChoregrapheClip id="stand" start="0" clipName="stand"/>
+    <srne:runChoregrapheClip id="walk" start="stand:end" clipName="walk"/>
+    <srne:runChoregrapheClip id="sit" start="walk:end" clipName="sit"/>
+	<speech id="speech1" start="stand:start+2">
+		<text>Hello! My name is Nao</text>
+	</speech>
+	<speech id="speech2" start="walk:start">
+		<text>I can walk forwards</text>
+	</speech>
+	<speech id="speech3" start="walk:end">
+		<text>It was nice to meet you</text>
+	</speech>
+</bml> 

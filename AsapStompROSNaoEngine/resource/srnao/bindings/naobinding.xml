@@ -1,0 +1,37 @@
+
+<naobinding>
+    <!-- StompROSNaoEngine basic behaviours mapped to the corresponding control primitives -->
+    <NaoUnitSpec type="runChoregrapheClip" namespace="http://hmi.ewi.utwente.nl/stomprosnaoengine">
+        <constraints>
+        </constraints>
+        <parametermap>
+            <parameter src="clipName" dst="clipName"/>
+        </parametermap>
+        <NaoUnit type="RunChoregrapheClipNU"/>
+    </NaoUnitSpec>    
+    
+    <!-- A fire-and-forget method for setting a joint angle, speed is a fraction of max speed between 0..1 -->
+    <NaoUnitSpec type="setJointAngle" namespace="http://hmi.ewi.utwente.nl/stomprosnaoengine">
+        <constraints>
+        </constraints>
+        <parametermap>
+            <parameter src="jointName" dst="jointName"/>
+            <parameter src="angle" dst="angle"/>
+            <parameter src="speed" dst="speed"/>
+        </parametermap>
+        <NaoUnit type="SetJointAngleNU"/>
+    </NaoUnitSpec>
+    
+    <!-- More advanced behavioural controls mapped onto nao control primitives -->
+    
+    <!-- Move a joint to a specified angle over a certain predictable duration (from start to end) where speed is linear as much as possible -->
+    <NaoUnitSpec type="moveJoint" namespace="http://hmi.ewi.utwente.nl/stomprosnaoengine">
+        <constraints>
+        </constraints>
+        <parametermap>
+            <parameter src="jointName" dst="jointName"/>
+            <parameter src="angle" dst="angle"/>
+        </parametermap>
+        <NaoUnit type="MoveJointNU"/>
+    </NaoUnitSpec>
+</naobinding>

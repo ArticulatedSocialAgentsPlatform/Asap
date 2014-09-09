@@ -1,0 +1,4 @@
+<bml id="bml1" xmlns="http://www.bml-initiative.org/bml/bml-1.0" xmlns:srne="http://hmi.ewi.utwente.nl/stomprosnaoengine">
+    <srne:moveJoint id="joint 1" start="0" end="30" jointName="HeadYaw" angle="1"/>
+    <srne:moveJoint id="joint 2" start="joint 1:end" end="60" jointName="HeadYaw" angle="-1"/>
+</bml> 
