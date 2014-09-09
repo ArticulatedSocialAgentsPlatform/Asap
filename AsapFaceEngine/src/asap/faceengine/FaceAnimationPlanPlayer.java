@@ -73,4 +73,10 @@ public class FaceAnimationPlanPlayer implements PlanPlayer
     {
         defPlayer.shutdown();
     }
+
+    @Override
+    public void updateTiming(String bmlId)
+    {
+                
+    }
 }

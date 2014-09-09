@@ -75,6 +75,12 @@ public class LoggingRealizerBridgeTest
         {
             feedbackManager.removeAllListeners();
         }
+
+        @Override
+        public void removeListener(BMLFeedbackListener l)
+        {
+            feedbackManager.removeListener(l);            
+        }
     }
     
     private static class StubInputBridge implements RealizerPort
@@ -101,6 +107,12 @@ public class LoggingRealizerBridgeTest
         public void removeAllListeners()
         {
             outBridge.removeAllListeners();            
+        }
+
+        @Override
+        public void removeListener(BMLFeedbackListener l)
+        {
+            outBridge.removeListener(l);            
         }        
     }
     

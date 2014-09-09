@@ -49,7 +49,7 @@ public class ForwardRestGaze implements RestGaze
     @Override
     public void play(double time, Set<String> kinematicJoints, Set<String> physicalJoints)
     {
-                
+        
     }
 
     @Override
@@ -117,7 +117,7 @@ public class ForwardRestGaze implements RestGaze
         DynamicGazeMU mu = new DynamicGazeMU();
         mu.setGazeDirection(Vec3f.getVec3f(0,0,1));        
         mu.influence = influence;
-        return new GazeShiftTMU(bmlBlockPeg, bmlId, id, mu.copy(aPlayer), pb, this, aPlayer);
+        return new GazeShiftTMU(bbf, bmlBlockPeg, bmlId, id, mu.copy(aPlayer), pb, this, aPlayer);
     }
     
     @Override

@@ -54,63 +54,82 @@ public class GazeTMU extends TimedAnimationMotionUnit
     @Override
     protected void startUnit(double time) throws TimedPlanUnitPlayException
     {
-        super.startUnit(time);
         try
         {
-            double readyTime = getTime("ready");
-            double relaxTime = getTime("relax");
             gmu.setStartPose();
-
-            double readyDuration;
-            double relaxDuration;
-            if (readyTime != TimePeg.VALUE_UNKNOWN)
-            {
-                readyDuration = readyTime - getStartTime();
-            }
-            else
-            {
-                readyDuration = gmu.getPreferedReadyDuration();
-
-                if (getEndTime() != TimePeg.VALUE_UNKNOWN && getStartTime() != TimePeg.VALUE_UNKNOWN)
-                {
-                    double duration = getEndTime() - getStartTime();
-                    if (duration <= readyDuration * 2)
-                    {
-                        readyDuration = duration * 0.5;
-                    }
-                }
-
-                TimePeg startPeg = this.getTimePeg(BMLGestureSync.START.getId());
-                if (startPeg == null)
-                {
-                    throw new TimedPlanUnitPlayException("Start peg is null", this);
-                }
-                OffsetPeg tpReady = new OffsetPeg(startPeg, readyDuration);
-                setTimePeg("ready", tpReady);
-            }
-
-            if (relaxTime != TimePeg.VALUE_UNKNOWN)
-            {
-                relaxDuration = readyTime - getStartTime();
-            }
-            else
-            {
-                relaxDuration = readyDuration;
-                TimePeg endPeg = getTimePeg("end");
-                OffsetPeg tpRelax;
-                if (endPeg != null && getEndTime() != TimePeg.VALUE_UNKNOWN)
-                {
-                    // only set relax if end is set, otherwise persistent gaze
-                    tpRelax = new OffsetPeg(endPeg, -relaxDuration);
-                    setTimePeg("relax", tpRelax);
-                }
-            }
-            gmu.setDurations(readyDuration, relaxDuration);
         }
         catch (MUPlayException ex)
         {
             throw new TMUPlayException(ex.getLocalizedMessage(), this, ex);
         }
+
+        double readyTime = getTime("ready");
+        double relaxTime = getTime("relax");
+
+        double readyDuration;
+        double relaxDuration;
+
+        // Setting ready time
+        if (readyTime != TimePeg.VALUE_UNKNOWN)
+        {
+            readyDuration = readyTime - getStartTime();
+        }
+        else
+        {
+            readyDuration = gmu.getPreferedReadyDuration();
+
+            if (getEndTime() != TimePeg.VALUE_UNKNOWN && getStartTime() != TimePeg.VALUE_UNKNOWN)
+            {
+                double duration = getEndTime() - getStartTime();
+                if (duration <= readyDuration * 2)
+                {
+                    readyDuration = duration * 0.5;
+                }
+            }
+
+            TimePeg startPeg = getTimePeg(BMLGestureSync.START.getId());
+            if (startPeg == null)
+            {
+                throw new TimedPlanUnitPlayException("Start peg is null", this);
+            }
+            OffsetPeg tpReady = new OffsetPeg(startPeg, readyDuration);
+            setTimePeg("ready", tpReady);
+        }
+
+        // setting relax
+        TimePeg endPeg = getTimePeg("end");
+        if (relaxTime != TimePeg.VALUE_UNKNOWN)
+        {
+            relaxDuration = readyTime - getStartTime();
+        }
+        else
+        {
+            relaxDuration = readyDuration;
+            TimePeg tpRelax = new TimePeg(getBMLBlockPeg());
+            setTimePeg("relax", tpRelax);
+            if (endPeg != null && endPeg.getGlobalValue() != TimePeg.VALUE_UNKNOWN)
+            {
+                tpRelax.setGlobalValue(getEndTime()-relaxDuration);
+            }
+            else
+            {
+                tpRelax.setGlobalValue(getTime("ready")+gmu.getPreferedStayDuration());
+            }
+        }
+
+        // set end        
+        if (endPeg == null)
+        {
+            endPeg = new TimePeg(getBMLBlockPeg());
+            setTimePeg("end", endPeg);
+        }
+        if (getEndTime() == TimePeg.VALUE_UNKNOWN)
+        {
+            endPeg.setGlobalValue(getTime("relax")+relaxDuration);
+        }
+
+        gmu.setDurations(readyDuration, relaxDuration);
+        super.startUnit(time);
     }
 
     @Override
@@ -146,8 +165,8 @@ public class GazeTMU extends TimedAnimationMotionUnit
         {
             throw new TimedPlanUnitPlayException("TMUSetupException in construction of relax unit", this, e);
         }
-        relaxUnit.setTimePeg("relax", new OffsetPeg(endPeg,1));
-        relaxUnit.setTimePeg("end", new OffsetPeg(endPeg,2));        
+        relaxUnit.setTimePeg("relax", new OffsetPeg(endPeg, 1));
+        relaxUnit.setTimePeg("end", new OffsetPeg(endPeg, 2));
         relaxUnit.setSubUnit(true);
         relaxUnit.start(time);
         super.relaxUnit(time);
@@ -155,11 +174,11 @@ public class GazeTMU extends TimedAnimationMotionUnit
 
     protected void gracefullInterrupt(double time) throws TimedPlanUnitPlayException
     {
-        
+
         skipPegs(time, "ready", "strokeStart", "stroke", "strokeEnd");
 
         // XXX: should relax and end pegs also be detached if other behaviors are connected to them?
         getTimePeg("relax").setGlobalValue(time);
-        getTimePeg("end").setGlobalValue(time + 1); // for now duration 1, should be dynamically gotten from the rest gaze pos
+        getTimePeg("end").setGlobalValue(time + aniPlayer.getGazeTransitionToRestDuration());
     }
 }

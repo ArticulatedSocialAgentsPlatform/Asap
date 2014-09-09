@@ -45,5 +45,12 @@ public class MultiThreadedElckerlycRealizerBridge implements RealizerPort
     public void removeAllListeners()
     {
         queueBridge.removeAllListeners();        
+    }
+
+
+    @Override
+    public void removeListener(BMLFeedbackListener l)
+    {
+        queueBridge.removeListener(l);        
     }   
 }

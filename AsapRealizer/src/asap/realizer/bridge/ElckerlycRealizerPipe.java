@@ -27,6 +27,13 @@ public class ElckerlycRealizerPipe implements RealizerPort
     }
 
     @Override
+    public void removeListener(BMLFeedbackListener l)
+    {
+        realizer.getScheduler().removeFeedbackListener(l);
+        
+    }
+    
+    @Override
     public void addListeners(BMLFeedbackListener... listeners)
     {
         for (BMLFeedbackListener listener : listeners)
@@ -34,5 +41,4 @@ public class ElckerlycRealizerPipe implements RealizerPort
             realizer.addFeedbackListener((BMLFeedbackListener) listener);
         }
     }
-
 }

@@ -17,6 +17,9 @@ import saiba.bml.feedback.BMLFeedbackParser;
 import saiba.bml.feedback.BMLPredictionFeedback;
 import saiba.bml.feedback.BMLSyncPointProgressFeedback;
 import saiba.bml.feedback.BMLWarningFeedback;
+import asap.bml.ext.bmla.feedback.BMLABlockProgressFeedback;
+import asap.bml.ext.bmla.feedback.BMLAPredictionFeedback;
+import asap.bml.ext.bmla.feedback.BMLASyncPointProgressFeedback;
 import asap.realizerport.BMLFeedbackListener;
 import asap.realizerport.RealizerPort;
 
@@ -87,25 +90,25 @@ public class FeedbackPanel extends JPanel implements BMLFeedbackListener
         warningOutput.setCaretPosition(warningOutput.getText().length());
     }
 
-    public void blockProgress(BMLBlockProgressFeedback psf)
+    public void blockProgress(BMLABlockProgressFeedback psf)
     {
-        feedbackOutput.append(psf.toString());
+        feedbackOutput.append(psf.toBMLFeedbackString());
     }
 
-    public void syncProgress(BMLSyncPointProgressFeedback spp)
+    public void syncProgress(BMLASyncPointProgressFeedback spp)
     {
-        feedbackOutput.append(spp.toString());
+        feedbackOutput.append(spp.toBMLFeedbackString());
     }
 
-    public void prediction(BMLPredictionFeedback bpf)
+    public void prediction(BMLAPredictionFeedback bpf)
     {
-        predictionOutput.append(bpf.toString());
+        predictionOutput.append(bpf.toBMLFeedbackString());
     }
 
     public void warn(BMLWarningFeedback bw)
     {
         // show the feedback from the realizer
-        warningOutput.append(bw.toString());
+        warningOutput.append(bw.toBMLFeedbackString());
         warningOutput.setCaretPosition(warningOutput.getText().length());
     }
 
@@ -117,15 +120,15 @@ public class FeedbackPanel extends JPanel implements BMLFeedbackListener
             BMLFeedback fb = BMLFeedbackParser.parseFeedback(feedback);
             if(fb instanceof BMLPredictionFeedback)
             {
-                prediction((BMLPredictionFeedback)fb);
+                prediction(BMLAPredictionFeedback.build((BMLPredictionFeedback)fb));
             }
             else if (fb instanceof BMLBlockProgressFeedback)
             {
-                blockProgress((BMLBlockProgressFeedback)fb);
+                blockProgress(BMLABlockProgressFeedback.build((BMLBlockProgressFeedback)fb));
             }
             else if (fb instanceof BMLSyncPointProgressFeedback)
             {
-                syncProgress((BMLSyncPointProgressFeedback)fb);
+                syncProgress(BMLASyncPointProgressFeedback.build((BMLSyncPointProgressFeedback)fb));
             }
             else if (fb instanceof BMLWarningFeedback)
             {

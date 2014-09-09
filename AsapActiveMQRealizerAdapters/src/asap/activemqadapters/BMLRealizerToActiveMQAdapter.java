@@ -83,6 +83,12 @@ public class BMLRealizerToActiveMQAdapter implements RealizerPort, AMQConnection
     }
 
     @Override
+    public void removeListener(BMLFeedbackListener l)
+    {
+        feedbackListeners.remove(l);        
+    }   
+    
+    @Override
     public void performBML(String bmlString)
     {
         try
@@ -103,5 +109,7 @@ public class BMLRealizerToActiveMQAdapter implements RealizerPort, AMQConnection
                 log.warn("Error sending BMLFeedback to Listeners", ex);
             }
         }
-    }    
+    }
+
+     
 }

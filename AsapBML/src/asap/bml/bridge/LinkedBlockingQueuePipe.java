@@ -46,6 +46,12 @@ public class LinkedBlockingQueuePipe implements RealizerPort
     {
         outBridge.removeAllListeners();
     }
+    
+    @Override
+    public void removeListener(BMLFeedbackListener l)
+    {
+        outBridge.removeListener(l);        
+    }
 
     @Override
     public void performBML(String bmlString)
@@ -102,5 +108,5 @@ public class LinkedBlockingQueuePipe implements RealizerPort
     public void stopRunning()
     {
         exec.shutdown();
-    }
+    }    
 }

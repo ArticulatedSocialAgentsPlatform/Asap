@@ -36,6 +36,12 @@ public class AsapRealizerPort extends XMLRealizerTestPort implements RealizerPor
         realizerPort.removeAllListeners();
     }
     
+    @Override
+    public void removeListener(BMLFeedbackListener l)
+    {
+        realizerPort.removeListener(l);
+    }
+    
     private class MyListener implements BMLFeedbackListener
     {
         @Override
@@ -44,4 +50,6 @@ public class AsapRealizerPort extends XMLRealizerTestPort implements RealizerPor
             AsapRealizerPort.this.feedback(feedback);
         }        
     }
+
+    
 }
