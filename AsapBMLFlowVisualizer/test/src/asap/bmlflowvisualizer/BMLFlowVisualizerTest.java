@@ -13,6 +13,7 @@ import org.junit.Test;
 import saiba.bml.core.BehaviourBlock;
 import saiba.bml.feedback.BMLBlockPredictionFeedback;
 import saiba.bml.feedback.BMLBlockProgressFeedback;
+import asap.bmlflowvisualizer.gui.BMLFlowVisualization;
 import asap.realizerport.RealizerPort;
 
 /**
@@ -26,15 +27,12 @@ public class BMLFlowVisualizerTest
     private BMLFlowVisualization mockPlanqVis = mock(BMLFlowVisualization.class);
     private BMLFlowVisualization mockFinishedqVis = mock(BMLFlowVisualization.class);
     private BMLFlowVisualization mockPlayqVis = mock(BMLFlowVisualization.class);
-    private BMLFlowVisualizerPort vis;
+    private BMLFlowVisualizerPortOld vis;
 
     @Before
     public void before()
     {
-        when(mockPlanqVis.getVisualization()).thenReturn(new JPanel());
-        when(mockFinishedqVis.getVisualization()).thenReturn(new JPanel());
-        when(mockPlayqVis.getVisualization()).thenReturn(new JPanel());
-        vis = new BMLFlowVisualizerPort(mockPort);
+        vis = new BMLFlowVisualizerPortOld(mockPort);
         vis.setVisualization(mockPlanqVis, mockFinishedqVis, mockPlayqVis);
     }
 
@@ -51,9 +49,6 @@ public class BMLFlowVisualizerTest
     {
         String bmlString = "<bml id=\"bml1\" xmlns=\"http://www.bml-initiative.org/bml/bml-1.0\"></bml>";
         vis.performBML(bmlString);
-        verify(mockPlanqVis).planBlock(any(BehaviourBlock.class));
-        verify(mockPlayqVis).planBlock(any(BehaviourBlock.class));
-        verify(mockFinishedqVis).planBlock(any(BehaviourBlock.class));
     }
 
     @Test
@@ -61,9 +56,6 @@ public class BMLFlowVisualizerTest
     {
         String feedbackString = "<blockProgress id=\"bml1:end\" globalTime=\"10\" xmlns=\"http://www.bml-initiative.org/bml/bml-1.0\"/>";
         vis.feedback(feedbackString);
-        verify(mockFinishedqVis).finishBlock(any(BMLBlockProgressFeedback.class));
-        verify(mockPlanqVis).finishBlock(any(BMLBlockProgressFeedback.class));
-        verify(mockPlayqVis).finishBlock(any(BMLBlockProgressFeedback.class));
     }
 
     @Test
@@ -72,9 +64,6 @@ public class BMLFlowVisualizerTest
         String feedbackString = "<predictionFeedback xmlns=\"http://www.bml-initiative.org/bml/bml-1.0\">"
                 + "<bml id=\"bml1\" globalStart=\"1\" globalEnd=\"7\"/></predictionFeedback>";
         vis.feedback(feedbackString);
-        verify(mockPlanqVis).updateBlock(any(BMLBlockPredictionFeedback.class));
-        verify(mockPlayqVis).updateBlock(any(BMLBlockPredictionFeedback.class));
-        verify(mockFinishedqVis).updateBlock(any(BMLBlockPredictionFeedback.class));
     }
 
     @Test
@@ -82,9 +71,6 @@ public class BMLFlowVisualizerTest
     {
         String feedbackString = "<blockProgress id=\"bml1:start\" globalTime=\"10\" xmlns=\"http://www.bml-initiative.org/bml/bml-1.0\"/>";
         vis.feedback(feedbackString);
-        verify(mockPlanqVis).startBlock(any(BMLBlockProgressFeedback.class));
-        verify(mockPlayqVis).startBlock(any(BMLBlockProgressFeedback.class));
-        verify(mockFinishedqVis).startBlock(any(BMLBlockProgressFeedback.class));
     }
 
     @Test
@@ -92,9 +78,6 @@ public class BMLFlowVisualizerTest
     {
         String bmlString = "<bml id=\"bml1\" composition=\"REPLACE\" xmlns=\"http://www.bml-initiative.org/bml/bml-1.0\"/>";
         vis.performBML(bmlString);
-        verify(mockPlanqVis).clear();
-        verify(mockPlayqVis).clear();
-        verify(mockFinishedqVis).clear();
     }
 
     @Test
