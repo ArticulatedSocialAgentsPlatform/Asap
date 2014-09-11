@@ -8,20 +8,22 @@ import java.awt.event.ActionListener;
 import java.awt.event.MouseEvent;
 import java.awt.event.WindowEvent;
 
-import javax.swing.BoxLayout;
 import javax.swing.JButton;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JList;
-import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 
-import asap.bmlflowvisualizer.BMLFlowVisualizerPort;
 import asap.bmlflowvisualizer.utils.BMLBlock;
 import asap.bmlflowvisualizer.utils.BMLBlockStatus;
 import asap.bmlflowvisualizer.utils.ClickListener;
 import asap.bmlflowvisualizer.utils.ListHighlightRenderer;
-
+/**
+ * Popup frame to display information about one bml block.
+ * @author jpoeppel
+ *
+ */
+@SuppressWarnings("serial")
 public class BMLBlockPopup extends JFrame {
 
 	private BMLBlock bmlBlock;
@@ -42,12 +44,9 @@ public class BMLBlockPopup extends JFrame {
 		ref = this;
 		this.setLayout(new GridBagLayout());
 		GridBagConstraints c = new GridBagConstraints();
-
+		
 		c.weightx = 0.5;
 		c.weighty = 0.0;
-		JPanel behaviourPanel = new JPanel();
-		behaviourPanel.setLayout(new BoxLayout(behaviourPanel,
-				BoxLayout.PAGE_AXIS));
 		c.gridx = 0;
 		c.gridy = 0;
 		this.add(new JLabel("Behaviours"), c);
@@ -61,18 +60,14 @@ public class BMLBlockPopup extends JFrame {
 		c.weighty = 0.5;
 
 		behaviourList = new JList<String>(block.getBehaviourList());
-		behaviourPanel.add(behaviourList);
 		c.gridx = 0;
 		c.gridy = 1;
-		this.add(new JScrollPane(behaviourPanel), c);
-		JPanel messagePanel = new JPanel();
-		messagePanel
-				.setLayout(new BoxLayout(messagePanel, BoxLayout.PAGE_AXIS));
-
+		this.add(new JScrollPane(behaviourList), c);
+		
 		messageList = new JList<String>(block.getMessageList());
 		messageListRenderer = new ListHighlightRenderer<String>();
 		messageList.setCellRenderer(messageListRenderer);
-		messageList.addMouseListener(new ClickListener(200) {
+		messageList.addMouseListener(new ClickListener(BMLFlowVisualization.DBCLICK_INTERVAL) {
 
 			@Override
 			public void singleClick(MouseEvent e) {
@@ -92,20 +87,16 @@ public class BMLBlockPopup extends JFrame {
 				new DetailPopup(info);
 			}
 		});
-		messagePanel.add(messageList);
 		c.gridx = 1;
 		c.gridy = 1;
-		this.add(new JScrollPane(messagePanel), c);
-		JPanel statePanel = new JPanel();
+		this.add(new JScrollPane(messageList), c);
 
-		statePanel.setLayout(new BoxLayout(statePanel, BoxLayout.PAGE_AXIS));
 		stateList = new JList<String>(block.getStateList());
 		stateListRenderer = new ListHighlightRenderer<String>();
 		stateList.setCellRenderer(stateListRenderer);
-		statePanel.add(stateList);
 		c.gridx = 2;
 		c.gridy = 1;
-		this.add(new JScrollPane(statePanel), c);
+		this.add(new JScrollPane(stateList), c);
 
 		JButton goToTime = new JButton("Jump to selected time");
 		goToTime.addActionListener(new ActionListener() {

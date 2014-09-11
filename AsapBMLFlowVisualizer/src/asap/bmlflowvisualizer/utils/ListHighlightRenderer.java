@@ -6,7 +6,12 @@ import java.awt.Component;
 import javax.swing.JLabel;
 import javax.swing.JList;
 import javax.swing.ListCellRenderer;
-
+/**
+ * Custom highlight renderer to highlight the current status in the block lists.
+ * @author jpoeppel
+ *
+ * @param <E> The type of the list content
+ */
 @SuppressWarnings("serial")
 public class ListHighlightRenderer<E> extends JLabel implements
 		ListCellRenderer<E> {

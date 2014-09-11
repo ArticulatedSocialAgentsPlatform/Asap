@@ -1,14 +1,21 @@
 package asap.bmlflowvisualizer.gui;
 
+import java.awt.Color;
 import java.awt.Graphics;
 import java.awt.Graphics2D;
 import java.awt.image.BufferedImage;
 
+import javax.swing.BorderFactory;
 import javax.swing.JPanel;
 
 public class ContentPanel extends JPanel {
 
+	private static final long serialVersionUID = 5012761048626998527L;
 	private BufferedImage image;
+	
+	public ContentPanel() {
+		this.setBorder(BorderFactory.createLineBorder(Color.GRAY));
+	}
 
 	public void setImage(BufferedImage img) {
 		this.image = img;

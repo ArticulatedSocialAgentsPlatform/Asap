@@ -3,7 +3,6 @@ package asap.bmlflowvisualizer.gui;
 import java.awt.BasicStroke;
 import java.awt.BorderLayout;
 import java.awt.Color;
-import java.awt.Component;
 import java.awt.Dimension;
 import java.awt.FontMetrics;
 import java.awt.Graphics2D;
@@ -24,11 +23,11 @@ import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
 
+import javax.swing.BorderFactory;
 import javax.swing.BoundedRangeModel;
 import javax.swing.BoxLayout;
 import javax.swing.JButton;
 import javax.swing.JCheckBox;
-import javax.swing.JComponent;
 import javax.swing.JLabel;
 import javax.swing.JLayer;
 import javax.swing.JMenu;
@@ -36,7 +35,6 @@ import javax.swing.JMenuBar;
 import javax.swing.JMenuItem;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
-import javax.swing.JSeparator;
 import javax.swing.JSlider;
 import javax.swing.KeyStroke;
 import javax.swing.event.ChangeEvent;
@@ -51,21 +49,19 @@ import asap.bmlflowvisualizer.utils.BMLBlockComperator;
 import asap.bmlflowvisualizer.utils.BMLBlockStatus;
 import asap.bmlflowvisualizer.utils.ClickListener;
 import asap.bmlflowvisualizer.utils.ConnectionType;
-import saiba.bml.core.BehaviourBlock;
-import saiba.bml.feedback.BMLBlockPredictionFeedback;
-import saiba.bml.feedback.BMLBlockProgressFeedback;
 
 /**
- * Handles
+ * Main visualization panel. Also handles all gui related events and controls different dialogs.
  * 
  * @author jpoeppel
  *
  */
+@SuppressWarnings("serial")
 public class BMLFlowVisualization extends JPanel {
 	/** Time between updates */
 	private final int PLAY_INTERVAL = 100;
 	/** Time between 2 clicks to be recognized as double click */
-	private final int DBCLICK_INTERVAL = 200;
+	public static final int DBCLICK_INTERVAL = 200;
 
 	private Map<String, BMLBlock> bmlBlocks = Collections
 			.synchronizedMap(new HashMap<String, BMLBlock>());
@@ -84,8 +80,8 @@ public class BMLFlowVisualization extends JPanel {
 	private JSlider zoomSlider;
 	private JButton playB;
 	// Visualization variables
-	private int blockHeight = 20;
-	private int blockWidth = 100;
+	public static final int BLOCK_HEIGHT = 20;
+	public static final  int BLOCK_WIDTH = 100;
 	private int maxHistWidth = 500;
 	private int curHistPanelWidth;
 	private double pixPerSec = maxHistWidth / 10;
@@ -211,7 +207,6 @@ public class BMLFlowVisualization extends JPanel {
 			}
 		});
 		panel.add(histPlannedPanel);
-		panel.add(new JSeparator(JSeparator.HORIZONTAL));
 		histScheduledPanel = new ContentPanel();
 		histScheduledPanel
 				.addMouseListener(new ClickListener(DBCLICK_INTERVAL) {
@@ -226,7 +221,6 @@ public class BMLFlowVisualization extends JPanel {
 					}
 				});
 		panel.add(histScheduledPanel);
-		panel.add(new JSeparator(JSeparator.HORIZONTAL));
 		histPlayedPanel = new ContentPanel();
 		histPlayedPanel.addMouseListener(new ClickListener(DBCLICK_INTERVAL) {
 			@Override
@@ -271,7 +265,6 @@ public class BMLFlowVisualization extends JPanel {
 
 			@Override
 			public void actionPerformed(ActionEvent e) {
-				// TODO Make sure this does what it is intended to do!
 				// Pause/Play Button logic
 				if (playing) { // Will pause now
 					playing = false;
@@ -309,10 +302,7 @@ public class BMLFlowVisualization extends JPanel {
 	private JPanel buildDetailPanel() {
 		JPanel panel = new JPanel();
 		panel.setLayout(new BoxLayout(panel, BoxLayout.PAGE_AXIS));
-		panel.setPreferredSize(new Dimension(maxHistWidth, 600)); // TODO Adapt
-																	// size and
-																	// store in
-																	// variable!
+		panel.setPreferredSize(new Dimension(maxHistWidth, 600)); 
 		detailPlannedPanel = new ContentPanel();
 		detailPlannedPanel
 				.addMouseListener(new ClickListener(DBCLICK_INTERVAL) {
@@ -336,7 +326,9 @@ public class BMLFlowVisualization extends JPanel {
 				performDoubleClick(e, 4);
 			}
 		});
-		panel.add(new JScrollPane(detailScheduledPanel));
+		JScrollPane detailSchedPane = new JScrollPane(detailScheduledPanel);
+		detailSchedPane.setBorder(BorderFactory.createEmptyBorder());
+		panel.add(detailSchedPane);
 		return panel;
 	}
 
@@ -578,17 +570,17 @@ public class BMLFlowVisualization extends JPanel {
 		int y = 20;
 		for (BMLBlock b : blocks) {
 			g.setColor(Color.YELLOW);
-			g.fillRect(x, y, blockWidth, blockHeight);
+			g.fillRect(x, y, BLOCK_WIDTH, BLOCK_HEIGHT);
 			g.setColor(b.getBorderColor());
-			g.drawRect(x, y, blockWidth, blockHeight);
+			g.drawRect(x, y, BLOCK_WIDTH, BLOCK_HEIGHT);
 			g.setColor(Color.BLACK);
 
 			FontMetrics metric = g.getFontMetrics();
-			g.drawString(trunkStringToFit(b.getId(), blockWidth, metric),
-					x + 5, y + blockHeight / 2 + 2);
-			b.setPosition(new Point(x, y), blockWidth,
+			g.drawString(trunkStringToFit(b.getId(), BLOCK_WIDTH, metric),
+					x + 5, y + BLOCK_HEIGHT / 2 + 2);
+			b.setPosition(new Point(x, y), BLOCK_WIDTH,
 					VisualisationField.DetailPlanned);
-			y += (int) 1.25 * blockHeight;
+			y += (int) 1.25 * BLOCK_HEIGHT;
 		}
 		g.dispose();
 
@@ -661,7 +653,7 @@ public class BMLFlowVisualization extends JPanel {
 				maxY = p.y;
 			}
 		}
-		int newWidth = (maxY + 1) * (blockWidth + wgap);
+		int newWidth = (maxY + 1) * (BLOCK_WIDTH + wgap);
 		detailScheduledPanel.setPreferredSize(new Dimension(newWidth, 1));
 
 		BufferedImage img = new BufferedImage(newWidth,
@@ -677,8 +669,8 @@ public class BMLFlowVisualization extends JPanel {
 			// Same as the one in blocks but allows faster access
 			BMLBlock b = bmlBlocks.get(entry.getKey());
 			g.setColor(b.getColor());
-			w = blockWidth;
-			h = blockHeight;
+			w = BLOCK_WIDTH;
+			h = BLOCK_HEIGHT;
 			x = (entry.getValue().y) * (w + wgap);
 			y = (entry.getValue().x + 1) * (h + hgap);
 			if (playingBlocks.contains(b)) {
@@ -715,9 +707,9 @@ public class BMLFlowVisualization extends JPanel {
 				g.setStroke(line);
 			}
 
-			g.drawLine(b1.getPosition(4).x, b1.getPosition(4).y + blockHeight
-					/ 2, b2.getPosition(4).x + blockWidth, b2.getPosition(4).y
-					+ blockHeight / 2);
+			g.drawLine(b1.getPosition(4).x, b1.getPosition(4).y + BLOCK_HEIGHT
+					/ 2, b2.getPosition(4).x + BLOCK_WIDTH, b2.getPosition(4).y
+					+ BLOCK_HEIGHT / 2);
 		}
 		g.dispose();
 		detailScheduledPanel.setImage(img);
@@ -784,7 +776,7 @@ public class BMLFlowVisualization extends JPanel {
 				}
 
 				// Set y coordinate
-				y = yBase - l * blockHeight;
+				y = yBase - l * BLOCK_HEIGHT;
 				// Calculate xStart, xEnd from zoom level and play duration
 				xStart = (int) (start * 0.001 * pixPerSec);
 				if (end < 0) {
@@ -794,9 +786,10 @@ public class BMLFlowVisualization extends JPanel {
 					xEnd = (int) (end * 0.001 * pixPerSec);
 				}
 
+
 				// Draw block
 				g.setColor(col);
-				g.fillRect(xStart, y, xEnd - xStart, blockHeight);
+				g.fillRect(xStart, y, xEnd - xStart, BLOCK_HEIGHT);
 
 				if (field == VisualisationField.HistScheduled) {
 					// Draw Lurking if necessary
@@ -810,18 +803,18 @@ public class BMLFlowVisualization extends JPanel {
 						}
 					}
 					g.setColor(new Color(153, 76, 0));
-					g.fillRect(tmpStart, y, xEnd - tmpStart, blockHeight);
+					g.fillRect(tmpStart, y, xEnd - tmpStart, BLOCK_HEIGHT);
 				}
 
 				g.setColor(b.getBorderColor());
 				g.setStroke(new BasicStroke(b.getBorderThickness()));
-				g.drawRect(xStart, y, xEnd - xStart, blockHeight);
+				g.drawRect(xStart, y, xEnd - xStart, BLOCK_HEIGHT);
 				g.setColor(Color.BLACK);
 				FontMetrics metric = g.getFontMetrics();
 
 				g.drawString(
 						trunkStringToFit(b.getId(), xEnd - xStart, metric),
-						xStart + 2, y + blockHeight / 2 + 2);
+						xStart + 2, y + BLOCK_HEIGHT / 2 + 2);
 				b.setPosition(new Point(xStart, y), xEnd - xStart, field);
 
 				// Update layers

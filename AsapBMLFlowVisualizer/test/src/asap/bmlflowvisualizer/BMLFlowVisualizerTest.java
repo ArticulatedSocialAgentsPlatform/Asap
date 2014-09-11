@@ -1,19 +1,16 @@
 package asap.bmlflowvisualizer;
 
-import static org.mockito.Matchers.any;
+
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.verify;
-import static org.mockito.Mockito.when;
 
-import javax.swing.JPanel;
+
+
 
 import org.junit.Before;
 import org.junit.Test;
 
-import saiba.bml.core.BehaviourBlock;
-import saiba.bml.feedback.BMLBlockPredictionFeedback;
-import saiba.bml.feedback.BMLBlockProgressFeedback;
-import asap.bmlflowvisualizer.gui.BMLFlowVisualization;
+
 import asap.realizerport.RealizerPort;
 
 /**
@@ -24,16 +21,12 @@ import asap.realizerport.RealizerPort;
 public class BMLFlowVisualizerTest
 {
     private RealizerPort mockPort = mock(RealizerPort.class);
-    private BMLFlowVisualization mockPlanqVis = mock(BMLFlowVisualization.class);
-    private BMLFlowVisualization mockFinishedqVis = mock(BMLFlowVisualization.class);
-    private BMLFlowVisualization mockPlayqVis = mock(BMLFlowVisualization.class);
-    private BMLFlowVisualizerPortOld vis;
+    private BMLFlowVisualizerPort vis;
 
     @Before
     public void before()
     {
-        vis = new BMLFlowVisualizerPortOld(mockPort);
-        vis.setVisualization(mockPlanqVis, mockFinishedqVis, mockPlayqVis);
+        vis = new BMLFlowVisualizerPort(mockPort);
     }
 
     @Test

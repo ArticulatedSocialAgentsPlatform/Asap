@@ -4,6 +4,11 @@ import java.io.File;
 
 import javax.swing.filechooser.FileFilter;
 
+/**
+ * Custom FileFilter to allow only files with extension "bmli" to be saved or loaded by this program.
+ * @author jpoeppel
+ *
+ */
 public class BMLFileFilter extends FileFilter {
 
 	public static final String bmlFileFormat = "bmli";

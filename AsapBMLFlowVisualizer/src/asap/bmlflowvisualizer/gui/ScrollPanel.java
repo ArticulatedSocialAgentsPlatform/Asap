@@ -1,8 +1,6 @@
 package asap.bmlflowvisualizer.gui;
 
-import java.awt.Color;
 import java.awt.Dimension;
-import java.awt.Graphics;
 import java.awt.Rectangle;
 
 import javax.swing.JPanel;
@@ -10,8 +8,8 @@ import javax.swing.Scrollable;
 
 public class ScrollPanel extends JPanel implements Scrollable {
 	
-	
-	
+	private static final long serialVersionUID = 4377045349264326581L;
+
 	@Override
 	public int getHeight() {
 		if (super.getHeight() <= 0) {

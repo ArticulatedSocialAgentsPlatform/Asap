@@ -2,14 +2,12 @@ package asap.bmlflowvisualizer;
 
 import hmi.xml.XMLScanException;
 
-import java.io.File;
-import java.io.FileFilter;
+
 import java.io.FileInputStream;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
-import java.io.StreamCorruptedException;
 import java.lang.reflect.InvocationTargetException;
 import java.util.ArrayList;
 import java.util.Collections;
@@ -19,6 +17,7 @@ import java.util.Map;
 
 import javax.swing.JComponent;
 import javax.swing.JFileChooser;
+import javax.swing.JOptionPane;
 import javax.swing.SwingUtilities;
 
 import saiba.bml.core.Behaviour;
@@ -42,7 +41,7 @@ import asap.realizerport.BMLFeedbackListener;
 import asap.realizerport.RealizerPort;
 
 /**
- * Visualizes the status of the BML blocks submitted to the realizer
+ * Handles incoming realizer feedback and manages the bmlBlocks.
  * 
  * @author jpoeppel
  * 
@@ -86,6 +85,11 @@ public class BMLFlowVisualizerPort implements RealizerPort, BMLFeedbackListener 
 		}
 	}
 
+	/**
+	 * Open a file chooser and saves all received at the chosen location. 
+	 * If the chosen file extension does not match BMLFileFilter.bmlFileFormat, then
+	 * the fileFormat is added to the filename.
+	 */
 	public void saveAs() {
 		JFileChooser chooser;
 
@@ -118,6 +122,9 @@ public class BMLFlowVisualizerPort implements RealizerPort, BMLFeedbackListener 
 		chooser.setVisible(false);
 	}
 
+	/**
+	 * Opens a file chooser and tries to load the selected file as a list of bmlInformation.
+	 */
 	@SuppressWarnings("unchecked")
 	public void load() {
 		JFileChooser chooser;
@@ -142,27 +149,29 @@ public class BMLFlowVisualizerPort implements RealizerPort, BMLFeedbackListener 
 				in.close();
 				fileIn.close();
 			} catch (IOException e) {
-				e.printStackTrace();
+				JOptionPane.showMessageDialog(null, "Unable to load " + path + ". Corrupt file?");
 				return;
 			} catch (ClassNotFoundException e) {
-				e.printStackTrace();
+				System.out.println("Class not found Exception. Something went terribly wrong.");
 				return;
+			} 
+			bmlBlocks.clear();
+			firstTimestampKnown = false;
+			chooser.setVisible(false);
+			for (BMLInformation info : information) {
+				switch (info.getType()) {
+				case BML_BLOCK:
+					presentBML(info, info.getTimestamp());
+					break;
+				case FEEDBACK:
+					presentFeedback(info, info.getTimestamp());
+					break;
+				}
+				panel.updateHistory(info.getTimestamp() + 1000);
 			}
-			
+			panel.updateVisualisation();
 		}
-		chooser.setVisible(false);
-		for (BMLInformation info : information) {
-			switch (info.getType()) {
-			case BML_BLOCK:
-				presentBML(info, info.getTimestamp());
-				break;
-			case FEEDBACK:
-				presentFeedback(info, info.getTimestamp());
-				break;
-			}
-			panel.updateHistory(info.getTimestamp() + 1000);
-		}
-		panel.updateVisualisation();
+		
 	}
 
 	public static JComponent createBMLFlowVisualizerPortUI(RealizerPort rp) {

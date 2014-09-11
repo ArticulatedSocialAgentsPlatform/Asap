@@ -7,6 +7,11 @@ import java.awt.event.MouseEvent;
 
 import javax.swing.Timer;
 
+/**
+ * Custom mouse adapter to distinguish between single and double click. 
+ * @author jpoeppel
+ *
+ */
 public class ClickListener extends MouseAdapter implements ActionListener{
 	
 	private Timer timer;

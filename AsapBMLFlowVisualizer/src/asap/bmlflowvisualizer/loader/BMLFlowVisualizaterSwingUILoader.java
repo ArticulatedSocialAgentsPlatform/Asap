@@ -12,9 +12,6 @@ import java.io.IOException;
 
 import lombok.Getter;
 import asap.bmlflowvisualizer.BMLFlowVisualizerPort;
-import asap.bmlflowvisualizer.FinishedQueueJPanelVisualization;
-import asap.bmlflowvisualizer.PlanningQueueJPanelVisualization;
-import asap.bmlflowvisualizer.PlayingQueueJPanelVisualization;
 import asap.realizerembodiments.AsapRealizerEmbodiment;
 
 /**

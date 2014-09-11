@@ -4,6 +4,13 @@ import java.util.Comparator;
 
 import asap.bmlflowvisualizer.gui.VisualisationField;
 
+/**
+ * Custom Comparator to compare BMLBlocks based on different times.
+ * The time is determined by the given VisualisationField type.
+ * 
+ * @author jpoeppel
+ *
+ */
 public class BMLBlockComperator implements Comparator<BMLBlock> {
 
 	private VisualisationField type;

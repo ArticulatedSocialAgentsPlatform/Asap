@@ -2,8 +2,17 @@ package asap.bmlflowvisualizer.utils;
 
 import java.io.Serializable;
 
+/**
+ * Wrapper class to store all the received information. BML block information and feedback are distinguished
+ * using the BMLInformationType. The time when they were received relative to the first timestamp of the
+ * program is also stored. 
+ * 
+ * @author jpoeppel
+ *
+ */
 public class BMLInformation implements Serializable {
 	
+	private static final long serialVersionUID = -6900362738395320960L;
 	private long timestamp;
 	private String information;
 	private BMLInformationType type;

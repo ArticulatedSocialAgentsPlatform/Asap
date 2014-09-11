@@ -7,8 +7,17 @@ import java.util.Map;
 
 import javax.swing.table.AbstractTableModel;
 
+/**
+ * Custom table model for the search dialog table. Allows to display the
+ * required bml data and returns the correct classes for the different columns
+ * for sorting. Also updates the displayed data for each new timestamp.
+ * 
+ * @author jpoeppel
+ *
+ */
 public class BMLTableModel extends AbstractTableModel {
 
+	private static final long serialVersionUID = 575505704823276098L;
 	private String[] columnNames = { "ID", "Status", "Submitted time" };;
 	private ArrayList<Object[]> data;
 	private Map<String, BMLBlock> blocks = Collections
@@ -20,6 +29,9 @@ public class BMLTableModel extends AbstractTableModel {
 
 	}
 
+	/**
+	 * Fill the displayed data.
+	 */
 	private void buildData() {
 		data = new ArrayList<Object[]>();
 		for (BMLBlock b : blocks.values()) {
@@ -40,7 +52,7 @@ public class BMLTableModel extends AbstractTableModel {
 	}
 
 	@Override
-	public Class getColumnClass(int col) {
+	public Class<?> getColumnClass(int col) {
 		return getValueAt(0, col).getClass();
 	}
 
@@ -49,6 +61,10 @@ public class BMLTableModel extends AbstractTableModel {
 		return columnNames[col];
 	}
 
+	/**
+	 * Updates the displayed data to display the status for the given time.
+	 * @param timestamp The timestamp which is to be displayed.
+	 */
 	public void update(long timestamp) {
 		if (blocks.size() != data.size()) {
 			buildData();
@@ -56,9 +72,9 @@ public class BMLTableModel extends AbstractTableModel {
 		for (int i = 0; i < data.size(); i++) {
 			BMLBlock b = blocks.get(data.get(i)[0]);
 			if (b != null) {
-				String newValue = b.getCurStatus(timestamp);
+				String newValue = b.getStatusAt(timestamp);
 				data.get(i)[1] = newValue;
-			} 
+			}
 		}
 	}
 

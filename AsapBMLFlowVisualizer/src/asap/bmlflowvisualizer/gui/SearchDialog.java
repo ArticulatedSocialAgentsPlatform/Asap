@@ -16,13 +16,21 @@ import javax.swing.JScrollPane;
 import javax.swing.JTable;
 import javax.swing.JTextField;
 
-import asap.bmlflowvisualizer.BMLFlowVisualizerPort;
 import asap.bmlflowvisualizer.utils.BMLBlock;
 import asap.bmlflowvisualizer.utils.BMLTableModel;
 import asap.bmlflowvisualizer.utils.ClickListener;
 
+/**
+ * Frame for the search dialog. Displaying all blocks, with their current
+ * (depending on the currently selected time) status as well as the time of
+ * their submission.
+ * 
+ * @author jpoeppel
+ *
+ */
 public class SearchDialog extends JFrame {
 
+	private static final long serialVersionUID = 4844769435265282483L;
 	private BMLFlowVisualization visualization;
 	private SearchDialog ref;
 	private JTable table;
@@ -30,8 +38,16 @@ public class SearchDialog extends JFrame {
 	private JTextField searchField;
 	private int lastIndex;
 
-	public SearchDialog(Map<String, BMLBlock> blocks,
-			BMLFlowVisualization vis) {
+	/**
+	 * Constructor for the search dialog.
+	 * 
+	 * @param blocks
+	 *            Reference to the blocks. This is passed on to the model.
+	 * @param vis
+	 *            Reference to the main visualization to notify when this frame
+	 *            is closed.
+	 */
+	public SearchDialog(Map<String, BMLBlock> blocks, BMLFlowVisualization vis) {
 		super();
 		lastIndex = 0;
 		this.visualization = vis;
@@ -40,7 +56,8 @@ public class SearchDialog extends JFrame {
 		model = new BMLTableModel(blocks);
 		table = new JTable(model);
 		table.setAutoCreateRowSorter(true);
-		table.addMouseListener(new ClickListener(200) {
+		table.addMouseListener(new ClickListener(
+				BMLFlowVisualization.DBCLICK_INTERVAL) {
 			@Override
 			public void doubleClick(MouseEvent e) {
 				JTable target = (JTable) e.getSource();
@@ -56,13 +73,13 @@ public class SearchDialog extends JFrame {
 		JPanel ctrlPanel = new JPanel();
 		ctrlPanel.add(new JLabel("BML Id to find: "));
 		searchField = new JTextField();
-		searchField.setPreferredSize(new Dimension(150,20));
+		searchField.setPreferredSize(new Dimension(150, 20));
 		searchField.addActionListener(new ActionListener() {
-			
+
 			@Override
 			public void actionPerformed(ActionEvent e) {
 				searchForId();
-				
+
 			}
 		});
 		ctrlPanel.add(searchField);
@@ -77,7 +94,7 @@ public class SearchDialog extends JFrame {
 		ctrlPanel.add(searchB);
 		JButton closeB = new JButton("Close");
 		closeB.addActionListener(new ActionListener() {
-			
+
 			@Override
 			public void actionPerformed(ActionEvent e) {
 				visualization.notifySearchClose();
@@ -85,16 +102,18 @@ public class SearchDialog extends JFrame {
 			}
 		});
 		ctrlPanel.add(closeB);
-		this.add(ctrlPanel,BorderLayout.SOUTH);
-		this.setTitle("Search..");
-		this.setPreferredSize(new Dimension(600, 600));
+		this.add(ctrlPanel, BorderLayout.SOUTH);
+		this.setTitle("Search");
+		this.setPreferredSize(new Dimension(600, 400));
 		this.pack();
 		this.setVisible(true);
 	}
-	
+
+	/**
+	 * Highlights the next row that matches the given Id in the searchField.
+	 */
 	private void searchForId() {
-		
-		int row = model.getRowOfElement(searchField.getText(), lastIndex+1);
+		int row = model.getRowOfElement(searchField.getText(), lastIndex + 1);
 		if (row == -1 && lastIndex != 0) {
 			lastIndex = 0;
 			row = model.getRowOfElement(searchField.getText(), lastIndex);
@@ -118,12 +137,21 @@ public class SearchDialog extends JFrame {
 		}
 	}
 
+	/**
+	 * Updates the underlying model to display changed information.
+	 * 
+	 * @param curTimestamp
+	 *            The timestamp which information is to be displayed.
+	 */
 	public void update(long curTimestamp) {
 		model.update(curTimestamp);
 		table.revalidate();
 		table.repaint();
 	}
-	
+
+	/**
+	 * Resets the table.
+	 */
 	public void reset() {
 		table.clearSelection();
 		model.reset();

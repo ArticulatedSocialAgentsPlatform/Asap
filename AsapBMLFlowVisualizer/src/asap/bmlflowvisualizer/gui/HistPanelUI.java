@@ -10,6 +10,7 @@ import javax.swing.plaf.LayerUI;
 
 public class HistPanelUI extends LayerUI<ScrollPanel> {
 
+	private static final long serialVersionUID = -8809179249995416382L;
 	private int timeLinePos;
 
 	public void setTimeLinePos(int pos) {
@@ -22,7 +23,6 @@ public class HistPanelUI extends LayerUI<ScrollPanel> {
 
 		Graphics2D g2 = (Graphics2D) g.create();
 
-		int w = c.getWidth();
 		g2.setColor(Color.RED);
 		g2.setStroke(new BasicStroke(2.0f));
 		g2.drawLine(timeLinePos, 0, timeLinePos, c.getHeight());

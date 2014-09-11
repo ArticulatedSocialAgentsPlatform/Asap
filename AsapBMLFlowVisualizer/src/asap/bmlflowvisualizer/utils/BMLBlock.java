@@ -20,6 +20,7 @@ import asap.bml.ext.bmla.feedback.BMLABlockProgressFeedback;
 import asap.bml.ext.bmla.feedback.BMLAFeedbackParser;
 import asap.bml.ext.bmla.feedback.BMLAPredictionFeedback;
 import asap.bml.ext.bmla.feedback.BMLASyncPointProgressFeedback;
+import asap.bmlflowvisualizer.gui.BMLFlowVisualization;
 import asap.bmlflowvisualizer.gui.VisualisationField;
 import saiba.bml.core.BehaviourBlock;
 import saiba.bml.feedback.BMLFeedback;
@@ -28,13 +29,18 @@ import saiba.bml.feedback.BMLSyncPointProgressFeedback;
 import saiba.bml.feedback.BMLWarningFeedback;
 import saiba.bml.parser.SyncPoint;
 
+/**
+ * Wrapper class for a BMLBlock. Stores all received feedback and status times of the bml block as well as
+ * some gui related information such as positions on the panels.
+ * @author jpoeppel
+ *
+ */
 public class BMLBlock {
 
 	private Point[] position;
 	private int[] width;
 	private Color borderColor;
-	private int boxHeight = 20; // TODO Have only one global variable determine
-								// this value for all classes
+
 	private String id;
 	private int borderThickness;
 	private BehaviourBlock bb;
@@ -47,7 +53,6 @@ public class BMLBlock {
 	private long schedEnd = -1;
 	private long playStart = -1;
 	private long playEnd = -1;
-	private boolean isInterruptBlock;
 	private HashMap<BMLBlockStatus, Long> statusTimes = new HashMap<BMLBlockStatus, Long>();
 	private BMLBlockStatus curStatus;
 
@@ -59,7 +64,6 @@ public class BMLBlock {
 		this.bb = bb;
 		this.borderThickness = 1;
 		this.planStart = time;
-		this.isInterruptBlock = false;
 		if (bb != null) {
 			curStatus = BMLBlockStatus.SUBMITTED;
 			statusTimes.put(BMLBlockStatus.SUBMITTED, time);
@@ -76,7 +80,7 @@ public class BMLBlock {
 				if (x - position[field].x <= width[field]
 						&& x - position[field].x >= 0
 						&& y - position[field].y >= 0
-						&& y - position[field].y <= boxHeight) {
+						&& y - position[field].y <= BMLFlowVisualization.BLOCK_HEIGHT) {
 					return true;
 				}
 
@@ -313,14 +317,6 @@ public class BMLBlock {
 		statusTimes.put(BMLBlockStatus.SUBMITTED, time);
 	}
 
-	public int getBoxHeight() {
-		return boxHeight;
-	}
-
-	public void setBoxHeight(int boxHeight) {
-		this.boxHeight = boxHeight;
-	}
-
 	public Color getBorderColor() {
 		return borderColor;
 	}
@@ -445,11 +441,15 @@ public class BMLBlock {
 	 * blocks.
 	 */
 	public void isInterruptBlock() {
-		isInterruptBlock = true;
 		borderColor = Color.RED;
 	}
-
-	public String getCurStatus(long timestamp) {
+	
+	/**
+	 * Return the status this block was in at the given time
+	 * @param timestamp The time since the program started running in ms.
+	 * @return The name of the status the block was in at the given time.
+	 */
+	public String getStatusAt(long timestamp) {
 		BMLBlockStatus lastStatus = BMLBlockStatus.NONE;
 		long lastTime = 0;
 		for (Entry<BMLBlockStatus, Long> e : statusTimes.entrySet()) {
