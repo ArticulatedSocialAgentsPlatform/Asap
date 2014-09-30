@@ -103,7 +103,6 @@ public class RealizerPortUI extends JPanel
 
     private static Logger logger = LoggerFactory.getLogger(RealizerPortUI.class.getName());
 
-    private URL demoScriptUrl = null;
     private String demoScriptResource = null;
 
     private String loadPath = "../../Shared/repository/HMI/HmiElckerlyc/resources/";
@@ -146,7 +145,7 @@ public class RealizerPortUI extends JPanel
         super();
 
         demoScriptResource = resource;
-        demoScriptUrl = new Resources("").getURL(resource);
+        
 
         realizerBridge = bridge;
 
@@ -168,7 +167,7 @@ public class RealizerPortUI extends JPanel
         buttonPanel.add(loadButton);
         buttonPanel.add(Box.createRigidArea(new Dimension(5, 0)));
 
-        getDemoScripts();
+        getDemoScripts(resource);
 
         // did we obtain demoscripts? if so, load them to GUI
         if (demoScripts.size() > 0)
@@ -259,8 +258,10 @@ public class RealizerPortUI extends JPanel
 
     }
 
-    private void getDemoScripts()
+    private void getDemoScripts(String resource)
     {
+        URL demoScriptUrl = new Resources("").getURL(resource);
+        
         // find the demoscripts, based on the URL
         if (demoScriptUrl != null)
         {
