@@ -3,9 +3,6 @@ package asap.bmlflowvisualizer.loader;
 import javax.swing.JFrame;
 
 import asap.bmlflowvisualizer.BMLFlowVisualizerPort;
-import asap.bmlflowvisualizer.FinishedQueueJPanelVisualization;
-import asap.bmlflowvisualizer.PlanningQueueJPanelVisualization;
-import asap.bmlflowvisualizer.PlayingQueueJPanelVisualization;
 import asap.realizerport.BMLFeedbackListener;
 import asap.realizerport.RealizerPort;
 
@@ -52,8 +49,6 @@ public final class BMLFlowVisualizationTryout
         };
 
         BMLFlowVisualizerPort port = new BMLFlowVisualizerPort(rp);
-        port.setVisualization(new PlanningQueueJPanelVisualization(), new PlayingQueueJPanelVisualization(),
-                new FinishedQueueJPanelVisualization());
         jf.add(port.getVisualization());
         jf.setSize(1024, 768);
         jf.setVisible(true);

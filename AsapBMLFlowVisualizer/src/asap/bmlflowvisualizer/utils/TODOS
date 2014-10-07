@@ -1,0 +1,6 @@
+* Move all block colors to static class, that returns color for given status
+* Maybe force existing popup in foreground when "opening" it again
+* Differentiate between different interruptions (with exceptions/w/o)
+* Status SUBSIDING!
+* General GUI improvements
+* Performance tests/optimization
