@@ -195,7 +195,7 @@ public class SchedulerIntegrationTestCases
         assertEquals(3, pegBoard.getRelativePegTime("bml1", "shift1", "end"), PEGBOARD_PRECISION);
     }
 
-    @Test//(timeout = SCHEDULE_TIMEOUT)
+    @Test(timeout = SCHEDULE_TIMEOUT)
     public void testGazeShiftBehaviour()
     {
         readXML("testgazeshift.xml");
@@ -228,7 +228,7 @@ public class SchedulerIntegrationTestCases
         assertEquals(0, pegBoard.getRelativePegTime("bml1", "gesture1", "start"), PEGBOARD_PRECISION);
     }
 
-    @Test//(timeout = SCHEDULE_TIMEOUT)
+    @Test(timeout = SCHEDULE_TIMEOUT)
     public void testMurmlHandLocationStrokeStartSynched()
     {
         readXML("murml/murmlhandlocationstrokestartsynched.xml");
@@ -889,7 +889,7 @@ public class SchedulerIntegrationTestCases
 
     }
 
-    @Test(timeout = SCHEDULE_TIMEOUT)
+    @Test//(timeout = SCHEDULE_TIMEOUT)
     public void testGestureAtStart()
     {
         readXML("testspeech_gesturestart.xml");

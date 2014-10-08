@@ -39,7 +39,7 @@ final class TimePegMap
         return pegMap.get(key);
     }
 
-    private synchronized Collection<Entry<PegKey, TimePeg>> getEntries(final String bmlId, final String behaviorId)
+    public synchronized Collection<Entry<PegKey, TimePeg>> getEntries(final String bmlId, final String behaviorId)
     {
         Collection<Entry<PegKey, TimePeg>> entries = Collections2.filter(pegMap.entrySet(), new Predicate<Entry<PegKey, TimePeg>>()
         {

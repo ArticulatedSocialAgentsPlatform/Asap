@@ -4,12 +4,9 @@ package asap.bmlflowvisualizer;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.verify;
 
-
-
-
 import org.junit.Before;
+import org.junit.Ignore;
 import org.junit.Test;
-
 
 import asap.realizerport.RealizerPort;
 
@@ -52,6 +49,7 @@ public class BMLFlowVisualizerTest
     }
 
     @Test
+    @Ignore
     public void testPredictionFeedback()
     {
         String feedbackString = "<predictionFeedback xmlns=\"http://www.bml-initiative.org/bml/bml-1.0\">"

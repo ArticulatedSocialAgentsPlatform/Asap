@@ -638,6 +638,7 @@ public final class BMLScheduler
                 {
                     String behId = id.substring(bmlId.length() + 1);
                     String warningText = "Invalid timing for behavior " + id + ", behavior ommitted";
+                    warningText += "\n "+pegBoard.getSyncAndTimePegs(bmlId, behId);
                     warn(new BMLWarningFeedback(bmlId + ":" + behId, "INVALID_TIMING", warningText));
                     removeBehaviour(bmlId, behId);
                 }

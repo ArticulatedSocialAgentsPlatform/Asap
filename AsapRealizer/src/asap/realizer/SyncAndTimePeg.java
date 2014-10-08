@@ -22,4 +22,10 @@ public final class SyncAndTimePeg
         this.bmlId = bmlId;
         this.peg = p;
     }
+    
+    @Override
+    public String toString()
+    {
+        return bmlId+":"+id+":"+sync+"="+peg;
+    }
 }
