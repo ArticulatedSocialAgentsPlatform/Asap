@@ -72,7 +72,7 @@ public class BMLTableModel extends AbstractTableModel {
 		for (int i = 0; i < data.size(); i++) {
 			BMLBlock b = blocks.get(data.get(i)[0]);
 			if (b != null) {
-				String newValue = b.getStatusAt(timestamp);
+				String newValue = b.getStatusStringAt(timestamp);
 				data.get(i)[1] = newValue;
 			}
 		}

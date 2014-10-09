@@ -17,6 +17,7 @@ import javax.swing.DefaultListModel;
 
 import asap.bml.ext.bmla.feedback.BMLABlockPredictionFeedback;
 import asap.bml.ext.bmla.feedback.BMLABlockProgressFeedback;
+import asap.bml.ext.bmla.feedback.BMLABlockStatus;
 import asap.bml.ext.bmla.feedback.BMLAFeedbackParser;
 import asap.bml.ext.bmla.feedback.BMLAPredictionFeedback;
 import asap.bml.ext.bmla.feedback.BMLASyncPointProgressFeedback;
@@ -30,8 +31,10 @@ import saiba.bml.feedback.BMLWarningFeedback;
 import saiba.bml.parser.SyncPoint;
 
 /**
- * Wrapper class for a BMLBlock. Stores all received feedback and status times of the bml block as well as
- * some gui related information such as positions on the panels.
+ * Wrapper class for a BMLBlock. Stores all received feedback and status times
+ * of the bml block as well as some gui related information such as positions on
+ * the panels.
+ * 
  * @author jpoeppel
  *
  */
@@ -47,12 +50,6 @@ public class BMLBlock {
 	private List<BMLInformation> feedback = Collections
 			.synchronizedList(new ArrayList<BMLInformation>());
 
-	private long planStart = -1;
-	private long planEnd = -1;
-	private long schedStart = -1;
-	private long schedEnd = -1;
-	private long playStart = -1;
-	private long playEnd = -1;
 	private HashMap<BMLBlockStatus, Long> statusTimes = new HashMap<BMLBlockStatus, Long>();
 	private BMLBlockStatus curStatus;
 
@@ -63,7 +60,6 @@ public class BMLBlock {
 		this.borderColor = Color.BLACK;
 		this.bb = bb;
 		this.borderThickness = 1;
-		this.planStart = time;
 		if (bb != null) {
 			curStatus = BMLBlockStatus.SUBMITTED;
 			statusTimes.put(BMLBlockStatus.SUBMITTED, time);
@@ -91,7 +87,8 @@ public class BMLBlock {
 
 	public DefaultListModel<String> getMessageList() {
 		DefaultListModel<String> list = new DefaultListModel<String>();
-		list.addElement(BehaviourBlock.class.getSimpleName() + " " + planStart);
+		list.addElement(BehaviourBlock.class.getSimpleName() + " "
+				+ getPlanStart() + " ms");
 		synchronized (feedback) {
 			for (BMLInformation info : feedback) {
 				String s = "";
@@ -112,6 +109,7 @@ public class BMLBlock {
 						s = BMLWarningFeedback.class.getSimpleName() + ", "
 								+ info.getTimestamp();
 					}
+					s += " ms";
 				} catch (IOException e) {
 					// shouldn't happen since we parse strings
 					throw new AssertionError(e);
@@ -130,10 +128,10 @@ public class BMLBlock {
 			String s = b.getClass().getSimpleName() + " " + b.id + " ";
 			for (SyncPoint point : b.getSyncPoints()) {
 				if (point.getName().equals("start")) {
-					s += point.getRefString() + ", ";
+					s += point.getRefString() + " ms, ";
 				}
 				if (point.getName().equals("end")) {
-					s += point.getRefString();
+					s += point.getRefString() + " ms";
 				}
 			}
 			list.addElement(s);
@@ -156,7 +154,7 @@ public class BMLBlock {
 		}
 		for (Entry<BMLBlockStatus, Long> e : orderedList) {
 
-			s = e.getKey().name() + " " + e.getValue();
+			s = e.getKey().name() + " " + e.getValue() + " ms";
 			list.addElement(s);
 		}
 
@@ -207,23 +205,18 @@ public class BMLBlock {
 		if (!statusTimes.containsKey(BMLBlockStatus.IN_EXEC)) {
 			statusTimes.put(BMLBlockStatus.IN_EXEC, time);
 		}
-
-		if (playStart < 0) {
-			playStart = time;
-		}
-		if (schedEnd < 0) {
-			schedEnd = time;
-		}
 	}
 
-	public void end(long time) {
-		if (statusTimes.containsKey(BMLBlockStatus.INTERRUPT_REQUESTED)) {
+	public void end(BMLABlockProgressFeedback progFeedback, long time) {
+		if (progFeedback.getStatus() == BMLABlockStatus.REVOKED) {
+			curStatus = BMLBlockStatus.REVOKED;
+		} else if (statusTimes.containsKey(BMLBlockStatus.INTERRUPT_REQUESTED)) {
 			switch (curStatus) {
 			case IN_EXEC:
 				curStatus = BMLBlockStatus.INTERRUPTED;
 				break;
 			default:
-				curStatus = BMLBlockStatus.REVOKED;
+				// curStatus = BMLBlockStatus.REVOKED;
 				break;
 			}
 		} else {
@@ -232,9 +225,6 @@ public class BMLBlock {
 
 		if (!statusTimes.containsKey(curStatus)) {
 			statusTimes.put(curStatus, time);
-		}
-		if (playEnd < 0) {
-			playEnd = time;
 		}
 
 	}
@@ -258,12 +248,6 @@ public class BMLBlock {
 			statusTimes.put(curStatus, time);
 		}
 
-		if (planEnd < 0) {
-			planEnd = time;
-		}
-		if (schedStart < 0) {
-			schedStart = time;
-		}
 	}
 
 	public String getId() {
@@ -286,25 +270,22 @@ public class BMLBlock {
 		this.width[field.ordinal()] = width;
 	}
 
-	public Color getColor() {
-		switch (curStatus) {
-		case PENDING:
-			return Color.ORANGE;
-		case LURKING:
-			return Color.MAGENTA;
-		case IN_EXEC:
-			return Color.GREEN;
-		case DONE:
-			return Color.GREEN;
-		case REVOKED:
-			return Color.LIGHT_GRAY;
-		case INTERRUPTED:
-			return Color.ORANGE;
-		case FAILED:
-			return Color.RED;
-		default:
-			return Color.GREEN;
+	/**
+	 * Returns the color of the block according to the status this block was in
+	 * at the given timestamp. If timestamp < 0 the current status is used.
+	 * 
+	 * @param timestamp
+	 *            Determines the status that is used for the colour
+	 * @return
+	 */
+	public Color getColor(long timestamp) {
+		if (getStatusAt(timestamp) == BMLBlockStatus.INTERRUPT_REQUESTED) {
+			return getColorFor(getStatusAt(statusTimes
+					.get(BMLBlockStatus.INTERRUPT_REQUESTED) - 1));
+		} else {
+			return getColorFor(getStatusAt(timestamp));
 		}
+
 	}
 
 	public BehaviourBlock getBb() {
@@ -313,12 +294,44 @@ public class BMLBlock {
 
 	public void setBb(BehaviourBlock bb, long time) {
 		this.bb = bb;
-		curStatus = BMLBlockStatus.SUBMITTED;
-		statusTimes.put(BMLBlockStatus.SUBMITTED, time);
+		if (!statusTimes.containsKey(BMLBlockStatus.SUBMITTED)) {
+			curStatus = BMLBlockStatus.SUBMITTED;
+			statusTimes.put(BMLBlockStatus.SUBMITTED, time);
+		}
 	}
 
-	public Color getBorderColor() {
+	public Color getBorderColor(VisualisationField field) {
+		switch (field) {
+		case HistPlanned:
+			if (statusTimes.containsKey(BMLBlockStatus.REVOKED)) {
+				return Color.RED;
+			}
+			break;
+		case HistPlayed:
+			if (statusTimes.containsKey(BMLBlockStatus.INTERRUPTED)) {
+				return Color.RED;
+			}
+			break;
+		case HistScheduled:
+			if (statusTimes.containsKey(BMLBlockStatus.REVOKED)) {
+				return Color.RED;
+			}
+			break;
+		case DetailPlanned:
+			if (statusTimes.containsKey(BMLBlockStatus.REVOKED)) {
+				return Color.RED;
+			}
+			break;
+		case DetailScheduled:
+			if (statusTimes.containsKey(BMLBlockStatus.REVOKED)) {
+				return Color.RED;
+			}
+			break;
+		default:
+			break;
+		}
 		return borderColor;
+
 	}
 
 	public void setBorderColor(Color borderColor) {
@@ -334,51 +347,68 @@ public class BMLBlock {
 	}
 
 	public long getPlanStart() {
-		return planStart;
-	}
-
-	public void setPlanStart(long planStart) {
-		this.planStart = planStart;
+		if (statusTimes.containsKey(BMLBlockStatus.SUBMITTED)) {
+			return statusTimes.get(BMLBlockStatus.SUBMITTED);
+		} else {
+			return -1;
+		}
 	}
 
 	public long getPlanEnd() {
-		return planEnd;
+		long tmpPen = Long.MAX_VALUE;
+		long tmpLurk = Long.MAX_VALUE;
+		if (statusTimes.containsKey(BMLBlockStatus.PENDING)) {
+			tmpPen = statusTimes.get(BMLBlockStatus.PENDING);
+		}
+		if (statusTimes.containsKey(BMLBlockStatus.LURKING)) {
+			tmpLurk = statusTimes.get(BMLBlockStatus.LURKING);
+		}
+		long min = Math.min(tmpPen, tmpLurk);
+		return (min < Long.MAX_VALUE ? min : -1);
 	}
 
-	public void setPlanEnd(long planEnd) {
-		this.planEnd = planEnd;
-	}
-
+	/**
+	 * Returns the start of the scheduling phase. This is always the same as the
+	 * end of the planning phase.
+	 * 
+	 * @return Time in ms of the start of the scheduling phase.
+	 */
 	public long getSchedStart() {
-		return schedStart;
-	}
-
-	public void setSchedStart(long schedStart) {
-		this.schedStart = schedStart;
+		return getPlanEnd();
 	}
 
 	public long getSchedEnd() {
-		return schedEnd;
+		if (statusTimes.containsKey(BMLBlockStatus.REVOKED)) {
+			return statusTimes.get(BMLBlockStatus.REVOKED);
+		}
+		if (statusTimes.containsKey(BMLBlockStatus.IN_EXEC)) {
+			return statusTimes.get(BMLBlockStatus.IN_EXEC);
+		} else {
+			return -1;
+		}
 	}
 
-	public void setSchedEnd(long schedEnd) {
-		this.schedEnd = schedEnd;
-	}
-
+	/**
+	 * Returns the start of the playing phase.
+	 * 
+	 * @return Time in ms of the start of the playing phase.
+	 */
 	public long getPlayStart() {
-		return playStart;
-	}
-
-	public void setPlayStart(long playStart) {
-		this.playStart = playStart;
+		if (statusTimes.containsKey(BMLBlockStatus.IN_EXEC)) {
+			return statusTimes.get(BMLBlockStatus.IN_EXEC);
+		} else {
+			return -1;
+		}
 	}
 
 	public long getPlayEnd() {
-		return playEnd;
-	}
-
-	public void setPlayEnd(long playEnd) {
-		this.playEnd = playEnd;
+		if (statusTimes.containsKey(BMLBlockStatus.DONE)) {
+			return statusTimes.get(BMLBlockStatus.DONE);
+		} else if (statusTimes.containsKey(BMLBlockStatus.INTERRUPTED)) {
+			return statusTimes.get(BMLBlockStatus.INTERRUPTED);
+		} else {
+			return -1;
+		}
 	}
 
 	/**
@@ -438,18 +468,25 @@ public class BMLBlock {
 
 	/**
 	 * Method to mark this bmlBlock as an interrupt block that interrupts other
-	 * blocks.
+	 * blocks. So far only the border color is changed in this case. Update:
+	 * This is not desired anymore.
 	 */
 	public void isInterruptBlock() {
-		borderColor = Color.RED;
+		// borderColor = Color.RED;
 	}
-	
+
 	/**
-	 * Return the status this block was in at the given time
-	 * @param timestamp The time since the program started running in ms.
-	 * @return The name of the status the block was in at the given time.
+	 * Return the status this block was in at the given time. If timestamp is
+	 * negative, the current status of the block is returned.
+	 * 
+	 * @param timestamp
+	 *            The time since the program started running in ms.
+	 * @return The status the block was in at the given time.
 	 */
-	public String getStatusAt(long timestamp) {
+	private BMLBlockStatus getStatusAt(long timestamp) {
+		if (timestamp < 0) {
+			return curStatus;
+		}
 		BMLBlockStatus lastStatus = BMLBlockStatus.NONE;
 		long lastTime = 0;
 		for (Entry<BMLBlockStatus, Long> e : statusTimes.entrySet()) {
@@ -458,7 +495,52 @@ public class BMLBlock {
 				lastTime = e.getValue();
 			}
 		}
-		return lastStatus.name();
+		return lastStatus;
 	}
 
+	/**
+	 * Return the status string this block was in at the given time
+	 * 
+	 * @param timestamp
+	 *            The time since the program started running in ms.
+	 * @return The name of the status the block was in at the given time.
+	 */
+	public String getStatusStringAt(long timestamp) {
+		return getStatusAt(timestamp).name();
+	}
+
+	public static Color getColorFor(BMLBlockStatus status) {
+		switch (status) {
+		case DONE:
+			return Color.GREEN;
+		case FAILED:
+			return Color.RED;
+		case IN_EXEC:
+			return Color.GREEN;
+		case IN_PREP:
+			return Color.YELLOW;
+		case INTERRUPTED:
+			return Color.GREEN;
+		case LURKING:
+			return new Color(153, 76, 0);
+		case PENDING:
+			return Color.ORANGE;
+		case REVOKED:
+			return Color.LIGHT_GRAY;
+		case SUBMITTED:
+			return new Color(255, 251, 223);
+		case NONE:
+			return null;
+		case INTERRUPT_REQUESTED:
+			// Interrupt_Requested does not have a color on it's own since it
+			// can happen at any moment.
+			return null;
+		//Not used yet
+		case SUBSIDING:
+			return Color.WHITE;
+		default:
+			return Color.WHITE;
+		}
+		
+	}
 }
