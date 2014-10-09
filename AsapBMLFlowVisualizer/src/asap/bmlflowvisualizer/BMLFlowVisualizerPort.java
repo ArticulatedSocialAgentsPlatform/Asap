@@ -230,7 +230,7 @@ public class BMLFlowVisualizerPort implements RealizerPort, BMLFeedbackListener 
 				if (bmlBlocks.containsKey(fbBlock.getBmlId())) {
 					bmlBlocks.get(fbBlock.getBmlId()).addFeedback(info);
 					if (fbBlock.getSyncId().equals("end")) {
-						bmlBlocks.get(fbBlock.getBmlId()).end(time);
+						bmlBlocks.get(fbBlock.getBmlId()).end(fbBlock, time);
 
 					} else if (fbBlock.getSyncId().equals("start")) {
 
@@ -343,6 +343,7 @@ public class BMLFlowVisualizerPort implements RealizerPort, BMLFeedbackListener 
 				}
 
 				if (bmlBlocks.containsKey(bb.getBmlId())) {
+					System.out.println("Setting block: " + bb.getBmlId());
 					bmlBlocks.get(bb.getBmlId()).setBb(bb, time);
 				} else {
 					BMLBlock block = new BMLBlock(bb.getBmlId(), bb, time);
@@ -354,7 +355,8 @@ public class BMLFlowVisualizerPort implements RealizerPort, BMLFeedbackListener 
 					if (b instanceof BMLAInterruptBehaviour) {
 						bmlBlocks.get(((BMLAInterruptBehaviour) b).getTarget())
 								.interrupt(time);
-						bmlBlocks.get(bb.getBmlId()).isInterruptBlock();
+						//7.12.14 Visualization of interrupting blocks not desired  
+						//bmlBlocks.get(bb.getBmlId()).isInterruptBlock();
 					}
 				}
 				// With interrupt attribute

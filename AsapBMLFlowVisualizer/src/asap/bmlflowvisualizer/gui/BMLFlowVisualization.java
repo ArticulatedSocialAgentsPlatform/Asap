@@ -13,9 +13,11 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.AdjustmentEvent;
 import java.awt.event.AdjustmentListener;
+import java.awt.event.KeyAdapter;
 import java.awt.event.KeyEvent;
 import java.awt.event.MouseEvent;
 import java.awt.image.BufferedImage;
+import java.text.NumberFormat;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashMap;
@@ -25,9 +27,11 @@ import java.util.Map.Entry;
 
 import javax.swing.BorderFactory;
 import javax.swing.BoundedRangeModel;
+import javax.swing.Box;
 import javax.swing.BoxLayout;
 import javax.swing.JButton;
 import javax.swing.JCheckBox;
+import javax.swing.JFormattedTextField;
 import javax.swing.JLabel;
 import javax.swing.JLayer;
 import javax.swing.JMenu;
@@ -36,9 +40,12 @@ import javax.swing.JMenuItem;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.JSlider;
+import javax.swing.JTextField;
 import javax.swing.KeyStroke;
 import javax.swing.event.ChangeEvent;
 import javax.swing.event.ChangeListener;
+import javax.swing.text.DefaultFormatterFactory;
+import javax.swing.text.NumberFormatter;
 
 import asap.bml.ext.bmla.BMLABMLBehaviorAttributes;
 import asap.bmlflowvisualizer.BMLFlowVisualizerPort;
@@ -51,7 +58,8 @@ import asap.bmlflowvisualizer.utils.ClickListener;
 import asap.bmlflowvisualizer.utils.ConnectionType;
 
 /**
- * Main visualization panel. Also handles all gui related events and controls different dialogs.
+ * Main visualization panel. Also handles all gui related events and controls
+ * different dialogs.
  * 
  * @author jpoeppel
  *
@@ -79,9 +87,10 @@ public class BMLFlowVisualization extends JPanel {
 	private JCheckBox feedbackOnly;
 	private JSlider zoomSlider;
 	private JButton playB;
+	private JTextField timeField;
 	// Visualization variables
 	public static final int BLOCK_HEIGHT = 20;
-	public static final  int BLOCK_WIDTH = 100;
+	public static final int BLOCK_WIDTH = 100;
 	private int maxHistWidth = 500;
 	private int curHistPanelWidth;
 	private double pixPerSec = maxHistWidth / 10;
@@ -162,6 +171,7 @@ public class BMLFlowVisualization extends JPanel {
 		playB.setText("Play");
 		lockScrolling = false;
 		histPanelUI.setTimeLinePos(e.getX());
+		timeField.setText(String.valueOf(curTimestamp * 0.001f));
 		updateDetailVisualisation(curTimestamp);
 		histPanel.repaint();
 	}
@@ -192,6 +202,7 @@ public class BMLFlowVisualization extends JPanel {
 	 */
 	private ScrollPanel buildHistoryPanel() {
 		ScrollPanel panel = new ScrollPanel();
+		panel.setBackground(Color.CYAN);
 		panel.setLayout(new BoxLayout(panel, BoxLayout.PAGE_AXIS));
 		panel.setPreferredSize(new Dimension(1, 600));
 		histPlannedPanel = new ContentPanel();
@@ -245,7 +256,47 @@ public class BMLFlowVisualization extends JPanel {
 	 */
 	private JPanel buildControlPanel() {
 		JPanel panel = new JPanel();
+		timeField = new JTextField();
+		timeField.addKeyListener(new KeyAdapter() {
+			@Override
+			public void keyReleased(KeyEvent e) {
+				String oldString = "";
+				if (timeField.getText().equals("")) {
+					oldString = "";
+					return;
+				} else {
+					// if you cannot parse the string as an int, or float,
+					// then change the text to the text before (means: ignore
+					// the user input)
+					try {
+						float f = Float.parseFloat(timeField.getText());
+						oldString = timeField.getText();
 
+					} catch (NumberFormatException el) {
+						timeField.setText(oldString);
+					}
+				}
+			}
+		});
+		timeField.setPreferredSize(new Dimension(150, 20));
+		timeField.addActionListener(new ActionListener() {
+			
+			@Override
+			public void actionPerformed(ActionEvent e) {
+				jumpToTime((long)(Float.parseFloat(timeField.getText())*1000));	
+			}
+		});
+		panel.add(timeField);
+
+		JButton jtTB = new JButton("Jump to time");
+		jtTB.addActionListener(new ActionListener() {
+
+			@Override
+			public void actionPerformed(ActionEvent e) {
+				jumpToTime((long)(Float.parseFloat(timeField.getText())*1000));
+			}
+		});
+		panel.add(jtTB);
 		zoomSlider = new JSlider(1, 30);
 		zoomSlider.addChangeListener(new ChangeListener() {
 
@@ -287,6 +338,7 @@ public class BMLFlowVisualization extends JPanel {
 				lockScrolling = true;
 				curTimestamp = (long) (curHistPanelWidth / pixPerSec * 1000);
 				histPanelUI.setTimeLinePos(curHistPanelWidth);
+				timeField.setText(String.valueOf(curTimestamp * 0.001));
 				updateDetailVisualisation(curTimestamp);
 
 				histPanel.repaint();
@@ -302,7 +354,7 @@ public class BMLFlowVisualization extends JPanel {
 	private JPanel buildDetailPanel() {
 		JPanel panel = new JPanel();
 		panel.setLayout(new BoxLayout(panel, BoxLayout.PAGE_AXIS));
-		panel.setPreferredSize(new Dimension(maxHistWidth, 600)); 
+		panel.setPreferredSize(new Dimension(maxHistWidth, 600));
 		detailPlannedPanel = new ContentPanel();
 		detailPlannedPanel
 				.addMouseListener(new ClickListener(DBCLICK_INTERVAL) {
@@ -431,6 +483,8 @@ public class BMLFlowVisualization extends JPanel {
 
 							int posX = (int) (curTimestamp * 0.001 * pixPerSec) + 1;
 							histPanelUI.setTimeLinePos(posX);
+							timeField.setText(String
+									.valueOf(curTimestamp * 0.001));
 							updateDetailVisualisation(curTimestamp);
 							// Scroll so that the timeLine is visible
 							histPanel.scrollRectToVisible(new Rectangle(
@@ -489,15 +543,22 @@ public class BMLFlowVisualization extends JPanel {
 		playing = false;
 		curTimestamp = time;
 		curTimeAtEnd = false;
+		if (time < 0) {
+			curTimestamp = 0;
+		}
+		if (time > lastTimestamp){
+			curTimestamp = lastTimestamp;
+			curTimeAtEnd = true;
+		}
 		lockScrolling = false;
 		playB.setText("Play");
 		int posX = (int) (curTimestamp * 0.001 * pixPerSec) + 1;
 		histPanelUI.setTimeLinePos(posX);
+		timeField.setText(String.valueOf(curTimestamp * 0.001));
 		histPanel.scrollRectToVisible(new Rectangle(new Point(posX, 0)));
 		histPanel.repaint();
 		updateDetailVisualisation(curTimestamp);
 	}
-
 	/**
 	 * Updates the detail visualization to display the given timestamp
 	 * 
@@ -536,8 +597,8 @@ public class BMLFlowVisualization extends JPanel {
 						VisualisationField.DetailScheduled);
 			}
 		}
-		drawOnDetailPlanned(plannedBlocks);
-		drawOnDetailScheduled(playingBlocks, scheduledBlocks);
+		drawOnDetailPlanned(plannedBlocks, timestamp);
+		drawOnDetailScheduled(playingBlocks, scheduledBlocks, timestamp);
 		detailScheduledPanel.revalidate();
 		detailPanel.revalidate();
 		detailPanel.repaint();
@@ -560,7 +621,7 @@ public class BMLFlowVisualization extends JPanel {
 	 * @param blocks
 	 *            The blocks to be drawn.
 	 */
-	private void drawOnDetailPlanned(ArrayList<BMLBlock> blocks) {
+	private void drawOnDetailPlanned(ArrayList<BMLBlock> blocks, long timestamp) {
 		BufferedImage img = new BufferedImage(detailPlannedPanel.getWidth(),
 				detailPlannedPanel.getHeight(), BufferedImage.TYPE_INT_ARGB);
 		Graphics2D g = img.createGraphics();
@@ -569,12 +630,12 @@ public class BMLFlowVisualization extends JPanel {
 		int x = detailPlannedPanel.getX() + detailPlannedPanel.getWidth() / 2;
 		int y = 20;
 		for (BMLBlock b : blocks) {
-			g.setColor(Color.YELLOW);
+			g.setColor(b.getColor(timestamp));
 			g.fillRect(x, y, BLOCK_WIDTH, BLOCK_HEIGHT);
-			g.setColor(b.getBorderColor());
+			g.setColor(b.getBorderColor(VisualisationField.DetailPlanned));
 			g.drawRect(x, y, BLOCK_WIDTH, BLOCK_HEIGHT);
+			
 			g.setColor(Color.BLACK);
-
 			FontMetrics metric = g.getFontMetrics();
 			g.drawString(trunkStringToFit(b.getId(), BLOCK_WIDTH, metric),
 					x + 5, y + BLOCK_HEIGHT / 2 + 2);
@@ -596,7 +657,7 @@ public class BMLFlowVisualization extends JPanel {
 	 *            The currently scheduled blocks
 	 */
 	private void drawOnDetailScheduled(ArrayList<BMLBlock> playingBlocks,
-			ArrayList<BMLBlock> scheduledBlocks) {
+			ArrayList<BMLBlock> scheduledBlocks, long timestamp) {
 
 		int wgap = 60;
 		int hgap = 20;
@@ -644,7 +705,6 @@ public class BMLFlowVisualization extends JPanel {
 			vertices.add(b.getId());
 		}
 
-		// TODO Check (and fix) layout
 		final Map<String, Point> layout = DAGUtils.layout(vertices, edges);
 		// Determine maxY in layout to calculate new width of panel
 		int maxY = 0;
@@ -668,18 +728,24 @@ public class BMLFlowVisualization extends JPanel {
 		for (Entry<String, Point> entry : layout.entrySet()) {
 			// Same as the one in blocks but allows faster access
 			BMLBlock b = bmlBlocks.get(entry.getKey());
-			g.setColor(b.getColor());
+			g.setColor(b.getColor(timestamp));
 			w = BLOCK_WIDTH;
 			h = BLOCK_HEIGHT;
 			x = (entry.getValue().y) * (w + wgap);
 			y = (entry.getValue().x + 1) * (h + hgap);
-			if (playingBlocks.contains(b)) {
-				g.setColor(Color.GREEN);
-			} else {
-				g.setColor(Color.ORANGE);
-			}
+//			if (playingBlocks.contains(b)) {
+//				g.setColor(Color.GREEN);
+//			} else {
+//				g.setColor(Color.ORANGE);
+//			}
 			g.fillRect(x, y, w, h);
-			g.setColor(b.getBorderColor());
+			if (playingBlocks.contains(b)) {
+				// Playing blocks need to be handled the same as in the hist
+				// played field
+				g.setColor(b.getBorderColor(VisualisationField.HistPlayed));
+			} else {
+				g.setColor(b.getBorderColor(VisualisationField.DetailScheduled));
+			}
 			g.setStroke(new BasicStroke(b.getBorderThickness()));
 			g.drawRect(x, y, w, h);
 			g.setColor(Color.BLACK);
@@ -732,6 +798,7 @@ public class BMLFlowVisualization extends JPanel {
 		long start = 0;
 		long end = 0;
 		Color col = Color.WHITE;
+		Color border = Color.BLACK;
 
 		// Create ordered list.
 		BMLBlockComperator comp = new BMLBlockComperator(field);
@@ -743,22 +810,27 @@ public class BMLFlowVisualization extends JPanel {
 			switch (field) {
 			case HistPlanned:
 				start = b.getPlanStart();
-				end = b.getPlanEnd();
-				col = Color.YELLOW;
+				if (b.getStatusTime(BMLBlockStatus.IN_PREP) > 0) {
+					end = b.getStatusTime(BMLBlockStatus.IN_PREP);
+				} else {
+					end = b.getPlanEnd();
+				}
+				col = BMLBlock.getColorFor(BMLBlockStatus.SUBMITTED);
 				break;
 			case HistScheduled:
 				start = b.getSchedStart();
 				if (b.getStatusTime(BMLBlockStatus.LURKING) > 0) {
 					end = b.getStatusTime(BMLBlockStatus.LURKING);
 				} else {
-					end = b.getStatusTime(BMLBlockStatus.IN_EXEC);
+					end = b.getSchedEnd();
 				}
-				col = Color.ORANGE;
+				col = BMLBlock.getColorFor(BMLBlockStatus.PENDING);
 				break;
 			case HistPlayed:
 				start = b.getPlayStart();
 				end = b.getPlayEnd();
-				col = b.getColor();
+				col = BMLBlock.getColorFor(BMLBlockStatus.IN_EXEC);
+				border = b.getBorderColor(field);
 				break;
 			default:
 				break;
@@ -786,7 +858,6 @@ public class BMLFlowVisualization extends JPanel {
 					xEnd = (int) (end * 0.001 * pixPerSec);
 				}
 
-
 				// Draw block
 				g.setColor(col);
 				g.fillRect(xStart, y, xEnd - xStart, BLOCK_HEIGHT);
@@ -796,17 +867,29 @@ public class BMLFlowVisualization extends JPanel {
 					int tmpStart = xEnd;
 					if (b.getStatusTime(BMLBlockStatus.LURKING) > 0) {
 						if (b.getStatusTime(BMLBlockStatus.IN_EXEC) > 0) {
-							xEnd = (int) (b
-									.getStatusTime(BMLBlockStatus.IN_EXEC) * 0.001 * pixPerSec);
+							xEnd = (int) (b.getSchedEnd() * 0.001 * pixPerSec);
 						} else {
 							xEnd = curHistPanelWidth;
 						}
 					}
-					g.setColor(new Color(153, 76, 0));
+					g.setColor(BMLBlock.getColorFor(BMLBlockStatus.LURKING));
+					g.fillRect(tmpStart, y, xEnd - tmpStart, BLOCK_HEIGHT);
+				} else if (field == VisualisationField.HistPlanned) {
+					// Draw IN_PREP
+					int tmpStart = xEnd;
+					if (b.getStatusTime(BMLBlockStatus.IN_PREP) > 0) {
+						// Test if the Block has finished planning
+						if (b.getSchedStart() > 0) {
+							xEnd = (int) (b.getSchedStart() * 0.001 * pixPerSec);
+						} else {
+							xEnd = curHistPanelWidth;
+						}
+					}
+					g.setColor(BMLBlock.getColorFor(BMLBlockStatus.IN_PREP));
 					g.fillRect(tmpStart, y, xEnd - tmpStart, BLOCK_HEIGHT);
 				}
-
-				g.setColor(b.getBorderColor());
+				// Set border color
+				g.setColor(border);
 				g.setStroke(new BasicStroke(b.getBorderThickness()));
 				g.drawRect(xStart, y, xEnd - xStart, BLOCK_HEIGHT);
 				g.setColor(Color.BLACK);
@@ -972,13 +1055,15 @@ public class BMLFlowVisualization extends JPanel {
 	public void notifySearchClose() {
 		searchDialog = null;
 	}
+
 	/**
-	 * Method to notify this class that the info screen was closed. So that a new
-	 * one can be opened;
+	 * Method to notify this class that the info screen was closed. So that a
+	 * new one can be opened;
 	 */
 	public void notifyInfoClose() {
-		infoScreen = null;		
+		infoScreen = null;
 	}
+
 	/**
 	 * Updates the history panel's width to fit to the new time
 	 * 
@@ -990,9 +1075,11 @@ public class BMLFlowVisualization extends JPanel {
 			lastTimestamp = time;
 		}
 		curHistPanelWidth = (int) (time * 0.001 * pixPerSec) + 1;
-		histPanel.setPreferredSize(new Dimension(curHistPanelWidth, 600));
+		histPanel.setPreferredSize(new Dimension(curHistPanelWidth, histPanel
+				.getHeight()));
 		int posX = (int) (curTimestamp * 0.001 * pixPerSec) + 1;
 		histPanelUI.setTimeLinePos(posX);
+		timeField.setText(String.valueOf(curTimestamp * 0.001));
 	}
 
 	/**
@@ -1031,7 +1118,5 @@ public class BMLFlowVisualization extends JPanel {
 		}
 
 	}
-
-	
 
 }
