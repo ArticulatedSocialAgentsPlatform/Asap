@@ -67,9 +67,9 @@ public class IncrementalTTSPlanner extends AbstractPlanner<IncrementalTTSUnit>
         
         for (String sync:bs.getAvailableSyncs())
         {
-            satp.add(new SyncAndTimePeg(b.getBmlId(), b.id, sync, bs.getTimePeg(sync)));
+            satp.add(new SyncAndTimePeg(b.getBmlId(), b.id, sync, bs.getTimePeg(sync)));            
         }
-        planManager.addPlanUnit(bs);
+        planManager.addPlanUnit(bs);        
         bs.applyTimeConstraints();
         return satp;
     }

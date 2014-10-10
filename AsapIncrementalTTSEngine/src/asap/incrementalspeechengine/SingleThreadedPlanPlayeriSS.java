@@ -92,7 +92,7 @@ public final class SingleThreadedPlanPlayeriSS<T extends TimedPlanUnit> implemen
 
         for (T pu : planManager.getPlanUnits())
         {
-            if (t < pu.getStartTime() || pu.isLurking() || pu.isInPrep() || pu.isPending())
+            if (t < pu.getStartTime() || pu.isLurking())
             {
                 try
                 {
