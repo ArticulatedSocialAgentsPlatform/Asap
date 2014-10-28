@@ -1,0 +1,9 @@
+<ivy-module version="2.0">
+   <info organisation="HMI" module="AsapMaryTTS5BindingTest"/>
+   <dependencies >
+      <dependency org="junit" name="junit-dep"  rev="latest.release" />
+      <dependency org="hamcrest" name="hamcrest-all"       rev="latest.release"  />
+	  <dependency org="HMI" name="HmiHumanoidEmbodimentShared" rev="latest.{$resolve.status}"  />
+	  <dependency org="marytts" name="voice-cmu-slt-hsmm"       rev="latest.release"  />
+   </dependencies>
+</ivy-module>
