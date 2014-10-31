@@ -58,10 +58,6 @@
       <dependency org="logback" name="logback-classic"     rev="latest.release"  />   
       <dependency org="logback" name="logback-core"        rev="latest.release"  />   
       
-      <!--dependency org="slf4j"   name="log4j-over-slf4j"      rev="latest.release"  />   
-      <dependency org="slf4j"   name="jul-to-slf4j"          rev="latest.release"  />   
-      <dependency org="slf4j"   name="jcl-over-slf4j"        rev="latest.release"  /-->   
-
       <!-- for tests with SAPI -->
       <dependency org="HMI"      name="HmiTTSnative"        rev="latest.${resolve.status}"  />
 	
@@ -74,16 +70,6 @@
       <dependency org="slf4j"    name="jul-to-slf4j"       rev="latest.release"  />   
       <dependency org="slf4j"    name="jcl-over-slf4j"     rev="latest.release"  />   
       
-      <!-- for tests with MaryTTS -->
-      <dependency org="slf4j"   name="log4j-over-slf4j"      rev="latest.release"  />   
-      <dependency org="dfki"   name="mary-common"    rev="latest.release"  />   
-      <dependency org="apache" name="commons-collections" rev="latest.release"  />   
-      <dependency org="opennlp" name="opennlp-tools" rev="latest.release"  />   
-      <dependency org="opennlp" name="maxent" rev="latest.release"  />   
-      <dependency org="freetts" name="freetts" rev="latest.release"  />   
-      <dependency org="gnu" name="trove" rev="latest.release"  />   
-      <dependency org="hsqldb" name="hsqldb" rev="latest.release"  />     
-      <dependency org="Jama" name="Jama" rev="latest.release"  />             
       <dependency org="reflections" name="reflections" rev="latest.release"  />             
    </dependencies>
 </ivy-module>
