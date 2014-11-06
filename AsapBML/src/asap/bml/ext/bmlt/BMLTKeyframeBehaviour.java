@@ -19,6 +19,7 @@
 package asap.bml.ext.bmlt;
 
 import hmi.xml.XMLFormatting;
+import hmi.xml.XMLScanException;
 import hmi.xml.XMLTokenizer;
 
 import java.io.IOException;
@@ -55,22 +56,40 @@ public class BMLTKeyframeBehaviour extends BMLTBehaviour
     @Override
     public void decodeContent(XMLTokenizer tokenizer) throws IOException
     {
-        content = tokenizer.getXMLSectionContent();
+        while (tokenizer.atSTag())
+        {
+            String tag = tokenizer.getTagName();
+            if (tag.equals(BMLTParameter.xmlTag()))
+            {
+                BMLTParameter param = new BMLTParameter();
+                param.readXML(tokenizer);
+                parameters.put(param.name, param);
+            }
+            else if (tag.equals("SkeletonInterpolator"))
+            {
+                content = tokenizer.getXMLSection();
+            }
+            else
+            {
+                throw new XMLScanException("Invalid content " + tag + " in BMLTBehavior " + id);
+            }
+        }
     }
 
     @Override
     public StringBuilder appendContent(StringBuilder buf, XMLFormatting fmt)
     {
         if (content != null) buf.append(content);
-        return buf;
+        return super.appendContent(buf, fmt);
     }
-    
+
     @Override
     public boolean hasContent()
     {
-        return content!=null;
+        if (content != null) return true;
+        return super.hasContent();
     }
-    
+
     public BMLTKeyframeBehaviour(String bmlId, XMLTokenizer tokenizer) throws IOException
     {
         super(bmlId);

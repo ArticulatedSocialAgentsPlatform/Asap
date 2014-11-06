@@ -19,6 +19,7 @@
 package asap.bml.ext.bmlt;
 
 import hmi.xml.XMLFormatting;
+import hmi.xml.XMLScanException;
 import hmi.xml.XMLTokenizer;
 
 import java.io.IOException;
@@ -50,7 +51,7 @@ public abstract class BMLTBehaviour extends Behaviour
     @Override
     public String getStringParameterValue(String name)
     {
-        if(parameters.get(name)!=null)
+        if (parameters.get(name) != null)
         {
             return parameters.get(name).value;
         }
@@ -60,14 +61,14 @@ public abstract class BMLTBehaviour extends Behaviour
     @Override
     public boolean specifiesParameter(String name)
     {
-        if(parameters.get(name) != null) return true;
+        if (parameters.get(name) != null) return true;
         return super.specifiesParameter(name);
     }
 
     @Override
     public float getFloatParameterValue(String name)
     {
-        if(parameters.get(name)!=null)
+        if (parameters.get(name) != null)
         {
             return Float.parseFloat(parameters.get(name).value);
         }
@@ -88,16 +89,16 @@ public abstract class BMLTBehaviour extends Behaviour
     @Override
     public boolean hasContent()
     {
-        if (parameters.size()>0)return true;
+        if (parameters.size() > 0) return true;
         return super.hasContent();
     }
-    
+
     @Override
     public StringBuilder appendContent(StringBuilder buf, XMLFormatting fmt)
     {
         for (BMLTParameter p : parameters.values())
         {
-            p.appendXML(buf,fmt);
+            p.appendXML(buf, fmt);
         }
         return buf;
     }
@@ -114,8 +115,10 @@ public abstract class BMLTBehaviour extends Behaviour
                 param.readXML(tokenizer);
                 parameters.put(param.name, param);
             }
-            ensureDecodeProgress(tokenizer);
-
+            else
+            {
+                throw new XMLScanException("Invalid content " + tag + " in BMLTBehavior " + id);
+            }
         }
     }
 }

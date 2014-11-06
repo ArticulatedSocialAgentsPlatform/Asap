@@ -57,21 +57,40 @@ public class BMLTKeyframeBehaviourTest extends AbstractBehaviourTest
     }
 
     @Test
-    public void writeInternalKeyframe() throws IOException, SAXException
+    public void readInternalKeyframeWithParameters() throws IOException
     {
-        String keyframe = "<SkeletonInterpolator xmlns=\"\" rotationEncoding=\"quaternions\" parts=\"vc4\" encoding=\"R\">" + "0 0 1 0 1"
+        String keyframe = "<SkeletonInterpolator rotationEncoding=\"quaternions\" parts=\"vc4\" encoding=\"R\">" + "0 0 1 0 1"
                 + "</SkeletonInterpolator>";
-        String str = "<bmlt:keyframe xmlns:bmlt=\"http://hmi.ewi.utwente.nl/bmlt\" " + TestUtil.getDefNS() + "id=\"kf1\">" + keyframe
+        String str = "<bmlt:keyframe xmlns:bmlt=\"http://hmi.ewi.utwente.nl/bmlt\" " + TestUtil.getDefNS() + "id=\"kf1\">"
+                + "<bmlt:parameter name=\"before\" value=\"b1\"/>" + keyframe + "<bmlt:parameter name=\"after\" value=\"a1\"/>"
+                + "</bmlt:keyframe>";
+        BMLTKeyframeBehaviour beh = new BMLTKeyframeBehaviour("bml1", new XMLTokenizer(str));
+        assertEquals(keyframe, beh.content);
+        assertEquals("a1", beh.getStringParameterValue("after"));
+        assertEquals("b1", beh.getStringParameterValue("before"));
+    }
+
+    @Test
+    public void writeInternalKeyframeWithParameters() throws IOException, SAXException
+    {
+        String keyframe = "<SkeletonInterpolator rotationEncoding=\"quaternions\" parts=\"vc4\" encoding=\"R\">" + "0 0 1 0 1"
+                + "</SkeletonInterpolator>";
+        String str = "<bmlt:keyframe xmlns:bmlt=\"http://hmi.ewi.utwente.nl/bmlt\" " + TestUtil.getDefNS() + "id=\"kf1\">"
+                + "<bmlt:parameter name=\"before\" value=\"b1\"/>" + keyframe + "<bmlt:parameter name=\"after\" value=\"a1\"/>"
                 + "</bmlt:keyframe>";
         BMLTKeyframeBehaviour behIn = new BMLTKeyframeBehaviour("bml1", new XMLTokenizer(str));
-        
+
         StringBuilder buf = new StringBuilder();
         behIn.appendXML(buf);
-        
+
         BMLTKeyframeBehaviour behOut = new BMLTKeyframeBehaviour("bml1", new XMLTokenizer(buf.toString()));
-        XMLTestCase xmlTester = new XMLTestCase(""){};
+        XMLTestCase xmlTester = new XMLTestCase("")
+        {
+        };
         XMLUnit.setIgnoreWhitespace(true);
         xmlTester.assertXMLEqual(keyframe, behOut.content);
+        assertEquals("a1", behOut.getStringParameterValue("after"));
+        assertEquals("b1", behOut.getStringParameterValue("before"));
     }
 
     @Test
