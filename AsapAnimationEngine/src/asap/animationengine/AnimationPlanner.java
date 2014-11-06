@@ -18,6 +18,10 @@
  ******************************************************************************/
 package asap.animationengine;
 
+import hmi.animation.SkeletonInterpolator;
+import hmi.xml.XMLTokenizer;
+
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -34,6 +38,8 @@ import asap.animationengine.gaze.RestGaze;
 import asap.animationengine.gesturebinding.GestureBinding;
 import asap.animationengine.gesturebinding.HnsHandshape;
 import asap.animationengine.gesturebinding.MURMLMUBuilder;
+import asap.animationengine.keyframe.KeyframeMU;
+import asap.animationengine.motionunit.AnimationUnit;
 import asap.animationengine.motionunit.MUSetupException;
 import asap.animationengine.motionunit.TMUSetupException;
 import asap.animationengine.motionunit.TimedAnimationMotionUnit;
@@ -126,7 +132,6 @@ public class AnimationPlanner extends AbstractPlanner<TimedAnimationUnit>
     public List<SyncAndTimePeg> addBehaviour(BMLBlockPeg bbPeg, Behaviour b, List<TimePegAndConstraint> sacs, TimedAnimationUnit tmu)
             throws BehaviourPlanningException
     {
-        
 
         if (tmu == null)
         {
@@ -178,9 +183,9 @@ public class AnimationPlanner extends AbstractPlanner<TimedAnimationUnit>
         else if (b instanceof PostureShiftBehaviour)
         {
             RestPose rp = gestureBinding.getRestPose((PostureShiftBehaviour) b, player);
-            if(rp == null)
+            if (rp == null)
             {
-                throw new BehaviourPlanningException(b, "Behavior " + b.id +" "+b.toXMLString()
+                throw new BehaviourPlanningException(b, "Behavior " + b.id + " " + b.toXMLString()
                         + " could not be constructed from the gesture binding, behavior omitted.");
             }
             try
@@ -194,10 +199,10 @@ public class AnimationPlanner extends AbstractPlanner<TimedAnimationUnit>
         }
         else if (b instanceof GazeShiftBehaviour)
         {
-            RestGaze rg = gestureBinding.getRestGaze((GazeShiftBehaviour)b, player);
-            if(rg == null)
+            RestGaze rg = gestureBinding.getRestGaze((GazeShiftBehaviour) b, player);
+            if (rg == null)
             {
-                throw new BehaviourPlanningException(b, "Behavior " + b.id +" "+b.toXMLString()
+                throw new BehaviourPlanningException(b, "Behavior " + b.id + " " + b.toXMLString()
                         + " could not be constructed from the gesture binding, behavior omitted.");
             }
             try
@@ -209,12 +214,33 @@ public class AnimationPlanner extends AbstractPlanner<TimedAnimationUnit>
                 throw new BehaviourPlanningException(b, "GazeShiftBehaviour " + b.id + " could not be constructed.", e);
             }
         }
+        else if (b instanceof BMLTKeyframeBehaviour && b.hasContent())
+        {
+            BMLTKeyframeBehaviour beh = (BMLTKeyframeBehaviour) b;
+            AnimationUnit mu;
+            try
+            {
+                mu = new KeyframeMU(new SkeletonInterpolator(new XMLTokenizer(beh.content)));
+            }
+            catch (IOException e)
+            {
+                throw new BehaviourPlanningException(b, "BMLTKeyframeBehaviour " + b.id + " could not be constructed.", e);
+            }
+            try
+            {
+                tmu = mu.copy(player).createTMU(fbManager, bbPeg, b.getBmlId(), b.id, pegBoard);
+            }
+            catch (MUSetupException e)
+            {
+                throw new BehaviourPlanningException(b, "BMLTKeyframeBehaviour " + b.id + " could not be constructed.", e);
+            }
+        }
         else
         {
             List<TimedAnimationUnit> tmus = gestureBinding.getMotionUnit(bbPeg, b, player, pegBoard, murmlMUBuilder);
             if (tmus.isEmpty())
             {
-                throw new BehaviourPlanningException(b, "Behavior " + b.id  +" "+b.toXMLString()
+                throw new BehaviourPlanningException(b, "Behavior " + b.id + " " + b.toXMLString()
                         + " could not be constructed from the gesture binding, behavior omitted.");
             }
             tmu = tmus.get(0);

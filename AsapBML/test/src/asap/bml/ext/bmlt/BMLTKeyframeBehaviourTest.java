@@ -5,7 +5,10 @@ import hmi.xml.XMLTokenizer;
 
 import java.io.IOException;
 
+import org.custommonkey.xmlunit.XMLTestCase;
+import org.custommonkey.xmlunit.XMLUnit;
 import org.junit.Test;
+import org.xml.sax.SAXException;
 
 import saiba.bml.core.AbstractBehaviourTest;
 import saiba.bml.core.Behaviour;
@@ -32,16 +35,45 @@ public class BMLTKeyframeBehaviourTest extends AbstractBehaviourTest
     {
         return new BMLTKeyframeBehaviour(bmlId, new XMLTokenizer(bmlString));
     }
-    
+
     @Test
     public void testReadXML() throws IOException
     {
         String str = "<bmlt:keyframe xmlns:bmlt=\"http://hmi.ewi.utwente.nl/bmlt\" " + TestUtil.getDefNS()
                 + "id=\"kf1\" name=\"file1.xml\"/>";
         BMLTKeyframeBehaviour beh = new BMLTKeyframeBehaviour("bml1", new XMLTokenizer(str));
-        assertEquals("file1.xml",beh.name);
+        assertEquals("file1.xml", beh.name);
     }
-    
+
+    @Test
+    public void readInternalKeyframe() throws IOException
+    {
+        String keyframe = "<SkeletonInterpolator rotationEncoding=\"quaternions\" parts=\"vc4\" encoding=\"R\">" + "0 0 1 0 1"
+                + "</SkeletonInterpolator>";
+        String str = "<bmlt:keyframe xmlns:bmlt=\"http://hmi.ewi.utwente.nl/bmlt\" " + TestUtil.getDefNS() + "id=\"kf1\">" + keyframe
+                + "</bmlt:keyframe>";
+        BMLTKeyframeBehaviour beh = new BMLTKeyframeBehaviour("bml1", new XMLTokenizer(str));
+        assertEquals(keyframe, beh.content);
+    }
+
+    @Test
+    public void writeInternalKeyframe() throws IOException, SAXException
+    {
+        String keyframe = "<SkeletonInterpolator xmlns=\"\" rotationEncoding=\"quaternions\" parts=\"vc4\" encoding=\"R\">" + "0 0 1 0 1"
+                + "</SkeletonInterpolator>";
+        String str = "<bmlt:keyframe xmlns:bmlt=\"http://hmi.ewi.utwente.nl/bmlt\" " + TestUtil.getDefNS() + "id=\"kf1\">" + keyframe
+                + "</bmlt:keyframe>";
+        BMLTKeyframeBehaviour behIn = new BMLTKeyframeBehaviour("bml1", new XMLTokenizer(str));
+        
+        StringBuilder buf = new StringBuilder();
+        behIn.appendXML(buf);
+        
+        BMLTKeyframeBehaviour behOut = new BMLTKeyframeBehaviour("bml1", new XMLTokenizer(buf.toString()));
+        XMLTestCase xmlTester = new XMLTestCase(""){};
+        XMLUnit.setIgnoreWhitespace(true);
+        xmlTester.assertXMLEqual(keyframe, behOut.content);
+    }
+
     @Test
     public void testWriteXML() throws IOException
     {
@@ -50,8 +82,8 @@ public class BMLTKeyframeBehaviourTest extends AbstractBehaviourTest
         BMLTKeyframeBehaviour behIn = new BMLTKeyframeBehaviour("bml1", new XMLTokenizer(str));
         StringBuilder buf = new StringBuilder();
         behIn.appendXML(buf);
-        
+
         BMLTKeyframeBehaviour behOut = new BMLTKeyframeBehaviour("bml1", new XMLTokenizer(buf.toString()));
-        assertEquals("file1.xml",behOut.name);
+        assertEquals("file1.xml", behOut.name);
     }
 }

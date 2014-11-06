@@ -162,7 +162,7 @@ public class KeyframeMU implements AnimationUnit
         {
             for (VJoint vj : v.getParts())
             {
-                if (vj.getSid().equals(s))
+                if (s.equals(vj.getSid()))
                 {
                     vjParts.add(vj);
                 }

@@ -38,12 +38,14 @@ import asap.animationengine.gaze.RestGaze;
 import asap.animationengine.gaze.StubGazeMU;
 import asap.animationengine.gesturebinding.GestureBinding;
 import asap.animationengine.gesturebinding.MURMLMUBuilder;
+import asap.animationengine.keyframe.KeyframeMU;
 import asap.animationengine.motionunit.MUSetupException;
 import asap.animationengine.motionunit.StubAnimationUnit;
 import asap.animationengine.motionunit.TimedAnimationMotionUnit;
 import asap.animationengine.motionunit.TimedAnimationUnit;
 import asap.animationengine.restpose.PostureShiftTMU;
 import asap.animationengine.restpose.RestPose;
+import asap.bml.ext.bmlt.BMLTKeyframeBehaviour;
 import asap.bml.ext.murml.MURMLGestureBehaviour;
 import asap.hns.Hns;
 import asap.hns.ShapeSymbols;
@@ -424,6 +426,20 @@ public class AnimationPlannerTest
         assertEquals(4, pu.getTime("strokeStart"), TIMING_PRECISION);
         assertEquals(6, pu.getTime("strokeEnd"), TIMING_PRECISION);
         assertThat(pu.getTime("strokeStart"), greaterThan(pu.getTime("start")));
+    }
+
+    @Test
+    public void testKeyframeInternal() throws IOException, BehaviourPlanningException
+    {
+        String keyframe = "<SkeletonInterpolator xmlns=\"\" rotationEncoding=\"quaternions\" parts=\"vc4\" encoding=\"R\">" + "0 0 1 0 1"
+                + "</SkeletonInterpolator>";
+        String str = "<bmlt:keyframe xmlns:bmlt=\"http://hmi.ewi.utwente.nl/bmlt\" " + "id=\"kf1\">" + keyframe + "</bmlt:keyframe>";
+        BMLTKeyframeBehaviour beh = new BMLTKeyframeBehaviour("bml1", new XMLTokenizer(str));
+        ArrayList<TimePegAndConstraint> sacs = new ArrayList<TimePegAndConstraint>();
+        TimedAnimationMotionUnit pu = (TimedAnimationMotionUnit)animationPlanner.resolveSynchs(bbPeg, beh, sacs);
+        animationPlanner.addBehaviour(bbPeg, beh, sacs, pu);
+        assertThat(pu.getMotionUnit(), instanceOf(KeyframeMU.class));
+        assertThat(pu.getKinematicJoints(), IsIterableContainingInAnyOrder.containsInAnyOrder(Hanim.vc4));
     }
 
     @Test

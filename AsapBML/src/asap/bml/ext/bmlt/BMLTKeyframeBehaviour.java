@@ -36,13 +36,15 @@ import com.google.common.collect.ImmutableList;
 public class BMLTKeyframeBehaviour extends BMLTBehaviour
 {
     public String name;
+    public String content;
 
-    private static final List<String> DEFAULT_SYNCS = ImmutableList.of("start","end");
+    private static final List<String> DEFAULT_SYNCS = ImmutableList.of("start", "end");
+
     public static List<String> getDefaultSyncPoints()
     {
         return DEFAULT_SYNCS;
     }
-    
+
     @Override
     public boolean satisfiesConstraint(String n, String value)
     {
@@ -50,32 +52,54 @@ public class BMLTKeyframeBehaviour extends BMLTBehaviour
         return super.satisfiesConstraint(n, value);
     }
 
-    public BMLTKeyframeBehaviour(String bmlId,XMLTokenizer tokenizer) throws IOException
+    @Override
+    public void decodeContent(XMLTokenizer tokenizer) throws IOException
+    {
+        content = tokenizer.getXMLSectionContent();
+    }
+
+    @Override
+    public StringBuilder appendContent(StringBuilder buf, XMLFormatting fmt)
+    {
+        if (content != null) buf.append(content);
+        return buf;
+    }
+    
+    @Override
+    public boolean hasContent()
+    {
+        return content!=null;
+    }
+    
+    public BMLTKeyframeBehaviour(String bmlId, XMLTokenizer tokenizer) throws IOException
     {
         super(bmlId);
         readXML(tokenizer);
     }
-    
+
     @Override
     public void addDefaultSyncPoints()
     {
-        for(String s:getDefaultSyncPoints())
+        for (String s : getDefaultSyncPoints())
         {
             addSyncPoint(new SyncPoint(bmlId, id, s));
-        }        
+        }
     }
 
     @Override
     public StringBuilder appendAttributeString(StringBuilder buf, XMLFormatting fmt)
     {
-        appendAttribute(buf, "name", name);
+        if (name != null && !name.isEmpty())
+        {
+            appendAttribute(buf, "name", name);
+        }
         return super.appendAttributeString(buf, fmt);
     }
 
     @Override
     public void decodeAttributes(HashMap<String, String> attrMap, XMLTokenizer tokenizer)
     {
-        name = getRequiredAttribute("name", attrMap, tokenizer);
+        name = getOptionalAttribute("name", attrMap, null);
         super.decodeAttributes(attrMap, tokenizer);
     }
 
