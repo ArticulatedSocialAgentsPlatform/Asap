@@ -431,7 +431,7 @@ public class AnimationPlannerTest
     @Test
     public void testKeyframeInternal() throws IOException, BehaviourPlanningException
     {
-        String keyframe = "<SkeletonInterpolator xmlns=\"\" rotationEncoding=\"quaternions\" parts=\"vc4\" encoding=\"R\">" + "0 0 1 0 1"
+        String keyframe = "<SkeletonInterpolator xmlns=\"\" rotationEncoding=\"quaternions\" parts=\"skullbase\" encoding=\"R\">" + "0 0 1 0 1"
                 + "</SkeletonInterpolator>";
         String str = "<bmlt:keyframe xmlns:bmlt=\"http://hmi.ewi.utwente.nl/bmlt\" " + "id=\"kf1\">" + keyframe + "</bmlt:keyframe>";
         BMLTKeyframeBehaviour beh = new BMLTKeyframeBehaviour("bml1", new XMLTokenizer(str));
@@ -439,9 +439,23 @@ public class AnimationPlannerTest
         TimedAnimationMotionUnit pu = (TimedAnimationMotionUnit)animationPlanner.resolveSynchs(bbPeg, beh, sacs);
         animationPlanner.addBehaviour(bbPeg, beh, sacs, pu);
         assertThat(pu.getMotionUnit(), instanceOf(KeyframeMU.class));
-        assertThat(pu.getKinematicJoints(), IsIterableContainingInAnyOrder.containsInAnyOrder(Hanim.vc4));
+        assertThat(pu.getKinematicJoints(), IsIterableContainingInAnyOrder.containsInAnyOrder(Hanim.skullbase));
     }
 
+    @Test
+    public void testKeyframeInternalMirror() throws IOException, BehaviourPlanningException
+    {
+        String keyframe = "<SkeletonInterpolator xmlns=\"\" rotationEncoding=\"quaternions\" parts=\"r_shoulder\" encoding=\"R\">" + "0 0 1 0 1"
+                + "</SkeletonInterpolator>";
+        String str = "<bmlt:keyframe xmlns:bmlt=\"http://hmi.ewi.utwente.nl/bmlt\" " + "id=\"kf1\">" + keyframe + 
+                "<bmlt:parameter name=\"mirror\" value=\"true\"/></bmlt:keyframe>";
+        BMLTKeyframeBehaviour beh = new BMLTKeyframeBehaviour("bml1", new XMLTokenizer(str));
+        ArrayList<TimePegAndConstraint> sacs = new ArrayList<TimePegAndConstraint>();
+        TimedAnimationMotionUnit pu = (TimedAnimationMotionUnit)animationPlanner.resolveSynchs(bbPeg, beh, sacs);
+        animationPlanner.addBehaviour(bbPeg, beh, sacs, pu);
+        assertThat(pu.getKinematicJoints(), IsIterableContainingInAnyOrder.containsInAnyOrder(Hanim.l_shoulder));
+    }
+    
     @Test
     public void testInterrupt() // throws BehaviourPlanningException
     {

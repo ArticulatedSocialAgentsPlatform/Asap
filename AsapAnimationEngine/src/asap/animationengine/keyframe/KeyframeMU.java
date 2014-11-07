@@ -156,7 +156,6 @@ public class KeyframeMU implements AnimationUnit
 
     public AnimationUnit copy(VJoint v)
     {
-        VJoint[] empty = new VJoint[0];
         ArrayList<VJoint> vjParts = new ArrayList<VJoint>();
         for (String s : baseIp.getPartIds())
         {
@@ -168,8 +167,9 @@ public class KeyframeMU implements AnimationUnit
                 }
             }
         }
-        SkeletonInterpolator ipPredict = new SkeletonInterpolator(baseIp, vjParts.toArray(empty));
+        SkeletonInterpolator ipPredict = new SkeletonInterpolator(baseIp, vjParts.toArray(new VJoint[vjParts.size()]));
         KeyframeMU copy = new KeyframeMU(ipPredict);
+        copy.setTarget(v);
         for (Entry<String, String> paramValue : parameters.entrySet())
         {
             copy.setParameterValue(paramValue.getKey(), paramValue.getValue());
@@ -177,7 +177,7 @@ public class KeyframeMU implements AnimationUnit
         for (KeyPosition kp : getKeyPositions())
         {
             copy.addKeyPosition(kp);
-        }
+        }        
         return copy;
     }
 

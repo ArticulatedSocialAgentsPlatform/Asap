@@ -58,6 +58,7 @@ import asap.realizer.feedback.FeedbackManager;
 import asap.realizer.pegboard.BMLBlockPeg;
 import asap.realizer.pegboard.OffsetPeg;
 import asap.realizer.pegboard.PegBoard;
+import asap.realizer.planunit.ParameterException;
 import asap.realizer.planunit.PlanManager;
 import asap.realizer.scheduler.TimePegAndConstraint;
 
@@ -221,19 +222,29 @@ public class AnimationPlanner extends AbstractPlanner<TimedAnimationUnit>
             try
             {
                 mu = new KeyframeMU(new SkeletonInterpolator(new XMLTokenizer(beh.content)));
+                mu = mu.copy(player);
+                if(beh.specifiesParameter("mirror"))
+                {
+                    mu.setParameterValue("mirror", beh.getStringParameterValue("mirror"));
+                }
+                if(beh.specifiesParameter("joints"))
+                {
+                    mu.setParameterValue("joints", beh.getStringParameterValue("joints"));
+                }
             }
             catch (IOException e)
             {
                 throw new BehaviourPlanningException(b, "BMLTKeyframeBehaviour " + b.id + " could not be constructed.", e);
             }
-            try
+            catch (ParameterException e)
             {
-                tmu = mu.copy(player).createTMU(fbManager, bbPeg, b.getBmlId(), b.id, pegBoard);
+                throw new BehaviourPlanningException(b, "BMLTKeyframeBehaviour " + b.id + " could not be constructed.", e);
             }
             catch (MUSetupException e)
             {
                 throw new BehaviourPlanningException(b, "BMLTKeyframeBehaviour " + b.id + " could not be constructed.", e);
             }
+            tmu = mu.createTMU(fbManager, bbPeg, b.getBmlId(), b.id, pegBoard);
         }
         else
         {
