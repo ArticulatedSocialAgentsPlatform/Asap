@@ -37,6 +37,7 @@ import asap.faceengine.facebinding.FaceBinding;
 import asap.faceengine.facebinding.MURMLFUBuilder;
 import asap.faceengine.faceunit.FaceUnit;
 import asap.faceengine.faceunit.KeyframeFaceUnit;
+import asap.faceengine.faceunit.KeyframeFacsFU;
 import asap.faceengine.faceunit.KeyframeMorphFU;
 import asap.faceengine.faceunit.TimedFaceUnit;
 import asap.realizer.AbstractPlanner;
@@ -107,7 +108,21 @@ public class FacePlanner extends AbstractPlanner<TimedFaceUnit>
             BMLTFaceKeyframeBehaviour beh = (BMLTFaceKeyframeBehaviour) b;
             FaceInterpolator mi = new FaceInterpolator();
             mi.readXML(beh.content);
-            KeyframeFaceUnit fu = new KeyframeMorphFU(mi);
+            KeyframeFaceUnit fu;
+            switch(beh.getType())
+            {
+            default:
+            case MORPH:
+                fu = new KeyframeMorphFU(mi);break;
+            case FACS:
+                KeyframeFacsFU kfu = new KeyframeFacsFU(mi);
+                kfu = kfu.copy(faceController, facsConverter, emotionConverter);
+                fu = kfu;
+                break;
+            case FAPS:
+                //TODO
+                throw new RuntimeException("Implement this!!!");
+            }            
             fu.setFaceController(faceController);
             tfu = fu.createTFU(fbManager, bbPeg, beh.getBmlId(), beh.id, pegBoard);
         }

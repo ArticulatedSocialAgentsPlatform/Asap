@@ -31,6 +31,11 @@ public abstract class KeyframeFaceUnit implements FaceUnit
     {
         this.mi = mi;
     }
+    
+    protected float[] getInterpolatedValue(double t) 
+    {
+        return mi.interpolate(mi.getStartTime() + getPreferedDuration() * t);
+    }
 
     protected void setupCopy(KeyframeFaceUnit copy, FaceController fc)
     {
