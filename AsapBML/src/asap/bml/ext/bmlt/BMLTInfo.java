@@ -42,7 +42,7 @@ public final class BMLTInfo
             .put(BMLTControllerBehaviour.xmlTag(), BMLTControllerBehaviour.class)
             .put(BMLTNoiseBehaviour.xmlTag(), BMLTNoiseBehaviour.class)            
             .put(BMLTKeyframeBehaviour.xmlTag(), BMLTKeyframeBehaviour.class)
-            .put(BMLTMorphKeyframeBehaviour.xmlTag(),BMLTMorphKeyframeBehaviour.class)
+            .put(BMLTFaceKeyframeBehaviour.xmlTag(),BMLTFaceKeyframeBehaviour.class)
             .put(BMLTAudioFileBehaviour.xmlTag(), BMLTAudioFileBehaviour.class)
             .put(BMLTFaceMorphBehaviour.xmlTag(), BMLTFaceMorphBehaviour.class)
             .put(MURMLGestureBehaviour.xmlTag(), MURMLGestureBehaviour.class)

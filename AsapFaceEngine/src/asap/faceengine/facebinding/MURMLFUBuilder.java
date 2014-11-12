@@ -5,7 +5,7 @@ import java.util.List;
 
 import lombok.extern.slf4j.Slf4j;
 import asap.faceengine.faceunit.FaceUnit;
-import asap.faceengine.faceunit.KeyframeMorphFU;
+import asap.faceengine.faceunit.MURMLKeyframeMorphFU;
 import asap.motionunit.keyframe.CubicSplineFloatInterpolator;
 import asap.motionunit.keyframe.Interpolator;
 import asap.motionunit.keyframe.KeyFrame;
@@ -90,7 +90,7 @@ public final class MURMLFUBuilder
 
             double scale = kf.getEasescale();
             double p = kf.getEaseturningpoint();
-            return new KeyframeMorphFU(targets, interp, new EaseInEaseOutManipulator(scale, p), keyFrames, nrOfDofs, kf.isInsertStartframe());
+            return new MURMLKeyframeMorphFU(targets, interp, new EaseInEaseOutManipulator(scale, p), keyFrames, nrOfDofs, kf.isInsertStartframe());
         }
         return null;
     }

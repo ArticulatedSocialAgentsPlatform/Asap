@@ -11,7 +11,7 @@ import org.junit.Test;
 import org.mockito.AdditionalMatchers;
 
 import asap.faceengine.faceunit.FaceUnit;
-import asap.faceengine.faceunit.KeyframeMorphFU;
+import asap.faceengine.faceunit.MURMLKeyframeMorphFU;
 import asap.motionunit.MUPlayException;
 
 /**
@@ -30,8 +30,8 @@ public class MURMLFUBuilderTest
                 + "<dynamic><keyframing><phase><frame ftime=\"0\"><posture>Humanoid "
                 + "(dB_Smile 3 70 0 0)</posture></frame></phase></keyframing></dynamic></murml-description>";
         FaceUnit fu = MURMLFUBuilder.setup(murmlString);
-        assertThat(fu, instanceOf(KeyframeMorphFU.class));
-        KeyframeMorphFU kfu = (KeyframeMorphFU) fu;
+        assertThat(fu, instanceOf(MURMLKeyframeMorphFU.class));
+        MURMLKeyframeMorphFU kfu = (MURMLKeyframeMorphFU) fu;
         kfu.setFaceController(mockFc);
         kfu.play(0);
 
@@ -48,8 +48,8 @@ public class MURMLFUBuilderTest
                 + "<frame ftime=\"1\"><posture>Humanoid " + "(dB_Smile 3 80 0 0)</posture></frame>"
                 + "</phase></keyframing></dynamic></murml-description>";
         FaceUnit fu = MURMLFUBuilder.setup(murmlString);
-        assertThat(fu, instanceOf(KeyframeMorphFU.class));
-        KeyframeMorphFU kfu = (KeyframeMorphFU) fu;
+        assertThat(fu, instanceOf(MURMLKeyframeMorphFU.class));
+        MURMLKeyframeMorphFU kfu = (MURMLKeyframeMorphFU) fu;
         kfu.setFaceController(mockFc);
         kfu.play(1);
 
@@ -66,8 +66,8 @@ public class MURMLFUBuilderTest
                 + "<frame ftime=\"1\"><posture>Humanoid " + "(dB_Smile 3 80 0 0)(dB_Dummy 1 20)</posture></frame>"
                 + "</phase></keyframing></dynamic></murml-description>";
         FaceUnit fu = MURMLFUBuilder.setup(murmlString);
-        assertThat(fu, instanceOf(KeyframeMorphFU.class));
-        KeyframeMorphFU kfu = (KeyframeMorphFU) fu;
+        assertThat(fu, instanceOf(MURMLKeyframeMorphFU.class));
+        MURMLKeyframeMorphFU kfu = (MURMLKeyframeMorphFU) fu;
         kfu.setFaceController(mockFc);
         kfu.play(1);
 
@@ -84,8 +84,8 @@ public class MURMLFUBuilderTest
                 + "(dB_Smile 3 70 0 0)(dB_Dummy 1 30)</posture></frame>" + "<frame ftime=\"4\"><posture>Humanoid "
                 + "(dB_Smile 3 80 0 0)(dB_Dummy 1 20)</posture></frame>" + "</phase></keyframing></dynamic></murml-description>";
         FaceUnit fu = MURMLFUBuilder.setup(murmlString);
-        assertThat(fu, instanceOf(KeyframeMorphFU.class));
-        KeyframeMorphFU kfu = (KeyframeMorphFU) fu;
+        assertThat(fu, instanceOf(MURMLKeyframeMorphFU.class));
+        MURMLKeyframeMorphFU kfu = (MURMLKeyframeMorphFU) fu;
         kfu.setFaceController(mockFc);
         kfu.play(1);
 
@@ -102,8 +102,8 @@ public class MURMLFUBuilderTest
                 + "(dB_Smile 3 70 0 0)(dB_Dummy 1 30)</posture></frame>" + "<frame ftime=\"4\"><posture>Humanoid "
                 + "(dB_Smile 3 80 0 0)(dB_Dummy 1 20)</posture></frame>" + "</phase></keyframing></dynamic></murml-description>";
         FaceUnit fu = MURMLFUBuilder.setup(murmlString);
-        assertThat(fu, instanceOf(KeyframeMorphFU.class));
-        KeyframeMorphFU kfu = (KeyframeMorphFU) fu;
+        assertThat(fu, instanceOf(MURMLKeyframeMorphFU.class));
+        MURMLKeyframeMorphFU kfu = (MURMLKeyframeMorphFU) fu;
         kfu.setFaceController(mockFc);
         kfu.startUnit(0);
         kfu.play(0);
@@ -121,8 +121,8 @@ public class MURMLFUBuilderTest
                 + "(dB_Smile 3 70 0 0)(dB_Dummy 1 30)</posture></frame>" + "<frame ftime=\"4\"><posture>Humanoid "
                 + "(dB_Smile 3 80 0 0)(dB_Dummy 1 20)</posture></frame>" + "</phase></keyframing></dynamic></murml-description>";
         FaceUnit fu = MURMLFUBuilder.setup(murmlString);
-        assertThat(fu, instanceOf(KeyframeMorphFU.class));
-        KeyframeMorphFU kfu = (KeyframeMorphFU) fu;
+        assertThat(fu, instanceOf(MURMLKeyframeMorphFU.class));
+        MURMLKeyframeMorphFU kfu = (MURMLKeyframeMorphFU) fu;
         kfu.setFaceController(mockFc);
         kfu.startUnit(0);
         kfu.play(1);
@@ -139,8 +139,8 @@ public class MURMLFUBuilderTest
                 + "<dynamic><keyframing mode=\"linear\"><phase>" + "<frame ftime=\"3\"><posture>Humanoid "
                 + "(dB_Smile 3 70 0 0)(dB_Dummy 1 30)</posture></frame>" + "</phase></keyframing></dynamic></murml-description>";
         FaceUnit fu = MURMLFUBuilder.setup(murmlString);
-        assertThat(fu, instanceOf(KeyframeMorphFU.class));
-        KeyframeMorphFU kfu = (KeyframeMorphFU) fu;
+        assertThat(fu, instanceOf(MURMLKeyframeMorphFU.class));
+        MURMLKeyframeMorphFU kfu = (MURMLKeyframeMorphFU) fu;
         kfu.setFaceController(mockFc);
         kfu.startUnit(0);
         kfu.play(0.5);

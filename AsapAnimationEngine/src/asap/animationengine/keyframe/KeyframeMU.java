@@ -52,7 +52,7 @@ import com.google.common.collect.ImmutableSet;
  */
 public class KeyframeMU implements AnimationUnit
 {
-    private SkeletonInterpolator baseIp;
+    private final SkeletonInterpolator baseIp;
     private SkeletonInterpolator currentIp;
     private HashMap<String, String> parameters = new HashMap<String, String>(); // name => value set
     private KeyPositionManager keyPositionManager = new KeyPositionManagerImpl();

@@ -8,6 +8,7 @@ import java.io.IOException;
 import java.util.HashMap;
 import java.util.List;
 
+import lombok.Getter;
 import saiba.bml.parser.SyncPoint;
 
 import com.google.common.collect.ImmutableList;
@@ -17,10 +18,18 @@ import com.google.common.collect.ImmutableList;
  * @author herwinvw
  *
  */
-public class BMLTMorphKeyframeBehaviour extends BMLTBehaviour
+public class BMLTFaceKeyframeBehaviour extends BMLTBehaviour
 {
     public String name;
     public String content;
+
+    public enum Type
+    {
+        MORPH, FACS, FAPS;
+    }
+
+    @Getter
+    private Type type = Type.MORPH;
 
     private static final List<String> DEFAULT_SYNCS = ImmutableList.of("start", "end");
 
@@ -28,7 +37,7 @@ public class BMLTMorphKeyframeBehaviour extends BMLTBehaviour
     {
         return DEFAULT_SYNCS;
     }
-    
+
     @Override
     public boolean satisfiesConstraint(String n, String value)
     {
@@ -48,13 +57,13 @@ public class BMLTMorphKeyframeBehaviour extends BMLTBehaviour
                 param.readXML(tokenizer);
                 parameters.put(param.name, param);
             }
-            else if (tag.equals("MorphInterpolator"))
+            else if (tag.equals("FaceInterpolator"))
             {
                 content = tokenizer.getXMLSection();
             }
             else
             {
-                throw new XMLScanException("Invalid content " + tag + " in BMLTMorphKeyframeBehaviour " + id);
+                throw new XMLScanException("Invalid content " + tag + " in BMLTFaceKeyframeBehaviour " + id);
             }
         }
     }
@@ -73,7 +82,7 @@ public class BMLTMorphKeyframeBehaviour extends BMLTBehaviour
         return super.hasContent();
     }
 
-    public BMLTMorphKeyframeBehaviour(String bmlId, XMLTokenizer tokenizer) throws IOException
+    public BMLTFaceKeyframeBehaviour(String bmlId, XMLTokenizer tokenizer) throws IOException
     {
         super(bmlId);
         readXML(tokenizer);
@@ -95,6 +104,7 @@ public class BMLTMorphKeyframeBehaviour extends BMLTBehaviour
         {
             appendAttribute(buf, "name", name);
         }
+        appendAttribute(buf, "type", type.toString());
         return super.appendAttributeString(buf, fmt);
     }
 
@@ -102,13 +112,14 @@ public class BMLTMorphKeyframeBehaviour extends BMLTBehaviour
     public void decodeAttributes(HashMap<String, String> attrMap, XMLTokenizer tokenizer)
     {
         name = getOptionalAttribute("name", attrMap, null);
+        type = Type.valueOf(getOptionalAttribute("type", attrMap, Type.MORPH.toString()));
         super.decodeAttributes(attrMap, tokenizer);
     }
 
     /*
      * The XML Stag for XML encoding
      */
-    private static final String XMLTAG = "morphkeyframe";
+    private static final String XMLTAG = "facekeyframe";
 
     /**
      * The XML Stag for XML encoding -- use this static method when you want to see if a given
