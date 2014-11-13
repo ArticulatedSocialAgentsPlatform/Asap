@@ -144,12 +144,12 @@ public class FacePlannerTest
     @Test
     public void testResolveMorphKeyframe() throws IOException, BehaviourPlanningException
     {
-        String bmlString = "<morphkeyframe xmlns=\""+BMLTBehaviour.BMLTNAMESPACE+"\" id=\"kf1\">"+
-                           "<MorphInterpolator parts=\"morph1 morph2\">"+
+        String bmlString = "<facekeyframe xmlns=\""+BMLTBehaviour.BMLTNAMESPACE+"\" id=\"kf1\">"+
+                           "<FaceInterpolator parts=\"morph1 morph2\">"+
                            "2 0.8 0.7\n"+
                            "3 0.6 0.5"+
-                           "</MorphInterpolator>"+
-                           "</morphkeyframe>";
+                           "</FaceInterpolator>"+
+                           "</facekeyframe>";
         BMLTFaceKeyframeBehaviour b =new BMLTFaceKeyframeBehaviour("bml1", new XMLTokenizer(bmlString));
         ArrayList<TimePegAndConstraint> sacs = new ArrayList<TimePegAndConstraint>();
         

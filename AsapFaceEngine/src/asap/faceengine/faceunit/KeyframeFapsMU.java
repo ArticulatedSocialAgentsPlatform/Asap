@@ -49,7 +49,7 @@ public class KeyframeFapsMU extends KeyframeFaceUnit
         int i = 0;
         for (Integer part : parts)
         {
-            config.setValue(part, Math.round(current[i]));
+            config.setValue(part-1, Math.round(current[i]));
             i++;
         }
         faceController.addMPEG4Configuration(config);
