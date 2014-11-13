@@ -21,7 +21,7 @@ public class KeyframeMorphFU extends KeyframeFaceUnit
     @Override
     public void play(double t)
     {
-        faceController.addMorphTargets(mi.getParts().toArray(new String[0]),this.getInterpolatedValue(t));
+        faceController.addMorphTargets(mi.getParts().toArray(new String[0]),getInterpolatedValue(t));
     }
 
     @Override

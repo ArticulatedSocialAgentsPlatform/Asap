@@ -16,6 +16,11 @@ import com.google.common.collect.ImmutableList;
 import lombok.Data;
 import asap.motionunit.MUPlayException;
 
+/**
+ * MotionUnit for AU keyframe animation
+ * @author herwinvw
+ *
+ */
 public class KeyframeFacsFU extends KeyframeFaceUnit
 {
     private FACSConverter facsConverter;
