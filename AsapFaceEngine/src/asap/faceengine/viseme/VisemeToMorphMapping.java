@@ -35,17 +35,24 @@ import java.util.Map;
 public class VisemeToMorphMapping extends XMLStructureAdapter
 {
     
-    private Map<Integer,MorphVisemeDescription> mappings = new HashMap<Integer,MorphVisemeDescription>();
+    private Map<String,MorphVisemeDescription> mappings = new HashMap<String,MorphVisemeDescription>();
 
     /**
      * Get the morph target name for viseme vis. Returns null if not found.
      */
     public MorphVisemeDescription getMorphTargetForViseme(int vis)
     {
-      return mappings.get(Integer.valueOf(vis));
+      return mappings.get(String.valueOf(vis));
     }
 
-
+    /**
+     * Get the morph target name for viseme vis. Returns null if not found.
+     */
+    public MorphVisemeDescription getMorphTargetForViseme(String vis)
+    {
+      return mappings.get(Integer.valueOf(vis));
+    }
+    
     @Override
     public void decodeContent(XMLTokenizer tokenizer) throws IOException
     {
@@ -54,10 +61,10 @@ public class VisemeToMorphMapping extends XMLStructureAdapter
             String tag = tokenizer.getTagName();
             if (!tag.equals("Mapping")) throw new XMLScanException("Unknown element in VisemeToMorphMapping: "+tag);
             HashMap<String, String> attrMap = tokenizer.getAttributes();
-            int viseme = getRequiredIntAttribute("viseme", attrMap, tokenizer);
+            String viseme = getRequiredAttribute("viseme", attrMap, tokenizer);
             String target = getRequiredAttribute("target", attrMap, tokenizer);
             float intensity = getOptionalFloatAttribute("intensity",attrMap, 1f);
-            mappings.put(Integer.valueOf(viseme),new MorphVisemeDescription(target.split(","),intensity));
+            mappings.put(viseme,new MorphVisemeDescription(target.split(","),intensity));
             tokenizer.takeSTag("Mapping");
             tokenizer.takeETag("Mapping");
         }
