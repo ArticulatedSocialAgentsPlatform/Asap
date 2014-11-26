@@ -24,7 +24,12 @@ import hmi.xml.XMLTokenizer;
 
 import java.io.IOException;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.Map;
+import java.util.Map.Entry;
+import java.util.Set;
+
+import com.google.common.collect.ImmutableSet;
 /**
  * given a viseme number, return the appropriate morph target name. 
  * 
@@ -37,6 +42,19 @@ public class VisemeToMorphMapping extends XMLStructureAdapter
     
     private Map<String,MorphVisemeDescription> mappings = new HashMap<String,MorphVisemeDescription>();
 
+    /**
+     * Get the set of morph ids used in the mapping
+     */
+    public Set<String> getUsedMorphs()
+    {
+        Set<String> morphs = new HashSet<String>();
+        for(Entry<String,MorphVisemeDescription> entry:mappings.entrySet())
+        {
+            morphs.addAll(entry.getValue().morphNames);
+        }
+        return ImmutableSet.copyOf(morphs);
+    }
+    
     /**
      * Get the morph target name for viseme vis. Returns null if not found.
      */
