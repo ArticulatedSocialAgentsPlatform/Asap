@@ -68,7 +68,7 @@ public class VisemeToMorphMapping extends XMLStructureAdapter
      */
     public MorphVisemeDescription getMorphTargetForViseme(String vis)
     {
-      return mappings.get(Integer.valueOf(vis));
+      return mappings.get(vis);
     }
     
     @Override
