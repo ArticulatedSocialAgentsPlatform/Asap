@@ -21,7 +21,10 @@ package asap.audioengine;
 import hmi.audioenvironment.SoundManager;
 import hmi.util.Resources;
 
+import java.io.IOException;
 import java.io.InputStream;
+import java.net.MalformedURLException;
+import java.net.URL;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -61,7 +64,23 @@ public class AudioPlanner extends AbstractPlanner<TimedAbstractAudioUnit>
     private TimedAbstractAudioUnit createAudioUnit(BMLBlockPeg bbPeg, Behaviour b) throws BehaviourPlanningException
     {
         BMLTAudioFileBehaviour bAudio = (BMLTAudioFileBehaviour) b;
-        InputStream inputStream = audioResource.getInputStream(bAudio.getStringParameterValue("fileName"));
+        String fileName = bAudio.getStringParameterValue("fileName");
+        InputStream inputStream = audioResource.getInputStream(fileName);
+        if(inputStream == null)
+        {
+            try
+            {
+                inputStream = new URL(fileName).openStream();
+            }
+            catch (MalformedURLException e)
+            {
+                throw new BehaviourPlanningException(b,"Cannot find audio file "+bAudio.getStringParameterValue("fileName"),e);
+            }
+            catch (IOException e)
+            {
+                throw new BehaviourPlanningException(b,"Cannot find audio file "+bAudio.getStringParameterValue("fileName"),e);
+            }
+        }
         if(inputStream == null)
         {
             throw new BehaviourPlanningException(b,"Cannot find audio file "+bAudio.getStringParameterValue("fileName"));
