@@ -140,8 +140,12 @@ public class AsapVirtualHuman
 
         try
         {
+            if (vhId.isEmpty())
+            {
+                attrMap = theTokenizer.getAttributes();
+                vhId = adapter.getOptionalAttribute("id", attrMap, vhId);
+            }
             theTokenizer.takeSTag("AsapVirtualHuman");
-
             Loader loader = null;
 
             loader = new EmbodimentLoader()
@@ -227,7 +231,7 @@ public class AsapVirtualHuman
                 }
                 // always add "are" -- just in case someone forgets
                 requiredLoaders.add(are);
-                loader = constructLoader(loaderClass);                
+                loader = constructLoader(loaderClass);
                 theTokenizer.takeSTag("Loader");
                 log.debug("Parsing Loader: {}", id);
                 loader.readXML(theTokenizer, id, vhId, name, allEnvironments, requiredLoaders.toArray(new Loader[0]));
@@ -238,11 +242,11 @@ public class AsapVirtualHuman
                     log.info("Adding engine {}", loader.getId());
                     engines.add(((EngineLoader) loader).getEngine());
                 }
-                if(loader instanceof CompoundLoader)
+                if (loader instanceof CompoundLoader)
                 {
-                    for(Loader l: ((CompoundLoader)loader).getParts())
+                    for (Loader l : ((CompoundLoader) loader).getParts())
                     {
-                        loaders.put(l.getId(),l);
+                        loaders.put(l.getId(), l);
                     }
                 }
             }
@@ -356,13 +360,13 @@ public class AsapVirtualHuman
                     }
                     else
                     {
-                        throw new XMLScanException("The class \""+behaviorClassName+"\" is not a bml Behaviour class");
+                        throw new XMLScanException("The class \"" + behaviorClassName + "\" is not a bml Behaviour class");
                     }
                 }
                 catch (Exception e)
                 {
                     log.error("Cannot find behaviorclass \"{}\"", behaviorClassName);
-                    throw new XMLScanException("Cannot find behaviorclass "+behaviorClassName,e);
+                    throw new XMLScanException("Cannot find behaviorclass " + behaviorClassName, e);
                 }
             }
             theTokenizer.takeSTag("Route");

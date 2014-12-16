@@ -108,7 +108,7 @@ public class AsapEnvironment implements Environment, ClockListener
             }
         }
     }
-    
+
     @Override
     public void initTime(double currentTime)
     {
@@ -127,7 +127,6 @@ public class AsapEnvironment implements Environment, ClockListener
         synchronized (shutdownSync)
         {
             if (shutdownPrepared) return null;
-            if (virtualHumans.containsKey(id)) throw new RuntimeException("Duplicate id for virtual human!");
             AsapVirtualHuman avh = new AsapVirtualHuman();
             avh.setVhId(id);
             avh.load(resources, fileName, name, environments, schedulingClock);
@@ -136,11 +135,17 @@ public class AsapEnvironment implements Environment, ClockListener
         }
     }
 
+    public AsapVirtualHuman loadVirtualHuman(String resources, String fileName, String name) throws IOException
+    {
+        return loadVirtualHuman("", resources, fileName, name);
+    }
+
     public void addVirtualHuman(AsapVirtualHuman avh)
     {
         synchronized (shutdownSync)
         {
             if (shutdownPrepared) return;
+            if (virtualHumans.containsKey(id)) throw new RuntimeException("Duplicate id for virtual human!");
             synchronized (virtualHumans)
             {
                 virtualHumans.put(avh.getVhId(), avh);
