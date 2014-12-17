@@ -237,7 +237,7 @@ public class BMLFlowVisualizerPort implements RealizerPort, BMLFeedbackListener 
 						bmlBlocks.get(fbBlock.getBmlId()).start(time);
 					}
 				} else {
-					System.out.println("Blog with id: " + fbBlock.getBmlId()
+					System.out.println("BMLABlockProgressFeedback with id: " + fbBlock.getBmlId()+":"+fbBlock.getSyncId()
 							+ " not present for feedback.");
 				}
 			}
@@ -258,7 +258,7 @@ public class BMLFlowVisualizerPort implements RealizerPort, BMLFeedbackListener 
 						bmlBlocks.get(b.getBmlId())
 								.updateBehaviourSyncPoints(b);
 					} else {
-						System.out.println("Blog with id: " + b.getBmlId()
+						System.out.println("BMLABlockProgressFeedback with id: " + b.getBmlId()
 								+ " not present for feedback.");
 					}
 				}
@@ -268,7 +268,7 @@ public class BMLFlowVisualizerPort implements RealizerPort, BMLFeedbackListener 
 				if (bmlBlocks.containsKey(wf.getId())) {
 					bmlBlocks.get(wf.getId()).addFeedback(info);
 				} else {
-					System.out.println("Blog with id: " + wf.getId()
+					System.out.println("BMLWarningFeedback with id: " + wf.getId()
 							+ " not present for feedback.");
 				}
 			}
@@ -277,7 +277,7 @@ public class BMLFlowVisualizerPort implements RealizerPort, BMLFeedbackListener 
 				if (bmlBlocks.containsKey(sf.getBMLId())) {
 					bmlBlocks.get(sf.getBMLId()).addFeedback(info);
 				} else {
-					System.out.println("Blog with id: " + sf.getBMLId()
+					System.out.println("BMLSyncPointProgressFeedback with id: " + sf.getBMLId() +":"+sf.getBehaviourId()
 							+ " not present for feedback.");
 				}
 			}

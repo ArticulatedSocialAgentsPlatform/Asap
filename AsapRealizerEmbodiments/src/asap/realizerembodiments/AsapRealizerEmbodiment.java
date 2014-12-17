@@ -157,7 +157,7 @@ public class AsapRealizerEmbodiment implements EmbodimentLoader, Embodiment
 
         // FIXME assumes that the XML element starts with the scheduler information
         bmlBlockManager = new BMLBlockManager();
-        feedbackManager = new FeedbackManagerImpl(bmlBlockManager, name);
+        feedbackManager = new FeedbackManagerImpl(bmlBlockManager, vhId);
         bmlScheduler = readSchedulerSection(bmlBlockManager, parser, feedbackManager);
 
         // ========= construct realizer and realizerport
@@ -207,14 +207,14 @@ public class AsapRealizerEmbodiment implements EmbodimentLoader, Embodiment
 
         if (theTokenizer.atSTag("BMLScheduler"))
         {
-            BMLSchedulerAssembler assembler = new BMLSchedulerAssembler(name, parser, feedbackManager, bmlBlockManager, theSchedulingClock,
+            BMLSchedulerAssembler assembler = new BMLSchedulerAssembler(vhId, parser, feedbackManager, bmlBlockManager, theSchedulingClock,
                     pegBoard);
             assembler.readXML(theTokenizer);
             scheduler = assembler.getBMLScheduler();
         }
         else
         {
-            scheduler = new BMLScheduler(name, parser, feedbackManager, theSchedulingClock, new BMLASchedulingHandler(
+            scheduler = new BMLScheduler(vhId, parser, feedbackManager, theSchedulingClock, new BMLASchedulingHandler(
                     new SortedSmartBodySchedulingStrategy(pegBoard), pegBoard), bmlBlockManager, pegBoard);
         }
         return scheduler;
