@@ -8,6 +8,12 @@ import java.awt.Graphics2D;
 import javax.swing.JComponent;
 import javax.swing.plaf.LayerUI;
 
+/**
+ * Custom LayerUI to draw the timeline over the panel.
+ * @author jpoeppel
+ *
+ */
+
 public class HistPanelUI extends LayerUI<ScrollPanel> {
 
 	private static final long serialVersionUID = -8809179249995416382L;

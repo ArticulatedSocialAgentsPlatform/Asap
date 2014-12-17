@@ -2,9 +2,3 @@
 * Differentiate between different interruptions (with exceptions/w/o)
 * Status SUBSIDING!
 * General GUI improvements
-* Performance tests/optimization
-
-
-!
-* Fix time error
-** Not really error. Depends on whether "IN_PREP" belongs to the scheduling or planning phase

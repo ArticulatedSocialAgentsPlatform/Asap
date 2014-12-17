@@ -69,7 +69,6 @@ public class BMLFlowVisualizerPort implements RealizerPort, BMLFeedbackListener 
 		realizerPort.addListeners(this);
 		ref = this;
 		firstTimestampKnown = false;
-
 		try {
 			SwingUtilities.invokeAndWait(new Runnable() {
 				@Override

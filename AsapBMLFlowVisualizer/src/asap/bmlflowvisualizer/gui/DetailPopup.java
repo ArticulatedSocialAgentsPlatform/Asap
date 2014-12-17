@@ -6,6 +6,12 @@ import javax.swing.JFrame;
 import javax.swing.JScrollPane;
 import javax.swing.JTextArea;
 
+/**
+ * Custom popup to display details.
+ * @author jpoeppel
+ *
+ */
+
 @SuppressWarnings("serial")
 public class DetailPopup extends JFrame {
 
