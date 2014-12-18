@@ -61,8 +61,6 @@ public class SearchDialog extends JFrame {
 			@Override
 			public void doubleClick(MouseEvent e) {
 				JTable target = (JTable) e.getSource();
-				System.out.println("Table dclicked at row: "
-						+ target.getSelectedRow());
 				visualization.addPopup((String) target.getModel().getValueAt(
 						target.getSelectedRow(), 0));
 			}
