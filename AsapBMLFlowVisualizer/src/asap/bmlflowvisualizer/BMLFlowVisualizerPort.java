@@ -258,7 +258,7 @@ public class BMLFlowVisualizerPort implements RealizerPort, BMLFeedbackListener 
 						bmlBlocks.get(b.getBmlId())
 								.updateBehaviourSyncPoints(b);
 					} else {
-						System.out.println("BMLABlockProgressFeedback with id: " + b.getBmlId()
+						System.out.println("BMLAPredictionFeedback of behavior" + b.getBmlId()+":"+b.id
 								+ " not present for feedback.");
 					}
 				}

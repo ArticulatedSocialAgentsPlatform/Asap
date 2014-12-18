@@ -24,6 +24,11 @@ public abstract class MURMLBehaviour extends Behaviour
         super(bmlId);        
     }
     
+    public MURMLBehaviour(String bmlId, String id)
+    {
+        super(bmlId, id);        
+    }
+    
     static final String MURMLNAMESPACE = "http://www.techfak.uni-bielefeld.de/ags/soa/murml";
 
     @Override

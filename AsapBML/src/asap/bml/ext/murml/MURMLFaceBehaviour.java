@@ -22,7 +22,11 @@ public class MURMLFaceBehaviour extends MURMLBehaviour
         readXML(tokenizer);
     }
 
-    
+    public MURMLFaceBehaviour(String bmlId, String id, XMLTokenizer tokenizer) throws IOException
+    {
+        super(bmlId, id);
+        readXML(tokenizer);
+    }
 
     /*
      * The XML Stag for XML encoding

@@ -16,12 +16,18 @@ public class MURMLGestureBehaviour extends MURMLBehaviour
 {
     public MURMLGestureBehaviour(String bmlId)
     {
-        super(bmlId);        
+        super(bmlId);
     }
-    
+
     public MURMLGestureBehaviour(String bmlId, XMLTokenizer tokenizer) throws IOException
     {
         super(bmlId);
+        readXML(tokenizer);
+    }
+
+    public MURMLGestureBehaviour(String bmlId, String id, XMLTokenizer tokenizer) throws IOException
+    {
+        super(bmlId, id);
         readXML(tokenizer);
     }
 
@@ -44,7 +50,7 @@ public class MURMLGestureBehaviour extends MURMLBehaviour
     {
         return DEFAULT_SYNCS;
     }
-    
+
     @Override
     public void addDefaultSyncPoints()
     {

@@ -34,10 +34,10 @@ public class MaryXMLBaseBehaviourTest
             this.behClass = behClass;
         }
 
-        public MaryXMLBaseBehaviour createBehavior(String bmlId, String bml) throws IOException, InstantiationException,
+        public MaryXMLBaseBehaviour createBehavior(String bmlId, String id, String bml) throws IOException, InstantiationException,
                 IllegalAccessException, InvocationTargetException, NoSuchMethodException 
         {
-            return behClass.getConstructor(String.class, XMLTokenizer.class).newInstance(bmlId, new XMLTokenizer(bml));
+            return behClass.getConstructor(String.class, String.class, XMLTokenizer.class).newInstance(bmlId, id, new XMLTokenizer(bml));
         }
     }
 
@@ -60,7 +60,7 @@ public class MaryXMLBaseBehaviourTest
             InvocationTargetException, NoSuchMethodException
     {
         String str = "<maryxml xmlns=\"" + MaryXMLBaseBehaviour.NAMESPACE + "\" >" + "Hello world!" + "</maryxml>";
-        beh = factory.createBehavior("bml1", str);
+        beh = factory.createBehavior("bml1", "beh1", str);
     }
 
     @Test
@@ -75,7 +75,8 @@ public class MaryXMLBaseBehaviourTest
     {
         StringBuilder buf = new StringBuilder();
         beh.appendXML(buf);
-        MaryXMLBaseBehaviour behOut = factory.createBehavior("bml1", buf.toString());
+        MaryXMLBaseBehaviour behOut = factory.createBehavior("bml1", "beh1", buf.toString());
         assertEquals("Hello world!", behOut.getContent().trim());
+        assertEquals("bml1",behOut.getBmlId());        
     }
 }

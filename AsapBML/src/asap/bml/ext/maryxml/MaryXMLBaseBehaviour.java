@@ -4,7 +4,6 @@ import hmi.xml.XMLFormatting;
 import hmi.xml.XMLTokenizer;
 
 import java.io.IOException;
-import java.util.HashMap;
 
 import saiba.bml.core.SpeechBehaviour;
 
@@ -20,13 +19,11 @@ class MaryXMLBaseBehaviour extends SpeechBehaviour
         super(bmlId, tokenizer);        
     }
     
-    @Override
-    public void decodeAttributes(HashMap<String, String> attrMap,
-            XMLTokenizer tokenizer)
+    public MaryXMLBaseBehaviour(String bmlId, String id, XMLTokenizer tokenizer) throws IOException
     {
-        // empty, 'cause id is not required
+        super(bmlId, id, tokenizer);        
     }
-
+    
     @Override
     public void decodeContent(XMLTokenizer tokenizer) throws IOException
     {

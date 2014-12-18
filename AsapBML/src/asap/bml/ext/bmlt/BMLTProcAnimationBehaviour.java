@@ -63,6 +63,12 @@ public class BMLTProcAnimationBehaviour extends BMLTBehaviour
         super(bmlId);
         readXML(tokenizer);
     }
+    
+    public BMLTProcAnimationBehaviour(String bmlId,String id, XMLTokenizer tokenizer) throws IOException
+    {
+        super(bmlId,id);
+        readXML(tokenizer);
+    }
 
     @Override
     public StringBuilder appendAttributeString(StringBuilder buf, XMLFormatting fmt)

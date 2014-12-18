@@ -13,4 +13,9 @@ public class MaryWordsBehaviour extends MaryXMLBaseBehaviour
     {
         super(bmlId, tokenizer);        
     }    
+    
+    public MaryWordsBehaviour(String bmlId, String id, XMLTokenizer tokenizer) throws IOException
+    {
+        super(bmlId, id, tokenizer);        
+    } 
 }

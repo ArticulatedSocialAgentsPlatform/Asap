@@ -13,4 +13,9 @@ public class MaryAllophonesBehaviour extends MaryXMLBaseBehaviour
     {
         super(bmlId, tokenizer);        
     }
+    
+    public MaryAllophonesBehaviour(String bmlId, String id, XMLTokenizer tokenizer) throws IOException
+    {
+        super(bmlId, id, tokenizer);        
+    }
 }
