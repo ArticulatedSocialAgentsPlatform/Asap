@@ -132,7 +132,7 @@ public class InfoScreen extends JFrame {
 				"<HTML>The left side symbolises the time history of all blocks. "
 						+ "The top part for planned blocks, the middle for scheduled blocks and the "
 						+ "lowest for played blocks. The right side displayes a detailed view for the "
-						+ "current time (red line). A dotted line between 2 blocks means they have an append connection"
+						+ "current time (red line). A dotted line between 2 blocks means they have an append connection "
 						+ "and a complete line means that they have a chunk connection.</HTML>");
 		c.insets = new Insets(10, 0, 0, 0);
 		c.gridwidth = 2;
