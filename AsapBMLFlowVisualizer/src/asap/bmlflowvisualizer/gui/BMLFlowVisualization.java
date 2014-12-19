@@ -17,7 +17,6 @@ import java.awt.event.KeyAdapter;
 import java.awt.event.KeyEvent;
 import java.awt.event.MouseEvent;
 import java.awt.image.BufferedImage;
-import java.text.NumberFormat;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashMap;
@@ -27,11 +26,9 @@ import java.util.Map.Entry;
 
 import javax.swing.BorderFactory;
 import javax.swing.BoundedRangeModel;
-import javax.swing.Box;
 import javax.swing.BoxLayout;
 import javax.swing.JButton;
 import javax.swing.JCheckBox;
-import javax.swing.JFormattedTextField;
 import javax.swing.JLabel;
 import javax.swing.JLayer;
 import javax.swing.JMenu;
@@ -44,8 +41,7 @@ import javax.swing.JTextField;
 import javax.swing.KeyStroke;
 import javax.swing.event.ChangeEvent;
 import javax.swing.event.ChangeListener;
-import javax.swing.text.DefaultFormatterFactory;
-import javax.swing.text.NumberFormatter;
+
 
 import asap.bml.ext.bmla.BMLABMLBehaviorAttributes;
 import asap.bmlflowvisualizer.BMLFlowVisualizerPort;
@@ -269,7 +265,7 @@ public class BMLFlowVisualization extends JPanel {
 					// then change the text to the text before (means: ignore
 					// the user input)
 					try {
-						float f = Float.parseFloat(timeField.getText());
+						Float.parseFloat(timeField.getText());
 						oldString = timeField.getText();
 
 					} catch (NumberFormatException el) {
@@ -283,7 +279,12 @@ public class BMLFlowVisualization extends JPanel {
 			
 			@Override
 			public void actionPerformed(ActionEvent e) {
-				jumpToTime((long)(Float.parseFloat(timeField.getText())*1000));	
+				try {
+					jumpToTime((long)(Float.parseFloat(timeField.getText())*1000));	
+				} catch(NumberFormatException el){
+					System.out.println("Incorrect time value.");
+				}
+				
 			}
 		});
 		panel.add(timeField);
@@ -293,7 +294,11 @@ public class BMLFlowVisualization extends JPanel {
 
 			@Override
 			public void actionPerformed(ActionEvent e) {
-				jumpToTime((long)(Float.parseFloat(timeField.getText())*1000));
+				try {
+					jumpToTime((long)(Float.parseFloat(timeField.getText())*1000));	
+				} catch(NumberFormatException el){
+					System.out.println("Incorrect time value.");
+				}
 			}
 		});
 		panel.add(jtTB);

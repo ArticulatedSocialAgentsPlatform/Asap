@@ -6,6 +6,12 @@ import java.awt.Rectangle;
 import javax.swing.JPanel;
 import javax.swing.Scrollable;
 
+/**
+ * Custom JPanel extension that allows better scrolling.
+ * @author jpoeppel
+ *
+ */
+
 public class ScrollPanel extends JPanel implements Scrollable {
 	
 	private static final long serialVersionUID = 4377045349264326581L;

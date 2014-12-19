@@ -8,6 +8,13 @@ import java.awt.image.BufferedImage;
 import javax.swing.BorderFactory;
 import javax.swing.JPanel;
 
+/**
+ * Custom JPanel extension that makes it easier to do drawings.
+ * 
+ * @author jpoeppel
+ *
+ */
+
 public class ContentPanel extends JPanel {
 
 	private static final long serialVersionUID = 5012761048626998527L;
