@@ -221,7 +221,6 @@ public class DAGUtilsTest
         assertEquals(new Point(0,2), layout.get("bml3"));
     }
     
-    @SuppressWarnings("unchecked")
     @Test
     public void layoutTree()
     {
@@ -233,7 +232,6 @@ public class DAGUtilsTest
         assertThat(layout.get("bml3"), anyOf( equalTo(new Point(0,1)), equalTo(new Point(1,1))));        
     }
     
-    @SuppressWarnings("unchecked")
     @Test
     public void layout()
     {
