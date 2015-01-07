@@ -1,3 +1,5 @@
+/*******************************************************************************
+ *******************************************************************************/
 package asap.animationengine.procanimation;
 
 import static hmi.testutil.math.Vec3fTestUtil.assertVec3fEquals;

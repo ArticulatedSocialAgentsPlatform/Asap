@@ -1,3 +1,5 @@
+/*******************************************************************************
+ *******************************************************************************/
 package asap.animationengine.motionunit;
 
 import static org.hamcrest.MatcherAssert.assertThat;

@@ -1,3 +1,5 @@
+/*******************************************************************************
+ *******************************************************************************/
 package asap.animationengine.gesturebinding;
 
 import static hmi.testutil.math.Vec3fTestUtil.assertVec3fEquals;

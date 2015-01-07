@@ -1,3 +1,5 @@
+/*******************************************************************************
+ *******************************************************************************/
 package asap.bml.ext.bmla.parser;
 
 import static asap.bml.parser.ParserTestUtil.assertEqualConstraints;

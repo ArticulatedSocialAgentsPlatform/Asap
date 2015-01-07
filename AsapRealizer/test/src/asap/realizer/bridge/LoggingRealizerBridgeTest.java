@@ -1,3 +1,5 @@
+/*******************************************************************************
+ *******************************************************************************/
 package asap.realizer.bridge;
 
 import static asap.testutil.bml.feedback.FeedbackAsserts.assertOneFeedback;
