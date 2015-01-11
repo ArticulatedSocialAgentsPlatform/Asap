@@ -42,7 +42,6 @@ public class PictureUnitSpec extends XMLStructureAdapter
     public PictureUnit pictureUnit;
     private String type;
     private String specnamespace;
-    private SpecParameterMap parametermap = new SpecParameterMap();
     /**
      * @return the type
      */
@@ -60,6 +59,7 @@ public class PictureUnitSpec extends XMLStructureAdapter
     }
 
     private SpecConstraints constraints = new SpecConstraints();
+    private SpecParameterMap parametermap = new SpecParameterMap();
     private SpecParameterDefaults parameterdefaults = new SpecParameterDefaults();
 
     public boolean satisfiesConstraints(Behaviour b)
@@ -104,8 +104,7 @@ public class PictureUnitSpec extends XMLStructureAdapter
             String tag = tokenizer.getTagName();
             if (tag.equals(SpecConstraints.xmlTag()))
             {
-                SpecConstraints pusc = new SpecConstraints();
-                pusc.readXML(tokenizer);
+                constraints.readXML(tokenizer);                                
             }
             else if (tag.equals(SpecParameterMap.xmlTag()))
             {
