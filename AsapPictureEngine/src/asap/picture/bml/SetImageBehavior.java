@@ -31,6 +31,7 @@ public class SetImageBehavior extends PictureBehaviour
 {
     private String filePath;
     private String fileName;
+    private float layer;
 
     @Override
     public boolean satisfiesConstraint(String name, String value)
@@ -51,6 +52,7 @@ public class SetImageBehavior extends PictureBehaviour
     {
         appendAttribute(buf, "filePath", filePath.toString());
         appendAttribute(buf, "fileName", fileName.toString());
+        appendAttribute(buf, "layer", layer);
         return super.appendAttributeString(buf, fmt);
     }
 
@@ -59,6 +61,7 @@ public class SetImageBehavior extends PictureBehaviour
     {
         filePath = getRequiredAttribute("filePath", attrMap, tokenizer);
         fileName = getRequiredAttribute("fileName", attrMap, tokenizer);
+        layer = getRequiredFloatAttribute("layer", attrMap, tokenizer);
         super.decodeAttributes(attrMap, tokenizer);
     }
 
@@ -103,7 +106,7 @@ public class SetImageBehavior extends PictureBehaviour
     @Override
     public boolean specifiesParameter(String name)
     {
-        if (name.equals("filePath") || name.equals("fileName"))
+        if (name.equals("filePath") || name.equals("fileName") || name.equals("filelayer"))
         {
             return true;
         }
@@ -113,6 +116,10 @@ public class SetImageBehavior extends PictureBehaviour
     @Override
     public float getFloatParameterValue(String name)
     {
+        if (name.equals("layer"))
+        {
+            return layer;
+        }
         return super.getFloatParameterValue(name);
     }
 }

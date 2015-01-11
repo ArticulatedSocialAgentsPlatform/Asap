@@ -3,6 +3,7 @@ package asap.picture.swing;
 import hmi.util.SwingResources;
 
 import java.awt.BorderLayout;
+import java.awt.Dimension;
 import java.awt.Image;
 import java.util.HashMap;
 import java.util.TreeMap;
@@ -27,6 +28,8 @@ public class PictureJComponent implements PictureDisplay
     private HashMap<String, Image> cachedImages = new HashMap<String, Image>();
     private TreeMap<Float, ImageLayer> layers;
     private Logger logger = LoggerFactory.getLogger(PictureJFrame.class.getName());
+    private int width = 400;
+    private int height = 400; 
 
     /**
      * Pre-load an image from the given resource and cache it for future access
@@ -54,7 +57,16 @@ public class PictureJComponent implements PictureDisplay
 
     public PictureJComponent(JComponent parent)
     {
+    	this (parent, 400,400);
+    }
+    public PictureJComponent(JComponent parent, int w, int h)
+    {
+    	width=w;
+    	height = h;
         content = new ImagePanel();
+        content.setPreferredSize(new Dimension(w,h));
+        content.setMinimumSize(new Dimension(w,h));
+
         parent.add(content, BorderLayout.CENTER);
         layers = new TreeMap<Float, ImageLayer>();
     }
