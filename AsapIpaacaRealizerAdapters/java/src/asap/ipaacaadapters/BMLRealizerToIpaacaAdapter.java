@@ -34,13 +34,24 @@ public class BMLRealizerToIpaacaAdapter implements RealizerPort
         Initializer.initializeIpaacaRsb();
     }
 
-    private final InputBuffer inBuffer = new InputBuffer("BMLToIpaacaRealizerAdapter",
-            ImmutableSet.of(IpaacaBMLConstants.BML_FEEDBACK_CATEGORY));
-    private final OutputBuffer outBuffer = new OutputBuffer("BMLToIpaacaRealizerAdapter");
+    private final InputBuffer inBuffer;
+            
+    private final OutputBuffer outBuffer;
     private List<BMLFeedbackListener> feedbackListeners = Collections.synchronizedList(new ArrayList<BMLFeedbackListener>());
 
-    public BMLRealizerToIpaacaAdapter()
+    public BMLRealizerToIpaacaAdapter(String characterId)
     {
+        if(characterId!=null)
+        {
+            inBuffer = new InputBuffer("BMLToIpaacaRealizerAdapter",ImmutableSet.of(IpaacaBMLConstants.BML_FEEDBACK_CATEGORY), characterId);
+            outBuffer =  new OutputBuffer("BMLToIpaacaRealizerAdapter", characterId);
+        }
+        else
+        {
+            inBuffer = new InputBuffer("BMLToIpaacaRealizerAdapter",ImmutableSet.of(IpaacaBMLConstants.BML_FEEDBACK_CATEGORY));
+            outBuffer =  new OutputBuffer("BMLToIpaacaRealizerAdapter");
+        }
+        
         EnumSet<IUEventType> types = EnumSet.of(IUEventType.ADDED, IUEventType.MESSAGE);
         inBuffer.registerHandler(new IUEventHandler(new HandlerFunctor()
         {
@@ -61,6 +72,11 @@ public class BMLRealizerToIpaacaAdapter implements RealizerPort
                 ImmutableSet.of(IpaacaBMLConstants.BML_CATEGORY),ImmutableSet.of(IpaacaBMLConstants.BML_FEEDBACK_CATEGORY),
                 outBuffer, inBuffer);
         notifier.initialize();
+    }
+    
+    public BMLRealizerToIpaacaAdapter()
+    {
+        this(null);
     }
 
     @Override
