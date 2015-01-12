@@ -2,6 +2,7 @@
  *******************************************************************************/
 package asap.picture.swing;
 
+import java.awt.Color;
 import java.awt.Graphics;
 import java.awt.Image;
 import java.util.Collection;
@@ -28,7 +29,7 @@ public class ImagePanel extends JComponent
     @Override
     public void paintComponent(Graphics g)
     {
-        if (images != null && images.size() > 0)
+    	if (images != null && images.size() > 0)
         {
             // System.out.println("nrimg: " +images.size());
             // iterate over all images in the collection, drawing each one on top of the other
@@ -42,6 +43,5 @@ public class ImagePanel extends JComponent
             // images set is currently empty, so clear the display
             g.clearRect(0, 0, WIDTH, HEIGHT);
         }
-
     }
 }

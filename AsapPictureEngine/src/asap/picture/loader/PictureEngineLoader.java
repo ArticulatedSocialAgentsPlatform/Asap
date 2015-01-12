@@ -42,7 +42,7 @@ public class PictureEngineLoader implements EngineLoader
     // some variables cached during loading
     private PictureBinding pictureBinding = null;
     private AsapRealizerEmbodiment are = null;
-
+    
     @Override
     public void readXML(XMLTokenizer tokenizer, String loaderId, String vhId, String vhName, Environment[] environments,
             Loader... requiredLoaders) throws IOException
