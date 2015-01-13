@@ -4,10 +4,10 @@ package asap.realizer.feedback;
 
 import java.util.List;
 
-import saiba.bml.feedback.BMLBlockProgressFeedback;
-import saiba.bml.feedback.BMLPredictionFeedback;
 import saiba.bml.feedback.BMLSyncPointProgressFeedback;
 import saiba.bml.feedback.BMLWarningFeedback;
+import asap.bml.ext.bmla.feedback.BMLABlockProgressFeedback;
+import asap.bml.ext.bmla.feedback.BMLAPredictionFeedback;
 import asap.realizer.planunit.TimedPlanUnit;
 import asap.realizerport.BMLFeedbackListener;
 
@@ -37,11 +37,11 @@ public interface FeedbackManager
     
     ImmutableSet<String> getSyncsPassed(String bmlId, String behaviorId);
     
-    void blockProgress(BMLBlockProgressFeedback psf);
+    void blockProgress(BMLABlockProgressFeedback psf);
     
     void puException(TimedPlanUnit timedMU, String message, double time);
     
-    void prediction(BMLPredictionFeedback bpsf);    
+    void prediction(BMLAPredictionFeedback bpsf);    
     
     void warn(BMLWarningFeedback w);
 }

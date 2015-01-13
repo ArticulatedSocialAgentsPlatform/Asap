@@ -28,6 +28,7 @@ import saiba.bml.parser.SyncPoint;
 import asap.bml.ext.bmla.feedback.BMLABlockPredictionFeedback;
 import asap.bml.ext.bmla.feedback.BMLABlockProgressFeedback;
 import asap.bml.ext.bmla.feedback.BMLABlockStatus;
+import asap.bml.ext.bmla.feedback.BMLAPredictionFeedback;
 import asap.realizer.BehaviorNotFoundException;
 import asap.realizer.Engine;
 import asap.realizer.SyncPointNotFoundException;
@@ -72,7 +73,7 @@ public final class BMLScheduler
     {
         void warn(BMLWarningFeedback w);
 
-        void prediction(BMLPredictionFeedback bpf);
+        void prediction(BMLAPredictionFeedback bpf);
 
         void addFeedbackListener(BMLFeedbackListener e);
 
@@ -318,25 +319,25 @@ public final class BMLScheduler
         return new BMLABlockPredictionFeedback(bmlId, predictedStart, predictedEnd, status, posixStart, posixEnd);
     }
 
-    private BMLPredictionFeedback createStartPrediction(BehaviourBlock bb)
+    private BMLAPredictionFeedback createStartPrediction(BehaviourBlock bb)
     {
-        BMLPredictionFeedback bpf = new BMLPredictionFeedback();
+        BMLAPredictionFeedback bpf = new BMLAPredictionFeedback();
         bpf.addBMLBlockPrediction(createBMLABlockPredictionFeedback(bb.getBmlId(), BMLABlockStatus.IN_EXEC, getSchedulingTime(), predictEndTime(bb.getBmlId())));
         addBehaviorPredictions(bb, bpf);
         return bpf;
     }
 
-    private BMLPredictionFeedback createFilledBlockPrediction(BehaviourBlock bb, BMLABlockStatus status, double predictedStart, double predictedEnd)
+    private BMLAPredictionFeedback createFilledBlockPrediction(BehaviourBlock bb, BMLABlockStatus status, double predictedStart, double predictedEnd)
     {
-        BMLPredictionFeedback bpf = new BMLPredictionFeedback();
+        BMLAPredictionFeedback bpf = new BMLAPredictionFeedback();
         bpf.addBMLBlockPrediction(createBMLABlockPredictionFeedback(bb.getBmlId(), status, predictedStart, predictedEnd));
         addBehaviorPredictions(bb, bpf);
         return bpf;
     }
 
-    private BMLPredictionFeedback createSingleBlockPrediction(String bmlId, BMLABlockStatus status, double predictedStart, double predictedEnd)
+    private BMLAPredictionFeedback createSingleBlockPrediction(String bmlId, BMLABlockStatus status, double predictedStart, double predictedEnd)
     {
-        BMLPredictionFeedback bpf = new BMLPredictionFeedback();
+        BMLAPredictionFeedback bpf = new BMLAPredictionFeedback();
         bpf.addBMLBlockPrediction(createBMLABlockPredictionFeedback(bmlId, status, predictedStart, predictedEnd));
         return bpf;
     }
