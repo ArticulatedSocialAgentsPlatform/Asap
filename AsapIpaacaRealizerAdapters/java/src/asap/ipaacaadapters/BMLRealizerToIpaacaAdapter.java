@@ -99,10 +99,10 @@ public class BMLRealizerToIpaacaAdapter implements RealizerPort
     @Override
     public void performBML(String bmlString)
     {
-        LocalMessageIU feedbackIU = new LocalMessageIU();
-        feedbackIU.setCategory(IpaacaBMLConstants.BML_CATEGORY);
-        feedbackIU.getPayload().put(IpaacaBMLConstants.BML_KEY, bmlString);
-        outBuffer.add(feedbackIU);
+        LocalMessageIU iu = new LocalMessageIU();
+        iu.setCategory(IpaacaBMLConstants.BML_CATEGORY);
+        iu.getPayload().put(IpaacaBMLConstants.BML_KEY, bmlString);
+        outBuffer.add(iu);
     }
 
     public void close()
