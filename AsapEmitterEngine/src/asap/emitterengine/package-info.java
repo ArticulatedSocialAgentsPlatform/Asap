@@ -1,3 +1,5 @@
+/*******************************************************************************
+ *******************************************************************************/
 /**
 The Emitter Engine gives us BML level control over Emitters.
 <p>An Emitter will autonomously, possibly on its own thread, generate and send to a Realizer little blocks of BML behavior, such

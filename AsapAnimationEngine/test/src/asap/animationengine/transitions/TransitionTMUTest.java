@@ -1,3 +1,5 @@
+/*******************************************************************************
+ *******************************************************************************/
 package asap.animationengine.transitions;
 
 import static org.mockito.AdditionalMatchers.eq;

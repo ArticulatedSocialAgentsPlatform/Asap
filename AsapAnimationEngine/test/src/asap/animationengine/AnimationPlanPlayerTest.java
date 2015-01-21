@@ -1,3 +1,5 @@
+/*******************************************************************************
+ *******************************************************************************/
 package asap.animationengine;
 
 import static asap.realizertestutil.util.KeyPositionMocker.stubKeyPositions;

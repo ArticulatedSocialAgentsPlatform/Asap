@@ -1,3 +1,5 @@
+/*******************************************************************************
+ *******************************************************************************/
 package asap.realizerintegrationtests;
 
 import static org.hamcrest.number.OrderingComparison.greaterThan;

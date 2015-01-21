@@ -1,3 +1,5 @@
+/*******************************************************************************
+ *******************************************************************************/
 package asap.bmlflowvisualizer.loader;
 
 import static org.mockito.Matchers.any;
@@ -17,7 +19,7 @@ import javax.swing.JComponent;
 import org.junit.Before;
 import org.junit.Test;
 
-import asap.bmlflowvisualizer.BMLFlowVisualizerPort;
+import saiba.bmlflowvisualizer.BMLFlowVisualizerPort;
 import asap.realizerembodiments.AsapRealizerEmbodiment;
 import asap.realizerembodiments.PipeLoader;
 

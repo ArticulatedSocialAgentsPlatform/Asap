@@ -1,3 +1,5 @@
+/*******************************************************************************
+ *******************************************************************************/
 package asap.ipaacaadapters.loader;
 
 import hmi.util.Clock;
@@ -28,7 +30,7 @@ public class IpaacaToBMLRealizerAdapterLoader implements PipeLoader
             throws IOException
     {
         adaptedRealizerPort = realizerPort;
-        ipaacaAdapter = new IpaacaToBMLRealizerAdapter(realizerPort);        
+        ipaacaAdapter = new IpaacaToBMLRealizerAdapter(realizerPort, vhId);        
         if (!theTokenizer.atETag("PipeLoader")) throw new XMLScanException("IpaacaToBMLRealizerAdapterLoader should be an empty element");
     }
 
