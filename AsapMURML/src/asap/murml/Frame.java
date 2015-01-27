@@ -2,6 +2,7 @@
  *******************************************************************************/
 package asap.murml;
 
+import hmi.xml.XMLFormatting;
 import hmi.xml.XMLTokenizer;
 
 import java.io.IOException;
@@ -20,18 +21,37 @@ public class Frame extends MURMLElement
 
     @Getter
     private Posture posture;
-    
+
     public Frame()
     {
-        
+
     }
-    
+
     public Frame(double ftime, Posture p)
     {
         this.ftime = ftime;
         this.posture = p;
     }
-    
+
+    @Override
+    public boolean hasContent()
+    {
+        return true;
+    }
+
+    @Override
+    public StringBuilder appendAttributes(StringBuilder buf)
+    {
+        appendAttribute(buf, "ftime", ftime);
+        return buf;
+    }
+
+    @Override
+    public StringBuilder appendContent(StringBuilder buf, XMLFormatting fmt)
+    {
+        return posture.appendXML(buf, fmt);
+    }
+
     @Override
     public void decodeAttributes(HashMap<String, String> attrMap, XMLTokenizer tokenizer)
     {

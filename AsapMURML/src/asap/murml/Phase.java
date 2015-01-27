@@ -2,6 +2,7 @@
  *******************************************************************************/
 package asap.murml;
 
+import hmi.xml.XMLFormatting;
 import hmi.xml.XMLTokenizer;
 
 import java.io.IOException;
@@ -23,6 +24,13 @@ public class Phase extends MURMLElement
     public boolean hasContent()
     {
         return true;
+    }
+    
+    @Override
+    public StringBuilder appendContent(StringBuilder buf, XMLFormatting fmt)
+    {
+        appendXMLStructureList(buf, fmt, frames);
+        return buf;
     }
     
     @Override

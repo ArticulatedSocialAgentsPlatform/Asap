@@ -2,6 +2,7 @@
  *******************************************************************************/
 package asap.murml;
 
+import hmi.xml.XMLFormatting;
 import hmi.xml.XMLScanException;
 import hmi.xml.XMLTokenizer;
 
@@ -21,6 +22,13 @@ public class Sequence extends MURMLElement implements MovementConstraint
     @Getter
     private List<MovementConstraint> sequence = new ArrayList<>();
 
+    @Override
+    public StringBuilder appendContent(StringBuilder buf, XMLFormatting fmt)
+    {
+        appendXMLStructureList(buf, fmt, sequence);
+        return buf;
+    }
+    
     static final String XMLTAG = "sequence";
 
     public static String xmlTag()

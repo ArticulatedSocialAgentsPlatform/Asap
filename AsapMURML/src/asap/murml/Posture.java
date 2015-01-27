@@ -2,6 +2,7 @@
  *******************************************************************************/
 package asap.murml;
 
+import hmi.xml.XMLFormatting;
 import hmi.xml.XMLTokenizer;
 
 import java.io.IOException;
@@ -11,6 +12,9 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 import lombok.Getter;
+
+import com.google.common.base.Joiner;
+import com.google.common.primitives.Floats;
 
 /**
  * Parses a MURML posture
@@ -26,6 +30,24 @@ public class Posture extends MURMLElement
     public boolean hasContent()
     {
         return true;
+    }
+    
+    @Override
+    public StringBuilder appendContent(StringBuilder buf, XMLFormatting fmt)
+    {
+        for(JointValue v:jointValues)
+        {
+            buf.append("(");
+            buf.append(v.jointSid);
+            buf.append(" ");
+            if(v.dofs.length>1)
+            {
+                buf.append(v.dofs.length+" ");
+            }
+            buf.append(Joiner.on(" ").join(Floats.asList(v.dofs)));
+            buf.append(")");
+        }
+        return buf;
     }
     
     @Override
