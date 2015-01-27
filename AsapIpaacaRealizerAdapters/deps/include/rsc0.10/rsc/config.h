@@ -1,3 +1,0 @@
-#define RSC_HAVE_NO_INIT_METHOD_ERROR
-
-#define RSC_INSTALL_PREFIX ""
