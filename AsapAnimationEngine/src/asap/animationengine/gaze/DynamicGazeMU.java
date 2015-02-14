@@ -55,7 +55,8 @@ public class DynamicGazeMU extends AbstractGazeMU
 
     private TimeManipulator tmpThoracic;
     private TimeManipulator tmpCervical;
-
+    private VJoint skullbase;
+    
     private ImmutableList<VJoint> joints;
     private ImmutableList<VJoint> cervicalJoints;
     private ImmutableList<VJoint> thoracicJoints;
@@ -241,19 +242,22 @@ public class DynamicGazeMU extends AbstractGazeMU
     @Override
     public void setStartPose() throws MUPlayException
     {
-        VJoint vjTop = joints.get(joints.size() - 1);
-        VJoint vjRoot = joints.get(0);
-        vjTop.getPathRotation(vjRoot, qStartCombined);
-
-        qStart = new float[joints.size() * 4];
-        int i = 0;
-        for (VJoint vj : joints)
+        if(joints.size()>0)//setup spine+neck rotations
         {
-            VJoint vjCur = player.getVCurrPartBySid(vj.getSid());
+            VJoint vjTop = joints.get(joints.size() - 1);
+            VJoint vjRoot = joints.get(0);
+            vjTop.getPathRotation(vjRoot, qStartCombined);
+    
+            qStart = new float[joints.size() * 4];
+            int i = 0;
+            for (VJoint vj : joints)
             {
-                vjCur.getRotation(qStart, i);
+                VJoint vjCur = player.getVCurrPartBySid(vj.getSid());
+                {
+                    vjCur.getRotation(qStart, i);
+                }
+                i += 4;
             }
-            i += 4;
         }
         if (woTarget == null && !isLocal)
         {
@@ -266,7 +270,15 @@ public class DynamicGazeMU extends AbstractGazeMU
     {
         if (!isLocal)
         {
-            VJoint neck = joints.get(joints.size() - 1);
+            VJoint neck;
+            if(joints.size()>0)
+            {
+                neck = joints.get(joints.size() - 1);            
+            }
+            else
+            {
+                neck = skullbase;
+            }
             woTarget.getTranslation2(localGaze, neck);
 
             // lgazeneck = gazepos - neck
@@ -380,6 +392,7 @@ public class DynamicGazeMU extends AbstractGazeMU
     public DynamicGazeMU copy(AnimationPlayer p) throws MUSetupException
     {
         DynamicGazeMU copy = new DynamicGazeMU();
+        copy.skullbase = p.getVNext().getPart(Hanim.skullbase);
         copy.influence = influence;
         copy.offsetAngle = offsetAngle;
         copy.offsetDirection = offsetDirection;
