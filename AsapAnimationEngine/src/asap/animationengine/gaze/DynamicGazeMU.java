@@ -54,8 +54,7 @@ public class DynamicGazeMU extends AbstractGazeMU
     private static final double EYE_ONLY = Math.toRadians(15);
 
     private TimeManipulator tmpThoracic;
-    private TimeManipulator tmpCervical;
-    private VJoint skullbase;
+    private TimeManipulator tmpCervical;    
     
     private ImmutableList<VJoint> joints;
     private ImmutableList<VJoint> cervicalJoints;
@@ -204,8 +203,8 @@ public class DynamicGazeMU extends AbstractGazeMU
 
         float qDesRight[] = Quat4f.getQuat4f();
         float qDesLeft[] = Quat4f.getQuat4f();
-        setEndEyeRotation(lEye, qDesLeft);
-        setEndEyeRotation(rEye, qDesRight);
+        setEndEyeRotation(lEyeCurr, qDesLeft);
+        setEndEyeRotation(rEyeCurr, qDesRight);
 
         playSpine(t, qSpine);
         playEye(t, qDesLeft, qDesRight);
@@ -277,7 +276,7 @@ public class DynamicGazeMU extends AbstractGazeMU
             }
             else
             {
-                neck = skullbase;
+                neck = null;
             }
             woTarget.getTranslation2(localGaze, neck);
 
@@ -392,7 +391,6 @@ public class DynamicGazeMU extends AbstractGazeMU
     public DynamicGazeMU copy(AnimationPlayer p) throws MUSetupException
     {
         DynamicGazeMU copy = new DynamicGazeMU();
-        copy.skullbase = p.getVNext().getPart(Hanim.skullbase);
         copy.influence = influence;
         copy.offsetAngle = offsetAngle;
         copy.offsetDirection = offsetDirection;

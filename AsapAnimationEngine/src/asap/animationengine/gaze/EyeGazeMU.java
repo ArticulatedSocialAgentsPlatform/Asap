@@ -36,6 +36,8 @@ public class EyeGazeMU extends TweedGazeMU
         EyeGazeMU gmu = new EyeGazeMU();
         gmu.lEye = p.getVNextPartBySid(Hanim.l_eyeball_joint);
         gmu.rEye = p.getVNextPartBySid(Hanim.r_eyeball_joint);
+        gmu.lEyeCurr = p.getVCurrPartBySid(Hanim.l_eyeball_joint);
+        gmu.rEyeCurr = p.getVCurrPartBySid(Hanim.r_eyeball_joint);
         if(gmu.lEye == null || gmu.rEye==null)
         {
             throw new MUSetupException("Eyegaze MU requested, but no eyeball joint in skeleton.",this);
@@ -87,8 +89,8 @@ public class EyeGazeMU extends TweedGazeMU
     @Override
     public void play(double t) throws MUPlayException
     {
-        setEndEyeRotation(lEye, qEyeLeft);
-        setEndEyeRotation(rEye, qEyeRight);
+        setEndEyeRotation(lEyeCurr, qEyeLeft);
+        setEndEyeRotation(rEyeCurr, qEyeRight);
         
         float qLeft[]=Quat4f.getQuat4f();
         float qRight[]=Quat4f.getQuat4f();
