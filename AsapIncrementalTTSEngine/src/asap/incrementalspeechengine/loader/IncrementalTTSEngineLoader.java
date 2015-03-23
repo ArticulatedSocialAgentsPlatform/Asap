@@ -1,3 +1,5 @@
+/*******************************************************************************
+ *******************************************************************************/
 package asap.incrementalspeechengine.loader;
 
 import hmi.environmentbase.ConfigDirLoader;

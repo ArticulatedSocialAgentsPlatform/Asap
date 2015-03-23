@@ -1,5 +1,8 @@
+/*******************************************************************************
+ *******************************************************************************/
 package asap.murml;
 
+import hmi.xml.XMLFormatting;
 import hmi.xml.XMLScanException;
 import hmi.xml.XMLTokenizer;
 
@@ -24,8 +27,9 @@ public class MURMLDescription extends MURMLElement
 
     @Getter
     private boolean pointStroke;
-    
-    @Getter @Setter
+
+    @Getter
+    @Setter
     private int priority = 100;
 
     @Override
@@ -50,6 +54,28 @@ public class MURMLDescription extends MURMLElement
 
     @Getter
     private Sequence sequence;
+
+    @Override
+    public StringBuilder appendContent(StringBuilder buf, XMLFormatting fmt)
+    {
+        if (dynamic != null)
+        {
+            buf = dynamic.appendXML(buf, fmt);
+        }
+        if (parallel != null)
+        {
+            buf = parallel.appendXML(buf, fmt);
+        }
+        if (staticElement != null)
+        {
+            buf = staticElement.appendXML(buf, fmt);
+        }
+        if (sequence != null)
+        {
+            buf = sequence.appendXML(buf, fmt);
+        }
+        return buf;
+    }
 
     @Override
     public void decodeContent(XMLTokenizer tokenizer) throws IOException
@@ -82,18 +108,18 @@ public class MURMLDescription extends MURMLElement
         }
         normalizeSymmetricals();
     }
-    
+
     private void normalizeSymmetricals()
     {
-        if(symmetrical!=null)
+        if (symmetrical != null)
         {
-            parallel = symmetrical.normalize();            
+            parallel = symmetrical.normalize();
         }
-        else if(parallel!=null)
+        else if (parallel != null)
         {
             parallel.normalizeInnerSymmetricals();
         }
-        else if(sequence!=null)
+        else if (sequence != null)
         {
             sequence.normalizeInnerSymmetricals();
         }

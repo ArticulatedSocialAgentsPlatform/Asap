@@ -1,5 +1,8 @@
+/*******************************************************************************
+ *******************************************************************************/
 package asap.murml;
 
+import hmi.xml.XMLFormatting;
 import hmi.xml.XMLTokenizer;
 
 import java.io.IOException;
@@ -57,6 +60,65 @@ public class Keyframing extends MURMLElement
         insertStartframe = !getOptionalBooleanAttribute("dont_insert_startframe", attrMap, false);
     }
     
+    @Override
+    public StringBuilder appendAttributes(StringBuilder buf)
+    {
+        if(!scope.isEmpty())
+        {
+            appendAttribute(buf, "scope",scope);            
+        }
+        appendAttribute(buf,"mode", mode.toString().toLowerCase());
+        if(priority!=0)
+        {
+            appendAttribute(buf,"priority",priority);
+        }
+        if(easescale!=1)
+        {
+            appendAttribute(buf,"easescale",easescale);
+        }
+        if(applyMode!=ApplyMode.EXCLUSIVE)
+        {
+            appendAttribute(buf,"applymode", applyMode.toString().toLowerCase());
+        }
+        if(!name.equals("KF_Anim_"))
+        {
+            appendAttribute(buf,"name",name);
+        }
+        if(easeturningpoint!=0.5)
+        {
+            appendAttribute(buf,"easeturningpoint",easeturningpoint);
+        }
+        if(startTime!=0)
+        {
+            appendAttribute(buf,"startTime",startTime);
+        }
+        if(endTime!=0)
+        {
+            appendAttribute(buf,"endTime",endTime);
+        }
+        if(postponeStartframe!=0)
+        {
+            appendAttribute(buf,"postpone_startframe",postponeStartframe);
+        }
+        if(!insertStartframe)
+        {
+            appendAttribute(buf,"dont_insert_startframe",true);
+        }
+        return buf;
+    }
+    
+    @Override
+    public boolean hasContent()
+    {
+        return true;
+    }
+    
+    @Override
+    public StringBuilder appendContent(StringBuilder buf, XMLFormatting fmt)
+    {
+        appendXMLStructureList(buf, fmt, phases);
+        return buf;
+    }
     @Override
     public void decodeContent(XMLTokenizer tokenizer) throws IOException
     {

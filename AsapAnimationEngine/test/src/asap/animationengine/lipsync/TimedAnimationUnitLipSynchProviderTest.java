@@ -1,3 +1,5 @@
+/*******************************************************************************
+ *******************************************************************************/
 package asap.animationengine.lipsync;
 
 import static org.hamcrest.MatcherAssert.assertThat;

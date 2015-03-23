@@ -1,3 +1,5 @@
+/*******************************************************************************
+ *******************************************************************************/
 package asap.animationengine.procanimation;
 
 import static asap.realizertestutil.util.TimePegUtil.createAbsoluteTimePeg;

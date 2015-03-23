@@ -1,3 +1,5 @@
+/*******************************************************************************
+ *******************************************************************************/
 package asap.livemocapengine.inputs.loader;
 
 import static org.junit.Assert.assertNotNull;
@@ -39,7 +41,6 @@ public class KeyboardEulerInputLoaderTest
         XMLTokenizer tok = new XMLTokenizer(str);
         tok.takeSTag();        
         loader.readXML(tok, "id1", "id1", "id1", new Environment[0], mockJFrameEmbodiment);
-        assertNotNull(loader.getSensor());
-        //verify(mockJFrameEmbodiment).addKeyListener(loader.getSensor());
+        assertNotNull(loader.getSensor());        
     }
 }

@@ -1,3 +1,5 @@
+/*******************************************************************************
+ *******************************************************************************/
 package asap.animationengine.gesturebinding;
 
 import static org.hamcrest.CoreMatchers.instanceOf;

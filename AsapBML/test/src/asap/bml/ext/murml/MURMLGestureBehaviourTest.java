@@ -1,8 +1,12 @@
+/*******************************************************************************
+ *******************************************************************************/
 package asap.bml.ext.murml;
 
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.instanceOf;
 import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertNotNull;
+import hmi.xml.XMLFormatting;
 import hmi.xml.XMLTokenizer;
 
 import java.io.IOException;
@@ -88,5 +92,24 @@ public class MURMLGestureBehaviourTest extends AbstractBehaviourTest
         MURMLGestureBehaviour beh = new MURMLGestureBehaviour("bmla", new XMLTokenizer(bmlString));
         assertEquals(10, beh.getFloatParameterValue("http://www.asap-project.org/bmla:priority"), FRAME_PRECISION);
         assertEquals(10, beh.getMurmlDescription().getPriority(), FRAME_PRECISION);
+    }
+    
+    @Test
+    public void testWriteXML() throws IOException
+    {
+        String bmlString = "<murmlgesture xmlns:bmla=\"http://www.asap-project.org/bmla\" bmla:priority=\"10\" xmlns=\"http://www.techfak.uni-bielefeld.de/ags/soa/murml\" "
+                + "id=\"a1\" start=\"nod1:end\">"
+                + "<murml-description><dynamic><keyframing><phase><frame ftime=\"0\"><posture>Humanoid "
+                + "(l_shoulder 3 70 0 0)</posture></frame></phase></keyframing></dynamic></murml-description>" + "</murml:murmlgesture>";
+        MURMLGestureBehaviour behIn = new MURMLGestureBehaviour("bml1", new XMLTokenizer(bmlString));
+        StringBuilder buf = new StringBuilder();
+        behIn.appendXML(buf, new XMLFormatting(), "bmla", "http://www.asap-project.org/bmla");
+        System.out.println(buf);
+        
+        MURMLGestureBehaviour behOut = new MURMLGestureBehaviour("bml1", new XMLTokenizer(buf.toString()));
+        assertEquals("bml1", behOut.getBmlId());
+        assertEquals("a1", behOut.id);
+        assertNotNull(behOut.getMurmlDescription());
+        assertEquals(0,behOut.getMurmlDescription().getDynamic().getKeyframing().getPhases().get(0).getFrames().get(0).getFtime(),FRAME_PRECISION);
     }
 }

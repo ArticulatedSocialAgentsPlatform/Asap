@@ -1,3 +1,5 @@
+/*******************************************************************************
+ *******************************************************************************/
 package asap.animationengine.ace.lmp;
 
 import static asap.testutil.bml.feedback.FeedbackAsserts.assertEqualSyncPointProgress;

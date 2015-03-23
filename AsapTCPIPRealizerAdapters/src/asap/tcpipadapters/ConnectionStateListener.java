@@ -1,3 +1,5 @@
+/*******************************************************************************
+ *******************************************************************************/
 package asap.tcpipadapters;
 
 import asap.tcpipadapters.TCPIPToBMLRealizerAdapter.ServerState;

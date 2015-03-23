@@ -1,3 +1,5 @@
+/*******************************************************************************
+ *******************************************************************************/
 package asap.murml;
 
 import static org.junit.Assert.assertEquals;
@@ -21,5 +23,20 @@ public class ValueTest
         value.readXML(valueScript);
         assertEquals("start", value.getType());
         assertEquals("LocLowerChest LocCenterRight LocNorm", value.getName());
+    }
+    
+    @Test
+    public void testWrite()
+    {
+        String valueScript = "<value xmlns=\"http://www.techfak.uni-bielefeld.de/ags/soa/murml\" "
+                + "type=\"start\" name=\"LocLowerChest LocCenterRight LocNorm\"/>";
+        value.readXML(valueScript);
+        StringBuilder buf = new StringBuilder();
+        value.appendXML(buf);
+        
+        Value valueOut = new Value();
+        valueOut.readXML(buf.toString());
+        assertEquals("start", valueOut.getType());
+        assertEquals("LocLowerChest LocCenterRight LocNorm", valueOut.getName());
     }
 }
