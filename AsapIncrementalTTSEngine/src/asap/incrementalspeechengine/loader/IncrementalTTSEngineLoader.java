@@ -15,11 +15,10 @@ import hmi.xml.XMLStructureAdapter;
 import hmi.xml.XMLTokenizer;
 import inpro.apps.SimpleMonitor;
 import inpro.apps.util.MonitorCommandLineParser;
-import inpro.audio.DDS16kAudioInputStream;
 import inpro.audio.DispatchStream;
 import inpro.incremental.unit.IU;
 import inpro.synthesis.MaryAdapter;
-import inpro.synthesis.MaryAdapter4internal;
+import inpro.synthesis.MaryAdapter5internal;
 import inpro.synthesis.hts.IUBasedFullPStream;
 import inpro.synthesis.hts.VocodingAudioStream;
 
@@ -29,8 +28,11 @@ import java.util.Collection;
 import java.util.HashMap;
 import java.util.List;
 
+import javax.sound.sampled.AudioFormat;
+
 import lombok.Getter;
 import lombok.extern.slf4j.Slf4j;
+import marytts.util.data.audio.DDSAudioInputStream;
 import asap.incrementalspeechengine.IncrementalTTSPlanner;
 import asap.incrementalspeechengine.IncrementalTTSUnit;
 import asap.incrementalspeechengine.PhraseIUManager;
@@ -159,8 +161,9 @@ public class IncrementalTTSEngineLoader implements EngineLoader
         DispatchStream dummydispatcher = SimpleMonitor.setupDispatcher(new MonitorCommandLineParser(new String[] { "-D", "-c",
                 "" + new Resources(di.getResource()).getURL(di.getFilename())}));
         List<IU> wordIUs = MaryAdapter.getInstance().text2IUs("Heating up.");
-        dummydispatcher.playStream(new DDS16kAudioInputStream(new VocodingAudioStream(new IUBasedFullPStream(wordIUs.get(0)),
-                MaryAdapter4internal.getDefaultHMMData(), true)), true);
+        //(source, new AudioFormat(16000.0F, 16, 1, true, false))
+        dummydispatcher.playStream(new DDSAudioInputStream(new VocodingAudioStream(new IUBasedFullPStream(wordIUs.get(0)),
+                MaryAdapter5internal.getDefaultHMMData(), true), new AudioFormat(16000.0F, 16, 1, true, false)), true);
         dummydispatcher.waitUntilDone();
         dummydispatcher.close();
         

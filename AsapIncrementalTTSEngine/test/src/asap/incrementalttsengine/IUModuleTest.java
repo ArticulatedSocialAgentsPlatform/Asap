@@ -5,7 +5,6 @@ package asap.incrementalttsengine;
 import hmi.util.Resources;
 import inpro.apps.SimpleMonitor;
 import inpro.apps.util.MonitorCommandLineParser;
-import inpro.audio.DDS16kAudioInputStream;
 import inpro.audio.DispatchStream;
 import inpro.incremental.IUModule;
 import inpro.incremental.processor.AdaptableSynthesisModule;
@@ -16,7 +15,7 @@ import inpro.incremental.unit.IU;
 import inpro.incremental.unit.IU.IUUpdateListener;
 import inpro.incremental.unit.SysInstallmentIU;
 import inpro.synthesis.MaryAdapter;
-import inpro.synthesis.MaryAdapter4internal;
+import inpro.synthesis.MaryAdapter5internal;
 import inpro.synthesis.hts.IUBasedFullPStream;
 import inpro.synthesis.hts.LoudnessPostProcessor;
 import inpro.synthesis.hts.VocodingAudioStream;
@@ -25,6 +24,10 @@ import java.io.IOException;
 import java.util.Collection;
 import java.util.List;
 import java.util.concurrent.TimeUnit;
+
+import javax.sound.sampled.AudioFormat;
+
+import marytts.util.data.audio.DDSAudioInputStream;
 
 import org.junit.Ignore;
 import org.junit.Test;
@@ -52,12 +55,6 @@ class MyIUModule extends IUModule
 
 public class IUModuleTest
 {
-    static
-    {
-        System.setProperty("mary.base", System.getProperty("shared.project.root")
-                + "/asapresource/MARYTTSIncremental/resource/MARYTTSIncremental");
-    }
-
     private static class MyWordUpdateListener implements IUUpdateListener
     {
         @Override
@@ -82,8 +79,8 @@ public class IUModuleTest
     {
         DispatchStream dispatcher = SimpleMonitor.setupDispatcher(new MonitorCommandLineParser(new String[]{"-D","-c",""+new Resources("").getURL("sphinx-config.xml")}));
         List<IU> wordIUs = MaryAdapter.getInstance().text2IUs("Heating up.");
-        dispatcher.playStream(new DDS16kAudioInputStream(new VocodingAudioStream(new IUBasedFullPStream(wordIUs.get(0)),
-                MaryAdapter4internal.getDefaultHMMData(), true)), true);
+        dispatcher.playStream(new DDSAudioInputStream(new VocodingAudioStream(new IUBasedFullPStream(wordIUs.get(0)),
+                MaryAdapter5internal.getDefaultHMMData(), true), new AudioFormat(16000.0F, 16, 1, true, false)), true);
         // wait for synthesis:
         dispatcher.waitUntilDone();
         dispatcher.close();

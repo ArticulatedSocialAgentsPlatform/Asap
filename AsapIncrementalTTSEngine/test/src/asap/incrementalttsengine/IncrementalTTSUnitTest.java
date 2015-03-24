@@ -13,17 +13,20 @@ import hmi.util.Resources;
 import hmi.util.SystemClock;
 import inpro.apps.SimpleMonitor;
 import inpro.apps.util.MonitorCommandLineParser;
-import inpro.audio.DDS16kAudioInputStream;
 import inpro.audio.DispatchStream;
 import inpro.incremental.unit.IU;
 import inpro.synthesis.MaryAdapter;
-import inpro.synthesis.MaryAdapter4internal;
+import inpro.synthesis.MaryAdapter5internal;
 import inpro.synthesis.hts.IUBasedFullPStream;
 import inpro.synthesis.hts.VocodingAudioStream;
 
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
+
+import javax.sound.sampled.AudioFormat;
+
+import marytts.util.data.audio.DDSAudioInputStream;
 
 import org.hamcrest.collection.IsIterableContainingInOrder;
 import org.junit.After;
@@ -81,8 +84,8 @@ public class IncrementalTTSUnitTest extends AbstractTimedPlanUnitTest
         DispatchStream dummydispatcher = SimpleMonitor.setupDispatcher(new MonitorCommandLineParser(new String[] { "-D", "-c",
                 "" + new Resources("").getURL("sphinx-config.xml") }));
         List<IU> wordIUs = MaryAdapter.getInstance().text2IUs("Heating up.");
-        dummydispatcher.playStream(new DDS16kAudioInputStream(new VocodingAudioStream(new IUBasedFullPStream(wordIUs.get(0)),
-                MaryAdapter4internal.getDefaultHMMData(), true)), true);
+        dummydispatcher.playStream(new DDSAudioInputStream(new VocodingAudioStream(new IUBasedFullPStream(wordIUs.get(0)),
+                MaryAdapter5internal.getDefaultHMMData(), true), new AudioFormat(16000.0F, 16, 1, true, false)), true);
         dummydispatcher.waitUntilDone();
         dummydispatcher.close();
 
