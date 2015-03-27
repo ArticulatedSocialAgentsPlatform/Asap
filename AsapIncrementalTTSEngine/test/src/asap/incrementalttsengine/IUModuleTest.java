@@ -77,6 +77,9 @@ public class IUModuleTest
     @Test
     public void testPreSynthesize() throws IOException, InterruptedException
     {
+        System.setProperty("inpro.tts.voice", "cmu-slt-hsmm");
+        System.setProperty("inpro.tts.language", "en_US");
+        
         DispatchStream dispatcher = SimpleMonitor.setupDispatcher(new MonitorCommandLineParser(new String[]{"-D","-c",""+new Resources("").getURL("sphinx-config.xml")}));
         List<IU> wordIUs = MaryAdapter.getInstance().text2IUs("Heating up.");
         dispatcher.playStream(new DDSAudioInputStream(new VocodingAudioStream(new IUBasedFullPStream(wordIUs.get(0)),
@@ -84,9 +87,7 @@ public class IUModuleTest
         // wait for synthesis:
         dispatcher.waitUntilDone();
         dispatcher.close();
-        
-        System.setProperty("inpro.tts.voice", "dfki-prudence-hsmm");
-        System.setProperty("inpro.tts.language", "en_GB");
+                
         dispatcher = SimpleMonitor.setupDispatcher(new Resources("").getURL("sphinx-config.xml"));
         String str = "Hello cruel world.";
         MyIUModule mb = new MyIUModule();
@@ -112,8 +113,8 @@ public class IUModuleTest
     public void testPhraseVSIncremental() throws InterruptedException, IOException
     {
         // MaryAdapter.getInstance();
-        System.setProperty("inpro.tts.voice", "dfki-prudence-hsmm");
-        System.setProperty("inpro.tts.language", "en_GB");
+        System.setProperty("inpro.tts.voice", "cmu-slt-hsmm");
+        System.setProperty("inpro.tts.language", "en_US");
         DispatchStream dispatcher = SimpleMonitor.setupDispatcher(new Resources("").getURL("sphinx-config.xml"));
 
         String str = "Tomorow at 10 is the meeting with your brother, and at two o clock you will go shopping, and at eight is the gettogether in the bar.";
@@ -147,8 +148,8 @@ public class IUModuleTest
     @Test
     public void testFeedback() throws InterruptedException, IOException
     {
-        System.setProperty("inpro.tts.voice", "dfki-prudence-hsmm");
-        System.setProperty("inpro.tts.language", "en_GB");
+        System.setProperty("inpro.tts.voice", "cmu-slt-hsmm");
+        System.setProperty("inpro.tts.language", "en_US");
         DispatchStream dispatcher = SimpleMonitor.setupDispatcher(new Resources("").getURL("sphinx-config.xml"));
         MyIUModule mb = new MyIUModule();
 
@@ -234,8 +235,8 @@ public class IUModuleTest
     @Test
     public void testInterruptContinue() throws InterruptedException, IOException
     {
-        System.setProperty("inpro.tts.voice", "dfki-prudence-hsmm");
-        System.setProperty("inpro.tts.language", "en_GB");
+        System.setProperty("inpro.tts.voice", "cmu-slt-hsmm");
+        System.setProperty("inpro.tts.language", "en_US");
 
         MaryAdapter.getInstance();
         DispatchStream dispatcher = SimpleMonitor.setupDispatcher(new Resources("").getURL("sphinx-config.xml"));

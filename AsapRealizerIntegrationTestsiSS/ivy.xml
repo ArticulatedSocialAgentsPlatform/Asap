@@ -47,7 +47,7 @@
 
       <dependency org="logback" name="logback-classic"     rev="latest.release"  />   
       <dependency org="logback" name="logback-core"        rev="latest.release"  />   
-      <dependency org="inpro" name="inpro_iss"        rev="latest.release"  />   
+      <dependency org="marytts" name="voice-cmu-slt-hsmm"       rev="latest.release"  />
       
          
    </dependencies>

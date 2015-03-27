@@ -12,7 +12,7 @@
       <dependency org="HMI"   name="LogbackConfigs"     rev="latest.${resolve.status}"   />
       <dependency org="saiba" name="openbmlparser-testresource"  rev="latest.release" />
       <dependency org="HMI"   name="HmiHumanoidEmbodimentShared"     rev="latest.${resolve.status}"   />   
-	 <dependency org="marytts" name="voice-dfki-prudence-hsmm"       rev="latest.${resolve.status}"  />
       <dependency org="marytts" name="voice-bits1-hsmm"       rev="latest.${resolve.status}"  />
+	<dependency org="marytts" name="voice-cmu-slt-hsmm"       rev="latest.release"  />
    </dependencies>
 </ivy-module>
