@@ -109,7 +109,7 @@ class MotionUnitSpec extends XMLStructureAdapter
         }
         catch (RuntimeException ex)
         {
-            log.warn("Cannot read motion unit spec, dropping element from gesture binding. Tag: {} ", tag);
+            log.warn("Cannot read motion unit spec, dropping element from gesture binding. Tag: {} {}", tag);
             motionUnit = null;
         }
     }

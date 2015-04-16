@@ -9,6 +9,8 @@ import hmi.xml.XMLTokenizer;
 
 import java.util.HashMap;
 
+import lombok.extern.slf4j.Slf4j;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -18,6 +20,12 @@ import asap.faceengine.faceunit.FaceUnit;
 import asap.faceengine.faceunit.MorphFU;
 import asap.faceengine.faceunit.PlutchikFU;
 
+/**
+ * Constructs a faceunit from the XML description
+ * @author hvanwelbergen
+ *
+ */
+@Slf4j
 class FaceUnitAssembler extends XMLStructureAdapter
 {
     private static Logger logger = LoggerFactory.getLogger(FaceUnitAssembler.class.getName());
@@ -32,11 +40,54 @@ class FaceUnitAssembler extends XMLStructureAdapter
     public void decodeAttributes(HashMap<String, String> attrMap, XMLTokenizer tokenizer)
     {
         String type = getRequiredAttribute("type", attrMap, tokenizer);
-
+        String className = getOptionalAttribute("class", attrMap, null);
+        
         if (type.equals("Morph"))
         {
             MorphFU fu = new MorphFU();
             faceUnit = fu;
+        }
+        else if(type.equals("class"))
+        {
+            if (className != null)
+            {
+                Class<?> muClass;
+                try
+                {
+                    muClass = Class.forName(className);
+                }
+                catch (ClassNotFoundException e)
+                {
+                    faceUnit = null;
+                    log.warn("Cannot instantiate MotionUnit \"{}\"", className);
+                    log.warn("Exception: ", e);
+                    return;
+                }
+                if (!FaceUnit.class.isAssignableFrom(muClass))
+                {
+                    faceUnit = null;
+                    log.warn("{} does not implement the MotionUnit interface", className);
+                    return;
+                }
+                
+                try
+                {
+                    faceUnit = (FaceUnit) (muClass.newInstance());
+                }
+                catch (InstantiationException e)
+                {
+                    faceUnit = null;
+                    log.warn("Cannot instantiate MotionUnit \"{}\"", className);
+                    log.warn("Exception: ", e);
+
+                }
+                catch (IllegalAccessException e)
+                {
+                    faceUnit = null;
+                    log.warn("Cannot instantiate MotionUnit \"{}\"", className);
+                    log.warn("Exception: ", e);
+                }                
+            }
         }
         else if (type.equals("Plutchik"))
         {
