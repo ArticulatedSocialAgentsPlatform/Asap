@@ -33,6 +33,11 @@ public class MorphVisemeBinding implements VisemeBinding
         visemeMapping = mapping;
     }
 
+    public MorphVisemeDescription getgetMorphTargetForViseme(int viseme)
+    {
+        return visemeMapping.getMorphTargetForViseme(viseme);
+    }
+    
     @Override
     public TimedFaceUnit getVisemeUnit(FeedbackManager bfm, BMLBlockPeg bbPeg, Behaviour b, int viseme, FaceController fc, PegBoard pb)
     // dur, ..
