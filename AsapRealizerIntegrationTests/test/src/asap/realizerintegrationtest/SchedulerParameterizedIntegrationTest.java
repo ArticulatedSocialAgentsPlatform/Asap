@@ -43,7 +43,7 @@ import asap.audioengine.AudioPlanner;
 import asap.audioengine.TimedAbstractAudioUnit;
 import asap.bml.ext.bmla.BMLABMLBehaviorAttributes;
 import asap.hns.Hns;
-import asap.maryttsbinding.MaryTTSBindingFactory;
+import asap.marytts5binding.MaryTTSBindingFactory;
 import asap.realizer.AsapRealizer;
 import asap.realizer.DefaultEngine;
 import asap.realizer.DefaultPlayer;
@@ -175,8 +175,7 @@ public class SchedulerParameterizedIntegrationTest extends SchedulerIntegrationT
                     soundManager));
         }
 
-        speechEngineFactories.add(new TTSEngineFactory(new WavTTSUnitFactory(bfm, soundManager), new MaryTTSBindingFactory(System
-                .getProperty("shared.project.root") + "/Asap/AsapRealizerIntegrationTests/test/lib/MARYTTS",
+        speechEngineFactories.add(new TTSEngineFactory(new WavTTSUnitFactory(bfm, soundManager), new MaryTTSBindingFactory(
                 new NullPhonemeToVisemeMapping()), soundManager));
         speechEngineFactories.add(new TextEngineFactory());
 
@@ -213,7 +212,7 @@ public class SchedulerParameterizedIntegrationTest extends SchedulerIntegrationT
         PlanManager<TimedAnimationUnit> animationPlanManager = new PlanManager<>();
 
         RestPose pose = new SkeletonPoseRestPose();
-        RestGaze gaze = new ForwardRestGaze(GazeInfluence.WAIST); 
+        RestGaze gaze = new ForwardRestGaze(GazeInfluence.WAIST);
         AnimationPlanPlayer animationPlanPlayer = new AnimationPlanPlayer(pose, gaze, bfm, animationPlanManager,
                 new DefaultTimedPlanUnitPlayer(), pegBoard);
         AnimationPlayer aPlayer = new AnimationPlayer(human, human, human, m, 0.001f, animationPlanPlayer);

@@ -18,3 +18,4 @@ report
 *.log
 .DS_Store
 findbugs.html
+log

@@ -2,6 +2,7 @@
    <info organisation="Asap" module="AsapRealizerIntegrationTests"/>
    <dependencies>
       <dependency org="junit"    name="cpsuite"              rev="latest.release"  />
+
       <dependency org="google"    name="junit-ext"              rev="latest.release"  />
       <dependency org="mockito"   name="mockito-all"            rev="latest.release"  />
       <dependency org="jboss"			name="javassist" rev="latest.release"  />
@@ -17,8 +18,7 @@
 	  <dependency org="HMI"   name="HmiNeurophysics"             rev="latest.${resolve.status}"   />
       <dependency org="HMI"   name="HmiFaceAnimation"     rev="latest.${resolve.status}"   />    
 
-      <dependency org="HMI"      name="HmiTTS"             rev="latest.${resolve.status}"  />
-      <dependency org="HMI"      name="HmiTTSMary"         rev="latest.${resolve.status}"  />
+      <dependency org="HMI"      name="HmiTTS"             rev="latest.${resolve.status}"  />      
       <dependency org="HMI"      name="HmiTTSSapi5"        rev="latest.${resolve.status}"  />
       <dependency org="HMI"      name="HmiTTSnative"       rev="latest.${resolve.status}"  />
 
@@ -51,8 +51,8 @@
       <dependency org="Asap"   name="AsapTextEngine"     rev="latest.${resolve.status}"   />    
       <dependency org="Asap"   name="AsapEmitterEngine"     rev="latest.${resolve.status}"   />
       <dependency org="Asap"      name="AsapSapi5TTSBinding"        rev="latest.{$resolve.status}"  />
-      <dependency org="Asap"      name="AsapMaryTTSBinding"        rev="latest.{$resolve.status}"  />
-
+      <dependency org="Asap"      name="AsapMaryTTS5Binding"        rev="latest.{$resolve.status}"  />
+	  <dependency org="marytts" name="voice-cmu-slt-hsmm"       rev="latest.release"  />
 
 
       <dependency org="logback" name="logback-classic"     rev="latest.release"  />   
