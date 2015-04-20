@@ -187,7 +187,7 @@ public class PhysicalBalanceRestPose implements RestPose
     }
 
     @Override
-    public void setRestPose()
+    public void startRestPose(double time)
     {
 
     }

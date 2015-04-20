@@ -10,7 +10,7 @@ import org.junit.runner.RunWith;
 import org.powermock.core.classloader.annotations.PrepareForTest;
 import org.powermock.modules.junit4.PowerMockRunner;
 
-import asap.maryttsbinding.MaryTTSBinding;
+import asap.marytts5binding.MaryTTSBinding;
 import asap.realizer.scheduler.BMLBlockManager;
 
 /**
@@ -25,9 +25,7 @@ public class TimedWavTTSUnitMaryIntegrationTest extends AbstractTimedWavTTSUnitT
     public void setup()
     {
         super.setup();
-        ttsBinding = new MaryTTSBinding(System.getProperty("shared.project.root")+"/Asap/AsapSpeechEngine/test/lib/MARYTTS",
-                new NullPhonemeToVisemeMapping());
-        
+        ttsBinding = new MaryTTSBinding(new NullPhonemeToVisemeMapping());        
     }    
     
     @After

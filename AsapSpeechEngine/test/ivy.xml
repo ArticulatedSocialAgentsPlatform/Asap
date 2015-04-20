@@ -21,7 +21,7 @@
       <dependency org="Asap"      name="AsapSapi5TTSBinding"        rev="latest.{$resolve.status}"  />
 
       <!-- for tests with MaryTTS -->
-      <dependency org="Asap"      name="AsapMaryTTSBinding"        rev="latest.{$resolve.status}"  />
-      <dependency org="HMI"   name="MARYTTS"     rev="latest.${resolve.status}"   />   
+      <dependency org="Asap"      name="AsapMaryTTS5Binding"        rev="latest.{$resolve.status}"  />      
+	 <dependency org="marytts" name="voice-cmu-slt-hsmm"       rev="latest.release"  />
    </dependencies>
 </ivy-module>

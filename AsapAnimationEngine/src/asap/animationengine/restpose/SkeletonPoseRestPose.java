@@ -148,7 +148,7 @@ public class SkeletonPoseRestPose implements RestPose
     }
 
     @Override
-    public void setRestPose()
+    public void startRestPose(double time)
     {
         VObjectTransformCopier.newInstanceFromVJointTree(poseTree, player.getVCurr(), "T1R").copyConfig();
         VObjectTransformCopier.newInstanceFromVJointTree(poseTree, player.getVNext(), "T1R").copyConfig();
@@ -196,8 +196,6 @@ public class SkeletonPoseRestPose implements RestPose
                 startJoints.add(player.getVCurrPartBySid(vj.getSid()));
             }
         }
-        
-        
         
         AnimationUnit mu;
         if (pose.getConfigType().equals("R"))

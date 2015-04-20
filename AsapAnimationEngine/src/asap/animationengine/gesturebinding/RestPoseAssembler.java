@@ -52,6 +52,26 @@ public class RestPoseAssembler extends XMLStructureAdapter
             }
             restPose = new SkeletonPoseRestPose(pose);
         }
+        else if (type.equals("class"))
+        {
+            try
+            {
+                Class<?> c = Class.forName(className);
+                restPose = c.asSubclass(RestPose.class).newInstance();                
+            }
+            catch (ClassNotFoundException e)
+            {
+                throw new XMLScanException("Restpose "+className+" not found.", e);
+            }
+            catch (InstantiationException e)
+            {
+                throw new XMLScanException("Restpose "+className+" not instantiated.", e);
+            }
+            catch (IllegalAccessException e)
+            {
+                throw new XMLScanException("Restpose "+className+" illegal access.", e);
+            }
+        }
         else if (type.equals("PhysicalController"))
         {
             try
