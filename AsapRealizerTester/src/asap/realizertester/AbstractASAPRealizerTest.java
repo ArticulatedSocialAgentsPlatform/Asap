@@ -7,6 +7,7 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
+import org.junit.Ignore;
 import org.junit.Test;
 
 import saiba.bml.feedback.BMLBlockPredictionFeedback;
@@ -100,6 +101,7 @@ public abstract class AbstractASAPRealizerTest extends AbstractBML1RealizerTest 
         String bmlString2 = readTestFile("asap/parametervaluechange/volumechange.xml");
         realizerHandler.performBML(bmlString1);
         waitForBMLSchedulingFinishedFeedback("bml1");
+        
         realizerHandler.performBML(bmlString2);
         realizerHandler.waitForBMLEndFeedback("bml1");
         realizerHandler.waitForBMLEndFeedback("bml2");
@@ -115,7 +117,7 @@ public abstract class AbstractASAPRealizerTest extends AbstractBML1RealizerTest 
         realizerHandler.assertLinkedSyncs("bml1", "speech1", "end", "bml2", "pvc1", "end");
     }
 
-    @Test
+    @Test    
     public void testActivate() throws IOException, InterruptedException
     {
         String bmlString1 = readTestFile("asap/activate/testpreplannedspeech1.xml");
