@@ -6,7 +6,7 @@ import static com.google.common.collect.Sets.newHashSet;
 import hmi.audioenvironment.SoundManager;
 import hmi.audioenvironment.WavCreationException;
 import hmi.tts.Bookmark;
-import hmi.tts.TimingInfo;
+import hmi.tts.TTSTiming;
 
 import java.io.File;
 import java.io.IOException;
@@ -173,12 +173,12 @@ public class TimedWavTTSUnit extends TimedTTSUnit
     }
 
     @Override
-    protected TimingInfo getTiming() throws SpeechUnitPlanningException
+    protected TTSTiming getTiming() throws SpeechUnitPlanningException
     {
         String fileName = getBMLId() + "-" + getId();
         synchronized (this)
         {
-            TimingInfo ti = null;
+            TTSTiming ti = null;
             try
             {
                 tempFile = File.createTempFile(fileName, ".wav");

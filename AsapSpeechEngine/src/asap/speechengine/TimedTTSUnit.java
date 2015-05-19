@@ -3,7 +3,7 @@
 package asap.speechengine;
 
 import hmi.tts.Bookmark;
-import hmi.tts.TimingInfo;
+import hmi.tts.TTSTiming;
 import hmi.tts.Visime;
 
 import java.util.ArrayList;
@@ -227,7 +227,7 @@ public abstract class TimedTTSUnit extends TimedAbstractSpeechUnit
         return duration;
     }
 
-    protected abstract TimingInfo getTiming() throws SpeechUnitPlanningException;
+    protected abstract TTSTiming getTiming() throws SpeechUnitPlanningException;
 
     /**
      * @throws SpeechUnitPlanningException
@@ -247,7 +247,7 @@ public abstract class TimedTTSUnit extends TimedAbstractSpeechUnit
         synchronized (ttsBinding)
         {
             ttsBinding.setCallback(null);
-            TimingInfo ti = getTiming();
+            TTSTiming ti = getTiming();
             setupCache();
 
             duration = ti.getDuration();

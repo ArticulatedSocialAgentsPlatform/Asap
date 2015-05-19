@@ -3,7 +3,7 @@
 package asap.speechengine;
 
 import hmi.tts.TTSCallback;
-import hmi.tts.TimingInfo;
+import hmi.tts.TTSTiming;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -60,7 +60,7 @@ public class TimedDirectTTSUnit extends TimedTTSUnit
     }
     
     @Override
-    protected TimingInfo getTiming()
+    protected TTSTiming getTiming()
     {
         synchronized (ttsBinding)
         {
