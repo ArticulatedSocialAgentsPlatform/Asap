@@ -31,9 +31,9 @@ public class VisualProsodyProvider
         {
             rpyPrevPrev = rpyPrev;
             rpyPrev = rpy;
-            if (audio.getF0()[i] > 0)
+            if (audio.getF0()[i] > 10)
             {
-                rpy = vpp.generateHeadPose(rpyPrev, rpyPrevPrev, audio.getF0()[i], audio.getRmsEnergy()[i]);
+                rpy = vpp.generateHeadPose(rpyPrev, rpyPrevPrev, audio.getF0()[i], 0.2*audio.getRmsEnergy()[i]);
             }
             else
             {
