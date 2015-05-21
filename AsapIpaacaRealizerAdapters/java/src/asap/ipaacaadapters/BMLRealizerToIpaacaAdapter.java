@@ -1,15 +1,7 @@
+/*******************************************************************************
+ *******************************************************************************/
 package asap.ipaacaadapters;
 
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.EnumSet;
-import java.util.List;
-
-import com.google.common.collect.ImmutableList;
-import com.google.common.collect.ImmutableSet;
-
-import asap.realizerport.BMLFeedbackListener;
-import asap.realizerport.RealizerPort;
 import ipaaca.AbstractIU;
 import ipaaca.HandlerFunctor;
 import ipaaca.IUEventHandler;
@@ -19,6 +11,17 @@ import ipaaca.InputBuffer;
 import ipaaca.LocalMessageIU;
 import ipaaca.OutputBuffer;
 import ipaaca.util.ComponentNotifier;
+
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.EnumSet;
+import java.util.List;
+
+import asap.realizerport.BMLFeedbackListener;
+import asap.realizerport.RealizerPort;
+
+import com.google.common.collect.ImmutableList;
+import com.google.common.collect.ImmutableSet;
 
 /**
  * Submits BML through ipaaca messages; submits received feedback to registered listeners.
@@ -31,13 +34,24 @@ public class BMLRealizerToIpaacaAdapter implements RealizerPort
         Initializer.initializeIpaacaRsb();
     }
 
-    private final InputBuffer inBuffer = new InputBuffer("BMLToIpaacaRealizerAdapter",
-            ImmutableSet.of(IpaacaBMLConstants.BML_FEEDBACK_CATEGORY));
-    private final OutputBuffer outBuffer = new OutputBuffer("BMLToIpaacaRealizerAdapter");
+    private final InputBuffer inBuffer;
+            
+    private final OutputBuffer outBuffer;
     private List<BMLFeedbackListener> feedbackListeners = Collections.synchronizedList(new ArrayList<BMLFeedbackListener>());
 
-    public BMLRealizerToIpaacaAdapter()
+    public BMLRealizerToIpaacaAdapter(String characterId)
     {
+        if(characterId!=null)
+        {
+            inBuffer = new InputBuffer("BMLToIpaacaRealizerAdapter",ImmutableSet.of(IpaacaBMLConstants.BML_FEEDBACK_CATEGORY), characterId);
+            outBuffer =  new OutputBuffer("BMLToIpaacaRealizerAdapter", characterId);
+        }
+        else
+        {
+            inBuffer = new InputBuffer("BMLToIpaacaRealizerAdapter",ImmutableSet.of(IpaacaBMLConstants.BML_FEEDBACK_CATEGORY));
+            outBuffer =  new OutputBuffer("BMLToIpaacaRealizerAdapter");
+        }
+        
         EnumSet<IUEventType> types = EnumSet.of(IUEventType.ADDED, IUEventType.MESSAGE);
         inBuffer.registerHandler(new IUEventHandler(new HandlerFunctor()
         {
@@ -59,6 +73,11 @@ public class BMLRealizerToIpaacaAdapter implements RealizerPort
                 outBuffer, inBuffer);
         notifier.initialize();
     }
+    
+    public BMLRealizerToIpaacaAdapter()
+    {
+        this(null);
+    }
 
     @Override
     public void addListeners(BMLFeedbackListener... listeners)
@@ -73,12 +92,17 @@ public class BMLRealizerToIpaacaAdapter implements RealizerPort
     }
 
     @Override
+    public void removeListener(BMLFeedbackListener l)
+    {
+        feedbackListeners.remove(l);
+    }
+    @Override
     public void performBML(String bmlString)
     {
-        LocalMessageIU feedbackIU = new LocalMessageIU();
-        feedbackIU.setCategory(IpaacaBMLConstants.BML_CATEGORY);
-        feedbackIU.getPayload().put(IpaacaBMLConstants.BML_KEY, bmlString);
-        outBuffer.add(feedbackIU);
+        LocalMessageIU iu = new LocalMessageIU();
+        iu.setCategory(IpaacaBMLConstants.BML_CATEGORY);
+        iu.getPayload().put(IpaacaBMLConstants.BML_KEY, bmlString);
+        outBuffer.add(iu);
     }
 
     public void close()
@@ -86,4 +110,6 @@ public class BMLRealizerToIpaacaAdapter implements RealizerPort
         outBuffer.close();
         inBuffer.close();
     }
+
+    
 }

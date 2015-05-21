@@ -1,3 +1,5 @@
+/*******************************************************************************
+ *******************************************************************************/
 package asap.animationengine.gaze;
 
 import hmi.animation.Hanim;
@@ -171,7 +173,7 @@ public class DynamicRestGaze implements RestGaze
         mu.offsetDirection = offsetDirection;
         mu.influence = influence;
         mu.offsetAngle = offsetAngle;
-        return new GazeShiftTMU(bmlBlockPeg, bmlId, id, mu.copy(aniPlayer), pb, this, aniPlayer);
+        return new GazeShiftTMU(bbf, bmlBlockPeg, bmlId, id, mu.copy(aniPlayer), pb, this, aniPlayer);
     }
 
     @Override

@@ -1,3 +1,5 @@
+/*******************************************************************************
+ *******************************************************************************/
 package asap.environment;
 
 import static org.junit.Assert.assertEquals;
@@ -290,5 +292,36 @@ public class AsapVirtualHumanTest
         avh.load(new XMLTokenizer(str), "id1", new Environment[] { aEnv }, new SystemClock());
         assertNotNull(avh.getLoaders().get("ml1"));
         assertNotNull(avh.getLoaders().get("ml2"));
+    }
+    
+    @Test
+    public void testId() throws IOException
+    {
+      //@formatter:off
+        String str = 
+        "<AsapVirtualHuman id=\"Fred\">"+             
+                "<Loader id=\"realizer\" loader=\"asap.realizerembodiments.AsapRealizerEmbodiment\">" +
+                "</Loader>"+
+        "</AsapVirtualHuman>";
+        //@formatter:on
+        AsapVirtualHuman avh = new AsapVirtualHuman();
+        avh.load(new XMLTokenizer(str), "windowname", new Environment[] { aEnv }, new SystemClock());
+        assertEquals("Fred",avh.getVhId());
+    }
+    
+    @Test
+    public void testIdOverride() throws IOException
+    {
+      //@formatter:off
+        String str = 
+        "<AsapVirtualHuman id=\"Fred\">"+             
+                "<Loader id=\"realizer\" loader=\"asap.realizerembodiments.AsapRealizerEmbodiment\">" +
+                "</Loader>"+
+        "</AsapVirtualHuman>";
+        //@formatter:on
+        AsapVirtualHuman avh = new AsapVirtualHuman();
+        avh.setVhId("Wilma");
+        avh.load(new XMLTokenizer(str), "windowname", new Environment[] { aEnv }, new SystemClock());
+        assertEquals("Wilma",avh.getVhId());
     }
 }

@@ -1,3 +1,5 @@
+/*******************************************************************************
+ *******************************************************************************/
 package asap.animationengine;
 
 import static org.hamcrest.CoreMatchers.instanceOf;
@@ -38,12 +40,14 @@ import asap.animationengine.gaze.RestGaze;
 import asap.animationengine.gaze.StubGazeMU;
 import asap.animationengine.gesturebinding.GestureBinding;
 import asap.animationengine.gesturebinding.MURMLMUBuilder;
+import asap.animationengine.keyframe.KeyframeMU;
 import asap.animationengine.motionunit.MUSetupException;
 import asap.animationengine.motionunit.StubAnimationUnit;
 import asap.animationengine.motionunit.TimedAnimationMotionUnit;
 import asap.animationengine.motionunit.TimedAnimationUnit;
 import asap.animationengine.restpose.PostureShiftTMU;
 import asap.animationengine.restpose.RestPose;
+import asap.bml.ext.bmlt.BMLTKeyframeBehaviour;
 import asap.bml.ext.murml.MURMLGestureBehaviour;
 import asap.hns.Hns;
 import asap.hns.ShapeSymbols;
@@ -134,8 +138,8 @@ public class AnimationPlannerTest
         animationPlanner = new AnimationPlanner(fbManager, mockPlayer, mockBinding, stubHns, null, planManager, pegBoard);
         plannerTests = new PlannerTests<TimedAnimationUnit>(animationPlanner, bbPeg);
         PostureShiftTMU tmups = new PostureShiftTMU(fbManager, bbPeg, BMLID, "pshift1", stubUnit, pegBoard, mockRestPose, mockPlayer);
-        GazeShiftTMU tmugs = new GazeShiftTMU(bbPeg, BMLID, "gshift1", stubGazeUnit, pegBoard, mockRestGaze, mockPlayer);
-        TimedAnimationMotionUnit tmu = new TimedAnimationMotionUnit(fbManager, bbPeg, BMLID, "nod1", stubUnit, pegBoard);
+        GazeShiftTMU tmugs = new GazeShiftTMU(fbManager, bbPeg, BMLID, "gshift1", stubGazeUnit, pegBoard, mockRestGaze, mockPlayer);
+        TimedAnimationMotionUnit tmu = new TimedAnimationMotionUnit(fbManager, bbPeg, BMLID, "nod1", stubUnit, pegBoard, mockPlayer);
 
         final List<TimedAnimationUnit> tmus = new ArrayList<>();
         tmus.add(tmu);
@@ -426,6 +430,34 @@ public class AnimationPlannerTest
         assertThat(pu.getTime("strokeStart"), greaterThan(pu.getTime("start")));
     }
 
+    @Test
+    public void testKeyframeInternal() throws IOException, BehaviourPlanningException
+    {
+        String keyframe = "<SkeletonInterpolator xmlns=\"\" rotationEncoding=\"quaternions\" parts=\"skullbase\" encoding=\"R\">" + "0 0 1 0 1"
+                + "</SkeletonInterpolator>";
+        String str = "<bmlt:keyframe xmlns:bmlt=\"http://hmi.ewi.utwente.nl/bmlt\" " + "id=\"kf1\">" + keyframe + "</bmlt:keyframe>";
+        BMLTKeyframeBehaviour beh = new BMLTKeyframeBehaviour("bml1", new XMLTokenizer(str));
+        ArrayList<TimePegAndConstraint> sacs = new ArrayList<TimePegAndConstraint>();
+        TimedAnimationMotionUnit pu = (TimedAnimationMotionUnit)animationPlanner.resolveSynchs(bbPeg, beh, sacs);
+        animationPlanner.addBehaviour(bbPeg, beh, sacs, pu);
+        assertThat(pu.getMotionUnit(), instanceOf(KeyframeMU.class));
+        assertThat(pu.getKinematicJoints(), IsIterableContainingInAnyOrder.containsInAnyOrder(Hanim.skullbase));
+    }
+
+    @Test
+    public void testKeyframeInternalMirror() throws IOException, BehaviourPlanningException
+    {
+        String keyframe = "<SkeletonInterpolator xmlns=\"\" rotationEncoding=\"quaternions\" parts=\"r_shoulder\" encoding=\"R\">" + "0 0 1 0 1"
+                + "</SkeletonInterpolator>";
+        String str = "<bmlt:keyframe xmlns:bmlt=\"http://hmi.ewi.utwente.nl/bmlt\" " + "id=\"kf1\">" + keyframe + 
+                "<bmlt:parameter name=\"mirror\" value=\"true\"/></bmlt:keyframe>";
+        BMLTKeyframeBehaviour beh = new BMLTKeyframeBehaviour("bml1", new XMLTokenizer(str));
+        ArrayList<TimePegAndConstraint> sacs = new ArrayList<TimePegAndConstraint>();
+        TimedAnimationMotionUnit pu = (TimedAnimationMotionUnit)animationPlanner.resolveSynchs(bbPeg, beh, sacs);
+        animationPlanner.addBehaviour(bbPeg, beh, sacs, pu);
+        assertThat(pu.getKinematicJoints(), IsIterableContainingInAnyOrder.containsInAnyOrder(Hanim.l_shoulder));
+    }
+    
     @Test
     public void testInterrupt() // throws BehaviourPlanningException
     {

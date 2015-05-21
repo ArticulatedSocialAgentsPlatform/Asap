@@ -1,3 +1,5 @@
+/*******************************************************************************
+ *******************************************************************************/
 package asap.realizer.scheduler;
 
 import static org.hamcrest.core.IsCollectionContaining.hasItem;

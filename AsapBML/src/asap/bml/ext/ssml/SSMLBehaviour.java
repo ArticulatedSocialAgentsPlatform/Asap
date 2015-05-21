@@ -1,11 +1,13 @@
+/*******************************************************************************
+ *******************************************************************************/
 package asap.bml.ext.ssml;
 
-import saiba.bml.core.SpeechBehaviour;
 import hmi.xml.XMLFormatting;
 import hmi.xml.XMLTokenizer;
 
 import java.io.IOException;
-import java.util.HashMap;
+
+import saiba.bml.core.SpeechBehaviour;
 
 /**
  * Speech Synthesis Markup Language behaviour.
@@ -15,17 +17,14 @@ import java.util.HashMap;
  */
 public class SSMLBehaviour extends SpeechBehaviour
 {
-    
     public SSMLBehaviour(String bmlId, XMLTokenizer tokenizer) throws IOException
     {
         super(bmlId, tokenizer);        
     }
     
-    @Override
-    public void decodeAttributes(HashMap<String, String> attrMap,
-            XMLTokenizer tokenizer)
+    public SSMLBehaviour(String bmlId, String id, XMLTokenizer tokenizer) throws IOException
     {
-        // empty, 'cause id is not required
+        super(bmlId, id, tokenizer);        
     }
 
     @Override

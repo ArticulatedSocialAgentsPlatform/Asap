@@ -1,3 +1,5 @@
+/*******************************************************************************
+ *******************************************************************************/
 package asap.realizer.feedback;
 
 import java.util.ArrayList;
@@ -6,10 +8,10 @@ import java.util.List;
 
 import lombok.extern.slf4j.Slf4j;
 import net.jcip.annotations.GuardedBy;
-import saiba.bml.feedback.BMLBlockProgressFeedback;
-import saiba.bml.feedback.BMLPredictionFeedback;
 import saiba.bml.feedback.BMLSyncPointProgressFeedback;
 import saiba.bml.feedback.BMLWarningFeedback;
+import asap.bml.ext.bmla.feedback.BMLABlockProgressFeedback;
+import asap.bml.ext.bmla.feedback.BMLAPredictionFeedback;
 import asap.bml.ext.bmla.feedback.BMLASyncPointProgressFeedback;
 import asap.realizer.planunit.TimedPlanUnit;
 import asap.realizer.scheduler.BMLBlockManager;
@@ -70,11 +72,11 @@ public class FeedbackManagerImpl implements FeedbackManager
             {
                 try
                 {
-                    fbl.feedback(fba.toXMLString());
+                    fbl.feedback(fba.toBMLFeedbackString());
                 }
                 catch (Exception ex)
                 {
-                    log.warn("Exception in FeedbackListener: {}, feedback: {}", ex, fb.toXMLString());
+                    log.warn("Exception in FeedbackListener: {}, feedback: {}", ex, fb.toBMLFeedbackString());
                 }
             }
         }
@@ -94,11 +96,11 @@ public class FeedbackManagerImpl implements FeedbackManager
                 {
                     try
                     {
-                        fbl.feedback(fba.toXMLString());
+                        fbl.feedback(fba.toBMLFeedbackString());
                     }
                     catch (Exception ex)
                     {
-                        log.warn("Exception in FeedbackListener: {}, feedback: {}", ex, fb.toXMLString());
+                        log.warn("Exception in FeedbackListener: {}, feedback: {}", ex, fb.toBMLFeedbackString());
                     }
                 }
             }
@@ -127,7 +129,7 @@ public class FeedbackManagerImpl implements FeedbackManager
     }
 
     @Override
-    public void blockProgress(BMLBlockProgressFeedback psf)
+    public void blockProgress(BMLABlockProgressFeedback psf)
     {
         psf.setCharacterId(characterId);
         synchronized (feedbackListeners)
@@ -136,7 +138,7 @@ public class FeedbackManagerImpl implements FeedbackManager
             {
                 try
                 {
-                    fbl.feedback(psf.toXMLString());
+                    fbl.feedback(psf.toBMLFeedbackString());
                 }
                 catch (Exception ex)
                 {
@@ -149,11 +151,11 @@ public class FeedbackManagerImpl implements FeedbackManager
 
     
     @Override
-    public void prediction(BMLPredictionFeedback bpf)
+    public void prediction(BMLAPredictionFeedback bpf)
     {
         synchronized (feedbackListeners)
         {
-            String feedbackString = bpf.toXMLString();       
+            String feedbackString = bpf.toBMLFeedbackString();       
             for (BMLFeedbackListener pl : feedbackListeners)
             {
                 try
@@ -178,11 +180,11 @@ public class FeedbackManagerImpl implements FeedbackManager
             {
                 try
                 {
-                    wl.feedback(w.toXMLString());
+                    wl.feedback(w.toBMLFeedbackString());
                 }
                 catch (Exception ex)
                 {
-                    log.warn("Exception in WarningListener: {}, feedback: {}", ex, w.toXMLString());
+                    log.warn("Exception in WarningListener: {}, feedback: {}", ex, w.toBMLFeedbackString());
                 }
             }
         }

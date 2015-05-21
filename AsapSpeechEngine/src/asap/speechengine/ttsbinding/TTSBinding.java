@@ -1,10 +1,11 @@
+/*******************************************************************************
+ *******************************************************************************/
 package asap.speechengine.ttsbinding;
 
-import saiba.bml.core.Behaviour;
 import hmi.tts.AbstractTTSGenerator;
 import hmi.tts.TTSBridge;
 import hmi.tts.TTSCallback;
-import hmi.tts.TimingInfo;
+import hmi.tts.TTSTiming;
 
 import java.io.IOException;
 import java.util.ArrayList;
@@ -12,6 +13,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import saiba.bml.core.Behaviour;
 import asap.realizer.planunit.ParameterException;
 import asap.realizer.planunit.ParameterNotFoundException;
 
@@ -58,7 +60,7 @@ public abstract class TTSBinding
      * @param text
      *            the text or script to speak
      */
-    public TimingInfo speak(Class<? extends Behaviour> behClass, String text)
+    public TTSTiming speak(Class<? extends Behaviour> behClass, String text)
     {
         TTSBridge bridge = ttsBridgeMap.get(behClass);
         if(bridge!=null)
@@ -72,7 +74,7 @@ public abstract class TTSBinding
         }
     }
     
-    public TimingInfo speakToFile(Class<? extends Behaviour> behClass, String text, String filename) throws IOException
+    public TTSTiming speakToFile(Class<? extends Behaviour> behClass, String text, String filename) throws IOException
     {
         TTSBridge bridge = ttsBridgeMap.get(behClass);
         if(bridge!=null)
@@ -86,7 +88,7 @@ public abstract class TTSBinding
         }        
     }
     
-    public TimingInfo getTiming(Class<? extends Behaviour> behClass, String text) 
+    public TTSTiming getTiming(Class<? extends Behaviour> behClass, String text) 
     {
         TTSBridge bridge = ttsBridgeMap.get(behClass);
         if(bridge!=null)

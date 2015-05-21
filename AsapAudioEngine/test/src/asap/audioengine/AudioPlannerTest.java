@@ -1,3 +1,5 @@
+/*******************************************************************************
+ *******************************************************************************/
 package asap.audioengine;
 
 import static org.junit.Assert.assertEquals;
@@ -14,7 +16,6 @@ import org.junit.Before;
 import org.junit.Test;
 
 import saiba.bml.parser.Constraint;
-
 import asap.bml.ext.bmlt.BMLTAudioFileBehaviour;
 import asap.realizer.BehaviourPlanningException;
 import asap.realizer.SyncAndTimePeg;

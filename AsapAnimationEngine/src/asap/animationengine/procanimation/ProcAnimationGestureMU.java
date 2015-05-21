@@ -1,3 +1,5 @@
+/*******************************************************************************
+ *******************************************************************************/
 package asap.animationengine.procanimation;
 
 import hmi.animation.Hanim;
@@ -372,7 +374,7 @@ public class ProcAnimationGestureMU implements GestureUnit
     @Override
     public ProcAnimationGestureTMU createTMU(FeedbackManager bbm, BMLBlockPeg bmlBlockPeg, String bmlId, String id, PegBoard pb)
     {
-        return new ProcAnimationGestureTMU(bbm, bmlBlockPeg, bmlId, id, this, pb);
+        return new ProcAnimationGestureTMU(bbm, bmlBlockPeg, bmlId, id, this, pb, aniPlayer);
     }
 
     @Override
@@ -458,5 +460,11 @@ public class ProcAnimationGestureMU implements GestureUnit
     public void startUnit(double t) throws MUPlayException
     {
 
+    }
+    
+    @Override
+    public Set<String> getAdditiveJoints()
+    {
+        return ImmutableSet.of();
     }
 }

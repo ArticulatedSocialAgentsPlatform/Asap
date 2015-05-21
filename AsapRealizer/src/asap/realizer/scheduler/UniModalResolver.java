@@ -1,9 +1,10 @@
+/*******************************************************************************
+ *******************************************************************************/
 package asap.realizer.scheduler;
-
-import saiba.bml.core.Behaviour;
 
 import java.util.List;
 
+import saiba.bml.core.Behaviour;
 import asap.realizer.BehaviourPlanningException;
 import asap.realizer.pegboard.BMLBlockPeg;
 import asap.realizer.planunit.TimedPlanUnit;

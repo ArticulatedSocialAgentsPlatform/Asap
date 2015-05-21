@@ -1,3 +1,5 @@
+/*******************************************************************************
+ *******************************************************************************/
 package asap.animationengine.restpose;
 
 import hmi.animation.SkeletonPose;
@@ -50,7 +52,7 @@ public class PhysicalBalanceRestPose implements RestPose
     private SkeletonPose restPose;
     private VJoint restPoseTree;
     private List<PhysicalController> prevControllers = new ArrayList<PhysicalController>();
-    
+
     @Override
     public RestPose copy(AnimationPlayer player)
     {
@@ -103,7 +105,7 @@ public class PhysicalBalanceRestPose implements RestPose
         {
             if (Sets.intersection(cc.getRequiredJointIDs(), kinematicJoints).size() == 0)
             {
-                if(!prevControllers.contains(cc))
+                if (!prevControllers.contains(cc))
                 {
                     cc.reset();
                 }
@@ -132,8 +134,8 @@ public class PhysicalBalanceRestPose implements RestPose
     }
 
     @Override
-    public TimedAnimationMotionUnit createTransitionToRest(FeedbackManager fbm, Set<String> joints, double startTime, String bmlId, String id,
-            BMLBlockPeg bmlBlockPeg, PegBoard pb)
+    public TimedAnimationMotionUnit createTransitionToRest(FeedbackManager fbm, Set<String> joints, double startTime, String bmlId,
+            String id, BMLBlockPeg bmlBlockPeg, PegBoard pb)
     {
         return createTransitionToRest(fbm, joints, startTime, 1, bmlId, id, bmlBlockPeg, pb);
     }
@@ -145,7 +147,7 @@ public class PhysicalBalanceRestPose implements RestPose
         TransitionMU mu = createTransitionToRest(joints);
         mu.addKeyPosition(new KeyPosition("start", 0));
         mu.addKeyPosition(new KeyPosition("end", 1));
-        TimedAnimationMotionUnit tmu = new TimedAnimationMotionUnit(fbm, bmlBlockPeg, bmlId, id, mu, pb);
+        TimedAnimationMotionUnit tmu = new TimedAnimationMotionUnit(fbm, bmlBlockPeg, bmlId, id, mu, pb, player);
         TimePeg startPeg = new TimePeg(bmlBlockPeg);
         startPeg.setGlobalValue(startTime);
         tmu.setTimePeg("start", startPeg);
@@ -185,7 +187,7 @@ public class PhysicalBalanceRestPose implements RestPose
     }
 
     @Override
-    public void setRestPose()
+    public void startRestPose(double time)
     {
 
     }
@@ -206,7 +208,7 @@ public class PhysicalBalanceRestPose implements RestPose
                 catch (IOException e)
                 {
                     throw new ParameterException("Cannot load compound controller " + value, e);
-                }                
+                }
                 optionalControllers.add(cc);
             }
         }

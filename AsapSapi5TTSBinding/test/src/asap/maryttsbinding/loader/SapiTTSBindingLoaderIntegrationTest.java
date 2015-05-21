@@ -1,3 +1,5 @@
+/*******************************************************************************
+ *******************************************************************************/
 package asap.maryttsbinding.loader;
 
 import static org.hamcrest.MatcherAssert.assertThat;
@@ -6,7 +8,7 @@ import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertTrue;
 import hmi.environmentbase.Environment;
 import hmi.environmentbase.Loader;
-import hmi.tts.TimingInfo;
+import hmi.tts.TTSTiming;
 import hmi.tts.Visime;
 import hmi.util.OS;
 import hmi.xml.XMLTokenizer;
@@ -45,7 +47,7 @@ public class SapiTTSBindingLoaderIntegrationTest
         tok.takeSTag();
         loader.readXML(tok, "id1", "id1", "id1" , new Environment[0], new Loader[0]);      
         assertNotNull(loader.getTTSBinding());
-        TimingInfo ti = loader.getTTSBinding().speak(SpeechBehaviour.class,"blah blah test 1 2 3");
+        TTSTiming ti = loader.getTTSBinding().speak(SpeechBehaviour.class,"blah blah test 1 2 3");
         assertThat(ti.getDuration(),greaterThan(0d));
         
         boolean hasVisemes = false;

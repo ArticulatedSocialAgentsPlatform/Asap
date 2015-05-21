@@ -1,3 +1,5 @@
+/*******************************************************************************
+ *******************************************************************************/
 package asap.realizertestutil.planunit;
 
 import static asap.testutil.bml.feedback.FeedbackAsserts.assertEqualSyncPointProgress;
@@ -162,7 +164,6 @@ public abstract class AbstractTimedPlanUnitTest
         assertEquals(TimedPlanUnitState.IN_EXEC, tpu.getState());
     }
 
-    @SuppressWarnings("unchecked")
     @Test
     public void testStartThenPlayInLurking() throws TimedPlanUnitPlayException, TimedPlanUnitSetupException
     {
@@ -176,7 +177,6 @@ public abstract class AbstractTimedPlanUnitTest
         assertEqualSyncPointProgress(expected, fbList.get(0));
     }
 
-    @SuppressWarnings("unchecked")
     @Test
     public void testPlayInExec() throws TimedPlanUnitPlayException, TimedPlanUnitSetupException
     {

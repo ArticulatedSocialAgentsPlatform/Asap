@@ -1,7 +1,9 @@
+/*******************************************************************************
+ *******************************************************************************/
 package asap.animationengine.motionunit;
 
-import asap.realizer.planunit.TimedPlanUnitSetupException;
 import lombok.Getter;
+import asap.realizer.planunit.TimedPlanUnitSetupException;
 
 /**
  * A failure occurred when constructing tmu

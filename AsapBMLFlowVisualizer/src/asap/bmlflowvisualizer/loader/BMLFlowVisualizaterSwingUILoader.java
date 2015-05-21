@@ -1,3 +1,5 @@
+/*******************************************************************************
+ *******************************************************************************/
 package asap.bmlflowvisualizer.loader;
 
 import hmi.environmentbase.Environment;
@@ -11,10 +13,7 @@ import hmi.xml.XMLTokenizer;
 import java.io.IOException;
 
 import lombok.Getter;
-import asap.bmlflowvisualizer.BMLFlowVisualizerPort;
-import asap.bmlflowvisualizer.FinishedQueueJPanelVisualization;
-import asap.bmlflowvisualizer.PlanningQueueJPanelVisualization;
-import asap.bmlflowvisualizer.PlayingQueueJPanelVisualization;
+import saiba.bmlflowvisualizer.BMLFlowVisualizerPort;
 import asap.realizerembodiments.AsapRealizerEmbodiment;
 
 /**
@@ -41,8 +40,6 @@ public class BMLFlowVisualizaterSwingUILoader implements Loader
         AsapBMLFlowVisualizerPortLoader visPortLoader = CollectionUtils.getFirstClassOfType(are.getPipeLoaders(),
                 AsapBMLFlowVisualizerPortLoader.class);
         BMLFlowVisualizerPort visPort = visPortLoader.getAdaptedRealizerPort();
-        visPort.setVisualization(new PlanningQueueJPanelVisualization(), new PlayingQueueJPanelVisualization(),
-                new FinishedQueueJPanelVisualization());
         jcc.getEmbodiment().addJComponent(visPort.getVisualization());
     }
 

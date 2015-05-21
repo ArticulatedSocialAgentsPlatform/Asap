@@ -1,39 +1,28 @@
 /*******************************************************************************
- * Copyright (C) 2009 Human Media Interaction, University of Twente, the Netherlands
- * 
- * This file is part of the Elckerlyc BML realizer.
- * 
- * Elckerlyc is free software: you can redistribute it and/or modify
- * it under the terms of the GNU General Public License as published by
- * the Free Software Foundation, either version 3 of the License, or
- * (at your option) any later version.
- * 
- * Elckerlyc is distributed in the hope that it will be useful,
- * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- * GNU General Public License for more details.
- * 
- * You should have received a copy of the GNU General Public License
- * along with Elckerlyc.  If not, see http://www.gnu.org/licenses/.
- ******************************************************************************/
+ *******************************************************************************/
 package asap.speechengine;
 
-import saiba.bml.BMLGestureSync;
-import saiba.bml.core.Behaviour;
-import hmi.tts.*;
+import hmi.tts.Bookmark;
+import hmi.tts.TTSTiming;
+import hmi.tts.Visime;
 
-import java.util.*;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import com.google.common.collect.ImmutableList;
-
-import asap.realizer.*;
+import saiba.bml.BMLGestureSync;
+import saiba.bml.core.Behaviour;
+import asap.realizer.SyncPointNotFoundException;
 import asap.realizer.feedback.FeedbackManager;
 import asap.realizer.pegboard.BMLBlockPeg;
 import asap.realizer.pegboard.TimePeg;
 import asap.speechengine.ttsbinding.TTSBinding;
+
+import com.google.common.collect.ImmutableList;
 
 /**
  * A TimedPlanUnit that contains speech played back through a TTS system, 
@@ -238,7 +227,7 @@ public abstract class TimedTTSUnit extends TimedAbstractSpeechUnit
         return duration;
     }
 
-    protected abstract TimingInfo getTiming() throws SpeechUnitPlanningException;
+    protected abstract TTSTiming getTiming() throws SpeechUnitPlanningException;
 
     /**
      * @throws SpeechUnitPlanningException
@@ -258,7 +247,7 @@ public abstract class TimedTTSUnit extends TimedAbstractSpeechUnit
         synchronized (ttsBinding)
         {
             ttsBinding.setCallback(null);
-            TimingInfo ti = getTiming();
+            TTSTiming ti = getTiming();
             setupCache();
 
             duration = ti.getDuration();

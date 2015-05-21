@@ -1,3 +1,5 @@
+/*******************************************************************************
+ *******************************************************************************/
 package asap.bml.ext.bmlt;
 
 import saiba.bml.BMLInfo;
@@ -42,6 +44,7 @@ public final class BMLTInfo
             .put(BMLTControllerBehaviour.xmlTag(), BMLTControllerBehaviour.class)
             .put(BMLTNoiseBehaviour.xmlTag(), BMLTNoiseBehaviour.class)            
             .put(BMLTKeyframeBehaviour.xmlTag(), BMLTKeyframeBehaviour.class)
+            .put(BMLTFaceKeyframeBehaviour.xmlTag(),BMLTFaceKeyframeBehaviour.class)
             .put(BMLTAudioFileBehaviour.xmlTag(), BMLTAudioFileBehaviour.class)
             .put(BMLTFaceMorphBehaviour.xmlTag(), BMLTFaceMorphBehaviour.class)
             .put(MURMLGestureBehaviour.xmlTag(), MURMLGestureBehaviour.class)
@@ -81,6 +84,10 @@ public final class BMLTInfo
         BMLInfo.addCustomFeedbackStringAttribute(BMLBlockPredictionFeedback.class, BMLAInfo.BMLA_NAMESPACE, "posixEndTime");
         BMLInfo.addCustomFeedbackStringAttribute(BMLABlockPredictionFeedback.class, BMLAInfo.BMLA_NAMESPACE, "posixStartTime");
         BMLInfo.addCustomFeedbackStringAttribute(BMLABlockPredictionFeedback.class, BMLAInfo.BMLA_NAMESPACE, "posixEndTime");
+        BMLInfo.addCustomFeedbackStringAttribute(BMLABlockProgressFeedback.class, BMLAInfo.BMLA_NAMESPACE, "status");
+        BMLInfo.addCustomFeedbackStringAttribute(BMLBlockProgressFeedback.class, BMLAInfo.BMLA_NAMESPACE, "status");
+        BMLInfo.addCustomFeedbackStringAttribute(BMLABlockPredictionFeedback.class, BMLAInfo.BMLA_NAMESPACE, "status");
+        BMLInfo.addCustomFeedbackStringAttribute(BMLBlockPredictionFeedback.class, BMLAInfo.BMLA_NAMESPACE, "status");
         
         
         BMLInfo.addCustomFloatAttribute(GazeBehaviour.class, BMLAInfo.BMLA_NAMESPACE, "priority");

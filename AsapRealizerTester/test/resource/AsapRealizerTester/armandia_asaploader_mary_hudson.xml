@@ -100,8 +100,7 @@
 	<SpeechBinding basedir="" resources="Humanoids/shared/speechbinding/" filename="ikpspeechbinding.xml"/>
   </Loader>
 
-  <Loader id="ttsbinding" loader="asap.maryttsbinding.loader.MaryTTSBindingLoader">
-    <MaryTTS localdir="Asap/AsapRealizerTester/lib/MARYTTS"/>
+ <Loader id="ttsbinding" loader="asap.marytts5binding.loader.MaryTTSBindingLoader">
     <PhonemeToVisemeMapping resources="Humanoids/shared/phoneme2viseme/" filename="sampade2ikp.xml"/>
   </Loader>
 

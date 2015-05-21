@@ -1,3 +1,5 @@
+/*******************************************************************************
+ *******************************************************************************/
 package asap.animationengine.gaze;
 
 import java.util.Set;
@@ -134,5 +136,10 @@ public class StubGazeMU implements GazeMU
     public void setTarget()
     {
                 
-    }    
+    }
+    @Override
+    public Set<String> getAdditiveJoints()
+    {
+        return ImmutableSet.of();
+    }
 }

@@ -1,10 +1,10 @@
+/*******************************************************************************
+ *******************************************************************************/
 package asap.animationengine.motionunit;
-
 
 import java.util.Set;
 
 import lombok.Delegate;
-
 import asap.animationengine.AnimationPlayer;
 import asap.motionunit.MUPlayException;
 import asap.realizer.feedback.FeedbackManager;
@@ -14,6 +14,7 @@ import asap.realizer.planunit.KeyPositionManager;
 import asap.realizer.planunit.KeyPositionManagerImpl;
 
 import com.google.common.collect.ImmutableSet;
+
 /**
  * Motion unit stub, typically used to test a TimedMotionUnit implementation.
  * @author welberge
@@ -21,8 +22,9 @@ import com.google.common.collect.ImmutableSet;
 public class StubAnimationUnit implements AnimationUnit
 {
     @Delegate
-    private KeyPositionManager keyPositionManager = new KeyPositionManagerImpl();    
-    
+    private KeyPositionManager keyPositionManager = new KeyPositionManagerImpl();
+    private AnimationPlayer aniPlayer;
+
     @Override
     public void setFloatParameterValue(String name, float value)
     {
@@ -48,7 +50,7 @@ public class StubAnimationUnit implements AnimationUnit
     @Override
     public TimedAnimationMotionUnit createTMU(FeedbackManager bfm, BMLBlockPeg bmlBlockPeg, String bmlId, String id, PegBoard pb)
     {
-        return new TimedAnimationMotionUnit(bfm,bmlBlockPeg,bmlId,id,this, pb);
+        return new TimedAnimationMotionUnit(bfm, bmlBlockPeg, bmlId, id, this, pb, aniPlayer);
     }
 
     @Override
@@ -60,6 +62,7 @@ public class StubAnimationUnit implements AnimationUnit
     @Override
     public AnimationUnit copy(AnimationPlayer p)
     {
+        this.aniPlayer = p;
         return null;
     }
 
@@ -84,6 +87,12 @@ public class StubAnimationUnit implements AnimationUnit
     @Override
     public void startUnit(double t) throws MUPlayException
     {
-                
+
+    }
+    
+    @Override
+    public Set<String> getAdditiveJoints()
+    {
+        return ImmutableSet.of();
     }
 }

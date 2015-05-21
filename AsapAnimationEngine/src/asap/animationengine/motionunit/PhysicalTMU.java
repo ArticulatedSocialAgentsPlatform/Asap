@@ -1,8 +1,11 @@
+/*******************************************************************************
+ *******************************************************************************/
 package asap.animationengine.motionunit;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import asap.animationengine.AnimationPlayer;
 import asap.animationengine.controller.ControllerMU;
 import asap.realizer.feedback.FeedbackManager;
 import asap.realizer.pegboard.BMLBlockPeg;
@@ -19,9 +22,9 @@ public class PhysicalTMU extends TimedAnimationMotionUnit
 {
     private static Logger logger = LoggerFactory.getLogger(PhysicalTMU.class.getName());
 
-    public PhysicalTMU(FeedbackManager bbm, BMLBlockPeg bbPeg, String bmlId, String id, AnimationUnit m, PegBoard pb)
+    public PhysicalTMU(FeedbackManager bbm, BMLBlockPeg bbPeg, String bmlId, String id, AnimationUnit m, PegBoard pb, AnimationPlayer aniPlayer)
     {
-        super(bbm, bbPeg, bmlId, id, m, pb);
+        super(bbm, bbPeg, bmlId, id, m, pb, aniPlayer);
     }
 
     @Override

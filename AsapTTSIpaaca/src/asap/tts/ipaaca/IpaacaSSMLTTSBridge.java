@@ -1,9 +1,11 @@
+/*******************************************************************************
+ *******************************************************************************/
 package asap.tts.ipaaca;
-
-import java.io.IOException;
 
 import hmi.tts.TTSBridge;
 import hmi.tts.TimingInfo;
+
+import java.io.IOException;
 
 /**
  * Binds the SSMLBehavior to the ipaaca ttsgenerator

@@ -1,14 +1,16 @@
+/*******************************************************************************
+ *******************************************************************************/
 package asap.hns;
+
+import hmi.xml.XMLScanException;
+import hmi.xml.XMLStructureAdapter;
+import hmi.xml.XMLTokenizer;
 
 import java.io.IOException;
 import java.util.HashMap;
 import java.util.Map;
 
 import lombok.Getter;
-
-import hmi.xml.XMLScanException;
-import hmi.xml.XMLStructureAdapter;
-import hmi.xml.XMLTokenizer;
 
 /**
  * Parses hns symbols

@@ -1,3 +1,5 @@
+/*******************************************************************************
+ *******************************************************************************/
 package asap.faceengine;
 
 import static org.hamcrest.CoreMatchers.instanceOf;
@@ -28,10 +30,13 @@ import saiba.bml.core.Behaviour;
 import saiba.bml.core.FaceLexemeBehaviour;
 import saiba.bml.feedback.BMLWarningFeedback;
 import saiba.bml.parser.Constraint;
+import asap.bml.ext.bmlt.BMLTBehaviour;
+import asap.bml.ext.bmlt.BMLTFaceKeyframeBehaviour;
 import asap.bml.ext.murml.MURMLFaceBehaviour;
 import asap.faceengine.facebinding.FaceBinding;
 import asap.faceengine.faceunit.FaceUnit;
 import asap.faceengine.faceunit.KeyframeMorphFU;
+import asap.faceengine.faceunit.MURMLKeyframeMorphFU;
 import asap.faceengine.faceunit.TimedFaceUnit;
 import asap.realizer.BehaviourPlanningException;
 import asap.realizer.DefaultPlayer;
@@ -139,6 +144,24 @@ public class FacePlannerTest
     }
 
     @Test
+    public void testResolveMorphKeyframe() throws IOException, BehaviourPlanningException
+    {
+        String bmlString = "<facekeyframe xmlns=\""+BMLTBehaviour.BMLTNAMESPACE+"\" id=\"kf1\">"+
+                           "<FaceInterpolator parts=\"morph1 morph2\">"+
+                           "2 0.8 0.7\n"+
+                           "3 0.6 0.5"+
+                           "</FaceInterpolator>"+
+                           "</facekeyframe>";
+        BMLTFaceKeyframeBehaviour b =new BMLTFaceKeyframeBehaviour("bml1", new XMLTokenizer(bmlString));
+        ArrayList<TimePegAndConstraint> sacs = new ArrayList<TimePegAndConstraint>();
+        
+        TimedFaceUnit tfu = facePlanner.resolveSynchs(bbPeg, b, sacs);
+        assertNotNull(tfu);
+        assertThat(tfu.getFaceUnit(), instanceOf(KeyframeMorphFU.class));
+        assertEquals(1, tfu.getPreferedDuration(),PLAN_PRECISION);
+    }
+    
+    @Test
     public void testResolveMURML() throws IOException, BehaviourPlanningException
     {
         String bmlString = "<murmlface xmlns=\"http://www.techfak.uni-bielefeld.de/ags/soa/murml\" " + "id=\"a1\" start=\"nod1:end\">"
@@ -155,7 +178,7 @@ public class FacePlannerTest
 
         TimedFaceUnit tfu = facePlanner.resolveSynchs(bbPeg, b, sacs);
         assertNotNull(tfu);
-        assertThat(tfu.getFaceUnit(), instanceOf(KeyframeMorphFU.class));
+        assertThat(tfu.getFaceUnit(), instanceOf(MURMLKeyframeMorphFU.class));
         assertEquals(0, tfu.getStartTime(), PLAN_PRECISION);
         assertEquals(2, tfu.getEndTime(), PLAN_PRECISION);
     }

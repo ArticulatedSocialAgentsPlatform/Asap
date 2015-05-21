@@ -1,3 +1,5 @@
+/*******************************************************************************
+ *******************************************************************************/
 package asap.realizerport;
 
 /**
@@ -10,6 +12,9 @@ public interface RealizerPort
      * Add some listeners to which BML Feedback will be sent
      */
     void addListeners(BMLFeedbackListener ... listeners);
+    
+    
+    void removeListener(BMLFeedbackListener l);
     
     /**
      * Removes all BMLListeners

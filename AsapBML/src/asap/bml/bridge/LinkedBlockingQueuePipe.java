@@ -1,3 +1,5 @@
+/*******************************************************************************
+ *******************************************************************************/
 package asap.bml.bridge;
 
 import hmi.util.RuntimeExceptionLoggingRunnable;
@@ -45,6 +47,12 @@ public class LinkedBlockingQueuePipe implements RealizerPort
     public void removeAllListeners()
     {
         outBridge.removeAllListeners();
+    }
+    
+    @Override
+    public void removeListener(BMLFeedbackListener l)
+    {
+        outBridge.removeListener(l);        
     }
 
     @Override
@@ -102,5 +110,5 @@ public class LinkedBlockingQueuePipe implements RealizerPort
     public void stopRunning()
     {
         exec.shutdown();
-    }
+    }    
 }

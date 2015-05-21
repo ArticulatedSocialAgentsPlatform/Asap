@@ -1,3 +1,5 @@
+/*******************************************************************************
+ *******************************************************************************/
 package asap.animationengine.gesturebinding;
 
 import static hmi.testutil.math.Vec3fTestUtil.assertVec3fEquals;
@@ -42,7 +44,9 @@ import asap.animationengine.motionunit.TimedAnimationUnit;
 import asap.hns.Hns;
 import asap.hns.ShapeSymbols;
 import asap.motionunit.MUPlayException;
+import asap.motionunit.TimedMotionUnit;
 import asap.murml.MURMLDescription;
+import asap.realizer.feedback.FeedbackManager;
 import asap.realizer.feedback.FeedbackManagerImpl;
 import asap.realizer.pegboard.BMLBlockPeg;
 import asap.realizer.pegboard.PegBoard;
@@ -56,12 +60,14 @@ import com.google.common.collect.ObjectArrays;
  */
 public class MURMLMUBuilderTest
 {
-    
+
     private AnimationUnit mockMu = mock(AnimationUnit.class);
     private VJoint vNext = HanimBody.getLOA2HanimBody();
     private VJoint vCurr = HanimBody.getLOA2HanimBody();
-    private AnimationPlayer mockAnimationPlayer = AnimationPlayerMock.createAnimationPlayerMock(vCurr,vNext);
-            
+    private BMLBlockManager bbManager = new BMLBlockManager();
+    private FeedbackManager fbManager = new FeedbackManagerImpl(bbManager, "characterx");
+    private AnimationPlayer mockAnimationPlayer = AnimationPlayerMock.createAnimationPlayerMock(vCurr, vNext);
+
     private static final float ROT_PRECISION = 0.001f;
     private Hns mockHns = mock(Hns.class);
     private SkeletonPose mockSkeletonPose = mock(SkeletonPose.class);
@@ -74,7 +80,7 @@ public class MURMLMUBuilderTest
     @Before
     public void setup()
     {
-        when(mockAnimationPlayer.createTransitionToRest(any(Set.class))).thenReturn(mockMu);        
+        when(mockAnimationPlayer.createTransitionToRest(any(Set.class))).thenReturn(mockMu);
         when(mockHns.getHandLocation(anyString(), any(float[].class))).thenReturn(true);
         when(mockHns.getAbsoluteDirection(startsWith("Palm"), any(float[].class))).thenReturn(false);
         when(mockHns.getAbsoluteDirection(startsWith("Dir"), any(float[].class))).thenReturn(true);
@@ -83,8 +89,6 @@ public class MURMLMUBuilderTest
         when(mockHnsHandshapes.getHNSHandShape(anyString())).thenReturn(mockSkeletonPose);
     }
 
-    
-    
     @Test
     public void testSingleFrame() throws MUPlayException, MUSetupException
     {
@@ -104,10 +108,8 @@ public class MURMLMUBuilderTest
         Quat4fTestUtil.assertQuat4fRotationEquivalent(qExp, q, ROT_PRECISION);
     }
 
-    @edu.umd.cs.findbugs.annotations.SuppressWarnings(
-            value="RV_RETURN_VALUE_IGNORED_INFERRED", 
-            justification="Return value ignored, should throw exception anyways.")
-    @Test(expected=MUSetupException.class)
+    @edu.umd.cs.findbugs.annotations.SuppressWarnings(value = "RV_RETURN_VALUE_IGNORED_INFERRED", justification = "Return value ignored, should throw exception anyways.")
+    @Test(expected = MUSetupException.class)
     public void testKeyframeGestureMissingJoint() throws MUSetupException
     {
         // @formatter:off
@@ -123,11 +125,30 @@ public class MURMLMUBuilderTest
         // @formatter:on
         AnimationUnit au = murmlMuBuilder.setup(murmlString);
         assertThat(au, instanceOf(MURMLKeyframeMU.class));
-        MURMLKeyframeMU kfmu = (MURMLKeyframeMU)au;
-        
-        kfmu.copy(mockAnimationPlayer);        
+        MURMLKeyframeMU kfmu = (MURMLKeyframeMU) au;
+
+        kfmu.copy(mockAnimationPlayer);
     }
-    
+
+    @Test(expected = TMUSetupException.class)
+    public void testKeyframeTMUMissingJoint() throws TMUSetupException
+    {
+        // @formatter:off
+        String murmlString =  "<murml-description xmlns=\"http://www.techfak.uni-bielefeld.de/ags/soa/murml\">"+
+                                "<dynamic>"+
+                                    "<keyframing mode=\"spline\" easescale=\"1.0\" easeturningpoint=\"0.5\">"+
+                                    "<phase>"+
+                                        "<frame ftime=\"0.50\"><posture>Humanoid (missingjoint 3 0.0 0.0 -5.0)</posture></frame>"+
+                                    "</phase>"+
+                                    "</keyframing>"+
+                                "</dynamic>"+
+                                "</murml-description>";
+        // @formatter:on
+        MURMLDescription desc = new MURMLDescription();
+        desc.readXML(murmlString);
+        murmlMuBuilder.setupTMU(desc, fbManager, BMLBlockPeg.GLOBALPEG, "bml1", "beh1", pb, mockAnimationPlayer);        
+    }
+
     @Test
     public void testPriorityKeyframing() throws MUPlayException, MUSetupException, TMUSetupException
     {
@@ -137,12 +158,12 @@ public class MURMLMUBuilderTest
         MURMLDescription def = new MURMLDescription();
         def.setPriority(34);
         def.readXML(murmlString);
-        
-        TimedAnimationUnit tmu = murmlMuBuilder.setupTMU(def, new FeedbackManagerImpl(new BMLBlockManager(), ""),
-                BMLBlockPeg.GLOBALPEG, "bml1", "g1", pb, mockAnimationPlayer);
+
+        TimedAnimationUnit tmu = murmlMuBuilder.setupTMU(def, new FeedbackManagerImpl(new BMLBlockManager(), ""), BMLBlockPeg.GLOBALPEG,
+                "bml1", "g1", pb, mockAnimationPlayer);
         assertEquals(34, tmu.getPriority());
     }
-    
+
     @Test
     public void testTwoFrames() throws MUPlayException, MUSetupException
     {
@@ -280,12 +301,11 @@ public class MURMLMUBuilderTest
         Quat4fTestUtil.assertQuat4fRotationEquivalent(qExp, q, ROT_PRECISION);
     }
 
-    @Test(expected=TMUSetupException.class)
+    @Test(expected = TMUSetupException.class)
     public void setupInvalidTMUStaticHandLocation() throws TMUSetupException
     {
         when(mockHns.getHandLocation(anyString(), any(float[].class))).thenReturn(false);
-        
-        
+
         //@formatter:off
         String murmlString =
                 "<murml-description xmlns=\"http://www.techfak.uni-bielefeld.de/ags/soa/murml\">" +
@@ -295,10 +315,10 @@ public class MURMLMUBuilderTest
                 "</parallel>"+
                 "</murml-description>";
         // @formatter:on
-        murmlMuBuilder.setupTMU(murmlString, new FeedbackManagerImpl(new BMLBlockManager(), ""),
-                BMLBlockPeg.GLOBALPEG, "bml1", "g1", pb, mockAnimationPlayer);
+        murmlMuBuilder.setupTMU(murmlString, new FeedbackManagerImpl(new BMLBlockManager(), ""), BMLBlockPeg.GLOBALPEG, "bml1", "g1", pb,
+                mockAnimationPlayer);
     }
-    
+
     @Test
     public void setupTMUStaticHandLocation() throws TMUSetupException
     {
@@ -316,7 +336,7 @@ public class MURMLMUBuilderTest
         assertThat(tau.getKinematicJoints(), IsIterableContainingInAnyOrder.containsInAnyOrder(Hanim.l_shoulder, Hanim.l_elbow));
     }
 
-    @Test(expected=TMUSetupException.class)
+    @Test(expected = TMUSetupException.class)
     public void setupInvalidTMUDynamicHandLocation() throws TMUSetupException
     {
         when(mockHns.getHandLocation(anyString(), any(float[].class))).thenReturn(false);
@@ -358,10 +378,10 @@ public class MURMLMUBuilderTest
                         "</parallel>"+
                 "</murml-description>";
         // @formatter:on
-        murmlMuBuilder.setupTMU(murmlString, new FeedbackManagerImpl(new BMLBlockManager(), ""),
-                BMLBlockPeg.GLOBALPEG, "bml1", "g1", pb, mockAnimationPlayer);
+        murmlMuBuilder.setupTMU(murmlString, new FeedbackManagerImpl(new BMLBlockManager(), ""), BMLBlockPeg.GLOBALPEG, "bml1", "g1", pb,
+                mockAnimationPlayer);
     }
-    
+
     @Test
     public void setupTMUHandLocation() throws TMUSetupException
     {
@@ -500,7 +520,7 @@ public class MURMLMUBuilderTest
         TimedAnimationUnit lmp = field("lmp").ofType(TimedAnimationUnit.class).in(tau).get();
         assertThat(lmp, instanceOf(LMPPoRot.class));
     }
-    
+
     @Test
     public void setupTMURelativeDynamicPalmOrientation2Elements() throws TMUSetupException
     {
@@ -543,16 +563,16 @@ public class MURMLMUBuilderTest
         // @formatter:on
         TimedAnimationUnit tau = murmlMuBuilder.setupTMU(murmlString, new FeedbackManagerImpl(new BMLBlockManager(), ""),
                 BMLBlockPeg.GLOBALPEG, "bml1", "g1", pb, mockAnimationPlayer);
-        assertEquals(100,tau.getPriority());
-        
+        assertEquals(100, tau.getPriority());
+
         assertThat(tau, instanceOf(MotorControlProgram.class));
         assertThat(tau.getKinematicJoints(), IsIterableContainingInAnyOrder.containsInAnyOrder(Hanim.r_wrist));
 
         TimedAnimationUnit lmp = field("lmp").ofType(TimedAnimationUnit.class).in(tau).get();
         assertThat(lmp, instanceOf(LMPWristRot.class));
     }
-    
-    @Test(expected=TMUSetupException.class)
+
+    @Test(expected = TMUSetupException.class)
     public void setupInvalidTMUDynamicPalmOrientation() throws TMUSetupException
     {
         when(mockHns.getAbsoluteDirection(startsWith("Palm"), any(float[].class))).thenReturn(false);
@@ -577,11 +597,11 @@ public class MURMLMUBuilderTest
                         "</parallel>"+
                 "</murml-description>";
         // @formatter:on
-        murmlMuBuilder.setupTMU(murmlString, new FeedbackManagerImpl(new BMLBlockManager(), ""),
-                BMLBlockPeg.GLOBALPEG, "bml1", "g1", pb, mockAnimationPlayer);
+        murmlMuBuilder.setupTMU(murmlString, new FeedbackManagerImpl(new BMLBlockManager(), ""), BMLBlockPeg.GLOBALPEG, "bml1", "g1", pb,
+                mockAnimationPlayer);
     }
-    
-    @Test(expected=TMUSetupException.class)
+
+    @Test(expected = TMUSetupException.class)
     public void setupInvalidTMUDynamicExtFingerOrientation() throws TMUSetupException
     {
         when(mockHns.getAbsoluteDirection(startsWith("Dir"), any(float[].class))).thenReturn(false);
@@ -604,11 +624,11 @@ public class MURMLMUBuilderTest
                         "</parallel>"+
                 "</murml-description>";
         // @formatter:on
-        murmlMuBuilder.setupTMU(murmlString, new FeedbackManagerImpl(new BMLBlockManager(), ""),
-                BMLBlockPeg.GLOBALPEG, "bml1", "g1", pb, mockAnimationPlayer);
+        murmlMuBuilder.setupTMU(murmlString, new FeedbackManagerImpl(new BMLBlockManager(), ""), BMLBlockPeg.GLOBALPEG, "bml1", "g1", pb,
+                mockAnimationPlayer);
     }
 
-    @Test(expected=TMUSetupException.class)
+    @Test(expected = TMUSetupException.class)
     public void setupInvalidTMUStaticPalmOrientation() throws TMUSetupException
     {
         when(mockHns.getAbsoluteDirection(startsWith("Palm"), any(float[].class))).thenReturn(false);
@@ -623,11 +643,11 @@ public class MURMLMUBuilderTest
                         "</parallel>"+
                 "</murml-description>";
         // @formatter:on
-        murmlMuBuilder.setupTMU(murmlString, new FeedbackManagerImpl(new BMLBlockManager(), ""),
-                BMLBlockPeg.GLOBALPEG, "bml1", "g1", pb, mockAnimationPlayer);
+        murmlMuBuilder.setupTMU(murmlString, new FeedbackManagerImpl(new BMLBlockManager(), ""), BMLBlockPeg.GLOBALPEG, "bml1", "g1", pb,
+                mockAnimationPlayer);
     }
-    
-    @Test(expected=TMUSetupException.class)
+
+    @Test(expected = TMUSetupException.class)
     public void setupInvalidTMUStaticExtFingerOrientation() throws TMUSetupException
     {
         when(mockHns.getAbsoluteDirection(startsWith("Palm"), any(float[].class))).thenReturn(false);
@@ -642,14 +662,14 @@ public class MURMLMUBuilderTest
                         "</parallel>"+
                 "</murml-description>";
         // @formatter:on
-        murmlMuBuilder.setupTMU(murmlString, new FeedbackManagerImpl(new BMLBlockManager(), ""),
-                BMLBlockPeg.GLOBALPEG, "bml1", "g1", pb, mockAnimationPlayer);
+        murmlMuBuilder.setupTMU(murmlString, new FeedbackManagerImpl(new BMLBlockManager(), ""), BMLBlockPeg.GLOBALPEG, "bml1", "g1", pb,
+                mockAnimationPlayer);
     }
-    
+
     @Test
     public void testPriorityOther() throws MUPlayException, MUSetupException, TMUSetupException
     {
-      //@formatter:off
+        //@formatter:off
         String murmlString = 
                 "<murml-description xmlns=\"http://www.techfak.uni-bielefeld.de/ags/soa/murml\">" +
                         "<static slot=\"PalmOrientation\" scope=\"right_arm\" value=\"DirU\"/>"+
@@ -658,10 +678,11 @@ public class MURMLMUBuilderTest
         MURMLDescription def = new MURMLDescription();
         def.readXML(murmlString);
         def.setPriority(34);
-        TimedAnimationUnit tau = murmlMuBuilder.setupTMU(def, new FeedbackManagerImpl(new BMLBlockManager(), ""),
-                BMLBlockPeg.GLOBALPEG, "bml1", "g1", pb, mockAnimationPlayer);
-        assertEquals(34,tau.getPriority());
+        TimedAnimationUnit tau = murmlMuBuilder.setupTMU(def, new FeedbackManagerImpl(new BMLBlockManager(), ""), BMLBlockPeg.GLOBALPEG,
+                "bml1", "g1", pb, mockAnimationPlayer);
+        assertEquals(34, tau.getPriority());
     }
+
     @Test
     public void setupTMURelativeStaticPalmOrientation() throws TMUSetupException
     {
@@ -749,7 +770,7 @@ public class MURMLMUBuilderTest
         assertThat(lmp, instanceOf(LMPHandMove.class));
         assertThat(tau.getKinematicJoints(), IsIterableContainingInAnyOrder.containsInAnyOrder(Hanim.LEFTHAND_JOINTS));
     }
-    
+
     @Test(expected = TMUSetupException.class)
     public void testUnknownStaticHandShape() throws TMUSetupException
     {
@@ -760,8 +781,8 @@ public class MURMLMUBuilderTest
         "  <static scope=\"left_arm\" slot=\"HandShape\" value=\"BSfist (ThExt)\"/>"+
         "</murml-description>";
         //@formatter:on
-        murmlMuBuilder.setupTMU(murmlString, new FeedbackManagerImpl(new BMLBlockManager(), ""),
-                BMLBlockPeg.GLOBALPEG, "bml1", "gesture1", pb, mockAnimationPlayer);
+        murmlMuBuilder.setupTMU(murmlString, new FeedbackManagerImpl(new BMLBlockManager(), ""), BMLBlockPeg.GLOBALPEG, "bml1", "gesture1",
+                pb, mockAnimationPlayer);
     }
 
     @Test(expected = TMUSetupException.class)
@@ -783,14 +804,14 @@ public class MURMLMUBuilderTest
                         "</dynamic>"+
                         "</murml-description>";
         //@formatter:on
-        murmlMuBuilder.setupTMU(murmlString, new FeedbackManagerImpl(new BMLBlockManager(), ""),
-                BMLBlockPeg.GLOBALPEG, "bml1", "gesture1", pb, mockAnimationPlayer);
+        murmlMuBuilder.setupTMU(murmlString, new FeedbackManagerImpl(new BMLBlockManager(), ""), BMLBlockPeg.GLOBALPEG, "bml1", "gesture1",
+                pb, mockAnimationPlayer);
     }
-    
+
     @Test
     public void setupDynamicHandshape() throws TMUSetupException
     {
-      //@formatter:off
+        //@formatter:off
         String murmlString =
         "<murml-description xmlns=\"http://www.techfak.uni-bielefeld.de/ags/soa/murml\">" +
         "<dynamic slot=\"HandShape\" scope=\"right_arm\">"+
@@ -809,7 +830,7 @@ public class MURMLMUBuilderTest
                 BMLBlockPeg.GLOBALPEG, "bml1", "gesture1", pb, mockAnimationPlayer);
 
         assertThat(tau, instanceOf(MotorControlProgram.class));
-        
+
         TimedAnimationUnit lmp = field("lmp").ofType(TimedAnimationUnit.class).in(tau).get();
         assertThat(lmp, instanceOf(LMPHandMove.class));
         assertThat(tau.getKinematicJoints(), IsIterableContainingInAnyOrder.containsInAnyOrder(Hanim.RIGHTHAND_JOINTS));
@@ -818,11 +839,11 @@ public class MURMLMUBuilderTest
         assertNotNull(tau.getTime("stroke2"));
         assertNotNull(tau.getTime("strokeEnd"));
     }
-    
+
     @Test
     public void setupDynamicHandshape2() throws TMUSetupException
     {
-      //@formatter:off
+        //@formatter:off
         String murmlString =
         "<murml-description xmlns=\"http://www.techfak.uni-bielefeld.de/ags/soa/murml\">" +
         "<dynamic slot=\"HandShape\" scope=\"right_arm\">"+
@@ -839,7 +860,7 @@ public class MURMLMUBuilderTest
                 BMLBlockPeg.GLOBALPEG, "bml1", "gesture1", pb, mockAnimationPlayer);
 
         assertThat(tau, instanceOf(MotorControlProgram.class));
-        
+
         TimedAnimationUnit lmp = field("lmp").ofType(TimedAnimationUnit.class).in(tau).get();
         assertThat(lmp, instanceOf(LMPHandMove.class));
         assertThat(tau.getKinematicJoints(), IsIterableContainingInAnyOrder.containsInAnyOrder(Hanim.RIGHTHAND_JOINTS));
@@ -848,8 +869,7 @@ public class MURMLMUBuilderTest
         assertNotNull(tau.getTime("stroke2"));
         assertNotNull(tau.getTime("strokeEnd"));
     }
-    
-    
+
     @Test
     public void setupParallelHandshapeAndPalmOrientation() throws TMUSetupException
     {
@@ -893,8 +913,7 @@ public class MURMLMUBuilderTest
         TimedAnimationUnit lmp = field("lmp").ofType(TimedAnimationUnit.class).in(tau).get();
         assertThat(lmp, instanceOf(LMPSequence.class));
     }
-    
-    
+
     @Test
     public void testParallelInSequence() throws TMUSetupException
     {
@@ -918,20 +937,18 @@ public class MURMLMUBuilderTest
         "</sequence>"+
         "</murml-description>";
         //@formatter:on
-        
+
         TimedAnimationUnit tau = murmlMuBuilder.setupTMU(murmlString, new FeedbackManagerImpl(new BMLBlockManager(), ""),
                 BMLBlockPeg.GLOBALPEG, "bml1", "gesture1", pb, mockAnimationPlayer);
         String strs[] = ObjectArrays.concat(Hanim.l_wrist, Hanim.LEFTHAND_JOINTS);
         strs = ObjectArrays.concat(Hanim.r_elbow, strs);
         strs = ObjectArrays.concat(Hanim.r_shoulder, strs);
-        assertThat(tau.getKinematicJoints(),
-                IsIterableContainingInAnyOrder.containsInAnyOrder(strs));
+        assertThat(tau.getKinematicJoints(), IsIterableContainingInAnyOrder.containsInAnyOrder(strs));
 
         TimedAnimationUnit lmp = field("lmp").ofType(TimedAnimationUnit.class).in(tau).get();
         assertThat(lmp, instanceOf(LMPSequence.class));
     }
-    
-    
+
     @Test
     public void testSequenceInParallel() throws TMUSetupException
     {
@@ -955,14 +972,13 @@ public class MURMLMUBuilderTest
         "</parallel>"+
         "</murml-description>";
         //@formatter:on
-        
+
         TimedAnimationUnit tau = murmlMuBuilder.setupTMU(murmlString, new FeedbackManagerImpl(new BMLBlockManager(), ""),
                 BMLBlockPeg.GLOBALPEG, "bml1", "gesture1", pb, mockAnimationPlayer);
         String strs[] = ObjectArrays.concat(Hanim.l_wrist, Hanim.LEFTHAND_JOINTS);
         strs = ObjectArrays.concat(Hanim.r_elbow, strs);
         strs = ObjectArrays.concat(Hanim.r_shoulder, strs);
-        assertThat(tau.getKinematicJoints(),
-                IsIterableContainingInAnyOrder.containsInAnyOrder(strs));
+        assertThat(tau.getKinematicJoints(), IsIterableContainingInAnyOrder.containsInAnyOrder(strs));
 
         TimedAnimationUnit lmp = field("lmp").ofType(TimedAnimationUnit.class).in(tau).get();
         assertThat(lmp, instanceOf(LMPParallel.class));

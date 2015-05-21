@@ -1,4 +1,8 @@
+/*******************************************************************************
+ *******************************************************************************/
 package asap.nao.planunit;
+
+import java.util.List;
 
 import asap.nao.Nao;
 import asap.realizer.feedback.FeedbackManager;
@@ -8,8 +12,6 @@ import asap.realizer.planunit.KeyPositionManager;
 import asap.realizer.planunit.KeyPositionManagerImpl;
 import asap.realizer.planunit.ParameterException;
 import asap.realizer.planunit.TimedPlanUnitPlayException;
-
-import java.util.List;
 
 public class PlayChoregrapheClipNU implements NaoUnit
 {

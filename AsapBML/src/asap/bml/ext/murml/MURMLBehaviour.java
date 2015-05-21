@@ -1,5 +1,8 @@
+/*******************************************************************************
+ *******************************************************************************/
 package asap.bml.ext.murml;
 
+import hmi.xml.XMLFormatting;
 import hmi.xml.XMLTokenizer;
 
 import java.io.IOException;
@@ -24,6 +27,11 @@ public abstract class MURMLBehaviour extends Behaviour
         super(bmlId);        
     }
     
+    public MURMLBehaviour(String bmlId, String id)
+    {
+        super(bmlId, id);        
+    }
+    
     static final String MURMLNAMESPACE = "http://www.techfak.uni-bielefeld.de/ags/soa/murml";
 
     @Override
@@ -32,6 +40,18 @@ public abstract class MURMLBehaviour extends Behaviour
         return MURMLNAMESPACE;
     }
 
+    @Override
+    public boolean hasContent()
+    {
+        return true;
+    }
+    
+    @Override
+    public StringBuilder appendContent(StringBuilder buf, XMLFormatting fmt)
+    {
+        return murmlDescription.appendXML(buf,fmt);
+    }
+    
     @Override
     public void decodeContent(XMLTokenizer tokenizer) throws IOException
     {

@@ -1,3 +1,5 @@
+/*******************************************************************************
+ *******************************************************************************/
 package asap.speechengine;
 
 import static org.junit.Assert.assertEquals;
@@ -22,7 +24,7 @@ import org.junit.runners.Parameterized.Parameters;
 
 import saiba.bml.core.SpeechBehaviour;
 import saiba.bml.feedback.BMLSyncPointProgressFeedback;
-import asap.maryttsbinding.MaryTTSBindingFactory;
+import asap.marytts5binding.MaryTTSBindingFactory;
 import asap.realizer.feedback.FeedbackManager;
 import asap.realizer.feedback.FeedbackManagerImpl;
 import asap.realizer.pegboard.BMLBlockPeg;
@@ -35,41 +37,39 @@ import asap.sapittsbinding.SAPITTSBindingFactory;
 import asap.speechengine.ttsbinding.TTSBinding;
 import asap.speechengine.ttsbinding.TTSBindingFactory;
 
-
 @RunWith(LabelledParameterized.class)
 public class SpeechUnitParameterizedIntegrationTest
 {
     private TTSBinding ttsBinding;
     private TimedTTSUnitFactory ttsUnitFactory;
-    private static FeedbackManager fbManager = new FeedbackManagerImpl(new BMLBlockManager(),"character1");
+    private static FeedbackManager fbManager = new FeedbackManagerImpl(new BMLBlockManager(), "character1");
     private static SoundManager soundManager = new LWJGLJoalSoundManager();
     private static final double PRECISION = 0.001d;
-    
-    public SpeechUnitParameterizedIntegrationTest(String label,
-            TimedTTSUnitFactory fa, TTSBindingFactory bindingFactory)
+
+    public SpeechUnitParameterizedIntegrationTest(String label, TimedTTSUnitFactory fa, TTSBindingFactory bindingFactory)
     {
         ttsBinding = bindingFactory.createBinding();
         ttsUnitFactory = fa;
     }
-    
+
     @BeforeClass
     public static void beforeClass()
     {
         soundManager.init();
     }
-    
+
     @AfterClass
     public static void afterClass()
     {
-        soundManager.shutdown();        
+        soundManager.shutdown();
     }
-    
+
     @Before
     public void setup()
     {
-        
+
     }
-    
+
     @After
     public void cleanup()
     {
@@ -77,11 +77,9 @@ public class SpeechUnitParameterizedIntegrationTest
     }
 
     @Test
-    public void testSpeak() throws TimedPlanUnitPlayException,
-            SpeechUnitPlanningException
+    public void testSpeak() throws TimedPlanUnitPlayException, SpeechUnitPlanningException
     {
-        TimedTTSUnit ttsUnit = ttsUnitFactory.createTimedTTSUnit(
-                BMLBlockPeg.GLOBALPEG, "Hello world", "voice1", "bml1", "speech1",
+        TimedTTSUnit ttsUnit = ttsUnitFactory.createTimedTTSUnit(BMLBlockPeg.GLOBALPEG, "Hello world", "voice1", "bml1", "speech1",
                 ttsBinding, SpeechBehaviour.class);
         ttsUnit.setup();
         List<BMLSyncPointProgressFeedback> fbList = new ArrayList<BMLSyncPointProgressFeedback>();
@@ -90,7 +88,7 @@ public class SpeechUnitParameterizedIntegrationTest
         TimePeg tpStart = new TimePeg(BMLBlockPeg.GLOBALPEG);
         tpStart.setGlobalValue(0);
         ttsUnit.setStart(tpStart);
-        assertEquals(TimePeg.VALUE_UNKNOWN, ttsUnit.getEndTime(),PRECISION);
+        assertEquals(TimePeg.VALUE_UNKNOWN, ttsUnit.getEndTime(), PRECISION);
         assertTrue(ttsUnit.getPreferedDuration() > 0);
         ttsUnit.setState(TimedPlanUnitState.LURKING);
         ttsUnit.start(0);
@@ -116,13 +114,11 @@ public class SpeechUnitParameterizedIntegrationTest
     {
         Collection<Object[]> objs = new ArrayList<Object[]>();
 
-        
-
         List<TimedTTSUnitFactory> ttsFactories = new ArrayList<TimedTTSUnitFactory>();
-        ttsFactories.add(new WavTTSUnitFactory(fbManager,soundManager));
+        ttsFactories.add(new WavTTSUnitFactory(fbManager, soundManager));
 
         List<TTSBindingFactory> ttsBindingFactories = new ArrayList<TTSBindingFactory>();
-        if(OS.equalsOS(OS.WINDOWS))
+        if (OS.equalsOS(OS.WINDOWS))
         {
             Object obj[] = new Object[3];
             obj[0] = "DirectTTSUnitFactory, SAPITTSBinding";
@@ -131,18 +127,15 @@ public class SpeechUnitParameterizedIntegrationTest
             objs.add(obj);
             ttsBindingFactories.add(new SAPITTSBindingFactory());
         }
-        
-        ttsBindingFactories.add(new
-                MaryTTSBindingFactory(System.getProperty("shared.project.root")+"/Asap/AsapSpeechEngine/test/lib/MARYTTS",
-                new NullPhonemeToVisemeMapping()));
-        
+
+        ttsBindingFactories.add(new MaryTTSBindingFactory(new NullPhonemeToVisemeMapping()));
+
         for (TimedTTSUnitFactory ttsF : ttsFactories)
         {
             for (TTSBindingFactory bind : ttsBindingFactories)
             {
                 Object obj[] = new Object[3];
-                obj[0] = ttsF.getClass().getName() + ", "
-                        + bind.getClass().getName();
+                obj[0] = ttsF.getClass().getName() + ", " + bind.getClass().getName();
                 obj[1] = ttsF;
                 obj[2] = bind;
                 objs.add(obj);

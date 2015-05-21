@@ -1,11 +1,14 @@
+/*******************************************************************************
+ *******************************************************************************/
 package asap.bml.ext.murml;
 
-import saiba.bml.core.GestureBehaviour;
-import saiba.bml.parser.SyncPoint;
 import hmi.xml.XMLTokenizer;
 
 import java.io.IOException;
 import java.util.List;
+
+import saiba.bml.core.GestureBehaviour;
+import saiba.bml.parser.SyncPoint;
 
 /**
  * Extension for MURML gesture behaviours
@@ -15,12 +18,18 @@ public class MURMLGestureBehaviour extends MURMLBehaviour
 {
     public MURMLGestureBehaviour(String bmlId)
     {
-        super(bmlId);        
+        super(bmlId);
     }
-    
+
     public MURMLGestureBehaviour(String bmlId, XMLTokenizer tokenizer) throws IOException
     {
         super(bmlId);
+        readXML(tokenizer);
+    }
+
+    public MURMLGestureBehaviour(String bmlId, String id, XMLTokenizer tokenizer) throws IOException
+    {
+        super(bmlId, id);
         readXML(tokenizer);
     }
 
@@ -43,7 +52,7 @@ public class MURMLGestureBehaviour extends MURMLBehaviour
     {
         return DEFAULT_SYNCS;
     }
-    
+
     @Override
     public void addDefaultSyncPoints()
     {

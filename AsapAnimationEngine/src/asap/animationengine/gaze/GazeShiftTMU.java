@@ -1,3 +1,5 @@
+/*******************************************************************************
+ *******************************************************************************/
 package asap.animationengine.gaze;
 
 import lombok.extern.slf4j.Slf4j;
@@ -5,6 +7,7 @@ import asap.animationengine.AnimationPlayer;
 import asap.animationengine.motionunit.TimedAnimationMotionUnit;
 import asap.motionunit.MUPlayException;
 import asap.motionunit.TMUPlayException;
+import asap.realizer.feedback.FeedbackManager;
 import asap.realizer.pegboard.BMLBlockPeg;
 import asap.realizer.pegboard.PegBoard;
 import asap.realizer.pegboard.TimePeg;
@@ -21,10 +24,10 @@ public class GazeShiftTMU extends TimedAnimationMotionUnit
     private final AnimationPlayer aniPlayer;
     private final GazeMU gmu;
     
-    public GazeShiftTMU(BMLBlockPeg bmlBlockPeg, String bmlId, String id, GazeMU m, PegBoard pb,
+    public GazeShiftTMU(FeedbackManager bfm, BMLBlockPeg bmlBlockPeg, String bmlId, String id, GazeMU m, PegBoard pb,
             RestGaze restGaze, AnimationPlayer ap)
     {
-        super(bmlBlockPeg, bmlId, id, m, pb);
+        super(bfm, bmlBlockPeg, bmlId, id, m, pb, ap);
         this.restGaze = restGaze;
         this.aniPlayer = ap;
         this.gmu = m;

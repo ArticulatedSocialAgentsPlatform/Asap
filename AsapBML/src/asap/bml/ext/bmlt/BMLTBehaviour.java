@@ -1,29 +1,15 @@
 /*******************************************************************************
- * Copyright (C) 2009 Human Media Interaction, University of Twente, the Netherlands
- * 
- * This file is part of the Elckerlyc BML realizer.
- * 
- * Elckerlyc is free software: you can redistribute it and/or modify
- * it under the terms of the GNU General Public License as published by
- * the Free Software Foundation, either version 3 of the License, or
- * (at your option) any later version.
- * 
- * Elckerlyc is distributed in the hope that it will be useful,
- * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- * GNU General Public License for more details.
- * 
- * You should have received a copy of the GNU General Public License
- * along with Elckerlyc.  If not, see http://www.gnu.org/licenses/.
- ******************************************************************************/
+ *******************************************************************************/
 package asap.bml.ext.bmlt;
 
-import saiba.bml.core.Behaviour;
 import hmi.xml.XMLFormatting;
+import hmi.xml.XMLScanException;
 import hmi.xml.XMLTokenizer;
 
 import java.io.IOException;
 import java.util.HashMap;
+
+import saiba.bml.core.Behaviour;
 
 /**
  * Abstract class for all BMLT specific Behaviours
@@ -36,6 +22,11 @@ public abstract class BMLTBehaviour extends Behaviour
         super(bmlId);
     }
 
+    public BMLTBehaviour(String bmlId, String id)
+    {
+        super(bmlId, id);
+    }
+    
     public static final String BMLTNAMESPACE = "http://hmi.ewi.utwente.nl/bmlt";
 
     @Override
@@ -49,7 +40,7 @@ public abstract class BMLTBehaviour extends Behaviour
     @Override
     public String getStringParameterValue(String name)
     {
-        if(parameters.get(name)!=null)
+        if (parameters.get(name) != null)
         {
             return parameters.get(name).value;
         }
@@ -59,14 +50,14 @@ public abstract class BMLTBehaviour extends Behaviour
     @Override
     public boolean specifiesParameter(String name)
     {
-        if(parameters.get(name) != null) return true;
+        if (parameters.get(name) != null) return true;
         return super.specifiesParameter(name);
     }
 
     @Override
     public float getFloatParameterValue(String name)
     {
-        if(parameters.get(name)!=null)
+        if (parameters.get(name) != null)
         {
             return Float.parseFloat(parameters.get(name).value);
         }
@@ -87,16 +78,16 @@ public abstract class BMLTBehaviour extends Behaviour
     @Override
     public boolean hasContent()
     {
-        if (parameters.size()>0)return true;
+        if (parameters.size() > 0) return true;
         return super.hasContent();
     }
-    
+
     @Override
     public StringBuilder appendContent(StringBuilder buf, XMLFormatting fmt)
     {
         for (BMLTParameter p : parameters.values())
         {
-            p.appendXML(buf,fmt);
+            p.appendXML(buf, fmt);
         }
         return buf;
     }
@@ -113,8 +104,10 @@ public abstract class BMLTBehaviour extends Behaviour
                 param.readXML(tokenizer);
                 parameters.put(param.name, param);
             }
-            ensureDecodeProgress(tokenizer);
-
+            else
+            {
+                throw new XMLScanException("Invalid content " + tag + " in BMLTBehavior " + id);
+            }
         }
     }
 }

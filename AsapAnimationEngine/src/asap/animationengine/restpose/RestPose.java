@@ -1,3 +1,5 @@
+/*******************************************************************************
+ *******************************************************************************/
 package asap.animationengine.restpose;
 
 import hmi.animation.VJoint;
@@ -71,7 +73,7 @@ public interface RestPose
     /**
      * Sets the restpose to prev, next, curr on the animationplayer 
      */
-    void setRestPose();
+    void startRestPose(double time);
     
     void setParameterValue(String name, String value) throws ParameterException;
     

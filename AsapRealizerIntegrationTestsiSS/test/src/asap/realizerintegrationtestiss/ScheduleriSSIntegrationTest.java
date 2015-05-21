@@ -1,3 +1,5 @@
+/*******************************************************************************
+ *******************************************************************************/
 package asap.realizerintegrationtestiss;
 
 import hmi.animation.VJoint;
@@ -26,6 +28,9 @@ import saiba.bml.parser.BMLParser;
 import asap.animationengine.AnimationPlanPlayer;
 import asap.animationengine.AnimationPlanner;
 import asap.animationengine.AnimationPlayer;
+import asap.animationengine.gaze.ForwardRestGaze;
+import asap.animationengine.gaze.GazeInfluence;
+import asap.animationengine.gaze.RestGaze;
 import asap.animationengine.gesturebinding.GestureBinding;
 import asap.animationengine.gesturebinding.HnsHandshape;
 import asap.animationengine.gesturebinding.SpeechBinding;
@@ -39,6 +44,7 @@ import asap.hns.Hns;
 import asap.incrementalspeechengine.IncrementalTTSPlanner;
 import asap.incrementalspeechengine.IncrementalTTSUnit;
 import asap.incrementalspeechengine.PhraseIUManager;
+import asap.incrementalspeechengine.SingleThreadedPlanPlayeriSS;
 import asap.realizer.AsapRealizer;
 import asap.realizer.DefaultEngine;
 import asap.realizer.DefaultPlayer;
@@ -66,13 +72,14 @@ public class ScheduleriSSIntegrationTest extends SchedulerIntegrationTestCases
     private BMLBlockManager bbm = new BMLBlockManager();
     private FeedbackManager bfm = new FeedbackManagerImpl(bbm, "character1");
     private static final SoundManager soundManager = new LWJGLJoalSoundManager();
-    private DispatchStream dispatcher = SimpleMonitor.setupDispatcher(new Resources("").getURL("sphinx-config.xml"));
+    private static DispatchStream dispatcher;
 
     @BeforeClass
     public static void oneTimeSetUp()
     {
         System.setProperty("mary.base", System.getProperty("shared.project.root")
                 + "/asapresource/MARYTTSIncremental/resource/MARYTTSIncremental");
+        dispatcher = SimpleMonitor.setupDispatcher(new Resources("").getURL("sphinx-config.xml"));
         soundManager.init();
         Odejava.init();
     }
@@ -81,25 +88,20 @@ public class ScheduleriSSIntegrationTest extends SchedulerIntegrationTestCases
     public static void oneTimeCleanup() throws IOException
     {
         Odejava.close();
-        soundManager.shutdown();        
+        soundManager.shutdown();      
+        dispatcher.waitUntilDone();
+        dispatcher.close();
     }
 
     @After
     public void after() throws IOException
     {
-        dispatcher.waitUntilDone();
-        dispatcher.close();
+        
     }
     
     @Before
     public void before() throws IOException
     {
-        PlanManager<IncrementalTTSUnit> planManager = new PlanManager<IncrementalTTSUnit>();
-        IncrementalTTSPlanner planner = new IncrementalTTSPlanner(bfm, planManager, new PhraseIUManager(dispatcher, null, null),
-                new NullPhonemeToVisemeMapping(), new ArrayList<IncrementalLipSynchProvider>());
-        Engine speechEngine = new DefaultEngine<IncrementalTTSUnit>(planner, new DefaultPlayer(
-                new SingleThreadedPlanPlayer<IncrementalTTSUnit>(planManager)), planManager);
-
         VJoint human = HanimBody.getLOA1HanimBody();
 
         ArrayList<MixedSystem> m = new ArrayList<MixedSystem>();
@@ -117,14 +119,15 @@ public class ScheduleriSSIntegrationTest extends SchedulerIntegrationTestCases
         PlanManager<TimedAnimationUnit> animationPlanManager = new PlanManager<>();
 
         RestPose pose = new SkeletonPoseRestPose();
-        AnimationPlanPlayer animationPlanPlayer = new AnimationPlanPlayer(pose, bfm, animationPlanManager,
+        RestGaze gaze = new ForwardRestGaze(GazeInfluence.WAIST); 
+        AnimationPlanPlayer animationPlanPlayer = new AnimationPlanPlayer(pose, gaze, bfm, animationPlanManager,
                 new DefaultTimedPlanUnitPlayer(), pegBoard);
         AnimationPlayer aPlayer = new AnimationPlayer(human, human, human, m, 0.001f, animationPlanPlayer);
         pose.setAnimationPlayer(aPlayer);
 
         Hns hns = new Hns();
         hns.readXML(gres.getReader("Humanoids/shared/hns/hns.xml"));
-        HnsHandshape HnsHandshape = new HnsHandshape(hns, "Humanoids/shared/handshapes");
+        HnsHandshape HnsHandshape = new HnsHandshape("Humanoids/shared/handshapes");
         AnimationPlanner ap = new AnimationPlanner(bfm, aPlayer, gestureBinding, hns, HnsHandshape, animationPlanManager, pegBoard);
         Engine animationEngine = new DefaultEngine<TimedAnimationUnit>(ap, aPlayer, animationPlanManager);
 
@@ -149,9 +152,16 @@ public class ScheduleriSSIntegrationTest extends SchedulerIntegrationTestCases
         BMLParser parser = new BMLParser(new ImmutableSet.Builder<Class<? extends BMLBehaviorAttributeExtension>>().add(
                 BMLABMLBehaviorAttributes.class).build());
 
-        realizer = new AsapRealizer("avatar1", parser, bfm, clock, bbm, pegBoard, animationEngine, speechEngine, auEngine, waitEngine,
+        realizer = new AsapRealizer("avatar1", parser, bfm, clock, bbm, pegBoard, animationEngine, auEngine, waitEngine,
                 pvpcEngine);
-
+        
+        PlanManager<IncrementalTTSUnit> planManager = new PlanManager<IncrementalTTSUnit>();
+        IncrementalTTSPlanner planner = new IncrementalTTSPlanner(bfm, planManager, new PhraseIUManager(dispatcher, "", realizer.getScheduler()),
+                new NullPhonemeToVisemeMapping(), new ArrayList<IncrementalLipSynchProvider>());
+        Engine speechEngine = new DefaultEngine<IncrementalTTSUnit>(planner, new DefaultPlayer(
+                new SingleThreadedPlanPlayeriSS<IncrementalTTSUnit>(planManager)), planManager);
+        realizer.addEngine(speechEngine);
+        
         setupRealizer();
     }
 }

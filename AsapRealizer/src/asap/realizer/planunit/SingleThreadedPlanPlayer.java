@@ -1,3 +1,5 @@
+/*******************************************************************************
+ *******************************************************************************/
 package asap.realizer.planunit;
 
 import java.util.ArrayList;
@@ -171,4 +173,9 @@ public final class SingleThreadedPlanPlayer<T extends TimedPlanUnit> implements 
         fbManager.addFeedbackListener(fl);
     }
 
+    @Override
+    public void updateTiming(String bmlId)
+    {
+                
+    }
 }

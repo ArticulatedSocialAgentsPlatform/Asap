@@ -1,3 +1,5 @@
+/*******************************************************************************
+ *******************************************************************************/
 package asap.realizertester;
 
 import hmi.animation.VJoint;
@@ -159,14 +161,6 @@ public class PersistentFixtureAsapRealizerTest extends AbstractASAPRealizerTest
         realizerHandler.clearFeedbackLists();
     }
 
-    @Ignore
-    @Test
-    //FIXME: timeout here
-    public void testGazeShift() throws InterruptedException, IOException
-    {
-        
-    }
-    
     @Ignore
     // TODO: predictedEnd is no longer available in BML1
     @Test

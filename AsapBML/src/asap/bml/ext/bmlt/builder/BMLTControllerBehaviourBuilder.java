@@ -1,9 +1,11 @@
+/*******************************************************************************
+ *******************************************************************************/
 package asap.bml.ext.bmlt.builder;
 
-import asap.bml.ext.bmlt.BMLTBehaviour;
-import asap.bml.ext.bmlt.BMLTControllerBehaviour;
 import saiba.bml.builder.BehaviourBuilder;
 import saiba.bml.core.Behaviour;
+import asap.bml.ext.bmlt.BMLTBehaviour;
+import asap.bml.ext.bmlt.BMLTControllerBehaviour;
 
 /**
  * Builds a BMLTControllerBehaviour

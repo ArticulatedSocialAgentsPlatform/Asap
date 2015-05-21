@@ -1,3 +1,5 @@
+/*******************************************************************************
+ *******************************************************************************/
 package asap.activemqadapters;
 
 import java.util.ArrayList;
@@ -7,14 +9,12 @@ import java.util.List;
 import javax.jms.JMSException;
 import javax.jms.TextMessage;
 
-import saiba.bml.feedback.BMLWarningFeedback;
-
 import lombok.extern.slf4j.Slf4j;
-
-import com.google.common.collect.ImmutableList;
-
+import saiba.bml.feedback.BMLWarningFeedback;
 import asap.realizerport.BMLFeedbackListener;
 import asap.realizerport.RealizerPort;
+
+import com.google.common.collect.ImmutableList;
 
 /**
  * Submits BML through activemq messages; submits received feedback to registered listeners.
@@ -85,6 +85,12 @@ public class BMLRealizerToActiveMQAdapter implements RealizerPort, AMQConnection
     }
 
     @Override
+    public void removeListener(BMLFeedbackListener l)
+    {
+        feedbackListeners.remove(l);        
+    }   
+    
+    @Override
     public void performBML(String bmlString)
     {
         try
@@ -105,5 +111,7 @@ public class BMLRealizerToActiveMQAdapter implements RealizerPort, AMQConnection
                 log.warn("Error sending BMLFeedback to Listeners", ex);
             }
         }
-    }    
+    }
+
+     
 }

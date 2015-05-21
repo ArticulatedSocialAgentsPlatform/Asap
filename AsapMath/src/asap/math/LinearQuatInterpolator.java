@@ -1,8 +1,10 @@
+/*******************************************************************************
+ *******************************************************************************/
 package asap.math;
 
-import java.util.Arrays;
-
 import hmi.math.Quat4f;
+
+import java.util.Arrays;
 
 /**
  * SLERP interpolation between quaternions

@@ -1,11 +1,13 @@
+/*******************************************************************************
+ *******************************************************************************/
 package asap.math;
 
-import static org.junit.Assert.*;
-
-import org.junit.Test;
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.number.OrderingComparison.greaterThan;
 import static org.hamcrest.number.OrderingComparison.lessThan;
+import static org.junit.Assert.assertEquals;
+
+import org.junit.Test;
 
 /**
  * Unit testcases for CubicSplineInterpolator

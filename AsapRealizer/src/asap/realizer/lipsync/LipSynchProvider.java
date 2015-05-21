@@ -1,10 +1,12 @@
+/*******************************************************************************
+ *******************************************************************************/
 package asap.realizer.lipsync;
 
-import saiba.bml.core.Behaviour;
 import hmi.tts.Visime;
 
 import java.util.List;
 
+import saiba.bml.core.Behaviour;
 import asap.realizer.pegboard.BMLBlockPeg;
 import asap.realizer.planunit.TimedPlanUnit;
 

@@ -1,16 +1,18 @@
+/*******************************************************************************
+ *******************************************************************************/
 package asap.motionunit.keyframe;
 
 import java.util.List;
-import asap.motionunit.MUPlayException;
-import asap.motionunit.MotionUnit;
 
 import lombok.Delegate;
+import asap.motionunit.MUPlayException;
+import asap.motionunit.MotionUnit;
 import asap.realizer.planunit.KeyPositionManager;
 import asap.realizer.planunit.KeyPositionManagerImpl;
 import asap.realizer.planunit.ParameterException;
 import asap.realizer.planunit.ParameterNotFoundException;
-import asap.timemanipulator.TimeManipulator;
 import asap.timemanipulator.LinearManipulator;
+import asap.timemanipulator.TimeManipulator;
 
 /**
  * Generic implementation a motion motion unit that interpolates a set of keyframes

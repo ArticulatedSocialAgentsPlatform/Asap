@@ -1,3 +1,5 @@
+/*******************************************************************************
+ *******************************************************************************/
 package asap.bml.ext.bmla;
 
 import hmi.util.StringUtil;
@@ -7,6 +9,7 @@ import hmi.xml.XMLStructureAdapter;
 import hmi.xml.XMLTokenizer;
 
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.HashSet;
@@ -14,14 +17,13 @@ import java.util.List;
 import java.util.Set;
 
 import lombok.Setter;
-
-import com.google.common.base.Joiner;
-import com.google.common.collect.ImmutableSet;
-
 import saiba.bml.core.BMLBehaviorAttributeExtension;
 import saiba.bml.core.BMLBlockComposition;
 import saiba.bml.core.BehaviourBlock;
 import saiba.bml.core.CoreComposition;
+
+import com.google.common.base.Joiner;
+import com.google.common.collect.ImmutableSet;
 
 /**
  * Attributes added to the &ltbml&gt tag by bmlb
@@ -35,10 +37,10 @@ public class BMLABMLBehaviorAttributes implements BMLBehaviorAttributeExtension
     private Set<String> chunkBeforeList = new HashSet<String>();
     private List<String> interruptList = new ArrayList<String>();
     private List<String> onStartList = new ArrayList<String>();
-
+    
     @Setter
     private boolean prePlan;
-
+    
     public void addToChunkAfter(String... bmlIds)
     {
         for (String bmlId : bmlIds)
@@ -193,22 +195,29 @@ public class BMLABMLBehaviorAttributes implements BMLBehaviorAttributeExtension
                 .addAll(chunkBeforeList).addAll(interruptList).addAll(onStartList).build();
     }
 
+    private void appendNonEmptyListToAttributes(StringBuilder buf, XMLFormatting fmt, String attributeId, Collection<String> list)
+    {
+        if (!list.isEmpty())
+        {
+            XMLStructureAdapter.appendNamespacedAttribute(buf, fmt, "http://www.asap-project.org/bmla", attributeId,
+                    Joiner.on(",").join(list));
+        }
+    }
+
     @Override
     public StringBuilder appendAttributeString(StringBuilder buf, XMLFormatting fmt)
     {
-        XMLStructureAdapter.appendNamespacedAttribute(buf, fmt, "http://www.asap-project.org/bmla", "chunkBefore",
-                Joiner.on(",").join(chunkBeforeList));
-        XMLStructureAdapter.appendNamespacedAttribute(buf, fmt, "http://www.asap-project.org/bmla", "chunkAfter",
-                Joiner.on(",").join(chunkAfterList));
-        XMLStructureAdapter.appendNamespacedAttribute(buf, fmt, "http://www.asap-project.org/bmla", "appendAfter",
-                Joiner.on(",").join(appendAfterList));
-        XMLStructureAdapter.appendNamespacedAttribute(buf, fmt, "http://www.asap-project.org/bmla", "prependBefore",
-                Joiner.on(",").join(prependBeforeList));
-        XMLStructureAdapter.appendNamespacedAttribute(buf, fmt, "http://www.asap-project.org/bmla", "interrupt",
-                Joiner.on(",").join(interruptList));
-        XMLStructureAdapter.appendNamespacedAttribute(buf, fmt, "http://www.asap-project.org/bmla", "onStart",
-                Joiner.on(",").join(onStartList));
-        XMLStructureAdapter.appendNamespacedAttribute(buf, fmt, "http://www.asap-project.org/bmla", "preplan", "" + isPrePlanned());
+        appendNonEmptyListToAttributes(buf, fmt, "chunkBefore", chunkBeforeList);
+        appendNonEmptyListToAttributes(buf, fmt, "chunkAfter", chunkAfterList);
+        appendNonEmptyListToAttributes(buf, fmt, "appendAfter", appendAfterList);
+        appendNonEmptyListToAttributes(buf, fmt, "prependBefore", prependBeforeList);
+        appendNonEmptyListToAttributes(buf, fmt, "interrupt", interruptList);
+        appendNonEmptyListToAttributes(buf, fmt, "onStart", onStartList);
+
+        if (isPrePlanned())
+        {
+            XMLStructureAdapter.appendNamespacedAttribute(buf, fmt, "http://www.asap-project.org/bmla", "preplan", "true");
+        }
         return buf;
     }
 }

@@ -1,8 +1,10 @@
+/*******************************************************************************
+ *******************************************************************************/
 package asap.speechengine;
 
+import saiba.bml.core.Behaviour;
 import asap.realizer.pegboard.BMLBlockPeg;
 import asap.speechengine.ttsbinding.TTSBinding;
-import saiba.bml.core.Behaviour;
 
 /**
  * Factory to create TimedTTSUnits

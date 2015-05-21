@@ -1,3 +1,5 @@
+/*******************************************************************************
+ *******************************************************************************/
 package asap.bml.ext.maryxml;
 
 import static org.junit.Assert.assertEquals;
@@ -34,8 +36,14 @@ public class MaryXMLBaseBehaviourTest
             this.behClass = behClass;
         }
 
+        public MaryXMLBaseBehaviour createBehavior(String bmlId, String id, String bml) throws IOException, InstantiationException,
+                IllegalAccessException, InvocationTargetException, NoSuchMethodException
+        {
+            return behClass.getConstructor(String.class, String.class, XMLTokenizer.class).newInstance(bmlId, id, new XMLTokenizer(bml));
+        }
+
         public MaryXMLBaseBehaviour createBehavior(String bmlId, String bml) throws IOException, InstantiationException,
-                IllegalAccessException, InvocationTargetException, NoSuchMethodException 
+                IllegalAccessException, InvocationTargetException, NoSuchMethodException
         {
             return behClass.getConstructor(String.class, XMLTokenizer.class).newInstance(bmlId, new XMLTokenizer(bml));
         }
@@ -56,11 +64,11 @@ public class MaryXMLBaseBehaviourTest
     }
 
     @Before
-    public void setup() throws IOException, InstantiationException, IllegalAccessException, 
-            InvocationTargetException, NoSuchMethodException
+    public void setup() throws IOException, InstantiationException, IllegalAccessException, InvocationTargetException,
+            NoSuchMethodException
     {
         String str = "<maryxml xmlns=\"" + MaryXMLBaseBehaviour.NAMESPACE + "\" >" + "Hello world!" + "</maryxml>";
-        beh = factory.createBehavior("bml1", str);
+        beh = factory.createBehavior("bml1", "beh1", str);
     }
 
     @Test
@@ -77,5 +85,7 @@ public class MaryXMLBaseBehaviourTest
         beh.appendXML(buf);
         MaryXMLBaseBehaviour behOut = factory.createBehavior("bml1", buf.toString());
         assertEquals("Hello world!", behOut.getContent().trim());
+        assertEquals("bml1", behOut.getBmlId());
+        assertEquals("beh1", behOut.id);
     }
 }

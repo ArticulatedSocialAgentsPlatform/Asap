@@ -1,21 +1,5 @@
 /*******************************************************************************
- * Copyright (C) 2009 Human Media Interaction, University of Twente, the Netherlands
- * 
- * This file is part of the Elckerlyc BML realizer.
- * 
- * Elckerlyc is free software: you can redistribute it and/or modify
- * it under the terms of the GNU General Public License as published by
- * the Free Software Foundation, either version 3 of the License, or
- * (at your option) any later version.
- * 
- * Elckerlyc is distributed in the hope that it will be useful,
- * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- * GNU General Public License for more details.
- * 
- * You should have received a copy of the GNU General Public License
- * along with Elckerlyc.  If not, see http://www.gnu.org/licenses/.
- ******************************************************************************/
+ *******************************************************************************/
 package asap.bml.bridge.ui;
 
 import hmi.util.Resources;
@@ -103,7 +87,6 @@ public class RealizerPortUI extends JPanel
 
     private static Logger logger = LoggerFactory.getLogger(RealizerPortUI.class.getName());
 
-    private URL demoScriptUrl = null;
     private String demoScriptResource = null;
 
     private String loadPath = "../../Shared/repository/HMI/HmiElckerlyc/resources/";
@@ -146,7 +129,7 @@ public class RealizerPortUI extends JPanel
         super();
 
         demoScriptResource = resource;
-        demoScriptUrl = new Resources("").getURL(resource);
+        
 
         realizerBridge = bridge;
 
@@ -168,7 +151,7 @@ public class RealizerPortUI extends JPanel
         buttonPanel.add(loadButton);
         buttonPanel.add(Box.createRigidArea(new Dimension(5, 0)));
 
-        getDemoScripts();
+        getDemoScripts(resource);
 
         // did we obtain demoscripts? if so, load them to GUI
         if (demoScripts.size() > 0)
@@ -259,8 +242,10 @@ public class RealizerPortUI extends JPanel
 
     }
 
-    private void getDemoScripts()
+    private void getDemoScripts(String resource)
     {
+        URL demoScriptUrl = new Resources("").getURL(resource);
+        
         // find the demoscripts, based on the URL
         if (demoScriptUrl != null)
         {

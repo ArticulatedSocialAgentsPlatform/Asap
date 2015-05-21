@@ -1,3 +1,5 @@
+/*******************************************************************************
+ *******************************************************************************/
 package asap.bml.ext.ssml;
 
 import static org.junit.Assert.assertEquals;
@@ -8,10 +10,9 @@ import java.io.IOException;
 
 import org.junit.Test;
 
-import asap.bml.ext.bmlt.BMLTInfo;
-
 import saiba.bml.BMLInfo;
 import saiba.bml.core.SpeechBehaviour;
+import asap.bml.ext.bmlt.BMLTInfo;
 
 /**
  * Unit tests for the SSMLBehaviour
@@ -23,7 +24,7 @@ public class SSMLBehaviourTest
     public void readXML() throws IOException
     {
         String str ="<speak xmlns=\""+SSMLBehaviour.NAMESPACE+"\">Hello world!</speak>";
-        SSMLBehaviour beh = new SSMLBehaviour("bml1",new XMLTokenizer(str));
+        SSMLBehaviour beh = new SSMLBehaviour("bml1","beh1", new XMLTokenizer(str));
         assertEquals("Hello world!",beh.getContent().trim());
     }
     
@@ -31,7 +32,7 @@ public class SSMLBehaviourTest
     public void writeXML() throws IOException
     {
         String str ="<speak xmlns=\""+SSMLBehaviour.NAMESPACE+"\">Hello world!</speak>";
-        SSMLBehaviour behIn = new SSMLBehaviour("bml1",new XMLTokenizer(str));
+        SSMLBehaviour behIn = new SSMLBehaviour("bml1","beh1", new XMLTokenizer(str));
         StringBuilder buf = new StringBuilder();
         behIn.appendXML(buf);
         SSMLBehaviour behOut = new SSMLBehaviour("bml1",new XMLTokenizer(buf.toString())); 

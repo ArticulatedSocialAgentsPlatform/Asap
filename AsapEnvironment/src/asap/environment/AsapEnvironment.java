@@ -1,21 +1,5 @@
 /*******************************************************************************
- * Copyright (C) 2009 Human Media Interaction, University of Twente, the Netherlands
- * 
- * This file is part of the Elckerlyc BML realizer.
- * 
- * Elckerlyc is free software: you can redistribute it and/or modify
- * it under the terms of the GNU General Public License as published by
- * the Free Software Foundation, either version 3 of the License, or
- * (at your option) any later version.
- * 
- * Elckerlyc is distributed in the hope that it will be useful,
- * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- * GNU General Public License for more details.
- * 
- * You should have received a copy of the GNU General Public License
- * along with Elckerlyc.  If not, see http://www.gnu.org/licenses/.
- ******************************************************************************/
+ *******************************************************************************/
 package asap.environment;
 
 import hmi.environmentbase.Environment;
@@ -108,7 +92,7 @@ public class AsapEnvironment implements Environment, ClockListener
             }
         }
     }
-    
+
     @Override
     public void initTime(double currentTime)
     {
@@ -127,7 +111,6 @@ public class AsapEnvironment implements Environment, ClockListener
         synchronized (shutdownSync)
         {
             if (shutdownPrepared) return null;
-            if (virtualHumans.containsKey(id)) throw new RuntimeException("Duplicate id for virtual human!");
             AsapVirtualHuman avh = new AsapVirtualHuman();
             avh.setVhId(id);
             avh.load(resources, fileName, name, environments, schedulingClock);
@@ -136,11 +119,17 @@ public class AsapEnvironment implements Environment, ClockListener
         }
     }
 
+    public AsapVirtualHuman loadVirtualHuman(String resources, String fileName, String name) throws IOException
+    {
+        return loadVirtualHuman("", resources, fileName, name);
+    }
+
     public void addVirtualHuman(AsapVirtualHuman avh)
     {
         synchronized (shutdownSync)
         {
             if (shutdownPrepared) return;
+            if (virtualHumans.containsKey(id)) throw new RuntimeException("Duplicate id for virtual human!");
             synchronized (virtualHumans)
             {
                 virtualHumans.put(avh.getVhId(), avh);

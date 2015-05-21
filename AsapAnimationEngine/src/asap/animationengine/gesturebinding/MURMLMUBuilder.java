@@ -1,9 +1,10 @@
+/*******************************************************************************
+ *******************************************************************************/
 package asap.animationengine.gesturebinding;
 
 import hmi.animation.SkeletonPose;
 import hmi.math.Quat4f;
 import hmi.math.Vec3f;
-import hmi.neurophysics.BiologicalSwivelCostsEvaluator;
 import hmi.neurophysics.FittsLaw;
 
 import java.util.ArrayList;

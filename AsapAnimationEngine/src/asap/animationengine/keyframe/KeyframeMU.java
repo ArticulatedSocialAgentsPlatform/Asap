@@ -1,21 +1,5 @@
 /*******************************************************************************
- * Copyright (C) 2009 Human Media Interaction, University of Twente, the Netherlands
- * 
- * This file is part of the Elckerlyc BML realizer.
- * 
- * Elckerlyc is free software: you can redistribute it and/or modify
- * it under the terms of the GNU General Public License as published by
- * the Free Software Foundation, either version 3 of the License, or
- * (at your option) any later version.
- * 
- * Elckerlyc is distributed in the hope that it will be useful,
- * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- * GNU General Public License for more details.
- * 
- * You should have received a copy of the GNU General Public License
- * along with Elckerlyc.  If not, see http://www.gnu.org/licenses/.
- ******************************************************************************/
+ *******************************************************************************/
 package asap.animationengine.keyframe;
 
 import hmi.animation.SkeletonInterpolator;
@@ -52,13 +36,14 @@ import com.google.common.collect.ImmutableSet;
  */
 public class KeyframeMU implements AnimationUnit
 {
-    private SkeletonInterpolator baseIp;
+    private final SkeletonInterpolator baseIp;
     private SkeletonInterpolator currentIp;
     private HashMap<String, String> parameters = new HashMap<String, String>(); // name => value set
     private KeyPositionManager keyPositionManager = new KeyPositionManagerImpl();
     private boolean mirror = false;
     private Set<String> filter = new HashSet<String>();
-
+    private AnimationPlayer aniPlayer;
+    
     @Override
     public void addKeyPosition(KeyPosition kp)
     {
@@ -155,20 +140,20 @@ public class KeyframeMU implements AnimationUnit
 
     public AnimationUnit copy(VJoint v)
     {
-        VJoint[] empty = new VJoint[0];
         ArrayList<VJoint> vjParts = new ArrayList<VJoint>();
         for (String s : baseIp.getPartIds())
         {
             for (VJoint vj : v.getParts())
             {
-                if (vj.getSid().equals(s))
+                if (s.equals(vj.getSid()))
                 {
                     vjParts.add(vj);
                 }
             }
         }
-        SkeletonInterpolator ipPredict = new SkeletonInterpolator(baseIp, vjParts.toArray(empty));
+        SkeletonInterpolator ipPredict = new SkeletonInterpolator(baseIp, vjParts.toArray(new VJoint[vjParts.size()]));
         KeyframeMU copy = new KeyframeMU(ipPredict);
+        copy.setTarget(v);
         for (Entry<String, String> paramValue : parameters.entrySet())
         {
             copy.setParameterValue(paramValue.getKey(), paramValue.getValue());
@@ -176,7 +161,7 @@ public class KeyframeMU implements AnimationUnit
         for (KeyPosition kp : getKeyPositions())
         {
             copy.addKeyPosition(kp);
-        }
+        }        
         return copy;
     }
 
@@ -244,12 +229,13 @@ public class KeyframeMU implements AnimationUnit
     @Override
     public TimedAnimationMotionUnit createTMU(FeedbackManager bbm, BMLBlockPeg bbPeg, String bmlId, String id, PegBoard pb)
     {
-        return new TimedAnimationMotionUnit(bbm, bbPeg, bmlId, id, this, pb);
+        return new TimedAnimationMotionUnit(bbm, bbPeg, bmlId, id, this, pb, aniPlayer);
     }
 
     @Override
     public AnimationUnit copy(AnimationPlayer p)
     {
+        this.aniPlayer = p;
         return copy(p.getVNext());
     }
 
@@ -272,4 +258,9 @@ public class KeyframeMU implements AnimationUnit
     {
                 
     } 
+    @Override
+    public Set<String> getAdditiveJoints()
+    {
+        return ImmutableSet.of();
+    }
 }

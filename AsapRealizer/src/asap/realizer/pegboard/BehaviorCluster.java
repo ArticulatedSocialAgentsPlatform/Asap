@@ -1,8 +1,10 @@
+/*******************************************************************************
+ *******************************************************************************/
 package asap.realizer.pegboard;
 
-import com.google.common.collect.ImmutableSet;
-
 import lombok.Data;
+
+import com.google.common.collect.ImmutableSet;
 
 /**
  * Stores cluster of connected behaviors

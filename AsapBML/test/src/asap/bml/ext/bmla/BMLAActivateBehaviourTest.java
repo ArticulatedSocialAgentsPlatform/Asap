@@ -1,3 +1,5 @@
+/*******************************************************************************
+ *******************************************************************************/
 package asap.bml.ext.bmla;
 
 import static org.junit.Assert.assertEquals;
@@ -8,12 +10,11 @@ import java.io.IOException;
 
 import org.junit.Test;
 
-import asap.bml.ext.bmlt.BMLTInfo;
-
 import saiba.bml.core.AbstractBehaviourTest;
 import saiba.bml.core.Behaviour;
 import saiba.bml.core.BehaviourBlock;
 import saiba.utils.TestUtil;
+import asap.bml.ext.bmlt.BMLTInfo;
 
 /**
  * Unit tests for the activate behavior

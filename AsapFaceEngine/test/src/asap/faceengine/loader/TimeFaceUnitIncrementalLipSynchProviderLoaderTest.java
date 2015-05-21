@@ -1,13 +1,14 @@
+/*******************************************************************************
+ *******************************************************************************/
 package asap.faceengine.loader;
 
 import static org.junit.Assert.assertNotNull;
 import static org.mockito.Mockito.mock;
-
-import java.io.IOException;
-
 import hmi.environmentbase.Environment;
 import hmi.environmentbase.Loader;
 import hmi.xml.XMLTokenizer;
+
+import java.io.IOException;
 
 import org.junit.Test;
 

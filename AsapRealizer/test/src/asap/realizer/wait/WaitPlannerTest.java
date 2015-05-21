@@ -1,20 +1,20 @@
+/*******************************************************************************
+ *******************************************************************************/
 package asap.realizer.wait;
 
-import static org.junit.Assert.*;
+import static org.junit.Assert.assertEquals;
 import static org.powermock.api.mockito.PowerMockito.mock;
+import hmi.xml.XMLTokenizer;
 
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
-import saiba.bml.core.WaitBehaviour;
-import saiba.bml.parser.Constraint;
-import asap.realizertestutil.PlannerTests;
-import hmi.xml.XMLTokenizer;
-
 import org.junit.Before;
 import org.junit.Test;
 
+import saiba.bml.core.WaitBehaviour;
+import saiba.bml.parser.Constraint;
 import asap.realizer.BehaviourPlanningException;
 import asap.realizer.SyncAndTimePeg;
 import asap.realizer.feedback.FeedbackManager;
@@ -23,6 +23,7 @@ import asap.realizer.pegboard.TimePeg;
 import asap.realizer.planunit.PlanManager;
 import asap.realizer.planunit.TimedPlanUnit;
 import asap.realizer.scheduler.TimePegAndConstraint;
+import asap.realizertestutil.PlannerTests;
 
 /**
  * WaitPlanner Unit test cases

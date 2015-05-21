@@ -1,11 +1,14 @@
+/*******************************************************************************
+ *******************************************************************************/
 package asap.realizerembodiments.impl;
 
-import saiba.bml.parser.BMLParser;
+import hmi.util.Clock;
 import hmi.xml.XMLStructureAdapter;
 import hmi.xml.XMLTokenizer;
 
 import java.io.IOException;
 
+import saiba.bml.parser.BMLParser;
 import asap.realizer.feedback.FeedbackManager;
 import asap.realizer.pegboard.PegBoard;
 import asap.realizer.scheduler.BMLASchedulingHandler;
@@ -13,7 +16,6 @@ import asap.realizer.scheduler.BMLBlockManager;
 import asap.realizer.scheduler.BMLScheduler;
 import asap.realizer.scheduler.SchedulingHandler;
 import asap.realizer.scheduler.SortedSmartBodySchedulingStrategy;
-import hmi.util.Clock;
 
 /**
  * Constructs a BMLScheduler from an xml description.
@@ -25,7 +27,7 @@ public class BMLSchedulerAssembler extends XMLStructureAdapter
     private SchedulingHandler schedulingHandler;
     private final BMLParser parser;
     private final FeedbackManager feedbackManager;
-    private final String name;
+    private final String characterId;
     private final Clock schedulingClock;
     private final BMLBlockManager bmlBlockManager;
     private BMLScheduler bmlScheduler;
@@ -36,11 +38,11 @@ public class BMLSchedulerAssembler extends XMLStructureAdapter
         return bmlScheduler;
     }
 
-    public BMLSchedulerAssembler(String name, BMLParser parser, FeedbackManager feedbackManager, BMLBlockManager bmlBlockManager,
+    public BMLSchedulerAssembler(String characterId, BMLParser parser, FeedbackManager feedbackManager, BMLBlockManager bmlBlockManager,
             Clock schedulingClock, PegBoard pb)
     {
         this.parser = parser;
-        this.name = name;
+        this.characterId = characterId;
         this.feedbackManager = feedbackManager;
         this.schedulingClock = schedulingClock;
         this.bmlBlockManager = bmlBlockManager;
@@ -61,7 +63,7 @@ public class BMLSchedulerAssembler extends XMLStructureAdapter
                 schedulingHandler = asm.getBMLSchedulingHandler();
             }
         }
-        bmlScheduler = new BMLScheduler(name, parser, feedbackManager, schedulingClock, schedulingHandler, bmlBlockManager, pegBoard);
+        bmlScheduler = new BMLScheduler(characterId, parser, feedbackManager, schedulingClock, schedulingHandler, bmlBlockManager, pegBoard);
     }
 
     private static final String XMLTAG = "BMLScheduler";

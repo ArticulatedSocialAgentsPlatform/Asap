@@ -1,7 +1,8 @@
+/*******************************************************************************
+ *******************************************************************************/
 package asap.livemocapengine.bml;
 
 import static org.junit.Assert.assertEquals;
-
 import hmi.xml.XMLFormatting;
 import hmi.xml.XMLTokenizer;
 

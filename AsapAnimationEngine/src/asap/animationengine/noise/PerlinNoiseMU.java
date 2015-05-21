@@ -1,21 +1,5 @@
 /*******************************************************************************
- * Copyright (C) 2009 Human Media Interaction, University of Twente, the Netherlands
- * 
- * This file is part of the Elckerlyc BML realizer.
- * 
- * Elckerlyc is free software: you can redistribute it and/or modify
- * it under the terms of the GNU General Public License as published by
- * the Free Software Foundation, either version 3 of the License, or
- * (at your option) any later version.
- * 
- * Elckerlyc is distributed in the hope that it will be useful,
- * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- * GNU General Public License for more details.
- * 
- * You should have received a copy of the GNU General Public License
- * along with Elckerlyc.  If not, see http://www.gnu.org/licenses/.
- ******************************************************************************/
+ *******************************************************************************/
 package asap.animationengine.noise;
 
 import hmi.animation.Hanim;
@@ -64,6 +48,7 @@ public class PerlinNoiseMU implements NoiseMU
 {
     private HashMap<String, String> parameters = new HashMap<String, String>(); // name => value set
     private KeyPositionManager keyPositionManager = new KeyPositionManagerImpl();
+    private AnimationPlayer aniPlayer;
     private PerlinNoise pnx1 = new PerlinNoise(1024, 0, 1);
     /*
      * private PerlinNoise pnx2 = new PerlinNoise(1024,0,1);
@@ -210,12 +195,13 @@ public class PerlinNoiseMU implements NoiseMU
     @Override
     public TimedAnimationMotionUnit createTMU(FeedbackManager bbm, BMLBlockPeg bbPeg, String bmlId, String id, PegBoard pb)
     {
-        return new NoiseTMU(bbm, bbPeg, bmlId, id, this, pb);
+        return new NoiseTMU(bbm, bbPeg, bmlId, id, this, pb, aniPlayer);
     }
 
     @Override
     public AnimationUnit copy(AnimationPlayer p)
     {
+        this.aniPlayer = p;
         HashMap<String, String> newparam = new HashMap<String, String>();
         newparam.putAll(parameters);
         PerlinNoiseMU pmu = new PerlinNoiseMU();
@@ -246,6 +232,12 @@ public class PerlinNoiseMU implements NoiseMU
         }
         return ImmutableSet.of();
 
+    }
+    
+    @Override
+    public Set<String> getAdditiveJoints()
+    {
+        return ImmutableSet.of();
     }
 
     @Override

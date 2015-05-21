@@ -1,3 +1,5 @@
+/*******************************************************************************
+ *******************************************************************************/
 package asap.realizer.scheduler;
 
 import static org.hamcrest.MatcherAssert.assertThat;
@@ -5,7 +7,6 @@ import static org.hamcrest.collection.IsCollectionWithSize.hasSize;
 import static org.hamcrest.number.OrderingComparison.greaterThan;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNull;
-import static org.junit.Assert.fail;
 import hmi.util.Clock;
 import hmi.util.ClockListener;
 
@@ -36,11 +37,13 @@ import saiba.bml.feedback.BMLBlockPredictionFeedback;
 import saiba.bml.feedback.BMLBlockProgressFeedback;
 import saiba.bml.feedback.BMLPredictionFeedback;
 import saiba.bml.feedback.BMLSyncPointProgressFeedback;
+import saiba.bml.feedback.BMLWarningFeedback;
 import saiba.bml.parser.BMLParser;
 import asap.bml.ext.bmla.BMLABMLBehaviorAttributes;
 import asap.bml.ext.bmla.BMLAInfo;
 import asap.bml.ext.bmla.feedback.BMLABlockPredictionFeedback;
 import asap.bml.ext.bmla.feedback.BMLABlockProgressFeedback;
+import asap.bml.ext.bmla.feedback.BMLABlockStatus;
 import asap.bml.ext.bmlt.BMLTInfo;
 import asap.realizer.BehaviorNotFoundException;
 import asap.realizer.BehaviourPlanningException;
@@ -69,13 +72,13 @@ import com.google.common.collect.ImmutableSet;
  * 
  */
 @RunWith(PowerMockRunner.class)
-@PrepareForTest({System.class, BMLABlockProgressFeedback.class, BMLScheduler.class})
+@PrepareForTest({ System.class, BMLABlockProgressFeedback.class, BMLScheduler.class })
 public class BMLSchedulerTest
 {
     private StubEngine stubEngine;
     private PegBoard pegBoard = new PegBoard();
     private static final double PRECISION = 0.0001;
-    
+
     private static class StubClock implements Clock
     {
         private double time = 0;
@@ -303,8 +306,8 @@ public class BMLSchedulerTest
     }
 
     private static final long CTM = 123;
-    private long currentTimeMillis = CTM ;
-    
+    private long currentTimeMillis = CTM;
+
     private BMLScheduler scheduler;
 
     private BMLParser parser;
@@ -314,6 +317,8 @@ public class BMLSchedulerTest
     private List<BMLSyncPointProgressFeedback> feedBackList;
 
     private List<BMLBlockProgressFeedback> blockProgressFeedbackList;
+    
+    private List<BMLWarningFeedback> warningList;
 
     private List<BMLPredictionFeedback> predictionFeedback = new ArrayList<BMLPredictionFeedback>();
 
@@ -367,14 +372,14 @@ public class BMLSchedulerTest
         return "<bml xmlns=\"http://www.bml-initiative.org/bml/bml-1.0\"" + "xmlns:bmla=\"http://www.asap-project.org/bmla\" id=\"" + bmlId
                 + "\"><speech id=\"s1\"><text/></speech></bml>";
     }
-
+    
     @Before
     public void setup()
     {
         BMLTInfo.init();
         PowerMockito.mockStatic(System.class);
         Mockito.when(System.currentTimeMillis()).thenReturn(currentTimeMillis);
-        
+
         parser = new BMLParser(new ImmutableSet.Builder<Class<? extends BMLBehaviorAttributeExtension>>().add(
                 BMLABMLBehaviorAttributes.class).build());
         stubEngine = new StubEngine("stubEngine");
@@ -396,9 +401,10 @@ public class BMLSchedulerTest
         scheduler.addEngine(SpeechBehaviour.class, stubEngine);
 
         feedBackList = new ArrayList<BMLSyncPointProgressFeedback>();
-        blockProgressFeedbackList = new ArrayList<BMLBlockProgressFeedback>();
+        blockProgressFeedbackList = new ArrayList<BMLBlockProgressFeedback>();     
+        warningList = new ArrayList<BMLWarningFeedback>();
         listFeedbackListener = new ListBMLFeedbackListener.Builder().predictionList(predictionFeedback).feedBackList(feedBackList)
-                .blockFeedbackList(blockProgressFeedbackList).build();
+                .blockFeedbackList(blockProgressFeedbackList).warningList(warningList).build();
         scheduler.addFeedbackListener(listFeedbackListener);
     }
 
@@ -408,7 +414,7 @@ public class BMLSchedulerTest
         bb.readXML(str);
         parser.addBehaviourBlock(bb);
     }
-
+    
     @Test
     public void testStartFeedback()
     {
@@ -419,47 +425,47 @@ public class BMLSchedulerTest
         BMLABlockProgressFeedback fb = BMLABlockProgressFeedback.build(blockProgressFeedbackList.get(0));
         assertEquals(CTM, fb.getPosixTime(), PRECISION);
     }
-    
+
     @Test
     public void testStartPredictionFeedbackEmptyBlock()
     {
         parseBML("<bml xmlns=\"http://www.bml-initiative.org/bml/bml-1.0\" id=\"bml1\"/>");
         scheduler.schedule();
-        assertEquals(2, predictionFeedback.size()); //delivered, scheduling done, (no starting, since it finishes instantly)
+        assertEquals(2, predictionFeedback.size()); // delivered, scheduling done, (no starting, since it finishes instantly)
         assertEquals("bml1", predictionFeedback.get(0).getBmlBlockPredictions().get(0).getId());
         assertEquals("bml1", predictionFeedback.get(1).getBmlBlockPredictions().get(0).getId());
-        
+
         assertEquals(0, predictionFeedback.get(0).getBmlBlockPredictions().get(0).getGlobalStart(), PRECISION);
         assertEquals(TimePeg.VALUE_UNKNOWN, predictionFeedback.get(0).getBmlBlockPredictions().get(0).getGlobalEnd(), PRECISION);
         assertEquals(0, predictionFeedback.get(1).getBmlBlockPredictions().get(0).getGlobalStart(), PRECISION);
-        
+
         assertEquals(0, predictionFeedback.get(1).getBmlBlockPredictions().get(0).getGlobalEnd(), PRECISION);
-        
+
         BMLABlockPredictionFeedback fb0 = BMLABlockPredictionFeedback.build(predictionFeedback.get(0).getBmlBlockPredictions().get(0));
         BMLABlockPredictionFeedback fb1 = BMLABlockPredictionFeedback.build(predictionFeedback.get(1).getBmlBlockPredictions().get(0));
         assertEquals(CTM, fb0.getPosixStartTime(), PRECISION);
         assertEquals(CTM, fb1.getPosixStartTime(), PRECISION);
         assertEquals(0, fb0.getPosixEndTime(), PRECISION);
-        assertEquals(CTM, fb1.getPosixEndTime(), PRECISION);        
+        assertEquals(CTM, fb1.getPosixEndTime(), PRECISION);
     }
-    
+
     @Test
     public void testStartPredictionFeedback()
     {
         stubEngine.addBlockEnd("bml1", 5);
         parseBML(createNonEmptyBML("bml1"));
         scheduler.schedule();
-        assertEquals(3, predictionFeedback.size()); //delivered, scheduling done, starting
-        
+        assertEquals(3, predictionFeedback.size()); // delivered, scheduling done, starting
+
         assertEquals(0, predictionFeedback.get(0).getBmlBlockPredictions().get(0).getGlobalStart(), PRECISION);
         assertEquals(TimePeg.VALUE_UNKNOWN, predictionFeedback.get(0).getBmlBlockPredictions().get(0).getGlobalEnd(), PRECISION);
-        
+
         assertEquals(0, predictionFeedback.get(1).getBmlBlockPredictions().get(0).getGlobalStart(), PRECISION);
         assertEquals(0, predictionFeedback.get(2).getBmlBlockPredictions().get(0).getGlobalStart(), PRECISION);
-        
+
         assertEquals(5, predictionFeedback.get(1).getBmlBlockPredictions().get(0).getGlobalEnd(), PRECISION);
         assertEquals(5, predictionFeedback.get(2).getBmlBlockPredictions().get(0).getGlobalEnd(), PRECISION);
-        
+
         BMLABlockPredictionFeedback fb0 = BMLABlockPredictionFeedback.build(predictionFeedback.get(0).getBmlBlockPredictions().get(0));
         BMLABlockPredictionFeedback fb1 = BMLABlockPredictionFeedback.build(predictionFeedback.get(1).getBmlBlockPredictions().get(0));
         BMLABlockPredictionFeedback fb2 = BMLABlockPredictionFeedback.build(predictionFeedback.get(2).getBmlBlockPredictions().get(0));
@@ -467,8 +473,8 @@ public class BMLSchedulerTest
         assertEquals(CTM, fb1.getPosixStartTime(), PRECISION);
         assertEquals(CTM, fb2.getPosixStartTime(), PRECISION);
         assertEquals(0, fb0.getPosixEndTime(), PRECISION);
-        assertEquals(CTM+5000, fb1.getPosixEndTime(), PRECISION);
-        assertEquals(CTM+5000, fb2.getPosixEndTime(), PRECISION);
+        assertEquals(CTM + 5000, fb1.getPosixEndTime(), PRECISION);
+        assertEquals(CTM + 5000, fb2.getPosixEndTime(), PRECISION);
     }
 
     @Test
@@ -482,7 +488,7 @@ public class BMLSchedulerTest
         BMLABlockProgressFeedback fb = BMLABlockProgressFeedback.build(blockProgressFeedbackList.get(1));
         assertEquals(CTM, fb.getPosixTime(), PRECISION);
     }
-    
+
     @Test
     public void testAppend()
     {
@@ -491,7 +497,7 @@ public class BMLSchedulerTest
         scheduler.schedule();
         assertEquals(1, getBMLIdsFromStartFeedback(blockProgressFeedbackList).size());
         assertEquals("bml1", getBMLIdsFromStartFeedback(blockProgressFeedbackList).get(0));
-        scheduler.getBMLBlockManager().finishBlock("bml1");        
+        scheduler.getBMLBlockManager().finishBlock("bml1");
         assertEquals(2, getBMLIdsFromStartFeedback(blockProgressFeedbackList).size());
         assertEquals("bml2", getBMLIdsFromStartFeedback(blockProgressFeedbackList).get(1));
         assertThat(listFeedbackListener.getIndex(listFeedbackListener.getBlockProgress("bml2", "start")),
@@ -530,7 +536,7 @@ public class BMLSchedulerTest
         assertEquals(1, getBMLIdsFromStartFeedback(blockProgressFeedbackList).size());
         assertEquals("bml1", getBMLIdsFromStartFeedback(blockProgressFeedbackList).get(0));
 
-        scheduler.blockStopFeedback("bml1");
+        scheduler.blockStopFeedback("bml1", BMLABlockStatus.DONE);
         assertEquals(1, getBMLIdsFromEndFeedback(blockProgressFeedbackList).size());
         assertEquals("bml1", getBMLIdsFromEndFeedback(blockProgressFeedbackList).get(0));
     }
@@ -623,10 +629,20 @@ public class BMLSchedulerTest
     {
         parseBML(createNonEmptyBML("bml1"));
         scheduler.schedule();
-        assertEquals(1, getBMLIdsFromStartFeedback(blockProgressFeedbackList).size());
-
+        
+        assertEquals(1, blockProgressFeedbackList.size());
         scheduler.interruptBlock("bml1");
-        assertEquals(1, getBMLIdsFromEndFeedback(blockProgressFeedbackList).size());
+        
+        BMLABlockProgressFeedback bbfb[] = constructBMLABlockProgress();
+        assertEquals(2, bbfb.length);
+        
+        //bml 1 start                
+        assertEquals("bml1", bbfb[0].getBmlId());
+        assertEquals(BMLABlockStatus.IN_EXEC, bbfb[0].getStatus());
+        
+        //bml1 interrupt
+        assertEquals("bml1", bbfb[1].getBmlId());
+        assertEquals(BMLABlockStatus.INTERRUPTED, bbfb[1].getStatus());        
     }
 
     @Test
@@ -639,21 +655,30 @@ public class BMLSchedulerTest
 
         parseBML(createNonEmptyBML("bml3", "bmla:interrupt=\"bml1,bml2\""));
         scheduler.schedule();
-        assertEquals(3, getBMLIdsFromStartFeedback(blockProgressFeedbackList).size());
+        
 
-        assertEquals(2, getBMLIdsFromEndFeedback(blockProgressFeedbackList).size());
-        if (getBMLIdsFromEndFeedback(blockProgressFeedbackList).get(0).equals("bml1"))
-        {
-            assertEquals("bml2", getBMLIdsFromEndFeedback(blockProgressFeedbackList).get(1));
-        }
-        else if (getBMLIdsFromEndFeedback(blockProgressFeedbackList).get(0).equals("bml2"))
-        {
-            assertEquals("bml1", getBMLIdsFromEndFeedback(blockProgressFeedbackList).get(1));
-        }
-        else
-        {
-            fail();
-        }
+        BMLABlockProgressFeedback bbfb[] = constructBMLABlockProgress();
+        assertEquals(5, bbfb.length);
+        
+        //bml1 start
+        assertEquals("bml1", bbfb[0].getBmlId());
+        assertEquals(BMLABlockStatus.IN_EXEC, bbfb[0].getStatus());
+        
+        //bml2 start
+        assertEquals("bml2", bbfb[1].getBmlId());
+        assertEquals(BMLABlockStatus.IN_EXEC, bbfb[1].getStatus());
+        
+        //bml1 interrupt
+        assertEquals("bml1", bbfb[2].getBmlId());
+        assertEquals(BMLABlockStatus.INTERRUPTED, bbfb[2].getStatus());
+        
+        //bml2 interrupt
+        assertEquals("bml2", bbfb[3].getBmlId());
+        assertEquals(BMLABlockStatus.INTERRUPTED, bbfb[3].getStatus());
+        
+        //bml3 start
+        assertEquals("bml3", bbfb[4].getBmlId());
+        assertEquals(BMLABlockStatus.IN_EXEC, bbfb[4].getStatus());
     }
 
     @Test
@@ -667,7 +692,7 @@ public class BMLSchedulerTest
         scheduler.interruptBlock("bml2");
         assertEquals(1, getBMLIdsFromEndFeedback(blockProgressFeedbackList).size());
 
-        scheduler.blockStopFeedback("bml1");
+        scheduler.blockStopFeedback("bml1", BMLABlockStatus.DONE);
         assertEquals(1, getBMLIdsFromStartFeedback(blockProgressFeedbackList).size());
         assertEquals(2, getBMLIdsFromEndFeedback(blockProgressFeedbackList).size());
     }
@@ -730,7 +755,7 @@ public class BMLSchedulerTest
         assertEquals(1, getBMLIdsFromStartFeedback(blockProgressFeedbackList).size());
         assertEquals("bml1", getBMLIdsFromStartFeedback(blockProgressFeedbackList).get(0));
 
-        scheduler.blockStopFeedback("bml1");
+        scheduler.blockStopFeedback("bml1", BMLABlockStatus.DONE);
         assertEquals(1, getBMLIdsFromStartFeedback(blockProgressFeedbackList).size());
     }
 
@@ -876,7 +901,7 @@ public class BMLSchedulerTest
         parseBML(createNonEmptyBML("bml1", "bmla:preplan=\"true\""));
         scheduler.schedule();
 
-        parseBML(createNonEmptyBML("bml2", "bmla:preplan=\"true\" onStart=\"bml1\""));
+        parseBML(createNonEmptyBML("bml2", "bmla:preplan=\"true\" bmla:onStart=\"bml1\""));
         scheduler.schedule();
 
         assertEquals(0, getBMLIdsFromStartFeedback(blockProgressFeedbackList).size());
@@ -891,7 +916,7 @@ public class BMLSchedulerTest
         parseBML(createNonEmptyBML("bml3", "bmla:preplan=\"true\""));
         scheduler.schedule();
 
-        parseBML(createNonEmptyBML("bml2", "bmla:preplan=\"true\" composition=\"APPEND-AFTER(bml1)\" onStart=\"bml3\""));
+        parseBML(createNonEmptyBML("bml2", "bmla:preplan=\"true\" composition=\"APPEND-AFTER(bml1)\" bmla:onStart=\"bml3\""));
         scheduler.schedule();
 
         assertEquals(0, getBMLIdsFromStartFeedback(blockProgressFeedbackList).size());
@@ -967,9 +992,9 @@ public class BMLSchedulerTest
         assertEquals(3, blockStartPredictions.size());
         assertEquals(2d, blockStartPredictions.get(2).getGlobalStart(), PRECISION);
         assertEquals(2, pegBoard.getBMLBlockPeg("bml3").getValue(), PRECISION);
-        
+
         BMLABlockPredictionFeedback pred = BMLABlockPredictionFeedback.build(blockStartPredictions.get(2));
-        assertEquals(2000d+CTM, pred.getPosixStartTime(), PRECISION);
+        assertEquals(2000d + CTM, pred.getPosixStartTime(), PRECISION);
     }
 
     @Test
@@ -977,7 +1002,7 @@ public class BMLSchedulerTest
     {
         stubEngine.addBlockEnd("bml1", 2);
         stubEngine.addBlockEnd("bml2", 3);
-        parseBML(createNonEmptyBML("bml1", "preplan=\"true\""));
+        parseBML(createNonEmptyBML("bml1", "bmla:preplan=\"true\""));
         parseBML(createNonEmptyBML("bml2", "composition=\"APPEND\""));
         parseBML(createNonEmptyBML("bml3", "composition=\"APPEND\""));
         scheduler.schedule();
@@ -989,39 +1014,72 @@ public class BMLSchedulerTest
         assertEquals(3, pegBoard.getBMLBlockPeg("bml3").getValue(), PRECISION);
     }
 
+    private BMLABlockProgressFeedback[] constructBMLABlockProgress()
+    {
+        BMLABlockProgressFeedback bbf[] = new BMLABlockProgressFeedback[blockProgressFeedbackList.size()];
+        for(int i=0;i<blockProgressFeedbackList.size();i++)
+        {
+            bbf[i] = BMLABlockProgressFeedback.build(blockProgressFeedbackList.get(i));
+        }
+        return bbf;
+    }
+    
+    private BMLABlockPredictionFeedback[] constructBMLABlockPredictions()
+    {
+        BMLABlockPredictionFeedback bbf[] = new BMLABlockPredictionFeedback[predictionFeedback.size()];
+        for(int i=0;i<predictionFeedback.size();i++)
+        {
+            bbf[i] = BMLABlockPredictionFeedback.build(predictionFeedback.get(i).getBmlBlockPredictions().get(0));
+        }
+        return bbf;
+    }
+    
     @Test
     public void testStartPredictionWithBMLAAppendAfter()
     {
         stubEngine.addBlockEnd("bml1", 2);
         stubEngine.addBlockEnd("bml2", 5);
         parseBML(createNonEmptyBML("bml1"));
-        parseBML(createNonEmptyBML("bml2", "xmlns:bmla=\""+BMLAInfo.BMLA_NAMESPACE +"\" bmla:appendAfter=\"bml1\""));
+        parseBML(createNonEmptyBML("bml2", "xmlns:bmla=\"" + BMLAInfo.BMLA_NAMESPACE + "\" bmla:appendAfter=\"bml1\""));
         scheduler.schedule();
+
+        assertEquals(6, predictionFeedback.size());
+        BMLABlockPredictionFeedback bbf[] = constructBMLABlockPredictions();
+                
+        // bml1 scheduling start
+        assertEquals("bml1", bbf[0].getId());
+        assertEquals(BMLABlockStatus.IN_PREP, bbf[0].getStatus());
+
+        // bml1 scheduling end, PENDING
+        assertEquals("bml1", bbf[1].getId());
+        assertEquals(2, bbf[1].getGlobalEnd(), PRECISION);
+        assertEquals(BMLABlockStatus.PENDING, bbf[1].getStatus());
+
+        // bml1 start
+        assertEquals("bml1", bbf[2].getId());
+        assertEquals(2, bbf[2].getGlobalEnd(), PRECISION);
+        assertEquals(BMLABlockStatus.IN_EXEC, bbf[2].getStatus());
         
-        //bml1 scheduling start
-        assertEquals(5, predictionFeedback.size());
-        assertEquals("bml1", predictionFeedback.get(0).getBmlBlockPredictions().get(0).getId());
+        // bml2 scheduling start
+        assertEquals("bml2", bbf[3].getId());
+        assertEquals(2, bbf[3].getGlobalStart(), PRECISION);
+        assertEquals(BMLABlockStatus.IN_PREP, bbf[3].getStatus());
         
-        //bml1 scheduling end
-        assertEquals("bml1", predictionFeedback.get(1).getBmlBlockPredictions().get(0).getId());
-        assertEquals(2,predictionFeedback.get(1).getBmlBlockPredictions().get(0).getGlobalEnd(), PRECISION);
+        // bml2 scheduling end, PENDING
+        assertEquals("bml2", bbf[4].getId());
+        assertEquals(2, bbf[4].getGlobalStart(), PRECISION);
+        assertEquals(5, bbf[4].getGlobalEnd(), PRECISION);
+        assertEquals(BMLABlockStatus.PENDING, bbf[4].getStatus());
         
-        //bml1 scheduling start
-        assertEquals("bml1", predictionFeedback.get(2).getBmlBlockPredictions().get(0).getId());
-        assertEquals(2,predictionFeedback.get(2).getBmlBlockPredictions().get(0).getGlobalEnd(), PRECISION);
-        
-        //bml2 scheduling start
-        assertEquals("bml2", predictionFeedback.get(3).getBmlBlockPredictions().get(0).getId());
-        assertEquals(2,predictionFeedback.get(3).getBmlBlockPredictions().get(0).getGlobalStart(), PRECISION);
-        
-        //bml2 scheduling end
-        assertEquals("bml2", predictionFeedback.get(4).getBmlBlockPredictions().get(0).getId());
-        assertEquals(2,predictionFeedback.get(4).getBmlBlockPredictions().get(0).getGlobalStart(), PRECISION);
-        assertEquals(5,predictionFeedback.get(4).getBmlBlockPredictions().get(0).getGlobalEnd(), PRECISION);
+        // bml2 scheduling end, LURKING
+        assertEquals("bml2", bbf[5].getId());
+        assertEquals(2, bbf[5].getGlobalStart(), PRECISION);
+        assertEquals(5, bbf[5].getGlobalEnd(), PRECISION);
+        assertEquals(BMLABlockStatus.LURKING, bbf[5].getStatus());
     }
-    
+
     @Test
-    public void testStartPredictionWithAppendAfter()
+    public void testPredictionsWithAppendAfter()
     {
         stubEngine.addBlockEnd("bml1", 2);
         stubEngine.addBlockEnd("bml2", 1);
@@ -1030,20 +1088,61 @@ public class BMLSchedulerTest
         parseBML(createNonEmptyBML("bml2"));
         parseBML(createNonEmptyBML("bml3", "composition=\"APPEND-AFTER(bml2)\""));
         scheduler.schedule();
-        List<BMLBlockPredictionFeedback> blockStartPredictions = listFeedbackListener.getBlockStartOnlyPredictions();
-        List<BMLBlockPredictionFeedback> blockFinishedPredictions = listFeedbackListener.getBlockEndPredictions();
-
-        assertEquals(3, blockStartPredictions.size());
-        assertEquals(1d, blockStartPredictions.get(2).getGlobalStart(), PRECISION);
         
-        assertEquals(5, blockFinishedPredictions.size());   //bml1 scheduling done, bml1 start, bml2 scheduling done, bml2 start, bml3 scheduling done
-        assertEquals(1d, blockFinishedPredictions.get(4).getGlobalStart(), PRECISION);
-        assertEquals(5d, blockFinishedPredictions.get(4).getGlobalEnd(), PRECISION);
-        assertEquals(1, pegBoard.getBMLBlockPeg("bml3").getValue(), PRECISION);
+        assertEquals(9, predictionFeedback.size());
+        BMLABlockPredictionFeedback bbf[] = constructBMLABlockPredictions();
+        
+        // bml1 scheduling start
+        assertEquals("bml1", bbf[0].getId());
+        assertEquals(BMLABlockStatus.IN_PREP, bbf[0].getStatus());
+
+        // bml1 scheduling end, PENDING
+        assertEquals("bml1", bbf[1].getId());
+        assertEquals(2, bbf[1].getGlobalEnd(), PRECISION);
+        assertEquals(BMLABlockStatus.PENDING, bbf[1].getStatus());
+        
+        // bml1 start
+        assertEquals("bml1", bbf[2].getId());
+        assertEquals(2, bbf[2].getGlobalEnd(), PRECISION);
+        assertEquals(BMLABlockStatus.IN_EXEC, bbf[2].getStatus());
+        
+        // bml2 scheduling start
+        assertEquals("bml2", bbf[3].getId());
+        assertEquals(0, bbf[3].getGlobalStart(), PRECISION);
+        assertEquals(BMLABlockStatus.IN_PREP, bbf[3].getStatus());
+        
+        // bml2 scheduling end, PENDING
+        assertEquals("bml2", bbf[4].getId());
+        assertEquals(0, bbf[4].getGlobalStart(), PRECISION);
+        assertEquals(1, bbf[4].getGlobalEnd(), PRECISION);
+        assertEquals(BMLABlockStatus.PENDING, bbf[4].getStatus());
+        
+        // bml2 scheduling end, IN_EXEC
+        assertEquals("bml2", bbf[5].getId());
+        assertEquals(0, bbf[5].getGlobalStart(), PRECISION);
+        assertEquals(1, bbf[5].getGlobalEnd(), PRECISION);
+        assertEquals(BMLABlockStatus.IN_EXEC, bbf[5].getStatus());
+        
+        // bml3 scheduling start
+        assertEquals("bml3", bbf[6].getId());
+        assertEquals(1, bbf[6].getGlobalStart(), PRECISION);
+        assertEquals(BMLABlockStatus.IN_PREP, bbf[6].getStatus());
+        
+        // bml3 scheduling end, PENDING
+        assertEquals("bml3", bbf[7].getId());
+        assertEquals(1, bbf[7].getGlobalStart(), PRECISION);
+        assertEquals(5, bbf[7].getGlobalEnd(), PRECISION);
+        assertEquals(BMLABlockStatus.PENDING, bbf[7].getStatus());
+        
+        // bml3 scheduling end, LURKING
+        assertEquals("bml3", bbf[8].getId());
+        assertEquals(1, bbf[8].getGlobalStart(), PRECISION);
+        assertEquals(5, bbf[8].getGlobalEnd(), PRECISION);
+        assertEquals(BMLABlockStatus.LURKING, bbf[8].getStatus());        
     }
 
     @Test
-    public void testStartPredictionWithAppendAndLateClock()
+    public void testPredictionsWithAppendAndLateClock()
     {
         stubClock.setTime(3);
         stubEngine.addBlockEnd("bml1", 5);
@@ -1053,19 +1152,63 @@ public class BMLSchedulerTest
         parseBML(createNonEmptyBML("bml2"));
         parseBML(createNonEmptyBML("bml3", "composition=\"APPEND\""));
         scheduler.schedule();
-        List<BMLBlockPredictionFeedback> blockStartPredictions = listFeedbackListener.getBlockStartOnlyPredictions();
-        List<BMLBlockPredictionFeedback> blockFinishedPredictions = listFeedbackListener.getBlockEndPredictions();
-        assertEquals(3, blockStartPredictions.size());
-        assertEquals(5d, blockStartPredictions.get(2).getGlobalStart(), PRECISION);
         
-        assertEquals(5, blockFinishedPredictions.size());   //bml1 scheduling done, bml1 start, bml2 scheduling done, bml2 start, bml3 scheduling done
-        assertEquals(5d, blockFinishedPredictions.get(4).getGlobalStart(), PRECISION);
-        assertEquals(6d, blockFinishedPredictions.get(4).getGlobalEnd(), PRECISION);
+        assertEquals(9, predictionFeedback.size());
+        BMLABlockPredictionFeedback bbf[] = constructBMLABlockPredictions();
         
-        BMLABlockPredictionFeedback pred = BMLABlockPredictionFeedback.build(blockFinishedPredictions.get(4));
-        assertEquals(-3000+5000d+CTM, pred.getPosixStartTime(), PRECISION);
-        assertEquals(-3000+6000d+CTM, pred.getPosixEndTime(), PRECISION);
-
+        // bml1 scheduling start
+        assertEquals("bml1", bbf[0].getId());
+        assertEquals(3, bbf[0].getGlobalStart(), PRECISION);
+        assertEquals(BMLABlockStatus.IN_PREP, bbf[0].getStatus());
+        
+        // bml1 scheduling end, PENDING
+        assertEquals("bml1", bbf[1].getId());
+        assertEquals(3, bbf[1].getGlobalStart(), PRECISION);
+        assertEquals(5, bbf[1].getGlobalEnd(), PRECISION);
+        assertEquals(BMLABlockStatus.PENDING, bbf[1].getStatus());
+        
+        // bml1 start
+        assertEquals("bml1", bbf[2].getId());
+        assertEquals(3, bbf[2].getGlobalStart(), PRECISION);
+        assertEquals(5, bbf[2].getGlobalEnd(), PRECISION);
+        assertEquals(BMLABlockStatus.IN_EXEC, bbf[2].getStatus());
+        
+        // bml2 scheduling start
+        assertEquals("bml2", bbf[3].getId());
+        assertEquals(3, bbf[3].getGlobalStart(), PRECISION);
+        assertEquals(BMLABlockStatus.IN_PREP, bbf[3].getStatus());
+        
+        // bml2 scheduling end, PENDING
+        assertEquals("bml2", bbf[4].getId());
+        assertEquals(3, bbf[4].getGlobalStart(), PRECISION);
+        assertEquals(4, bbf[4].getGlobalEnd(), PRECISION);
+        assertEquals(BMLABlockStatus.PENDING, bbf[4].getStatus());
+        assertEquals(-3000 + 3000d + CTM, bbf[4].getPosixStartTime(), PRECISION);
+        assertEquals(-3000 + 4000d + CTM, bbf[4].getPosixEndTime(), PRECISION);
+        
+        // bml2 scheduling end, IN_EXEC
+        assertEquals("bml2", bbf[5].getId());
+        assertEquals(3, bbf[5].getGlobalStart(), PRECISION);
+        assertEquals(4, bbf[5].getGlobalEnd(), PRECISION);
+        assertEquals(BMLABlockStatus.IN_EXEC, bbf[5].getStatus());
+        
+        // bml3 scheduling start
+        assertEquals("bml3", bbf[6].getId());
+        assertEquals(5, bbf[6].getGlobalStart(), PRECISION);
+        assertEquals(BMLABlockStatus.IN_PREP, bbf[6].getStatus());
+        
+        // bml3 scheduling end, PENDING
+        assertEquals("bml3", bbf[7].getId());
+        assertEquals(5, bbf[7].getGlobalStart(), PRECISION);
+        assertEquals(6, bbf[7].getGlobalEnd(), PRECISION);
+        assertEquals(BMLABlockStatus.PENDING, bbf[7].getStatus());
+        
+        // bml3 scheduling end, LURKING
+        assertEquals("bml3", bbf[8].getId());
+        assertEquals(5, bbf[8].getGlobalStart(), PRECISION);
+        assertEquals(6, bbf[8].getGlobalEnd(), PRECISION);
+        assertEquals(BMLABlockStatus.LURKING, bbf[8].getStatus());  
+        
         assertEquals(5, pegBoard.getBMLBlockPeg("bml3").getValue(), PRECISION);
     }
 
@@ -1076,62 +1219,139 @@ public class BMLSchedulerTest
         stubEngine.addBlockEnd("bml2", 10);
         stubEngine.addBlockEnd("bml3", 20);
         parseBML(createNonEmptyBML("bml1"));
-        parseBML(createNonEmptyBML("bml2", "xmlns:bmla=\""+BMLAInfo.BMLA_NAMESPACE +"\" bmla:appendAfter=\"bml1\""));
-        parseBML(createNonEmptyBML("bml3", "xmlns:bmla=\""+BMLAInfo.BMLA_NAMESPACE +"\" bmla:prependBefore=\"bml2\""));
+        parseBML(createNonEmptyBML("bml2", "xmlns:bmla=\"" + BMLAInfo.BMLA_NAMESPACE + "\" bmla:appendAfter=\"bml1\""));
+        parseBML(createNonEmptyBML("bml3", "xmlns:bmla=\"" + BMLAInfo.BMLA_NAMESPACE + "\" bmla:prependBefore=\"bml2\""));
         scheduler.schedule();
+
+        assertEquals(12, predictionFeedback.size());
+        BMLABlockPredictionFeedback bbf[] = constructBMLABlockPredictions();
+
+        // bml1 scheduling start
+        assertEquals("bml1", bbf[0].getId());
+        assertEquals(0, bbf[0].getGlobalStart(), PRECISION);
+        assertEquals(BMLABlockStatus.IN_PREP, bbf[0].getStatus());
+            
+        // bml1 scheduling done
+        assertEquals("bml1", bbf[1].getId());
+        assertEquals(0, bbf[1].getGlobalStart(), PRECISION);
+        assertEquals(5, bbf[1].getGlobalEnd(), PRECISION);
+        assertEquals(BMLABlockStatus.PENDING, bbf[1].getStatus());
         
-        assertEquals(11, predictionFeedback.size());
+        // bml1 start
+        assertEquals("bml1", bbf[2].getId());
+        assertEquals(0, bbf[2].getGlobalStart(), PRECISION);
+        assertEquals(5, bbf[2].getGlobalEnd(), PRECISION);
+        assertEquals(BMLABlockStatus.IN_EXEC, bbf[2].getStatus());
         
-        //bml1 scheduling start
-        assertEquals("bml1", predictionFeedback.get(0).getBmlBlockPredictions().get(0).getId());
-        assertEquals(0,predictionFeedback.get(0).getBmlBlockPredictions().get(0).getGlobalStart(),PRECISION);
+        // bml2 scheduling start
+        assertEquals("bml2",bbf[3].getId());
+        assertEquals(5, bbf[3].getGlobalStart(), PRECISION);
+        assertEquals(BMLABlockStatus.IN_PREP, bbf[3].getStatus());
+
+        // bml2 scheduling done
+        assertEquals("bml2", bbf[4].getId());
+        assertEquals(5, bbf[4].getGlobalStart(), PRECISION);
+        assertEquals(10, bbf[4].getGlobalEnd(), PRECISION);
+        assertEquals(BMLABlockStatus.PENDING, bbf[4].getStatus());
         
-        //bml1 scheduling done
-        assertEquals("bml1", predictionFeedback.get(1).getBmlBlockPredictions().get(0).getId());
-        assertEquals(0,predictionFeedback.get(1).getBmlBlockPredictions().get(0).getGlobalStart(),PRECISION);
-        assertEquals(5,predictionFeedback.get(1).getBmlBlockPredictions().get(0).getGlobalEnd(),PRECISION);
+        // bml2 lurking
+        assertEquals("bml2", bbf[5].getId());
+        assertEquals(5, bbf[5].getGlobalStart(), PRECISION);
+        assertEquals(10, bbf[5].getGlobalEnd(), PRECISION);
+        assertEquals(BMLABlockStatus.LURKING, bbf[5].getStatus());
         
-        //bml1 start
-        assertEquals("bml1", predictionFeedback.get(2).getBmlBlockPredictions().get(0).getId());
-        assertEquals(0,predictionFeedback.get(2).getBmlBlockPredictions().get(0).getGlobalStart(),PRECISION);
-        assertEquals(5,predictionFeedback.get(2).getBmlBlockPredictions().get(0).getGlobalEnd(),PRECISION);
+        // bml3 scheduling start
+        assertEquals("bml3", bbf[6].getId());
+        assertEquals(0, bbf[6].getGlobalStart(), PRECISION);
+        assertEquals(BMLABlockStatus.IN_PREP, bbf[6].getStatus());
         
-        //bml2 scheduling start        
-        assertEquals("bml2", predictionFeedback.get(3).getBmlBlockPredictions().get(0).getId());
-        assertEquals(5,predictionFeedback.get(3).getBmlBlockPredictions().get(0).getGlobalStart(),PRECISION);
-                
-        //bml2 scheduling done
-        assertEquals("bml2", predictionFeedback.get(4).getBmlBlockPredictions().get(0).getId());
-        assertEquals(5,predictionFeedback.get(4).getBmlBlockPredictions().get(0).getGlobalStart(),PRECISION);
-        assertEquals(10,predictionFeedback.get(4).getBmlBlockPredictions().get(0).getGlobalEnd(),PRECISION);
-        
-        //bml3 scheduling start        
-        assertEquals("bml3", predictionFeedback.get(5).getBmlBlockPredictions().get(0).getId());
-        assertEquals(0,predictionFeedback.get(5).getBmlBlockPredictions().get(0).getGlobalStart(),PRECISION);
-        
-        //bml2 timing update
-        assertEquals("bml2", predictionFeedback.get(6).getBmlBlockPredictions().get(0).getId());
-        assertEquals(20,predictionFeedback.get(6).getBmlBlockPredictions().get(0).getGlobalStart(),PRECISION);
-        
-        //bml3 scheduling done
-        assertEquals("bml3", predictionFeedback.get(7).getBmlBlockPredictions().get(0).getId());
-        assertEquals(0,predictionFeedback.get(7).getBmlBlockPredictions().get(0).getGlobalStart(),PRECISION);
-        assertEquals(20,predictionFeedback.get(7).getBmlBlockPredictions().get(0).getGlobalEnd(),PRECISION);
-        
-        //bml2 timing update        
-        assertEquals("bml2", predictionFeedback.get(8).getBmlBlockPredictions().get(0).getId());
-        assertEquals(20,predictionFeedback.get(8).getBmlBlockPredictions().get(0).getGlobalStart(),PRECISION);
-        
-        //bml3 start
-        assertEquals("bml3", predictionFeedback.get(9).getBmlBlockPredictions().get(0).getId());
-        assertEquals(0,predictionFeedback.get(9).getBmlBlockPredictions().get(0).getGlobalStart(),PRECISION);
-        assertEquals(20,predictionFeedback.get(9).getBmlBlockPredictions().get(0).getGlobalEnd(),PRECISION);
-        
-        //bml2 timing update
-        assertEquals("bml2", predictionFeedback.get(10).getBmlBlockPredictions().get(0).getId());
-        assertEquals(20,predictionFeedback.get(10).getBmlBlockPredictions().get(0).getGlobalStart(),PRECISION);
+        // bml2 timing update
+        assertEquals("bml2", bbf[7].getId());
+        assertEquals(20, bbf[7].getGlobalStart(), PRECISION);
+        assertEquals(BMLABlockStatus.LURKING, bbf[7].getStatus());
+
+        // bml3 scheduling done
+        assertEquals("bml3", bbf[8].getId());
+        assertEquals(0, bbf[8].getGlobalStart(), PRECISION);
+        assertEquals(20, bbf[8].getGlobalEnd(), PRECISION);
+
+        // bml2 timing update
+        assertEquals("bml2", bbf[9].getId());
+        assertEquals(20, bbf[9].getGlobalStart(), PRECISION);
+        assertEquals(BMLABlockStatus.LURKING, bbf[9].getStatus());
+
+        // bml3 start
+        assertEquals("bml3", bbf[10].getId());
+        assertEquals(0, bbf[10].getGlobalStart(), PRECISION);
+        assertEquals(20, bbf[10].getGlobalEnd(), PRECISION);
+        assertEquals(BMLABlockStatus.IN_EXEC, bbf[10].getStatus());
+
+        // bml2 timing update
+        assertEquals("bml2", bbf[11].getId());
+        assertEquals(20, bbf[11].getGlobalStart(), PRECISION);
+        assertEquals(BMLABlockStatus.LURKING, bbf[11].getStatus());
     }
     
+    @Test
+    public void testRevokePreplanned()
+    {
+        stubEngine.addBlockEnd("bml1", 5);
+        parseBML(createNonEmptyBML("bml1", "bmla:preplan=\"true\""));
+        parseBML(createEmptyBML("bml2", "bmla:interrupt=\"bml1\""));
+        scheduler.schedule();
+        
+        assertEquals(3, blockProgressFeedbackList.size());
+        BMLABlockProgressFeedback bbfb[] = constructBMLABlockProgress();
+        
+        // bml1 revoke
+        assertEquals("bml1", bbfb[0].getBmlId());
+        assertEquals(0, bbfb[0].getGlobalTime(), PRECISION);
+        assertEquals(BMLABlockStatus.REVOKED, bbfb[0].getStatus());
+        
+        // bml2 start
+        assertEquals("bml2", bbfb[1].getBmlId());
+        assertEquals(0, bbfb[1].getGlobalTime(), PRECISION);
+        assertEquals(BMLABlockStatus.IN_EXEC, bbfb[1].getStatus());
+        
+        // bml2 finished
+        assertEquals("bml2", bbfb[2].getBmlId());
+        assertEquals(0, bbfb[2].getGlobalTime(), PRECISION);
+        assertEquals(BMLABlockStatus.DONE, bbfb[2].getStatus());
+    }
+    
+    @Test
+    public void testRevokeAppendAfter()
+    {
+        stubEngine.addBlockEnd("bml1", 5);
+        parseBML(createNonEmptyBML("bml1"));
+        parseBML(createNonEmptyBML("bml2","bmla:appendAfter=\"bml1\""));
+        parseBML(createEmptyBML("bml3", "bmla:interrupt=\"bml2\""));
+        scheduler.schedule();
+        
+        assertEquals(4, blockProgressFeedbackList.size());
+        BMLABlockProgressFeedback bbfb[] = constructBMLABlockProgress();
+        
+        // bml1 start
+        assertEquals("bml1", bbfb[0].getBmlId());
+        assertEquals(0, bbfb[0].getGlobalTime(), PRECISION);
+        assertEquals(BMLABlockStatus.IN_EXEC, bbfb[0].getStatus());
+        
+        // bml2 revoke
+        assertEquals("bml2", bbfb[1].getBmlId());
+        assertEquals(0, bbfb[1].getGlobalTime(), PRECISION);
+        assertEquals(BMLABlockStatus.REVOKED, bbfb[1].getStatus());
+        
+        // bml3 start
+        assertEquals("bml3", bbfb[2].getBmlId());
+        assertEquals(0, bbfb[2].getGlobalTime(), PRECISION);
+        assertEquals(BMLABlockStatus.IN_EXEC, bbfb[2].getStatus());
+        
+        // bml3 finished
+        assertEquals("bml3", bbfb[3].getBmlId());
+        assertEquals(0, bbfb[3].getGlobalTime(), PRECISION);
+        assertEquals(BMLABlockStatus.DONE, bbfb[3].getStatus());
+    }
+
     @Test
     public void testEndPredictionEmptyBlock()
     {

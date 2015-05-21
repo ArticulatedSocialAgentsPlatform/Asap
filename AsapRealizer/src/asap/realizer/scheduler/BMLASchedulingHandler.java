@@ -1,12 +1,13 @@
+/*******************************************************************************
+ *******************************************************************************/
 package asap.realizer.scheduler;
-
-import saiba.bml.core.BehaviourBlock;
-import saiba.bml.feedback.BMLWarningFeedback;
 
 import java.util.HashSet;
 import java.util.Set;
 
 import lombok.extern.slf4j.Slf4j;
+import saiba.bml.core.BehaviourBlock;
+import saiba.bml.feedback.BMLWarningFeedback;
 import asap.bml.ext.bmla.BMLABMLBehaviorAttributes;
 import asap.bml.ext.bmla.BMLASchedulingMechanism;
 import asap.realizer.pegboard.BMLBlockPeg;
@@ -178,6 +179,7 @@ public class BMLASchedulingHandler implements SchedulingHandler
                 if (appendAfter.size() > 0 || chunkAfter.size() > 0)
                 {
                     bbm.setState(TimedPlanUnitState.LURKING);
+                    scheduler.updatePredictions(bbm.getBMLId());
                     scheduler.updateBMLBlocks();
                 }
                 else
@@ -188,6 +190,7 @@ public class BMLASchedulingHandler implements SchedulingHandler
             case APPEND_AFTER:
             case APPEND:
                 bbm.setState(TimedPlanUnitState.LURKING);
+                scheduler.updatePredictions(bbm.getBMLId());
                 scheduler.updateBMLBlocks();
                 break;
             }

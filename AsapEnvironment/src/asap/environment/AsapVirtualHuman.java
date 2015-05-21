@@ -1,22 +1,5 @@
 /*******************************************************************************
- * 
- * Copyright (C) 2009 Human Media Interaction, University of Twente, the Netherlands
- * 
- * This file is part of the Elckerlyc BML realizer.
- * 
- * Elckerlyc is free software: you can redistribute it and/or modify
- * it under the terms of the GNU General Public License as published by
- * the Free Software Foundation, either version 3 of the License, or
- * (at your option) any later version.
- * 
- * Elckerlyc is distributed in the hope that it will be useful,
- * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- * GNU General Public License for more details.
- * 
- * You should have received a copy of the GNU General Public License
- * along with Elckerlyc.  If not, see http://www.gnu.org/licenses/.
- ******************************************************************************/
+ *******************************************************************************/
 package asap.environment;
 
 import hmi.environmentbase.CompoundLoader;
@@ -140,8 +123,12 @@ public class AsapVirtualHuman
 
         try
         {
+            if (vhId.isEmpty())
+            {
+                attrMap = theTokenizer.getAttributes();
+                vhId = adapter.getOptionalAttribute("id", attrMap, vhId);
+            }
             theTokenizer.takeSTag("AsapVirtualHuman");
-
             Loader loader = null;
 
             loader = new EmbodimentLoader()
@@ -227,7 +214,7 @@ public class AsapVirtualHuman
                 }
                 // always add "are" -- just in case someone forgets
                 requiredLoaders.add(are);
-                loader = constructLoader(loaderClass);                
+                loader = constructLoader(loaderClass);
                 theTokenizer.takeSTag("Loader");
                 log.debug("Parsing Loader: {}", id);
                 loader.readXML(theTokenizer, id, vhId, name, allEnvironments, requiredLoaders.toArray(new Loader[0]));
@@ -238,11 +225,11 @@ public class AsapVirtualHuman
                     log.info("Adding engine {}", loader.getId());
                     engines.add(((EngineLoader) loader).getEngine());
                 }
-                if(loader instanceof CompoundLoader)
+                if (loader instanceof CompoundLoader)
                 {
-                    for(Loader l: ((CompoundLoader)loader).getParts())
+                    for (Loader l : ((CompoundLoader) loader).getParts())
                     {
-                        loaders.put(l.getId(),l);
+                        loaders.put(l.getId(), l);
                     }
                 }
             }
@@ -356,13 +343,13 @@ public class AsapVirtualHuman
                     }
                     else
                     {
-                        throw new XMLScanException("The class \""+behaviorClassName+"\" is not a bml Behaviour class");
+                        throw new XMLScanException("The class \"" + behaviorClassName + "\" is not a bml Behaviour class");
                     }
                 }
                 catch (Exception e)
                 {
                     log.error("Cannot find behaviorclass \"{}\"", behaviorClassName);
-                    throw new XMLScanException("Cannot find behaviorclass "+behaviorClassName,e);
+                    throw new XMLScanException("Cannot find behaviorclass " + behaviorClassName, e);
                 }
             }
             theTokenizer.takeSTag("Route");

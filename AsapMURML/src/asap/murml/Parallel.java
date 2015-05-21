@@ -1,5 +1,8 @@
+/*******************************************************************************
+ *******************************************************************************/
 package asap.murml;
 
+import hmi.xml.XMLFormatting;
 import hmi.xml.XMLScanException;
 import hmi.xml.XMLTokenizer;
 
@@ -82,6 +85,16 @@ public class Parallel extends MURMLElement implements MovementConstraint
         {
             throw new XMLScanException("Cannot have inner <symmetric> inside another symmetric block.");
         }
+    }
+    
+    @Override
+    public StringBuilder appendContent(StringBuilder buf, XMLFormatting fmt)
+    {
+        appendXMLStructureList(buf, fmt, dynamics);
+        appendXMLStructureList(buf, fmt, sequences);
+        appendXMLStructureList(buf, fmt, statics);
+        appendXMLStructureList(buf, fmt, symmetricals);
+        return buf;
     }
     
     @Override

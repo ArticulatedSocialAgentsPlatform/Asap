@@ -1,3 +1,5 @@
+/*******************************************************************************
+ *******************************************************************************/
 package asap.realizer.planunit;
 
 /**
@@ -8,6 +10,8 @@ public interface PlanPlayer
 {
     void play(double time);
 
+    void updateTiming(String bmlId);
+    
     void stopPlanUnit(String bmlId, String id, double globalTime);
 
     void stopBehaviourBlock(String bmlId, double time);

@@ -1,21 +1,5 @@
 /*******************************************************************************
- * Copyright (C) 2009 Human Media Interaction, University of Twente, the Netherlands
- * 
- * This file is part of the Elckerlyc BML realizer.
- * 
- * Elckerlyc is free software: you can redistribute it and/or modify
- * it under the terms of the GNU General Public License as published by
- * the Free Software Foundation, either version 3 of the License, or
- * (at your option) any later version.
- * 
- * Elckerlyc is distributed in the hope that it will be useful,
- * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- * GNU General Public License for more details.
- * 
- * You should have received a copy of the GNU General Public License
- * along with Elckerlyc.  If not, see http://www.gnu.org/licenses/.
- ******************************************************************************/
+ *******************************************************************************/
 package asap.animationengine.procanimation;
 
 import hmi.animation.Hanim;
@@ -120,6 +104,8 @@ public class ProcAnimationMU extends XMLStructureAdapter implements AnimationUni
     private KeyPositionManager keyPositionManager = new KeyPositionManagerImpl();
 
     private VJoint vNext, vAdditive;
+
+    private AnimationPlayer aniPlayer;
 
     /**
      * Constructor
@@ -1243,7 +1229,9 @@ public class ProcAnimationMU extends XMLStructureAdapter implements AnimationUni
     @Override
     public synchronized ProcAnimationMU copy(AnimationPlayer p) throws MUSetupException
     {
-        return copy(p.getVNext(), p.getvAdditive());
+        ProcAnimationMU mu = copy(p.getVNext(), p.getvAdditive());
+        mu.aniPlayer = p;
+        return mu;
     }
 
     public void setup(VJoint vNext)
@@ -1472,7 +1460,7 @@ public class ProcAnimationMU extends XMLStructureAdapter implements AnimationUni
                 bodyPartFilter.add(joint);
             }
             filterBodyParts();
-        }        
+        }
         else if (StringUtil.isNumeric(value))
         {
             setFloatParameterValue(name, Float.parseFloat(value));
@@ -1506,7 +1494,7 @@ public class ProcAnimationMU extends XMLStructureAdapter implements AnimationUni
     @Override
     public TimedAnimationMotionUnit createTMU(FeedbackManager bfm, BMLBlockPeg bbPeg, String bmlId, String id, PegBoard pb)
     {
-        return new TimedAnimationMotionUnit(bfm, bbPeg, bmlId, id, this, pb);
+        return new TimedAnimationMotionUnit(bfm, bbPeg, bmlId, id, this, pb, aniPlayer);
     }
 
     private static final Set<String> PHJOINTS = ImmutableSet.of();
@@ -1515,6 +1503,17 @@ public class ProcAnimationMU extends XMLStructureAdapter implements AnimationUni
     public Set<String> getPhysicalJoints()
     {
         return PHJOINTS;
+    }
+
+    @Override
+    public Set<String> getAdditiveJoints()
+    {
+        if (blending.equals(Blending.ADDITIVE))
+        {
+            return VJointUtils.transformToSidSet(bodyParts);
+        }
+
+        return ImmutableSet.of();
     }
 
     @Override

@@ -1,8 +1,9 @@
+/*******************************************************************************
+ *******************************************************************************/
 package asap.faceengine.viseme;
 
 import static org.junit.Assert.assertEquals;
 import static org.mockito.Mockito.mock;
-import saiba.bml.core.SpeechBehaviour;
 import hmi.faceanimation.FaceController;
 import hmi.xml.XMLTokenizer;
 
@@ -11,6 +12,7 @@ import java.io.IOException;
 import org.junit.Before;
 import org.junit.Test;
 
+import saiba.bml.core.SpeechBehaviour;
 import asap.faceengine.faceunit.TimedFaceUnit;
 import asap.realizer.pegboard.BMLBlockPeg;
 import asap.realizer.pegboard.PegBoard;

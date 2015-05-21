@@ -1,8 +1,11 @@
+/*******************************************************************************
+ *******************************************************************************/
 package asap.animationengine.keyframe;
 
 import java.util.List;
 
 import saiba.bml.core.Behaviour;
+import asap.animationengine.AnimationPlayer;
 import asap.animationengine.motionunit.TimedAnimationMotionUnit;
 import asap.realizer.BehaviourPlanningException;
 import asap.realizer.feedback.FeedbackManager;
@@ -21,9 +24,9 @@ public class MURMLKeyframeTMU extends TimedAnimationMotionUnit
 {
     private final MURMLKeyframeMU mu;
 
-    public MURMLKeyframeTMU(FeedbackManager bbf, BMLBlockPeg bmlBlockPeg, String bmlId, String id, MURMLKeyframeMU mu, PegBoard pb)
+    public MURMLKeyframeTMU(FeedbackManager bbf, BMLBlockPeg bmlBlockPeg, String bmlId, String id, MURMLKeyframeMU mu, PegBoard pb, AnimationPlayer aniPlayer)
     {
-        super(bbf, bmlBlockPeg, bmlId, id, mu, pb);
+        super(bbf, bmlBlockPeg, bmlId, id, mu, pb, aniPlayer);
         this.mu = mu;
     }
 

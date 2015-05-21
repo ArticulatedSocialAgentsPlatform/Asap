@@ -1,3 +1,5 @@
+/*******************************************************************************
+ *******************************************************************************/
 package asap.rsbadapters;
 
 import java.util.ArrayList;
@@ -34,9 +36,9 @@ public class BMLRealizerToRsbAdapter implements RealizerPort
 
         try
         {
-            // setup bml sender            
+            // setup bml sender
             informer = factory.createInformer(RsbAdapterConstants.BML_SCOPE);
-            
+
             // setup feedback receiver
             listener = factory.createListener(RsbAdapterConstants.BML_FEEDBACK_SCOPE);
             listener.addHandler(new AbstractEventHandler()
@@ -44,9 +46,9 @@ public class BMLRealizerToRsbAdapter implements RealizerPort
                 @Override
                 public void handleEvent(Event event)
                 {
-                    synchronized(feedbackListeners)
+                    synchronized (feedbackListeners)
                     {
-                        for(BMLFeedbackListener fbl:feedbackListeners)
+                        for (BMLFeedbackListener fbl : feedbackListeners)
                         {
                             fbl.feedback(event.getData().toString());
                         }
@@ -61,11 +63,8 @@ public class BMLRealizerToRsbAdapter implements RealizerPort
         catch (InterruptedException ex)
         {
             throw new RuntimeException(ex);
-        }  
-        
-        
-        
-        
+        }
+
         try
         {
             listener.activate();
@@ -80,17 +79,23 @@ public class BMLRealizerToRsbAdapter implements RealizerPort
             throw new RuntimeException(e);
         }
     }
-    
+
     @Override
     public void addListeners(BMLFeedbackListener... listeners)
     {
-        feedbackListeners.addAll(ImmutableList.copyOf(listeners));        
+        feedbackListeners.addAll(ImmutableList.copyOf(listeners));
     }
 
     @Override
     public void removeAllListeners()
     {
         feedbackListeners.clear();
+    }
+
+    @Override
+    public void removeListener(BMLFeedbackListener l)
+    {
+        feedbackListeners.remove(l);
     }
 
     @Override
@@ -102,10 +107,10 @@ public class BMLRealizerToRsbAdapter implements RealizerPort
         }
         catch (RSBException e)
         {
-            log.warn("Cannot send BML ",e);
-        }        
+            log.warn("Cannot send BML ", e);
+        }
     }
-    
+
     public void close()
     {
         try
@@ -114,25 +119,26 @@ public class BMLRealizerToRsbAdapter implements RealizerPort
         }
         catch (RSBException e)
         {
-            log.warn("",e);
+            log.warn("", e);
         }
         catch (InterruptedException e)
         {
             Thread.interrupted();
         }
-        
+
         try
         {
             informer.deactivate();
         }
         catch (RSBException e)
         {
-            log.warn("",e);
+            log.warn("", e);
         }
         catch (InterruptedException e)
         {
             Thread.interrupted();
         }
-        
+
     }
+
 }

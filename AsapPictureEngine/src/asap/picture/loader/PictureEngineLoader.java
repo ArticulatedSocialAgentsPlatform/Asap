@@ -1,36 +1,7 @@
 /*******************************************************************************
- * 
- * Copyright (C) 2009 Human Media Interaction, University of Twente, the Netherlands
- * 
- * This file is part of the Elckerlyc BML realizer.
- * 
- * Elckerlyc is free software: you can redistribute it and/or modify
- * it under the terms of the GNU General Public License as published by
- * the Free Software Foundation, either version 3 of the License, or
- * (at your option) any later version.
- * 
- * Elckerlyc is distributed in the hope that it will be useful,
- * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- * GNU General Public License for more details.
- * 
- * You should have received a copy of the GNU General Public License
- * along with Elckerlyc.  If not, see http://www.gnu.org/licenses/.
- ******************************************************************************/
+ *******************************************************************************/
 package asap.picture.loader;
 
-import asap.realizer.DefaultEngine;
-import asap.realizer.DefaultPlayer;
-import asap.realizer.Engine;
-import asap.realizer.Player;
-import asap.realizer.planunit.PlanManager;
-import asap.realizer.planunit.PlanPlayer;
-import asap.realizer.planunit.SingleThreadedPlanPlayer;
-import asap.realizerembodiments.AsapRealizerEmbodiment;
-import asap.realizerembodiments.EngineLoader;
-import asap.picture.PicturePlanner;
-import asap.picture.picturebinding.PictureBinding;
-import asap.picture.planunit.TimedPictureUnit;
 import hmi.environmentbase.EmbodimentLoader;
 import hmi.environmentbase.Environment;
 import hmi.environmentbase.Loader;
@@ -41,6 +12,19 @@ import hmi.xml.XMLTokenizer;
 
 import java.io.IOException;
 import java.util.HashMap;
+
+import asap.picture.PicturePlanner;
+import asap.picture.picturebinding.PictureBinding;
+import asap.picture.planunit.TimedPictureUnit;
+import asap.realizer.DefaultEngine;
+import asap.realizer.DefaultPlayer;
+import asap.realizer.Engine;
+import asap.realizer.Player;
+import asap.realizer.planunit.PlanManager;
+import asap.realizer.planunit.PlanPlayer;
+import asap.realizer.planunit.SingleThreadedPlanPlayer;
+import asap.realizerembodiments.AsapRealizerEmbodiment;
+import asap.realizerembodiments.EngineLoader;
 
 /**
 
@@ -58,7 +42,7 @@ public class PictureEngineLoader implements EngineLoader
     // some variables cached during loading
     private PictureBinding pictureBinding = null;
     private AsapRealizerEmbodiment are = null;
-
+    
     @Override
     public void readXML(XMLTokenizer tokenizer, String loaderId, String vhId, String vhName, Environment[] environments,
             Loader... requiredLoaders) throws IOException

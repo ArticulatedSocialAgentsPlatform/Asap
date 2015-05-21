@@ -1,3 +1,5 @@
+/*******************************************************************************
+ *******************************************************************************/
 package asap.animationengine.keyframe;
 
 import static org.junit.Assert.assertEquals;
@@ -91,7 +93,7 @@ public class MURMLKeyframeTMUTest extends AbstractTimedPlanUnitTest
         {
             throw new RuntimeException(e);
         }
-        MURMLKeyframeTMU tmu = new MURMLKeyframeTMU(bfm, bbPeg, bmlId, id, mu, pegBoard);
+        MURMLKeyframeTMU tmu = new MURMLKeyframeTMU(bfm, bbPeg, bmlId, id, mu, pegBoard, mockAniPlayer);
         tmu.resolveGestureKeyPositions();
         tmu.setTimePeg("start", TimePegUtil.createTimePeg(bbPeg, startTime));
         return tmu;

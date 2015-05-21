@@ -1,3 +1,5 @@
+/*******************************************************************************
+ *******************************************************************************/
 package asap.animationengine.restpose;
 
 import hmi.animation.SkeletonPose;
@@ -108,7 +110,7 @@ public class SkeletonPoseRestPose implements RestPose
         TransitionMU mu = createTransitionToRest(joints);
         mu.addKeyPosition(new KeyPosition("start", 0));
         mu.addKeyPosition(new KeyPosition("end", 1));
-        TimedAnimationMotionUnit tmu = new TimedAnimationMotionUnit(fbm, bmlBlockPeg, bmlId, id, mu, pb);
+        TimedAnimationMotionUnit tmu = new TimedAnimationMotionUnit(fbm, bmlBlockPeg, bmlId, id, mu, pb, player);
         tmu.setTimePeg("start", startPeg);
         tmu.setTimePeg("end", endPeg);
         tmu.setState(TimedPlanUnitState.LURKING);
@@ -146,7 +148,7 @@ public class SkeletonPoseRestPose implements RestPose
     }
 
     @Override
-    public void setRestPose()
+    public void startRestPose(double time)
     {
         VObjectTransformCopier.newInstanceFromVJointTree(poseTree, player.getVCurr(), "T1R").copyConfig();
         VObjectTransformCopier.newInstanceFromVJointTree(poseTree, player.getVNext(), "T1R").copyConfig();
@@ -194,8 +196,6 @@ public class SkeletonPoseRestPose implements RestPose
                 startJoints.add(player.getVCurrPartBySid(vj.getSid()));
             }
         }
-        
-        
         
         AnimationUnit mu;
         if (pose.getConfigType().equals("R"))

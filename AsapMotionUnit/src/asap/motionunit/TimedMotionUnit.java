@@ -1,10 +1,14 @@
+/*******************************************************************************
+ *******************************************************************************/
 package asap.motionunit;
 
-import java.util.List;
-
 import java.util.ArrayList;
+import java.util.List;
 import java.util.concurrent.CopyOnWriteArrayList;
 
+import lombok.Delegate;
+import lombok.extern.slf4j.Slf4j;
+import saiba.bml.feedback.BMLSyncPointProgressFeedback;
 import asap.realizer.feedback.FeedbackManager;
 import asap.realizer.pegboard.BMLBlockPeg;
 import asap.realizer.pegboard.PegBoard;
@@ -15,11 +19,6 @@ import asap.realizer.planunit.ParameterNotFoundException;
 import asap.realizer.planunit.PlanUnitTimeManager;
 import asap.realizer.planunit.TimedAbstractPlanUnit;
 import asap.realizer.planunit.TimedPlanUnitPlayException;
-
-import lombok.Delegate;
-import lombok.extern.slf4j.Slf4j;
-
-import saiba.bml.feedback.BMLSyncPointProgressFeedback;
 
 /**
  * A timedmotionunit is an abstract plan unit that delegates playback of motion to a motion unit.
@@ -83,12 +82,13 @@ public class TimedMotionUnit extends TimedAbstractPlanUnit
                 }
             }
         }
-        for (BMLSyncPointProgressFeedback fb : fbToSend)
-        {
-            feedback(fb);
-        }
+        feedback(fbToSend);        
     }
 
+    protected void sendProgress(double time)
+    {
+        sendProgress(puTimeManager.getRelativeTime(time), time);
+    }
     @Override
     protected void playUnit(double time) throws TimedPlanUnitPlayException
     {

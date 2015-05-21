@@ -1,3 +1,5 @@
+/*******************************************************************************
+ *******************************************************************************/
 package asap.realizer;
 
 import asap.realizer.pegboard.TimePeg;
@@ -21,5 +23,11 @@ public final class SyncAndTimePeg
         this.id = id;
         this.bmlId = bmlId;
         this.peg = p;
+    }
+    
+    @Override
+    public String toString()
+    {
+        return bmlId+":"+id+":"+sync+"="+peg;
     }
 }

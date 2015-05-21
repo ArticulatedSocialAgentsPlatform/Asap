@@ -1,3 +1,5 @@
+/*******************************************************************************
+ *******************************************************************************/
 package asap.faceengine.viseme;
 
 import static org.junit.Assert.assertEquals;
@@ -39,6 +41,17 @@ public class VisemeToMorphMappingTest
         assertEquals(1,map.getMorphTargetForViseme(10).intensity,PARAMETER_PRECISION);
     }
     
+    @Test
+    public void testGetUsedMorphs()
+    {
+        map.readXML("<VisemeToMorphMapping>"
+                + "<Mapping viseme=\"10\" target=\"vis10a,vis10b\"/>"
+                + "<Mapping viseme=\"11\" target=\"vis11\"/>"
+                + "<Mapping viseme=\"12\" target=\"vis11\"/>"
+                + "</VisemeToMorphMapping>");
+        assertThat(map.getUsedMorphs(), IsIterableContainingInAnyOrder.containsInAnyOrder("vis10a","vis10b","vis11"));
+        map.getUsedMorphs();
+    }
     @Test
     public void testGetNonExistingTarget()
     {

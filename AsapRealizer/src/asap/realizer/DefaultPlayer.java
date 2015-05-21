@@ -1,3 +1,5 @@
+/*******************************************************************************
+ *******************************************************************************/
 package asap.realizer;
 
 import asap.realizer.planunit.PlanPlayer;
@@ -17,7 +19,7 @@ public class DefaultPlayer implements Player
 
     public void updateTiming(String bmlId)
     {
-        
+        planPlayer.updateTiming(bmlId);
     }
 
     public DefaultPlayer(PlanPlayer pPlayer)

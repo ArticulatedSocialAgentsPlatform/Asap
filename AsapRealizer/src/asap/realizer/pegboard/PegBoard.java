@@ -1,9 +1,13 @@
+/*******************************************************************************
+ *******************************************************************************/
 package asap.realizer.pegboard;
 
 
+import java.util.Collection;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
+import java.util.Map.Entry;
 import java.util.concurrent.ConcurrentHashMap;
 
 import lombok.extern.slf4j.Slf4j;
@@ -152,6 +156,16 @@ public final class PegBoard
         }
     }
 
+    public ImmutableSet<SyncAndTimePeg> getSyncAndTimePegs(final String bmlId, final String behId)
+    {
+        Set<SyncAndTimePeg> satps = new HashSet<SyncAndTimePeg>();
+        Collection<Entry<PegKey, TimePeg>> entries = pegs.getEntries(bmlId, behId);
+        for(Entry<PegKey, TimePeg> entry:entries)
+        {
+            satps.add(new SyncAndTimePeg(bmlId, behId, entry.getKey().syncId, entry.getValue()));
+        }
+        return ImmutableSet.copyOf(satps);
+    }
     /**
      * Adds p to the pegboard.
      */
@@ -170,6 +184,7 @@ public final class PegBoard
         return pegs.get(bmlId, behaviorId);
     }
 
+    
     public Set<String> getBehaviours(final String bmlId)
     {
         return pegs.getBehaviours(bmlId);
@@ -207,6 +222,7 @@ public final class PegBoard
         return syncs;
     }
 
+    
     /**
      * Remove all links to TimePegs corresponding with the behavior bmlId:id
      */

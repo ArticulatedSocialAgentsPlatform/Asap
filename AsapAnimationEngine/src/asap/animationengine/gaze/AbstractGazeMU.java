@@ -1,3 +1,5 @@
+/*******************************************************************************
+ *******************************************************************************/
 package asap.animationengine.gaze;
 
 import hmi.animation.VJoint;
@@ -125,7 +127,7 @@ public abstract class AbstractGazeMU implements GazeMU
         }
         else
         {
-            woTarget.getTranslation2(gazeDir, eye);
+            woTarget.getTranslation2(gazeDir, eye);                
         }
         Quat4f.transformVec3f(getOffsetRotation(), gazeDir);
         Vec3f.normalize(gazeDir);

@@ -1,34 +1,18 @@
-/**
- * *****************************************************************************
- * Copyright (C) 2009 Human Media Interaction, University of Twente, the
- * Netherlands
- *
- * This file is part of the Elckerlyc BML realizer.
- *
- * Elckerlyc is free software: you can redistribute it and/or modify it under
- * the terms of the GNU General Public License as published by the Free Software
- * Foundation, either version 3 of the License, or (at your option) any later
- * version.
- *
- * Elckerlyc is distributed in the hope that it will be useful, but WITHOUT ANY
- * WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR
- * A PARTICULAR PURPOSE. See the GNU General Public License for more details.
- *
- * You should have received a copy of the GNU General Public License along with
- * Elckerlyc. If not, see http://www.gnu.org/licenses/.
- * ****************************************************************************
- */
+/*******************************************************************************
+ *******************************************************************************/
 package asap.picture.loader;
 
-import asap.realizer.lipsync.LipSynchProvider;
-import asap.realizerembodiments.LipSynchProviderLoader;
-import asap.picture.lipsync.TimedPictureUnitLipSynchProvider;
 import hmi.environmentbase.Environment;
 import hmi.environmentbase.Loader;
 import hmi.xml.XMLStructureAdapter;
 import hmi.xml.XMLTokenizer;
+
 import java.io.IOException;
 import java.util.HashMap;
+
+import asap.picture.lipsync.TimedPictureUnitLipSynchProvider;
+import asap.realizer.lipsync.LipSynchProvider;
+import asap.realizerembodiments.LipSynchProviderLoader;
 
 /**
  * Loader for a TimedPictureUnitLipSynchProvider. This loader requires an

@@ -2,6 +2,7 @@ lib
 dist
 build
 dist
+deps
 privateprops
 .classpath
 .project
@@ -17,3 +18,4 @@ report
 *.log
 .DS_Store
 findbugs.html
+log

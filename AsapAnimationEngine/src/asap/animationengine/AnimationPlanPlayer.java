@@ -1,3 +1,5 @@
+/*******************************************************************************
+ *******************************************************************************/
 package asap.animationengine;
 
 import java.util.ArrayList;
@@ -7,8 +9,6 @@ import java.util.List;
 import java.util.Set;
 
 import lombok.extern.slf4j.Slf4j;
-import asap.animationengine.gaze.ForwardRestGaze;
-import asap.animationengine.gaze.GazeInfluence;
 import asap.animationengine.gaze.RestGaze;
 import asap.animationengine.motionunit.TimedAnimationUnit;
 import asap.animationengine.restpose.RestPose;
@@ -149,10 +149,10 @@ public class AnimationPlanPlayer implements PlanPlayer
             tpuPlayer.stopUnit(tmuR, t);
         }
         planManager.removeFinishedPlanUnits();
-
+        
         currentRestGaze.play(t, kinematicJoints, physicalJoints);
         kinematicJoints.addAll(currentRestGaze.getKinematicJoints());
-        currentRestPose.play(t, kinematicJoints, physicalJoints);
+        currentRestPose.play(t, kinematicJoints, physicalJoints);        
     }
 
     private List<TimedAnimationUnit> playback(double t, List<TimedAnimationUnit> tmuRemove, List<TimedAnimationUnit> playingPlanUnits,
@@ -227,7 +227,7 @@ public class AnimationPlanPlayer implements PlanPlayer
     public void reset(double time)
     {
         currentRestPose = defaultRestPose;
-        defaultRestPose.setRestPose();
+        defaultRestPose.startRestPose(time);
         currentRestGaze = defaultRestGaze;
         defPlayer.reset(time);
     }

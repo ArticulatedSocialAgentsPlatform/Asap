@@ -1,3 +1,5 @@
+/*******************************************************************************
+ *******************************************************************************/
 package asap.animationengine.restpose;
 
 import static hmi.testutil.math.Quat4fTestUtil.assertQuat4fEquals;

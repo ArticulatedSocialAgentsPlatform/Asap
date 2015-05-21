@@ -1,14 +1,15 @@
+/*******************************************************************************
+ *******************************************************************************/
 package asap.incrementalttsengine;
 
 import static org.mockito.Mockito.mock;
-
-import java.io.IOException;
-
 import hmi.util.Resources;
 import hmi.util.SystemClock;
 import inpro.apps.SimpleMonitor;
 import inpro.audio.DispatchStream;
-import inpro.incremental.unit.PhraseIU;
+import inpro.incremental.unit.ChunkIU;
+
+import java.io.IOException;
 
 import org.junit.Before;
 import org.junit.Test;
@@ -53,13 +54,13 @@ public class PhraseIUManagerTest
         
         for(String str:CHUNK_CONTENT)
         {
-            man.playIU(new PhraseIU(str), null, mock(IncrementalTTSUnit.class));
+            man.playIU(new ChunkIU(str), null, mock(IncrementalTTSUnit.class));
         }
         Thread.sleep(3000);
         man.stopAfterOngoingPhoneme();
         for(String str:CHUNK_CONTINUER_CONTENT)
         {
-            man.playIU(new PhraseIU(str), null, mock(IncrementalTTSUnit.class));
+            man.playIU(new ChunkIU(str), null, mock(IncrementalTTSUnit.class));
         }
         Thread.sleep(10000);
         dispatcher.waitUntilDone();

@@ -1,23 +1,11 @@
 /*******************************************************************************
- * Copyright (C) 2009 Human Media Interaction, University of Twente, the Netherlands
- *
- * This file is part of the Elckerlyc BML realizer.
- *
- * Elckerlyc is free software: you can redistribute it and/or modify
- * it under the terms of the GNU General Public License as published by
- * the Free Software Foundation, either version 3 of the License, or
- * (at your option) any later version.
- *
- * Elckerlyc is distributed in the hope that it will be useful,
- * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- * GNU General Public License for more details.
- *
- * You should have received a copy of the GNU General Public License
- * along with Elckerlyc.  If not, see http://www.gnu.org/licenses/.
- ******************************************************************************/
+ *******************************************************************************/
 package asap.animationengine;
 
+import hmi.animation.SkeletonInterpolator;
+import hmi.xml.XMLTokenizer;
+
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -34,6 +22,8 @@ import asap.animationengine.gaze.RestGaze;
 import asap.animationengine.gesturebinding.GestureBinding;
 import asap.animationengine.gesturebinding.HnsHandshape;
 import asap.animationengine.gesturebinding.MURMLMUBuilder;
+import asap.animationengine.keyframe.KeyframeMU;
+import asap.animationengine.motionunit.AnimationUnit;
 import asap.animationengine.motionunit.MUSetupException;
 import asap.animationengine.motionunit.TMUSetupException;
 import asap.animationengine.motionunit.TimedAnimationMotionUnit;
@@ -52,6 +42,7 @@ import asap.realizer.feedback.FeedbackManager;
 import asap.realizer.pegboard.BMLBlockPeg;
 import asap.realizer.pegboard.OffsetPeg;
 import asap.realizer.pegboard.PegBoard;
+import asap.realizer.planunit.ParameterException;
 import asap.realizer.planunit.PlanManager;
 import asap.realizer.scheduler.TimePegAndConstraint;
 
@@ -126,7 +117,6 @@ public class AnimationPlanner extends AbstractPlanner<TimedAnimationUnit>
     public List<SyncAndTimePeg> addBehaviour(BMLBlockPeg bbPeg, Behaviour b, List<TimePegAndConstraint> sacs, TimedAnimationUnit tmu)
             throws BehaviourPlanningException
     {
-        
 
         if (tmu == null)
         {
@@ -178,9 +168,9 @@ public class AnimationPlanner extends AbstractPlanner<TimedAnimationUnit>
         else if (b instanceof PostureShiftBehaviour)
         {
             RestPose rp = gestureBinding.getRestPose((PostureShiftBehaviour) b, player);
-            if(rp == null)
+            if (rp == null)
             {
-                throw new BehaviourPlanningException(b, "Behavior " + b.id +" "+b.toXMLString()
+                throw new BehaviourPlanningException(b, "Behavior " + b.id + " " + b.toXMLString()
                         + " could not be constructed from the gesture binding, behavior omitted.");
             }
             try
@@ -194,10 +184,10 @@ public class AnimationPlanner extends AbstractPlanner<TimedAnimationUnit>
         }
         else if (b instanceof GazeShiftBehaviour)
         {
-            RestGaze rg = gestureBinding.getRestGaze((GazeShiftBehaviour)b, player);
-            if(rg == null)
+            RestGaze rg = gestureBinding.getRestGaze((GazeShiftBehaviour) b, player);
+            if (rg == null)
             {
-                throw new BehaviourPlanningException(b, "Behavior " + b.id +" "+b.toXMLString()
+                throw new BehaviourPlanningException(b, "Behavior " + b.id + " " + b.toXMLString()
                         + " could not be constructed from the gesture binding, behavior omitted.");
             }
             try
@@ -209,12 +199,43 @@ public class AnimationPlanner extends AbstractPlanner<TimedAnimationUnit>
                 throw new BehaviourPlanningException(b, "GazeShiftBehaviour " + b.id + " could not be constructed.", e);
             }
         }
+        else if (b instanceof BMLTKeyframeBehaviour && b.hasContent())
+        {
+            BMLTKeyframeBehaviour beh = (BMLTKeyframeBehaviour) b;
+            AnimationUnit mu;
+            try
+            {
+                mu = new KeyframeMU(new SkeletonInterpolator(new XMLTokenizer(beh.content)));
+                mu = mu.copy(player);
+                if(beh.specifiesParameter("mirror"))
+                {
+                    mu.setParameterValue("mirror", beh.getStringParameterValue("mirror"));
+                }
+                if(beh.specifiesParameter("joints"))
+                {
+                    mu.setParameterValue("joints", beh.getStringParameterValue("joints"));
+                }
+            }
+            catch (IOException e)
+            {
+                throw new BehaviourPlanningException(b, "BMLTKeyframeBehaviour " + b.id + " could not be constructed.", e);
+            }
+            catch (ParameterException e)
+            {
+                throw new BehaviourPlanningException(b, "BMLTKeyframeBehaviour " + b.id + " could not be constructed.", e);
+            }
+            catch (MUSetupException e)
+            {
+                throw new BehaviourPlanningException(b, "BMLTKeyframeBehaviour " + b.id + " could not be constructed.", e);
+            }
+            tmu = mu.createTMU(fbManager, bbPeg, b.getBmlId(), b.id, pegBoard);
+        }
         else
         {
             List<TimedAnimationUnit> tmus = gestureBinding.getMotionUnit(bbPeg, b, player, pegBoard, murmlMUBuilder);
             if (tmus.isEmpty())
             {
-                throw new BehaviourPlanningException(b, "Behavior " + b.id  +" "+b.toXMLString()
+                throw new BehaviourPlanningException(b, "Behavior " + b.id + " " + b.toXMLString()
                         + " could not be constructed from the gesture binding, behavior omitted.");
             }
             tmu = tmus.get(0);

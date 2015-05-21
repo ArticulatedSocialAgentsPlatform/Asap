@@ -1,22 +1,6 @@
 package asap.animationengine.gaze;
 /*******************************************************************************
- * Copyright (C) 2009 Human Media Interaction, University of Twente, the Netherlands
- * 
- * This file is part of the Elckerlyc BML realizer.
- * 
- * Elckerlyc is free software: you can redistribute it and/or modify
- * it under the terms of the GNU General Public License as published by
- * the Free Software Foundation, either version 3 of the License, or
- * (at your option) any later version.
- * 
- * Elckerlyc is distributed in the hope that it will be useful,
- * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- * GNU General Public License for more details.
- * 
- * You should have received a copy of the GNU General Public License
- * along with Elckerlyc.  If not, see http://www.gnu.org/licenses/.
- ******************************************************************************/
+ *******************************************************************************/
 import hmi.animation.Hanim;
 import hmi.math.Quat4f;
 import hmi.math.Vec3f;
@@ -52,6 +36,8 @@ public class EyeGazeMU extends TweedGazeMU
         EyeGazeMU gmu = new EyeGazeMU();
         gmu.lEye = p.getVNextPartBySid(Hanim.l_eyeball_joint);
         gmu.rEye = p.getVNextPartBySid(Hanim.r_eyeball_joint);
+        gmu.lEyeCurr = p.getVCurrPartBySid(Hanim.l_eyeball_joint);
+        gmu.rEyeCurr = p.getVCurrPartBySid(Hanim.r_eyeball_joint);
         if(gmu.lEye == null || gmu.rEye==null)
         {
             throw new MUSetupException("Eyegaze MU requested, but no eyeball joint in skeleton.",this);
@@ -103,8 +89,8 @@ public class EyeGazeMU extends TweedGazeMU
     @Override
     public void play(double t) throws MUPlayException
     {
-        setEndEyeRotation(lEye, qEyeLeft);
-        setEndEyeRotation(rEye, qEyeRight);
+        setEndEyeRotation(lEyeCurr, qEyeLeft);
+        setEndEyeRotation(rEyeCurr, qEyeRight);
         
         float qLeft[]=Quat4f.getQuat4f();
         float qRight[]=Quat4f.getQuat4f();

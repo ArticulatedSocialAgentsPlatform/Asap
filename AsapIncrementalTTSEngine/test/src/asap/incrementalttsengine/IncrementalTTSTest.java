@@ -1,12 +1,14 @@
+/*******************************************************************************
+ *******************************************************************************/
 package asap.incrementalttsengine;
 
 import hmi.util.Resources;
 import inpro.apps.SimpleMonitor;
 import inpro.audio.DispatchStream;
+import inpro.incremental.unit.ChunkBasedInstallmentIU;
+import inpro.incremental.unit.ChunkIU;
 import inpro.incremental.unit.IU;
 import inpro.incremental.unit.IU.IUUpdateListener;
-import inpro.incremental.unit.PhraseBasedInstallmentIU;
-import inpro.incremental.unit.PhraseIU;
 import inpro.incremental.unit.SysSegmentIU;
 import inpro.synthesis.MaryAdapter;
 
@@ -78,20 +80,20 @@ public class IncrementalTTSTest
         MaryAdapter.getInstance();
         DispatchStream dispatcher = SimpleMonitor.setupDispatcher(new Resources("").getURL("sphinx-config.xml"));
         {
-            PhraseBasedInstallmentIU installment1 = new PhraseBasedInstallmentIU(new PhraseIU("Morgen um 10"));
-            PhraseIU installment2 = new PhraseIU("ist das treffen mit deinem Bruder");
-            PhraseIU installment3 = new PhraseIU("und um zwei Uhr");
-            PhraseIU installment4 = new PhraseIU("gehst du Einkaufen");
-            PhraseIU installment5 = new PhraseIU("und abends ab acht");
-            PhraseIU installment6 = new PhraseIU("ist der Stammtisch");
-            PhraseIU installment7 = new PhraseIU("in der Kneipe.");
+            ChunkBasedInstallmentIU installment1 = new ChunkBasedInstallmentIU(new ChunkIU("Morgen um 10"));
+            ChunkIU installment2 = new ChunkIU("ist das treffen mit deinem Bruder");
+            ChunkIU installment3 = new ChunkIU("und um zwei Uhr");
+            ChunkIU installment4 = new ChunkIU("gehst du Einkaufen");
+            ChunkIU installment5 = new ChunkIU("und abends ab acht");
+            ChunkIU installment6 = new ChunkIU("ist der Stammtisch");
+            ChunkIU installment7 = new ChunkIU("in der Kneipe.");
             dispatcher.playStream(installment1.getAudio());
-            installment1.appendPhrase(installment2);
-            installment1.appendPhrase(installment3);
-            installment1.appendPhrase(installment4);
-            installment1.appendPhrase(installment5);
-            installment1.appendPhrase(installment6);
-            installment1.appendPhrase(installment7);
+            installment1.appendChunk(installment2);
+            installment1.appendChunk(installment3);
+            installment1.appendChunk(installment4);
+            installment1.appendChunk(installment5);
+            installment1.appendChunk(installment6);
+            installment1.appendChunk(installment7);
         }
         Thread.sleep(20000);
 
@@ -220,7 +222,7 @@ public class IncrementalTTSTest
 
         for (SysSegmentIU seg : installment.getSegments())
         {
-            seg.stretch(2);
+            seg.stretchFromOriginal(2);
         }
         Thread.sleep(12000);
 

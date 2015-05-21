@@ -1,29 +1,30 @@
+/*******************************************************************************
+ *******************************************************************************/
 package asap.realizer.parametervaluechange;
 
-import static org.junit.Assert.*;
-import static org.powermock.api.mockito.PowerMockito.mock;
-import static org.mockito.Mockito.verify;
+import static asap.realizertestutil.util.TimePegUtil.createTimePeg;
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertThat;
 import static org.mockito.Mockito.times;
+import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
+import static org.powermock.api.mockito.PowerMockito.mock;
+import hmi.xml.XMLTokenizer;
 
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
-import saiba.bml.parser.Constraint;
-import asap.bml.ext.bmla.BMLAInfo;
-import asap.bml.ext.bmla.BMLAParameterValueChangeBehaviour;
-import asap.realizertestutil.PlannerTests;
-import hmi.xml.XMLTokenizer;
-
+import org.hamcrest.collection.IsIterableContainingInOrder;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.powermock.core.classloader.annotations.PrepareForTest;
 import org.powermock.modules.junit4.PowerMockRunner;
 
-import org.hamcrest.collection.*;
-
+import saiba.bml.parser.Constraint;
+import asap.bml.ext.bmla.BMLAInfo;
+import asap.bml.ext.bmla.BMLAParameterValueChangeBehaviour;
 import asap.realizer.BehaviorNotFoundException;
 import asap.realizer.BehaviourPlanningException;
 import asap.realizer.SyncAndTimePeg;
@@ -39,9 +40,9 @@ import asap.realizer.planunit.TimedPlanUnitPlayException;
 import asap.realizer.scheduler.BMLBlockManager;
 import asap.realizer.scheduler.BMLScheduler;
 import asap.realizer.scheduler.TimePegAndConstraint;
+import asap.realizertestutil.PlannerTests;
 
 import com.google.common.collect.ImmutableSet;
-import static asap.realizertestutil.util.TimePegUtil.*;
 
 /**
  * Unit testcases for the ParameterValueChangePlanner

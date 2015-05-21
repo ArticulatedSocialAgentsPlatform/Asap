@@ -1,21 +1,5 @@
 /*******************************************************************************
- * Copyright (C) 2009 Human Media Interaction, University of Twente, the Netherlands
- * 
- * This file is part of the Elckerlyc BML realizer.
- * 
- * Elckerlyc is free software: you can redistribute it and/or modify
- * it under the terms of the GNU General Public License as published by
- * the Free Software Foundation, either version 3 of the License, or
- * (at your option) any later version.
- * 
- * Elckerlyc is distributed in the hope that it will be useful,
- * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- * GNU General Public License for more details.
- * 
- * You should have received a copy of the GNU General Public License
- * along with Elckerlyc.  If not, see http://www.gnu.org/licenses/.
- ******************************************************************************/
+ *******************************************************************************/
 package asap.realizer.scheduler;
 
 import hmi.util.Clock;
@@ -43,6 +27,8 @@ import saiba.bml.parser.InvalidSyncRefException;
 import saiba.bml.parser.SyncPoint;
 import asap.bml.ext.bmla.feedback.BMLABlockPredictionFeedback;
 import asap.bml.ext.bmla.feedback.BMLABlockProgressFeedback;
+import asap.bml.ext.bmla.feedback.BMLABlockStatus;
+import asap.bml.ext.bmla.feedback.BMLAPredictionFeedback;
 import asap.realizer.BehaviorNotFoundException;
 import asap.realizer.Engine;
 import asap.realizer.SyncPointNotFoundException;
@@ -87,7 +73,7 @@ public final class BMLScheduler
     {
         void warn(BMLWarningFeedback w);
 
-        void prediction(BMLPredictionFeedback bpf);
+        void prediction(BMLAPredictionFeedback bpf);
 
         void addFeedbackListener(BMLFeedbackListener e);
 
@@ -322,7 +308,7 @@ public final class BMLScheduler
 
     }
 
-    private BMLABlockPredictionFeedback createBMLABlockPredictionFeedback(String bmlId, double predictedStart, double predictedEnd)
+    private BMLABlockPredictionFeedback createBMLABlockPredictionFeedback(String bmlId, BMLABlockStatus status, double predictedStart, double predictedEnd)
     {
         long timeOffset = System.currentTimeMillis() - (long) (getSchedulingTime() * 1000);
         long posixStart = (long) (predictedStart * 1000) + timeOffset, posixEnd = 0;
@@ -330,29 +316,29 @@ public final class BMLScheduler
         {
             posixEnd = (long) (predictedEnd * 1000) + timeOffset;
         }
-        return new BMLABlockPredictionFeedback(bmlId, predictedStart, predictedEnd, posixStart, posixEnd);
+        return new BMLABlockPredictionFeedback(bmlId, predictedStart, predictedEnd, status, posixStart, posixEnd);
     }
 
-    private BMLPredictionFeedback createStartPrediction(BehaviourBlock bb)
+    private BMLAPredictionFeedback createStartPrediction(BehaviourBlock bb)
     {
-        BMLPredictionFeedback bpf = new BMLPredictionFeedback();
-        bpf.addBMLBlockPrediction(createBMLABlockPredictionFeedback(bb.getBmlId(), getSchedulingTime(), predictEndTime(bb.getBmlId())));
+        BMLAPredictionFeedback bpf = new BMLAPredictionFeedback();
+        bpf.addBMLBlockPrediction(createBMLABlockPredictionFeedback(bb.getBmlId(), BMLABlockStatus.IN_EXEC, getSchedulingTime(), predictEndTime(bb.getBmlId())));
         addBehaviorPredictions(bb, bpf);
         return bpf;
     }
 
-    private BMLPredictionFeedback createFilledBlockPrediction(BehaviourBlock bb, double predictedStart, double predictedEnd)
+    private BMLAPredictionFeedback createFilledBlockPrediction(BehaviourBlock bb, BMLABlockStatus status, double predictedStart, double predictedEnd)
     {
-        BMLPredictionFeedback bpf = new BMLPredictionFeedback();
-        bpf.addBMLBlockPrediction(createBMLABlockPredictionFeedback(bb.getBmlId(), predictedStart, predictedEnd));
+        BMLAPredictionFeedback bpf = new BMLAPredictionFeedback();
+        bpf.addBMLBlockPrediction(createBMLABlockPredictionFeedback(bb.getBmlId(), status, predictedStart, predictedEnd));
         addBehaviorPredictions(bb, bpf);
         return bpf;
     }
 
-    private BMLPredictionFeedback createSingleBlockPrediction(String bmlId, double predictedStart, double predictedEnd)
+    private BMLAPredictionFeedback createSingleBlockPrediction(String bmlId, BMLABlockStatus status, double predictedStart, double predictedEnd)
     {
-        BMLPredictionFeedback bpf = new BMLPredictionFeedback();
-        bpf.addBMLBlockPrediction(createBMLABlockPredictionFeedback(bmlId, predictedStart, predictedEnd));
+        BMLAPredictionFeedback bpf = new BMLAPredictionFeedback();
+        bpf.addBMLBlockPrediction(createBMLABlockPredictionFeedback(bmlId, status, predictedStart, predictedEnd));
         return bpf;
     }
 
@@ -360,7 +346,8 @@ public final class BMLScheduler
     {
         if (bmlBlockMap.containsKey(bmlId))
         {
-            prediction(createFilledBlockPrediction(bmlBlockMap.get(bmlId), predictStartTime(bmlId), predictEndTime(bmlId)));
+            BMLABlockStatus status = BMLABlockStatus.valueOf(bmlBlocksManager.getBMLBlockState(bmlId).toString());
+            prediction(createFilledBlockPrediction(bmlBlockMap.get(bmlId), status, predictStartTime(bmlId), predictEndTime(bmlId)));
         }
     }
 
@@ -376,12 +363,12 @@ public final class BMLScheduler
 
     public void planningStart(String bmlId, double predictedStart)
     {
-        prediction(createSingleBlockPrediction(bmlId, predictedStart, BMLBlockPredictionFeedback.UNKNOWN_TIME));
+        prediction(createSingleBlockPrediction(bmlId, BMLABlockStatus.IN_PREP, predictedStart, BMLBlockPredictionFeedback.UNKNOWN_TIME));
     }
 
     public void planningFinished(BehaviourBlock bb, double predictedStart, double predictedEnd)
     {
-        prediction(createFilledBlockPrediction(bb, predictedStart, predictedEnd));
+        prediction(createFilledBlockPrediction(bb, BMLABlockStatus.PENDING, predictedStart, predictedEnd));
         bmlBlocksManager.predictionUpdate(bb.getBmlId());
     }
 
@@ -391,14 +378,14 @@ public final class BMLScheduler
      * @param fb
      *            the feedback
      */
-    public void blockStopFeedback(String bmlId)
+    public void blockStopFeedback(String bmlId, BMLABlockStatus status)
     {
-        fbManager.blockProgress(new BMLABlockProgressFeedback(bmlId, "end", schedulingClock.getMediaSeconds()));
+        fbManager.blockProgress(new BMLABlockProgressFeedback(bmlId, "end", schedulingClock.getMediaSeconds(), status));
     }
 
     public void blockStartFeedback(String bmlId)
     {
-        fbManager.blockProgress(new BMLABlockProgressFeedback(bmlId, "start", schedulingClock.getMediaSeconds()));
+        fbManager.blockProgress(new BMLABlockProgressFeedback(bmlId, "start", schedulingClock.getMediaSeconds(), BMLABlockStatus.IN_EXEC));
     }
 
     /**
@@ -566,8 +553,7 @@ public final class BMLScheduler
         {
             e.interruptBehaviourBlock(bmlId, schedulingClock.getMediaSeconds());
         }
-
-        bmlBlocksManager.finishBlock(bmlId);
+        bmlBlocksManager.interruptBlock(bmlId);
         bmlBlocksManager.removeBMLBlock(bmlId);
     }
 
@@ -637,6 +623,7 @@ public final class BMLScheduler
                 {
                     String behId = id.substring(bmlId.length() + 1);
                     String warningText = "Invalid timing for behavior " + id + ", behavior ommitted";
+                    warningText += "\n "+pegBoard.getSyncAndTimePegs(bmlId, behId);
                     warn(new BMLWarningFeedback(bmlId + ":" + behId, "INVALID_TIMING", warningText));
                     removeBehaviour(bmlId, behId);
                 }

@@ -1,21 +1,5 @@
 /*******************************************************************************
- * Copyright (C) 2009 Human Media Interaction, University of Twente, the Netherlands
- * 
- * This file is part of the Elckerlyc BML realizer.
- * 
- * Elckerlyc is free software: you can redistribute it and/or modify
- * it under the terms of the GNU General Public License as published by
- * the Free Software Foundation, either version 3 of the License, or
- * (at your option) any later version.
- * 
- * Elckerlyc is distributed in the hope that it will be useful,
- * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- * GNU General Public License for more details.
- * 
- * You should have received a copy of the GNU General Public License
- * along with Elckerlyc.  If not, see http://www.gnu.org/licenses/.
- ******************************************************************************/
+ *******************************************************************************/
 package asap.realizerintegrationtest;
 
 import hmi.animation.VJoint;
@@ -59,7 +43,7 @@ import asap.audioengine.AudioPlanner;
 import asap.audioengine.TimedAbstractAudioUnit;
 import asap.bml.ext.bmla.BMLABMLBehaviorAttributes;
 import asap.hns.Hns;
-import asap.maryttsbinding.MaryTTSBindingFactory;
+import asap.marytts5binding.MaryTTSBindingFactory;
 import asap.realizer.AsapRealizer;
 import asap.realizer.DefaultEngine;
 import asap.realizer.DefaultPlayer;
@@ -191,8 +175,7 @@ public class SchedulerParameterizedIntegrationTest extends SchedulerIntegrationT
                     soundManager));
         }
 
-        speechEngineFactories.add(new TTSEngineFactory(new WavTTSUnitFactory(bfm, soundManager), new MaryTTSBindingFactory(System
-                .getProperty("shared.project.root") + "/Asap/AsapRealizerIntegrationTests/test/lib/MARYTTS",
+        speechEngineFactories.add(new TTSEngineFactory(new WavTTSUnitFactory(bfm, soundManager), new MaryTTSBindingFactory(
                 new NullPhonemeToVisemeMapping()), soundManager));
         speechEngineFactories.add(new TextEngineFactory());
 
@@ -229,7 +212,7 @@ public class SchedulerParameterizedIntegrationTest extends SchedulerIntegrationT
         PlanManager<TimedAnimationUnit> animationPlanManager = new PlanManager<>();
 
         RestPose pose = new SkeletonPoseRestPose();
-        RestGaze gaze = new ForwardRestGaze(GazeInfluence.WAIST); 
+        RestGaze gaze = new ForwardRestGaze(GazeInfluence.WAIST);
         AnimationPlanPlayer animationPlanPlayer = new AnimationPlanPlayer(pose, gaze, bfm, animationPlanManager,
                 new DefaultTimedPlanUnitPlayer(), pegBoard);
         AnimationPlayer aPlayer = new AnimationPlayer(human, human, human, m, 0.001f, animationPlanPlayer);
@@ -238,7 +221,7 @@ public class SchedulerParameterizedIntegrationTest extends SchedulerIntegrationT
 
         Hns hns = new Hns();
         hns.readXML(gres.getReader("Humanoids/shared/hns/hns.xml"));
-        HnsHandshape HnsHandshape = new HnsHandshape(hns, "Humanoids/shared/handshapes");
+        HnsHandshape HnsHandshape = new HnsHandshape("Humanoids/shared/handshapes");
         AnimationPlanner ap = new AnimationPlanner(bfm, aPlayer, gestureBinding, hns, HnsHandshape, animationPlanManager, pegBoard);
         Engine animationEngine = new DefaultEngine<TimedAnimationUnit>(ap, aPlayer, animationPlanManager);
 

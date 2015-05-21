@@ -1,3 +1,5 @@
+/*******************************************************************************
+ *******************************************************************************/
 package asap.bml.ext.bmla;
 
 import static org.junit.Assert.assertEquals;
@@ -7,8 +9,6 @@ import hmi.xml.XMLTokenizer;
 import java.io.IOException;
 
 import org.junit.Test;
-
-import asap.bml.ext.bmla.BMLAParameterValueChangeBehaviour;
 
 import saiba.bml.core.AbstractBehaviourTest;
 import saiba.bml.core.Behaviour;

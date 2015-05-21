@@ -14,12 +14,12 @@ class BMLRealizerToIpaacaAdapter(RealizerPort):
     '''
 
 
-    def __init__(self):
+    def __init__(self, characterId="default"):
         '''
         Constructor
         '''
-        self.inBuffer = InputBuffer("BMLToIpaacaRealizerAdapter", [IpaacaBMLConstants.BML_FEEDBACK_CATEGORY])
-        self.outBuffer = OutputBuffer("BMLToIpaacaRealizerAdapter")
+        self.inBuffer = InputBuffer("BMLToIpaacaRealizerAdapter", [IpaacaBMLConstants.BML_FEEDBACK_CATEGORY], characterId)
+        self.outBuffer = OutputBuffer("BMLToIpaacaRealizerAdapter", characterId)
         self.feedbackListeners = []
         self.inBuffer.register_handler(self.handle_iu_event, [IUEventType.MESSAGE], IpaacaBMLConstants.BML_FEEDBACK_CATEGORY)
     

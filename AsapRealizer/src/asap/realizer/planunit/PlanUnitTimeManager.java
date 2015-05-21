@@ -1,6 +1,6 @@
+/*******************************************************************************
+ *******************************************************************************/
 package asap.realizer.planunit;
-
-import saiba.bml.BMLGestureSync;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -11,6 +11,7 @@ import java.util.TreeMap;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import saiba.bml.BMLGestureSync;
 import asap.realizer.SyncPointNotFoundException;
 import asap.realizer.pegboard.TimePeg;
 
@@ -316,6 +317,11 @@ public class PlanUnitTimeManager
         {
             kpManager.addKeyPosition(new KeyPosition("relax", 0.75, 0.01));
         }
+    }
+    
+    public void resolveHeadKeyPositions()
+    {
+        resolveGestureKeyPositions();
     }
     
     /**

@@ -1,38 +1,22 @@
 /*******************************************************************************
- * Copyright (C) 2009 Human Media Interaction, University of Twente, the Netherlands
- * 
- * This file is part of the Elckerlyc BML realizer.
- * 
- * Elckerlyc is free software: you can redistribute it and/or modify
- * it under the terms of the GNU General Public License as published by
- * the Free Software Foundation, either version 3 of the License, or
- * (at your option) any later version.
- * 
- * Elckerlyc is distributed in the hope that it will be useful,
- * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- * GNU General Public License for more details.
- * 
- * You should have received a copy of the GNU General Public License
- * along with Elckerlyc.  If not, see http://www.gnu.org/licenses/.
- ******************************************************************************/
+ *******************************************************************************/
 package asap.blinkemitter;
 
-import hmi.util.*;
+import hmi.util.StringUtil;
 
-import java.util.*;
+import java.util.ArrayList;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import asap.emitterengine.*;
+import asap.emitterengine.Emitter;
 import asap.realizerport.RealizerPort;
 
 /**
  * Emits blink behaviors to a RealizerBridge with a certain probabilitydistribution. Distribution
  * parameters can be modified on the fly; the emitter will immediately change the blinking behavior.
  * Next blink bml block will always start after the previous blink block (append-after) -- even if
- * it were acceidentally fired too early.
+ * it were accidentally fired too early.
  * 
  * basic implementation: wait time equally distributed over avg-range..avg+range
  * better implementation:
@@ -135,15 +119,7 @@ public class BlinkEmitter extends Emitter implements Runnable
                 + "xmlns:bmla=\"http://www.asap-project.org/bmla\"><faceLexeme id=\"b1\"  lexeme=\"BLINK\" start=\"0\" end=\"0.15\" "
                 + "amount=\"1\" attackPeak=\"0.03\" relax=\"0.12\"/>";        
         realizerBridge.performBML(bml + "</bml>");
-
-        /*
-         * if (blinkcount > 4) {
-         * realizerBridge.performBML("<bml id=\"throwawayblink"+(blinkcount-3)+
-         * "\" interrupt=\"blinkbml"+(blinkcount-3)+"\"></bml>"); }
-         */
         blinkcount++;
-        //System.out.println("Blink! " + blinkcount);
-
     }
 
     protected void setWaitForNextBlink()
@@ -156,13 +132,6 @@ public class BlinkEmitter extends Emitter implements Runnable
         {
             basicMethodSetWaitForNextBlink();
         }
-
-        // long now = System.currentTimeMillis();
-        // if ((double)now-(double)lastblink >= currentwaitingtime*1000d)
-        // {
-        // emitBlink(); //time past to blink -- blink now
-        // setWaitForNextBlink();
-        // }
     }
 
     /**
@@ -243,10 +212,6 @@ public class BlinkEmitter extends Emitter implements Runnable
     {
         return XMLTAG;
     }
-
-    /** start emitter. Needs to be already connected to realizerport. */
-    // @Override
-    // public void start() ... its a thread already...
 
     /**
      * stop and clean up emitter as soon as possible. After stop was called, no new BML should be emitted,

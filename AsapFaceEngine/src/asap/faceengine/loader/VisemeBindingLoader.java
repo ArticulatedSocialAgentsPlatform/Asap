@@ -1,3 +1,5 @@
+/*******************************************************************************
+ *******************************************************************************/
 package asap.faceengine.loader;
 
 import hmi.faceanimation.converters.FACSConverter;
@@ -18,35 +20,50 @@ import asap.faceengine.viseme.VisemeToMorphMapping;
  * Utility class to load the VisemeBinding
  * @author hvanwelbergen
  */
-final class VisemeBindingLoader
+public final class VisemeBindingLoader
 {
     private VisemeBindingLoader()
     {
     }
 
-    static VisemeBinding load(XMLTokenizer tokenizer, FACSConverter fc) throws IOException
+    public static VisemeBinding load(XMLTokenizer tokenizer, FACSConverter fc) throws IOException
     {
         VisemeBinding visBinding = null;
-        XMLStructureAdapter adapter = new XMLStructureAdapter();
 
         if (tokenizer.atSTag("MorphVisemeBinding"))
         {
-            HashMap<String, String> attrMap = tokenizer.getAttributes();
-            VisemeToMorphMapping mapping = new VisemeToMorphMapping();
-            mapping.readXML(new Resources(adapter.getOptionalAttribute("resources", attrMap, "")).getReader(adapter.getRequiredAttribute(
-                    "filename", attrMap, tokenizer)));
-            visBinding = new MorphVisemeBinding(mapping);
-            tokenizer.takeEmptyElement("MorphVisemeBinding");
+            visBinding = loadMorphVisemeBinding(tokenizer);
         }
         else if (tokenizer.atSTag("FACSVisemeBinding"))
         {
-            HashMap<String, String> attrMap = tokenizer.getAttributes();
-            VisemeToFACSMapping mapping = new VisemeToFACSMapping();
-            mapping.readXML(new Resources(adapter.getOptionalAttribute("resources", attrMap, "")).getReader(adapter.getRequiredAttribute(
-                    "filename", attrMap, tokenizer)));
-            visBinding = new FACSVisemeBinding(mapping, fc);
-            tokenizer.takeEmptyElement("FACSVisemeBinding");
+            visBinding = loadFACSVisemeBinding(tokenizer, fc);
         }
+        return visBinding;
+    }
+
+    private static FACSVisemeBinding loadFACSVisemeBinding(XMLTokenizer tokenizer, FACSConverter fc) throws IOException
+    {
+        FACSVisemeBinding visBinding;
+        XMLStructureAdapter adapter = new XMLStructureAdapter();
+        HashMap<String, String> attrMap = tokenizer.getAttributes();
+        VisemeToFACSMapping mapping = new VisemeToFACSMapping();
+        mapping.readXML(new Resources(adapter.getOptionalAttribute("resources", attrMap, "")).getReader(adapter.getRequiredAttribute(
+                "filename", attrMap, tokenizer)));
+        visBinding = new FACSVisemeBinding(mapping, fc);
+        tokenizer.takeEmptyElement("FACSVisemeBinding");
+        return visBinding;
+    }
+
+    public static MorphVisemeBinding loadMorphVisemeBinding(XMLTokenizer tokenizer) throws IOException
+    {
+        MorphVisemeBinding visBinding;
+        XMLStructureAdapter adapter = new XMLStructureAdapter();
+        HashMap<String, String> attrMap = tokenizer.getAttributes();
+        VisemeToMorphMapping mapping = new VisemeToMorphMapping();
+        mapping.readXML(new Resources(adapter.getOptionalAttribute("resources", attrMap, "")).getReader(adapter.getRequiredAttribute(
+                "filename", attrMap, tokenizer)));
+        visBinding = new MorphVisemeBinding(mapping);
+        tokenizer.takeEmptyElement("MorphVisemeBinding");
         return visBinding;
     }
 }

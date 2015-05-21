@@ -1,27 +1,13 @@
 /*******************************************************************************
- * Copyright (C) 2009 Human Media Interaction, University of Twente, the Netherlands
- * 
- * This file is part of the Elckerlyc BML realizer.
- * 
- * Elckerlyc is free software: you can redistribute it and/or modify
- * it under the terms of the GNU General Public License as published by
- * the Free Software Foundation, either version 3 of the License, or
- * (at your option) any later version.
- * 
- * Elckerlyc is distributed in the hope that it will be useful,
- * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- * GNU General Public License for more details.
- * 
- * You should have received a copy of the GNU General Public License
- * along with Elckerlyc.  If not, see http://www.gnu.org/licenses/.
- ******************************************************************************/
+ *******************************************************************************/
 package asap.animationengine.motionunit;
 
 import java.util.List;
 import java.util.Set;
 
 import saiba.bml.core.Behaviour;
+import asap.animationengine.AnimationPlayer;
+import asap.motionunit.MUPlayException;
 import asap.motionunit.TMUPlayException;
 import asap.motionunit.TimedMotionUnit;
 import asap.realizer.BehaviourPlanningException;
@@ -30,9 +16,12 @@ import asap.realizer.feedback.NullFeedbackManager;
 import asap.realizer.pegboard.BMLBlockPeg;
 import asap.realizer.pegboard.PegBoard;
 import asap.realizer.planunit.Priority;
+import asap.realizer.planunit.TimedPlanUnitPlayException;
 import asap.realizer.scheduler.LinearStretchResolver;
 import asap.realizer.scheduler.TimePegAndConstraint;
 import asap.realizer.scheduler.UniModalResolver;
+
+import com.google.common.collect.Sets;
 
 /**
  * A TimedAnimationUnit implementation that delegates the motion execution etc to an AnimationUnit
@@ -45,7 +34,9 @@ import asap.realizer.scheduler.UniModalResolver;
 public class TimedAnimationMotionUnit extends TimedMotionUnit implements TimedAnimationUnit
 {
     private final AnimationUnit mu;
-    private final UniModalResolver resolver = new LinearStretchResolver();    
+    private final UniModalResolver resolver = new LinearStretchResolver();
+    private final AnimationPlayer aniPlayer;
+    private AnimationUnit retractUnit;
 
     public Set<String> getKinematicJoints()
     {
@@ -69,22 +60,25 @@ public class TimedAnimationMotionUnit extends TimedMotionUnit implements TimedAn
      * @param id behaviour id
      * @param m motion unit
      */
-    public TimedAnimationMotionUnit(FeedbackManager bbf, BMLBlockPeg bmlBlockPeg, String bmlId, String id, AnimationUnit m, PegBoard pb)
+    public TimedAnimationMotionUnit(FeedbackManager bbf, BMLBlockPeg bmlBlockPeg, String bmlId, String id, AnimationUnit m, PegBoard pb,
+            AnimationPlayer aniPlayer)
     {
         super(bbf, bmlBlockPeg, bmlId, id, m, pb);
+        this.aniPlayer = aniPlayer;
         setPriority(Priority.GESTURE);
-        mu = m;        
+        mu = m;
     }
 
-    public TimedAnimationMotionUnit(BMLBlockPeg bmlBlockPeg, String bmlId, String id, AnimationUnit m, PegBoard pb)
+    public TimedAnimationMotionUnit(BMLBlockPeg bmlBlockPeg, String bmlId, String id, AnimationUnit m, PegBoard pb,
+            AnimationPlayer aniPlayer)
     {
-        this(NullFeedbackManager.getInstance(), bmlBlockPeg, bmlId, id, m, pb);
+        this(NullFeedbackManager.getInstance(), bmlBlockPeg, bmlId, id, m, pb, aniPlayer);
     }
 
     public void updateTiming(double time) throws TMUPlayException
     {
 
-    }    
+    }
 
     @Override
     public double getPreparationDuration()
@@ -103,6 +97,53 @@ public class TimedAnimationMotionUnit extends TimedMotionUnit implements TimedAn
     {
         return getPreferedDuration() - getPreparationDuration() - getRetractionDuration();
     }
-    
-    
+
+    @Override
+    protected void relaxUnit(double time) throws TimedPlanUnitPlayException
+    {
+        sendProgress(puTimeManager.getRelativeTime(time), time);
+        if (!progressHandled.contains(getKeyPosition("relax")))
+        {
+            progressHandled.add(getKeyPosition("relax"));
+            feedback("relax", time);
+        }
+    }
+
+    @Override
+    protected void playUnit(double time) throws TimedPlanUnitPlayException
+    {
+        
+        if (retractUnit != null && time >= getRelaxTime())
+        {
+            try
+            {
+                double t = (time - getRelaxTime()) / (getEndTime() - getRelaxTime());                
+                retractUnit.play(t);
+            }
+            catch (MUPlayException e)
+            {
+                throw new TimedPlanUnitPlayException(e.getMessage(), this, e);
+            }
+        }
+        else
+        {
+            super.playUnit(time);
+        }
+    }
+
+    @Override
+    protected void gracefullInterrupt(double time) throws TimedPlanUnitPlayException
+    {
+        if (getTimePeg("relax") == null)
+        {
+            super.gracefullInterrupt(time);
+            return;
+        }
+        Set<String> joints = Sets.union(Sets.union(mu.getKinematicJoints(), mu.getPhysicalJoints()), mu.getAdditiveJoints());
+        double retractionDuration = aniPlayer.getRestPose().getTransitionToRestDuration(aniPlayer.getVCurr(), joints);
+        skipPegs(time, "ready", "strokeStart", "stroke", "strokeEnd");
+        getTimePeg("relax").setGlobalValue(time);
+        getTimePeg("end").setGlobalValue(time + retractionDuration);
+        retractUnit = aniPlayer.getRestPose().createTransitionToRest(joints);
+    }
 }

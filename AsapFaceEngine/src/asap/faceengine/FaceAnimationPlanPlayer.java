@@ -1,3 +1,5 @@
+/*******************************************************************************
+ *******************************************************************************/
 package asap.faceengine;
 
 import hmi.faceanimation.FaceControllerPose;
@@ -72,5 +74,11 @@ public class FaceAnimationPlanPlayer implements PlanPlayer
     public void shutdown()
     {
         defPlayer.shutdown();
+    }
+
+    @Override
+    public void updateTiming(String bmlId)
+    {
+                
     }
 }

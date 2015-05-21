@@ -1,3 +1,5 @@
+/*******************************************************************************
+ *******************************************************************************/
 package asap.realizer.bridge;
 
 import hmi.util.Clock;
@@ -63,8 +65,16 @@ public class LogPipe implements RealizerPort, BMLFeedbackListener
     }
 
     @Override
+    public void removeListener(BMLFeedbackListener l)
+    {
+        outputBridge.removeListener(l);        
+    }  
+    
+    @Override
     public void feedback(String feedback)
     {
         if(logFeedback)feedbackLogger.info(feedback);
-    }    
+    }
+
+      
 }

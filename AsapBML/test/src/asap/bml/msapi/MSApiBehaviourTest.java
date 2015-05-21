@@ -1,10 +1,11 @@
+/*******************************************************************************
+ *******************************************************************************/
 package asap.bml.msapi;
 
 import static org.junit.Assert.assertEquals;
+import hmi.xml.XMLTokenizer;
 
 import java.io.IOException;
-
-import hmi.xml.XMLTokenizer;
 
 import org.junit.Test;
 

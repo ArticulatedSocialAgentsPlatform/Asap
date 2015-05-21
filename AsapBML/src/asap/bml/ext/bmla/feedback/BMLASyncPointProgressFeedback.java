@@ -1,12 +1,17 @@
+/*******************************************************************************
+ *******************************************************************************/
 package asap.bml.ext.bmla.feedback;
 
+import hmi.xml.XMLNameSpace;
 import hmi.xml.XMLTokenizer;
 
 import java.util.HashMap;
+import java.util.List;
 
 import lombok.Getter;
 import saiba.bml.feedback.BMLSyncPointProgressFeedback;
 import asap.bml.ext.bmla.BMLAInfo;
+import asap.bml.ext.bmla.BMLAPrefix;
 
 /**
  * Extension of BMLSyncPointProgressFeedback to allow posix times in feedback
@@ -56,4 +61,9 @@ public class BMLASyncPointProgressFeedback extends BMLSyncPointProgressFeedback
         }
     }
 
+    @Override
+    public String toBMLFeedbackString(List<XMLNameSpace> xmlNamespaceList)
+    {
+        return super.toBMLFeedbackString(BMLAPrefix.insertBMLANamespacePrefix(xmlNamespaceList));
+    }
 }

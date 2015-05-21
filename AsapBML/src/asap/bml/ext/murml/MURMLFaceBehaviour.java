@@ -1,10 +1,13 @@
+/*******************************************************************************
+ *******************************************************************************/
 package asap.bml.ext.murml;
 
-import saiba.bml.parser.SyncPoint;
 import hmi.xml.XMLTokenizer;
 
 import java.io.IOException;
 import java.util.List;
+
+import saiba.bml.parser.SyncPoint;
 
 import com.google.common.collect.ImmutableList;
 
@@ -21,7 +24,11 @@ public class MURMLFaceBehaviour extends MURMLBehaviour
         readXML(tokenizer);
     }
 
-    
+    public MURMLFaceBehaviour(String bmlId, String id, XMLTokenizer tokenizer) throws IOException
+    {
+        super(bmlId, id);
+        readXML(tokenizer);
+    }
 
     /*
      * The XML Stag for XML encoding

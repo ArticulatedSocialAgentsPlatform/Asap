@@ -1,24 +1,9 @@
 /*******************************************************************************
- * Copyright (C) 2009 Human Media Interaction, University of Twente, the Netherlands
- * 
- * This file is part of the Elckerlyc BML realizer.
- * 
- * Elckerlyc is free software: you can redistribute it and/or modify
- * it under the terms of the GNU General Public License as published by
- * the Free Software Foundation, either version 3 of the License, or
- * (at your option) any later version.
- * 
- * Elckerlyc is distributed in the hope that it will be useful,
- * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- * GNU General Public License for more details.
- * 
- * You should have received a copy of the GNU General Public License
- * along with Elckerlyc.  If not, see http://www.gnu.org/licenses/.
- ******************************************************************************/
+ *******************************************************************************/
 package asap.faceengine;
 
 import hmi.faceanimation.FaceController;
+import hmi.faceanimation.FaceInterpolator;
 import hmi.faceanimation.converters.EmotionConverter;
 import hmi.faceanimation.converters.FACSConverter;
 
@@ -29,11 +14,16 @@ import saiba.bml.BMLInfo;
 import saiba.bml.core.Behaviour;
 import saiba.bml.core.FaceLexemeBehaviour;
 import saiba.bml.core.ext.FaceFacsBehaviour;
+import asap.bml.ext.bmlt.BMLTFaceKeyframeBehaviour;
 import asap.bml.ext.bmlt.BMLTFaceMorphBehaviour;
 import asap.bml.ext.murml.MURMLFaceBehaviour;
 import asap.faceengine.facebinding.FaceBinding;
 import asap.faceengine.facebinding.MURMLFUBuilder;
 import asap.faceengine.faceunit.FaceUnit;
+import asap.faceengine.faceunit.KeyframeFaceUnit;
+import asap.faceengine.faceunit.KeyframeFacsFU;
+import asap.faceengine.faceunit.KeyframeFapsMU;
+import asap.faceengine.faceunit.KeyframeMorphFU;
 import asap.faceengine.faceunit.TimedFaceUnit;
 import asap.realizer.AbstractPlanner;
 import asap.realizer.BehaviourPlanningException;
@@ -48,10 +38,12 @@ import asap.realizer.scheduler.LinearStretchResolver;
 import asap.realizer.scheduler.TimePegAndConstraint;
 import asap.realizer.scheduler.UniModalResolver;
 
+import com.google.common.collect.ImmutableList;
+
 /**
  * This planner will in the future support planning of face behaviors -- i.e. face expressions and such. In addition, the faceplanner allows for the
  * possiblities to set visemes at certain TimePegs. This functionality is mostly accessed by the verbalplanner.
- * @author Reidsma
+ * @author Reidsma, welberge
  */
 public class FacePlanner extends AbstractPlanner<TimedFaceUnit>
 {
@@ -62,7 +54,7 @@ public class FacePlanner extends AbstractPlanner<TimedFaceUnit>
     private final FaceBinding faceBinding;
     private UniModalResolver resolver;
     private final PegBoard pegBoard;
-    
+
     /* register the MURML BML face behaviors with the BML parser... */
     static
     {
@@ -94,11 +86,36 @@ public class FacePlanner extends AbstractPlanner<TimedFaceUnit>
         {
             FaceUnit fu = MURMLFUBuilder.setup(((MURMLFaceBehaviour) b).getMurmlDescription());
             FaceUnit fuCopy = fu.copy(faceController, facsConverter, emotionConverter);
-            tfu = fuCopy.createTFU(fbManager, bbPeg, b.getBmlId(), b.id,pegBoard);
+            tfu = fuCopy.createTFU(fbManager, bbPeg, b.getBmlId(), b.id, pegBoard);
+        }
+        else if (b instanceof BMLTFaceKeyframeBehaviour && !b.specifiesParameter("name"))
+        {
+            BMLTFaceKeyframeBehaviour beh = (BMLTFaceKeyframeBehaviour) b;
+            FaceInterpolator mi = new FaceInterpolator();
+            mi.readXML(beh.content);
+            KeyframeFaceUnit fu;
+            switch (beh.getType())
+            {
+            default:
+            case MORPH:
+                fu = new KeyframeMorphFU(mi);
+                break;
+            case FACS:
+                KeyframeFacsFU kfu = new KeyframeFacsFU(mi);
+                kfu = kfu.copy(faceController, facsConverter, emotionConverter);
+                fu = kfu;
+                break;
+            case FAPS:
+                fu = new KeyframeFapsMU(mi);
+                break;
+            }
+            fu.setFaceController(faceController);
+            tfu = fu.createTFU(fbManager, bbPeg, beh.getBmlId(), beh.id, pegBoard);
         }
         else
         {
-            List<TimedFaceUnit> tfus = faceBinding.getFaceUnit(fbManager, bbPeg, b, faceController, facsConverter, emotionConverter, pegBoard);
+            List<TimedFaceUnit> tfus = faceBinding.getFaceUnit(fbManager, bbPeg, b, faceController, facsConverter, emotionConverter,
+                    pegBoard);
             if (tfus.isEmpty())
             {
                 throw new BehaviourPlanningException(b, "Behavior " + b.id
@@ -123,7 +140,7 @@ public class FacePlanner extends AbstractPlanner<TimedFaceUnit>
     public List<SyncAndTimePeg> addBehaviour(BMLBlockPeg bbPeg, Behaviour b, List<TimePegAndConstraint> sacs, TimedFaceUnit tfu)
             throws BehaviourPlanningException
     {
-        
+
         if (tfu == null)
         {
             tfu = createTfu(bbPeg, b);
@@ -171,12 +188,8 @@ public class FacePlanner extends AbstractPlanner<TimedFaceUnit>
     @Override
     public List<Class<? extends Behaviour>> getSupportedBehaviours()
     {
-        List<Class<? extends Behaviour>> list = new ArrayList<Class<? extends Behaviour>>();
-        list.add(FaceLexemeBehaviour.class);
-        list.add(FaceFacsBehaviour.class);
-        list.add(BMLTFaceMorphBehaviour.class);
-        list.add(MURMLFaceBehaviour.class);
-        return list;
+        return ImmutableList.of(FaceLexemeBehaviour.class, FaceFacsBehaviour.class, BMLTFaceMorphBehaviour.class,
+                BMLTFaceKeyframeBehaviour.class, MURMLFaceBehaviour.class);
     }
 
     @Override

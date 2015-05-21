@@ -1,11 +1,11 @@
+/*******************************************************************************
+ *******************************************************************************/
 package asap.math;
 
 import static org.junit.Assert.assertArrayEquals;
 import static org.junit.Assert.assertEquals;
 
 import org.junit.Test;
-
-import asap.math.LinearStretchTemporalResolver;
 
 /**
  * Unit tests for the LinearStretchTemporalResolver

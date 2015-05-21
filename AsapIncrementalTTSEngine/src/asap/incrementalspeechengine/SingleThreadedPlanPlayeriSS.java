@@ -1,3 +1,5 @@
+/*******************************************************************************
+ *******************************************************************************/
 package asap.incrementalspeechengine;
 
 import java.util.ArrayList;
@@ -25,7 +27,7 @@ import asap.realizerport.BMLFeedbackListener;
  * PlanUnits used in the PlanPlayer should have non-blocking play and start functions.
  * 
  * @author Herwin
- * @param <T> 
+ * @param <T>
  */
 @ThreadSafe
 @Slf4j
@@ -63,6 +65,28 @@ public final class SingleThreadedPlanPlayeriSS<T extends TimedPlanUnit> implemen
 
     private List<T> playingPlanUnits = new ArrayList<T>();
 
+    @Override
+    public void updateTiming(String bmlId)
+    {
+        List<T> failedBehaviors = new ArrayList<>();
+        for (T pu : planManager.getPlanUnits())
+        {
+            if (pu.getBMLId().equals(bmlId))
+            {
+                try
+                {
+                    pu.updateTiming(0);
+                }
+                catch (TimedPlanUnitPlayException e)
+                {
+                    log.warn("Failure in updating the timing of {}, removed", pu);
+                    failedBehaviors.add(pu);
+                }
+            }
+            planManager.removePlanUnits(failedBehaviors, 0);
+        }
+    }
+
     public synchronized void play(double t)
     {
         playingPlanUnits.clear();
@@ -70,7 +94,7 @@ public final class SingleThreadedPlanPlayeriSS<T extends TimedPlanUnit> implemen
 
         for (T pu : planManager.getPlanUnits())
         {
-            if (t < pu.getStartTime() || pu.isLurking() || pu.isInPrep()||pu.isPending())
+            if (t < pu.getStartTime() || pu.isLurking())
             {
                 try
                 {
@@ -78,19 +102,19 @@ public final class SingleThreadedPlanPlayeriSS<T extends TimedPlanUnit> implemen
                 }
                 catch (TimedPlanUnitPlayException e)
                 {
-                    log.warn("Exception when updating timing: ",e);
-                }                
+                    log.warn("Exception when updating timing: ", e);
+                }
             }
-            
+
             if (t >= pu.getStartTime() && (pu.isPlaying() || pu.isLurking()))
             {
-                playingPlanUnits.add(pu);                
+                playingPlanUnits.add(pu);
             }
         }
 
         for (T pu : playingPlanUnits)
         {
-            tpuPlayer.playUnit(pu, t);            
+            tpuPlayer.playUnit(pu, t);
         }
         tpuPlayer.handlePlayExceptions(t, fbManager);
         tpuPlayer.handleStopExceptions(t);
@@ -98,11 +122,9 @@ public final class SingleThreadedPlanPlayeriSS<T extends TimedPlanUnit> implemen
         {
             tpuPlayer.stopUnit(tmuR, t);
         }
-        planManager.removeFinishedPlanUnits();        
+        planManager.removeFinishedPlanUnits();
     }
-    
-    
-    
+
     public Set<String> getInvalidBehaviors()
     {
         return planManager.getInvalidBehaviours();
@@ -120,13 +142,12 @@ public final class SingleThreadedPlanPlayeriSS<T extends TimedPlanUnit> implemen
     /**
      * Stops and removes a planunit.
      * Blocking.
-     */    
+     */
     public synchronized void stopPlanUnit(String bmlId, String id, double globalTime)
     {
-        planManager.stopPlanUnit(bmlId, id, globalTime);        
+        planManager.stopPlanUnit(bmlId, id, globalTime);
     }
-    
-    
+
     public void setBMLBlockState(String bmlId, TimedPlanUnitState state)
     {
         planManager.setBMLBlockState(bmlId, state);
@@ -156,17 +177,17 @@ public final class SingleThreadedPlanPlayeriSS<T extends TimedPlanUnit> implemen
     {
         planManager.stopBehaviourBlock(bmlId, time);
     }
-    
+
     @Override
     public void interruptPlanUnit(String bmlId, String id, double globalTime)
     {
-        planManager.interruptPlanUnit(bmlId, id, globalTime);            
+        planManager.interruptPlanUnit(bmlId, id, globalTime);
     }
 
     @Override
     public void interruptBehaviourBlock(String bmlId, double time)
     {
-        planManager.interruptBehaviourBlock(bmlId, time);        
+        planManager.interruptBehaviourBlock(bmlId, time);
     }
 
     public void shutdown()

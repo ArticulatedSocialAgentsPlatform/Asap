@@ -1,42 +1,31 @@
 /*******************************************************************************
- * Copyright (C) 2009 Human Media Interaction, University of Twente, the Netherlands
- * 
- * This file is part of the Elckerlyc BML realizer.
- * 
- * Elckerlyc is free software: you can redistribute it and/or modify
- * it under the terms of the GNU General Public License as published by
- * the Free Software Foundation, either version 3 of the License, or
- * (at your option) any later version.
- * 
- * Elckerlyc is distributed in the hope that it will be useful,
- * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- * GNU General Public License for more details.
- * 
- * You should have received a copy of the GNU General Public License
- * along with Elckerlyc.  If not, see http://www.gnu.org/licenses/.
- ******************************************************************************/
+ *******************************************************************************/
 package asap.audioengine;
 
+import hmi.audioenvironment.SoundManager;
+import hmi.util.Resources;
+
+import java.io.IOException;
 import java.io.InputStream;
+import java.net.MalformedURLException;
+import java.net.URL;
 import java.util.ArrayList;
 import java.util.List;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import asap.bml.ext.bmlt.*;
-import asap.realizer.*;
+import saiba.bml.core.Behaviour;
+import asap.bml.ext.bmlt.BMLTAudioFileBehaviour;
+import asap.realizer.AbstractPlanner;
+import asap.realizer.BehaviourPlanningException;
+import asap.realizer.SyncAndTimePeg;
 import asap.realizer.feedback.FeedbackManager;
 import asap.realizer.pegboard.BMLBlockPeg;
 import asap.realizer.pegboard.OffsetPeg;
 import asap.realizer.pegboard.TimePeg;
 import asap.realizer.planunit.PlanManager;
 import asap.realizer.scheduler.TimePegAndConstraint;
-
-import hmi.util.Resources;
-import saiba.bml.core.Behaviour;
-import hmi.audioenvironment.*;
 
 /**
  * Planner for BMLT audio behaviours
@@ -59,7 +48,23 @@ public class AudioPlanner extends AbstractPlanner<TimedAbstractAudioUnit>
     private TimedAbstractAudioUnit createAudioUnit(BMLBlockPeg bbPeg, Behaviour b) throws BehaviourPlanningException
     {
         BMLTAudioFileBehaviour bAudio = (BMLTAudioFileBehaviour) b;
-        InputStream inputStream = audioResource.getInputStream(bAudio.getStringParameterValue("fileName"));
+        String fileName = bAudio.getStringParameterValue("fileName");
+        InputStream inputStream = audioResource.getInputStream(fileName);
+        if(inputStream == null)
+        {
+            try
+            {
+                inputStream = new URL(fileName).openStream();
+            }
+            catch (MalformedURLException e)
+            {
+                throw new BehaviourPlanningException(b,"Cannot find audio file "+bAudio.getStringParameterValue("fileName"),e);
+            }
+            catch (IOException e)
+            {
+                throw new BehaviourPlanningException(b,"Cannot find audio file "+bAudio.getStringParameterValue("fileName"),e);
+            }
+        }
         if(inputStream == null)
         {
             throw new BehaviourPlanningException(b,"Cannot find audio file "+bAudio.getStringParameterValue("fileName"));

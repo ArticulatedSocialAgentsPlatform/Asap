@@ -1,3 +1,5 @@
+/*******************************************************************************
+ *******************************************************************************/
 package asap.animationengine.pointing;
 
 import static org.junit.Assert.assertEquals;
@@ -86,7 +88,7 @@ public class PointingTMUTest extends AbstractTimedPlanUnitTest
         mu.addKeyPosition(new KeyPosition(BMLGestureSync.STROKE_START.getId(), 0.2, 1.0));
         mu.addKeyPosition(new KeyPosition(BMLGestureSync.STROKE_END.getId(), 0.8, 1.0));
 
-        PointingTMU tmu = new PointingTMU(bfm, bbPeg, bmlId, id, mu, pegBoard);
+        PointingTMU tmu = new PointingTMU(bfm, bbPeg, bmlId, id, mu, pegBoard, mockAnimationPlayer);
         tmu.resolveGestureKeyPositions();
         tmu.setTimePeg("start", TimePegUtil.createTimePeg(bbPeg, startTime));
         tmu.setTimePeg("relax", new TimePeg(bbPeg));

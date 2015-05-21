@@ -21,16 +21,7 @@
       <dependency org="Asap"      name="AsapSapi5TTSBinding"        rev="latest.{$resolve.status}"  />
 
       <!-- for tests with MaryTTS -->
-      <dependency org="Asap"      name="AsapMaryTTSBinding"        rev="latest.{$resolve.status}"  />
-      <dependency org="slf4j"   name="log4j-over-slf4j"      rev="latest.release"  />   
-      <dependency org="dfki"   name="mary-common"    rev="latest.release"  />   
-      <dependency org="apache" name="commons-collections" rev="latest.release"  />   
-      <dependency org="opennlp" name="opennlp-tools" rev="latest.release"  />   
-      <dependency org="opennlp" name="maxent" rev="latest.release"  />   
-      <dependency org="freetts" name="freetts" rev="latest.release"  />   
-      <dependency org="gnu" name="trove" rev="latest.release"  />   
-      <dependency org="hsqldb" name="hsqldb" rev="latest.release"  />     
-      <dependency org="Jama" name="Jama" rev="latest.release"  />          
-      <dependency org="HMI"   name="MARYTTS"     rev="latest.${resolve.status}"   />   
+      <dependency org="Asap"      name="AsapMaryTTS5Binding"        rev="latest.{$resolve.status}"  />      
+	 <dependency org="marytts" name="voice-cmu-slt-hsmm"       rev="latest.release"  />
    </dependencies>
 </ivy-module>

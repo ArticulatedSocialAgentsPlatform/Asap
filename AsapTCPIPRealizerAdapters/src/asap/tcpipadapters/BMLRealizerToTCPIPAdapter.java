@@ -1,3 +1,5 @@
+/*******************************************************************************
+ *******************************************************************************/
 package asap.tcpipadapters;
 
 import hmi.xml.XMLScanException;
@@ -16,13 +18,13 @@ import java.net.SocketTimeoutException;
 import java.nio.channels.IllegalBlockingModeException;
 import java.util.concurrent.ConcurrentLinkedQueue;
 
-import com.google.common.base.Charsets;
-
 import lombok.extern.slf4j.Slf4j;
 import saiba.bml.feedback.BMLWarningFeedback;
 import asap.realizerport.BMLFeedbackListener;
 import asap.realizerport.RealizerPort;
 import asap.realizerport.util.BMLFeedbackManager;
+
+import com.google.common.base.Charsets;
 
 /**
  * A {@link asap.realizerport.bml.bridge.RealizerPort RealizerBridge} that uses a tcp/ip connection to provide
@@ -135,6 +137,15 @@ public final class BMLRealizerToTCPIPAdapter implements RealizerPort, Runnable
         {
             fbManager.removeAllListeners();
         }
+    }
+    
+    @Override
+    public void removeListener(BMLFeedbackListener l)
+    {
+        synchronized (feedbackLock)
+        {
+            fbManager.removeListener(l);
+        }        
     }
     
     /** Add BML request to the queue and return. Sending will happen in the main networking loop. */
@@ -656,6 +667,8 @@ public final class BMLRealizerToTCPIPAdapter implements RealizerPort, Runnable
         feedbackRedirectorThread.start();
         new Thread(this).start();
     }
+
+    
 
     
 

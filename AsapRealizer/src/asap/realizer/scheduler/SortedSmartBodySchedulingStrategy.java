@@ -1,10 +1,6 @@
+/*******************************************************************************
+ *******************************************************************************/
 package asap.realizer.scheduler;
-
-import saiba.bml.core.BMLBlockComposition;
-import saiba.bml.core.Behaviour;
-import saiba.bml.core.BehaviourBlock;
-import saiba.bml.parser.Constraint;
-import saiba.bml.parser.SyncPoint;
 
 import java.util.Collections;
 import java.util.Comparator;
@@ -12,6 +8,11 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import saiba.bml.core.BMLBlockComposition;
+import saiba.bml.core.Behaviour;
+import saiba.bml.core.BehaviourBlock;
+import saiba.bml.parser.Constraint;
+import saiba.bml.parser.SyncPoint;
 import asap.realizer.pegboard.BMLBlockPeg;
 import asap.realizer.pegboard.PegBoard;
 

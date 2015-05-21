@@ -1,3 +1,5 @@
+/*******************************************************************************
+ *******************************************************************************/
 package asap.bml.ext.bmla;
 
 import static org.hamcrest.MatcherAssert.assertThat;
@@ -14,8 +16,6 @@ import org.junit.Test;
 import saiba.bml.core.AbstractBehaviourTest;
 import saiba.bml.core.Behaviour;
 import saiba.utils.TestUtil;
-import asap.bml.ext.bmla.BMLAInfo;
-import asap.bml.ext.bmla.BMLAInterruptBehaviour;
 
 /**
  * Unit test cases for interruptbehaviour parsing

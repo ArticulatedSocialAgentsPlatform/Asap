@@ -1,8 +1,10 @@
+/*******************************************************************************
+ *******************************************************************************/
 package asap.realizertester;
 
+import saiba.realizertestport.XMLRealizerTestPort;
 import asap.realizerport.BMLFeedbackListener;
 import asap.realizerport.RealizerPort;
-import saiba.realizertestport.XMLRealizerTestPort;
 
 /**
  * Maps RealizerPort feedback to RealizerTestPort feedback
@@ -36,6 +38,12 @@ public class AsapRealizerPort extends XMLRealizerTestPort implements RealizerPor
         realizerPort.removeAllListeners();
     }
     
+    @Override
+    public void removeListener(BMLFeedbackListener l)
+    {
+        realizerPort.removeListener(l);
+    }
+    
     private class MyListener implements BMLFeedbackListener
     {
         @Override
@@ -44,4 +52,6 @@ public class AsapRealizerPort extends XMLRealizerTestPort implements RealizerPor
             AsapRealizerPort.this.feedback(feedback);
         }        
     }
+
+    
 }

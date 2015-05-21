@@ -1,8 +1,10 @@
+/*******************************************************************************
+ *******************************************************************************/
 package asap.realizer.scheduler;
 
-import asap.realizer.pegboard.BMLBlockPeg;
 import saiba.bml.core.BMLBlockComposition;
 import saiba.bml.core.BehaviourBlock;
+import asap.realizer.pegboard.BMLBlockPeg;
 
 /**
  * Interface for strategies to schedule BML blocks (that is: resolve the time constraints and add the behaviors to the appropiate plans). 

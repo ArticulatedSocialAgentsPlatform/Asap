@@ -1,3 +1,5 @@
+/*******************************************************************************
+ *******************************************************************************/
 package asap.bml.ext.bmlt;
 
 import static org.hamcrest.MatcherAssert.assertThat;
@@ -78,7 +80,6 @@ public class BMLTProcAnimationBehaviourTest extends AbstractBehaviourTest
     @Test
     public void testProcAniExtension() throws IOException
     {
-        // BMLInfo.addDescriptionExtension(BMLTProcAnimationBehaviour.xmlTag(), BMLTProcAnimationBehaviour.class);
         BMLInfo.supportedExtensions.add(BMLTProcAnimationBehaviour.class);
         String bmlString = "<gesture xmlns=\"http://www.bml-initiative.org/bml/bml-1.0\" id=\"a1\" start=\"nod1:end\" lexeme=\"BEAT\">"
                 + "<description priority=\"1\" type=\"procanimation\">"

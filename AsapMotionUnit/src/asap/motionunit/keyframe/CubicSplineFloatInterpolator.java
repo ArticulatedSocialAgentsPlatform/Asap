@@ -1,11 +1,13 @@
+/*******************************************************************************
+ *******************************************************************************/
 package asap.motionunit.keyframe;
 
 import java.util.ArrayList;
 import java.util.List;
 
-import com.google.common.collect.ImmutableList;
-
 import asap.math.CubicSplineInterpolator;
+
+import com.google.common.collect.ImmutableList;
 
 /**
  * Cubic spline interpolator for of a list of keyframes. Interpolates each dof seperately.

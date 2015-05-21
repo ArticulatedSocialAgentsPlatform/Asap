@@ -1,3 +1,5 @@
+/*******************************************************************************
+ *******************************************************************************/
 package asap.livemocapengine;
 
 import static org.junit.Assert.assertEquals;
@@ -14,7 +16,6 @@ import org.junit.Before;
 import org.junit.Test;
 
 import saiba.bml.parser.Constraint;
-
 import asap.livemocapengine.binding.NameTypeBinding;
 import asap.livemocapengine.bml.RemoteHeadBehaviour;
 import asap.livemocapengine.inputs.EulerInput;

@@ -1,3 +1,5 @@
+/*******************************************************************************
+ *******************************************************************************/
 package asap.realizer.scheduler;
 
 import static org.junit.Assert.assertEquals;
@@ -15,6 +17,7 @@ import org.powermock.core.classloader.annotations.PrepareForTest;
 import org.powermock.modules.junit4.PowerMockRunner;
 
 import saiba.bml.BMLGestureSync;
+import asap.bml.ext.bmla.feedback.BMLABlockStatus;
 import asap.realizer.pegboard.PegBoard;
 import asap.realizer.planunit.TimedPlanUnitState;
 
@@ -72,7 +75,7 @@ public class BMLBBlockTest
         block.setState(TimedPlanUnitState.IN_EXEC);
         block.update(EMPTY_UPDATE_MAP);
         assertEquals(TimedPlanUnitState.DONE, block.getState());
-        verify(mockScheduler, times(1)).blockStopFeedback(BLOCKID);
+        verify(mockScheduler, times(1)).blockStopFeedback(BLOCKID, BMLABlockStatus.DONE);
     }
 
     @Test
@@ -83,7 +86,7 @@ public class BMLBBlockTest
         when(mockScheduler.getBehaviours(BLOCKID)).thenReturn(Sets.newHashSet("beh1"));
         block.update(EMPTY_UPDATE_MAP);
         assertEquals(TimedPlanUnitState.IN_EXEC, block.getState());
-        verify(mockScheduler, times(0)).blockStopFeedback(BLOCKID);
+        verify(mockScheduler, times(0)).blockStopFeedback(BLOCKID, BMLABlockStatus.DONE);
     }
 
     @Test
@@ -95,7 +98,7 @@ public class BMLBBlockTest
         block.behaviorProgress("beh1", BMLGestureSync.END.getId());
         block.update(EMPTY_UPDATE_MAP);
         assertEquals(TimedPlanUnitState.DONE, block.getState());
-        verify(mockScheduler, times(1)).blockStopFeedback(BLOCKID);
+        verify(mockScheduler, times(1)).blockStopFeedback(BLOCKID, BMLABlockStatus.DONE);
     }
 
     @Test
@@ -118,7 +121,7 @@ public class BMLBBlockTest
         block.behaviorProgress("beh1", BMLGestureSync.END.getId());
         block.update(EMPTY_UPDATE_MAP);
         assertEquals(TimedPlanUnitState.DONE, block.getState());
-        verify(mockScheduler, times(1)).blockStopFeedback(BLOCKID);
+        verify(mockScheduler, times(1)).blockStopFeedback(BLOCKID, BMLABlockStatus.DONE);
     }
 
     @Test
