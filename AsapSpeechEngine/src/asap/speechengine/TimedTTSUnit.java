@@ -3,6 +3,7 @@
 package asap.speechengine;
 
 import hmi.tts.Bookmark;
+import hmi.tts.Prosody;
 import hmi.tts.TTSTiming;
 import hmi.tts.Visime;
 
@@ -10,6 +11,8 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+
+import lombok.Getter;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -53,6 +56,9 @@ public abstract class TimedTTSUnit extends TimedAbstractSpeechUnit
 
     private static Logger logger = LoggerFactory.getLogger(TimedTTSUnit.class.getName());
 
+    @Getter
+    private Prosody prosody;
+    
     public Class<? extends Behaviour> getBehaviourClass()
     {
         return behaviourClass;
@@ -248,6 +254,7 @@ public abstract class TimedTTSUnit extends TimedAbstractSpeechUnit
         {
             ttsBinding.setCallback(null);
             TTSTiming ti = getTiming();
+            prosody = ti.getProsody();
             setupCache();
 
             duration = ti.getDuration();

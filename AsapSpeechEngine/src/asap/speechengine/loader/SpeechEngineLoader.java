@@ -34,9 +34,11 @@ import asap.realizer.lipsync.LipSynchProvider;
 import asap.realizer.planunit.MultiThreadedPlanPlayer;
 import asap.realizer.planunit.PlanManager;
 import asap.realizer.planunit.PlanPlayer;
+import asap.realizer.visualprosody.VisualProsodyProvider;
 import asap.realizerembodiments.AsapRealizerEmbodiment;
 import asap.realizerembodiments.EngineLoader;
 import asap.realizerembodiments.LipSynchProviderLoader;
+import asap.realizerembodiments.VisualProsodyProviderLoader;
 import asap.speechengine.DirectTTSUnitFactory;
 import asap.speechengine.TTSPlanner;
 import asap.speechengine.TimedTTSUnit;
@@ -83,6 +85,7 @@ public class SpeechEngineLoader implements EngineLoader
     private AsapRealizerEmbodiment are = null;
 
     private List<LipSynchProvider> lipSyncProviders = new ArrayList<LipSynchProvider>();
+    private List<VisualProsodyProvider> visualProsodyProviders = new ArrayList<VisualProsodyProvider>();
 
     @Override
     public void readXML(XMLTokenizer tokenizer, String loaderId, String vhId, String vhName, Environment[] environments,
@@ -113,6 +116,11 @@ public class SpeechEngineLoader implements EngineLoader
         for (LipSynchProviderLoader el : ArrayUtils.getClassesOfType(requiredLoaders, LipSynchProviderLoader.class))
         {
             lipSyncProviders.add(el.getLipSyncProvider());
+        }
+        
+        for (VisualProsodyProviderLoader el : ArrayUtils.getClassesOfType(requiredLoaders, VisualProsodyProviderLoader.class))
+        {
+            visualProsodyProviders.add(el.getVisualProsodyProvider());
         }
         
         for (Environment e : environments)
@@ -236,10 +244,9 @@ public class SpeechEngineLoader implements EngineLoader
             return null;
         }
         TTSPlanner ttsPlanner = new TTSPlanner(are.getFeedbackManager(), ttsFactory, ttsBin, speechPlanManager);
-        for (LipSynchProvider lsp : lipSyncProviders)
-        {
-            ttsPlanner.addLipSyncher(lsp);
-        }
+        ttsPlanner.addAllLipSynchers(lipSyncProviders);
+        ttsPlanner.addAllVisualProsodyProviders(visualProsodyProviders);
+        
         return ttsPlanner;
     }
 

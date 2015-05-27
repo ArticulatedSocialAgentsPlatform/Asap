@@ -73,9 +73,9 @@ public class VisualProsodyLoader extends XMLStructureAdapter
         }
     }
     
-    public VisualProsodyProvider constructProsodyProvider()
+    public VisualProsody constructProsodyProvider()
     {
-        return new VisualProsodyProvider(roll, pitch, yaw, v, a, offset);
+        return new VisualProsody(roll, pitch, yaw, v, a, offset);
     }
     
     public static String xmlTag()

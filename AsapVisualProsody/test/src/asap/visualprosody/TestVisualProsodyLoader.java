@@ -112,7 +112,7 @@ public class TestVisualProsodyLoader
     public void testConstructVisualProsodyProvider()
     {
         vpl.readXML(xml);
-        VisualProsodyProvider vpp = vpl.constructProsodyProvider();
+        VisualProsody vpp = vpl.constructProsodyProvider();
         assertNotNull(vpp.headMotion(new double[]{0,0,0}, new AudioFeatures(new double[]{0,0}, new double[]{0,0}, 2)));
     }
 }

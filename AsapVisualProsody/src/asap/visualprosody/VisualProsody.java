@@ -8,24 +8,30 @@ import hmi.math.Vec3f;
 
 import java.util.Arrays;
 
-public class VisualProsodyProvider
+public class VisualProsody
 {
     private VisualProsodyLeNumericalDiff vpp;
     private float offset[] = Vec3f.getVec3f();
-    
-    public VisualProsodyProvider(GaussianMixtureModel gmmRollVoiced, GaussianMixtureModel gmmPitchVoiced,
-            GaussianMixtureModel gmmYawVoiced, GaussianMixtureModel gmmVelocityVoiced, GaussianMixtureModel gmmAccelerationVoiced, float[]offset)
+
+    public VisualProsody(GaussianMixtureModel gmmRollVoiced, GaussianMixtureModel gmmPitchVoiced,
+            GaussianMixtureModel gmmYawVoiced, GaussianMixtureModel gmmVelocityVoiced, GaussianMixtureModel gmmAccelerationVoiced,
+            float[] offset)
     {
-        Vec3f.set(this.offset,offset);
-        vpp = new VisualProsodyLeNumericalDiff(gmmRollVoiced, gmmPitchVoiced, gmmYawVoiced, gmmVelocityVoiced, gmmAccelerationVoiced);        
+        Vec3f.set(this.offset, offset);
+        vpp = new VisualProsodyLeNumericalDiff(gmmRollVoiced, gmmPitchVoiced, gmmYawVoiced, gmmVelocityVoiced, gmmAccelerationVoiced);
     }
 
     public SkeletonInterpolator headMotion(double[] rpyStart, AudioFeatures audio)
     {
         ConfigList cl = new ConfigList(4);
-        double[] rpy = Arrays.copyOf(rpyStart, 3);
-        double[] rpyPrev = Arrays.copyOf(rpyStart, 3);
-        double[] rpyPrevPrev = Arrays.copyOf(rpyStart, 3);
+        double startOffsetted[] = new double[3];
+        for (int i = 0; i < 3; i++)
+        {
+            startOffsetted[i] = rpyStart[i] + offset[i];
+        }
+        double[] rpy = Arrays.copyOf(startOffsetted, 3);
+        double[] rpyPrev = Arrays.copyOf(startOffsetted, 3);
+        double[] rpyPrevPrev = Arrays.copyOf(startOffsetted, 3);
 
         for (int i = 0; i < audio.getF0().length; i++)
         {
@@ -33,7 +39,7 @@ public class VisualProsodyProvider
             rpyPrev = rpy;
             if (audio.getF0()[i] > 10)
             {
-                rpy = vpp.generateHeadPose(rpyPrev, rpyPrevPrev, audio.getF0()[i], 0.2*audio.getRmsEnergy()[i]);
+                rpy = vpp.generateHeadPose(rpyPrev, rpyPrevPrev, audio.getF0()[i], audio.getRmsEnergy()[i]);                
             }
             else
             {

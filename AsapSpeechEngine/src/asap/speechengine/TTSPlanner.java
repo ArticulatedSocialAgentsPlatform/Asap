@@ -3,6 +3,7 @@
 package asap.speechengine;
 
 import hmi.tts.Bookmark;
+import hmi.tts.Prosody;
 
 import java.util.ArrayList;
 import java.util.Collection;
@@ -24,6 +25,7 @@ import asap.realizer.pegboard.OffsetPeg;
 import asap.realizer.pegboard.TimePeg;
 import asap.realizer.planunit.PlanManager;
 import asap.realizer.scheduler.TimePegAndConstraint;
+import asap.realizer.visualprosody.VisualProsodyProvider;
 import asap.speechengine.ttsbinding.TTSBinding;
 
 /**
@@ -38,6 +40,7 @@ public class TTSPlanner extends AbstractPlanner<TimedTTSUnit>
     private final TimedTTSUnitFactory suFactory;
     private static final double TIMEPEG_TOLERANCE = 0.003;
     private Collection<LipSynchProvider> lipSynchers = new ArrayList<LipSynchProvider>();
+    private Collection<VisualProsodyProvider> visualProsodyProviders = new ArrayList<VisualProsodyProvider>();
 
     @Override
     public String toString()
@@ -45,6 +48,21 @@ public class TTSPlanner extends AbstractPlanner<TimedTTSUnit>
         return getClass().getName() + "[" + ttsBinding.getClass().getName() + ", " + suFactory.getClass().getName() + "]";
     }
 
+    public void addVisualProsodyProvider(VisualProsodyProvider vp)
+    {
+        visualProsodyProviders.add(vp);
+    }
+
+    public void addAllVisualProsodyProviders(Collection<VisualProsodyProvider> vps)
+    {
+        visualProsodyProviders.addAll(vps);
+    }
+    
+    public void addAllLipSynchers(Collection<LipSynchProvider> ls)
+    {
+        lipSynchers.addAll(ls);
+    }
+    
     public void addLipSyncher(LipSynchProvider ls)
     {
         lipSynchers.add(ls);
@@ -86,14 +104,14 @@ public class TTSPlanner extends AbstractPlanner<TimedTTSUnit>
             SpeechBehaviour bSpeech = (SpeechBehaviour) b;
 
             String voice = null;
-            if(bSpeech.specifiesParameter(BMLTBehaviour.BMLTNAMESPACE + ":" + "voice"))
+            if (bSpeech.specifiesParameter(BMLTBehaviour.BMLTNAMESPACE + ":" + "voice"))
             {
                 voice = bSpeech.getStringParameterValue(BMLTBehaviour.BMLTNAMESPACE + ":" + "voice");
             }
-            
+
             // TODO: ultimately, this may be the characterId from the behavior -- but remember that characterId may be empty
             String voiceId = "voice1";
-            
+
             TimedTTSUnit bs = suFactory.createTimedTTSUnit(bbPeg, bSpeech.getContent(), voiceId, bSpeech.getBmlId(), bSpeech.id,
                     ttsBinding, b.getClass());
 
@@ -105,10 +123,10 @@ public class TTSPlanner extends AbstractPlanner<TimedTTSUnit>
                     ttsBinding.setVoice(voice);
                 }
                 bs.setup();
-                if (voice!=null && !voice.equals(oldVoice))
+                if (voice != null && !voice.equals(oldVoice))
                 {
                     ttsBinding.setVoice(oldVoice);
-                }          
+                }
             }
             logger.debug("Created speech unit {} duration: {}", b.id, bs.getPreferedDuration());
             return bs;
@@ -236,21 +254,30 @@ public class TTSPlanner extends AbstractPlanner<TimedTTSUnit>
         validateSacs(b, bs, sacs);
 
         linkStartAndEnd(b, sacs, bs);
-        
+
         linkBookmarks(bs, sacs, bs.getStartTime(), b);
-        if(bs.getStartTime()!=TimePeg.VALUE_UNKNOWN)
+        if (bs.getStartTime() != TimePeg.VALUE_UNKNOWN)
         {
             resolveUnsetBookmarks(bs);
             resolveUnsetEndPeg(bs);
         }
-        
-        List<SyncAndTimePeg> satp = constructSyncAndTimePegs(bbPeg, b, bs); 
+
+        List<SyncAndTimePeg> satp = constructSyncAndTimePegs(bbPeg, b, bs);
 
         for (LipSynchProvider ls : lipSynchers)
         {
             ls.addLipSyncMovement(bbPeg, b, bs, bs.visimes);
         }
-        
+
+        Prosody pros = bs.getProsody();
+        if (pros != null)
+        {
+            for (VisualProsodyProvider vp : visualProsodyProviders)
+            {
+                vp.visualProsody(bbPeg, b, bs, pros.getF0(), pros.getRmsEnergy(), pros.getFrameDuration());
+            }
+        }
+
         planManager.addPlanUnit(bs);
         return satp;
     }
@@ -299,23 +326,23 @@ public class TTSPlanner extends AbstractPlanner<TimedTTSUnit>
             }
         }
     }
-    
+
     private void resolveUnsetEndPeg(TimedTTSUnit su)
     {
-        if(su.getEndTime()==TimePeg.VALUE_UNKNOWN)
+        if (su.getEndTime() == TimePeg.VALUE_UNKNOWN)
         {
-            su.setEnd(new OffsetPeg(su.getStartPeg(),su.getPreferedDuration()));
+            su.setEnd(new OffsetPeg(su.getStartPeg(), su.getPreferedDuration()));
         }
     }
-    
+
     private void resolveUnsetBookmarks(TimedTTSUnit su)
     {
         TimePeg tpStart = su.getStartPeg();
         for (Bookmark bm : su.getBookmarks())
         {
-            if(su.getTime(bm.getName())==TimePeg.VALUE_UNKNOWN)
+            if (su.getTime(bm.getName()) == TimePeg.VALUE_UNKNOWN)
             {
-                su.setTimePeg(bm, new OffsetPeg(tpStart, bm.getOffset()* 0.001));
+                su.setTimePeg(bm, new OffsetPeg(tpStart, bm.getOffset() * 0.001));
             }
         }
     }
