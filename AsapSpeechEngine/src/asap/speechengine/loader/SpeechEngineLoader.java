@@ -110,7 +110,6 @@ public class SpeechEngineLoader implements EngineLoader
             {
                 are = (AsapRealizerEmbodiment) el.getEmbodiment();
             }
-
         }
         
         for (LipSynchProviderLoader el : ArrayUtils.getClassesOfType(requiredLoaders, LipSynchProviderLoader.class))

@@ -8,6 +8,7 @@
 	  <dependency org="Asap"     name="AsapBinding"           rev="latest.${resolve.status}"    />
 	  <dependency org="Asap"     name="AsapMURML"           rev="latest.${resolve.status}"    />
 	  <dependency org="Asap"     name="AsapMath"           rev="latest.${resolve.status}"    />
+ 	  <dependency org="Asap"     name="AsapVisualProsody"           rev="latest.${resolve.status}"    />
 	  <dependency org="Asap"   transitive="false" name="AsapBinding"     rev="latest.${resolve.status}"   />    
       
       <dependency org="saiba"     name="openbmlparser"           rev="latest.release"    />

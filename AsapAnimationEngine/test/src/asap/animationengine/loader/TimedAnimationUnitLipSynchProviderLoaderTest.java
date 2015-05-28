@@ -21,8 +21,8 @@ import asap.realizerembodiments.AsapRealizerEmbodiment;
  */
 public class TimedAnimationUnitLipSynchProviderLoaderTest
 {
-    MixedAnimationEngineLoader mockMixedAnimationEngineLoader = mock(MixedAnimationEngineLoader.class);
-    AsapRealizerEmbodiment mockAsapRealizerEmbodiment = mock(AsapRealizerEmbodiment.class);
+    private MixedAnimationEngineLoader mockMixedAnimationEngineLoader = mock(MixedAnimationEngineLoader.class);
+    private AsapRealizerEmbodiment mockAsapRealizerEmbodiment = mock(AsapRealizerEmbodiment.class);
 
     @Test
     public void test() throws IOException
@@ -32,7 +32,8 @@ public class TimedAnimationUnitLipSynchProviderLoaderTest
                 + "filename=\"ikpspeechbinding.xml\"/></Loader>";
         XMLTokenizer tok = new XMLTokenizer(str);
         tok.takeSTag();
-        loader.readXML(tok, "id1", "id1", "id1" , new Environment[0], new Loader[]{mockMixedAnimationEngineLoader, mockAsapRealizerEmbodiment});
+        loader.readXML(tok, "id1", "id1", "id1", new Environment[0], new Loader[] { mockMixedAnimationEngineLoader,
+                mockAsapRealizerEmbodiment });
         assertNotNull(loader.getLipSyncProvider());
     }
 }
