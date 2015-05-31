@@ -13,6 +13,7 @@ import java.util.List;
 import java.util.Map.Entry;
 import java.util.Set;
 
+import lombok.Setter;
 import asap.animationengine.AnimationPlayer;
 import asap.animationengine.motionunit.AnimationUnit;
 import asap.animationengine.motionunit.TimedAnimationMotionUnit;
@@ -41,6 +42,10 @@ public class KeyframeMU implements AnimationUnit
     private HashMap<String, String> parameters = new HashMap<String, String>(); // name => value set
     private KeyPositionManager keyPositionManager = new KeyPositionManagerImpl();
     private boolean mirror = false;
+    
+    @Setter
+    private boolean additive = false;
+    
     private Set<String> filter = new HashSet<String>();
     private AnimationPlayer aniPlayer;
     
@@ -138,7 +143,7 @@ public class KeyframeMU implements AnimationUnit
         return baseIp;
     }
 
-    public AnimationUnit copy(VJoint v)
+    public KeyframeMU copy(VJoint v)
     {
         ArrayList<VJoint> vjParts = new ArrayList<VJoint>();
         for (String s : baseIp.getPartIds())
@@ -153,6 +158,7 @@ public class KeyframeMU implements AnimationUnit
         }
         SkeletonInterpolator ipPredict = new SkeletonInterpolator(baseIp, vjParts.toArray(new VJoint[vjParts.size()]));
         KeyframeMU copy = new KeyframeMU(ipPredict);
+        copy.additive = additive;
         copy.setTarget(v);
         for (Entry<String, String> paramValue : parameters.entrySet())
         {
@@ -185,6 +191,10 @@ public class KeyframeMU implements AnimationUnit
             // ip.filterJoints(jointSet);
             applyParameters();
         }
+        else if (name.equals("additive"))
+        {
+            additive = Boolean.parseBoolean("additive");
+        }
         else if (name.equals("mirror"))
         {
             mirror = Boolean.parseBoolean(value);
@@ -198,6 +208,10 @@ public class KeyframeMU implements AnimationUnit
     {
         if (name.equals("mirror"))
             return "false";// no need to store mirroring
+        if(name.equals("additive"))
+        {
+            return ""+additive;
+        }
         if (parameters.get(name) == null)
         {
             throw new ParameterNotFoundException(name);
@@ -233,9 +247,13 @@ public class KeyframeMU implements AnimationUnit
     }
 
     @Override
-    public AnimationUnit copy(AnimationPlayer p)
+    public KeyframeMU copy(AnimationPlayer p)
     {
         this.aniPlayer = p;
+        if(additive)
+        {
+            return copy(p.getvAdditive());
+        }
         return copy(p.getVNext());
     }
 
@@ -247,9 +265,14 @@ public class KeyframeMU implements AnimationUnit
         return PHJOINTS;
     }
 
+    
     @Override
     public Set<String> getKinematicJoints()
     {
+        if(additive)
+        {
+            return ImmutableSet.of(); 
+        }
         return ImmutableSet.copyOf(currentIp.getPartIds());
     }
 
@@ -261,6 +284,10 @@ public class KeyframeMU implements AnimationUnit
     @Override
     public Set<String> getAdditiveJoints()
     {
-        return ImmutableSet.of();
+        if(!additive)
+        {
+            return ImmutableSet.of(); 
+        }
+        return ImmutableSet.copyOf(currentIp.getPartIds());
     }
 }
