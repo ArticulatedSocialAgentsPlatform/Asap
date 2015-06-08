@@ -54,8 +54,7 @@ public class AnimationPlayer implements Player, MixedAnimationPlayer
     private final VJointPartsMap vNextMap;
     private final VJointPartsMap vCurrMap;
     private final VJoint vAdditive;
-    private final VJointPartsMap vAdditiveMap;
-
+    
     private PhysicalHumanoid pHuman;
 
     private VObjectTransformCopier votcCurrToPrev;
@@ -156,7 +155,7 @@ public class AnimationPlayer implements Player, MixedAnimationPlayer
         vNextMap = new VJointPartsMap(vN);
         vAdditive = vC.copyTree("vAdditive-");
         setAdditiveToIdentity();
-        vAdditiveMap = new VJointPartsMap(vAdditive);
+        //vAdditiveMap = new VJointPartsMap(vAdditive);
         
         prevSkel = new Skeleton("prevSkel", vPrev);
         curSkel = new Skeleton("curSkel", vCurr);
@@ -528,11 +527,6 @@ public class AnimationPlayer implements Player, MixedAnimationPlayer
         return vPrevMap.get(sid);
     }
     
-    public VJoint getVAdditivePartBySid(String sid)
-    {
-        return vAdditiveMap.get(sid);
-    }
-
     public VJoint getvAdditive()
     {
         return vAdditive;
