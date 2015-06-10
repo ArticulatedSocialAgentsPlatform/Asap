@@ -1229,7 +1229,7 @@ public class ProcAnimationMU extends XMLStructureAdapter implements AnimationUni
     @Override
     public synchronized ProcAnimationMU copy(AnimationPlayer p) throws MUSetupException
     {
-        ProcAnimationMU mu = copy(p.getVNext(), p.getvAdditive());
+        ProcAnimationMU mu = copy(p.getVNext(), p.constructAdditiveBody());
         mu.aniPlayer = p;
         return mu;
     }

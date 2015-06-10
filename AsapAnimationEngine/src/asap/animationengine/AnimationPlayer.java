@@ -22,6 +22,9 @@ import hmi.worldobjectenvironment.WorldObjectManager;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Set;
+import java.util.UUID;
+
+import com.google.common.collect.ImmutableList;
 
 import lombok.extern.slf4j.Slf4j;
 import net.jcip.annotations.GuardedBy;
@@ -53,8 +56,8 @@ public class AnimationPlayer implements Player, MixedAnimationPlayer
     private final VJointPartsMap vPrevMap;
     private final VJointPartsMap vNextMap;
     private final VJointPartsMap vCurrMap;
-    private final VJoint vAdditive;
-    
+    // private final VJoint vAdditive;
+
     private PhysicalHumanoid pHuman;
 
     private VObjectTransformCopier votcCurrToPrev;
@@ -87,10 +90,10 @@ public class AnimationPlayer implements Player, MixedAnimationPlayer
     {
         return app.getRestPose();
     }
-    
+
     public RestGaze getRestGaze()
     {
-        
+
         return app.getRestGaze();
     }
 
@@ -98,8 +101,7 @@ public class AnimationPlayer implements Player, MixedAnimationPlayer
     {
         app.setRestGaze(g);
     }
-    
-    
+
     public AnimationPlayer(VJoint vP, VJoint vC, VJoint vN, List<MixedSystem> m, float h, AnimationPlanPlayer planPlayer)
     {
         this(vP, vC, vN, m, h, null, planPlayer);
@@ -107,10 +109,7 @@ public class AnimationPlayer implements Player, MixedAnimationPlayer
 
     private void setAdditiveToIdentity()
     {
-        for (VJoint vj : vAdditive.getParts())
-        {
-            vj.setRotation(Quat4f.getIdentity());
-        }
+        additiveBlender.setIdentityRotation();
     }
 
     private void setVNextToIdentity()
@@ -131,8 +130,8 @@ public class AnimationPlayer implements Player, MixedAnimationPlayer
         float q[] = Quat4f.getQuat4f();
         for (VJoint vj : vNextMap.getJoints())
         {
-            //XXX:ugliness, the eyes move so fast that they might have identity rotation in the next frame and non-identity rotation in the previous
-            if (vj.getSid() != null && !vj.getSid().equals(Hanim.l_eyeball_joint) && !vj.getSid().equals(Hanim.r_eyeball_joint))    
+            // XXX:ugliness, the eyes move so fast that they might have identity rotation in the next frame and non-identity rotation in the previous
+            if (vj.getSid() != null && !vj.getSid().equals(Hanim.l_eyeball_joint) && !vj.getSid().equals(Hanim.r_eyeball_joint))
             {
                 vj.getRotation(q);
                 if (Quat4f.epsilonEquals(q, Quat4f.getIdentity(), 0.001f))
@@ -153,16 +152,16 @@ public class AnimationPlayer implements Player, MixedAnimationPlayer
         vPrevMap = new VJointPartsMap(vP);
         vCurrMap = new VJointPartsMap(vC);
         vNextMap = new VJointPartsMap(vN);
-        vAdditive = vC.copyTree("vAdditive-");
-        setAdditiveToIdentity();
-        //vAdditiveMap = new VJointPartsMap(vAdditive);
+
         
+        // vAdditiveMap = new VJointPartsMap(vAdditive);
+
         prevSkel = new Skeleton("prevSkel", vPrev);
         curSkel = new Skeleton("curSkel", vCurr);
         nextSkel = new Skeleton("nextSkel", vNext);
 
         woManager = wom;
-        planPlayer.getRestGaze().setAnimationPlayer(this);//XXX ugly..
+        planPlayer.getRestGaze().setAnimationPlayer(this);// XXX ugly..
         // VJoint[] emptyArray = new VJoint[0];
 
         vPrevStartPose = new SkeletonPose("prev", prevSkel, "TR");
@@ -171,8 +170,9 @@ public class AnimationPlayer implements Player, MixedAnimationPlayer
         vPrevStartPose.setFromTarget();
         vCurrStartPose.setFromTarget();
         vNextStartPose.setFromTarget();
-        additiveBlender = new AdditiveRotationBlend(vNext, vAdditive, vNext);
-
+        additiveBlender = new AdditiveRotationBlend(vNext, ImmutableList.of(), vNext);
+        //setAdditiveToIdentity();
+        
         mSystems = m;
         pHuman = mSystems.get(0).getPHuman();
         pHuman.setEnabled(true);
@@ -196,18 +196,18 @@ public class AnimationPlayer implements Player, MixedAnimationPlayer
     {
         return app.getRestGaze().getTransitionToRestDuration();
     }
-    
+
     public TimedAnimationUnit createTransitionToRest(FeedbackManager fbm, Set<String> joints, double startTime, double duration,
             String bmlId, String id, BMLBlockPeg bmlBlockPeg, PegBoard pb)
     {
         return app.getRestPose().createTransitionToRest(fbm, joints, startTime, duration, bmlId, id, bmlBlockPeg, pb);
     }
-    
-    public AnimationUnit createTransitionToRest(Set<String>joints)
+
+    public AnimationUnit createTransitionToRest(Set<String> joints)
     {
         return app.getRestPose().createTransitionToRest(joints);
     }
-    
+
     public TimedAnimationUnit createTransitionToRest(FeedbackManager fbm, Set<String> joints, TimePeg startPeg, TimePeg endPeg,
             String bmlId, String id, BMLBlockPeg bmlBlockPeg, PegBoard pb)
     {
@@ -241,11 +241,11 @@ public class AnimationPlayer implements Player, MixedAnimationPlayer
     public synchronized void reset(double time)
     {
         prevValid = false;
-        
+
         vPrevStartPose.setToTarget();
         vCurrStartPose.setToTarget();
         vNextStartPose.setToTarget();
-        setAdditiveToIdentity();
+        additiveBlender.clear();
         synchronized (PhysicsSync.getSync())
         {
             for (PhysicalController p : controllers)
@@ -294,7 +294,7 @@ public class AnimationPlayer implements Player, MixedAnimationPlayer
         setAdditiveToIdentity();
         controllers.clear();
         prevValidOld = prevValid;
-        
+
         playKinematics(prevTime);
         playPhysics(prevTime);
     }
@@ -303,10 +303,10 @@ public class AnimationPlayer implements Player, MixedAnimationPlayer
     {
         List<String> controlledJoints = getRequiredPhJoints();
         MixedSystem bestMatch = getBestMixedSystemMatch(controlledJoints, getDesiredPhJoints(controlledJoints));
-        
+
         synchronized (PhysicsSync.getSync())
         {
-            if (bestMatch==null)
+            if (bestMatch == null)
             {
                 log.warn("Could not find a mixed system that contains joints: {} ", controlledJoints);
                 bestMatch = mPlayer.getSystem();
@@ -345,7 +345,7 @@ public class AnimationPlayer implements Player, MixedAnimationPlayer
     // 3. The least total number of physical joints
     // Note that desired physical joints, when selected, still override the kinematic motion on the same joint
     private MixedSystem getBestMixedSystemMatch(List<String> controlledJoints, List<String> desiredJoints)
-    {        
+    {
         MixedSystem bestMatch = null;
         int jointsInPH = Integer.MAX_VALUE;
         int nrOfDesiredJoints = -1;
@@ -399,14 +399,14 @@ public class AnimationPlayer implements Player, MixedAnimationPlayer
                 {
                     nrOfDesiredJoints = dJoints;
                     bestMatch = m;
-                    jointsInPH = ph.getJoints().size();                    
+                    jointsInPH = ph.getJoints().size();
                 }
                 else if (dJoints == nrOfDesiredJoints)
                 {
                     if (ph.getJoints().size() < jointsInPH)
                     {
                         bestMatch = m;
-                        jointsInPH = ph.getJoints().size();                        
+                        jointsInPH = ph.getJoints().size();
                     }
                 }
             }
@@ -441,7 +441,7 @@ public class AnimationPlayer implements Player, MixedAnimationPlayer
                 {
                     controlledJoints.add(jid);
                 }
-            }            
+            }
         }
         return controlledJoints;
     }
@@ -511,27 +511,29 @@ public class AnimationPlayer implements Player, MixedAnimationPlayer
     {
         return vNext;
     }
-    
+
     public VJoint getVNextPartBySid(String sid)
     {
         return vNextMap.get(sid);
     }
-    
+
     public VJoint getVCurrPartBySid(String sid)
     {
         return vCurrMap.get(sid);
     }
-    
+
     public VJoint getVPrevPartBySid(String sid)
     {
         return vPrevMap.get(sid);
     }
-    
-    public VJoint getvAdditive()
+
+    public VJoint constructAdditiveBody()
     {
+        VJoint vAdditive = getVCurr().copyTree("additive"+UUID.randomUUID());
+        additiveBlender.addVJoint(vAdditive);
         return vAdditive;
     }
-
+    
     /**
      * Get the prev set of joints that is to be animated
      * 
