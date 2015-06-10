@@ -41,16 +41,18 @@ public class HeadVisualProsodyProvider implements VisualProsodyProvider
     public void visualProsody(BMLBlockPeg bbPeg, Behaviour beh, TimedPlanUnit speechUnit, double[] f0, double[] rmsEnergy,
             double frameDuration)
     {
+        System.out.println("scheduling visual prosody");
         double rpyStart[] = new double[] { 0, 0, 0 };
         SkeletonInterpolator headSki = visualProsody.headMotion(rpyStart, new AudioFeatures(f0, rmsEnergy, frameDuration));
         KeyframeMU mu = new KeyframeMU(headSki);
         mu.setAdditive(true);
+        System.out.println("connecting to animationPlayer");
         mu = mu.copy(animationPlayer);
         TimedAnimationMotionUnit tmu = mu.createTMU(NullFeedbackManager.getInstance(), bbPeg, beh.getBmlId(), beh.id, pegBoard);
         tmu.resolveStartAndEndKeyPositions();
-        tmu.setSubUnit(true);
-        animationPlanManager.addPlanUnit(tmu);
+        tmu.setSubUnit(true);        
         tmu.setTimePeg("start", speechUnit.getTimePeg("start"));
+        animationPlanManager.addPlanUnit(tmu);
 
         ConfigList cl = new ConfigList(4);
         cl.addConfig(0, headSki.getConfig(headSki.size() - 1));
@@ -61,8 +63,8 @@ public class HeadVisualProsodyProvider implements VisualProsodyProvider
         relaxMu = relaxMu.copy(animationPlayer);
         TimedAnimationMotionUnit tmuRelax = relaxMu.createTMU(NullFeedbackManager.getInstance(), bbPeg, beh.getBmlId(), beh.id, pegBoard);
         tmuRelax.resolveStartAndEndKeyPositions();
-        tmuRelax.setSubUnit(true);
-        animationPlanManager.addPlanUnit(tmuRelax);
+        tmuRelax.setSubUnit(true);        
         tmuRelax.setTimePeg("start", speechUnit.getTimePeg("end"));
+        animationPlanManager.addPlanUnit(tmuRelax);
     }
 }
