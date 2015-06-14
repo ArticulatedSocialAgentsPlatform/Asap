@@ -11,6 +11,7 @@ import hmi.testutil.animation.HanimBody;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Set;
 
 import org.junit.Before;
 import org.junit.Test;
@@ -33,7 +34,7 @@ import asap.realizer.planunit.TimedPlanUnitState;
 import asap.realizer.scheduler.BMLBlockManager;
 import asap.realizertestutil.planunit.AbstractTimedPlanUnitTest;
 import asap.realizertestutil.util.TimePegUtil;
-
+import static org.mockito.Matchers.any;
 /**
  * Unit tests for LMPPoRot
  * @author Herwin
@@ -55,6 +56,7 @@ public class LMPPoRotTest extends AbstractTimedPlanUnitTest
         pegBoard.addBMLBlockPeg(new BMLBlockPeg("bml1",0));
     }
     
+    @SuppressWarnings("unchecked")
     private LMPPoRot setupPlanUnit(FeedbackManager bfm, BMLBlockPeg bbPeg, String id, String bmlId)
     {
         List<PoConstraint> ocList = new ArrayList<>();
@@ -62,7 +64,7 @@ public class LMPPoRotTest extends AbstractTimedPlanUnitTest
         ocList.add(new PoConstraint(11,GStrokePhaseID.STP_STROKE,"stroke1"));
         ocList.add(new PoConstraint(12,GStrokePhaseID.STP_STROKE,"stroke2"));
         ocList.add(new PoConstraint(13,GStrokePhaseID.STP_STROKE,"strokeEnd"));    
-        when(mockAniPlayer.constructAdditiveBody()).thenReturn(HanimBody.getLOA1HanimBody());
+        when(mockAniPlayer.constructAdditiveBody(any(Set.class))).thenReturn(HanimBody.getLOA1HanimBody());
         LMPPoRot lmp = new LMPPoRot("right_arm", ocList, bfm, bbPeg, bmlId, id, pegBoard,mockAniPlayer);
         initializeForUpdateTiming(lmp);
         lmp.setState(TimedPlanUnitState.IN_PREP);

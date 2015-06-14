@@ -349,7 +349,7 @@ public class LMPPoRot extends LMP
     @Override
     protected void startUnit(double time) throws TimedPlanUnitPlayException
     {
-        vjWristAdditive = aniPlayer.constructAdditiveBody().getPartBySid(joint);
+        vjWristAdditive = aniPlayer.constructAdditiveBody(ImmutableSet.of(joint)).getPartBySid(joint);
         
         resolveTimePegs(time);
         timeVec = toTimeVec();

@@ -252,7 +252,7 @@ public class KeyframeMU implements AnimationUnit
         this.aniPlayer = p;
         if(additive)
         {
-            return copy(p.constructAdditiveBody());
+            return copy(p.constructAdditiveBody(getAdditiveJoints()));
         }
         return copy(p.getVNext());
     }

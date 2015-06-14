@@ -52,8 +52,8 @@ public class HeadVisualProsodyProvider implements VisualProsodyProvider
         tmu.resolveStartAndEndKeyPositions();
         tmu.setSubUnit(true);        
         tmu.setTimePeg("start", speechUnit.getTimePeg("start"));
-        animationPlanManager.addPlanUnit(tmu);
-
+        animationPlanManager.addPlanUnit(tmu);        
+        
         ConfigList cl = new ConfigList(4);
         cl.addConfig(0, headSki.getConfig(headSki.size() - 1));
         cl.addConfig(0.3, Quat4f.getIdentity());
@@ -65,6 +65,6 @@ public class HeadVisualProsodyProvider implements VisualProsodyProvider
         tmuRelax.resolveStartAndEndKeyPositions();
         tmuRelax.setSubUnit(true);        
         tmuRelax.setTimePeg("start", speechUnit.getTimePeg("end"));
-        animationPlanManager.addPlanUnit(tmuRelax);
+        animationPlanManager.addPlanUnit(tmuRelax);                
     }
 }

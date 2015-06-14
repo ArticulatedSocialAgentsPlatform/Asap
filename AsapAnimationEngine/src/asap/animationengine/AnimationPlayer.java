@@ -530,10 +530,32 @@ public class AnimationPlayer implements Player, MixedAnimationPlayer
     public VJoint constructAdditiveBody()
     {
         VJoint vAdditive = getVCurr().copyTree("additive"+UUID.randomUUID());
+        for (VJoint vj:vAdditive.getParts())
+        {
+            vj.setRotation(Quat4f.getIdentity());
+        }
+        System.out.println("constructing additive body for all joints ");
         additiveBlender.addVJoint(vAdditive);
         return vAdditive;
     }
     
+    public VJoint constructAdditiveBody(Set<String> sids)
+    {
+        VJoint vAdditive = getVCurr().copyTree("additive"+UUID.randomUUID());
+        for (VJoint vj:vAdditive.getParts())
+        {
+            vj.setRotation(Quat4f.getIdentity());
+        }
+        System.out.println("constructing additive body for joints "+sids);
+        additiveBlender.addVJoint(vAdditive,sids);
+        return vAdditive;
+    }
+    
+    public void filterAdditiveBody(VJoint vj, Set<String>sids)
+    {
+        System.out.println("filter additive body to joints "+sids);
+        additiveBlender.filterVJoint(vj, sids);
+    }
     /**
      * Get the prev set of joints that is to be animated
      * 

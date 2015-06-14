@@ -875,6 +875,10 @@ public class ProcAnimationMU extends XMLStructureAdapter implements AnimationUni
             }
         }
         bodyParts.removeAll(deleteList);
+        if(aniPlayer!=null)
+        {
+            aniPlayer.filterAdditiveBody(vAdditive,this.getAdditiveJoints());            
+        }
         sortBodyParts();
     }
 
@@ -1231,6 +1235,7 @@ public class ProcAnimationMU extends XMLStructureAdapter implements AnimationUni
     {
         ProcAnimationMU mu = copy(p.getVNext(), p.constructAdditiveBody());
         mu.aniPlayer = p;
+        mu.setup2();
         return mu;
     }
 
