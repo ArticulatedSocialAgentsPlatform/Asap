@@ -5,6 +5,7 @@ package asap.murml;
 import static asap.murml.testutil.MURMLTestUtil.createJointValue;
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.junit.Assert.assertEquals;
+import hmi.xml.XMLScanException;
 
 import org.hamcrest.collection.IsIterableContainingInAnyOrder;
 import org.junit.Test;
@@ -51,6 +52,16 @@ public class KeyframingTest
                         createJointValue("dB_OpenMouthWOOQ", 1, 0, 0), createJointValue("dB_OpenMouthL", 0, 1, 0),
                         createJointValue("dB_OpenMouthE", 0, 0, 1)));
         assertEquals(0.2, f1.getFtime(), PARAMETER_PRECISION);
+    }
+    
+    @Test(timeout=200,expected=XMLScanException.class)
+    public void testUnknown()
+    {
+        Keyframing kf = new Keyframing();
+        kf.readXML("<keyframing xmlns=\"http://www.techfak.uni-bielefeld.de/ags/soa/murml\" mode=\"spline\" priority=\"100\" easescale=\"10\">"
+                +"<SkeletonInterpolator/>"
+                +"</keyframing>");
+        
     }
     
     @Test
