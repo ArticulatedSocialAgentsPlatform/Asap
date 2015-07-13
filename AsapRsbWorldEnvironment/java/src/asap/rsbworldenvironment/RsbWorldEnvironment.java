@@ -84,7 +84,7 @@ public class RsbWorldEnvironment implements ClockListener, Environment
         catch (RSBException e)
         {
             throw new RuntimeException(e);
-        }
+        }        
     }
 
     private void setWorldObject(String name, float[] pos)

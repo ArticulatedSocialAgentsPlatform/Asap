@@ -10,6 +10,7 @@ import static org.mockito.Matchers.eq;
 import static org.powermock.api.mockito.PowerMockito.when;
 import hmi.tts.Bookmark;
 import hmi.tts.Phoneme;
+import hmi.tts.TTSException;
 import hmi.tts.TimingInfo;
 import hmi.tts.Visime;
 import hmi.tts.WordDescription;
@@ -46,7 +47,7 @@ public class DirectTTSPlannerIntegrationTest extends TTSPlannerIntegrationTest
             SpeechBehaviour.class);
 
     @Override
-    protected void mockTTSUnitFactoryExpectations()
+    protected void mockTTSUnitFactoryExpectations() throws TTSException
     {
         Phoneme p = new Phoneme(0, (int) (SPEECH_DURATION * 1000), false);
         List<Phoneme> ps = new ArrayList<Phoneme>();
@@ -66,7 +67,7 @@ public class DirectTTSPlannerIntegrationTest extends TTSPlannerIntegrationTest
     }
 
     @Test
-    public void testDirectTTSFeedback() throws BehaviourPlanningException, InterruptedException, IOException
+    public void testDirectTTSFeedback() throws BehaviourPlanningException, InterruptedException, IOException, TTSException
     {
         mockTTSUnitFactoryExpectations();
 
@@ -95,7 +96,7 @@ public class DirectTTSPlannerIntegrationTest extends TTSPlannerIntegrationTest
     }
 
     @Test
-    public void testDirectTTSFeedbackBlockManager() throws BehaviourPlanningException, InterruptedException, IOException
+    public void testDirectTTSFeedbackBlockManager() throws BehaviourPlanningException, InterruptedException, IOException, TTSException
     {
         mockTTSUnitFactoryExpectations();
 

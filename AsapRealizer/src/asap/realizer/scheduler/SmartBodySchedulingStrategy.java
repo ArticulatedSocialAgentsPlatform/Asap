@@ -3,6 +3,7 @@
 package asap.realizer.scheduler;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -163,7 +164,8 @@ public class SmartBodySchedulingStrategy implements SchedulingStrategy
                 // TODO: create error and cancel the block if the behaviour
                 // is a required
                 // behavior/its constraints are required
-                scheduler.warn(new BMLWarningFeedback(bmlId + ":" + b.id, "BehaviourPlanningException", ex.getMessage()));
+                scheduler.warn(new BMLWarningFeedback(bmlId + ":" + b.id, "BehaviourPlanningException", ex.getMessage() + ":\n"
+                        + Arrays.toString(ex.getStackTrace())));
                 return;
             }
         }

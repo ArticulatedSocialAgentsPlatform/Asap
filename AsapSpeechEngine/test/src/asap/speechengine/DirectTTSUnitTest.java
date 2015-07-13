@@ -6,6 +6,7 @@ import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
 import static org.mockito.Mockito.mock;
 import static org.powermock.api.mockito.PowerMockito.when;
+import hmi.tts.TTSException;
 import hmi.tts.TimingInfo;
 
 import java.util.ArrayList;
@@ -73,7 +74,14 @@ public class DirectTTSUnitTest extends AbstractTimedPlanUnitTest
     protected TimedPlanUnit setupPlanUnit(FeedbackManager bfm, BMLBlockPeg bbPeg, String id, String bmlId, double startTime)
     {
         TimedDirectTTSUnit ttsUnit = new TimedDirectTTSUnit(bfm, bbPeg, "Hello world", bmlId, id, mockTTSBinding, SpeechBehaviour.class);
-        when(mockTTSBinding.getTiming(SpeechBehaviour.class, "Hello world")).thenReturn(mockTimingInfo);
+        try
+        {
+            when(mockTTSBinding.getTiming(SpeechBehaviour.class, "Hello world")).thenReturn(mockTimingInfo);
+        }
+        catch (TTSException e1)
+        {
+            throw new RuntimeException(e1);
+        }
         when(mockTimingInfo.getDuration()).thenReturn(3d);
         try
         {
@@ -91,7 +99,7 @@ public class DirectTTSUnitTest extends AbstractTimedPlanUnitTest
     }
 
     @Test
-    public void testTTSUnit() throws TimedPlanUnitPlayException, SpeechUnitPlanningException, InterruptedException
+    public void testTTSUnit() throws TimedPlanUnitPlayException, SpeechUnitPlanningException, InterruptedException, TTSException
     {
         BMLBlockPeg bbPeg = new BMLBlockPeg("Peg1", 0.3);
         TimePeg tp = new TimePeg(bbPeg);

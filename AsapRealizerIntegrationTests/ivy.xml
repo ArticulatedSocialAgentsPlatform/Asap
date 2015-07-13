@@ -52,7 +52,8 @@
       <dependency org="Asap"   name="AsapEmitterEngine"     rev="latest.${resolve.status}"   />
       <dependency org="Asap"      name="AsapSapi5TTSBinding"        rev="latest.{$resolve.status}"  />
       <dependency org="Asap"      name="AsapMaryTTS5Binding"        rev="latest.{$resolve.status}"  />
-	  <dependency org="marytts" name="voice-cmu-slt-hsmm"       rev="latest.release"  />
+	  <!--dependency org="marytts" name="voice-cmu-slt-hsmm"       rev="latest.release"  /-->
+	  <dependency org="marytts" name="voice-dfki-prudence-hsmm"       rev="latest.release"  />
 
 
       <dependency org="logback" name="logback-classic"     rev="latest.release"  />   

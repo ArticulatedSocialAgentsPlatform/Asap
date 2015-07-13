@@ -12,6 +12,7 @@ import static org.powermock.api.mockito.PowerMockito.mock;
 import static org.powermock.api.mockito.PowerMockito.when;
 import hmi.tts.Bookmark;
 import hmi.tts.Phoneme;
+import hmi.tts.TTSException;
 import hmi.tts.Visime;
 import hmi.tts.WordDescription;
 
@@ -68,7 +69,7 @@ public class TTSPlannerTest extends AbstractSpeechPlannerTest<TimedTTSUnit>
     final TTSUnitStub stubTTSUnit = new TTSUnitStub(mockFeedbackManager, bbPeg, SPEECHTEXT, SPEECHID, BMLID, mockTTSBinding,
             SpeechBehaviour.class, SPEECH_DURATION, BOOKMARKS);
 
-    protected void mockTTSUnitFactoryExpectations()
+    protected void mockTTSUnitFactoryExpectations() throws TTSException
     {
         when(
                 mockTTSUnitFactory.createTimedTTSUnit((BMLBlockPeg) any(), anyString(), anyString(), eq(BMLID), eq(SPEECHID),
@@ -77,7 +78,7 @@ public class TTSPlannerTest extends AbstractSpeechPlannerTest<TimedTTSUnit>
 
     @Before
     @Override
-    public void setup()
+    public void setup() throws TTSException
     {
         MockitoAnnotations.initMocks(this);
         mockTTSUnitFactoryExpectations();
