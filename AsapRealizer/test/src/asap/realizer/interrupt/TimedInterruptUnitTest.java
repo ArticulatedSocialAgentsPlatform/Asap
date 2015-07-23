@@ -32,69 +32,68 @@ import com.google.common.collect.ImmutableSet;
  *
  */
 @RunWith(PowerMockRunner.class)
-@PrepareForTest({BMLScheduler.class, BMLBlockManager.class})
+@PrepareForTest({ BMLScheduler.class, BMLBlockManager.class })
 public class TimedInterruptUnitTest extends AbstractTimedPlanUnitTest
 {
     private BMLScheduler mockScheduler = mock(BMLScheduler.class);
-    private static final String TARGET="bml2";
-    
+    private static final String TARGET = "bml2";
 
     @Override
     protected void assertSubsiding(TimedPlanUnit tpu)
     {
         assertEquals(TimedPlanUnitState.DONE, tpu.getState());
     }
-    
+
     @Override
     protected TimedInterruptUnit setupPlanUnit(FeedbackManager bfm, BMLBlockPeg bbPeg, String id, String bmlId, double startTime)
     {
         TimedInterruptUnit tiu = new TimedInterruptUnit(bfm, bbPeg, bmlId, id, TARGET, mockScheduler);
-        when(mockScheduler.getBehaviours(TARGET)).thenReturn(ImmutableSet.of("beh1","beh2"));
+        when(mockScheduler.getBehaviours(TARGET)).thenReturn(ImmutableSet.of("beh1", "beh2"));
         when(mockScheduler.getSyncsPassed(TARGET, "beh1")).thenReturn(new ImmutableSet.Builder<String>().build());
-        
+
         TimePeg start = new TimePeg(bbPeg);
         start.setGlobalValue(startTime);
         tiu.setStartPeg(start);
-        
+
         return tiu;
     }
 
     @Test
     public void testInterruptBlock() throws TimedPlanUnitPlayException, TimedPlanUnitSetupException
     {
-        TimedPlanUnit tpu = setupPlanUnitWithListener(BMLBlockPeg.GLOBALPEG,"id1","bml1",0);
+        TimedPlanUnit tpu = setupPlanUnitWithListener(BMLBlockPeg.GLOBALPEG, "id1", "bml1", 0);
         tpu.setState(TimedPlanUnitState.LURKING);
         tpu.start(0);
-        tpu.play(0);        
-        verify(mockScheduler,times(1)).interruptBlock(TARGET);
+        tpu.play(0);
+        verify(mockScheduler, times(1)).interruptBlock(TARGET, 0);
     }
-    
+
     @Test
     public void testInterruptBehavior() throws TimedPlanUnitPlayException, TimedPlanUnitSetupException
     {
-        TimedInterruptUnit tpu = (TimedInterruptUnit) setupPlanUnitWithListener(BMLBlockPeg.GLOBALPEG,"id1","bml1",0);
+        TimedInterruptUnit tpu = (TimedInterruptUnit) setupPlanUnitWithListener(BMLBlockPeg.GLOBALPEG, "id1", "bml1", 0);
         tpu.setInclude(ImmutableSet.of("beh1"));
         tpu.setState(TimedPlanUnitState.LURKING);
         tpu.start(0);
-        tpu.play(0);        
-        verify(mockScheduler,times(1)).interruptBehavior(TARGET,"beh1");
+        tpu.play(0);
+        verify(mockScheduler, times(1)).interruptBehavior(TARGET, "beh1", 0);
     }
-    
+
     @Test
     public void testInterruptBehaviorAll() throws TimedPlanUnitPlayException, TimedPlanUnitSetupException
     {
-        TimedInterruptUnit tpu = (TimedInterruptUnit) setupPlanUnitWithListener(BMLBlockPeg.GLOBALPEG,"id1","bml1",0);
-        tpu.setInclude(ImmutableSet.of("beh1","beh2"));
+        TimedInterruptUnit tpu = (TimedInterruptUnit) setupPlanUnitWithListener(BMLBlockPeg.GLOBALPEG, "id1", "bml1", 0);
+        tpu.setInclude(ImmutableSet.of("beh1", "beh2"));
         tpu.setState(TimedPlanUnitState.LURKING);
         tpu.start(0);
-        tpu.play(0);        
-        verify(mockScheduler,times(1)).interruptBlock(TARGET);
+        tpu.play(0);
+        verify(mockScheduler, times(1)).interruptBlock(TARGET, 0);
     }
-    
+
     @Override
     @Test
-    public void testSetStrokePeg() 
+    public void testSetStrokePeg()
     {
-        //XXX: remove from super?
-    }    
+        // XXX: remove from super?
+    }
 }

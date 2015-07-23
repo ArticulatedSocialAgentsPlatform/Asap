@@ -71,7 +71,7 @@ public final class BMLScheduler
 
     private interface FeedbackManagerDelegates
     {
-        void warn(BMLWarningFeedback w);
+        void warn(BMLWarningFeedback w, double time);
 
         void prediction(BMLAPredictionFeedback bpf);
 
@@ -226,9 +226,9 @@ public final class BMLScheduler
     /**
      * Forces an update in the state machines of the bml blocks
      */
-    public void updateBMLBlocks()
+    public void updateBMLBlocks(double time)
     {
-        bmlBlocksManager.updateBlocks();
+        bmlBlocksManager.updateBlocks(time);
     }
 
     /**
@@ -241,7 +241,7 @@ public final class BMLScheduler
         {
             e.reset(schedulingClock.getMediaSeconds());
         }
-        bmlBlocksManager.updateBlocks();
+        bmlBlocksManager.updateBlocks(0);
         bmlBlocksManager.clear();
         // FIXME: bmlBlockMap.clear();
         pegBoard.clear();
@@ -308,7 +308,8 @@ public final class BMLScheduler
 
     }
 
-    private BMLABlockPredictionFeedback createBMLABlockPredictionFeedback(String bmlId, BMLABlockStatus status, double predictedStart, double predictedEnd)
+    private BMLABlockPredictionFeedback createBMLABlockPredictionFeedback(String bmlId, BMLABlockStatus status, double predictedStart,
+            double predictedEnd)
     {
         long timeOffset = System.currentTimeMillis() - (long) (getSchedulingTime() * 1000);
         long posixStart = (long) (predictedStart * 1000) + timeOffset, posixEnd = 0;
@@ -322,12 +323,14 @@ public final class BMLScheduler
     private BMLAPredictionFeedback createStartPrediction(BehaviourBlock bb)
     {
         BMLAPredictionFeedback bpf = new BMLAPredictionFeedback();
-        bpf.addBMLBlockPrediction(createBMLABlockPredictionFeedback(bb.getBmlId(), BMLABlockStatus.IN_EXEC, getSchedulingTime(), predictEndTime(bb.getBmlId())));
+        bpf.addBMLBlockPrediction(createBMLABlockPredictionFeedback(bb.getBmlId(), BMLABlockStatus.IN_EXEC, getSchedulingTime(),
+                predictEndTime(bb.getBmlId())));
         addBehaviorPredictions(bb, bpf);
         return bpf;
     }
 
-    private BMLAPredictionFeedback createFilledBlockPrediction(BehaviourBlock bb, BMLABlockStatus status, double predictedStart, double predictedEnd)
+    private BMLAPredictionFeedback createFilledBlockPrediction(BehaviourBlock bb, BMLABlockStatus status, double predictedStart,
+            double predictedEnd)
     {
         BMLAPredictionFeedback bpf = new BMLAPredictionFeedback();
         bpf.addBMLBlockPrediction(createBMLABlockPredictionFeedback(bb.getBmlId(), status, predictedStart, predictedEnd));
@@ -335,7 +338,8 @@ public final class BMLScheduler
         return bpf;
     }
 
-    private BMLAPredictionFeedback createSingleBlockPrediction(String bmlId, BMLABlockStatus status, double predictedStart, double predictedEnd)
+    private BMLAPredictionFeedback createSingleBlockPrediction(String bmlId, BMLABlockStatus status, double predictedStart,
+            double predictedEnd)
     {
         BMLAPredictionFeedback bpf = new BMLAPredictionFeedback();
         bpf.addBMLBlockPrediction(createBMLABlockPredictionFeedback(bmlId, status, predictedStart, predictedEnd));
@@ -378,14 +382,14 @@ public final class BMLScheduler
      * @param fb
      *            the feedback
      */
-    public void blockStopFeedback(String bmlId, BMLABlockStatus status)
+    public void blockStopFeedback(String bmlId, BMLABlockStatus status, double time)
     {
-        fbManager.blockProgress(new BMLABlockProgressFeedback(bmlId, "end", schedulingClock.getMediaSeconds(), status));
+        fbManager.blockProgress(new BMLABlockProgressFeedback(bmlId, "end", time, status));
     }
 
-    public void blockStartFeedback(String bmlId)
+    public void blockStartFeedback(String bmlId, double time)
     {
-        fbManager.blockProgress(new BMLABlockProgressFeedback(bmlId, "start", schedulingClock.getMediaSeconds(), BMLABlockStatus.IN_EXEC));
+        fbManager.blockProgress(new BMLABlockProgressFeedback(bmlId, "start", time, BMLABlockStatus.IN_EXEC));
     }
 
     /**
@@ -515,33 +519,33 @@ public final class BMLScheduler
         for (BehaviourBlock bb : parser.getBehaviourBlocks())
         {
             bmlBlockMap.put(bb.id, bb);
-            schedulingHandler.schedule(bb, this);
+            schedulingHandler.schedule(bb, this, getSchedulingTime());
         }
         parser.clear();
     }
 
-    public void stopBehavior(String bmlId, String behaviourId)
+    public void stopBehavior(String bmlId, String behaviourId, double time)
     {
         for (Engine e : getEngines())
         {
             e.stopBehaviour(bmlId, behaviourId, schedulingClock.getMediaSeconds());
         }
-        bmlBlocksManager.updateBlocks();
+        bmlBlocksManager.updateBlocks(time);
     }
 
-    public void interruptBehavior(String bmlId, String behaviourId)
+    public void interruptBehavior(String bmlId, String behaviourId, double time)
     {
         for (Engine e : getEngines())
         {
             e.interruptBehaviour(bmlId, behaviourId, schedulingClock.getMediaSeconds());
         }
-        bmlBlocksManager.updateBlocks();
+        bmlBlocksManager.updateBlocks(time);
     }
 
     /**
      * Stops and removes all behaviors of block bmlId
      */
-    public void interruptBlock(String bmlId)
+    public void interruptBlock(String bmlId, double time)
     {
         if (!bmlBlocksManager.getBMLBlocks().contains(bmlId))
         {
@@ -553,13 +557,8 @@ public final class BMLScheduler
         {
             e.interruptBehaviourBlock(bmlId, schedulingClock.getMediaSeconds());
         }
-        bmlBlocksManager.interruptBlock(bmlId);
-        bmlBlocksManager.removeBMLBlock(bmlId);
-    }
-
-    public void activateBlock(String bmlId)
-    {
-        bmlBlocksManager.activateBlock(bmlId);
+        bmlBlocksManager.interruptBlock(bmlId, time);
+        bmlBlocksManager.removeBMLBlock(bmlId, time);
     }
 
     /**
@@ -575,34 +574,36 @@ public final class BMLScheduler
      * 
      * @param bmlId
      */
-    public void startBlock(String bmlId)
+    public void startBlock(String bmlId, double time)
     {
+
         if (!bmlBlocksManager.getBMLBlocks().contains(bmlId))
         {
             log.warn("Attempting to start non existing bml block {}", bmlId);
             return;
         }
 
-        pegBoard.setBMLBlockTime(bmlId, schedulingClock.getMediaSeconds());
+        pegBoard.setBMLBlockTime(bmlId, time);
         log.debug("Starting bml block {}", bmlId);
 
-        bmlBlocksManager.startBlock(bmlId);
+        bmlBlocksManager.startBlock(bmlId, time);
 
         for (Engine e : getEngines())
         {
             e.setBMLBlockState(bmlId, TimedPlanUnitState.LURKING);
         }
-        bmlBlocksManager.updateBlocks();
+        bmlBlocksManager.updateBlocks(time);
         if (bmlBlocksManager.getBMLBlock(bmlId).getState() != TimedPlanUnitState.DONE)
         {
             prediction(createStartPrediction(bmlBlockMap.get(bmlId)));
         }
         bmlBlocksManager.predictionUpdate(bmlId);
+        System.out.println("started block " + bmlId + " at " + time);
     }
 
     public void activateBlock(String bmlId, double time)
     {
-        bmlBlocksManager.activateBlock(bmlId);
+        bmlBlocksManager.activateBlock(bmlId, time);
     }
 
     public BMLParser getParser()
@@ -610,7 +611,7 @@ public final class BMLScheduler
         return parser;
     }
 
-    public void removeInvalidBehaviors(String bmlBlock)
+    public void removeInvalidBehaviors(String bmlBlock, double time)
     {
         for (Engine e : getEngines())
         {
@@ -623,15 +624,15 @@ public final class BMLScheduler
                 {
                     String behId = id.substring(bmlId.length() + 1);
                     String warningText = "Invalid timing for behavior " + id + ", behavior ommitted";
-                    warningText += "\n "+pegBoard.getSyncAndTimePegs(bmlId, behId);
-                    warn(new BMLWarningFeedback(bmlId + ":" + behId, "INVALID_TIMING", warningText));
+                    warningText += "\n " + pegBoard.getSyncAndTimePegs(bmlId, behId);
+                    warn(new BMLWarningFeedback(bmlId + ":" + behId, "INVALID_TIMING", warningText), time);
                     removeBehaviour(bmlId, behId);
                 }
             }
         }
     }
 
-    public void removeInvalidBehaviors()
+    public void removeInvalidBehaviors(double time)
     {
         log.debug("Checking behavior validity");
         // remove all invalid behaviours and warn
@@ -644,7 +645,7 @@ public final class BMLScheduler
                 String bmlId = id.split(":")[0];
                 String behId = id.substring(bmlId.length() + 1);
                 String warningText = "Invalid timing for behavior " + id + ", behavior ommitted";
-                warn(new BMLWarningFeedback(bmlId + ":" + behId, "INVALID_TIMING", warningText));
+                warn(new BMLWarningFeedback(bmlId + ":" + behId, "INVALID_TIMING", warningText), time);
                 removeBehaviour(bmlId, behId);
             }
         }

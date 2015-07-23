@@ -51,7 +51,7 @@ public class FeedbackManagerImpl implements FeedbackManager
     {
         String bmlId = timedMU.getBMLId();        
         String exceptionText = message + "\nBehavior " + timedMU.getBMLId() + ":" + timedMU.getId() + " dropped.";
-        warn(new BMLWarningFeedback(bmlId+":"+timedMU.getId(), "EXECUTION_FAILURE",exceptionText));
+        warn(new BMLWarningFeedback(bmlId+":"+timedMU.getId(), "EXECUTION_FAILURE",exceptionText), time);
     }
     
     private BMLASyncPointProgressFeedback constructBMLASyncPointProgressFeedback(BMLSyncPointProgressFeedback fb)
@@ -80,7 +80,7 @@ public class FeedbackManagerImpl implements FeedbackManager
                 }
             }
         }
-        bmlBlockManager.syncProgress(fba);
+        bmlBlockManager.syncProgress(fb);
     }
 
     
@@ -107,7 +107,7 @@ public class FeedbackManagerImpl implements FeedbackManager
         }
         for (BMLSyncPointProgressFeedback fb : fbs)
         {
-            bmlBlockManager.syncProgress(constructBMLASyncPointProgressFeedback(fb));
+            bmlBlockManager.syncProgress(fb);
         }
     }
 
@@ -171,7 +171,7 @@ public class FeedbackManagerImpl implements FeedbackManager
     }    
 
     @Override
-    public void warn(BMLWarningFeedback w)
+    public void warn(BMLWarningFeedback w, double time)
     {
         w.setCharacterId(characterId);
         synchronized (feedbackListeners)
@@ -188,6 +188,6 @@ public class FeedbackManagerImpl implements FeedbackManager
                 }
             }
         }
-        bmlBlockManager.warn(w);
+        bmlBlockManager.warn(w, time);
     }    
 }

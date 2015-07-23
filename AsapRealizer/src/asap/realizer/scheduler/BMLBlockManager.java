@@ -74,11 +74,11 @@ public final class BMLBlockManager
         bmlBlocks.put(bbm.getBMLId(), bbm);
     }
 
-    public synchronized void removeBMLBlock(String bmlId)
+    public synchronized void removeBMLBlock(String bmlId, double time)
     {
         bmlBlocks.remove(bmlId);
         finishedBMLBBlocks.remove(bmlId);        
-        updateBlocks();
+        updateBlocks(time);
     }
 
     boolean isPending(String bmlId, Set<String> bmlIdsChecked)
@@ -104,30 +104,30 @@ public final class BMLBlockManager
         return b.isPending();
     }
     
-    public void interruptBlock(String bmlId)
+    public void interruptBlock(String bmlId, double time)
     {
         BMLBBlock b = bmlBlocks.get(bmlId);
         if (b != null)
         {
-            b.interrupt();
+            b.interrupt(time);
         }
     }
     
-    public void finishBlock(String bmlId)
+    public void finishBlock(String bmlId, double time)
     {
         BMLBBlock b = bmlBlocks.get(bmlId);
         if (b != null)
         {
-            b.finish();
+            b.finish(time);
         }
     }
 
-    public synchronized void startBlock(String bmlId)
+    public synchronized void startBlock(String bmlId, double time)
     {
         BMLBBlock b = bmlBlocks.get(bmlId);
         if (b != null)
         {
-            b.start();
+            b.start(time);
         }
     }
 
@@ -167,12 +167,12 @@ public final class BMLBlockManager
         return ImmutableMap.copyOf(blockStates);
     }
 
-    public synchronized void updateBlocks()
+    public synchronized void updateBlocks(double time)
     {
         ImmutableMap<String, TimedPlanUnitState> m = getBlockStates();
         for (BMLBBlock block : bmlBlocks.values())
         {
-            block.update(m);
+            block.update(m, time);
         }
     }
 
@@ -188,7 +188,7 @@ public final class BMLBlockManager
         behaviorProgress.clear();
     }
 
-    public synchronized void activateBlock(String bmlId)
+    public synchronized void activateBlock(String bmlId, double time)
     {
         BMLBBlock bb = bmlBlocks.get(bmlId);
         if (bb == null)
@@ -197,7 +197,7 @@ public final class BMLBlockManager
             return;
         }
         bb.activate();
-        updateBlocks();
+        updateBlocks(time);
     }
 
     public synchronized void blockProgress(BMLBlockProgressFeedback psf)
@@ -211,10 +211,10 @@ public final class BMLBlockManager
                 return;
             }
         }
-        updateBlocks();
+        updateBlocks(psf.getGlobalTime());
     }
 
-    public synchronized void warn(BMLWarningFeedback bw)
+    public synchronized void warn(BMLWarningFeedback bw, double time)
     {
         String idSplit[] = bw.getId().split(":");
         if (idSplit.length == 2)
@@ -227,7 +227,7 @@ public final class BMLBlockManager
                 }
             }
         }
-        updateBlocks();
+        updateBlocks(time);
     }
 
     public synchronized void syncProgress(BMLSyncPointProgressFeedback spp)
@@ -241,7 +241,7 @@ public final class BMLBlockManager
                 block.behaviorProgress(spp.getBehaviourId(), spp.getSyncId());
             }
         }
-        updateBlocks();
+        updateBlocks(spp.getGlobalTime());
     }
 
     /**

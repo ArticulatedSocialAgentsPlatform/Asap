@@ -63,14 +63,14 @@ public class TimedInterruptUnit extends TimedEventUnit
         feedback("start",time);
         if(stopBehs.equals(containingBehs))
         {
-            scheduler.interruptBlock(target);
+            scheduler.interruptBlock(target, time);
         }
         else
         {
             for(String beh:stopBehs)
             {
             	log.debug("Interrupting behavior {}:{}",target,beh);
-                scheduler.interruptBehavior(target,beh);            
+                scheduler.interruptBehavior(target,beh, time);            
             }
         }                
     }    

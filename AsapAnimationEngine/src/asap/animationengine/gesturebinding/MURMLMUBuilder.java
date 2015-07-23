@@ -188,7 +188,7 @@ public final class MURMLMUBuilder
                 LinearGStroke lgs = new LinearGStroke(GStrokePhaseID.STP_STROKE, ePos);
                 double dur = FittsLaw.getHandTrajectoryDuration(lgs.getArcLengthFrom(sPos));
                 
-                if(dur<0.001)dur = 0.01;//HACK HACK: minimum duration 10 ms
+                if(dur<0.001)dur = 0.001;//HACK HACK: minimum duration 1 ms
                 
                 lgs.setEDt(dur);
                 tEst += lgs.getEDt();
@@ -253,7 +253,7 @@ public final class MURMLMUBuilder
 
                 // -- stroke time smaller than affiliate duration, i.e., post-stroke hold required?
                 double dur = FittsLaw.getHandTrajectoryDuration(cgs.getArcLengthFrom(sPos));
-                if(dur<0.001)dur = 0.01;//HACK HACK: minimum duration 10 ms
+                if(dur<0.001)dur = 0.001;//HACK HACK: minimum duration 1 ms
                 cgs.setEDt(dur);
 
                 tEst += cgs.getEDt();

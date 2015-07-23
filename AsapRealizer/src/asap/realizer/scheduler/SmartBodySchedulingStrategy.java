@@ -110,7 +110,8 @@ public class SmartBodySchedulingStrategy implements SchedulingStrategy
                         {
                             String warningText = "Can't satisfy time constraints " + tpac + " on <" + b.getXMLTag()
                                     + ">, behavior ommitted";
-                            scheduler.warn(new BMLWarningFeedback(b.getBmlId() + ":" + b.id, "CANNOT_SATISFY_CONSTRAINTS", warningText));
+                            scheduler.warn(new BMLWarningFeedback(b.getBmlId() + ":" + b.id, "CANNOT_SATISFY_CONSTRAINTS", warningText),
+                                    scheduler.getSchedulingTime());
 
                             // TODO: create error and cancel the block if the
                             // behaviour is a
@@ -165,7 +166,7 @@ public class SmartBodySchedulingStrategy implements SchedulingStrategy
                 // is a required
                 // behavior/its constraints are required
                 scheduler.warn(new BMLWarningFeedback(bmlId + ":" + b.id, "BehaviourPlanningException", ex.getMessage() + ":\n"
-                        + Arrays.toString(ex.getStackTrace())));
+                        + Arrays.toString(ex.getStackTrace())),scheduler.getSchedulingTime());
                 return;
             }
         }
@@ -175,7 +176,8 @@ public class SmartBodySchedulingStrategy implements SchedulingStrategy
             // required
             // behavior/its constraints are required
             String warningText = "No planner found to plan behavior of type <" + b.getXMLTag() + ">, behavior ommitted";
-            scheduler.warn(new BMLWarningFeedback(bmlId + ":" + b.id, BMLWarningFeedback.CANNOT_CREATE_BEHAVIOR, warningText));
+            scheduler.warn(new BMLWarningFeedback(bmlId + ":" + b.id, BMLWarningFeedback.CANNOT_CREATE_BEHAVIOR, warningText),
+                    scheduler.getSchedulingTime());
             return;
         }
         syncMap.put(b, syncList);
@@ -224,7 +226,8 @@ public class SmartBodySchedulingStrategy implements SchedulingStrategy
                 if (apPeg == null)
                 {
                     String warningText = "Unknown anticipator synchronization point " + s.getName() + " sync ignored.";
-                    scheduler.warn(new BMLWarningFeedback(bmlId + ":" + b.id, "UNKNOWN_ANTICIPATOR_SYNC", warningText));
+                    scheduler.warn(new BMLWarningFeedback(bmlId + ":" + b.id, "UNKNOWN_ANTICIPATOR_SYNC", warningText),
+                            scheduler.getSchedulingTime());
                     break;
                 }
 

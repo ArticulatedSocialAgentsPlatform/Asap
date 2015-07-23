@@ -66,7 +66,7 @@ public class BMLBlockManagerTest
     {
         BMLBBlock bb1 = new BMLBBlock("bml1", mockScheduler, pb);
         bbm.addBMLBlock(bb1);
-        bbm.startBlock("bml1");
+        bbm.startBlock("bml1", 0);
         assertEquals(TimedPlanUnitState.IN_EXEC, bbm.getBMLBlockState("bml1"));
     }
 
@@ -76,7 +76,7 @@ public class BMLBlockManagerTest
         BMLBBlock bb1 = new BMLBBlock("bml1", mockScheduler, pb);
         bb1.setState(TimedPlanUnitState.PENDING);
         bbm.addBMLBlock(bb1);
-        bbm.activateBlock("bml1");
+        bbm.activateBlock("bml1", 0);
         assertEquals(TimedPlanUnitState.LURKING, bbm.getBMLBlockState("bml1"));
     }
 
@@ -85,9 +85,9 @@ public class BMLBlockManagerTest
     {
         BMLBBlock bb1 = new BMLBBlock("bml1", mockScheduler, pb);
         bbm.addBMLBlock(bb1);
-        bbm.startBlock("bml1");
-        bbm.activateBlock("bml1");
-        verify(mockScheduler, times(1)).startBlock("bml1");
+        bbm.startBlock("bml1", 0);
+        bbm.activateBlock("bml1", 0);
+        verify(mockScheduler, times(1)).startBlock("bml1", 0);
         // assertEquals(TimedPlanUnitState.IN_EXEC,bbm.getBMLBlockState("bml1"));
     }
 
@@ -98,7 +98,7 @@ public class BMLBlockManagerTest
         BMLBBlock bb2 = new BMLBBlock("bml2", mockScheduler, pb);
         bbm.addBMLBlock(bb1);
         bbm.addBMLBlock(bb2);
-        bbm.removeBMLBlock("bml1");
+        bbm.removeBMLBlock("bml1", 0);
         assertEquals(1, bbm.getBMLBlocks().size());
         assertThat(bbm.getBMLBlocks(), hasItem("bml2"));
     }
