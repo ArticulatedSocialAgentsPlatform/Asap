@@ -443,6 +443,7 @@ public class MotorControlProgram extends TimedAbstractPlanUnit implements TimedA
     protected void relaxUnit(double time) throws TimedPlanUnitPlayException
     {
         System.out.println("relax " + this.getBMLId() + ":" + this.getId() + " " + time);
+        feedbackForSyncs(time);
         feedback("relax", time);
         Set<String> usedJoints = new HashSet<String>();
         usedJoints.addAll(getKinematicJoints());
