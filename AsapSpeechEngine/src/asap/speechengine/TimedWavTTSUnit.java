@@ -6,6 +6,7 @@ import static com.google.common.collect.Sets.newHashSet;
 import hmi.audioenvironment.SoundManager;
 import hmi.audioenvironment.WavCreationException;
 import hmi.tts.Bookmark;
+import hmi.tts.TTSException;
 import hmi.tts.TTSTiming;
 
 import java.io.File;
@@ -191,7 +192,7 @@ public class TimedWavTTSUnit extends TimedTTSUnit
             {
                 ti = ttsBinding.speakToFile(getBehaviourClass(), speechText, tempFile.getAbsolutePath());
             }
-            catch (IOException e)
+            catch (IOException | TTSException e)
             {
                 throw new SpeechUnitPlanningException(e.getLocalizedMessage(), this, e);
             }

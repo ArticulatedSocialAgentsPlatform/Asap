@@ -91,13 +91,13 @@ public class BMLASchedulingHandlerTest
     public void testMergeBlock()
     {
         BehaviourBlock bb = createBehaviourBlock("bml1");
-        handler.schedule(bb, mockScheduler);
+        handler.schedule(bb, mockScheduler, 0);
 
         BMLBBlock block = captureBMLBlock();
         assertEquals("bml1", block.getBMLId());
         assertThat(block, instanceOf(BMLBBlock.class));
         assertBlockPegAdded("bml1", 0d);
-        verify(mockScheduler, times(1)).startBlock("bml1");
+        verify(mockScheduler, times(1)).startBlock("bml1", 0);
     }
 
     @Test
@@ -107,7 +107,7 @@ public class BMLASchedulingHandlerTest
         BehaviourBlock bb = createBehaviourBlock("bml1", "composition=\"APPEND-AFTER(bml2,bml3)\"");
         when(mockScheduler.getBMLBlocks()).thenReturn(ImmutableSet.of("bml2", "bml3"));
         when(mockScheduler.predictEndTime((Set<String>) any())).thenReturn(3d);
-        handler.schedule(bb, mockScheduler);
+        handler.schedule(bb, mockScheduler, 0);
 
         BMLBBlock block = captureBMLBlock();
         assertEquals("bml1", block.getBMLId());
@@ -122,7 +122,7 @@ public class BMLASchedulingHandlerTest
     public void testAppendAfterFinishedBlocks()
     {
         BehaviourBlock bb = createBehaviourBlock("bml1", "composition=\"APPEND-AFTER(bml2,bml3)\"");
-        handler.schedule(bb, mockScheduler);
+        handler.schedule(bb, mockScheduler, 0);
 
         BMLBBlock block = captureBMLBlock();
         assertEquals("bml1", block.getBMLId());
@@ -140,7 +140,7 @@ public class BMLASchedulingHandlerTest
         BehaviourBlock bb = createBehaviourBlock("bml1", " xmlns:bmla=\"http://www.asap-project.org/bmla\" bmla:chunkAfter=\"bml2,bml3\"");
         when(mockScheduler.getBMLBlocks()).thenReturn(ImmutableSet.of("bml2", "bml3"));
         when(mockScheduler.predictSubsidingTime((Set<String>) any())).thenReturn(3d);
-        handler.schedule(bb, mockScheduler);
+        handler.schedule(bb, mockScheduler, 0);
 
         BMLBBlock block = captureBMLBlock();
         assertEquals("bml1", block.getBMLId());
@@ -157,7 +157,7 @@ public class BMLASchedulingHandlerTest
         BehaviourBlock bb = createBehaviourBlock("bml1", " xmlns:bmla=\"http://www.asap-project.org/bmla\" bmla:chunkAfter=\"bml2,bml3\"");
         when(mockScheduler.getBMLBlocks()).thenReturn(ImmutableSet.of("bml2", "bml3"));
         when(mockScheduler.predictEndTime((Set<String>) any())).thenReturn(3d);
-        handler.schedule(bb, mockScheduler);
+        handler.schedule(bb, mockScheduler, 0);
 
         BMLBBlock block = captureBMLBlock();
         assertEquals("bml1", block.getBMLId());
@@ -174,18 +174,17 @@ public class BMLASchedulingHandlerTest
         BehaviourBlock bb = createBehaviourBlock("bml1",
                 " xmlns:bmla=\"http://www.asap-project.org/bmla\" bmla:prependBefore=\"bml2,bml3\"");
         when(mockScheduler.getBMLBlocks()).thenReturn(ImmutableSet.of("bml2", "bml3"));
-        handler.schedule(bb, mockScheduler);
+        handler.schedule(bb, mockScheduler, 0);
         verify(mockBML2).addAppendTarget("bml1");
         verify(mockBML3).addAppendTarget("bml1");
     }
-    
+
     @Test
     public void testPrependChunkBMLA()
     {
-        BehaviourBlock bb = createBehaviourBlock("bml1",
-                " xmlns:bmla=\"http://www.asap-project.org/bmla\" bmla:chunkBefore=\"bml2,bml3\"");
+        BehaviourBlock bb = createBehaviourBlock("bml1", " xmlns:bmla=\"http://www.asap-project.org/bmla\" bmla:chunkBefore=\"bml2,bml3\"");
         when(mockScheduler.getBMLBlocks()).thenReturn(ImmutableSet.of("bml2", "bml3"));
-        handler.schedule(bb, mockScheduler);
+        handler.schedule(bb, mockScheduler, 0);
         verify(mockBML2).addChunkTarget("bml1");
         verify(mockBML3).addChunkTarget("bml1");
     }

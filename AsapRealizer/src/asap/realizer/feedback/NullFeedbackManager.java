@@ -63,7 +63,7 @@ public final class NullFeedbackManager implements FeedbackManager
     }
 
     @Override
-    public void warn(BMLWarningFeedback w)
+    public void warn(BMLWarningFeedback w, double time)
     {
     }    
 }

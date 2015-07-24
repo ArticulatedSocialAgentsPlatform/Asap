@@ -221,14 +221,14 @@ public class AsapRealizer
         {
             String bmlId = "<no id>";
             String exceptionText = "InstantiationException " + e.getLocalizedMessage() + "\n" + Arrays.toString(e.getStackTrace()) + "\n";
-            scheduler.warn(new BMLWarningFeedback(bmlId, "InstantiationException", exceptionText));
+            scheduler.warn(new BMLWarningFeedback(bmlId, "InstantiationException", exceptionText), scheduler.getSchedulingTime());
             return;
         }
         catch (IllegalAccessException e)
         {
             String bmlId = "<no id>";
             String exceptionText = "IllegalAccessException " + e.getLocalizedMessage() + "\n" + Arrays.toString(e.getStackTrace()) + "\n";
-            scheduler.warn(new BMLWarningFeedback(bmlId, "IllegalAccessException", exceptionText));
+            scheduler.warn(new BMLWarningFeedback(bmlId, "IllegalAccessException", exceptionText), scheduler.getSchedulingTime());
             return;
         }
         try
@@ -240,7 +240,7 @@ public class AsapRealizer
             String bmlId = "<no id>";
             String exceptionText = "Parsing BML failed: see stack trace for more info. " + e.getLocalizedMessage() + "\n"
                     + Arrays.toString(e.getStackTrace()) + "\n";
-            scheduler.warn(new BMLWarningFeedback(bmlId, BMLWarningFeedback.PARSING_FAILURE, exceptionText));
+            scheduler.warn(new BMLWarningFeedback(bmlId, BMLWarningFeedback.PARSING_FAILURE, exceptionText), scheduler.getSchedulingTime());
             return;
         }
         catch (IOException e)
@@ -248,7 +248,7 @@ public class AsapRealizer
             String bmlId = "<no id>";
             String exceptionText = "IO Exception reading BML. " + e.getLocalizedMessage() + "\n" + Arrays.toString(e.getStackTrace())
                     + "\n";
-            scheduler.warn(new BMLWarningFeedback(bmlId, "IOException", exceptionText));
+            scheduler.warn(new BMLWarningFeedback(bmlId, "IOException", exceptionText), scheduler.getSchedulingTime());
             return;
         }
         catch (Exception e)
@@ -256,7 +256,7 @@ public class AsapRealizer
             String bmlId = "<no id>";
             String exceptionText = "Exception reading the XML. " + e.getLocalizedMessage() + "\n" + Arrays.toString(e.getStackTrace())
                     + "\n";
-            scheduler.warn(new BMLWarningFeedback(bmlId, "Exception", exceptionText));
+            scheduler.warn(new BMLWarningFeedback(bmlId, "Exception", exceptionText), scheduler.getSchedulingTime());
             return;
         }
         try
@@ -267,7 +267,7 @@ public class AsapRealizer
         { // DO NOT REMOVE THIS CLAUSE!
             String exceptionText = "Exception parsing the BML. " + e.getLocalizedMessage() + "\n" + Arrays.toString(e.getStackTrace())
                     + "\n";
-            scheduler.warn(new BMLWarningFeedback(block.id, "Exception", exceptionText));
+            scheduler.warn(new BMLWarningFeedback(block.id, "Exception", exceptionText), scheduler.getSchedulingTime());
             return;
         }
         try
@@ -277,7 +277,7 @@ public class AsapRealizer
         catch (Exception e)
         { // DO NOT REMOVE THIS CLAUSE!
             String exceptionText = "Exception scheduling the BML. " + e + "\n" + Arrays.toString(e.getStackTrace()) + "\n";
-            scheduler.warn(new BMLWarningFeedback(block.id, "Scheduling Exception", exceptionText));
+            scheduler.warn(new BMLWarningFeedback(block.id, "Scheduling Exception", exceptionText), scheduler.getSchedulingTime());
             return;
         }
     }

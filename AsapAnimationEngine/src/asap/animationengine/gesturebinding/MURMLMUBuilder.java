@@ -186,7 +186,11 @@ public final class MURMLMUBuilder
                 // cout << "NEW LINEAR Guiding Stroke to " << eT << ":" << ePos << endl;
 
                 LinearGStroke lgs = new LinearGStroke(GStrokePhaseID.STP_STROKE, ePos);
-                lgs.setEDt(FittsLaw.getHandTrajectoryDuration(lgs.getArcLengthFrom(sPos)));
+                double dur = FittsLaw.getHandTrajectoryDuration(lgs.getArcLengthFrom(sPos));
+                
+                if(dur<0.001)dur = 0.001;//HACK HACK: minimum duration 1 ms
+                
+                lgs.setEDt(dur);
                 tEst += lgs.getEDt();
                 // cout << "est. duration=" << lgs->eDt << " -> est. end time=" << tEst << endl;
 
@@ -248,7 +252,9 @@ public final class MURMLMUBuilder
                 // cgs->vGain = 0.;
 
                 // -- stroke time smaller than affiliate duration, i.e., post-stroke hold required?
-                cgs.setEDt(FittsLaw.getHandTrajectoryDuration(cgs.getArcLengthFrom(sPos)));
+                double dur = FittsLaw.getHandTrajectoryDuration(cgs.getArcLengthFrom(sPos));
+                if(dur<0.001)dur = 0.001;//HACK HACK: minimum duration 1 ms
+                cgs.setEDt(dur);
 
                 tEst += cgs.getEDt();
                 sSeq.add(cgs);

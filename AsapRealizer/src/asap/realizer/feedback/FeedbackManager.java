@@ -43,5 +43,5 @@ public interface FeedbackManager
     
     void prediction(BMLAPredictionFeedback bpsf);    
     
-    void warn(BMLWarningFeedback w);
+    void warn(BMLWarningFeedback w, double time);
 }

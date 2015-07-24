@@ -8,6 +8,7 @@ import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertTrue;
 import hmi.environmentbase.Environment;
 import hmi.environmentbase.Loader;
+import hmi.tts.TTSException;
 import hmi.tts.TTSTiming;
 import hmi.tts.Visime;
 import hmi.util.OS;
@@ -36,7 +37,7 @@ public class SapiTTSBindingLoaderIntegrationTest
     }
     
     @Test
-    public void test() throws IOException, InterruptedException
+    public void test() throws IOException, InterruptedException, TTSException
     {
         //@formatter:off
         String bindingXML=

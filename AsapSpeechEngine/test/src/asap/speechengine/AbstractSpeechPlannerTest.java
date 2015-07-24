@@ -7,6 +7,7 @@ import static org.hamcrest.number.OrderingComparison.greaterThan;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
 import static org.mockito.Mockito.mock;
+import hmi.tts.TTSException;
 import hmi.xml.XMLTokenizer;
 
 import java.io.IOException;
@@ -47,7 +48,7 @@ public abstract class AbstractSpeechPlannerTest<T extends TimedAbstractSpeechUni
     protected FeedbackManager mockFeedbackManager = mock(FeedbackManager.class);
     private static final double RESOLVE_PRECISION = 0.001;
     
-    public void setup()
+    public void setup() throws TTSException
     {
         plannerTests = new PlannerTests<T>(speechPlanner, bbPeg);
     }

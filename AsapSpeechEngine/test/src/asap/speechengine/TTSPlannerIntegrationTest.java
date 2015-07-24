@@ -10,6 +10,7 @@ import static org.mockito.Mockito.when;
 import static org.powermock.api.mockito.PowerMockito.mock;
 import hmi.tts.Bookmark;
 import hmi.tts.Phoneme;
+import hmi.tts.TTSException;
 import hmi.tts.Visime;
 import hmi.tts.WordDescription;
 import hmi.xml.XMLTokenizer;
@@ -132,7 +133,7 @@ public class TTSPlannerIntegrationTest
         }
     }
 
-    protected void mockTTSUnitFactoryExpectations()
+    protected void mockTTSUnitFactoryExpectations() throws TTSException
     {
         when(
                 mockTTSUnitFactory.createTimedTTSUnit(eq(bbPeg), anyString(), anyString(), eq(BMLID), eq(SPEECHID), eq(mockTTSBinding),
@@ -176,7 +177,7 @@ public class TTSPlannerIntegrationTest
     }
 
     @Test
-    public void testResolveUnknownStartAndEnd() throws BehaviourPlanningException, IOException
+    public void testResolveUnknownStartAndEnd() throws BehaviourPlanningException, IOException, TTSException
     {
         mockTTSUnitFactoryExpectations();
 
@@ -231,7 +232,7 @@ public class TTSPlannerIntegrationTest
         assertEquals(1, exceptionList.size());
     }
 
-    public void testRemoveBehaviour() throws BehaviourPlanningException, IOException
+    public void testRemoveBehaviour() throws BehaviourPlanningException, IOException, TTSException
     {
         mockTTSUnitFactoryExpectations();
 

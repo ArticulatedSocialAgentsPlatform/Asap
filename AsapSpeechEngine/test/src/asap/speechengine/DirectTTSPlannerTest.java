@@ -8,6 +8,7 @@ import static org.mockito.Matchers.eq;
 import static org.mockito.Mockito.when;
 import hmi.tts.Bookmark;
 import hmi.tts.Phoneme;
+import hmi.tts.TTSException;
 import hmi.tts.TimingInfo;
 import hmi.tts.Visime;
 import hmi.tts.WordDescription;
@@ -28,7 +29,7 @@ public class DirectTTSPlannerTest extends TTSPlannerTest
     
     
     @Override
-    protected void mockTTSUnitFactoryExpectations()
+    protected void mockTTSUnitFactoryExpectations() throws TTSException
     {
         final TimedDirectTTSUnit ttsUnit = new TimedDirectTTSUnit(mockFeedbackManager,bbPeg,
                 SPEECHTEXT, BMLID, SPEECHID, mockTTSBinding,

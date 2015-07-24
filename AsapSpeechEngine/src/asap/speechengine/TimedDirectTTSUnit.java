@@ -3,6 +3,7 @@
 package asap.speechengine;
 
 import hmi.tts.TTSCallback;
+import hmi.tts.TTSException;
 import hmi.tts.TTSTiming;
 
 import org.slf4j.Logger;
@@ -29,24 +30,24 @@ public class TimedDirectTTSUnit extends TimedTTSUnit
 {
     private double systemStartTime;
 
-    private static Logger logger = LoggerFactory.getLogger(TimedDirectTTSUnit.class.getName()); 
-    
+    private static Logger logger = LoggerFactory.getLogger(TimedDirectTTSUnit.class.getName());
+
     public TimedDirectTTSUnit(FeedbackManager bfm, BMLBlockPeg bbPeg, String text, String bmlId, String id, TTSBinding ttsBin,
             Class<? extends Behaviour> behClass)
     {
-        super(bfm, bbPeg, text, bmlId, id, ttsBin, behClass);        
+        super(bfm, bbPeg, text, bmlId, id, ttsBin, behClass);
     }
 
-    public TimedDirectTTSUnit(FeedbackManager bfm,BMLBlockPeg bbPeg,String text, String bmlId, String id, TTSBinding ttsBin)
+    public TimedDirectTTSUnit(FeedbackManager bfm, BMLBlockPeg bbPeg, String text, String bmlId, String id, TTSBinding ttsBin)
     {
-        super(bfm, bbPeg, text, bmlId, id, ttsBin, SpeechBehaviour.class);        
+        super(bfm, bbPeg, text, bmlId, id, ttsBin, SpeechBehaviour.class);
     }
 
-    public TimedDirectTTSUnit(BMLBlockPeg bbPeg,String text, String bmlId, String id, TTSBinding ttsBin)
+    public TimedDirectTTSUnit(BMLBlockPeg bbPeg, String text, String bmlId, String id, TTSBinding ttsBin)
     {
-        this(NullFeedbackManager.getInstance(), bbPeg,text,bmlId,id,ttsBin);
+        this(NullFeedbackManager.getInstance(), bbPeg, text, bmlId, id, ttsBin);
     }
-    
+
     @Override
     public void startUnit(double time) throws TimedPlanUnitPlayException
     {
@@ -56,15 +57,29 @@ public class TimedDirectTTSUnit extends TimedTTSUnit
         bmlStartTime = time;
         systemStartTime = System.nanoTime() / 1E9;
         ttsBinding.setCallback(new MyTTSCallback());
-        ttsBinding.speak(getBehaviourClass(), speechText);        
+        try
+        {
+            ttsBinding.speak(getBehaviourClass(), speechText);
+        }
+        catch (TTSException e)
+        {
+            throw new TimedPlanUnitPlayException("TTSException", this, e);
+        }
     }
-    
+
     @Override
-    protected TTSTiming getTiming()
+    protected TTSTiming getTiming() throws SpeechUnitPlanningException
     {
         synchronized (ttsBinding)
         {
-            return ttsBinding.getTiming(getBehaviourClass(), speechText);
+            try
+            {
+                return ttsBinding.getTiming(getBehaviourClass(), speechText);
+            }
+            catch (TTSException e)
+            {
+                throw new SpeechUnitPlanningException("",this,e);
+            }
         }
     }
 
@@ -127,17 +142,16 @@ public class TimedDirectTTSUnit extends TimedTTSUnit
     {
         try
         {
-            ttsBinding.setFloatParameterValue(parameter,value);
+            ttsBinding.setFloatParameterValue(parameter, value);
         }
         catch (ParameterNotFoundException e)
         {
             throw wrapIntoPlanUnitFloatParameterNotFoundException(e);
-        }                
+        }
     }
 
     @Override
-    public float getFloatParameterValue(String paramId)
-            throws ParameterException
+    public float getFloatParameterValue(String paramId) throws ParameterException
     {
         try
         {
@@ -159,9 +173,9 @@ public class TimedDirectTTSUnit extends TimedTTSUnit
         catch (ParameterNotFoundException e)
         {
             throw wrapIntoPlanUnitParameterNotFoundException(e);
-        }        
+        }
     }
-    
+
     @Override
     public void setParameterValue(String paramId, String value) throws ParameterException
     {
@@ -172,9 +186,9 @@ public class TimedDirectTTSUnit extends TimedTTSUnit
         catch (ParameterNotFoundException e)
         {
             throw wrapIntoPlanUnitParameterNotFoundException(e);
-        }                
+        }
     }
-    
+
     @Override
     protected void stopUnit(double time) throws TimedPlanUnitPlayException
     {
@@ -191,6 +205,6 @@ public class TimedDirectTTSUnit extends TimedTTSUnit
     @Override
     protected void playUnit(double arg0) throws TimedPlanUnitPlayException
     {
-        
+
     }
 }

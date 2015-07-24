@@ -190,37 +190,37 @@ public class BMLBBlock
     /**
      * Set IN_EXEC state and generate appropriate feedback 
      */
-    public void start()
+    public void start(double time)
     {
         scheduler.updateTiming(getBMLId());
         reAlignBlock();
         state.set(TimedPlanUnitState.IN_EXEC);
-        scheduler.blockStartFeedback(bmlId);
-        activateOnStartBlocks();
+        scheduler.blockStartFeedback(bmlId, time);
+        activateOnStartBlocks(time);
     }
 
     /**
      * Called to potentially update the BMLBlock's state 
      */
-    public void update(ImmutableMap<String, TimedPlanUnitState> allBlocks)
+    public void update(ImmutableMap<String, TimedPlanUnitState> allBlocks, double time)
     {
         if (state.get() == TimedPlanUnitState.LURKING)
         {
-            updateFromLurking(allBlocks);
+            updateFromLurking(allBlocks, time);
         }
         else if (state.get() == TimedPlanUnitState.IN_EXEC || state.get() == TimedPlanUnitState.SUBSIDING)
         {
-            updateFromExecOrSubSiding();
+            updateFromExecOrSubSiding(time);
         }
     }
 
-    private void activateOnStartBlocks()
+    private void activateOnStartBlocks(double time)
     {
         for (String id : getOnStartSet())
         {
             if (scheduler.getBMLBlockState(id).equals(TimedPlanUnitState.PENDING))
             {
-                scheduler.activateBlock(id);
+                scheduler.activateBlock(id, time);
             }
         }
     }
@@ -228,7 +228,7 @@ public class BMLBBlock
     /**
      * Starts block if all its append targets are finished and it is in lurking state
      */
-    private void updateFromLurking(ImmutableMap<String, TimedPlanUnitState> allBlocks)
+    private void updateFromLurking(ImmutableMap<String, TimedPlanUnitState> allBlocks, double time)
     {
         appendSet.retainAll(allBlocks.keySet());
         chunkAfterSet.retainAll(allBlocks.keySet());
@@ -248,21 +248,21 @@ public class BMLBBlock
                 return;
             }
         }
-        log.debug("{} started at {}", bmlId, scheduler.getSchedulingTime());
-        scheduler.startBlock(bmlId);
+        log.debug("{} started at {}", bmlId, time);
+        scheduler.startBlock(bmlId, time);
     }
 
-    private void updateFromExecOrSubSiding()
+    private void updateFromExecOrSubSiding(double time)
     {
         if (getState() != TimedPlanUnitState.SUBSIDING && isSubsiding())
         {
             state.set(TimedPlanUnitState.SUBSIDING);
-            scheduler.updateBMLBlocks();
+            scheduler.updateBMLBlocks(time);
         }
         if (getState() != TimedPlanUnitState.DONE && isFinished())
         {
             log.debug("bml block {} finished", bmlId);
-            finish();
+            finish(time);
         }
     }
 
@@ -286,28 +286,28 @@ public class BMLBBlock
         return true;
     }
     
-    public void interrupt()
+    public void interrupt(double time)
     {
         TimedPlanUnitState prevState = state.getAndSet(TimedPlanUnitState.DONE);
         
         if(prevState.isPlaying())
         {
-            scheduler.blockStopFeedback(bmlId, BMLABlockStatus.INTERRUPTED);
+            scheduler.blockStopFeedback(bmlId, BMLABlockStatus.INTERRUPTED, time);
         }
         else if(prevState!=TimedPlanUnitState.DONE)
         {
-            scheduler.blockStopFeedback(bmlId, BMLABlockStatus.REVOKED);
+            scheduler.blockStopFeedback(bmlId, BMLABlockStatus.REVOKED, time);
         }
     }
     
     /**
      * Set DONE state and generate appropriate feedback
      */
-    public void finish()
+    public void finish(double time)
     {
         if(state.getAndSet(TimedPlanUnitState.DONE)!=TimedPlanUnitState.DONE)
         {
-            scheduler.blockStopFeedback(bmlId, BMLABlockStatus.DONE);
+            scheduler.blockStopFeedback(bmlId, BMLABlockStatus.DONE, time);
         }
     }
     

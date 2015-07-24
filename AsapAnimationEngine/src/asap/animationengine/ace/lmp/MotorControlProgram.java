@@ -401,6 +401,7 @@ public class MotorControlProgram extends TimedAbstractPlanUnit implements TimedA
         if (time > getRelaxTime())
         {
             relaxUnit.play(time);
+            System.out.println("playing relax " + this.getBMLId() + ":" + this.getId() + " " + time);
         }
         else
         {
@@ -433,6 +434,7 @@ public class MotorControlProgram extends TimedAbstractPlanUnit implements TimedA
     @Override
     protected void startUnit(double time) throws TimedPlanUnitPlayException
     {
+        System.out.println("start " + this.getBMLId() + ":" + this.getId() + " " + time);
         lmp.start(time);
         feedback("start", time);
     }
@@ -440,6 +442,9 @@ public class MotorControlProgram extends TimedAbstractPlanUnit implements TimedA
     @Override
     protected void relaxUnit(double time) throws TimedPlanUnitPlayException
     {
+        System.out.println("relax " + this.getBMLId() + ":" + this.getId() + " " + time);
+        feedbackForSyncs(time);
+        feedback("relax", time);
         Set<String> usedJoints = new HashSet<String>();
         usedJoints.addAll(getKinematicJoints());
         usedJoints.addAll(getPhysicalJoints());
@@ -487,7 +492,7 @@ public class MotorControlProgram extends TimedAbstractPlanUnit implements TimedA
             }
         }
     }
-    
+
     private void gracefullInterrupt(double time)
     {
         skipPegs(time, "ready", "strokeStart", "stroke", "strokeEnd");

@@ -10,5 +10,5 @@ import saiba.bml.core.BehaviourBlock;
  */
 public interface SchedulingHandler
 {
-    void schedule(BehaviourBlock bb, BMLScheduler scheduler);    
+    void schedule(BehaviourBlock bb, BMLScheduler scheduler, double time);    
 }

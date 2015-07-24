@@ -181,7 +181,7 @@ public class MultiThreadedPlanPlayer<T extends TimedPlanUnit>  implements PlanPl
         logger.debug("suException with {}:{}", su.getBMLId(), su.getId());
         String bmlId = su.getBMLId();
         String warningText = message + "\nBehavior " + su.getBMLId() + ":" + su.getId() + " dropped.";
-        warning(new BMLWarningFeedback(bmlId, "EXECUTION_EXCEPTION", warningText));
+        warning(new BMLWarningFeedback(bmlId, "EXECUTION_EXCEPTION", warningText), time);
     }
 
     protected void playUnit(T su, double t) throws TimedPlanUnitPlayException
@@ -258,9 +258,9 @@ public class MultiThreadedPlanPlayer<T extends TimedPlanUnit>  implements PlanPl
         }
     }
 
-    public void warning(BMLWarningFeedback e)
+    public void warning(BMLWarningFeedback e, double time)
     {
-        fbManager.warn(e);
+        fbManager.warn(e, time);
     }
     
     public void addFeedbackListener(BMLFeedbackListener ws)

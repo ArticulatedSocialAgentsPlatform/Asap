@@ -3,6 +3,7 @@
 package asap.tts.ipaaca;
 
 import hmi.tts.TTSBridge;
+import hmi.tts.TTSException;
 import hmi.tts.TimingInfo;
 
 import java.io.IOException;
@@ -22,19 +23,19 @@ public class IpaacaSSMLTTSBridge implements TTSBridge
     }
 
     @Override
-    public TimingInfo getTiming(String text)
+    public TimingInfo getTiming(String text) throws TTSException
     {
         return ttsGen.getTiming(text);
     }
 
     @Override
-    public TimingInfo speak(String text)
+    public TimingInfo speak(String text) throws TTSException
     {
         return ttsGen.speak(text);
     }
 
     @Override
-    public TimingInfo speakToFile(String text, String filename) throws IOException
+    public TimingInfo speakToFile(String text, String filename) throws IOException, TTSException
     {
         return ttsGen.speakToFile(text, filename);
     }

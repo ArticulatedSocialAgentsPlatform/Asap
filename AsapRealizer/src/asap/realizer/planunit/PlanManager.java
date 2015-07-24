@@ -255,6 +255,7 @@ public final class PlanManager<T extends TimedPlanUnit>
                     logger.debug("Setting BML {} block state of {}:{} to {}.", new String[] { pu.isSubUnit() ? "sub" : "", pu.getBMLId(),
                             pu.getId(), state.toString() });
                     pu.setState(state);
+                    System.out.println("Setting state of "+pu.getBMLId()+":"+pu.getId()+" to "+state+" start = "+pu.getStartTime());
                 }
             }
         }

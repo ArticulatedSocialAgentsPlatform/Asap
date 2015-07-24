@@ -9,6 +9,7 @@ import asap.bml.ext.ssml.SSMLBehaviour;
 import asap.speechengine.ttsbinding.TTSBinding;
 import asap.tts.ipaaca.IpaacaSSMLTTSBridge;
 import asap.tts.ipaaca.IpaacaTTSGenerator;
+import asap.tts.ipaaca.VisualProsodyAnalyzer;
 
 /**
  * Binds SpeechBehaviour to Ipaaca TTS generation.
@@ -19,9 +20,9 @@ public class IpaacaTTSBinding extends TTSBinding
 {
     private IpaacaTTSGenerator ipaacaTtsGenerator;
     
-    public IpaacaTTSBinding(PhonemeToVisemeMapping ptv)
+    public IpaacaTTSBinding(PhonemeToVisemeMapping ptv, VisualProsodyAnalyzer vpa)
     {
-        ipaacaTtsGenerator = new IpaacaTTSGenerator(ptv);
+        ipaacaTtsGenerator = new IpaacaTTSGenerator(ptv,vpa);
         ttsGenerator = ipaacaTtsGenerator;
         
         ttsBridgeMap.put(SpeechBehaviour.class, new BMLTTSBridge(ipaacaTtsGenerator));

@@ -3,6 +3,7 @@
 package asap.realizer.scheduler;
 
 import static org.mockito.Matchers.any;
+import static org.mockito.Matchers.anyDouble;
 import static org.mockito.Matchers.eq;
 import static org.mockito.Mockito.atLeastOnce;
 import static org.mockito.Mockito.mock;
@@ -54,7 +55,7 @@ public class BMLBlockManagerFeedbackTest
     {
         BMLBBlock bb = new BMLBBlock("bml1", mockScheduler, pegBoard);
         bbm.addBMLBlock(bb);
-        bbm.startBlock("bml1");
+        bbm.startBlock("bml1", 0);
         final Set<String> behs = new HashSet<String>();
         behs.add("beh1");
 
@@ -65,7 +66,7 @@ public class BMLBlockManagerFeedbackTest
         bbm.syncProgress(spp);
         // previous end definition
         // verify(mockScheduler,times(1)).blockStopFeedback("bml1");
-        verify(mockScheduler, times(0)).blockStopFeedback("bml1", BMLABlockStatus.DONE);
+        verify(mockScheduler, times(0)).blockStopFeedback("bml1", BMLABlockStatus.DONE, 0);
 
         verify(mockScheduler, atLeastOnce()).getBehaviours("bml1");
     }
@@ -75,7 +76,7 @@ public class BMLBlockManagerFeedbackTest
     {
         BMLBBlock bb = new BMLBBlock("bml1", mockScheduler, pegBoard);
         bbm.addBMLBlock(bb);
-        bbm.startBlock("bml1");
+        bbm.startBlock("bml1", 0);
 
         // bml1:beh1:start = 1
         // bml1:beh1:end = unknown
@@ -104,8 +105,8 @@ public class BMLBlockManagerFeedbackTest
 
         // previous end definition
         // verify(mockScheduler,times(1)).blockStopFeedback("bml1");
-        verify(mockScheduler, times(0)).blockStopFeedback(eq("bml1"), any(BMLABlockStatus.class));
-        verify(mockScheduler, times(0)).blockStopFeedback(eq("bml2"), any(BMLABlockStatus.class));
+        verify(mockScheduler, times(0)).blockStopFeedback(eq("bml1"), any(BMLABlockStatus.class), eq(0));
+        verify(mockScheduler, times(0)).blockStopFeedback(eq("bml2"), any(BMLABlockStatus.class), eq(0));
     }
 
     @Test
@@ -119,7 +120,7 @@ public class BMLBlockManagerFeedbackTest
         // bml2:beh1:start = 6
         BMLBBlock bb = new BMLBBlock("bml1", mockScheduler, pegBoard);
         bbm.addBMLBlock(bb);
-        bbm.startBlock("bml1");
+        bbm.startBlock("bml1", 0);
 
         pegBoard.addTimePeg("bml1", "beh1", "start", TimePegUtil.createTimePeg(1));
 
@@ -140,7 +141,7 @@ public class BMLBlockManagerFeedbackTest
         bbm.syncProgress(new BMLSyncPointProgressFeedback("bml1", "beh2", "stroke", 1.5, 1.5));
         bbm.syncProgress(new BMLSyncPointProgressFeedback("bml1", "beh2", "end", 2, 2));
 
-        verify(mockScheduler, never()).blockStopFeedback(eq("bml1"), any(BMLABlockStatus.class));
+        verify(mockScheduler, never()).blockStopFeedback(eq("bml1"), any(BMLABlockStatus.class), eq(0));
     }
 
     @Test
@@ -148,7 +149,7 @@ public class BMLBlockManagerFeedbackTest
     {
         BMLBBlock bb = new BMLBBlock("bml1", mockScheduler, pegBoard);
         bbm.addBMLBlock(bb);
-        bbm.startBlock("bml1");
+        bbm.startBlock("bml1", 0);
 
         pegBoard.addTimePeg("bml1", "beh1", "start", TimePegUtil.createTimePeg(1));
 
@@ -158,7 +159,7 @@ public class BMLBlockManagerFeedbackTest
         when(mockScheduler.getEndTime("bml1", "beh1")).thenReturn(4.0);
 
         bbm.syncProgress(new BMLSyncPointProgressFeedback("bml1", "beh1", "start", 4, 4));
-        verify(mockScheduler, never()).blockStopFeedback(eq("bml1"), any(BMLABlockStatus.class));
+        verify(mockScheduler, never()).blockStopFeedback(eq("bml1"), any(BMLABlockStatus.class), eq(0));
     }
 
     @Test
@@ -166,7 +167,7 @@ public class BMLBlockManagerFeedbackTest
     {
         BMLBBlock bb = new BMLBBlock("bml1", mockScheduler, pegBoard);
         bbm.addBMLBlock(bb);
-        bbm.startBlock("bml1");
+        bbm.startBlock("bml1", 0);
 
         pegBoard.addTimePeg("bml1", "beh1", "start", TimePegUtil.createTimePeg(1));
 
@@ -178,7 +179,7 @@ public class BMLBlockManagerFeedbackTest
         bbm.syncProgress(new BMLSyncPointProgressFeedback("bml1", "beh1", "start", 1, 1));
         bbm.syncProgress(new BMLSyncPointProgressFeedback("bml1", "beh1", "end", 4, 4));
 
-        verify(mockScheduler, times(1)).blockStopFeedback("bml1", BMLABlockStatus.DONE);
+        verify(mockScheduler, times(1)).blockStopFeedback("bml1", BMLABlockStatus.DONE, 4);
     }
 
     @Test
@@ -186,7 +187,7 @@ public class BMLBlockManagerFeedbackTest
     {
         BMLBBlock bb = new BMLBBlock("bml1", mockScheduler, pegBoard);
         bbm.addBMLBlock(bb);
-        bbm.startBlock("bml1");
+        bbm.startBlock("bml1", 0);
 
         pegBoard.addTimePeg("bml1", "beh1", "start", TimePegUtil.createTimePeg(1));
         pegBoard.addTimePeg("bml1", "beh2", "start", TimePegUtil.createTimePeg(2));
@@ -203,7 +204,7 @@ public class BMLBlockManagerFeedbackTest
         bbm.syncProgress(new BMLSyncPointProgressFeedback("bml1", "beh1", "end", 4, 4));
         bbm.syncProgress(new BMLSyncPointProgressFeedback("bml1", "beh2", "end", 8, 8));
 
-        verify(mockScheduler, times(1)).blockStopFeedback("bml1", BMLABlockStatus.DONE);
+        verify(mockScheduler, times(1)).blockStopFeedback("bml1", BMLABlockStatus.DONE, 8);
     }
 
     @Test
@@ -211,11 +212,11 @@ public class BMLBlockManagerFeedbackTest
     {
         BMLBBlock bb = new BMLBBlock("bml1", mockScheduler, pegBoard);
         bbm.addBMLBlock(bb);
-        bbm.startBlock("bml1");
+        bbm.startBlock("bml1", 0);
         when(mockScheduler.getBehaviours("bml1")).thenReturn(new HashSet<String>());
 
-        bbm.warn(new BMLWarningFeedback("bml1", "TEST", ""));
-        verify(mockScheduler, times(1)).blockStopFeedback("bml1", BMLABlockStatus.DONE);
+        bbm.warn(new BMLWarningFeedback("bml1", "TEST", ""), 0);
+        verify(mockScheduler, times(1)).blockStopFeedback("bml1", BMLABlockStatus.DONE, 0);
     }
 
     @Test
@@ -223,7 +224,7 @@ public class BMLBlockManagerFeedbackTest
     {
         BMLBBlock bb = new BMLBBlock("bml1", mockScheduler, pegBoard);
         bbm.addBMLBlock(bb);
-        bbm.startBlock("bml1");
+        bbm.startBlock("bml1", 0);
 
         pegBoard.addTimePeg("bml1", "beh2", "start", TimePegUtil.createTimePeg(1));
         pegBoard.addTimePeg("bml1", "beh1", "start", TimePegUtil.createTimePeg(2));
@@ -240,7 +241,7 @@ public class BMLBlockManagerFeedbackTest
         bbm.syncProgress(new BMLSyncPointProgressFeedback("bml1", "beh2", "end", 4, 4));
         bbm.syncProgress(new BMLSyncPointProgressFeedback("bml1", "beh1", "end", 8, 8));
 
-        verify(mockScheduler, times(1)).blockStopFeedback("bml1", BMLABlockStatus.DONE);
+        verify(mockScheduler, times(1)).blockStopFeedback("bml1", BMLABlockStatus.DONE, 8);
     }
 
     @Test
@@ -253,16 +254,16 @@ public class BMLBlockManagerFeedbackTest
         bbm.addBMLBlock(new BMLBBlock("bml2", mockScheduler, pegBoard));
         bbm.addBMLBlock(new BMLBBlock("bml3", mockScheduler, pegBoard));
 
-        bbm.activateBlock("bml1");
-        bbm.startBlock("bml2");
-        bbm.startBlock("bml3");
+        bbm.activateBlock("bml1", 0);
+        bbm.startBlock("bml2", 0);
+        bbm.startBlock("bml3", 0);
 
         bbm.blockProgress(new BMLBlockProgressFeedback("bml2", "end", 1));
         bbm.blockProgress(new BMLBlockProgressFeedback("bml3", "end", 1));
 
-        verify(mockScheduler, times(1)).startBlock("bml1");
-        verify(mockScheduler, never()).startBlock("bml2");
-        verify(mockScheduler, never()).startBlock("bml3");
+        verify(mockScheduler, times(1)).startBlock("bml1", 1);
+        verify(mockScheduler, never()).startBlock(eq("bml2"), anyDouble());
+        verify(mockScheduler, never()).startBlock(eq("bml3"), anyDouble());
     }
 
     @Test
@@ -275,15 +276,15 @@ public class BMLBlockManagerFeedbackTest
         bbm.addBMLBlock(new BMLBBlock("bml2", mockScheduler, pegBoard));
         bbm.addBMLBlock(new BMLBBlock("bml3", mockScheduler, pegBoard));
 
-        bbm.activateBlock("bml1");
-        bbm.startBlock("bml2");
-        bbm.startBlock("bml3");
+        bbm.activateBlock("bml1", 0);
+        bbm.startBlock("bml2", 0);
+        bbm.startBlock("bml3", 0);
         bbm.blockProgress(new BMLBlockProgressFeedback("bml2", "end", 1));
-        bbm.removeBMLBlock("bml3");
+        bbm.removeBMLBlock("bml3", 0);
 
-        verify(mockScheduler, times(1)).startBlock("bml1");
-        verify(mockScheduler, never()).startBlock("bml2");
-        verify(mockScheduler, never()).startBlock("bml3");
+        verify(mockScheduler, times(1)).startBlock("bml1", 0);
+        verify(mockScheduler, never()).startBlock("bml2", 0);
+        verify(mockScheduler, never()).startBlock("bml3", 0);
     }
 
     @Test
@@ -298,13 +299,13 @@ public class BMLBlockManagerFeedbackTest
         bbm.addBMLBlock(new BMLBBlock("bml3", mockScheduler, pegBoard));
 
         bml1.setState(TimedPlanUnitState.PENDING);
-        bbm.startBlock("bml2");
-        bbm.startBlock("bml3");
+        bbm.startBlock("bml2", 0);
+        bbm.startBlock("bml3", 0);
 
         bbm.blockProgress(new BMLBlockProgressFeedback("bml2", "end", 1));
 
-        verify(mockScheduler, never()).startBlock("bml1");
-        verify(mockScheduler, never()).startBlock("bml2");
-        verify(mockScheduler, never()).startBlock("bml3");
+        verify(mockScheduler, never()).startBlock("bml1", 0);
+        verify(mockScheduler, never()).startBlock("bml2", 0);
+        verify(mockScheduler, never()).startBlock("bml3", 0);
     }
 }

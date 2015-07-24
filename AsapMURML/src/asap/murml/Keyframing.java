@@ -3,6 +3,7 @@
 package asap.murml;
 
 import hmi.xml.XMLFormatting;
+import hmi.xml.XMLScanException;
 import hmi.xml.XMLTokenizer;
 
 import java.io.IOException;
@@ -130,6 +131,10 @@ public class Keyframing extends MURMLElement
                 Phase ph = new Phase();
                 ph.readXML(tokenizer);
                 phases.add(ph);
+            }
+            else
+            {
+                throw new XMLScanException("Invalid tag "+tag+" in <keyframing>");
             }
         }
     }

@@ -58,9 +58,9 @@ public final class SingleThreadedPlanPlayeriSS<T extends TimedPlanUnit> implemen
         this(NullFeedbackManager.getInstance(), planManager);
     }
 
-    public void warn(BMLWarningFeedback e)
+    public void warn(BMLWarningFeedback e, double time)
     {
-        fbManager.warn(e);
+        fbManager.warn(e, time);
     }
 
     private List<T> playingPlanUnits = new ArrayList<T>();

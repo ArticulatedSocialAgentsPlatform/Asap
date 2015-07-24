@@ -2,6 +2,7 @@
  *******************************************************************************/
 package asap.tts.ipaaca;
 
+import hmi.tts.TTSException;
 import ipaaca.Initializer;
 
 import org.junit.Ignore;
@@ -21,7 +22,7 @@ public class IpaacaTTSGeneratorTest
     
     @Ignore
     @Test
-    public void test() throws InterruptedException
+    public void test() throws InterruptedException, TTSException
     {
         //System.out.println(ttsGen.speakBML("test<sync id=\"s1\"/> 1 2 3"));
         ttsGen.speakBMLToFile("test<sync id=\"s1\"/> 1 2 3 4","/tmp/test.wav");

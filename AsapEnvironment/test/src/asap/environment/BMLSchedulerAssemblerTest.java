@@ -55,9 +55,9 @@ public class BMLSchedulerAssemblerTest
         }
 
         @Override
-        public void schedule(BehaviourBlock bb, BMLScheduler scheduler)
+        public void schedule(BehaviourBlock bb, BMLScheduler scheduler, double time)
         {
-
+            
         }
     }
 
