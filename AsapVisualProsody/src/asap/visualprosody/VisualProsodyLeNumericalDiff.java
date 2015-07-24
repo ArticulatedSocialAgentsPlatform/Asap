@@ -49,48 +49,22 @@ public class VisualProsodyLeNumericalDiff
         this.accelerationWeight = w;
     }
 
-    public double minplogVelocityAndAcceleration(double[] rpy, double[] rpyPrev, double[] rpyPrevPrev, double pitch, double rmsLoudness)
+    public double minplog(double[] rpy, double[] rpyPrev, double[] rpyPrevPrev, double pitch, double rmsLoudness, double frameSynthDur,
+            double frameDataDur)
     {
         double velocity = 0;
         for (int i = 0; i < 3; i++)
         {
             velocity += (rpy[i] - rpyPrev[i]) * (rpy[i] - rpyPrev[i]);
         }
-        velocity = Math.sqrt(velocity);
+        velocity = Math.sqrt(velocity) * (frameDataDur / frameSynthDur);
 
         double acceleration = 0;
         for (int i = 0; i < 3; i++)
         {
             acceleration += (rpy[i] - 2 * rpyPrev[i] + rpyPrevPrev[i]) * (rpy[i] - 2 * rpyPrev[i] + rpyPrevPrev[i]);
         }
-        acceleration = Math.sqrt(acceleration);
-
-        if (pitch > 0)
-        {
-            return -Math.log(gmmVelocityVoiced.density(new double[] { velocity, pitch, rmsLoudness })) * VELOCITY_SCALE
-                    - Math.log(gmmAccelerationVoiced.density(new double[] { acceleration, pitch, rmsLoudness })) * ACCELERATION_SCALE;
-        }
-        else
-        {
-            return 0;
-        }
-    }
-
-    public double minplog(double[] rpy, double[] rpyPrev, double[] rpyPrevPrev, double pitch, double rmsLoudness)
-    {
-        double velocity = 0;
-        for (int i = 0; i < 3; i++)
-        {
-            velocity += (rpy[i] - rpyPrev[i]) * (rpy[i] - rpyPrev[i]);
-        }
-        velocity = Math.sqrt(velocity);
-
-        double acceleration = 0;
-        for (int i = 0; i < 3; i++)
-        {
-            acceleration += (rpy[i] - 2 * rpyPrev[i] + rpyPrevPrev[i]) * (rpy[i] - 2 * rpyPrev[i] + rpyPrevPrev[i]);
-        }
-        acceleration = Math.sqrt(acceleration);
+        acceleration = Math.sqrt(acceleration) * (frameDataDur / frameSynthDur) * (frameDataDur / frameSynthDur);
 
         if (pitch > 0)
         {
@@ -107,24 +81,25 @@ public class VisualProsodyLeNumericalDiff
         }
     }
 
-    public double[] generateHeadPose(final double rpyPrev[], final double rpyPrevPrev[], final double pitch, final double rmsLoudness)
+    public double[] generateHeadPose(final double rpyPrev[], final double rpyPrevPrev[], final double pitch, final double rmsLoudness,
+            double frameSynthDur, double frameDataDur)
     {
         class MyOpt extends Optimization
         {
             // Provide the objective function
             protected double objectiveFunction(double[] rpy)
             {
-                return minplog(rpy, rpyPrev, rpyPrevPrev, pitch, rmsLoudness);
+                return minplog(rpy, rpyPrev, rpyPrevPrev, pitch, rmsLoudness, frameSynthDur, frameDataDur);
             }
 
             // Provide the first derivatives
             protected double[] evaluateGradient(double[] rpy)
             {
                 double delta = 0.001d;
-                double p = minplog(rpy, rpyPrev, rpyPrevPrev, pitch, rmsLoudness);
-                double proll = minplog(new double[] { rpy[0] + delta, rpy[1], rpy[2] }, rpyPrev, rpyPrevPrev, pitch, rmsLoudness);
-                double ppitch = minplog(new double[] { rpy[0], rpy[1] + delta, rpy[2] }, rpyPrev, rpyPrevPrev, pitch, rmsLoudness);
-                double pyaw = minplog(new double[] { rpy[0], rpy[1], rpy[2] + delta }, rpyPrev, rpyPrevPrev, pitch, rmsLoudness);
+                double p = minplog(rpy, rpyPrev, rpyPrevPrev, pitch, rmsLoudness, frameSynthDur, frameDataDur);
+                double proll = minplog(new double[] { rpy[0] + delta, rpy[1], rpy[2] }, rpyPrev, rpyPrevPrev, pitch, rmsLoudness, frameSynthDur, frameDataDur);
+                double ppitch = minplog(new double[] { rpy[0], rpy[1] + delta, rpy[2] }, rpyPrev, rpyPrevPrev, pitch, rmsLoudness, frameSynthDur, frameDataDur);
+                double pyaw = minplog(new double[] { rpy[0], rpy[1], rpy[2] + delta }, rpyPrev, rpyPrevPrev, pitch, rmsLoudness, frameSynthDur, frameDataDur);
                 return new double[] { (proll - p) / delta, (ppitch - p) / delta, (pyaw - p) / delta };
             }
 

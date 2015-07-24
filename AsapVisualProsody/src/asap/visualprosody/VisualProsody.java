@@ -8,17 +8,45 @@ import hmi.math.Vec3f;
 
 import java.util.Arrays;
 
+import lombok.Getter;
+
 public class VisualProsody
 {
     private VisualProsodyLeNumericalDiff vpp;
+    
+    @Getter
     private float offset[] = Vec3f.getVec3f();
 
-    public VisualProsody(GaussianMixtureModel gmmRollVoiced, GaussianMixtureModel gmmPitchVoiced,
-            GaussianMixtureModel gmmYawVoiced, GaussianMixtureModel gmmVelocityVoiced, GaussianMixtureModel gmmAccelerationVoiced,
-            float[] offset)
+    public VisualProsody(GaussianMixtureModel gmmRollVoiced, GaussianMixtureModel gmmPitchVoiced, GaussianMixtureModel gmmYawVoiced,
+            GaussianMixtureModel gmmVelocityVoiced, GaussianMixtureModel gmmAccelerationVoiced, float[] offset)
     {
         Vec3f.set(this.offset, offset);
         vpp = new VisualProsodyLeNumericalDiff(gmmRollVoiced, gmmPitchVoiced, gmmYawVoiced, gmmVelocityVoiced, gmmAccelerationVoiced);
+    }
+
+    public double[] firstHeadMotion(double rpyStart[], double f0, double rmsEnergy, double frameSynthDur, double frameDataDur)
+    {
+        double startOffsetted[] = new double[3];
+        for (int i = 0; i < 3; i++)
+        {
+            startOffsetted[i] = rpyStart[i] + offset[i];
+        }
+        return nextHeadMotion(startOffsetted, startOffsetted, f0, rmsEnergy, frameSynthDur, frameDataDur);
+    }
+
+    public double[] nextHeadMotion(double rpyPrev[], double rpyPrevPrev[], double f0, double rmsEnergy, double frameSynthDur,
+            double frameDataDur)
+    {
+        double[] rpy;
+        if (f0 > 10)
+        {
+            rpy = vpp.generateHeadPose(rpyPrev, rpyPrevPrev, f0, rmsEnergy, frameSynthDur, frameDataDur);
+        }
+        else
+        {
+            rpy = Arrays.copyOf(rpyPrev, 3);
+        }
+        return new double[] { rpy[0], rpy[1], rpy[2] };
     }
 
     public SkeletonInterpolator headMotion(double[] rpyStart, AudioFeatures audio)
@@ -37,14 +65,8 @@ public class VisualProsody
         {
             rpyPrevPrev = rpyPrev;
             rpyPrev = rpy;
-            if (audio.getF0()[i] > 10)
-            {
-                rpy = vpp.generateHeadPose(rpyPrev, rpyPrevPrev, audio.getF0()[i], audio.getRmsEnergy()[i]);                
-            }
-            else
-            {
-                rpy = Arrays.copyOf(rpyPrev, 3);
-            }
+            rpy = nextHeadMotion(rpyPrev, rpyPrevPrev, audio.getF0()[i], audio.getRmsEnergy()[i], audio.getFrameDuration(),
+                    audio.getFrameDuration());
             cl.addConfig(
                     i * audio.getFrameDuration(),
                     Quat4f.getQuat4fFromRollPitchYawDegrees((float) rpy[0] - offset[0], (float) rpy[1] - offset[1], (float) rpy[2]
