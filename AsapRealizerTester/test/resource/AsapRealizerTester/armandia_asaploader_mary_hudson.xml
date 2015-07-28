@@ -105,7 +105,7 @@
   </Loader>
 
  <Loader id="speechengine" loader="asap.speechengine.loader.SpeechEngineLoader" requiredloaders="facelipsync,jawlipsync,ttsbinding">
-   <Voice factory="WAV_TTS"/>
+   <Voice factory="WAV_TTS" voicename="dfki-prudence-hsmm"/>	
   </Loader>
 
 

@@ -597,8 +597,7 @@ public final class BMLScheduler
         {
             prediction(createStartPrediction(bmlBlockMap.get(bmlId)));
         }
-        bmlBlocksManager.predictionUpdate(bmlId);
-        System.out.println("started block " + bmlId + " at " + time);
+        bmlBlocksManager.predictionUpdate(bmlId);        
     }
 
     public void activateBlock(String bmlId, double time)

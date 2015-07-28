@@ -91,7 +91,7 @@ public class TimedAnimationUnitLipSynchProvider implements LipSynchProvider
 
         for (TimedAnimationMotionUnit tm : tmus)
         {
-            tm.setSubUnit(true);
+            tm.setSubUnit(true);            
             animationPlanManager.addPlanUnit(tm);
         }
 

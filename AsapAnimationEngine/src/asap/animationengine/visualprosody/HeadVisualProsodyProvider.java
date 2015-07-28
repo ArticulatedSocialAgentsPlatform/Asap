@@ -40,6 +40,7 @@ public class HeadVisualProsodyProvider implements VisualProsodyProvider
         VisualProsodyUnit tmu = new VisualProsodyUnit(NullFeedbackManager.getInstance(), bbPeg, beh.getBmlId(), beh.id, pegBoard,
                 speechUnit, visualProsody, animationPlayer, animationPlanManager, f0, rmsEnergy, frameDuration,
                 speechUnit.getTimePeg("start"), speechUnit.getTimePeg("end"));
+        tmu.setSubUnit(true);
         tmu.setTimePeg("start", speechUnit.getTimePeg("start"));
         animationPlanManager.addPlanUnit(tmu);
         

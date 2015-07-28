@@ -38,11 +38,11 @@ public class GaussianMixtureModel
         double density = 0;
         for (GaussianMixture gm : mixtures)
         {
-            density += gm.getDensity(vals) * gm.weight;
+            density += gm.getDensity(vals) * gm.weight;            
         }
         return density;
     }
-    
+
     /**
      * Get the weighted average of the means of the mixtures in the GMM
      */
@@ -51,14 +51,14 @@ public class GaussianMixtureModel
         double mean[] = new double[mixtures.get(0).getDistribution().getMeans().length];
         for (GaussianMixture gm : mixtures)
         {
-            for(int i=0;i<gm.getDistribution().getDimension();i++)
+            for (int i = 0; i < gm.getDistribution().getDimension(); i++)
             {
                 mean[i] += gm.getDistribution().getMeans()[i] * gm.getWeight();
             }
         }
         return mean;
     }
-    
+
     /**
      * Get the weighted average of the variance of the mixtures in the GMM
      */
@@ -67,9 +67,9 @@ public class GaussianMixtureModel
         double var[] = new double[mixtures.get(0).getDistribution().getMeans().length];
         for (GaussianMixture gm : mixtures)
         {
-            for(int i=0;i<gm.getDistribution().getDimension();i++)
+            for (int i = 0; i < gm.getDistribution().getDimension(); i++)
             {
-                var[i] += gm.getDistribution().getCovariances().getEntry(i,i) * gm.getWeight();
+                var[i] += gm.getDistribution().getCovariances().getEntry(i, i) * gm.getWeight();
             }
         }
         return var;

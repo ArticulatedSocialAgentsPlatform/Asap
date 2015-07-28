@@ -105,7 +105,7 @@ public class BMLASchedulingHandler implements SchedulingHandler
             return;
         }
         schedule(bb, scheduler, appendAfter, chunkAfter, bbm, predictedStart);
-        setupBlockStartState(bb, scheduler, bmlaAttr, appendAfter, chunkAfter, bbm, time);
+        setupBlockStartState(bb, scheduler, bmlaAttr, appendAfter, chunkAfter, bbm, scheduler.getSchedulingTime());
     }
 
     private void schedule(BehaviourBlock bb, BMLScheduler scheduler, Set<String> appendAfter, Set<String> chunkAfter, BMLBBlock bbm,

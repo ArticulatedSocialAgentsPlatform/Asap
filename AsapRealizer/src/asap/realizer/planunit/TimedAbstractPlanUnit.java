@@ -7,7 +7,6 @@ import java.util.concurrent.atomic.AtomicReference;
 
 import lombok.extern.slf4j.Slf4j;
 import saiba.bml.feedback.BMLSyncPointProgressFeedback;
-import asap.bml.ext.bmla.feedback.BMLASyncPointProgressFeedback;
 import asap.realizer.SyncPointNotFoundException;
 import asap.realizer.feedback.FeedbackManager;
 import asap.realizer.pegboard.BMLBlockPeg;

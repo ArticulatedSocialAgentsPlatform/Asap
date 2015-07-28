@@ -21,7 +21,8 @@
       <dependency org="Asap"   name="AsapBinding"      rev="latest.${resolve.status}"   />    
       <dependency org="Asap"   name="AsapEnvironment"     rev="latest.${resolve.status}"   />
             <dependency org="Asap"   name="AsapMaryTTS5Binding"     rev="latest.${resolve.status}"   />
-      <dependency org="marytts" name="voice-cmu-slt-hsmm"       rev="latest.release"  />
+      <!--dependency org="marytts" name="voice-cmu-slt-hsmm"       rev="latest.release"  /-->
+      <dependency org="marytts" name="voice-dfki-prudence-hsmm"       rev="latest.release"  />
 
       <dependency org="HMI"      name="HmiAnimation"       rev="latest.${resolve.status}"  />
       <dependency org="HMI"      name="HmiTTSSapi5"        rev="latest.${resolve.status}"  />

@@ -153,7 +153,6 @@ public class AnimationPlayer implements Player, MixedAnimationPlayer
         vCurrMap = new VJointPartsMap(vC);
         vNextMap = new VJointPartsMap(vN);
 
-        
         // vAdditiveMap = new VJointPartsMap(vAdditive);
 
         prevSkel = new Skeleton("prevSkel", vPrev);
@@ -171,8 +170,8 @@ public class AnimationPlayer implements Player, MixedAnimationPlayer
         vCurrStartPose.setFromTarget();
         vNextStartPose.setFromTarget();
         additiveBlender = new AdditiveRotationBlend(vNext, ImmutableList.of(), vNext);
-        //setAdditiveToIdentity();
-        
+        // setAdditiveToIdentity();
+
         mSystems = m;
         pHuman = mSystems.get(0).getPHuman();
         pHuman.setEnabled(true);
@@ -529,8 +528,8 @@ public class AnimationPlayer implements Player, MixedAnimationPlayer
 
     public VJoint constructAdditiveBody()
     {
-        VJoint vAdditive = getVCurr().copyTree("additive"+UUID.randomUUID());
-        for (VJoint vj:vAdditive.getParts())
+        VJoint vAdditive = getVCurr().copyTree("additive" + UUID.randomUUID());
+        for (VJoint vj : vAdditive.getParts())
         {
             vj.setRotation(Quat4f.getIdentity());
         }
@@ -538,24 +537,30 @@ public class AnimationPlayer implements Player, MixedAnimationPlayer
         additiveBlender.addVJoint(vAdditive);
         return vAdditive;
     }
-    
+
     public VJoint constructAdditiveBody(Set<String> sids)
     {
-        VJoint vAdditive = getVCurr().copyTree("additive"+UUID.randomUUID());
-        for (VJoint vj:vAdditive.getParts())
+        VJoint vAdditive = getVCurr().copyTree("additive" + UUID.randomUUID());
+        for (VJoint vj : vAdditive.getParts())
         {
             vj.setRotation(Quat4f.getIdentity());
         }
-        System.out.println("constructing additive body for joints "+sids);
-        additiveBlender.addVJoint(vAdditive,sids);
+        System.out.println("constructing additive body for joints " + sids);
+        additiveBlender.addVJoint(vAdditive, sids);
         return vAdditive;
     }
-    
-    public void filterAdditiveBody(VJoint vj, Set<String>sids)
+
+    public void removeAdditiveBody(VJoint vj)
     {
-        System.out.println("filter additive body to joints "+sids);
+        additiveBlender.removeVJoint(vj);
+    }
+
+    public void filterAdditiveBody(VJoint vj, Set<String> sids)
+    {
+        System.out.println("filter additive body to joints " + sids);
         additiveBlender.filterVJoint(vj, sids);
     }
+
     /**
      * Get the prev set of joints that is to be animated
      * 

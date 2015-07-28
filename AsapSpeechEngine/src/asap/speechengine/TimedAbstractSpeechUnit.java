@@ -87,10 +87,8 @@ public abstract class TimedAbstractSpeechUnit extends TimedAbstractPlanUnit
 
     protected void sendStartProgress(double time)
     {
-        logger.debug("Sending start progress feedback.");
         String bmlId = getBMLId();
-        String behaviorId = getId();
-
+        String behaviorId = getId();        
         double bmlBlockTime = time - bmlBlockPeg.getValue();
         feedback(new BMLSyncPointProgressFeedback(bmlId, behaviorId, "start", bmlBlockTime, time));
     }

@@ -400,8 +400,7 @@ public class MotorControlProgram extends TimedAbstractPlanUnit implements TimedA
     {
         if (time > getRelaxTime())
         {
-            relaxUnit.play(time);
-            System.out.println("playing relax " + this.getBMLId() + ":" + this.getId() + " " + time);
+            relaxUnit.play(time);            
         }
         else
         {

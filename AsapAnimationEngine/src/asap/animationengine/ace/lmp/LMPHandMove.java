@@ -378,7 +378,20 @@ public class LMPHandMove extends LMP
     @Override
     public double getPreparationDuration()
     {
-        return TRANSITION_TIME;
+        SkeletonPose sp = pcVec.get(0).getPosture();        
+        float qStart[] = Quat4f.getQuat4f();
+        int i= 0;
+        for (String jointId : sp.getPartIds())
+        {
+            VJoint vj = aniPlayer.getVCurrPartBySid(jointId);
+            vj.getRotation(qStart);
+            if(!Quat4f.epsilonRotationEquivalent(sp.getConfig(),i,qStart,0, 0.01f))
+            {
+                return TRANSITION_TIME;
+            }
+            i+=4;
+        }
+        return 0;
     }
 
     @Override
