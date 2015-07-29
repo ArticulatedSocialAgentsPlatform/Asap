@@ -254,7 +254,7 @@ public final class PlanManager<T extends TimedPlanUnit>
                 {
                     logger.debug("Setting BML {} block state of {}:{} to {}.", new String[] { pu.isSubUnit() ? "sub" : "", pu.getBMLId(),
                             pu.getId(), state.toString() });
-                    pu.setState(state);                    
+                    pu.setState(state);
                 }
             }
         }
@@ -298,7 +298,8 @@ public final class PlanManager<T extends TimedPlanUnit>
         {
             for (T pu : planUnits)
             {
-                if (pu.getBMLId().equals(bmlId) && pu.getId().equals(behId) && !pu.isSubUnit())
+                // if (pu.getBMLId().equals(bmlId) && pu.getId().equals(behId) && !pu.isSubUnit())
+                if (pu.getBMLId().equals(bmlId) && pu.getId().equals(behId))
                 {
                     return true;
                 }
@@ -427,27 +428,6 @@ public final class PlanManager<T extends TimedPlanUnit>
         removeFinishedPlanUnits();
     }
 
-    public void setFloatParameterValue(String bmlId, String behId, String paramId, float value) throws ParameterException,
-            BehaviorNotFoundException
-    {
-        boolean found = false;
-        logger.debug("setFloatParameterValue parameter:{} value:{}", paramId, value);
-        synchronized (planUnits)
-        {
-            logger.debug("setFloatParameterValue in sync");
-            for (T pu : planUnits)
-            {
-                if (pu.getBMLId().equals(bmlId) && pu.getId().equals(behId))
-                {
-                    pu.setFloatParameterValue(paramId, value);
-                    found = true;
-                }
-            }
-            logger.debug("setFloatParameterValue done");
-        }
-        if (!found) throw new BehaviorNotFoundException(bmlId, behId);
-    }
-
     public OffsetPeg createOffsetPeg(String bmlId, String behId, String syncId) throws BehaviorNotFoundException,
             SyncPointNotFoundException, TimePegAlreadySetException
     {
@@ -524,6 +504,34 @@ public final class PlanManager<T extends TimedPlanUnit>
         }
     }
 
+    public void setFloatParameterValue(String bmlId, String behId, String paramId, float value) throws ParameterException,
+            BehaviorNotFoundException
+    {
+        boolean found = false;
+        logger.debug("setFloatParameterValue parameter:{} value:{}", paramId, value);
+        synchronized (planUnits)
+        {
+            logger.debug("setFloatParameterValue in sync");
+            for (T pu : planUnits)
+            {
+                if (pu.getBMLId().equals(bmlId) && pu.getId().equals(behId))
+                {
+                    try
+                    {
+                        pu.setFloatParameterValue(paramId, value);
+                    }
+                    catch (ParameterException ex)
+                    {
+                        if (!pu.isSubUnit()) throw ex;
+                    }
+                    found = true;
+                }
+            }
+            logger.debug("setFloatParameterValue done");
+        }
+        if (!found) throw new BehaviorNotFoundException(bmlId, behId);
+    }
+
     public void setParameterValue(String bmlId, String behId, String paramId, String value) throws ParameterException,
             BehaviorNotFoundException
     {
@@ -534,7 +542,14 @@ public final class PlanManager<T extends TimedPlanUnit>
             {
                 if (pu.getBMLId().equals(bmlId) && pu.getId().equals(behId))
                 {
-                    pu.setParameterValue(paramId, value);
+                    try
+                    {
+                        pu.setParameterValue(paramId, value);
+                    }
+                    catch (ParameterException ex)
+                    {
+                        if (!pu.isSubUnit()) throw ex;
+                    }
                     found = true;
                 }
             }

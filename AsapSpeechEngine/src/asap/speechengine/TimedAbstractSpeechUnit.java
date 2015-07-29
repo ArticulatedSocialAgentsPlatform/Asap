@@ -2,13 +2,14 @@
  *******************************************************************************/
 package asap.speechengine;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import java.util.HashMap;
+import java.util.Map;
 
 import saiba.bml.feedback.BMLSyncPointProgressFeedback;
 import asap.realizer.feedback.FeedbackManager;
 import asap.realizer.pegboard.BMLBlockPeg;
 import asap.realizer.pegboard.TimePeg;
+import asap.realizer.planunit.ParameterException;
 import asap.realizer.planunit.TimedAbstractPlanUnit;
 import asap.realizer.planunit.TimedPlanUnitPlayException;
 
@@ -25,15 +26,61 @@ public abstract class TimedAbstractSpeechUnit extends TimedAbstractPlanUnit
 
     protected String speechText;
     protected double bmlStartTime;
-
-    private static Logger logger = LoggerFactory.getLogger(TimedAbstractSpeechUnit.class.getName());
-
+    
+    private Map<String, Float> subUnitFloatParameterValues = new HashMap<>();
+    private Map<String, String> subUnitStringParameterValues = new HashMap<>();
+    
     TimedAbstractSpeechUnit(FeedbackManager bfm, BMLBlockPeg bbPeg, String text, String bmlId, String id)
     {
         super(bfm, bbPeg, bmlId, id);
         speechText = text;
+        subUnitFloatParameterValues.put("visualprosodyAmplitude", 1f);
     }
 
+    public boolean isSubUnitParameter(String paramId)
+    {
+        return subUnitFloatParameterValues.containsKey(paramId)||subUnitStringParameterValues.containsKey(paramId);
+    }
+    
+    public boolean isSubUnitFloatParameter(String paramId)
+    {
+        return subUnitFloatParameterValues.containsKey(paramId);
+    }
+    
+    public void storeSubUnitParameterValue(String paramId, float value)
+    {
+        subUnitFloatParameterValues.put(paramId, value);
+    }
+    
+    public void storeSubUnitParameterValue(String paramId, String value)
+    {
+        subUnitStringParameterValues.put(paramId, value);
+    }
+    
+    @Override
+    public float getFloatParameterValue(String paramId) throws ParameterException
+    {
+        if(isSubUnitFloatParameter(paramId))
+        {
+            return subUnitFloatParameterValues.get(paramId);
+        }
+        return super.getFloatParameterValue(paramId);    
+    }
+
+    @Override
+    public String getParameterValue(String paramId) throws ParameterException
+    {
+        if(isSubUnitFloatParameter(paramId))
+        {
+            return ""+subUnitFloatParameterValues.get(paramId);
+        }
+        else if(isSubUnitParameter(paramId))
+        {
+            return subUnitStringParameterValues.get(paramId);
+        }
+        return super.getParameterValue(paramId);    
+    }
+    
     @Override
     public double getStartTime()
     {

@@ -12,6 +12,7 @@ import java.util.List;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import saiba.bml.BMLInfo;
 import saiba.bml.core.Behaviour;
 import saiba.bml.core.SpeechBehaviour;
 import asap.bml.ext.bmlt.BMLTBehaviour;
@@ -57,12 +58,12 @@ public class TTSPlanner extends AbstractPlanner<TimedTTSUnit>
     {
         visualProsodyProviders.addAll(vps);
     }
-    
+
     public void addAllLipSynchers(Collection<LipSynchProvider> ls)
     {
         lipSynchers.addAll(ls);
     }
-    
+
     public void addLipSyncher(LipSynchProvider ls)
     {
         lipSynchers.add(ls);
@@ -71,6 +72,7 @@ public class TTSPlanner extends AbstractPlanner<TimedTTSUnit>
     public TTSPlanner(FeedbackManager bfm, TimedTTSUnitFactory suf, TTSBinding ttsBin, PlanManager<TimedTTSUnit> planManager)
     {
         super(bfm, planManager);
+        BMLInfo.addCustomFloatAttribute(SpeechBehaviour.class, "http://www.asap-project.org/bmlvp","amount");
         suFactory = suf;
         ttsBinding = ttsBin;
     }
@@ -274,7 +276,12 @@ public class TTSPlanner extends AbstractPlanner<TimedTTSUnit>
         {
             for (VisualProsodyProvider vp : visualProsodyProviders)
             {
-                vp.visualProsody(bbPeg, b, bs, pros.getF0(), pros.getRmsEnergy(), pros.getFrameDuration());
+                float amount = 1;
+                if (b.specifiesParameter("http://www.asap-project.org/bmlvp:amount"))
+                {
+                    amount = b.getFloatParameterValue("http://www.asap-project.org/bmlvp:amount");
+                }
+                vp.visualProsody(bbPeg, b, bs, pros.getF0(), pros.getRmsEnergy(), pros.getFrameDuration(), amount);
             }
         }
 

@@ -202,12 +202,17 @@ public class TimedWavTTSUnit extends TimedTTSUnit
     }
 
     @Override
-    public void setFloatParameterValue(String parameter, float value) throws ParameterException
+    public void setFloatParameterValue(String paramId, float value) throws ParameterException
     {
-        log.debug("TimedWavTTSUnit Setting parameter {} value {}", parameter, value);
+        if(isSubUnitFloatParameter(paramId))
+        {
+            storeSubUnitParameterValue(paramId,value);
+            return;
+        }
+        log.debug("TimedWavTTSUnit Setting parameter {} value {}", paramId, value);
         try
         {
-            wavUnit.setParameterValue(parameter, value);
+            wavUnit.setParameterValue(paramId, value);
         }
         catch (ParameterNotFoundException e)
         {
@@ -218,6 +223,11 @@ public class TimedWavTTSUnit extends TimedTTSUnit
     @Override
     public void setParameterValue(String paramId, String value) throws ParameterException
     {
+        if(isSubUnitFloatParameter(paramId))
+        {
+            storeSubUnitParameterValue(paramId,value);
+            return;
+        }
         try
         {
             wavUnit.setParameterValue(paramId, value);
@@ -237,7 +247,7 @@ public class TimedWavTTSUnit extends TimedTTSUnit
         }
         catch (ParameterNotFoundException e)
         {
-            throw wrapIntoPlanUnitFloatParameterNotFoundException(e);
+            return super.getFloatParameterValue(paramId);            
         }
     }
 
@@ -250,7 +260,7 @@ public class TimedWavTTSUnit extends TimedTTSUnit
         }
         catch (ParameterNotFoundException e)
         {
-            throw wrapIntoPlanUnitParameterNotFoundException(e);
+            return super.getParameterValue(paramId);
         }
     }
 }

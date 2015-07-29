@@ -5,7 +5,6 @@ import asap.animationengine.AnimationPlayer;
 import asap.animationengine.motionunit.TimedAnimationUnit;
 import asap.realizer.feedback.NullFeedbackManager;
 import asap.realizer.pegboard.BMLBlockPeg;
-import asap.realizer.pegboard.PegBoard;
 import asap.realizer.planunit.PlanManager;
 import asap.realizer.planunit.TimedPlanUnit;
 import asap.realizer.visualprosody.VisualProsodyProvider;
@@ -20,26 +19,25 @@ public class HeadVisualProsodyProvider implements VisualProsodyProvider
     private final VisualProsody visualProsody;
     private final AnimationPlayer animationPlayer;
     private final PlanManager<TimedAnimationUnit> animationPlanManager;
-    private final PegBoard pegBoard;
-
-    public HeadVisualProsodyProvider(VisualProsody v, AnimationPlayer ap, PlanManager<TimedAnimationUnit> animationPlanManager, PegBoard pb)
+    
+    public HeadVisualProsodyProvider(VisualProsody v, AnimationPlayer ap, PlanManager<TimedAnimationUnit> animationPlanManager)
     {
         this.visualProsody = v;
         this.animationPlayer = ap;
-        this.animationPlanManager = animationPlanManager;
-        this.pegBoard = pb;
+        this.animationPlanManager = animationPlanManager;        
     }
 
     @Override
     public void visualProsody(BMLBlockPeg bbPeg, Behaviour beh, TimedPlanUnit speechUnit, double[] f0, double[] rmsEnergy,
-            double frameDuration)
+            double frameDuration, float amplitude)
     {
         System.out.println("scheduling visual prosody");
         long time = System.currentTimeMillis();
 
-        VisualProsodyUnit tmu = new VisualProsodyUnit(NullFeedbackManager.getInstance(), bbPeg, beh.getBmlId(), beh.id, pegBoard,
-                speechUnit, visualProsody, animationPlayer, animationPlanManager, f0, rmsEnergy, frameDuration,
+        VisualProsodyUnit tmu = new VisualProsodyUnit(NullFeedbackManager.getInstance(), bbPeg, beh.getBmlId(), beh.id, 
+                speechUnit, visualProsody, animationPlayer, f0, rmsEnergy, frameDuration,
                 speechUnit.getTimePeg("start"), speechUnit.getTimePeg("end"));
+        tmu.setAmplitude(amplitude);
         tmu.setSubUnit(true);
         tmu.setTimePeg("start", speechUnit.getTimePeg("start"));
         animationPlanManager.addPlanUnit(tmu);

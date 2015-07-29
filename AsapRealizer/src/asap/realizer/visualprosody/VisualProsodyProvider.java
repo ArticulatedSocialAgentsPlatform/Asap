@@ -10,5 +10,13 @@ import asap.realizer.planunit.TimedPlanUnit;
  */
 public interface VisualProsodyProvider
 {
-    void visualProsody(BMLBlockPeg bbPeg, Behaviour beh, TimedPlanUnit speechUnit, double f0[], double rmsEnergy[], double frameDuration);
+
+    void visualProsody(BMLBlockPeg bbPeg, Behaviour beh, TimedPlanUnit speechUnit, double f0[], double rmsEnergy[], double frameDuration,
+            float amount);
+
+    default void visualProsody(BMLBlockPeg bbPeg, Behaviour beh, TimedPlanUnit speechUnit, double f0[], double rmsEnergy[],
+            double frameDuration)
+    {
+        visualProsody(bbPeg, beh, speechUnit, f0, rmsEnergy, frameDuration, 1f);
+    }
 }

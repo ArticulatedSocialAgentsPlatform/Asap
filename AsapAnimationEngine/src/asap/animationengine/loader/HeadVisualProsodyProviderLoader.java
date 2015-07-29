@@ -50,7 +50,7 @@ public class HeadVisualProsodyProviderLoader implements VisualProsodyProviderLoa
         {
             throw new XMLScanException("HeadVisualProsodyProviderLoader requires a visualprosodyprovider");
         }
-        vpp = new HeadVisualProsodyProvider(v.constructProsodyProvider(), ael.getAnimationPlayer(), ael.getPlanManager(),are.getPegBoard());
+        vpp = new HeadVisualProsodyProvider(v.constructProsodyProvider(), ael.getAnimationPlayer(), ael.getPlanManager());
     }
 
     private void readSection(XMLTokenizer tokenizer) throws IOException
