@@ -292,13 +292,33 @@ public final class PlanManager<T extends TimedPlanUnit>
 
     }
 
+    /**
+     * Return true if a non-sub planunit corresponding to bmlId:behId is in the plan
+     */
+    public boolean containsMainBehaviour(String bmlId, String behId)
+    {
+        synchronized (planUnits)
+        {
+            for (T pu : planUnits)
+            {
+                if (pu.getBMLId().equals(bmlId) && pu.getId().equals(behId) && !pu.isSubUnit())
+                {
+                    return true;
+                }
+            }
+        }
+        return false;
+    }
+    
+    /**
+     * Return true if a PlanUnit corresponding to bmlId:behId is in the plan
+     */
     public boolean containsBehaviour(String bmlId, String behId)
     {
         synchronized (planUnits)
         {
             for (T pu : planUnits)
             {
-                // if (pu.getBMLId().equals(bmlId) && pu.getId().equals(behId) && !pu.isSubUnit())
                 if (pu.getBMLId().equals(bmlId) && pu.getId().equals(behId))
                 {
                     return true;

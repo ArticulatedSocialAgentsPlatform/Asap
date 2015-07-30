@@ -235,6 +235,12 @@ public class BMLSchedulerTest
         {
             return false;
         }
+        
+        @Override
+        public boolean containsMainBehaviour(String bmlId, String behId)
+        {
+            return false;
+        }
 
         @Override
         public OffsetPeg createOffsetPeg(String bmlId, String behId, String syncId) throws BehaviorNotFoundException,
@@ -303,6 +309,8 @@ public class BMLSchedulerTest
         {
             stopBehaviour(behaviourId, bmlId, time);
         }
+
+       
     }
 
     private static final long CTM = 123;

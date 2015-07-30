@@ -156,11 +156,9 @@ public class AnimationPlanPlayer implements PlanPlayer
             tpuPlayer.stopUnit(tmuR, t);
         }
         planManager.removeFinishedPlanUnits();
+        currentRestPose.play(t, Sets.union(kinematicJoints, currentRestGaze.getKinematicJoints()), physicalJoints);     
         additiveBlender.blend();
-        currentRestGaze.play(t, kinematicJoints, physicalJoints);
-        kinematicJoints.addAll(currentRestGaze.getKinematicJoints());
-        currentRestPose.play(t, kinematicJoints, physicalJoints);     
-        
+        currentRestGaze.play(t, kinematicJoints, physicalJoints);        
     }
 
     private List<TimedAnimationUnit> playback(double t, List<TimedAnimationUnit> tmuRemove, List<TimedAnimationUnit> playingPlanUnits,

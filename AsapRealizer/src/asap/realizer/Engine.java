@@ -21,6 +21,7 @@ public interface Engine
 {
     boolean containsBehaviour(String bmlId, String behId);
 
+    boolean containsMainBehaviour(String bmlId, String behId);
     /**
      * Updates the timing for all behaviors in bml block bmlId to reflect the current execution context
      * (e.g. position of limbs).
@@ -143,4 +144,6 @@ public interface Engine
     void setId(String newId);
 
     String getId();
+
+    
 }

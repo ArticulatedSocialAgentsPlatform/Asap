@@ -121,6 +121,12 @@ public class DefaultEngine<T extends TimedPlanUnit> implements Engine
     {
         return planManager.containsBehaviour(bmlId, behId);
     }
+    
+    @Override
+    public boolean containsMainBehaviour(String bmlId, String behId)
+    {
+        return planManager.containsMainBehaviour(bmlId, behId);
+    }
 
     @Override
     public Set<String> getBehaviours(String bmlId)

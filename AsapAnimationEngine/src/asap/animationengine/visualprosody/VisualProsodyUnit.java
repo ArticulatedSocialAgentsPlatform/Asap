@@ -146,11 +146,9 @@ public class VisualProsodyUnit extends TimedAbstractPlanUnit implements TimedAni
     @Override
     public void setFloatParameterValue(String paramId, float value) throws ParameterException
     {
-        System.out.println("Setting "+paramId);
         if (paramId.equals("visualprosodyAmplitude"))
         {
             amplitude = value;
-            System.out.println("Setting amplitude to "+value);
         }
     }
 

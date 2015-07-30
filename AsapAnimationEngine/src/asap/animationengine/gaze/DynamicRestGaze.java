@@ -89,7 +89,7 @@ public class DynamicRestGaze implements RestGaze
             if (aniPlayer.getVNextPartBySid(Hanim.r_eyeball_joint) != null && aniPlayer.getVNextPartBySid(Hanim.r_eyeball_joint) != null)
             {
                 VOREye(aniPlayer.getVNextPartBySid(Hanim.l_eyeball_joint));
-                VOREye(aniPlayer.getVNextPartBySid(Hanim.r_eyeball_joint));
+                VOREye(aniPlayer.getVNextPartBySid(Hanim.r_eyeball_joint));                
             }
         }
     }

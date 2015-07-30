@@ -174,7 +174,7 @@ public final class BMLScheduler
     {
         for (Engine e : getEngines())
         {
-            if (e.containsBehaviour(bmlId, behId))
+            if (e.containsMainBehaviour(bmlId, behId))
             {
                 return e.getFloatParameterValue(bmlId, behId, paramId);
             }
@@ -186,7 +186,7 @@ public final class BMLScheduler
     {
         for (Engine e : getEngines())
         {
-            if (e.containsBehaviour(bmlId, behId))
+            if (e.containsMainBehaviour(bmlId, behId))
             {
                 return e.getParameterValue(bmlId, behId, paramId);
             }
