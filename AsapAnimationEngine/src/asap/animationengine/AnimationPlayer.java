@@ -171,7 +171,8 @@ public class AnimationPlayer implements Player, MixedAnimationPlayer
         vNextStartPose.setFromTarget();
         additiveBlender = new AdditiveRotationBlend(vNext, ImmutableList.of(), vNext);
         // setAdditiveToIdentity();
-
+        planPlayer.setAdditiveBlender(additiveBlender);
+        
         mSystems = m;
         pHuman = mSystems.get(0).getPHuman();
         pHuman.setEnabled(true);
@@ -452,14 +453,12 @@ public class AnimationPlayer implements Player, MixedAnimationPlayer
             votcCurrToPrev.copyConfig();
             votcNextToCurr.copyConfig();
             setVNextToIdentity();
-            app.play(prevTime);
-            additiveBlender.blend();
+            app.play(prevTime);            
         }
         else
         {
             setVNextToIdentity();
-            app.play(prevTime);
-            additiveBlender.blend();
+            app.play(prevTime);            
 
             votcNextToCurr.copyConfig();
             votcCurrToPrev.copyConfig();

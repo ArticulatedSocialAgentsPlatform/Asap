@@ -76,40 +76,7 @@ public abstract class AbstractGazeMU implements GazeMU
     
     protected float[] getOffsetRotation()
     {
-        float[] q = Quat4f.getQuat4f();
-        Quat4f.setIdentity(q);
-        switch (offsetDirection)
-        {
-        case NONE:
-            break;
-        case RIGHT:
-            Quat4f.setFromAxisAngle4f(q, 0, -1, 0, (float) Math.toRadians(offsetAngle));
-            break;
-        case LEFT:
-            Quat4f.setFromAxisAngle4f(q, 0, 1, 0, (float) Math.toRadians(offsetAngle));
-            break;
-        case UP:
-            Quat4f.setFromAxisAngle4f(q, -1, 0, 0, (float) Math.toRadians(offsetAngle));
-            break;
-        case DOWN:
-            Quat4f.setFromAxisAngle4f(q, 1, 0, 0, (float) Math.toRadians(offsetAngle));
-            break;
-        case UPRIGHT:
-            Quat4f.setFromAxisAngle4f(q, -1, -1, 0, (float) Math.toRadians(offsetAngle));
-            break;
-        case UPLEFT:
-            Quat4f.setFromAxisAngle4f(q, -1, 1, 0, (float) Math.toRadians(offsetAngle));
-            break;
-        case DOWNLEFT:
-            Quat4f.setFromAxisAngle4f(q, 1, 1, 0, (float) Math.toRadians(offsetAngle));
-            break;
-        case DOWNRIGHT:
-            Quat4f.setFromAxisAngle4f(q, 1, -1, 0, (float) Math.toRadians(offsetAngle));
-            break;
-        case POLAR:
-            break;
-        }
-        return q;
+        return GazeUtils.getOffsetRotation(offsetDirection, offsetAngle);        
     }
     
     protected void setEndEyeRotation(VJoint eye, float qEye[]) throws MUPlayException

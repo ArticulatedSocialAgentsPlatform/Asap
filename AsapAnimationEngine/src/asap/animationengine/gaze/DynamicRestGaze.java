@@ -3,8 +3,13 @@
 package asap.animationengine.gaze;
 
 import hmi.animation.Hanim;
+import hmi.animation.VJoint;
 import hmi.math.Quat4f;
+import hmi.math.Vec3f;
+import hmi.neurophysics.EyeSaturation;
+import hmi.neurophysics.ListingsLaw;
 import hmi.util.StringUtil;
+import hmi.worldobjectenvironment.WorldObject;
 
 import java.util.Set;
 
@@ -59,21 +64,32 @@ public class DynamicRestGaze implements RestGaze
     public void setAnimationPlayer(AnimationPlayer player)
     {
         aniPlayer = player;
+
+    }
+
+    private void VOREye(VJoint eye)
+    {
+        WorldObject woTarget = aniPlayer.getWoManager().getWorldObject(target);
+        float gazeDir[] = Vec3f.getVec3f();
+        woTarget.getTranslation2(gazeDir, eye);
+        Quat4f.transformVec3f(GazeUtils.getOffsetRotation(offsetDirection, offsetAngle), gazeDir);
+        Vec3f.normalize(gazeDir);
+        float qp[] = Quat4f.getQuat4f();
+        ListingsLaw.listingsEye(gazeDir, qp);
+        float q[] = Quat4f.getQuat4f();
+        EyeSaturation.sat(qp, Quat4f.getIdentity(), q);
+        eye.setRotation(q);
     }
 
     @Override
     public void play(double time, Set<String> kinematicJoints, Set<String> physicalJoints)
     {
-        // XXX: hack hack: if the eyeball is free, restore it to its previous rotation
         if (!kinematicJoints.contains(Hanim.r_eyeball_joint) && !kinematicJoints.contains(Hanim.l_eyeball_joint))
         {
             if (aniPlayer.getVNextPartBySid(Hanim.r_eyeball_joint) != null && aniPlayer.getVNextPartBySid(Hanim.r_eyeball_joint) != null)
             {
-                float q[] = Quat4f.getQuat4f();
-                aniPlayer.getVCurrPartBySid(Hanim.r_eyeball_joint).getRotation(q);                
-                aniPlayer.getVNextPartBySid(Hanim.r_eyeball_joint).setRotation(q);
-                aniPlayer.getVCurrPartBySid(Hanim.l_eyeball_joint).getRotation(q);
-                aniPlayer.getVNextPartBySid(Hanim.l_eyeball_joint).setRotation(q);
+                VOREye(aniPlayer.getVNextPartBySid(Hanim.l_eyeball_joint));
+                VOREye(aniPlayer.getVNextPartBySid(Hanim.r_eyeball_joint));
             }
         }
     }
@@ -114,7 +130,7 @@ public class DynamicRestGaze implements RestGaze
         catch (MUPlayException e)
         {
             throw new RuntimeException(e);
-        }        
+        }
     }
 
     @Override
@@ -187,13 +203,13 @@ public class DynamicRestGaze implements RestGaze
         }
         catch (MUSetupException e)
         {
-            throw new TMUSetupException("Cannot setup TMU for transition to rest ",null, e);
+            throw new TMUSetupException("Cannot setup TMU for transition to rest ", null, e);
         }
-        
+
         TimedAnimationMotionUnit tmu = mu.createTMU(fbm, bmlBlockPeg, bmlId, id, pb);
         tmu.setTimePeg("start", startPeg);
         tmu.setTimePeg("ready", endPeg);
-        tmu.setState(TimedPlanUnitState.LURKING);        
+        tmu.setState(TimedPlanUnitState.LURKING);
         return tmu;
     }
 

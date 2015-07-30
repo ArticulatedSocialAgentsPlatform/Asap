@@ -5,9 +5,12 @@ package asap.animationengine.gaze;
 import hmi.animation.Hanim;
 import hmi.animation.VJoint;
 import hmi.animation.VJointUtils;
+import hmi.math.Quat4f;
 
 import java.util.HashSet;
 import java.util.Set;
+
+import saiba.bml.core.OffsetDirection;
 
 import com.google.common.collect.ImmutableSet;
 
@@ -20,6 +23,44 @@ public final class GazeUtils
 {
     private GazeUtils()
     {
+    }
+    
+    public static final float[] getOffsetRotation(OffsetDirection offsetDirection, double offsetAngle)
+    {
+        float[] q = Quat4f.getQuat4f();
+        Quat4f.setIdentity(q);
+        switch (offsetDirection)
+        {
+        case NONE:
+            break;
+        case RIGHT:
+            Quat4f.setFromAxisAngle4f(q, 0, -1, 0, (float) Math.toRadians(offsetAngle));
+            break;
+        case LEFT:
+            Quat4f.setFromAxisAngle4f(q, 0, 1, 0, (float) Math.toRadians(offsetAngle));
+            break;
+        case UP:
+            Quat4f.setFromAxisAngle4f(q, -1, 0, 0, (float) Math.toRadians(offsetAngle));
+            break;
+        case DOWN:
+            Quat4f.setFromAxisAngle4f(q, 1, 0, 0, (float) Math.toRadians(offsetAngle));
+            break;
+        case UPRIGHT:
+            Quat4f.setFromAxisAngle4f(q, -1, -1, 0, (float) Math.toRadians(offsetAngle));
+            break;
+        case UPLEFT:
+            Quat4f.setFromAxisAngle4f(q, -1, 1, 0, (float) Math.toRadians(offsetAngle));
+            break;
+        case DOWNLEFT:
+            Quat4f.setFromAxisAngle4f(q, 1, 1, 0, (float) Math.toRadians(offsetAngle));
+            break;
+        case DOWNRIGHT:
+            Quat4f.setFromAxisAngle4f(q, 1, -1, 0, (float) Math.toRadians(offsetAngle));
+            break;
+        case POLAR:
+            break;
+        }
+        return q;
     }
 
     @edu.umd.cs.findbugs.annotations.SuppressWarnings(

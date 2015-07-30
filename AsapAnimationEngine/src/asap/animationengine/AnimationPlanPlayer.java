@@ -2,12 +2,15 @@
  *******************************************************************************/
 package asap.animationengine;
 
+import hmi.animation.AdditiveRotationBlend;
+
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
+import lombok.Setter;
 import lombok.extern.slf4j.Slf4j;
 import asap.animationengine.gaze.RestGaze;
 import asap.animationengine.motionunit.TimedAnimationUnit;
@@ -43,7 +46,11 @@ public class AnimationPlanPlayer implements PlanPlayer
     private RestPose currentRestPose;
     private RestGaze currentRestGaze;
     private PegBoard pegBoard;
+    
+    @Setter
+    private AdditiveRotationBlend additiveBlender;
 
+    
     public void setRestPose(RestPose rp)
     {
         currentRestPose = rp;
@@ -149,10 +156,11 @@ public class AnimationPlanPlayer implements PlanPlayer
             tpuPlayer.stopUnit(tmuR, t);
         }
         planManager.removeFinishedPlanUnits();
-        
+        additiveBlender.blend();
         currentRestGaze.play(t, kinematicJoints, physicalJoints);
         kinematicJoints.addAll(currentRestGaze.getKinematicJoints());
-        currentRestPose.play(t, kinematicJoints, physicalJoints);        
+        currentRestPose.play(t, kinematicJoints, physicalJoints);     
+        
     }
 
     private List<TimedAnimationUnit> playback(double t, List<TimedAnimationUnit> tmuRemove, List<TimedAnimationUnit> playingPlanUnits,

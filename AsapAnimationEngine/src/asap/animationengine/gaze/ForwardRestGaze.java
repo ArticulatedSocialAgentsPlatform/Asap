@@ -2,7 +2,11 @@
  *******************************************************************************/
 package asap.animationengine.gaze;
 
+import hmi.animation.Hanim;
+import hmi.animation.VJoint;
+import hmi.math.Quat4f;
 import hmi.math.Vec3f;
+import hmi.neurophysics.EyeSaturation;
 
 import java.util.Set;
 
@@ -28,12 +32,12 @@ public class ForwardRestGaze implements RestGaze
 {
     private AnimationPlayer aPlayer;
     private final GazeInfluence influence;
-    
+
     public ForwardRestGaze(GazeInfluence influence)
     {
         this.influence = influence;
     }
-    
+
     @Override
     public RestGaze copy(AnimationPlayer player)
     {
@@ -45,18 +49,36 @@ public class ForwardRestGaze implements RestGaze
     @Override
     public void setAnimationPlayer(AnimationPlayer player)
     {
-        aPlayer = player;    
+        aPlayer = player;
     }
 
+    private void VOREye(VJoint eye)
+    {
+        VJoint par = eye.getParent();
+        float qp[] = Quat4f.getQuat4f();
+        par.getPathRotation(null, qp);
+        Quat4f.inverse(qp);
+        float q[]=Quat4f.getQuat4f();
+        EyeSaturation.sat(qp, Quat4f.getIdentity(), q);
+        eye.setRotation(q);
+    }
+    
     @Override
     public void play(double time, Set<String> kinematicJoints, Set<String> physicalJoints)
     {
-        
+        if (!kinematicJoints.contains(Hanim.r_eyeball_joint) && !kinematicJoints.contains(Hanim.l_eyeball_joint))
+        {
+            if (aPlayer.getVNextPartBySid(Hanim.r_eyeball_joint) != null && aPlayer.getVNextPartBySid(Hanim.r_eyeball_joint) != null)
+            {
+                VOREye(aPlayer.getVNextPartBySid(Hanim.l_eyeball_joint));
+                VOREye(aPlayer.getVNextPartBySid(Hanim.r_eyeball_joint));
+            }
+        }
     }
 
     @Override
-    public TimedAnimationMotionUnit createTransitionToRest(FeedbackManager fbm, TimePeg startPeg, TimePeg endPeg,
-            String bmlId, String id, BMLBlockPeg bmlBlockPeg, PegBoard pb) throws TMUSetupException
+    public TimedAnimationMotionUnit createTransitionToRest(FeedbackManager fbm, TimePeg startPeg, TimePeg endPeg, String bmlId, String id,
+            BMLBlockPeg bmlBlockPeg, PegBoard pb) throws TMUSetupException
     {
         AnimationUnit mu;
         try
@@ -65,19 +87,19 @@ public class ForwardRestGaze implements RestGaze
         }
         catch (MUSetupException e)
         {
-            throw new TMUSetupException("Cannot setup TMU for transition to rest ",null, e);
+            throw new TMUSetupException("Cannot setup TMU for transition to rest ", null, e);
         }
-        
+
         TimedAnimationMotionUnit tmu = mu.createTMU(fbm, bmlBlockPeg, bmlId, id, pb);
         tmu.setTimePeg("start", startPeg);
         tmu.setTimePeg("ready", endPeg);
         tmu.setState(TimedPlanUnitState.LURKING);
         return tmu;
     }
-    
+
     @Override
-    public TimedAnimationMotionUnit createTransitionToRest(FeedbackManager fbm, double startTime, String bmlId,
-            String id, BMLBlockPeg bmlBlockPeg, PegBoard pb) throws TMUSetupException
+    public TimedAnimationMotionUnit createTransitionToRest(FeedbackManager fbm, double startTime, String bmlId, String id,
+            BMLBlockPeg bmlBlockPeg, PegBoard pb) throws TMUSetupException
     {
         TimePeg startPeg = new TimePeg(bmlBlockPeg);
         startPeg.setGlobalValue(startTime);
@@ -86,8 +108,8 @@ public class ForwardRestGaze implements RestGaze
     }
 
     @Override
-    public TimedAnimationMotionUnit createTransitionToRest(FeedbackManager fbm, double startTime, double duration,
-            String bmlId, String id, BMLBlockPeg bmlBlockPeg, PegBoard pb) throws TMUSetupException
+    public TimedAnimationMotionUnit createTransitionToRest(FeedbackManager fbm, double startTime, double duration, String bmlId, String id,
+            BMLBlockPeg bmlBlockPeg, PegBoard pb) throws TMUSetupException
     {
         TimePeg startPeg = new TimePeg(bmlBlockPeg);
         startPeg.setGlobalValue(startTime);
@@ -98,7 +120,7 @@ public class ForwardRestGaze implements RestGaze
     @Override
     public double getTransitionToRestDuration()
     {
-        //FIXME: real duration calcuration here
+        // FIXME: real duration calcuration here
         return 2;
     }
 
@@ -107,8 +129,8 @@ public class ForwardRestGaze implements RestGaze
     {
         DynamicGazeMU mu = new DynamicGazeMU();
         mu = mu.copy(aPlayer);
-        mu.setInfluence(influence);        
-        mu.setGazeDirection(Vec3f.getVec3f(0,0,1));        
+        mu.setInfluence(influence);
+        mu.setGazeDirection(Vec3f.getVec3f(0, 0, 1));
         return mu;
     }
 
@@ -117,11 +139,11 @@ public class ForwardRestGaze implements RestGaze
             throws MUSetupException
     {
         DynamicGazeMU mu = new DynamicGazeMU();
-        mu.setGazeDirection(Vec3f.getVec3f(0,0,1));        
+        mu.setGazeDirection(Vec3f.getVec3f(0, 0, 1));
         mu.influence = influence;
         return new GazeShiftTMU(bbf, bmlBlockPeg, bmlId, id, mu.copy(aPlayer), pb, this, aPlayer);
     }
-    
+
     @Override
     public void setParameterValue(String name, String value) throws ParameterException
     {
@@ -131,12 +153,12 @@ public class ForwardRestGaze implements RestGaze
     @Override
     public void setFloatParameterValue(String name, float value) throws ParameterException
     {
-        throw new ParameterException("ForwardRestGaze doesn't support any parameters");        
+        throw new ParameterException("ForwardRestGaze doesn't support any parameters");
     }
 
     @Override
     public Set<String> getKinematicJoints()
     {
-        return GazeUtils.getJoints(aPlayer.getVCurr(),influence);
-    }    
+        return GazeUtils.getJoints(aPlayer.getVCurr(), influence);
+    }
 }
