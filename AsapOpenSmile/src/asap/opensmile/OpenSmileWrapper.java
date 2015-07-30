@@ -67,7 +67,7 @@ public class OpenSmileWrapper
         for (CSVRecord rec : parser.getRecords())
         {
             f0Values.add(Double.parseDouble(rec.get("F0_sma")));
-            rmsValues.add(Double.parseDouble(rec.get("pcm_RMSenergy_sma")));
+            rmsValues.add(0.2*Double.parseDouble(rec.get("pcm_RMSenergy_sma")));
             duration = Double.parseDouble(rec.get("frameTime"));
         }
         parser.close();
