@@ -16,6 +16,7 @@ import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
+import hmi.animation.AdditiveRotationBlend;
 
 import java.util.ArrayList;
 import java.util.HashSet;
@@ -73,6 +74,7 @@ public class AnimationPlanPlayerTest
     private BMLBlockManager mockBmlBlockManager = mock(BMLBlockManager.class);
     private RestPose mockRestPose = mock(RestPose.class);
     private RestGaze mockRestGaze = mock(RestGaze.class);
+    private AdditiveRotationBlend mockAdditiveRotationBlend = mock(AdditiveRotationBlend.class);
     private FeedbackManager fbManager = new FeedbackManagerImpl(mockBmlBlockManager, "character1");
     private PegBoard pegBoard = new PegBoard();
     PlanManager<TimedAnimationUnit> planManager = new PlanManager<>();
@@ -86,6 +88,7 @@ public class AnimationPlanPlayerTest
     {
         fbl = new ListBMLFeedbackListener.Builder().feedBackList(fbList).build();
         app = new AnimationPlanPlayer(mockRestPose, mockRestGaze, fbManager, planManager, new DefaultTimedPlanUnitPlayer(), pegBoard);
+        app.setAdditiveBlender(mockAdditiveRotationBlend);
         app.addFeedbackListener(new ListBMLFeedbackListener.Builder().warningList(exList).build());
         fbManager.addFeedbackListener(fbl);
     }
