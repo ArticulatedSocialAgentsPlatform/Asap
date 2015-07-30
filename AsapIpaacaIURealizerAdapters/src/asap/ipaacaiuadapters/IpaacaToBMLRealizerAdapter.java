@@ -45,7 +45,7 @@ public class IpaacaToBMLRealizerAdapter implements BMLFeedbackListener
     
 
     //private double initTime;
-    private final InputBuffer inBuffer = new InputBuffer("IpaacaToBMLRealizerAdapter", ImmutableSet.of("timesyncRequest", IpaacaBMLConstants.REALIZER_REQUEST_CATEGORY));
+    private final InputBuffer inBuffer = new InputBuffer("IpaacaToBMLRealizerAdapter", ImmutableSet.of(/*"timesyncRequest",*/ IpaacaBMLConstants.REALIZER_REQUEST_CATEGORY));
     private final OutputBuffer outBuffer = new OutputBuffer("IpaacaToBMLRealizerAdapter");
     private final RealizerPort realizerPort;
     private long nextUsedAutoBmlId = 1;
@@ -73,7 +73,7 @@ public class IpaacaToBMLRealizerAdapter implements BMLFeedbackListener
 				synchronized (this) {
 					BehaviourBlock bb = new BehaviourBlock();
 					String requested_bml = iu.getPayload().get(IpaacaBMLConstants.REALIZER_REQUEST_KEY);
-					System.out.println("requested bml {{{ "+requested_bml+" }}}");
+					//System.out.println("requested bml {{{ "+requested_bml+" }}}");
 					bb.readXML(requested_bml);
 					String actualBmlId = bb.getBmlId();
 					if (actualBmlId.equals("AUTO")) {
@@ -94,24 +94,25 @@ public class IpaacaToBMLRealizerAdapter implements BMLFeedbackListener
 					items.put(IpaacaBMLConstants.BML_ID_KEY, actualBmlId);
 					items.put(IpaacaBMLConstants.IU_STATUS_KEY, "((RECEIVED))");
 					try{
-						System.out.println("request status update");
+						//System.out.println("request status update");
 						iu.getPayload().merge(items);
-						System.out.println("OK status update");
+						//System.out.println("OK status update");
 					} catch (ipaaca.IUUpdateFailedException ex) {
-						System.out.println("FAILED status update");
+						//System.out.println("FAILED status update");
 						//
 					}
 				}
            	}
         }, types, ImmutableSet.of(IpaacaBMLConstants.REALIZER_REQUEST_CATEGORY)));
         
-        // HACK by Ramin
-        // FIXME: this is a minimal reimplementation of the Component timesync code (slave part) from Python ipaaca.util - not yet ported to Java
-        inBuffer.registerHandler(new IUEventHandler(new HandlerFunctor()
-        {
-            @Override
-            public void handle(AbstractIU iu, IUEventType type, boolean local)
-            {
+		/* deactivated, replace later with generic timesync for Java
+		// HACK by Ramin
+		// FIXME: this is a minimal reimplementation of the Component timesync code (slave part) from Python ipaaca.util - not yet ported to Java
+		inBuffer.registerHandler(new IUEventHandler(new HandlerFunctor()
+		{
+			@Override
+			public void handle(AbstractIU iu, IUEventType type, boolean local)
+			{
 				synchronized (this) {
 					String master = iu.getPayload().get("master");
 					String master_t1 = iu.getPayload().get("master_t1");
@@ -131,13 +132,13 @@ public class IpaacaToBMLRealizerAdapter implements BMLFeedbackListener
 						outBuffer.add(timingIU);
 					}
 				}
-           	}
-        }, types, ImmutableSet.of("timesyncRequest")));
-        outBuffer.registerHandler(new IUEventHandler(new HandlerFunctor()
-        {
-            @Override
-            public void handle(AbstractIU iu, IUEventType type, boolean local)
-            {
+			}
+		}, types, ImmutableSet.of("timesyncRequest")));
+		outBuffer.registerHandler(new IUEventHandler(new HandlerFunctor()
+		{
+			@Override
+			public void handle(AbstractIU iu, IUEventType type, boolean local)
+			{
 				synchronized (this) {
 					String master = iu.getPayload().get("master");
 					String master_t1 = iu.getPayload().get("master_t1");
@@ -154,9 +155,10 @@ public class IpaacaToBMLRealizerAdapter implements BMLFeedbackListener
 						System.out.println("Master "+master+" determined our timing info: round-trip time: "+latency+"  clock offset: "+offset);
 					}
 				}
-           	}
-        }, updated_types, ImmutableSet.of("timesyncReply")));
-        // END hack
+			}
+			}, updated_types, ImmutableSet.of("timesyncReply")));
+		// END hack
+		*/
         
         ComponentNotifier notifier = new ComponentNotifier("IpaacaToBMLRealizerAdapter", "bmlrealizer",
                 ImmutableSet.of(IpaacaBMLConstants.REALIZER_FEEDBACK_CATEGORY),ImmutableSet.of(IpaacaBMLConstants.REALIZER_REQUEST_CATEGORY),
@@ -229,7 +231,7 @@ public class IpaacaToBMLRealizerAdapter implements BMLFeedbackListener
 						new_payload_items.put(IpaacaBMLConstants.IU_PREDICTED_START_TIME_KEY, Double.valueOf(start).toString()); 
 						new_payload_items.put(IpaacaBMLConstants.IU_PREDICTED_END_TIME_KEY, Double.valueOf(end).toString());
 						double t = System.currentTimeMillis()/1000.0;
-						System.out.println("SEND TIME: " + String.format(Locale.ENGLISH, "%.3f", t));
+						//System.out.println("SEND TIME: " + String.format(Locale.ENGLISH, "%.3f", t));
 						if (iu_to_update != null) {
 							try{
 								iu_to_update.getPayload().merge(new_payload_items);
