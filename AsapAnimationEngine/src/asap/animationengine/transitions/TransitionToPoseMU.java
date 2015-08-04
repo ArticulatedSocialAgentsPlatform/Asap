@@ -47,12 +47,6 @@ public abstract class TransitionToPoseMU extends TransitionMU
         }        
     }
     
-    @Override
-    public void setEndPose(double endTime, double duration)
-    {
-
-    }
-    
     /**
      * Set the start pose
      * 

@@ -90,9 +90,7 @@ public abstract class TransitionMU implements AnimationUnit
     public abstract void play(double t);
 
     public abstract void setStartPose();
-
-    public abstract void setEndPose(double endTime, double duration);
-
+    
     @Override
     public void setFloatParameterValue(String name, float value) throws ParameterNotFoundException
     {

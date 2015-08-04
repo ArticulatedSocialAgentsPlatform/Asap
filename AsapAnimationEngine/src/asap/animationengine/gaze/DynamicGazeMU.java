@@ -8,7 +8,7 @@ import hmi.animation.VJointUtils;
 import hmi.math.Quat4f;
 import hmi.math.Vec3f;
 import hmi.neurophysics.Saccade;
-import hmi.neurophysics.Torso;
+import hmi.neurophysics.Spine;
 
 import java.util.List;
 import java.util.Set;
@@ -121,7 +121,7 @@ public class DynamicGazeMU extends AbstractGazeMU
         int n = jointsToSteer.size();
         for (i = 1; i <= jointsToSteer.size(); i++)
         {
-            float s = (float) Torso.getLinearIncrease(i, n);
+            float s = (float) Spine.getLinearIncrease(i, n);
             Quat4f.setFromRollPitchYaw(spineRots, (i - 1) * 4, s * rpy[0], s * rpy[1], s * rpy[2]);
         }
         return spineRots;

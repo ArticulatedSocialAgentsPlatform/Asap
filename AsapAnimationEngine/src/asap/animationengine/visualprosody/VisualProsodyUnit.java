@@ -6,8 +6,10 @@ import hmi.animation.SkeletonInterpolator;
 import hmi.animation.VJoint;
 import hmi.math.Quat4f;
 import hmi.math.Vec3f;
+import hmi.neurophysics.Spine;
 import hmi.util.StringUtil;
 
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Set;
@@ -48,7 +50,8 @@ public class VisualProsodyUnit extends TimedAbstractPlanUnit implements TimedAni
     private double[] rpy, rpyPrev, rpyPrevPrev;
     private VJoint additiveBody;
     private KeyframeMU relaxMu;
-    
+    private List<String> joints;
+
     @Setter
     private double amplitude = 1;
 
@@ -64,6 +67,14 @@ public class VisualProsodyUnit extends TimedAbstractPlanUnit implements TimedAni
         this.animationPlayer = animationPlayer;
         this.speechStart = speechStart;
         this.speechEnd = speechEnd;
+        joints = new ArrayList<String>();
+        for (String cJoint : Hanim.CERVICAL_JOINTS)
+        {
+            if (animationPlayer.getVNextPartBySid(cJoint) != null)
+            {
+                joints.add(cJoint);
+            }
+        }
     }
 
     @Override
@@ -72,7 +83,7 @@ public class VisualProsodyUnit extends TimedAbstractPlanUnit implements TimedAni
         rpy = visualProsody.firstHeadMotion(new double[] { 0, 0, 0 }, f0[0], rmsEnergy[0], frameDuration, frameDuration);
         rpyPrev = Arrays.copyOf(rpy, 3);
         rpyPrevPrev = Arrays.copyOf(rpy, 3);
-        additiveBody = animationPlayer.constructAdditiveBody(ImmutableSet.of(Hanim.skullbase));
+        additiveBody = animationPlayer.constructAdditiveBody(ImmutableSet.copyOf(joints));
     }
 
     @Override
@@ -87,11 +98,17 @@ public class VisualProsodyUnit extends TimedAbstractPlanUnit implements TimedAni
         {
             if (!relaxSetup)
             {
-                float q[] = Quat4f.getQuat4fFromRollPitchYawDegrees(rpyAnimation[0], rpyAnimation[1], rpyAnimation[2]);
-                ConfigList cl = new ConfigList(4);
+                float q[] = new float[joints.size() * 4];
+                Spine.setCervicalRotationRollPitchYawDegrees(q, rpyAnimation[0], rpyAnimation[1], rpyAnimation[2], joints.size());
+                ConfigList cl = new ConfigList(4*joints.size());
                 cl.addConfig(0, q);
-                cl.addConfig(RELAX_DURATION, Quat4f.getIdentity());
-                SkeletonInterpolator relaxSki = new SkeletonInterpolator(new String[] { Hanim.skullbase }, cl, "R");
+                float qIdentity[]=new float[joints.size()*4];
+                for(int i=0;i<joints.size();i++)
+                {
+                    Quat4f.setIdentity(qIdentity, i*4);
+                }
+                cl.addConfig(RELAX_DURATION, qIdentity);
+                SkeletonInterpolator relaxSki = new SkeletonInterpolator(joints.toArray(new String[joints.size()]), cl, "R");
                 relaxMu = new KeyframeMU(relaxSki);
                 relaxMu.setAdditive(true);
                 relaxMu = relaxMu.copy(animationPlayer);
@@ -111,8 +128,14 @@ public class VisualProsodyUnit extends TimedAbstractPlanUnit implements TimedAni
             }
             rpyPrevPrev = rpyPrev;
             rpyPrev = rpy;
-            float q[] = Quat4f.getQuat4fFromRollPitchYawDegrees(rpyAnimation[0], rpyAnimation[1], rpyAnimation[2]);
-            additiveBody.getPart(Hanim.skullbase).setRotation(q);
+            float q[] = new float[joints.size() * 4];
+            Spine.setCervicalRotationRollPitchYawDegrees(q, rpyAnimation[0], rpyAnimation[1], rpyAnimation[2], joints.size());
+            int i = 0;
+            for (String joint : joints)
+            {
+                additiveBody.getPart(joint).setRotation(q, i * 4);
+                i++;
+            }
         }
     }
 
@@ -157,9 +180,9 @@ public class VisualProsodyUnit extends TimedAbstractPlanUnit implements TimedAni
     {
         if (paramId.equals("visualprosodyAmplitude"))
         {
-            return (float)amplitude;
+            return (float) amplitude;
         }
-        return super.getFloatParameterValue(paramId);    
+        return super.getFloatParameterValue(paramId);
     }
 
     @Override
@@ -167,9 +190,9 @@ public class VisualProsodyUnit extends TimedAbstractPlanUnit implements TimedAni
     {
         if (paramId.equals("visualprosodyAmplitude"))
         {
-            return ""+amplitude;
+            return "" + amplitude;
         }
-        return super.getParameterValue(paramId);    
+        return super.getParameterValue(paramId);
     }
 
     @Override

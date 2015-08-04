@@ -9,6 +9,7 @@ import hmi.xml.XMLStructureAdapter;
 import hmi.xml.XMLTokenizer;
 
 import java.io.IOException;
+import java.lang.reflect.InvocationTargetException;
 import java.util.HashMap;
 
 import asap.animationengine.restpose.RestPose;
@@ -22,7 +23,7 @@ public class RestPoseAssembler extends XMLStructureAdapter
 {
     private Resources resources;
     private RestPose restPose;
-    
+
     public RestPose getRestPose()
     {
         return restPose;
@@ -57,19 +58,43 @@ public class RestPoseAssembler extends XMLStructureAdapter
             try
             {
                 Class<?> c = Class.forName(className);
-                restPose = c.asSubclass(RestPose.class).newInstance();                
+                if (file == null)
+                {
+                    restPose = c.asSubclass(RestPose.class).newInstance();
+                }
+                else
+                {
+                    restPose = c.asSubclass(RestPose.class).getDeclaredConstructor(XMLTokenizer.class)
+                            .newInstance(new XMLTokenizer(resources.getReader(file)));
+                }
             }
             catch (ClassNotFoundException e)
             {
-                throw new XMLScanException("Restpose "+className+" not found.", e);
+                throw new XMLScanException("Restpose " + className + " not found.", e);
             }
             catch (InstantiationException e)
             {
-                throw new XMLScanException("Restpose "+className+" not instantiated.", e);
+                throw new XMLScanException("Restpose " + className + " not instantiated.", e);
             }
             catch (IllegalAccessException e)
             {
-                throw new XMLScanException("Restpose "+className+" illegal access.", e);
+                throw new XMLScanException("Restpose " + className + " illegal access.", e);
+            }
+            catch (IllegalArgumentException e)
+            {
+                throw new XMLScanException("Restpose " + className + " illegal argument.", e);
+            }
+            catch (InvocationTargetException e)
+            {
+                throw new XMLScanException("Restpose " + className + " InvocationTargetException.", e);
+            }
+            catch (NoSuchMethodException e)
+            {
+                throw new XMLScanException("Restpose " + className + " NoSuchMethodException.", e);
+            }
+            catch (SecurityException e)
+            {
+                throw new XMLScanException("Restpose " + className + " SecurityException.", e);
             }
         }
         else if (type.equals("PhysicalController"))
@@ -82,15 +107,15 @@ public class RestPoseAssembler extends XMLStructureAdapter
             }
             catch (ClassNotFoundException e)
             {
-                throw new XMLScanException("Physical restpose "+className+" not found.", e);
+                throw new XMLScanException("Physical restpose " + className + " not found.", e);
             }
             catch (InstantiationException e)
             {
-                throw new XMLScanException("Physical restpose "+className+" not instantiated.", e);
+                throw new XMLScanException("Physical restpose " + className + " not instantiated.", e);
             }
             catch (IllegalAccessException e)
             {
-                throw new XMLScanException("Physical restpose "+className+" illegal access.", e);
+                throw new XMLScanException("Physical restpose " + className + " illegal access.", e);
             }
         }
     }
