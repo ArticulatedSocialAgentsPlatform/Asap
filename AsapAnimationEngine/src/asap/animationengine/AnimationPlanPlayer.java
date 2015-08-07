@@ -233,7 +233,7 @@ public class AnimationPlanPlayer implements PlanPlayer
     public void reset(double time)
     {
         currentRestPose = defaultRestPose;
-        defaultRestPose.startRestPose(time);
+        defaultRestPose.initialRestPose(time);
         currentRestGaze = defaultRestGaze;
         defPlayer.reset(time);
     }

@@ -71,9 +71,14 @@ public interface RestPose
     AnimationUnit createTransitionToRest(Set<String>joints);
     
     /**
-     * Sets the restpose to prev, next, curr on the animationplayer 
+     * Sets this rest posture as the initial one, that is: e.g. sets the restpose to prev, next, curr on the animationplayer 
      */
-    void startRestPose(double time);
+    void initialRestPose(double time);
+    
+    /**
+     * Starts the rest pose, called before first play via the PostureShiftTMU
+     */
+    void start(double time);
     
     void setParameterValue(String name, String value) throws ParameterException;
     

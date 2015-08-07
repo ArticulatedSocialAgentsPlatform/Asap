@@ -120,9 +120,9 @@ public class RestPoseAssembler extends XMLStructureAdapter
         }
     }
 
-    private static final String XMLTAG = "RestPose";
+    public static final String XMLTAG = "RestPose";
 
-    public static String xmlTag()
+    public final static String xmlTag()
     {
         return XMLTAG;
     }

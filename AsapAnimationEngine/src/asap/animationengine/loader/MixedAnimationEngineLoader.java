@@ -14,6 +14,7 @@ import hmi.physicsembodiments.PhysicalEmbodiment;
 import hmi.util.ArrayUtils;
 import hmi.util.Resources;
 import hmi.worldobjectenvironment.WorldObjectEnvironment;
+import hmi.xml.XMLScanException;
 import hmi.xml.XMLStructureAdapter;
 import hmi.xml.XMLTokenizer;
 
@@ -22,6 +23,7 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 
+import lombok.Getter;
 import asap.animationengine.AnimationPlanPlayer;
 import asap.animationengine.AnimationPlanner;
 import asap.animationengine.AnimationPlayer;
@@ -30,6 +32,7 @@ import asap.animationengine.gaze.GazeInfluence;
 import asap.animationengine.gaze.RestGaze;
 import asap.animationengine.gesturebinding.GestureBinding;
 import asap.animationengine.gesturebinding.HnsHandshape;
+import asap.animationengine.gesturebinding.RestPoseAssembler;
 import asap.animationengine.motionunit.TimedAnimationUnit;
 import asap.animationengine.restpose.RestPose;
 import asap.animationengine.restpose.SkeletonPoseRestPose;
@@ -37,6 +40,7 @@ import asap.hns.Hns;
 import asap.realizer.DefaultEngine;
 import asap.realizer.Engine;
 import asap.realizer.planunit.DefaultTimedPlanUnitPlayer;
+import asap.realizer.planunit.ParameterException;
 import asap.realizer.planunit.PlanManager;
 import asap.realizerembodiments.AsapRealizerEmbodiment;
 import asap.realizerembodiments.EngineLoader;
@@ -67,7 +71,8 @@ public class MixedAnimationEngineLoader implements EngineLoader
 
     private AsapRealizerEmbodiment are = null;
     private WorldObjectEnvironment we = null;
-
+    private RestPose pose;
+    
     @Override
     public void readXML(XMLTokenizer tokenizer, String loaderId, String vhId, String vhName, Environment[] environments,
             Loader... requiredLoaders) throws IOException
@@ -80,15 +85,15 @@ public class MixedAnimationEngineLoader implements EngineLoader
         {
             if (e.getEmbodiment() instanceof MixedSkeletonEmbodiment)
             {
-                mse = (MixedSkeletonEmbodiment) e.getEmbodiment();                
+                mse = (MixedSkeletonEmbodiment) e.getEmbodiment();
             }
             if (e.getEmbodiment() instanceof PhysicalEmbodiment)
             {
-                pe = (PhysicalEmbodiment) e.getEmbodiment();                
+                pe = (PhysicalEmbodiment) e.getEmbodiment();
             }
             if (e.getEmbodiment() instanceof AsapRealizerEmbodiment)
             {
-                are = (AsapRealizerEmbodiment) e.getEmbodiment();                
+                are = (AsapRealizerEmbodiment) e.getEmbodiment();
             }
         }
 
@@ -128,6 +133,113 @@ public class MixedAnimationEngineLoader implements EngineLoader
         mae.removeAnimationPlayer(animationPlayer, mse.getCurrentVJoint(), mse.getAnimationVJoint());
     }
 
+    static class Parameters extends XMLStructureAdapter
+    {
+        @Getter
+        private List<Parameter> parameters = new ArrayList<>();
+
+        @Override
+        public void decodeContent(XMLTokenizer tokenizer) throws IOException
+        {
+            while (tokenizer.atSTag())
+            {
+                String tag = tokenizer.getTagName();
+                switch (tag)
+                {
+                case Parameter.XMLTAG:
+                    Parameter p = new Parameter();
+                    p.readXML(tokenizer);
+                    parameters.add(p);
+                    break;
+
+                default:
+                    throw new XMLScanException("unknown tag " + tag);
+                }
+            }
+        }
+
+        public static final String XMLTAG = "parameters";
+
+        @Override
+        public String getXMLTag()
+        {
+            return XMLTAG;
+        }
+    }
+
+    static class Parameter extends XMLStructureAdapter
+    {
+        public String name;
+        public String value;
+
+        @Override
+        public void decodeAttributes(HashMap<String, String> attrMap, XMLTokenizer tokenizer)
+        {
+            name = getRequiredAttribute("name", attrMap, tokenizer);
+            value = getRequiredAttribute("value", attrMap, tokenizer);
+        }
+
+        public static final String XMLTAG = "parameter";
+
+        @Override
+        public String getXMLTag()
+        {
+            return XMLTAG;
+        }
+    }
+
+    static class StartPose extends XMLStructureAdapter
+    {
+        private RestPose restPose;
+        private Parameters params = new Parameters();
+
+        private RestPose getRestPose()
+        {
+            for (Parameter param : params.getParameters())
+            {
+                try
+                {
+                    restPose.setParameterValue(param.name, param.value);
+                }
+                catch (ParameterException e)
+                {
+                    throw new RuntimeException(e);
+                }
+            }
+            return restPose;
+        }
+
+        @Override
+        public void decodeContent(XMLTokenizer tokenizer) throws IOException
+        {
+            while (tokenizer.atSTag())
+            {
+                String tag = tokenizer.getTagName();
+                switch (tag)
+                {
+                case RestPoseAssembler.XMLTAG:
+                    RestPoseAssembler rpa = new RestPoseAssembler(new Resources(""));
+                    rpa.readXML(tokenizer);
+                    restPose = rpa.getRestPose();
+                    break;
+                case Parameters.XMLTAG:
+                    params.readXML(tokenizer);
+                    break;
+                default:
+                    throw new XMLScanException("unknown tag " + tag);
+                }
+            }
+        }
+
+        private static final String XMLTAG = "StartPose";
+
+        @Override
+        public String getXMLTag()
+        {
+            return XMLTAG;
+        }
+    }
+
     protected void readSection(XMLTokenizer tokenizer) throws IOException
     {
         HashMap<String, String> attrMap = null;
@@ -150,22 +262,28 @@ public class MixedAnimationEngineLoader implements EngineLoader
         }
         else if (tokenizer.atSTag("StartPose"))
         {
-            attrMap = tokenizer.getAttributes();
-            try
-            {
-                Resources res = new Resources(adapter.getOptionalAttribute("resources", attrMap, ""));
-                restpose = new SkeletonPose(new XMLTokenizer(res.getReader(adapter.getRequiredAttribute("filename", attrMap, tokenizer))));
-                VJoint vjNull[] = new VJoint[0];
-                restpose.setTargets(mse.getNextVJoint().getParts().toArray(vjNull));
-                restpose.setToTarget();
-                mse.getNextVJoint().calculateMatrices();
-            }
-            catch (RuntimeException e)
-            {
-                throw tokenizer.getXMLScanException("Cannot load start pose ");
-            }
-            tokenizer.takeSTag("StartPose");
-            tokenizer.takeETag("StartPose");
+            /*
+             * attrMap = tokenizer.getAttributes();
+             * try
+             * {
+             * Resources res = new Resources(adapter.getOptionalAttribute("resources", attrMap, ""));
+             * restpose = new SkeletonPose(new XMLTokenizer(res.getReader(adapter.getRequiredAttribute("filename", attrMap, tokenizer))));
+             * VJoint vjNull[] = new VJoint[0];
+             * restpose.setTargets(mse.getNextVJoint().getParts().toArray(vjNull));
+             * restpose.setToTarget();
+             * mse.getNextVJoint().calculateMatrices();
+             * }
+             * catch (RuntimeException e)
+             * {
+             * throw tokenizer.getXMLScanException("Cannot load start pose ");
+             * }
+             * tokenizer.takeSTag("StartPose");
+             * tokenizer.takeETag("StartPose");
+             */
+            
+            StartPose sp = new StartPose();
+            sp.readXML(tokenizer);
+            pose = sp.getRestPose();
         }
         else if (tokenizer.atSTag("Hns"))
         {
@@ -221,24 +339,22 @@ public class MixedAnimationEngineLoader implements EngineLoader
         if (gesturebinding == null) throw tokenizer.getXMLScanException("gesturebinding is null, cannot build animation planner ");
         animationPlanManager = new PlanManager<TimedAnimationUnit>();
 
-        RestPose pose;
-        if (restpose != null)
-        {
-            pose = new SkeletonPoseRestPose(restpose);
-        }
-        else
+        
+        if(pose == null)
         {
             pose = new SkeletonPoseRestPose();
         }
         RestGaze defRestGaze = new ForwardRestGaze(GazeInfluence.WAIST);
-        AnimationPlanPlayer animationPlanPlayer = new AnimationPlanPlayer(pose, defRestGaze, are.getFeedbackManager(), animationPlanManager,
-                new DefaultTimedPlanUnitPlayer(), are.getPegBoard());
+        AnimationPlanPlayer animationPlanPlayer = new AnimationPlanPlayer(pose, defRestGaze, are.getFeedbackManager(),
+                animationPlanManager, new DefaultTimedPlanUnitPlayer(), are.getPegBoard());
 
         animationPlayer = new AnimationPlayer(mse.getPreviousVJoint(), mse.getCurrentVJoint(), mse.getNextVJoint(), pe.getMixedSystems(),
                 mae.getH(), we.getWorldObjectManager(), animationPlanPlayer);
 
         pose.setAnimationPlayer(animationPlayer);
+        pose.initialRestPose(0);
         defRestGaze.setAnimationPlayer(animationPlayer);
+        
         try
         {
             hnsHandshape = new HnsHandshape(handShapeDir.toArray(new String[0]));
@@ -249,8 +365,8 @@ public class MixedAnimationEngineLoader implements EngineLoader
         }
 
         // make planner
-        animationPlanner = new AnimationPlanner(are.getFeedbackManager(), animationPlayer, gesturebinding, hns,
-                hnsHandshape, animationPlanManager, are.getPegBoard());
+        animationPlanner = new AnimationPlanner(are.getFeedbackManager(), animationPlayer, gesturebinding, hns, hnsHandshape,
+                animationPlanManager, are.getPegBoard());
 
         engine = new DefaultEngine<TimedAnimationUnit>(animationPlanner, animationPlayer, animationPlanManager);
         engine.setId(id);

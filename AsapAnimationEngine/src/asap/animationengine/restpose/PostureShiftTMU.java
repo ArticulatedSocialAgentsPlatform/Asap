@@ -33,5 +33,6 @@ public class PostureShiftTMU extends TimedAnimationMotionUnit
     {
         super.stopUnit(time);
         aniPlayer.setRestPose(restPose);
+        restPose.start(time);
     }
 }

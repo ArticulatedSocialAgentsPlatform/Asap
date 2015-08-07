@@ -148,7 +148,7 @@ public class SkeletonPoseRestPose implements RestPose
     }
 
     @Override
-    public void startRestPose(double time)
+    public void initialRestPose(double time)
     {
         VObjectTransformCopier.newInstanceFromVJointTree(poseTree, player.getVCurr(), "T1R").copyConfig();
         VObjectTransformCopier.newInstanceFromVJointTree(poseTree, player.getVNext(), "T1R").copyConfig();
@@ -224,4 +224,9 @@ public class SkeletonPoseRestPose implements RestPose
 
     }
 
+    @Override
+    public void start(double time)
+    {
+                
+    }
 }

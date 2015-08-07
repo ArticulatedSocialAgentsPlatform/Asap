@@ -187,7 +187,7 @@ public class PhysicalBalanceRestPose implements RestPose
     }
 
     @Override
-    public void startRestPose(double time)
+    public void initialRestPose(double time)
     {
 
     }
@@ -258,6 +258,12 @@ public class PhysicalBalanceRestPose implements RestPose
     {
         // TODO Auto-generated method stub
         return null;
+    }
+
+    @Override
+    public void start(double time)
+    {
+                
     }
 
 }
