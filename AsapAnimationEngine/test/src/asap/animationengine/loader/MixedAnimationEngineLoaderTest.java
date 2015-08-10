@@ -36,41 +36,41 @@ public class MixedAnimationEngineLoaderTest
 {
     private OdePhysicalEmbodiment mockPhEmbodiment = mock(OdePhysicalEmbodiment.class);
     private MixedSkeletonEmbodimentLoader mockMixedSkeletonEmbodimentLoader = mock(MixedSkeletonEmbodimentLoader.class);
-    private  MixedSkeletonEmbodiment mockMixedSkeletonEmbodiment = mock(MixedSkeletonEmbodiment.class);
-    private PhysicalHumanoid mockPhuman = mock(PhysicalHumanoid.class);    
-    private AsapRealizerEmbodiment  mockAsapRealizerEmbodiment = mock(AsapRealizerEmbodiment.class);
+    private MixedSkeletonEmbodiment mockMixedSkeletonEmbodiment = mock(MixedSkeletonEmbodiment.class);
+    private PhysicalHumanoid mockPhuman = mock(PhysicalHumanoid.class);
+    private AsapRealizerEmbodiment mockAsapRealizerEmbodiment = mock(AsapRealizerEmbodiment.class);
     private MixedAnimationEnvironment mockMixedAnimationEnvironment = mock(MixedAnimationEnvironment.class);
     private MixedAnimationEngineLoader loader = new MixedAnimationEngineLoader();
     private Loader[] reqLoaders = new Loader[3];
     private Environment reqEnvironments[] = new Environment[2];
-    
+
     @Before
     public void setup()
     {
         when(mockPhuman.getSegments()).thenReturn(new PhysicalSegment[0]);
         ArrayList<MixedSystem> ms = new ArrayList<>();
-        MixedSystem ms1 = new MixedSystem(Vec3f.getVec3f(0,-9.8f,0), mockPhuman);        
+        MixedSystem ms1 = new MixedSystem(Vec3f.getVec3f(0, -9.8f, 0), mockPhuman);
         ms1.setup();
         ms.add(ms1);
-        
+
         when(mockPhEmbodiment.getId()).thenReturn("physicalembodiment");
         when(mockPhEmbodiment.getEmbodiment()).thenReturn(mockPhEmbodiment);
         when(mockPhEmbodiment.getMixedSystems()).thenReturn(ms);
         when(mockMixedSkeletonEmbodimentLoader.getId()).thenReturn("mixedskeletonembodiment");
-        when(mockMixedSkeletonEmbodimentLoader.getEmbodiment()).thenReturn(mockMixedSkeletonEmbodiment);        
+        when(mockMixedSkeletonEmbodimentLoader.getEmbodiment()).thenReturn(mockMixedSkeletonEmbodiment);
         when(mockMixedSkeletonEmbodiment.getCurrentVJoint()).thenReturn(HanimBody.getLOA1HanimBody());
         when(mockMixedSkeletonEmbodiment.getNextVJoint()).thenReturn(HanimBody.getLOA1HanimBody());
-        when(mockMixedSkeletonEmbodiment.getPreviousVJoint()).thenReturn(HanimBody.getLOA1HanimBody());      
+        when(mockMixedSkeletonEmbodiment.getPreviousVJoint()).thenReturn(HanimBody.getLOA1HanimBody());
         when(mockAsapRealizerEmbodiment.getEmbodiment()).thenReturn(mockAsapRealizerEmbodiment);
-        
+
         reqLoaders[0] = mockMixedSkeletonEmbodimentLoader;
-        reqLoaders[1] = mockPhEmbodiment;        
-        reqLoaders[2] = mockAsapRealizerEmbodiment;        
-        
+        reqLoaders[1] = mockPhEmbodiment;
+        reqLoaders[2] = mockAsapRealizerEmbodiment;
+
         reqEnvironments[0] = new WorldObjectEnvironment();
         reqEnvironments[1] = mockMixedAnimationEnvironment;
     }
-    
+
     @Test
     public void test() throws IOException
     {
@@ -89,9 +89,9 @@ public class MixedAnimationEngineLoaderTest
         assertEquals("ma1", loader.getId());
         assertNotNull(loader.getEngine());
     }
-    
+
     @Test
-    public void testWithHns() throws IOException 
+    public void testWithHns() throws IOException
     {
         //@formatter:off
         String loaderStr =
@@ -109,9 +109,9 @@ public class MixedAnimationEngineLoaderTest
         assertEquals("ma1", loader.getId());
         assertNotNull(loader.getEngine());
     }
-    
+
     @Test
-    public void testWithHnsHandshape() throws IOException 
+    public void testWithHnsHandshape() throws IOException
     {
         //@formatter:off
         String loaderStr =
