@@ -72,7 +72,8 @@ public class TTSPlanner extends AbstractPlanner<TimedTTSUnit>
     public TTSPlanner(FeedbackManager bfm, TimedTTSUnitFactory suf, TTSBinding ttsBin, PlanManager<TimedTTSUnit> planManager)
     {
         super(bfm, planManager);
-        BMLInfo.addCustomFloatAttribute(SpeechBehaviour.class, "http://www.asap-project.org/bmlvp","amount");
+        BMLInfo.addCustomFloatAttribute(SpeechBehaviour.class, "http://www.asap-project.org/bmlvp", "amount");
+        BMLInfo.addCustomFloatAttribute(SpeechBehaviour.class, "http://www.asap-project.org/bmlvp", "k");
         suFactory = suf;
         ttsBinding = ttsBin;
     }
@@ -277,11 +278,16 @@ public class TTSPlanner extends AbstractPlanner<TimedTTSUnit>
             for (VisualProsodyProvider vp : visualProsodyProviders)
             {
                 float amount = 1;
+                float k = 1;
                 if (b.specifiesParameter("http://www.asap-project.org/bmlvp:amount"))
                 {
                     amount = b.getFloatParameterValue("http://www.asap-project.org/bmlvp:amount");
                 }
-                vp.visualProsody(bbPeg, b, bs, pros.getF0(), pros.getRmsEnergy(), pros.getFrameDuration(), amount);
+                else if (b.specifiesParameter("http://www.asap-project.org/bmlvp:k"))
+                {
+                    k = b.getFloatParameterValue("http://www.asap-project.org/bmlvp:k");
+                }
+                vp.visualProsody(bbPeg, b, bs, pros.getF0(), pros.getRmsEnergy(), pros.getFrameDuration(), amount, k);
             }
         }
 

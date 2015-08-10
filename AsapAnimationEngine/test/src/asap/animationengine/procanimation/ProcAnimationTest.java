@@ -133,6 +133,15 @@ public class ProcAnimationTest
     }
     
     @Test
+    public void testAdditive() throws ParameterException, MUSetupException
+    {
+        procAnimation.setParameterValue("blending", "ADDITIVE");
+        VJoint humanCopy = HanimBody.getLOA1HanimBody();
+        VJoint additiveCopy = HanimBody.getLOA1HanimBody();
+        procAnimation.copy(humanCopy,additiveCopy);
+    }
+    
+    @Test
     public void testSkeletonInterpolator()
     {
         procAnimation.play(0);

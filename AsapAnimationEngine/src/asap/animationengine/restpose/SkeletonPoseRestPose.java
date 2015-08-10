@@ -9,6 +9,7 @@ import hmi.math.Quat4f;
 import hmi.util.Resources;
 
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.List;
 import java.util.Set;
 
@@ -140,6 +141,25 @@ public class SkeletonPoseRestPose implements RestPose
             vj.getRotation(rotations, i);
             targetJoints.add(player.getVNextPartBySid(joint));
             startJoints.add(player.getVCurrPartBySid(joint));
+            i += 4;
+        }
+        TransitionMU mu = new SlerpTransitionToPoseMU(targetJoints, startJoints, rotations);
+        mu.setStartPose();
+        return mu;
+    }
+    
+    public TransitionMU createTransitionToRestFromVJoints(Collection<VJoint> joints)
+    {
+        float rotations[] = new float[joints.size() * 4];
+        int i = 0;
+        List<VJoint> targetJoints = new ArrayList<VJoint>();
+        List<VJoint> startJoints = new ArrayList<VJoint>();
+        for (VJoint joint : joints)
+        {
+            VJoint vj = poseTree.getPartBySid(joint.getSid());
+            vj.getRotation(rotations, i);
+            targetJoints.add(joint);
+            startJoints.add(player.getVCurrPartBySid(joint.getSid()));
             i += 4;
         }
         TransitionMU mu = new SlerpTransitionToPoseMU(targetJoints, startJoints, rotations);

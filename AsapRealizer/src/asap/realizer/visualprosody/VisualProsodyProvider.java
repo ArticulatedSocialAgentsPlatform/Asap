@@ -12,11 +12,17 @@ public interface VisualProsodyProvider
 {
 
     void visualProsody(BMLBlockPeg bbPeg, Behaviour beh, TimedPlanUnit speechUnit, double f0[], double rmsEnergy[], double frameDuration,
-            float amount);
+            float amount, float k);
 
+    default void visualProsody(BMLBlockPeg bbPeg, Behaviour beh, TimedPlanUnit speechUnit, double f0[], double rmsEnergy[],
+            double frameDuration, float amount)
+    {
+        visualProsody(bbPeg, beh, speechUnit, f0, rmsEnergy, frameDuration, amount, 1f);
+    }
+    
     default void visualProsody(BMLBlockPeg bbPeg, Behaviour beh, TimedPlanUnit speechUnit, double f0[], double rmsEnergy[],
             double frameDuration)
     {
-        visualProsody(bbPeg, beh, speechUnit, f0, rmsEnergy, frameDuration, 1f);
+        visualProsody(bbPeg, beh, speechUnit, f0, rmsEnergy, frameDuration, 1f, 1f);
     }
 }

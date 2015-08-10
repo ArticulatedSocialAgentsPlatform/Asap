@@ -53,6 +53,9 @@ public class VisualProsodyUnit extends TimedAbstractPlanUnit implements TimedAni
     private List<String> joints;
 
     @Setter
+    private double k = 1;
+
+    @Setter
     private double amplitude = 1;
 
     public VisualProsodyUnit(FeedbackManager bbf, BMLBlockPeg bmlBlockPeg, String bmlId, String id, TimedPlanUnit speechUnit,
@@ -89,6 +92,7 @@ public class VisualProsodyUnit extends TimedAbstractPlanUnit implements TimedAni
     @Override
     public void playUnit(double time)
     {
+        System.out.println("k:"+k);
         float rpyAnimation[] = Vec3f.getVec3f();
         for (int i = 0; i < 3; i++)
         {
@@ -100,12 +104,12 @@ public class VisualProsodyUnit extends TimedAbstractPlanUnit implements TimedAni
             {
                 float q[] = new float[joints.size() * 4];
                 Spine.setCervicalRotationRollPitchYawDegrees(q, rpyAnimation[0], rpyAnimation[1], rpyAnimation[2], joints.size());
-                ConfigList cl = new ConfigList(4*joints.size());
+                ConfigList cl = new ConfigList(4 * joints.size());
                 cl.addConfig(0, q);
-                float qIdentity[]=new float[joints.size()*4];
-                for(int i=0;i<joints.size();i++)
+                float qIdentity[] = new float[joints.size() * 4];
+                for (int i = 0; i < joints.size(); i++)
                 {
-                    Quat4f.setIdentity(qIdentity, i*4);
+                    Quat4f.setIdentity(qIdentity, i * 4);
                 }
                 cl.addConfig(RELAX_DURATION, qIdentity);
                 SkeletonInterpolator relaxSki = new SkeletonInterpolator(joints.toArray(new String[joints.size()]), cl, "R");
@@ -122,6 +126,12 @@ public class VisualProsodyUnit extends TimedAbstractPlanUnit implements TimedAni
             if (index >= f0.length) index = f0.length - 1;
             rpy = visualProsody.nextHeadMotion(rpyPrev, rpyPrevPrev, f0[index], rmsEnergy[index], animationPlayer.getStepTime(),
                     frameDuration);
+
+            for (int i = 0; i < 3; i++)
+            {
+                rpy[i] = rpyPrev[i] + k * (rpy[i] - rpyPrev[i]);
+            }
+
             for (int i = 0; i < 3; i++)
             {
                 rpyAnimation[i] = (float) ((rpy[i] - visualProsody.getOffset()[i]) * amplitude);
@@ -173,6 +183,10 @@ public class VisualProsodyUnit extends TimedAbstractPlanUnit implements TimedAni
         {
             amplitude = value;
         }
+        else if (paramId.equals("visualprosodyK"))
+        {
+            k = value;
+        }
     }
 
     @Override
@@ -181,6 +195,10 @@ public class VisualProsodyUnit extends TimedAbstractPlanUnit implements TimedAni
         if (paramId.equals("visualprosodyAmplitude"))
         {
             return (float) amplitude;
+        }
+        else if (paramId.equals("visualprosodyK"))
+        {
+            return (float) k;
         }
         return super.getFloatParameterValue(paramId);
     }
@@ -191,6 +209,10 @@ public class VisualProsodyUnit extends TimedAbstractPlanUnit implements TimedAni
         if (paramId.equals("visualprosodyAmplitude"))
         {
             return "" + amplitude;
+        }
+        else if (paramId.equals("visualprosodyK"))
+        {
+            return "" + k;
         }
         return super.getParameterValue(paramId);
     }

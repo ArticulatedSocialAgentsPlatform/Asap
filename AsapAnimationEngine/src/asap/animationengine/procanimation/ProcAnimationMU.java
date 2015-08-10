@@ -875,9 +875,9 @@ public class ProcAnimationMU extends XMLStructureAdapter implements AnimationUni
             }
         }
         bodyParts.removeAll(deleteList);
-        if(aniPlayer!=null)
+        if (aniPlayer != null)
         {
-            aniPlayer.filterAdditiveBody(vAdditive,this.getAdditiveJoints());            
+            aniPlayer.filterAdditiveBody(vAdditive, this.getAdditiveJoints());
         }
         sortBodyParts();
     }
@@ -1235,8 +1235,14 @@ public class ProcAnimationMU extends XMLStructureAdapter implements AnimationUni
     {
         ProcAnimationMU mu = copy(p.getVNext(), p.constructAdditiveBody());
         mu.aniPlayer = p;
-        mu.setup2();
+        mu.setup2();        
         return mu;
+    }
+
+    public void setup(AnimationPlayer p)
+    {
+        this.aniPlayer = p;
+        setup2(p.getVNext(), p.constructAdditiveBody());
     }
 
     public void setup(VJoint vNext)
@@ -1254,7 +1260,6 @@ public class ProcAnimationMU extends XMLStructureAdapter implements AnimationUni
 
     private void setup2()
     {
-
         VJoint vj;
         switch (blending)
         {
@@ -1264,7 +1269,7 @@ public class ProcAnimationMU extends XMLStructureAdapter implements AnimationUni
         default:
             vj = vNext;
         }
-
+        if (vj == null) return;
         setup(vj);
         for (Keyframes kf : keyframes.values())
         {

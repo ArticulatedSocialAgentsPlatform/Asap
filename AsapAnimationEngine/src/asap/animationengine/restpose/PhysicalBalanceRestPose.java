@@ -4,6 +4,7 @@ package asap.animationengine.restpose;
 
 import hmi.animation.SkeletonPose;
 import hmi.animation.VJoint;
+import hmi.animation.VJointUtils;
 import hmi.math.Quat4f;
 import hmi.physics.controller.BalanceController;
 import hmi.physics.controller.ControllerParameterException;
@@ -13,6 +14,7 @@ import hmi.xml.XMLTokenizer;
 
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
@@ -179,6 +181,33 @@ public class PhysicalBalanceRestPose implements RestPose
     }
 
     @Override
+    public TransitionMU createTransitionToRestFromVJoints(Collection<VJoint> joints)
+    {
+        Set<String> kinJoints = getKinematicTransitionJoints(VJointUtils.transformToSidSet(joints));
+        float rotations[] = new float[kinJoints.size() * 4];
+        int i = 0;
+        List<VJoint> targetJoints = new ArrayList<VJoint>();
+        List<VJoint> startJoints = new ArrayList<VJoint>();
+        for (String joint : kinJoints)
+        {
+            VJoint vj = restPoseTree.getPartBySid(joint);
+            vj.getRotation(rotations, i);
+            for (VJoint v : joints)
+            {
+                if (v.getSid().equals(joint))
+                {
+                    targetJoints.add(v);
+                }
+            }
+            startJoints.add(player.getVCurrPartBySid(joint));
+            i += 4;
+        }
+        TransitionMU mu = new SlerpTransitionToPoseMU(targetJoints, startJoints, rotations);
+        mu.setStartPose();
+        return mu;
+    }
+
+    @Override
     public double getTransitionToRestDuration(VJoint vCurrent, Set<String> joints)
     {
         double duration = MovementTimingUtils.getFittsMaximumLimbMovementDuration(vCurrent, restPoseTree, joints);
@@ -263,7 +292,7 @@ public class PhysicalBalanceRestPose implements RestPose
     @Override
     public void start(double time)
     {
-                
+
     }
 
 }

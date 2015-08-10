@@ -16,6 +16,7 @@ import hmi.xml.XMLTokenizer;
 import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.List;
 import java.util.Set;
 
@@ -221,6 +222,28 @@ public class MotionGraphRestPose implements RestPose
     }
 
     @Override
+    public TransitionMU createTransitionToRestFromVJoints(Collection<VJoint> joints)
+    {
+        float rotations[] = new float[joints.size() * 4];
+        int i = 0;
+        List<VJoint> targetJoints = new ArrayList<VJoint>();
+        List<VJoint> startJoints = new ArrayList<VJoint>();
+        List<VJoint> endJoints = new ArrayList<VJoint>();
+        for (VJoint joint : joints)
+        {
+            VJoint vj = restPoseTree.getPartBySid(joint.getSid());
+            vj.getRotation(rotations, i);
+            targetJoints.add(joint);
+            startJoints.add(aniPlayer.getVCurrPartBySid(joint.getSid()));
+            endJoints.add(vj);
+            i += 4;
+        }        
+        BlendingMotionUnit mu = new BlendingMotionUnit(targetJoints, startJoints, endJoints);
+        mu.setStartPose();
+        return mu;
+    }
+    
+    @Override
     public TransitionMU createTransitionToRest(Set<String> joints)
     {
         float rotations[] = new float[joints.size() * 4];
@@ -302,4 +325,5 @@ public class MotionGraphRestPose implements RestPose
     {
         startTime = time;        
     }
+
 }

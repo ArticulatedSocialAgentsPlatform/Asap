@@ -5,6 +5,7 @@ package asap.animationengine.restpose;
 import hmi.animation.VJoint;
 import hmi.util.Resources;
 
+import java.util.Collection;
 import java.util.Set;
 
 import asap.animationengine.AnimationPlayer;
@@ -66,9 +67,15 @@ public interface RestPose
     
     /**
      * Create a MotionUnit that moves the joints from their current position 
-     * to a position dictated by this resting pose.  
+     * to a position dictated by this resting pose. The motionunit steers vNext.
      */
     AnimationUnit createTransitionToRest(Set<String>joints);
+    
+    /**
+     * Create a MotionUnit that moves the joints from their current position 
+     * to a position dictated by this resting pose. The motionunit steers joints.
+     */
+    AnimationUnit createTransitionToRestFromVJoints(Collection<VJoint> joints);
     
     /**
      * Sets this rest posture as the initial one, that is: e.g. sets the restpose to prev, next, curr on the animationplayer 
@@ -83,5 +90,5 @@ public interface RestPose
     void setParameterValue(String name, String value) throws ParameterException;
     
     PostureShiftTMU createPostureShiftTMU(FeedbackManager bbf, BMLBlockPeg bmlBlockPeg, 
-            String bmlId, String id, PegBoard pb) throws MUSetupException;
+            String bmlId, String id, PegBoard pb) throws MUSetupException;    
 }

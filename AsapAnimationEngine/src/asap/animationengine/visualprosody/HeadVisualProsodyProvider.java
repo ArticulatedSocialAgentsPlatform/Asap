@@ -29,7 +29,7 @@ public class HeadVisualProsodyProvider implements VisualProsodyProvider
 
     @Override
     public void visualProsody(BMLBlockPeg bbPeg, Behaviour beh, TimedPlanUnit speechUnit, double[] f0, double[] rmsEnergy,
-            double frameDuration, float amplitude)
+            double frameDuration, float amplitude, float k)
     {
         System.out.println("scheduling visual prosody");
         long time = System.currentTimeMillis();
@@ -38,6 +38,7 @@ public class HeadVisualProsodyProvider implements VisualProsodyProvider
                 speechUnit, visualProsody, animationPlayer, f0, rmsEnergy, frameDuration,
                 speechUnit.getTimePeg("start"), speechUnit.getTimePeg("end"));
         tmu.setAmplitude(amplitude);
+        tmu.setK(k);
         tmu.setSubUnit(true);
         tmu.setTimePeg("start", speechUnit.getTimePeg("start"));
         animationPlanManager.addPlanUnit(tmu);

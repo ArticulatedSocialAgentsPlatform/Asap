@@ -50,7 +50,8 @@ public class ProcAnimationGestureMU implements GestureUnit
     private VJoint vStart;
     private VJoint vNext;
 
-    private ProcAnimationMU copyProc;
+    //copy of the procanimation, used to figure out the stroke start positions
+    private ProcAnimationMU copyProc;   
     private VJoint copyJoint;
 
     private Resources resource;
@@ -179,7 +180,7 @@ public class ProcAnimationGestureMU implements GestureUnit
     {
         vStart = ap.getVCurr();
         vNext = ap.getVNext();
-        gestureUnit.setup(vNext);
+        gestureUnit.setup(ap);
         copyJoint = vNext.copyTree("copy-");
         copyProc = gestureUnit.copy(copyJoint);
         aniPlayer = ap;
@@ -290,11 +291,11 @@ public class ProcAnimationGestureMU implements GestureUnit
         {
             try
             {
-                ProcAnimationMU mu = new ProcAnimationMU();
+                ProcAnimationMU mu = new ProcAnimationMU();                
                 mu.readXML(resource.getReader(value));
                 mu.setParameters(gestureUnit.getParameters());
                 setGestureUnit(mu);
-                gestureUnit.setup(vNext);
+                gestureUnit.setup(aniPlayer);
             }
             catch (IOException e)
             {
@@ -433,7 +434,7 @@ public class ProcAnimationGestureMU implements GestureUnit
 
     public AnimationUnit createRelaxUnit()
     {
-        return aniPlayer.getRestPose().createTransitionToRest(VJointUtils.transformToSidSet(gestureUnit.getControlledJoints()));
+        return aniPlayer.getRestPose().createTransitionToRestFromVJoints(gestureUnit.getControlledJoints());
     }
 
     @Override
@@ -461,7 +462,7 @@ public class ProcAnimationGestureMU implements GestureUnit
     {
 
     }
-    
+
     @Override
     public Set<String> getAdditiveJoints()
     {

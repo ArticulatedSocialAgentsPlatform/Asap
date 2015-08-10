@@ -10,6 +10,7 @@ import hmi.animation.VJoint;
 import hmi.math.Quat4f;
 import hmi.testutil.animation.HanimBody;
 
+import java.util.Collection;
 import java.util.Set;
 
 import org.junit.Before;
@@ -34,6 +35,7 @@ public class ProcAnimationGestureMUKeyframesTest
     private AnimationPlayer mockAnimationPlayer = mock(AnimationPlayer.class);
     private VJoint vCurr;
     private VJoint vNext;
+    private VJoint vAdd;
     private ProcAnimationGestureMU pag;    
     private static final float ROTATION_PRECISION = 0.01f;
 
@@ -42,9 +44,11 @@ public class ProcAnimationGestureMUKeyframesTest
     {
         vCurr = HanimBody.getLOA1HanimBody();
         vNext = HanimBody.getLOA1HanimBody();
+        vAdd = HanimBody.getLOA1HanimBody();
 
         when(mockAnimationPlayer.getVCurr()).thenReturn(vCurr);
         when(mockAnimationPlayer.getVNext()).thenReturn(vNext);
+        when(mockAnimationPlayer.constructAdditiveBody()).thenReturn(vAdd);
         RestPose pose = new SkeletonPoseRestPose();
         pose = pose.copy(mockAnimationPlayer);
         when(mockAnimationPlayer.getRestPose()).thenReturn(pose);
@@ -69,6 +73,8 @@ public class ProcAnimationGestureMUKeyframesTest
         pag.setupTransitionUnits();
     }
 
+    
+    
     @Test
     public void testPlayStart() throws MUPlayException
     {
@@ -124,6 +130,7 @@ public class ProcAnimationGestureMUKeyframesTest
         AnimationUnit mockRelaxMU = mock(AnimationUnit.class);
         when(mockAnimationPlayer.getRestPose()).thenReturn(mockRestPose);
         when(mockRestPose.createTransitionToRest((Set<String>) any())).thenReturn(mockRelaxMU);
+        when(mockRestPose.createTransitionToRestFromVJoints((Collection<VJoint>) any())).thenReturn(mockRelaxMU);
         pag.setupRelaxUnit();
         pag.play(1);
         float q[] = Quat4f.getQuat4f();

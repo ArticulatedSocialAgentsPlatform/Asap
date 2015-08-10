@@ -16,6 +16,7 @@ import hmi.animation.Hanim;
 import hmi.animation.VJoint;
 import hmi.testutil.animation.HanimBody;
 
+import java.util.Collection;
 import java.util.Set;
 
 import org.junit.Before;
@@ -98,6 +99,7 @@ public class ProcAnimationGestureMUMockupProcTest
         when(mockAnimationPlayer.getRestPose()).thenReturn(mockRestPose);
         when(mockRestPose.getTransitionToRestDuration((VJoint)any(), (Set<String>)any())).thenReturn(RELAX_DURATION);
         when(mockRestPose.createTransitionToRest((Set<String>)any())).thenReturn(mockRelaxMU);
+        when(mockRestPose.createTransitionToRestFromVJoints((Collection<VJoint>)any())).thenReturn(mockRelaxMU);
         pag.setupRelaxUnit();
     }
     
