@@ -59,7 +59,6 @@ public class MotionGraphRestPose implements RestPose
 
     public MotionGraphRestPose(XMLTokenizer tok)
     {
-        System.out.println("Loading graph from tokenizer");
         MotionGraphXML mgXML = new MotionGraphXML();
         try
         {
@@ -169,8 +168,11 @@ public class MotionGraphRestPose implements RestPose
         {
             if (!kinematicJoints.contains(part) && !physicalJoints.contains(part))
             {
-                restPoseTree.getPartBySid(part).getRotation(q);
-                aniPlayer.getVNextPartBySid(part).setRotation(q);
+                if(restPoseTree.getPartBySid(part)!=null)
+                {
+                    restPoseTree.getPartBySid(part).getRotation(q);
+                    aniPlayer.getVNextPartBySid(part).setRotation(q);
+                }                
             }            
         }
         if (!kinematicJoints.contains(Hanim.HumanoidRoot))

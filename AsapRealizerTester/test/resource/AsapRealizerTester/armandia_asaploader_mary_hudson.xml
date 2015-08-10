@@ -80,7 +80,9 @@
     <GestureBinding basedir="" resources="Humanoids/shared/gesturebinding/" filename="gesturebinding.xml"/>
     -->
 
-    <StartPose resources="Humanoids/armandia/restposes/" filename="looselyhangingarms.xml"/>
+    <StartPose>
+        <RestPose type="SkeletonPose" file="Humanoids/armandia/restposes/looselyhangingarms.xml"/>
+    </StartPose>
     <Hns resources="Humanoids/shared/hns" filename="hns.xml"/>
     <StartPosition offset="0.2 0 0"/>
     <StartRotation rotation="0 1 0 -0.2"/>
