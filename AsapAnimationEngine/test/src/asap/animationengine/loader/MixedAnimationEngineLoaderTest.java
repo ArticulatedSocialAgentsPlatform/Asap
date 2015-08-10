@@ -79,8 +79,10 @@ public class MixedAnimationEngineLoaderTest
           "<Loader id=\"animationengine\""+ 
                 "loader=\"asap.animationengine.loader.MixedAnimationEngineLoader\""+
                 "requiredloaders=\"mixedskeletonembodiment,physicalembodiment\">"+
-            "<GestureBinding basedir=\"\" resources=\"Humanoids/armandia/gesturebinding/\" filename=\"gesturebinding.xml\"/>"+
-            "<StartPose resources=\"Humanoids/armandia/restposes/\" filename=\"looselyhangingarms.xml\"/>"+    
+                "<StartPose>"+
+                "<RestPose type=\"SkeletonPose\" file=\"Humanoids/armandia/restposes/looselyhangingarms.xml\"/>"+
+                "</StartPose>"+
+                "<GestureBinding basedir=\"\" resources=\"Humanoids/armandia/gesturebinding/\" filename=\"gesturebinding.xml\"/>"+                
           "</Loader>";          
         //@formatter:on
         XMLTokenizer tok = new XMLTokenizer(loaderStr);
@@ -99,7 +101,9 @@ public class MixedAnimationEngineLoaderTest
                 "loader=\"asap.animationengine.loader.MixedAnimationEngineLoader\""+
                 "requiredloaders=\"mixedskeletonembodiment,physicalembodiment\">"+
             "<GestureBinding basedir=\"\" resources=\"Humanoids/armandia/gesturebinding/\" filename=\"gesturebinding.xml\"/>"+
-            "<StartPose resources=\"Humanoids/armandia/restposes/\" filename=\"looselyhangingarms.xml\"/>"+
+            "<StartPose>"+
+            "<RestPose type=\"SkeletonPose\" file=\"Humanoids/armandia/restposes/looselyhangingarms.xml\"/>"+
+            "</StartPose>"+
             "<Hns resources=\"Humanoids/shared/hns\" filename=\"hns.xml\"/>"+
           "</Loader>";          
         //@formatter:on
@@ -119,7 +123,9 @@ public class MixedAnimationEngineLoaderTest
                 "loader=\"asap.animationengine.loader.MixedAnimationEngineLoader\""+
                 "requiredloaders=\"mixedskeletonembodiment,physicalembodiment\">"+
             "<GestureBinding basedir=\"\" resources=\"Humanoids/armandia/gesturebinding/\" filename=\"gesturebinding.xml\"/>"+
-            "<StartPose resources=\"Humanoids/armandia/restposes/\" filename=\"looselyhangingarms.xml\"/>"+
+            "<StartPose>"+
+            "<RestPose type=\"SkeletonPose\" file=\"Humanoids/armandia/restposes/looselyhangingarms.xml\"/>"+
+            "</StartPose>"+
             "<Hns resources=\"Humanoids/shared/hns\" filename=\"hns.xml\"/>"+
             "<HnsHandShape dir=\"Humanoids/shared/handshapes\" />"+
           "</Loader>";          

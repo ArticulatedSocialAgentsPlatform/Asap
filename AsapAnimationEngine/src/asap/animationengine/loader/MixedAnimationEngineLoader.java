@@ -2,8 +2,6 @@
  *******************************************************************************/
 package asap.animationengine.loader;
 
-import hmi.animation.SkeletonPose;
-import hmi.animation.VJoint;
 import hmi.animationembodiments.MixedSkeletonEmbodiment;
 import hmi.environmentbase.EmbodimentLoader;
 import hmi.environmentbase.Environment;
@@ -22,6 +20,8 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
+
+import javax.smartcardio.ATR;
 
 import lombok.Getter;
 import asap.animationengine.AnimationPlanPlayer;
@@ -60,7 +60,6 @@ public class MixedAnimationEngineLoader implements EngineLoader
     private PlanManager<TimedAnimationUnit> animationPlanManager = null;
     private AnimationPlayer animationPlayer = null;
     private AnimationPlanner animationPlanner = null;
-    private SkeletonPose restpose;
     private Hns hns = new Hns();
     private HnsHandshape hnsHandshape = new HnsHandshape();
     private List<String> handShapeDir = new ArrayList<>();
@@ -176,7 +175,8 @@ public class MixedAnimationEngineLoader implements EngineLoader
         public void decodeAttributes(HashMap<String, String> attrMap, XMLTokenizer tokenizer)
         {
             name = getRequiredAttribute("name", attrMap, tokenizer);
-            value = getRequiredAttribute("value", attrMap, tokenizer);
+            value = getRequiredAttribute("value", attrMap, tokenizer);   
+            super.decodeAttributes(attrMap, tokenizer);
         }
 
         public static final String XMLTAG = "parameter";
@@ -209,6 +209,10 @@ public class MixedAnimationEngineLoader implements EngineLoader
             return restPose;
         }
 
+        public boolean decodeAttribute(String attrName, String attrValue, XMLTokenizer tokenizer)
+        {
+            throw new XMLScanException("StartPose may not contain attributes.");            
+        }
         @Override
         public void decodeContent(XMLTokenizer tokenizer) throws IOException
         {
@@ -262,25 +266,6 @@ public class MixedAnimationEngineLoader implements EngineLoader
         }
         else if (tokenizer.atSTag("StartPose"))
         {
-            /*
-             * attrMap = tokenizer.getAttributes();
-             * try
-             * {
-             * Resources res = new Resources(adapter.getOptionalAttribute("resources", attrMap, ""));
-             * restpose = new SkeletonPose(new XMLTokenizer(res.getReader(adapter.getRequiredAttribute("filename", attrMap, tokenizer))));
-             * VJoint vjNull[] = new VJoint[0];
-             * restpose.setTargets(mse.getNextVJoint().getParts().toArray(vjNull));
-             * restpose.setToTarget();
-             * mse.getNextVJoint().calculateMatrices();
-             * }
-             * catch (RuntimeException e)
-             * {
-             * throw tokenizer.getXMLScanException("Cannot load start pose ");
-             * }
-             * tokenizer.takeSTag("StartPose");
-             * tokenizer.takeETag("StartPose");
-             */
-            
             StartPose sp = new StartPose();
             sp.readXML(tokenizer);
             pose = sp.getRestPose();
