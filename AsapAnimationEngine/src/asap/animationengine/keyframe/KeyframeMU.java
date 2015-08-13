@@ -42,6 +42,7 @@ public class KeyframeMU implements AnimationUnit
     private HashMap<String, String> parameters = new HashMap<String, String>(); // name => value set
     private KeyPositionManager keyPositionManager = new KeyPositionManagerImpl();
     private boolean mirror = false;
+    private VJoint joint;
     
     @Setter
     private boolean additive = false;
@@ -156,10 +157,11 @@ public class KeyframeMU implements AnimationUnit
                 }
             }
         }
-        SkeletonInterpolator ipPredict = new SkeletonInterpolator(baseIp, vjParts.toArray(new VJoint[vjParts.size()]));
-        KeyframeMU copy = new KeyframeMU(ipPredict);
+        SkeletonInterpolator ipCopy = new SkeletonInterpolator(baseIp, vjParts.toArray(new VJoint[vjParts.size()]));
+        KeyframeMU copy = new KeyframeMU(ipCopy);
         copy.additive = additive;
         copy.setTarget(v);
+        copy.joint = v;
         for (Entry<String, String> paramValue : parameters.entrySet())
         {
             copy.setParameterValue(paramValue.getKey(), paramValue.getValue());
@@ -281,6 +283,16 @@ public class KeyframeMU implements AnimationUnit
     {
                 
     } 
+    
+    @Override
+    public void cleanup()
+    {
+        if(aniPlayer!=null)
+        {
+            aniPlayer.removeAdditiveBody(joint);
+        }
+    }
+    
     @Override
     public Set<String> getAdditiveJoints()
     {

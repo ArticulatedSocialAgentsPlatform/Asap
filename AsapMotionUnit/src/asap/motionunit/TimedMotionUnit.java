@@ -116,6 +116,7 @@ public class TimedMotionUnit extends TimedAbstractPlanUnit
         {
             sendProgress(1, time);
         }
+        mu.cleanup();
     }
 
     @Override

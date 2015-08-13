@@ -51,7 +51,9 @@ public class VisualProsodyUnit extends TimedAbstractPlanUnit implements TimedAni
     private VJoint additiveBody;
     private KeyframeMU relaxMu;
     private List<String> joints;
-
+    private volatile boolean interrupted = false;
+    private double relaxStart;
+    
     @Setter
     private double k = 1;
 
@@ -92,16 +94,16 @@ public class VisualProsodyUnit extends TimedAbstractPlanUnit implements TimedAni
     @Override
     public void playUnit(double time)
     {
-        System.out.println("k:"+k);
         float rpyAnimation[] = Vec3f.getVec3f();
         for (int i = 0; i < 3; i++)
         {
             rpyAnimation[i] = (float) ((rpy[i] - visualProsody.getOffset()[i]) * amplitude);
         }
-        if (time > speechEnd.getGlobalValue())
+        if (time > speechEnd.getGlobalValue()||interrupted)
         {
             if (!relaxSetup)
             {
+                relaxStart = time;
                 float q[] = new float[joints.size() * 4];
                 Spine.setCervicalRotationRollPitchYawDegrees(q, rpyAnimation[0], rpyAnimation[1], rpyAnimation[2], joints.size());
                 ConfigList cl = new ConfigList(4 * joints.size());
@@ -118,7 +120,7 @@ public class VisualProsodyUnit extends TimedAbstractPlanUnit implements TimedAni
                 relaxMu = relaxMu.copy(animationPlayer);
                 relaxSetup = true;
             }
-            relaxMu.play((time - speechEnd.getGlobalValue()) / RELAX_DURATION);
+            relaxMu.play((time - relaxStart) / RELAX_DURATION);
         }
         else
         {
@@ -245,6 +247,19 @@ public class VisualProsodyUnit extends TimedAbstractPlanUnit implements TimedAni
     protected void stopUnit(double time) throws TimedPlanUnitPlayException
     {
         animationPlayer.removeAdditiveBody(additiveBody);
+        if(relaxMu!=null)
+        {
+            relaxMu.cleanup();        
+        }
+    }
+    
+    @Override
+    public void interrupt(double time)
+    {
+        if(time <= speechEnd.getGlobalValue())
+        {
+            interrupted = true;
+        }
     }
 
     @Override

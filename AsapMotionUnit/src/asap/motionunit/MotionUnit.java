@@ -25,6 +25,14 @@ public interface MotionUnit extends KeyPositionManager
     void startUnit(double t)throws MUPlayException;
     
     /**
+     * clears any resources used by the MotionUnit
+     */
+    default void cleanup()
+    {
+        
+    }
+    
+    /**
      * @return Prefered duration (in seconds) of this face unit, 0 means not determined/infinite 
      */
     double getPreferedDuration();

@@ -45,6 +45,7 @@ public class LMPPoRot extends LMP
     private List<float[]> pointVec;
     private List<Double> timeVec;
     private VJoint vjWristAdditive; 
+    private VJoint vAdditive;
     private static final double TRANSITION_TIME = 0.4; // TODO: use getPODurationFromAmplitude instead?
     private static final double DEFAULT_STROKEPHASE_DURATION = 0;
 
@@ -349,7 +350,8 @@ public class LMPPoRot extends LMP
     @Override
     protected void startUnit(double time) throws TimedPlanUnitPlayException
     {
-        vjWristAdditive = aniPlayer.constructAdditiveBody(ImmutableSet.of(joint)).getPartBySid(joint);
+        vAdditive = aniPlayer.constructAdditiveBody(ImmutableSet.of(joint));
+        vjWristAdditive = vAdditive.getPartBySid(joint);
         
         resolveTimePegs(time);
         timeVec = toTimeVec();
@@ -394,6 +396,7 @@ public class LMPPoRot extends LMP
     protected void stopUnit(double time) throws TimedPlanUnitPlayException
     {
         feedback("end", time);
+        aniPlayer.removeAdditiveBody(vAdditive);
     }
 
     

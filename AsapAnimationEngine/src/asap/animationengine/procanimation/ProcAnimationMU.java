@@ -1537,4 +1537,13 @@ public class ProcAnimationMU extends XMLStructureAdapter implements AnimationUni
     public void startUnit(double t) throws MUPlayException
     {
     }
+    
+    @Override
+    public void cleanup()
+    {
+        if(aniPlayer!=null)
+        {
+            aniPlayer.removeAdditiveBody(vAdditive);
+        }
+    }
 }

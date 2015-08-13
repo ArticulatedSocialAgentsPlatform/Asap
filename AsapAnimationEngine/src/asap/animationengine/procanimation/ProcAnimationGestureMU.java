@@ -22,6 +22,7 @@ import asap.animationengine.motionunit.AnimationUnit;
 import asap.animationengine.motionunit.MUSetupException;
 import asap.animationengine.transitions.SlerpTransitionToPoseMU;
 import asap.motionunit.MUPlayException;
+import asap.motionunit.MotionUnit;
 import asap.realizer.feedback.FeedbackManager;
 import asap.realizer.pegboard.BMLBlockPeg;
 import asap.realizer.pegboard.PegBoard;
@@ -50,8 +51,8 @@ public class ProcAnimationGestureMU implements GestureUnit
     private VJoint vStart;
     private VJoint vNext;
 
-    //copy of the procanimation, used to figure out the stroke start positions
-    private ProcAnimationMU copyProc;   
+    // copy of the procanimation, used to figure out the stroke start positions
+    private ProcAnimationMU copyProc;
     private VJoint copyJoint;
 
     private Resources resource;
@@ -158,6 +159,8 @@ public class ProcAnimationGestureMU implements GestureUnit
 
     public void setGestureUnit(ProcAnimationMU pa) throws MUSetupException
     {
+        cleanup(gestureUnit);
+        cleanup(copyProc);
         gestureUnit = pa;
         for (KeyPosition kp : gestureUnit.getKeyPositions())
         {
@@ -291,7 +294,7 @@ public class ProcAnimationGestureMU implements GestureUnit
         {
             try
             {
-                ProcAnimationMU mu = new ProcAnimationMU();                
+                ProcAnimationMU mu = new ProcAnimationMU();
                 mu.readXML(resource.getReader(value));
                 mu.setParameters(gestureUnit.getParameters());
                 setGestureUnit(mu);
@@ -461,6 +464,23 @@ public class ProcAnimationGestureMU implements GestureUnit
     public void startUnit(double t) throws MUPlayException
     {
 
+    }
+
+    private void cleanup(MotionUnit mu)
+    {
+        if(mu!=null)
+        {
+            mu.cleanup();
+        }
+    }
+    
+    @Override
+    public void cleanup()
+    {
+        cleanup(gestureUnit);
+        cleanup(relaxUnit);
+        cleanup(prepUnit);
+        cleanup(copyProc);        
     }
 
     @Override
