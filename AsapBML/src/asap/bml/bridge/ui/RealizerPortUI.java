@@ -21,6 +21,7 @@ import java.util.Enumeration;
 import java.util.Locale;
 import java.util.jar.JarEntry;
 import java.util.jar.JarFile;
+import java.util.regex.Pattern;
 
 import javax.swing.AbstractAction;
 import javax.swing.BorderFactory;
@@ -321,10 +322,10 @@ public class RealizerPortUI extends JPanel
         realizerBridge.performBML(BehaviourBlockBuilder.resetBlock().toXMLString());
         String bmlContent = bmlInput.getText();
         bmlContent = bmlContent.replaceAll("(?s)<!--.*?-->", "");
-        String bmls[] = Iterables.toArray(Splitter.on("</bml>").trimResults().omitEmptyStrings().split(bmlContent), String.class);
+        String bmls[] = Iterables.toArray(Splitter.on(Pattern.compile("<bml\\s")).trimResults().omitEmptyStrings().split(bmlContent), String.class);
         for (String bml : bmls)
         {
-            realizerBridge.performBML(bml + "</bml>");
+            realizerBridge.performBML("<bml "+bml);
         }
     }
 

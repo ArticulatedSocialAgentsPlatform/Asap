@@ -111,7 +111,6 @@ public class BMLASchedulingHandler implements SchedulingHandler
     private void schedule(BehaviourBlock bb, BMLScheduler scheduler, Set<String> appendAfter, Set<String> chunkAfter, BMLBBlock bbm,
             double predictedStart)
     {
-
         BMLBlockPeg bmlBlockPeg = new BMLBlockPeg(bb.id, predictedStart);
         scheduler.addBMLBlockPeg(bmlBlockPeg);
 
