@@ -18,6 +18,7 @@ import lombok.Setter;
 import saiba.bml.core.Behaviour;
 import asap.animationengine.AnimationPlayer;
 import asap.animationengine.keyframe.KeyframeMU;
+import asap.animationengine.motionunit.MUSetupException;
 import asap.animationengine.motionunit.TimedAnimationUnit;
 import asap.realizer.BehaviourPlanningException;
 import asap.realizer.feedback.FeedbackManager;
@@ -92,7 +93,7 @@ public class VisualProsodyUnit extends TimedAbstractPlanUnit implements TimedAni
     }
 
     @Override
-    public void playUnit(double time)
+    public void playUnit(double time) throws TimedPlanUnitPlayException
     {
         float rpyAnimation[] = Vec3f.getVec3f();
         for (int i = 0; i < 3; i++)
@@ -117,7 +118,14 @@ public class VisualProsodyUnit extends TimedAbstractPlanUnit implements TimedAni
                 SkeletonInterpolator relaxSki = new SkeletonInterpolator(joints.toArray(new String[joints.size()]), cl, "R");
                 relaxMu = new KeyframeMU(relaxSki);
                 relaxMu.setAdditive(true);
-                relaxMu = relaxMu.copy(animationPlayer);
+                try
+                {
+                    relaxMu = relaxMu.copy(animationPlayer);
+                }
+                catch (MUSetupException e)
+                {
+                    throw new TimedPlanUnitPlayException("",this, e);
+                }
                 relaxSetup = true;
             }
             relaxMu.play((time - relaxStart) / RELAX_DURATION);

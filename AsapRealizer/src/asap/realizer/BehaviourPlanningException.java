@@ -21,7 +21,7 @@ public final class BehaviourPlanningException extends Exception
 
     public BehaviourPlanningException(Behaviour b, String m, Exception ex)
     {
-        this(b,m);
+        this(b,m+"\n"+ex.getMessage());
         initCause(ex);
     }
     

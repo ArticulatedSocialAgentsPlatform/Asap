@@ -2,14 +2,13 @@
  *******************************************************************************/
 package asap.nao.planunit;
 
-import asap.realizer.PlayException;
 
 /**
  * Thrown whenever a NaoUnit fails during play
  * @author Robin ten Buuren
  */
 @SuppressWarnings("serial")
-public class NUPlayException extends PlayException
+public class NUPlayException extends Exception
 {
     private final NaoUnit nu;
     

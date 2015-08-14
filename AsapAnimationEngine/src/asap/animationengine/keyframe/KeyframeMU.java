@@ -4,6 +4,7 @@ package asap.animationengine.keyframe;
 
 import hmi.animation.SkeletonInterpolator;
 import hmi.animation.VJoint;
+import hmi.animation.VJointUtils;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -16,6 +17,7 @@ import java.util.Set;
 import lombok.Setter;
 import asap.animationengine.AnimationPlayer;
 import asap.animationengine.motionunit.AnimationUnit;
+import asap.animationengine.motionunit.MUSetupException;
 import asap.animationengine.motionunit.TimedAnimationMotionUnit;
 import asap.motionunit.MUPlayException;
 import asap.realizer.feedback.FeedbackManager;
@@ -27,7 +29,6 @@ import asap.realizer.planunit.KeyPositionManagerImpl;
 import asap.realizer.planunit.ParameterNotFoundException;
 
 import com.google.common.collect.ImmutableSet;
-
 
 /**
  * Motion unit for keyframe/mocap motion specified in a SkeletonInterpolator.
@@ -43,13 +44,13 @@ public class KeyframeMU implements AnimationUnit
     private KeyPositionManager keyPositionManager = new KeyPositionManagerImpl();
     private boolean mirror = false;
     private VJoint joint;
-    
+
     @Setter
     private boolean additive = false;
-    
+
     private Set<String> filter = new HashSet<String>();
     private AnimationPlayer aniPlayer;
-    
+
     @Override
     public void addKeyPosition(KeyPosition kp)
     {
@@ -144,7 +145,7 @@ public class KeyframeMU implements AnimationUnit
         return baseIp;
     }
 
-    public KeyframeMU copy(VJoint v)
+    public KeyframeMU copy(VJoint v) throws MUSetupException
     {
         ArrayList<VJoint> vjParts = new ArrayList<VJoint>();
         for (String s : baseIp.getPartIds())
@@ -157,6 +158,14 @@ public class KeyframeMU implements AnimationUnit
                 }
             }
         }
+        Set<String> skelJoints = new HashSet<String>(Arrays.asList(baseIp.getPartIds()));
+        skelJoints.removeAll(VJointUtils.transformToSidSet(vjParts));
+        if (!skelJoints.isEmpty())
+        {
+            throw new MUSetupException("Joints "+skelJoints+
+                    " in SkeletonInterpolator not available in the steered body.", this);
+        }
+
         SkeletonInterpolator ipCopy = new SkeletonInterpolator(baseIp, vjParts.toArray(new VJoint[vjParts.size()]));
         KeyframeMU copy = new KeyframeMU(ipCopy);
         copy.additive = additive;
@@ -169,7 +178,7 @@ public class KeyframeMU implements AnimationUnit
         for (KeyPosition kp : getKeyPositions())
         {
             copy.addKeyPosition(kp);
-        }        
+        }
         return copy;
     }
 
@@ -208,18 +217,16 @@ public class KeyframeMU implements AnimationUnit
     @Override
     public String getParameterValue(String name) throws ParameterNotFoundException
     {
-        if (name.equals("mirror"))
-            return "false";// no need to store mirroring
-        if(name.equals("additive"))
+        if (name.equals("mirror")) return "false";// no need to store mirroring
+        if (name.equals("additive"))
         {
-            return ""+additive;
+            return "" + additive;
         }
         if (parameters.get(name) == null)
         {
             throw new ParameterNotFoundException(name);
         }
-        else
-            return parameters.get(name);
+        else return parameters.get(name);
 
     }
 
@@ -249,31 +256,30 @@ public class KeyframeMU implements AnimationUnit
     }
 
     @Override
-    public KeyframeMU copy(AnimationPlayer p)
+    public KeyframeMU copy(AnimationPlayer p) throws MUSetupException
     {
         this.aniPlayer = p;
-        if(additive)
+        if (additive)
         {
             return copy(p.constructAdditiveBody(getAdditiveJoints()));
         }
         return copy(p.getVNext());
     }
 
-    private static final Set<String>PHJOINTS = ImmutableSet.of(); 
-    
+    private static final Set<String> PHJOINTS = ImmutableSet.of();
+
     @Override
     public Set<String> getPhysicalJoints()
     {
         return PHJOINTS;
     }
 
-    
     @Override
     public Set<String> getKinematicJoints()
     {
-        if(additive)
+        if (additive)
         {
-            return ImmutableSet.of(); 
+            return ImmutableSet.of();
         }
         return ImmutableSet.copyOf(currentIp.getPartIds());
     }
@@ -281,24 +287,24 @@ public class KeyframeMU implements AnimationUnit
     @Override
     public void startUnit(double t) throws MUPlayException
     {
-                
-    } 
-    
+
+    }
+
     @Override
     public void cleanup()
     {
-        if(aniPlayer!=null)
+        if (aniPlayer != null)
         {
             aniPlayer.removeAdditiveBody(joint);
         }
     }
-    
+
     @Override
     public Set<String> getAdditiveJoints()
     {
-        if(!additive)
+        if (!additive)
         {
-            return ImmutableSet.of(); 
+            return ImmutableSet.of();
         }
         return ImmutableSet.copyOf(currentIp.getPartIds());
     }

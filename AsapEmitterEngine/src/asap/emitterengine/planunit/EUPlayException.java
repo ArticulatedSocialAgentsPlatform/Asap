@@ -3,13 +3,12 @@
 package asap.emitterengine.planunit;
 
 
-import asap.realizer.PlayException;
 
 /**
  * Thrown whenever an EmitterUnit fails during play
  * @author Dennis Reidsma
  */
-public class EUPlayException extends PlayException
+public class EUPlayException extends Exception
 {
     private static final long serialVersionUID = 1423L;
     private final EmitterUnit eu;

@@ -2,13 +2,12 @@
  *******************************************************************************/
 package asap.picture.planunit;
 
-import asap.realizer.PlayException;
 
 /**
  * Thrown whenever a PictureUnit fails during play
  * @author Dennis Reidsma
  */
-public class PUPlayException extends PlayException
+public class PUPlayException extends Exception
 {
     private static final long serialVersionUID = 1423L;
     private final PictureUnit pu;

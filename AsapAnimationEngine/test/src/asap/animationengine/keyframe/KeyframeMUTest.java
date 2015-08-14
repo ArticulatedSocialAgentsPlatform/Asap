@@ -15,6 +15,7 @@ import org.junit.Before;
 import org.junit.Test;
 
 import asap.animationengine.motionunit.AnimationUnit;
+import asap.animationengine.motionunit.MUSetupException;
 import asap.motionunit.MUPlayException;
 
 /**
@@ -113,7 +114,7 @@ public class KeyframeMUTest
         assertQuat4fRotationEquivalent(R_SHOULDER_ROT[0],R_SHOULDER_ROT[1],-R_SHOULDER_ROT[2],-R_SHOULDER_ROT[3],q,ROTATION_PRECISION);
     }
     @Test
-    public void testCopy() throws MUPlayException
+    public void testCopy() throws MUPlayException, MUSetupException
     {
         VJoint humanCopy = HanimBody.getLOA1HanimBody();
         AnimationUnit kfmuCopy = kfmu.copy(humanCopy);

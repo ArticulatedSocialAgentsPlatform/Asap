@@ -2,13 +2,12 @@
  *******************************************************************************/
 package asap.realizer.planunit;
 
-import asap.realizer.PlayException;
 /**
  * Thrown whenever a TimedPlanUnit fails during playback
  * @author hvanwelbergen
  *
  */
-public class TimedPlanUnitPlayException extends PlayException
+public class TimedPlanUnitPlayException extends Exception
 {
     private static final long serialVersionUID = 1L;
     private final TimedPlanUnit planUnit;
