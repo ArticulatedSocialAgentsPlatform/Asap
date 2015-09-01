@@ -211,6 +211,7 @@ public class IpaacaTTSGenerator extends AbstractTTSGenerator
 
     private List<Bookmark> createBookmarks(String marks, List<WordDescription> wd)
     {
+        System.out.println(marks);
         List<Bookmark> bmList = new ArrayList<Bookmark>();
         String seperatedMarks = marks.replaceAll("\\]\\[", ",");
         seperatedMarks = seperatedMarks.replaceAll("><", ",");
@@ -220,22 +221,24 @@ public class IpaacaTTSGenerator extends AbstractTTSGenerator
         String split[] = seperatedMarks.split(",");
 
         int wordnr = 0;
+        int offset = 0;
         for (int i = 0; i < split.length; i++)
         {
             if (split[i].startsWith("("))
             {
                 String bm[] = split[i].split("\\)\\(");
                 String name = bm[0].replaceAll("\\(", "");
-                int time = (int) (Double.parseDouble(bm[1].replaceAll("\\)", "")) * 1000);
                 WordDescription word = null;
                 if (wordnr < wd.size())
                 {
                     word = wd.get(wordnr);
                 }
-                bmList.add(new Bookmark(name, word, time));
+                bmList.add(new Bookmark(name, word, offset));
             }
             else
             {
+                WordDescription word = wd.get(wordnr);
+                offset += word.getDuration();
                 wordnr++;
             }
         }
