@@ -35,9 +35,9 @@ import com.google.common.collect.ImmutableSet;
  *         77 (2), pp. 654-666.
  * 
  *         Fixed head rotation axis during gaze:<br>
- *         Tweed, D., & Vilis, T. (1992).
+ *         Tweed, D., and Vilis, T. (1992).
  *         Listing's Law for Gaze-Directing Head Movements. In A. Berthoz, W.
- *         Graf, & P. Vidal (Eds.), The Head-Neck Sensory-Motor System (pp.
+ *         Graf, and P. Vidal (Eds.), The Head-Neck Sensory-Motor System (pp.
  *         387-391). New York: Oxford University Press.
  */
 public class TweedGazeMU extends AbstractGazeMU

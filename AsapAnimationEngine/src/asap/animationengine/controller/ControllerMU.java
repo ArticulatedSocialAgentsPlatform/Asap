@@ -42,7 +42,6 @@ public class ControllerMU implements AnimationUnit
     /**
      * Constructor
      * @param pc physical controller linked to the motion unit
-     * @param pcl physical controller list. This ControllerMU adds the controller to this list whenever it's playing.
      */
     public ControllerMU(PhysicalController pc, AnimationPlayer player)
     {

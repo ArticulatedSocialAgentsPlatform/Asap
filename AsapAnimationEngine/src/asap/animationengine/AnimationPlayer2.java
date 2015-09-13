@@ -416,16 +416,6 @@ public class AnimationPlayer2 implements Player, MixedAnimationPlayer
         return stepTime;
     }
 
-    /**
-     * @return the mSystems
-     */
-    /*
-    public List<MixedSystem> getMixedSystems()
-    {
-        return mSystems;
-    }
-    */
-
     @Override
     public void setBMLBlockState(String bmlId, TimedPlanUnitState state)
     {

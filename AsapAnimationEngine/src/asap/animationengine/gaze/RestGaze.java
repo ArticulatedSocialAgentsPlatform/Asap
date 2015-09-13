@@ -35,7 +35,6 @@ public interface RestGaze
     /**
      * Create a transition TMU that moves the joints from their current position 
      * to a position dictated by this resting pose.  
-     * @throws TMUSetupException 
      */
     TimedAnimationMotionUnit createTransitionToRest(FeedbackManager fbm, double startTime, 
             String bmlId, String id, BMLBlockPeg bmlBlockPeg, PegBoard pb) throws TMUSetupException;
@@ -43,7 +42,6 @@ public interface RestGaze
     /**
      * Create a transition TMU that moves the joints from their current position 
      * to a position dictated by this resting pose.  
-     * @throws TMUSetupException 
      */
     TimedAnimationMotionUnit createTransitionToRest(FeedbackManager fbm, double startTime, double duration, 
             String bmlId, String id, BMLBlockPeg bmlBlockPeg, PegBoard pb) throws TMUSetupException;
@@ -51,7 +49,6 @@ public interface RestGaze
     /**
      * Create a transition TMU that moves the joints from their current position 
      * to a position dictated by this resting pose.  
-     * @throws TMUSetupException 
      */
     TimedAnimationMotionUnit createTransitionToRest(FeedbackManager fbm, TimePeg startPeg, TimePeg endPeg,
             String bmlId, String id, BMLBlockPeg bmlBlockPeg, PegBoard pb) throws TMUSetupException;
@@ -61,7 +58,6 @@ public interface RestGaze
     /**
      * Create a MotionUnit that moves the joints from their current position 
      * to a position dictated by this resting pose.  
-     * @throws MUSetupException 
      */
     AnimationUnit createTransitionToRest() throws MUSetupException;
     

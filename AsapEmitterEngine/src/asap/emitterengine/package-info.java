@@ -18,16 +18,16 @@ engine example.
 Behavior that creates an emitter; emitter operates as long as behavior is not ended.  
 <i>Must be subclassed for new type of emitter engine, to create proper type of emitter, 
 and to map new parameters. But maybe we can use templating: CreateEmitterBehavior<BlinkEmitter>, 
-where BlinkEmitter also should specify the xml tag...</i><br/>
-<code>&lt;bml id="bmle1"&gt;&lt;bmlt:blinkemitter id="be1" start="0" range="2" averagewaitingtime="5"/&gt;&lt;/bml&gt;</code><br/>
-<br/>
-Behavior to change the parameter of a given emitter: <i>Reused for all types of emitter engine</i><br/>
+where BlinkEmitter also should specify the xml tag...</i><br>
+<code>&lt;bml id="bmle1"&gt;&lt;bmlt:blinkemitter id="be1" start="0" range="2" averagewaitingtime="5"/&gt;&lt;/bml&gt;</code><br>
+<br>
+Behavior to change the parameter of a given emitter: <i>Reused for all types of emitter engine</i><br>
 <code>
-&lt;bmlt:emitterparametervaluechange id="epvc1" target="bml11:be1" paramId="averagewaitingtime" start="3"&gt;<br/>
-&nbsp;&nbsp;&lt;bmlt:trajectory type="instant" targetValue="3"/><br/>
-&lt;/bmlt:parametervaluechange&gt;<br/>
-</code><br/>
-<br/>
+&lt;bmlt:emitterparametervaluechange id="epvc1" target="bml11:be1" paramId="averagewaitingtime" start="3"&gt;<br>
+&nbsp;&nbsp;&lt;bmlt:trajectory type="instant" targetValue="3"/><br>
+&lt;/bmlt:parametervaluechange&gt;<br>
+</code><br>
+<br>
 Behavior to stop existing emitter: Simply set an end time, or interrupt the original behavior; when the original emitter 
 behavior ends, the emitter will be stopped and cleaned up.
 
