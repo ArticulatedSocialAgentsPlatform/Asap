@@ -12,11 +12,11 @@ import static org.junit.Assert.assertTrue;
 
 import java.util.List;
 
+import lombok.extern.slf4j.Slf4j;
+
 import org.hamcrest.collection.IsIterableContainingInOrder;
 import org.junit.Before;
 import org.junit.Test;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 import saiba.bml.feedback.BMLSyncPointProgressFeedback;
 import asap.realizer.pegboard.BMLBlockPeg;
@@ -34,6 +34,7 @@ import asap.testutil.bml.feedback.FeedbackAsserts;
  * @author welberge
  * 
  */
+@Slf4j
 public abstract class AbstractTTSUnitTest extends AbstractTimedPlanUnitTest
 {
     private TimedTTSUnit ttsUnit;
@@ -45,7 +46,6 @@ public abstract class AbstractTTSUnitTest extends AbstractTimedPlanUnitTest
     private final static double BMLBLOCKSTART = 0.3;
     private BMLBlockPeg bbPeg;
     private TimePeg startPeg;
-    private static final Logger LOGGER = LoggerFactory.getLogger(AbstractTTSUnitTest.class.getName());
     private static final double TIMING_PRECISION = 0.001;
 
     @Override //behavior does not subside
@@ -79,10 +79,10 @@ public abstract class AbstractTTSUnitTest extends AbstractTimedPlanUnitTest
     private void initTTSUnit(String text) throws SpeechUnitPlanningException
     {
         ttsUnit = getTTSUnit(bbPeg, text, "speech1", "bml1");
-        LOGGER.debug("TTS Unit bookmarks: " + ttsUnit.getBookmarks());
         fbManager.addFeedbackListener(new ListBMLFeedbackListener.Builder().feedBackList(feedbackList).build());
         ttsUnit.setStart(startPeg);
         ttsUnit.setup();
+        log.debug("TTS Unit bookmarks: " + ttsUnit.getBookmarks());        
     }
 
     @Test
