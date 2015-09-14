@@ -52,7 +52,7 @@ public abstract class TimedTTSUnit extends TimedAbstractSpeechUnit
             Class<? extends Behaviour> behClass)
     {
         super(bfm, bbPeg, text, bmlId, id);
-        ttsBinding = ttsBin;        
+        ttsBinding = ttsBin;
         behaviourClass = behClass;
     }
 
@@ -236,6 +236,7 @@ public abstract class TimedTTSUnit extends TimedAbstractSpeechUnit
         {
             ttsBinding.setCallback(null);
             timing = getTiming();
+            prosody = timing.getProsody();
             setupCache();
         }
     }
