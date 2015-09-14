@@ -2,11 +2,8 @@
  *******************************************************************************/
 package asap.speechengine.util;
 
-import hmi.tts.Bookmark;
+import hmi.tts.TTSTiming;
 import hmi.tts.TimingInfo;
-
-import java.util.List;
-
 import saiba.bml.core.Behaviour;
 import asap.realizer.feedback.FeedbackManager;
 import asap.realizer.pegboard.BMLBlockPeg;
@@ -23,14 +20,11 @@ import asap.speechengine.ttsbinding.TTSBinding;
  */
 public class TTSUnitStub extends TimedTTSUnit
 {
-    final double prefDuration;
-
     public TTSUnitStub(FeedbackManager bfm, BMLBlockPeg bbPeg, String text, String id, String bmlId, TTSBinding ttsBin,
-            Class<? extends Behaviour> behClass, double prefDuration, List<Bookmark> bms)
+            Class<? extends Behaviour> behClass, TTSTiming timing)
     {
-        super(bfm, bbPeg, text, bmlId, id, ttsBin, behClass);
-        this.prefDuration = prefDuration;
-        bookmarks.addAll(bms);
+        super(bfm, bbPeg, text, bmlId, id, ttsBin, behClass);         
+        this.timing = timing;
     }
 
     @Override
@@ -52,12 +46,6 @@ public class TTSUnitStub extends TimedTTSUnit
     @Override
     protected void stopUnit(double time) throws TimedPlanUnitPlayException
     {
-    }
-
-    @Override
-    public double getPreferedDuration()
-    {
-        return prefDuration;
     }
 
     @Override

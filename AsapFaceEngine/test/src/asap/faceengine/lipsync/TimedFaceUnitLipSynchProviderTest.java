@@ -8,6 +8,7 @@ import static org.junit.Assert.assertEquals;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
 import hmi.faceanimation.FaceController;
+import hmi.tts.TTSTiming;
 import hmi.tts.Visime;
 import hmi.xml.XMLTokenizer;
 
@@ -46,6 +47,8 @@ public class TimedFaceUnitLipSynchProviderTest
     private static final double TIMING_PRECISION = 0.0001;
     private TimedFaceUnitLipSynchProvider provider;
     private final PegBoard pegBoard = new PegBoard();
+    private TTSTiming mockTiming = mock(TTSTiming.class);
+
     @Before
     public void before() throws IOException
     {
@@ -63,14 +66,14 @@ public class TimedFaceUnitLipSynchProviderTest
         endPeg.setLocalValue(10);
         when(mockSpeechUnit.getTimePeg("start")).thenReturn(startPeg);
         when(mockSpeechUnit.getTimePeg("end")).thenReturn(endPeg);
-        provider = new TimedFaceUnitLipSynchProvider(visemeBinding, mockFaceController, faceManager,pegBoard);
+        provider = new TimedFaceUnitLipSynchProvider(visemeBinding, mockFaceController, faceManager, pegBoard);
     }
 
     @Test
     public void test()
     {
-        provider.addLipSyncMovement(bbPeg, speechBehavior, mockSpeechUnit,
-                ImmutableList.of(new Visime(1, 5000, false), new Visime(2, 5000, false)));
+        when(mockTiming.getVisimes()).thenReturn(ImmutableList.of(new Visime(1, 5000, false), new Visime(2, 5000, false)));
+        provider.addLipSyncMovement(bbPeg, speechBehavior, mockSpeechUnit, mockTiming);
         List<TimedFaceUnit> faceUnits = faceManager.getPlanUnits();
         assertEquals(0, faceUnits.get(0).getStartTime(), TIMING_PRECISION);
         assertEquals(10, faceUnits.get(faceUnits.size() - 1).getEndTime(), TIMING_PRECISION);
@@ -81,21 +84,23 @@ public class TimedFaceUnitLipSynchProviderTest
                     - fu.getStartTime(), greaterThan(0d));
         }
     }
-    
+
     @Test
     public void testCoArticulation()
     {
-        provider.addLipSyncMovement(bbPeg, speechBehavior, mockSpeechUnit,
-                ImmutableList.of(new Visime(1, 1000, false), new Visime(2, 500, false), new Visime(2, 750, false), new Visime(1, 250, false)));
+        when(mockTiming.getVisimes()).thenReturn(
+                ImmutableList.of(new Visime(1, 1000, false), new Visime(2, 500, false), new Visime(2, 750, false),
+                        new Visime(1, 250, false)));
+        provider.addLipSyncMovement(bbPeg, speechBehavior, mockSpeechUnit, mockTiming);
         List<TimedFaceUnit> faceUnits = faceManager.getPlanUnits();
         assertEquals(0, faceUnits.get(0).getStartTime(), TIMING_PRECISION);
         assertEquals(2.5, faceUnits.get(3).getEndTime(), TIMING_PRECISION);
-        
+
         assertEquals(1.25, faceUnits.get(0).getEndTime(), TIMING_PRECISION);
         assertEquals(0.5, faceUnits.get(1).getStartTime(), TIMING_PRECISION);
         assertEquals(1.875, faceUnits.get(1).getEndTime(), TIMING_PRECISION);
         assertEquals(1.25, faceUnits.get(2).getStartTime(), TIMING_PRECISION);
         assertEquals(2.375, faceUnits.get(2).getEndTime(), TIMING_PRECISION);
-        assertEquals(1.875, faceUnits.get(3).getStartTime(), TIMING_PRECISION);        
+        assertEquals(1.875, faceUnits.get(3).getStartTime(), TIMING_PRECISION);
     }
 }

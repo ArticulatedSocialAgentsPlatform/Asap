@@ -13,10 +13,7 @@ import java.util.List;
 import java.util.Map;
 
 import lombok.Getter;
-
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
+import lombok.extern.slf4j.Slf4j;
 import saiba.bml.BMLGestureSync;
 import saiba.bml.core.Behaviour;
 import asap.realizer.SyncPointNotFoundException;
@@ -28,37 +25,24 @@ import asap.speechengine.ttsbinding.TTSBinding;
 import com.google.common.collect.ImmutableList;
 
 /**
- * A TimedPlanUnit that contains speech played back through a TTS system, 
+ * A TimedPlanUnit that contains speech played back through a TTS system,
  * either directly or via a .wav file
  * @author Herwin
  */
+@Slf4j
 public abstract class TimedTTSUnit extends TimedAbstractSpeechUnit
 {
     protected TTSBinding ttsBinding;
 
-    private double duration;
-
-    protected List<Bookmark> bookmarks;
-
-    protected List<Visime> visimes;
-
-    public int prevVisime;
-
-    public int curVisime;
-
-    public int nextVisime;
-
-    public double visimeDuration;
+    protected TTSTiming timing;
 
     private final Class<? extends Behaviour> behaviourClass;
 
     protected Map<Bookmark, TimePeg> pegs = new HashMap<Bookmark, TimePeg>();
 
-    private static Logger logger = LoggerFactory.getLogger(TimedTTSUnit.class.getName());
-
     @Getter
     private Prosody prosody;
-    
+
     public Class<? extends Behaviour> getBehaviourClass()
     {
         return behaviourClass;
@@ -68,15 +52,13 @@ public abstract class TimedTTSUnit extends TimedAbstractSpeechUnit
             Class<? extends Behaviour> behClass)
     {
         super(bfm, bbPeg, text, bmlId, id);
-        ttsBinding = ttsBin;
-        bookmarks = new ArrayList<Bookmark>();
-        visimes = new ArrayList<Visime>();
+        ttsBinding = ttsBin;        
         behaviourClass = behClass;
     }
 
     public TimePeg getBookMarkTimePeg(String bmid)
     {
-        for (Bookmark b : bookmarks)
+        for (Bookmark b : timing.getBookmarks())
         {
             if (b.getName().equals(bmid))
             {
@@ -107,7 +89,7 @@ public abstract class TimedTTSUnit extends TimedAbstractSpeechUnit
 
     private double getBookMarkTime(String bmid)
     {
-        for (Bookmark b : bookmarks)
+        for (Bookmark b : timing.getBookmarks())
         {
             if (b.getName().equals(bmid))
             {
@@ -122,7 +104,7 @@ public abstract class TimedTTSUnit extends TimedAbstractSpeechUnit
 
     private Bookmark getBookMark(String syncId)
     {
-        for (Bookmark b : bookmarks)
+        for (Bookmark b : timing.getBookmarks())
         {
             if (b.getName().equals(syncId))
             {
@@ -153,7 +135,7 @@ public abstract class TimedTTSUnit extends TimedAbstractSpeechUnit
     {
         if (getBookMark(syncId) != null)
         {
-            setTimePeg(getBookMark(syncId), peg);            
+            setTimePeg(getBookMark(syncId), peg);
         }
         else if (BMLGestureSync.isBMLSync(syncId))
         {
@@ -168,7 +150,7 @@ public abstract class TimedTTSUnit extends TimedAbstractSpeechUnit
         }
         else
         {
-            logger.warn("Can't set TimePeg on non-BML, non-Bookmark sync {}", syncId);
+            log.warn("Can't set TimePeg on non-BML, non-Bookmark sync {}", syncId);
         }
     }
 
@@ -204,10 +186,10 @@ public abstract class TimedTTSUnit extends TimedAbstractSpeechUnit
         }
         else if (Math.abs((getEndTime() - getStartTime()) - getPreferedDuration()) > 0.0001)
         {
-            logger.debug("End time: {}", getEndTime());
-            logger.debug("Start time: ", getStartTime());
-            logger.debug("End-start: ", (getEndTime() - getStartTime()));
-            logger.debug("Duration: ", getPreferedDuration());
+            log.debug("End time: {}", getEndTime());
+            log.debug("Start time: ", getStartTime());
+            log.debug("End-start: ", (getEndTime() - getStartTime()));
+            log.debug("Duration: ", getPreferedDuration());
             return false;
         }
 
@@ -216,8 +198,8 @@ public abstract class TimedTTSUnit extends TimedAbstractSpeechUnit
             double bmTime = getBookMarkTime(b);
             if (bmTime != TimePeg.VALUE_UNKNOWN && Math.abs((b.getOffset() * 0.001 + getStartTime()) - bmTime) > 0.0001)
             {
-                logger.debug("(b.offset*0.001+getStartTime())= {}", (b.getOffset() * 0.001 + getStartTime()));
-                logger.debug("bookmarktime= {}", bmTime);
+                log.debug("(b.offset*0.001+getStartTime())= {}", (b.getOffset() * 0.001 + getStartTime()));
+                log.debug("bookmarktime= {}", bmTime);
                 return false;
             }
         }
@@ -225,12 +207,12 @@ public abstract class TimedTTSUnit extends TimedAbstractSpeechUnit
     }
 
     /**
-     * @return Prefered duration (in seconds) of this speech unit (call setup before calling this)
+     * @return Preferred duration (in seconds) of this speech unit (call setup before calling this)
      */
     @Override
     public double getPreferedDuration()
     {
-        return duration;
+        return timing.getDuration();
     }
 
     protected abstract TTSTiming getTiming() throws SpeechUnitPlanningException;
@@ -253,15 +235,8 @@ public abstract class TimedTTSUnit extends TimedAbstractSpeechUnit
         synchronized (ttsBinding)
         {
             ttsBinding.setCallback(null);
-            TTSTiming ti = getTiming();
-            prosody = ti.getProsody();
+            timing = getTiming();
             setupCache();
-
-            duration = ti.getDuration();
-            bookmarks.clear();
-            bookmarks = ti.getBookmarks();
-            visimes.clear();
-            visimes.addAll(ti.getVisimes());
         }
     }
 
@@ -287,7 +262,7 @@ public abstract class TimedTTSUnit extends TimedAbstractSpeechUnit
      */
     public List<Bookmark> getBookmarks()
     {
-        return bookmarks;
+        return timing.getBookmarks();
     }
 
     /**
@@ -298,9 +273,9 @@ public abstract class TimedTTSUnit extends TimedAbstractSpeechUnit
     public List<Visime> getVisimes()
     {
         List<Visime> list;
-        synchronized(ttsBinding)
+        synchronized (ttsBinding)
         {
-            list = ImmutableList.copyOf(visimes);
+            list = ImmutableList.copyOf(timing.getVisimes());
         }
         return list;
     }

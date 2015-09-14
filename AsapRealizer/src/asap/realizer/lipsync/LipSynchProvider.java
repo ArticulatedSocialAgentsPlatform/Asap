@@ -2,10 +2,7 @@
  *******************************************************************************/
 package asap.realizer.lipsync;
 
-import hmi.tts.Visime;
-
-import java.util.List;
-
+import hmi.tts.TTSTiming;
 import saiba.bml.core.Behaviour;
 import asap.realizer.pegboard.BMLBlockPeg;
 import asap.realizer.planunit.TimedPlanUnit;
@@ -19,5 +16,5 @@ public interface LipSynchProvider
     /**
      * Adds the lipsync movement for a full (speech) behaviour 
      */
-    void addLipSyncMovement(BMLBlockPeg bbPeg, Behaviour beh, TimedPlanUnit speechUnit, List<Visime> visemes);
+    void addLipSyncMovement(BMLBlockPeg bbPeg, Behaviour beh, TimedPlanUnit speechUnit, TTSTiming timing);
 }

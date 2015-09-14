@@ -3,11 +3,11 @@
 package asap.faceengine.lipsync;
 
 import hmi.faceanimation.FaceController;
+import hmi.tts.TTSTiming;
 import hmi.tts.Visime;
 
 import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.List;
 
 import lombok.extern.slf4j.Slf4j;
 import saiba.bml.core.Behaviour;
@@ -43,7 +43,7 @@ public class TimedFaceUnitLipSynchProvider implements LipSynchProvider
     }
     
     @Override
-    public void addLipSyncMovement(BMLBlockPeg bbPeg, Behaviour beh, TimedPlanUnit bs, List<Visime> visemes)
+    public void addLipSyncMovement(BMLBlockPeg bbPeg, Behaviour beh, TimedPlanUnit bs, TTSTiming timing)
     {
         ArrayList<TimedFaceUnit> tfus = new ArrayList<TimedFaceUnit>();
         double totalDuration = 0d;
@@ -54,7 +54,7 @@ public class TimedFaceUnitLipSynchProvider implements LipSynchProvider
         HashMap<TimedFaceUnit, Double> startTimes = new HashMap<TimedFaceUnit, Double>();
         HashMap<TimedFaceUnit, Double> endTimes = new HashMap<TimedFaceUnit, Double>();
         
-        for (Visime vis : visemes)
+        for (Visime vis : timing.getVisimes())
         {
             // OOK: de visemen zijn nu te kort (sluiten aan op interpolatie 0/0
             // ipv 50/50)

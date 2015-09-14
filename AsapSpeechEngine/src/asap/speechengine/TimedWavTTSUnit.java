@@ -68,7 +68,7 @@ public class TimedWavTTSUnit extends TimedTTSUnit
         List<BMLSyncPointProgressFeedback> sppfs = new ArrayList<BMLSyncPointProgressFeedback>();
         synchronized (this)
         {
-            for (Bookmark b : bookmarks)
+            for (Bookmark b : timing.getBookmarks())
             {
                 if (playTime >= b.getOffset() / 1000d)
                 {

@@ -2,9 +2,7 @@
  *******************************************************************************/
 package asap.srnao.lipsync;
 
-import hmi.tts.Visime;
-
-import java.util.List;
+import hmi.tts.TTSTiming;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -49,14 +47,10 @@ public class TimedPictureUnitLipSynchProvider implements LipSynchProvider {
     }
 
     @Override
-    public void addLipSyncMovement(BMLBlockPeg bbPeg, Behaviour beh, TimedPlanUnit bs, List<Visime> visemes) {
-        double totalDuration = 0d;
+    public void addLipSyncMovement(BMLBlockPeg bbPeg, Behaviour beh, TimedPlanUnit bs, TTSTiming timing) {
+        double totalDuration = timing.getDuration();
         logger.debug("addLipSyncMovement has been called.");
 
-        // Calculate total duration of speech
-        for (Visime vis : visemes) {
-            totalDuration += vis.getDuration();
-        }
 
         // Create first AddAnimationXMLPU to determine preferred duration of animation
         AddAnimationXMLPU pu = new AddAnimationXMLPU();

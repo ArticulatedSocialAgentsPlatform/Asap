@@ -8,17 +8,17 @@ import static org.mockito.Matchers.anyString;
 import static org.mockito.Matchers.eq;
 import static org.mockito.Mockito.atLeast;
 import static org.mockito.Mockito.verify;
+import static org.mockito.Mockito.when;
 import static org.powermock.api.mockito.PowerMockito.mock;
-import static org.powermock.api.mockito.PowerMockito.when;
 import hmi.tts.Bookmark;
 import hmi.tts.Phoneme;
 import hmi.tts.TTSException;
+import hmi.tts.TTSTiming;
 import hmi.tts.Visime;
 import hmi.tts.WordDescription;
 
 import java.io.IOException;
 import java.util.ArrayList;
-import java.util.List;
 
 import org.junit.Before;
 import org.junit.Test;
@@ -45,7 +45,6 @@ import asap.speechengine.ttsbinding.TTSBinding;
 import asap.speechengine.util.TTSUnitStub;
 
 import com.google.common.collect.ImmutableList;
-
 /**
  * Unit test cases for SpeechBehaviour planning using a TTSPlanner
  * @author welberge
@@ -62,12 +61,13 @@ public class TTSPlannerTest extends AbstractSpeechPlannerTest<TimedTTSUnit>
     public static final double SYNC1_OFFSET = 1.0;
     private static final double TIMING_PRECISION = 0.0001;
 
+    private TTSTiming mockTiming = mock(TTSTiming.class);
     private final ImmutableList<Bookmark> BOOKMARKS = new ImmutableList.Builder<Bookmark>()
             .add(new Bookmark("s1", new WordDescription("world", new ArrayList<Phoneme>(), new ArrayList<Visime>()),
                     (int) (SYNC1_OFFSET * 1000))).build();
 
     final TTSUnitStub stubTTSUnit = new TTSUnitStub(mockFeedbackManager, bbPeg, SPEECHTEXT, SPEECHID, BMLID, mockTTSBinding,
-            SpeechBehaviour.class, SPEECH_DURATION, BOOKMARKS);
+            SpeechBehaviour.class, mockTiming);
 
     protected void mockTTSUnitFactoryExpectations() throws TTSException
     {
@@ -81,6 +81,8 @@ public class TTSPlannerTest extends AbstractSpeechPlannerTest<TimedTTSUnit>
     public void setup() throws TTSException
     {
         MockitoAnnotations.initMocks(this);
+        when(mockTiming.getBookmarks()).thenReturn(BOOKMARKS);
+        when(mockTiming.getDuration()).thenReturn(SPEECH_DURATION);
         mockTTSUnitFactoryExpectations();
         TTSPlanner ttsPlanner = new TTSPlanner(mockFeedbackManager, mockTTSUnitFactory, mockTTSBinding, planManager);
         speechPlanner = ttsPlanner;
@@ -116,7 +118,6 @@ public class TTSPlannerTest extends AbstractSpeechPlannerTest<TimedTTSUnit>
         TestUtil.assertInRangeExclusive(s1Peg.getGlobalValue(), startPeg.getGlobalValue(), endPeg.getGlobalValue());
     }
 
-    @SuppressWarnings("unchecked")
     @Test
     public void testAddBehaviour() throws IOException, BehaviourPlanningException
     {
@@ -124,7 +125,7 @@ public class TTSPlannerTest extends AbstractSpeechPlannerTest<TimedTTSUnit>
         ArrayList<TimePegAndConstraint> sacs = new ArrayList<TimePegAndConstraint>();
         stubTTSUnit.setTimePeg("start", TimePegUtil.createTimePeg(bbPeg, 0));
         speechPlanner.addBehaviour(bbPeg, beh, sacs, stubTTSUnit);
-        verify(mockLipSyncher, atLeast(1)).addLipSyncMovement(eq(bbPeg), eq(beh), (TimedPlanUnit) any(), (List<Visime>) any());
+        verify(mockLipSyncher, atLeast(1)).addLipSyncMovement(eq(bbPeg), eq(beh), (TimedPlanUnit) any(), (TTSTiming) any());
     }
 
     @Test

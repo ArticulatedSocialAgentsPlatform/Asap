@@ -2,11 +2,11 @@
  *******************************************************************************/
 package asap.animationengine.lipsync;
 
+import hmi.tts.TTSTiming;
 import hmi.tts.Visime;
 
 import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.List;
 
 import lombok.extern.slf4j.Slf4j;
 import saiba.bml.core.Behaviour;
@@ -46,7 +46,7 @@ public class TimedAnimationUnitLipSynchProvider implements LipSynchProvider
     }
 
     @Override
-    public void addLipSyncMovement(BMLBlockPeg bbPeg, Behaviour beh, TimedPlanUnit bs, List<Visime> visemes)
+    public void addLipSyncMovement(BMLBlockPeg bbPeg, Behaviour beh, TimedPlanUnit bs, TTSTiming timing)
     {
         ArrayList<TimedAnimationMotionUnit> tmus = new ArrayList<TimedAnimationMotionUnit>();
         double totalDuration = 0d;
@@ -56,7 +56,7 @@ public class TimedAnimationUnitLipSynchProvider implements LipSynchProvider
 
         TimedAnimationMotionUnit tmu = null;        
 
-        for (Visime vis : visemes)
+        for (Visime vis : timing.getVisimes())
         {
             // OOK: de visemen zijn nu te kort (sluiten aan op interpolatie 0/0
             // ipv 50/50)

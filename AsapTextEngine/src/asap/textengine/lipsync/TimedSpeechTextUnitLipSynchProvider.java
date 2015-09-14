@@ -2,9 +2,8 @@
  *******************************************************************************/
 package asap.textengine.lipsync;
 
+import hmi.tts.TTSTiming;
 import hmi.tts.Visime;
-
-import java.util.List;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -26,22 +25,26 @@ import asap.textengine.TimedSpeechTextUnit;
  *
  * @author Jordi Hendrix
  */
-public class TimedSpeechTextUnitLipSynchProvider implements LipSynchProvider {
+public class TimedSpeechTextUnitLipSynchProvider implements LipSynchProvider
+{
 
     private final PlanManager<TimedSpeechTextUnit> textPlanManager;
     private static Logger logger = LoggerFactory.getLogger(TimedSpeechTextUnitLipSynchProvider.class.getName());
     private TextOutput textOutput = null;
 
-    public TimedSpeechTextUnitLipSynchProvider(PlanManager<TimedSpeechTextUnit> textPlanManager, TextOutput to) {
+    public TimedSpeechTextUnitLipSynchProvider(PlanManager<TimedSpeechTextUnit> textPlanManager, TextOutput to)
+    {
         this.textPlanManager = textPlanManager;
         this.textOutput = to;
     }
 
     @Override
-    public void addLipSyncMovement(BMLBlockPeg bbPeg, Behaviour beh, TimedPlanUnit bs, List<Visime> visemes) {
+    public void addLipSyncMovement(BMLBlockPeg bbPeg, Behaviour beh, TimedPlanUnit bs, TTSTiming timing)
+    {
         double totalDuration = 0d;
 
-        for (Visime vis : visemes) {
+        for (Visime vis : timing.getVisimes())
+        {
             totalDuration += vis.getDuration();
         }
 

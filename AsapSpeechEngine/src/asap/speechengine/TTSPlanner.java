@@ -269,7 +269,7 @@ public class TTSPlanner extends AbstractPlanner<TimedTTSUnit>
 
         for (LipSynchProvider ls : lipSynchers)
         {
-            ls.addLipSyncMovement(bbPeg, b, bs, bs.visimes);
+            ls.addLipSyncMovement(bbPeg, b, bs, bs.timing);
         }
 
         Prosody pros = bs.getProsody();

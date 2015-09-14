@@ -29,7 +29,8 @@ import asap.speechengine.ttsbinding.TTSBinding;
 public class TimedDirectTTSUnit extends TimedTTSUnit
 {
     private double systemStartTime;
-
+    
+    
     private static Logger logger = LoggerFactory.getLogger(TimedDirectTTSUnit.class.getName());
 
     public TimedDirectTTSUnit(FeedbackManager bfm, BMLBlockPeg bbPeg, String text, String bmlId, String id, TTSBinding ttsBin,
@@ -118,10 +119,7 @@ public class TimedDirectTTSUnit extends TimedTTSUnit
         @Override
         public void visimeCallback(int visime, int duration, int nextVis, boolean stress)
         {
-            prevVisime = curVisime;
-            curVisime = visime;
-            nextVisime = nextVis;
-            visimeDuration = duration / 1000.0;
+            
         }
 
         @Override

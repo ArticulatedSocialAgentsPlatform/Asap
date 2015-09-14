@@ -11,6 +11,7 @@ import static org.powermock.api.mockito.PowerMockito.mock;
 import hmi.tts.Bookmark;
 import hmi.tts.Phoneme;
 import hmi.tts.TTSException;
+import hmi.tts.TTSTiming;
 import hmi.tts.Visime;
 import hmi.tts.WordDescription;
 import hmi.xml.XMLTokenizer;
@@ -112,18 +113,21 @@ public class TTSPlannerIntegrationTest
     private final ImmutableList<Bookmark> BOOKMARKS = new ImmutableList.Builder<Bookmark>()
             .add(new Bookmark("s1", new WordDescription("world", new ArrayList<Phoneme>(), new ArrayList<Visime>()),
                     (int) (SYNC1_OFFSET * 1000))).build();
+    
+    private TTSTiming mockTiming = mock(TTSTiming.class);
+    
     private final TTSUnitStub ttsUnit = new TTSUnitStub(fbManager, bbPeg, SPEECHTEXT, SPEECHID, BMLID, mockTTSBinding,
-            SpeechBehaviour.class, SPEECH_DURATION, BOOKMARKS);
+            SpeechBehaviour.class, mockTiming);
 
     private final TimedTTSUnit ttsUnitPlayExeception = new TTSUnitPlayExceptionStub(fbManager, bbPeg, SPEECHTEXT, SPEECHID, BMLID,
-            mockTTSBinding, SpeechBehaviour.class, SPEECH_DURATION, BOOKMARKS);
+            mockTTSBinding, SpeechBehaviour.class, mockTiming);
 
     protected static class TTSUnitPlayExceptionStub extends TTSUnitStub
     {
         public TTSUnitPlayExceptionStub(FeedbackManager bbm, BMLBlockPeg bbPeg, String text, String id, String bmlId, TTSBinding ttsBin,
-                Class<? extends Behaviour> behClass, double prefDur, List<Bookmark> bms)
+                Class<? extends Behaviour> behClass, TTSTiming timing)
         {
-            super(bbm, bbPeg, text, id, bmlId, ttsBin, behClass, prefDur, bms);
+            super(bbm, bbPeg, text, id, bmlId, ttsBin, behClass, timing);
         }
 
         @Override
@@ -150,6 +154,8 @@ public class TTSPlannerIntegrationTest
     @Before
     public void setUp()
     {
+        when(mockTiming.getBookmarks()).thenReturn(BOOKMARKS);
+        when(mockTiming.getDuration()).thenReturn(SPEECH_DURATION);
         verbalPlayer = new DefaultPlayer(new MultiThreadedPlanPlayer<TimedTTSUnit>(fbManager, planManager));
         ttsPlanner = new TTSPlanner(fbManager, mockTTSUnitFactory, mockTTSBinding, planManager);
         ttsEngine = new DefaultEngine<TimedTTSUnit>(ttsPlanner, verbalPlayer, planManager);

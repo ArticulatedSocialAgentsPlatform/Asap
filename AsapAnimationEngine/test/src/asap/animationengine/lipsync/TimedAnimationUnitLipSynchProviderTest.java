@@ -9,6 +9,7 @@ import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
 import hmi.animation.VJoint;
 import hmi.testutil.animation.HanimBody;
+import hmi.tts.TTSTiming;
 import hmi.tts.Visime;
 import hmi.util.Resources;
 import hmi.xml.XMLTokenizer;
@@ -79,9 +80,9 @@ public class TimedAnimationUnitLipSynchProviderTest
     @Test
     public void test() throws IOException
     {
-        provider.addLipSyncMovement(bbPeg, speechBehavior, mockSpeechUnit,
-                ImmutableList.of(new Visime(1, 5000, false), new Visime(2, 5000, false)));
-
+        TTSTiming mockTiming = mock(TTSTiming.class);
+        when(mockTiming.getVisimes()).thenReturn(ImmutableList.of(new Visime(1, 5000, false), new Visime(2, 5000, false)));
+        provider.addLipSyncMovement(bbPeg, speechBehavior, mockSpeechUnit,mockTiming);
         List<TimedAnimationUnit> animationUnits = animationPlanManager.getPlanUnits();
         assertEquals(0, animationUnits.get(0).getStartTime(), TIMING_PRECISION);
         assertEquals(10, animationUnits.get(animationUnits.size() - 1).getEndTime(), TIMING_PRECISION);
@@ -98,8 +99,10 @@ public class TimedAnimationUnitLipSynchProviderTest
     @Test
     public void testCoArticulation() throws IOException
     {
-        provider.addLipSyncMovement(bbPeg, speechBehavior, mockSpeechUnit, ImmutableList.of(new Visime(1, 1000, false), new Visime(2, 500,
+        TTSTiming mockTiming = mock(TTSTiming.class);
+        when(mockTiming.getVisimes()).thenReturn(ImmutableList.of(new Visime(1, 1000, false), new Visime(2, 500,
                 false), new Visime(2, 750, false), new Visime(1, 250, false)));
+        provider.addLipSyncMovement(bbPeg, speechBehavior, mockSpeechUnit, mockTiming);
         List<TimedAnimationUnit> animationUnits = animationPlanManager.getPlanUnits();
         
         assertEquals(0, animationUnits.get(0).getStartTime(), TIMING_PRECISION);
