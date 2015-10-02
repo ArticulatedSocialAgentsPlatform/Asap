@@ -54,7 +54,7 @@ public class VisualProsodyUnit extends TimedAbstractPlanUnit implements TimedAni
     private List<String> joints;
     private volatile boolean interrupted = false;
     private double relaxStart;
-    
+
     @Setter
     private double k = 1;
 
@@ -84,23 +84,34 @@ public class VisualProsodyUnit extends TimedAbstractPlanUnit implements TimedAni
     }
 
     @Override
-    public void startUnit(double time)
+    public void startUnit(double time) throws TimedPlanUnitPlayException
     {
-        rpy = visualProsody.firstHeadMotion(new double[] { 0, 0, 0 }, f0[0], rmsEnergy[0], frameDuration, frameDuration);
+        if (f0.length > 0)
+        {
+            rpy = visualProsody.firstHeadMotion(new double[] { 0, 0, 0 }, f0[0], rmsEnergy[0], frameDuration, frameDuration);
+        }
+        else
+        {
+            rpy = new double[3];
+        }
         rpyPrev = Arrays.copyOf(rpy, 3);
         rpyPrevPrev = Arrays.copyOf(rpy, 3);
         additiveBody = animationPlayer.constructAdditiveBody(ImmutableSet.copyOf(joints));
+        feedback("start", time);
+        super.startUnit(time);
     }
 
     @Override
     public void playUnit(double time) throws TimedPlanUnitPlayException
     {
+        if (f0.length == 0) return;
+
         float rpyAnimation[] = Vec3f.getVec3f();
         for (int i = 0; i < 3; i++)
         {
             rpyAnimation[i] = (float) ((rpy[i] - visualProsody.getOffset()[i]) * amplitude);
         }
-        if (time > speechEnd.getGlobalValue()||interrupted)
+        if (time > speechEnd.getGlobalValue() || interrupted)
         {
             if (!relaxSetup)
             {
@@ -124,7 +135,7 @@ public class VisualProsodyUnit extends TimedAbstractPlanUnit implements TimedAni
                 }
                 catch (MUSetupException e)
                 {
-                    throw new TimedPlanUnitPlayException("",this, e);
+                    throw new TimedPlanUnitPlayException("", this, e);
                 }
                 relaxSetup = true;
             }
@@ -255,16 +266,17 @@ public class VisualProsodyUnit extends TimedAbstractPlanUnit implements TimedAni
     protected void stopUnit(double time) throws TimedPlanUnitPlayException
     {
         animationPlayer.removeAdditiveBody(additiveBody);
-        if(relaxMu!=null)
+        if (relaxMu != null)
         {
-            relaxMu.cleanup();        
+            relaxMu.cleanup();
         }
+        feedback("end", time);
     }
-    
+
     @Override
     public void interrupt(double time)
     {
-        if(time <= speechEnd.getGlobalValue())
+        if (time <= speechEnd.getGlobalValue())
         {
             interrupted = true;
         }
