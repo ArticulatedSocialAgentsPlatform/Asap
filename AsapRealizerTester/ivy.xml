@@ -26,6 +26,7 @@
 
       <dependency org="HMI"      name="HmiAnimation"       rev="latest.${resolve.status}"  />
       <dependency org="HMI"      name="HmiTTSSapi5"        rev="latest.${resolve.status}"  />
+	  <dependency org="HMI"      name="HmiTTSMary5"        rev="latest.{$resolve.status}"  />
       <dependency org="HMI"      name="HmiNeurophysics"    rev="latest.${resolve.status}"  />
       <dependency org="HMI"      name="HmiGraphics"        transitive="false" rev="latest.${resolve.status}"  />
       <dependency org="HMI"      name="HmiFaceGraphics"    transitive="false" rev="latest.${resolve.status}"  />
