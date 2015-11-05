@@ -26,6 +26,11 @@ public final class VisemeBindingLoader
     {
     }
 
+    public static boolean isAtVisemeBindingTag(XMLTokenizer tokenizer) throws IOException
+    {
+        return tokenizer.atSTag("MorphVisemeBinding")||tokenizer.atSTag("FACSVisemeBinding");
+    }
+    
     public static VisemeBinding load(XMLTokenizer tokenizer, FACSConverter fc) throws IOException
     {
         VisemeBinding visBinding = null;

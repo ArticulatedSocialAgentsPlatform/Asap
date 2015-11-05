@@ -1,0 +1,11 @@
+<DominanceParameterMapping>
+<!-- New parameter-sets for sound-classes -->
+  <ParamSet soundclass="vowel" 		magnitude="1.0" stretchLeft="0.4" stretchRight="0.4" rateLeft="-0.2" rateRight="0.05" peak="0.3" startOffsetMultiplicator="0.5" endOffsetMultiplicator="1.5"/>
+  <ParamSet soundclass="diphthong" 	magnitude="0.9" stretchLeft="0.3" stretchRight="0.3" rateLeft="-0.3" rateRight="0.04" peak="0.2" startOffsetMultiplicator="0.7" endOffsetMultiplicator="1.7"/>
+  <ParamSet soundclass="glide" 		magnitude="1.0" stretchLeft="0.3" stretchRight="0.3" rateLeft="-0.1" rateRight="0.03" peak="0.3" startOffsetMultiplicator="1.0" endOffsetMultiplicator="2.0"/>
+  <ParamSet soundclass="liquid" 	magnitude="1.0" stretchLeft="0.5" stretchRight="0.5" rateLeft="-0.2" rateRight="0.05" peak="0.4" startOffsetMultiplicator="0.6" endOffsetMultiplicator="1.6"/>
+  <ParamSet soundclass="nasal" 		magnitude="1.0" stretchLeft="0.4" stretchRight="0.15" rateLeft="-0.04" rateRight="0.1" peak="0.5" startOffsetMultiplicator="1.0" endOffsetMultiplicator="2.0"/>
+  <ParamSet soundclass="fricative" 	magnitude="0.9" stretchLeft="0.4" stretchRight="0.4" rateLeft="-0.12" rateRight="0.12" peak="0.5" startOffsetMultiplicator="0.5" endOffsetMultiplicator="1.5"/>
+  <ParamSet soundclass="stop" 		magnitude="1.0" stretchLeft="0.5" stretchRight="0.5" rateLeft="-0.1" rateRight="0.1" peak="0.5" startOffsetMultiplicator="0.2" endOffsetMultiplicator="1.2"/>
+  <ParamSet soundclass="affricate"	magnitude="1.0" stretchLeft="0.4" stretchRight="0.4" rateLeft="-0.04" rateRight="0.04" peak="0.5" startOffsetMultiplicator="0.8" endOffsetMultiplicator="1.8"/>
+</DominanceParameterMapping> 
