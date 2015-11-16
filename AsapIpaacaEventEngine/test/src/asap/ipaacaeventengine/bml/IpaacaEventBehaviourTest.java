@@ -22,8 +22,8 @@ public class IpaacaEventBehaviourTest extends AbstractBehaviourTest
     public void testReadXML() throws IOException
     {
         String bmlString = "<ipaaca:ipaacaevent xmlns:ipaaca=\""+IpaacaEventBehaviour.NAMESPACE+"\" id=\"e1\" start=\"nod1:end\" >"
-                + "<ipaaca:message category=\"cat1\">"
-                + "</ipaaca:message>"
+                + "<message category=\"cat1\">"
+                + "</message>"
                 + "</ipaaca:ipaacaevent>";
         IpaacaEventBehaviour beh = new IpaacaEventBehaviour("bml2", new XMLTokenizer(bmlString));
         assertEquals("bml2",beh.getBmlId());
@@ -36,8 +36,8 @@ public class IpaacaEventBehaviourTest extends AbstractBehaviourTest
     protected Behaviour createBehaviour(String bmlId, String extraAttributeString) throws IOException
     {
         String str = "<ipaaca:ipaacaevent xmlns:ipaaca=\""+IpaacaEventBehaviour.NAMESPACE+"\" "+TestUtil.getDefNS()+"id=\"a1\" " + extraAttributeString+">"
-                + "<ipaaca:message category=\"cat1\">"
-                + "</ipaaca:message>"
+                + "<message category=\"cat1\">"
+                + "</message>"
                 + "</ipaaca:ipaacaevent>";       
                 return new IpaacaEventBehaviour(bmlId, new XMLTokenizer(str));
     }

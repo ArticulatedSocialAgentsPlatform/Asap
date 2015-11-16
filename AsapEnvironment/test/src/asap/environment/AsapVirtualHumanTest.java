@@ -11,6 +11,7 @@ import hmi.environmentbase.Environment;
 import hmi.environmentbase.Loader;
 import hmi.util.ArrayUtils;
 import hmi.util.SystemClock;
+import hmi.xml.XMLScanException;
 import hmi.xml.XMLTokenizer;
 
 import java.io.IOException;
@@ -312,7 +313,7 @@ public class AsapVirtualHumanTest
     @Test
     public void testIdOverride() throws IOException
     {
-      //@formatter:off
+        //@formatter:off
         String str = 
         "<AsapVirtualHuman id=\"Fred\">"+             
                 "<Loader id=\"realizer\" loader=\"asap.realizerembodiments.AsapRealizerEmbodiment\">" +
@@ -321,6 +322,21 @@ public class AsapVirtualHumanTest
         //@formatter:on
         AsapVirtualHuman avh = new AsapVirtualHuman();
         avh.setVhId("Wilma");
+        avh.load(new XMLTokenizer(str), "windowname", new Environment[] { aEnv }, new SystemClock());
+        assertEquals("Wilma",avh.getVhId());
+    }
+    
+    @Test(expected=XMLScanException.class)
+    public void testInvalidXML()throws IOException
+    {
+      //@formatter:off
+        String str = 
+        "<AsapVirtualHuman id=\"Fred\">"+             
+                "<Loader id=\"realizer\" loader=\"asap.realizerembodiments.AsapRealizerEmbodiment\"/>" +                
+                "</Loader>"+
+        "</AsapVirtualHuman>";
+        //@formatter:on
+        AsapVirtualHuman avh = new AsapVirtualHuman();
         avh.load(new XMLTokenizer(str), "windowname", new Environment[] { aEnv }, new SystemClock());
         assertEquals("Wilma",avh.getVhId());
     }
