@@ -28,7 +28,7 @@ import asap.realizertestutil.planunit.AbstractTimedPlanUnitTest;
  */
 @RunWith(PowerMockRunner.class)
 @PrepareForTest({BMLScheduler.class,BMLBlockManager.class})
-public class TestTimedIpaacaMessageUnit extends AbstractTimedPlanUnitTest
+public class TimedIpaacaMessageUnitTest extends AbstractTimedPlanUnitTest
 {
     private OutputBuffer mockOutBuffer = mock(OutputBuffer.class);
     @Override
