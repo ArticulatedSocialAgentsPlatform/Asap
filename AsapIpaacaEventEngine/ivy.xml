@@ -10,7 +10,7 @@
       <dependency org="Asap"   name="AsapRealizer"       transitive="false" rev="latest.${resolve.status}"   />      
       <dependency org="Asap"   name="AsapBML"       transitive="false" rev="latest.${resolve.status}"   />
       <dependency org="ipaaca"   name="ipaaca-java"       rev="latest.${resolve.status}"   />
-      
+      <dependency org="Asap"   name="AsapRealizerEmbodiments"       rev="latest.${resolve.status}"   />
       
        <dependency org="jcip"    name="jcip-annotations"      rev="latest.release"  />
       
