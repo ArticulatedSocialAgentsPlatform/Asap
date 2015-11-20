@@ -5,6 +5,7 @@ import ipaaca.OutputBuffer;
 import java.util.ArrayList;
 import java.util.List;
 
+import saiba.bml.BMLInfo;
 import saiba.bml.core.Behaviour;
 import asap.ipaacaeventengine.bml.IpaacaEventBehaviour;
 import asap.ipaacaeventengine.bml.IpaacaMessage;
@@ -26,6 +27,11 @@ import asap.realizer.scheduler.TimePegAndConstraint;
 public class IpaacaEventPlanner extends AbstractPlanner<TimedIpaacaMessageUnit>
 {
     private final OutputBuffer outBuffer;
+    
+    static
+    {
+        BMLInfo.addBehaviourType(IpaacaEventBehaviour.xmlTag(), IpaacaEventBehaviour.class);        
+    }
     
     public IpaacaEventPlanner(FeedbackManager fbm, PlanManager<TimedIpaacaMessageUnit> planManager, OutputBuffer outBuf)
     {

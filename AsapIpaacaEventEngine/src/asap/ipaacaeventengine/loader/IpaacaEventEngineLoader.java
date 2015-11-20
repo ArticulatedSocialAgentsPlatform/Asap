@@ -30,12 +30,15 @@ public class IpaacaEventEngineLoader implements EngineLoader
     private String id;
     private Engine engine = null;
     private OutputBuffer outBuffer;
+    static
+    {
+        ipaaca.Initializer.initializeIpaacaRsb();
+    }
     
     public IpaacaEventEngineLoader()
     {
 
     }
-    
     
     @Override
     public void readXML(XMLTokenizer tokenizer, String loaderId, String vhId, String vhName, Environment[] environments,
