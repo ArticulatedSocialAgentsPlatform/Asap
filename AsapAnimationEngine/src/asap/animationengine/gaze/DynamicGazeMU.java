@@ -278,7 +278,8 @@ public class DynamicGazeMU extends AbstractGazeMU
             {
                 neck = null;
             }
-            woTarget.getTranslation2(localGaze, neck);
+            VJoint currentNeck = player.getVCurrPartBySid(neck.getSid());
+            woTarget.getTranslation2(localGaze, currentNeck);
 
             // lgazeneck = gazepos - neck
             // lgazeeyes = gazepos - eye = gazepos - (neck+localeye) = gazepos-neck-localeye = lgazeneck - localeye

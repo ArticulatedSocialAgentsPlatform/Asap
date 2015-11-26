@@ -51,7 +51,7 @@ public class ActivatePlanner extends AbstractPlanner<TimedActivateUnit>
     {
         if (!(b instanceof BMLAActivateBehaviour))
         {
-            throw new BehaviourPlanningException(b, "Behaviour is not a BMLTActivateBehaviour");
+            throw new BehaviourPlanningException(b, "Behaviour is not a BMLAActivateBehaviour");
         }
         BMLAActivateBehaviour ab = (BMLAActivateBehaviour) b;
 

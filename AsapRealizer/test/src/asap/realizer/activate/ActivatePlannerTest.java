@@ -50,7 +50,7 @@ public class ActivatePlannerTest
         return new BMLAActivateBehaviour(BMLID, new XMLTokenizer(bml));
     }
 
-    private BMLAActivateBehaviour createInterruptBehaviour() throws IOException
+    private BMLAActivateBehaviour createActivateBehaviour() throws IOException
     {
         return createActivateBehaviour("<activate xmlns=\""+BMLAInfo.BMLA_NAMESPACE+"\" target=\"bml3\" id=\"i1\"/>");
     }
@@ -58,19 +58,19 @@ public class ActivatePlannerTest
     @Test
     public void testResolveUnsetStart() throws BehaviourPlanningException, IOException
     {
-        plannerTests.testResolveUnsetStart(createInterruptBehaviour());
+        plannerTests.testResolveUnsetStart(createActivateBehaviour());
     }
     
     @Test
     public void testResolveStartOffset() throws BehaviourPlanningException, IOException
     {
-        plannerTests.testResolveStartOffset(createInterruptBehaviour());
+        plannerTests.testResolveStartOffset(createActivateBehaviour());
     }
     
     @Test(expected=BehaviourPlanningException.class)
     public void testResolveNonExistingSync() throws IOException, BehaviourPlanningException
     {
-        plannerTests.testResolveNonExistingSync(createInterruptBehaviour());
+        plannerTests.testResolveNonExistingSync(createActivateBehaviour());
     }
     
     @Test
