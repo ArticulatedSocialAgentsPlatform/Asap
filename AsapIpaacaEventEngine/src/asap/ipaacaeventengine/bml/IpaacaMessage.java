@@ -22,6 +22,9 @@ public class IpaacaMessage extends XMLStructureAdapter
     @Getter
     private String category = "";
     
+    @Getter
+    private String channel = "default";
+            
     private Map<String, String> payload;
 
     public ImmutableMap<String, String> getPayload()
@@ -123,6 +126,7 @@ public class IpaacaMessage extends XMLStructureAdapter
     public void decodeAttributes(HashMap<String, String> attrMap, XMLTokenizer tokenizer)
     {
         category = getRequiredAttribute("category", attrMap, tokenizer);
+        channel = getOptionalAttribute("channel",attrMap,"default");        
     }
 
     private static final String XMLTAG = "message";

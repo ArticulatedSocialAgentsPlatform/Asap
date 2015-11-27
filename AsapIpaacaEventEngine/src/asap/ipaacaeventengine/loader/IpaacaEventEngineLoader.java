@@ -4,12 +4,12 @@ import hmi.environmentbase.Environment;
 import hmi.environmentbase.Loader;
 import hmi.util.ArrayUtils;
 import hmi.xml.XMLTokenizer;
-import ipaaca.OutputBuffer;
 
 import java.io.IOException;
 
 import lombok.Getter;
 import asap.ipaacaeventengine.IpaacaEventPlanner;
+import asap.ipaacaeventengine.MessageManager;
 import asap.ipaacaeventengine.TimedIpaacaMessageUnit;
 import asap.realizer.DefaultEngine;
 import asap.realizer.DefaultPlayer;
@@ -29,7 +29,7 @@ public class IpaacaEventEngineLoader implements EngineLoader
     @Getter
     private String id;
     private Engine engine = null;
-    private OutputBuffer outBuffer;
+    private MessageManager messageManager;
     static
     {
         ipaaca.Initializer.initializeIpaacaRsb();
@@ -45,7 +45,7 @@ public class IpaacaEventEngineLoader implements EngineLoader
             Loader... requiredLoaders) throws IOException
     {
         this.id = loaderId;
-        outBuffer = new OutputBuffer(id);
+        messageManager = new MessageManager(id);
         AsapRealizerEmbodiment are = ArrayUtils.getFirstClassOfType(requiredLoaders, AsapRealizerEmbodiment.class);
         if (are == null)
         {
@@ -54,7 +54,7 @@ public class IpaacaEventEngineLoader implements EngineLoader
         
         PlanManager<TimedIpaacaMessageUnit> planManager = new PlanManager<>();
         SingleThreadedPlanPlayer<TimedIpaacaMessageUnit> pp = new SingleThreadedPlanPlayer<>(are.getFeedbackManager(), planManager);
-        IpaacaEventPlanner planner = new IpaacaEventPlanner(are.getFeedbackManager(), planManager, outBuffer);
+        IpaacaEventPlanner planner = new IpaacaEventPlanner(are.getFeedbackManager(), planManager, messageManager);
         engine = new DefaultEngine<TimedIpaacaMessageUnit>(planner,new DefaultPlayer(pp),new PlanManager<TimedIpaacaMessageUnit>());
         engine.setId(id);
         are.addEngine(engine);
@@ -69,6 +69,6 @@ public class IpaacaEventEngineLoader implements EngineLoader
     @Override
     public void unload()
     {
-        outBuffer.close();
+        messageManager.close();
     }
 }

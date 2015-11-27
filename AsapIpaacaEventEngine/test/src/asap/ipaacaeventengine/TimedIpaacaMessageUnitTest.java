@@ -5,8 +5,6 @@ import static org.mockito.Mockito.mock;
 
 import java.util.HashMap;
 
-import ipaaca.OutputBuffer;
-
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.powermock.core.classloader.annotations.PrepareForTest;
@@ -30,7 +28,7 @@ import asap.realizertestutil.planunit.AbstractTimedPlanUnitTest;
 @PrepareForTest({BMLScheduler.class,BMLBlockManager.class})
 public class TimedIpaacaMessageUnitTest extends AbstractTimedPlanUnitTest
 {
-    private OutputBuffer mockOutBuffer = mock(OutputBuffer.class);
+    private MessageManager mockMessageManager = mock(MessageManager.class);
     @Override
     protected void assertSubsiding(TimedPlanUnit tpu)
     {
@@ -48,7 +46,7 @@ public class TimedIpaacaMessageUnitTest extends AbstractTimedPlanUnitTest
     protected TimedPlanUnit setupPlanUnit(FeedbackManager bfm, BMLBlockPeg bbPeg, String id, String bmlId, double startTime)
             throws TimedPlanUnitSetupException
     {
-        TimedIpaacaMessageUnit timu = new TimedIpaacaMessageUnit(bfm, bbPeg, bmlId, id, mockOutBuffer, "cat1", new HashMap<String,String>());
+        TimedIpaacaMessageUnit timu = new TimedIpaacaMessageUnit(bfm, bbPeg, bmlId, id, mockMessageManager, "cat1", new HashMap<String,String>());
         TimePeg start = new TimePeg(bbPeg);
         start.setGlobalValue(startTime);
         timu.setStartPeg(start);        
