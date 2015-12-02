@@ -269,16 +269,17 @@ public class DynamicGazeMU extends AbstractGazeMU
     {
         if (!isLocal)
         {
-            VJoint neck;
+            VJoint neck, currentNeck;
             if(joints.size()>0)
             {
                 neck = joints.get(joints.size() - 1);            
+                currentNeck = player.getVCurrPartBySid(neck.getSid());
             }
             else
             {
                 neck = null;
+                currentNeck = null;
             }
-            VJoint currentNeck = player.getVCurrPartBySid(neck.getSid());
             woTarget.getTranslation2(localGaze, currentNeck);
 
             // lgazeneck = gazepos - neck
