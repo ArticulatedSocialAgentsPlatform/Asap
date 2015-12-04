@@ -3,7 +3,6 @@ package asap.ipaacaeventengine;
 import static org.junit.Assert.assertEquals;
 import static org.mockito.Mockito.mock;
 import hmi.xml.XMLTokenizer;
-import ipaaca.OutputBuffer;
 
 import java.io.IOException;
 import java.util.ArrayList;
@@ -33,14 +32,14 @@ public class IpaacaEventPlannerTest
 {
     private IpaacaEventPlanner planner;
     private FeedbackManager mockBmlFeedbackManager = mock(FeedbackManager.class);
-    private OutputBuffer mockOutBuffer = mock(OutputBuffer.class);
+    private MessageManager mockMessageManager = mock(MessageManager.class);
     private static final String BMLID = "bml1";
     private PlannerTests<TimedIpaacaMessageUnit> plannerTests;
 
     @Before
     public void setup()
     {
-        planner = new IpaacaEventPlanner(mockBmlFeedbackManager, new PlanManager<TimedIpaacaMessageUnit>(), mockOutBuffer);
+        planner = new IpaacaEventPlanner(mockBmlFeedbackManager, new PlanManager<TimedIpaacaMessageUnit>(), mockMessageManager);
         plannerTests = new PlannerTests<TimedIpaacaMessageUnit>(planner, new BMLBlockPeg(BMLID, 0.3));
     }
     

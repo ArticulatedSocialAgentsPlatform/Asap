@@ -1,9 +1,9 @@
 package asap.ipaacaeventengine;
 
+import ipaaca.LocalMessageIU;
+
 import java.util.Map;
 
-import ipaaca.LocalMessageIU;
-import ipaaca.OutputBuffer;
 import asap.realizer.feedback.FeedbackManager;
 import asap.realizer.pegboard.BMLBlockPeg;
 import asap.realizer.planunit.TimedEventUnit;
@@ -16,13 +16,13 @@ import asap.realizer.planunit.TimedPlanUnitPlayException;
  */
 public class TimedIpaacaMessageUnit extends TimedEventUnit
 {
-    private final OutputBuffer outBuffer; 
+    private final MessageManager messageManager; 
     private final LocalMessageIU message;
     
-    public TimedIpaacaMessageUnit(FeedbackManager bfm, BMLBlockPeg bmlPeg, String bmlId, String behId, OutputBuffer outBuffer, String category, Map<String,String> payload)
+    public TimedIpaacaMessageUnit(FeedbackManager bfm, BMLBlockPeg bmlPeg, String bmlId, String behId, MessageManager messageManager, String category, Map<String,String> payload)
     {
         super(bfm,bmlPeg, bmlId, behId);     
-        this.outBuffer = outBuffer;
+        this.messageManager = messageManager;
         message = new LocalMessageIU(category);
         message.setPayload(payload);
     }
@@ -31,6 +31,6 @@ public class TimedIpaacaMessageUnit extends TimedEventUnit
     protected void startUnit(double time) throws TimedPlanUnitPlayException
     {
         feedback("start",time);
-        outBuffer.add(message);
+        messageManager.sendMessage(message);
     }
 }

@@ -1,7 +1,5 @@
 package asap.ipaacaeventengine;
 
-import ipaaca.OutputBuffer;
-
 import java.util.ArrayList;
 import java.util.List;
 
@@ -26,17 +24,17 @@ import asap.realizer.scheduler.TimePegAndConstraint;
  */
 public class IpaacaEventPlanner extends AbstractPlanner<TimedIpaacaMessageUnit>
 {
-    private final OutputBuffer outBuffer;
+    private final MessageManager messageManager;
     
     static
     {
         BMLInfo.addBehaviourType(IpaacaEventBehaviour.xmlTag(), IpaacaEventBehaviour.class);        
     }
     
-    public IpaacaEventPlanner(FeedbackManager fbm, PlanManager<TimedIpaacaMessageUnit> planManager, OutputBuffer outBuf)
+    public IpaacaEventPlanner(FeedbackManager fbm, PlanManager<TimedIpaacaMessageUnit> planManager, MessageManager messageManager)
     {
         super(fbm, planManager);
-        this.outBuffer = outBuf;        
+        this.messageManager = messageManager;        
     }
 
     @Override
@@ -46,7 +44,7 @@ public class IpaacaEventPlanner extends AbstractPlanner<TimedIpaacaMessageUnit>
         IpaacaMessage msg = getMessage(b);
         if(planElement==null)
         {
-            planElement = new TimedIpaacaMessageUnit(fbManager, bbPeg, b.getBmlId(), b.id, outBuffer, msg.getCategory(), msg.getPayload());
+            planElement = new TimedIpaacaMessageUnit(fbManager, bbPeg, b.getBmlId(), b.id, messageManager, msg.getCategory(), msg.getPayload());
         }
         
         validateSacs(b, sac);
@@ -88,7 +86,7 @@ public class IpaacaEventPlanner extends AbstractPlanner<TimedIpaacaMessageUnit>
             throws BehaviourPlanningException
     {
         IpaacaMessage msg = getMessage(b);
-        TimedIpaacaMessageUnit timu = new TimedIpaacaMessageUnit(fbManager, bbPeg, b.getBmlId(), b.id, outBuffer, msg.getCategory(), msg.getPayload());
+        TimedIpaacaMessageUnit timu = new TimedIpaacaMessageUnit(fbManager, bbPeg, b.getBmlId(), b.id, messageManager, msg.getCategory(), msg.getPayload());
         validateSacs(b, sac);
         TimePegAndConstraint sacStart = sac.get(0);
         
