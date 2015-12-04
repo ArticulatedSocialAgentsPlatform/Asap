@@ -21,8 +21,6 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 
-import javax.smartcardio.ATR;
-
 import lombok.Getter;
 import asap.animationengine.AnimationPlanPlayer;
 import asap.animationengine.AnimationPlanner;
@@ -329,7 +327,7 @@ public class MixedAnimationEngineLoader implements EngineLoader
         {
             pose = new SkeletonPoseRestPose();
         }
-        RestGaze defRestGaze = new ForwardRestGaze(GazeInfluence.WAIST);
+        RestGaze defRestGaze = new ForwardRestGaze(GazeInfluence.EYES);
         AnimationPlanPlayer animationPlanPlayer = new AnimationPlanPlayer(pose, defRestGaze, are.getFeedbackManager(),
                 animationPlanManager, new DefaultTimedPlanUnitPlayer(), are.getPegBoard());
 
