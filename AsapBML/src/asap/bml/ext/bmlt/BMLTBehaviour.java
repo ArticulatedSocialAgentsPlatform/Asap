@@ -100,14 +100,19 @@ public abstract class BMLTBehaviour extends Behaviour
             String tag = tokenizer.getTagName();
             if (tag.equals(BMLTParameter.xmlTag()))
             {
-                BMLTParameter param = new BMLTParameter();
-                param.readXML(tokenizer);
-                parameters.put(param.name, param);
+                decodeBMLTParameter(tokenizer);
             }
             else
             {
                 throw new XMLScanException("Invalid content " + tag + " in BMLTBehavior " + id);
             }
         }
+    }
+
+    protected void decodeBMLTParameter(XMLTokenizer tokenizer) throws IOException
+    {
+        BMLTParameter param = new BMLTParameter();
+        param.readXML(tokenizer);
+        parameters.put(param.name, param);
     }
 }

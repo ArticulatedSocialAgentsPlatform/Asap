@@ -60,8 +60,9 @@ public final class BMLTInfo
     private static final ImmutableMap<String, Class<? extends Behaviour>> DESCRIPTION_EXTENSIONS = 
         new ImmutableMap.Builder<String, Class<? extends Behaviour>>()
             .put(BMLTProcAnimationBehaviour.xmlTag(), BMLTProcAnimationBehaviour.class)
+            .put(BMLTProcAnimationGestureBehaviour.xmlTag(), BMLTProcAnimationGestureBehaviour.class)
             .put(BMLTControllerBehaviour.xmlTag(), BMLTControllerBehaviour.class)
-            .put(BMLTKeyframeBehaviour.xmlTag(), BMLTKeyframeBehaviour.class)            
+            .put(BMLTKeyframeBehaviour.xmlTag(), BMLTKeyframeBehaviour.class)
             .put("application/msapi+xml", MSApiBehaviour.class)
             .put("application/ssml+xml", SSMLBehaviour.class)
             .put("maryxml", MaryXMLBehaviour.class)
