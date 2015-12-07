@@ -40,7 +40,8 @@ public final class BMLTInfo
     private static final ImmutableMap<String, Class<? extends Behaviour>> BEHAVIOR_TYPES =
             new ImmutableMap.Builder<String, Class<? extends Behaviour>>()
             .put(BMLTTextBehaviour.xmlTag(), BMLTTextBehaviour.class)
-            .put(BMLTProcAnimationBehaviour.xmlTag(), BMLTProcAnimationBehaviour.class)            
+            .put(BMLTProcAnimationBehaviour.xmlTag(), BMLTProcAnimationBehaviour.class)
+            .put(BMLTProcAnimationGestureBehaviour.xmlTag(), BMLTProcAnimationGestureBehaviour.class)
             .put(BMLTControllerBehaviour.xmlTag(), BMLTControllerBehaviour.class)
             .put(BMLTNoiseBehaviour.xmlTag(), BMLTNoiseBehaviour.class)            
             .put(BMLTKeyframeBehaviour.xmlTag(), BMLTKeyframeBehaviour.class)

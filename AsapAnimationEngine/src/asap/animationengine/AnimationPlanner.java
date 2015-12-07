@@ -28,11 +28,14 @@ import asap.animationengine.motionunit.MUSetupException;
 import asap.animationengine.motionunit.TMUSetupException;
 import asap.animationengine.motionunit.TimedAnimationMotionUnit;
 import asap.animationengine.motionunit.TimedAnimationUnit;
+import asap.animationengine.procanimation.ProcAnimationGestureMU;
+import asap.animationengine.procanimation.ProcAnimationMU;
 import asap.animationengine.restpose.RestPose;
 import asap.bml.ext.bmlt.BMLTControllerBehaviour;
 import asap.bml.ext.bmlt.BMLTKeyframeBehaviour;
 import asap.bml.ext.bmlt.BMLTNoiseBehaviour;
 import asap.bml.ext.bmlt.BMLTProcAnimationBehaviour;
+import asap.bml.ext.bmlt.BMLTProcAnimationGestureBehaviour;
 import asap.bml.ext.murml.MURMLGestureBehaviour;
 import asap.hns.Hns;
 import asap.realizer.AbstractPlanner;
@@ -207,11 +210,11 @@ public class AnimationPlanner extends AbstractPlanner<TimedAnimationUnit>
             {
                 mu = new KeyframeMU(new SkeletonInterpolator(new XMLTokenizer(beh.content)));
                 mu = mu.copy(player);
-                if(beh.specifiesParameter("mirror"))
+                if (beh.specifiesParameter("mirror"))
                 {
                     mu.setParameterValue("mirror", beh.getStringParameterValue("mirror"));
                 }
-                if(beh.specifiesParameter("joints"))
+                if (beh.specifiesParameter("joints"))
                 {
                     mu.setParameterValue("joints", beh.getStringParameterValue("joints"));
                 }
@@ -227,6 +230,38 @@ public class AnimationPlanner extends AbstractPlanner<TimedAnimationUnit>
             catch (MUSetupException e)
             {
                 throw new BehaviourPlanningException(b, "BMLTKeyframeBehaviour " + b.id + " could not be constructed.", e);
+            }
+            tmu = mu.createTMU(fbManager, bbPeg, b.getBmlId(), b.id, pegBoard);
+        }
+        else if (b instanceof BMLTProcAnimationGestureBehaviour)
+        {
+            BMLTProcAnimationGestureBehaviour beh = (BMLTProcAnimationGestureBehaviour) b;
+            ProcAnimationMU mup = new ProcAnimationMU();
+            mup.readXML(beh.getContent());
+            ProcAnimationGestureMU mu = new ProcAnimationGestureMU();
+            try
+            {
+                if (beh.specifiesParameter("mirror"))
+                {
+                    mu.setParameterValue("mirror", beh.getStringParameterValue("mirror"));
+                }
+                if (beh.specifiesParameter("joints"))
+                {
+                    mu.setParameterValue("joints", beh.getStringParameterValue("joints"));
+                }
+            }
+            catch (ParameterException e)
+            {
+                throw new BehaviourPlanningException(b, "BMLTKeyframeBehaviour " + b.id + " could not be constructed.", e);
+            }
+            try
+            {
+                mu = mu.copy(player);
+                mu.setGestureUnit(mup);                
+            }
+            catch (MUSetupException e)
+            {
+                throw new BehaviourPlanningException(b, "BMLTProcAnimationGestureBehaviour " + b.id + " could not be constructed.", e);
             }
             tmu = mu.createTMU(fbManager, bbPeg, b.getBmlId(), b.id, pegBoard);
         }
@@ -271,6 +306,7 @@ public class AnimationPlanner extends AbstractPlanner<TimedAnimationUnit>
         list.add(PostureShiftBehaviour.class);
         list.add(PointingBehaviour.class);
         list.add(BMLTProcAnimationBehaviour.class);
+        list.add(BMLTProcAnimationGestureBehaviour.class);
         list.add(BMLTControllerBehaviour.class);
         list.add(BMLTKeyframeBehaviour.class);
         list.add(BMLTNoiseBehaviour.class);
