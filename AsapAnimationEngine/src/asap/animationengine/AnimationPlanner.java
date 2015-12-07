@@ -239,6 +239,17 @@ public class AnimationPlanner extends AbstractPlanner<TimedAnimationUnit>
             ProcAnimationMU mup = new ProcAnimationMU();
             mup.readXML(beh.getContent());
             ProcAnimationGestureMU mu = new ProcAnimationGestureMU();
+          
+            try
+            {
+                mu = mu.copy(player);
+                mu.setGestureUnit(mup);                
+            }
+            catch (MUSetupException e)
+            {
+                throw new BehaviourPlanningException(b, "BMLTProcAnimationGestureBehaviour " + b.id + " could not be constructed.", e);
+            }
+            
             try
             {
                 if (beh.specifiesParameter("mirror"))
@@ -254,15 +265,7 @@ public class AnimationPlanner extends AbstractPlanner<TimedAnimationUnit>
             {
                 throw new BehaviourPlanningException(b, "BMLTKeyframeBehaviour " + b.id + " could not be constructed.", e);
             }
-            try
-            {
-                mu = mu.copy(player);
-                mu.setGestureUnit(mup);                
-            }
-            catch (MUSetupException e)
-            {
-                throw new BehaviourPlanningException(b, "BMLTProcAnimationGestureBehaviour " + b.id + " could not be constructed.", e);
-            }
+            
             tmu = mu.createTMU(fbManager, bbPeg, b.getBmlId(), b.id, pegBoard);
         }
         else
