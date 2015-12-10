@@ -18,11 +18,11 @@ import java.util.HashMap;
 import java.util.Locale;
 
 import saiba.bml.core.BehaviourBlock;
-import saiba.bml.feedback.BMLBlockPredictionFeedback;
-import saiba.bml.feedback.BMLBlockProgressFeedback;
 import saiba.bml.feedback.BMLFeedback;
-import saiba.bml.feedback.BMLFeedbackParser;
-import saiba.bml.feedback.BMLPredictionFeedback;
+import asap.bml.ext.bmla.feedback.BMLAFeedbackParser;
+import asap.bml.ext.bmla.feedback.BMLABlockPredictionFeedback;
+import asap.bml.ext.bmla.feedback.BMLABlockProgressFeedback;
+import asap.bml.ext.bmla.feedback.BMLAPredictionFeedback;
 import asap.realizerport.BMLFeedbackListener;
 import asap.realizerport.RealizerPort;
 
@@ -36,15 +36,12 @@ import com.google.common.collect.ImmutableSet;
  */
 public class IpaacaToBMLRealizerAdapter implements BMLFeedbackListener
 {
-    static double initTime =  System.currentTimeMillis() / 1000.0;
     static
     {
-        //final double initTime =  System.nanoTime() / 1000000000L;
         Initializer.initializeIpaacaRsb();
     }
     
 
-    //private double initTime;
     private final InputBuffer inBuffer = new InputBuffer("IpaacaToBMLRealizerAdapter", ImmutableSet.of(/*"timesyncRequest",*/ IpaacaBMLConstants.REALIZER_REQUEST_CATEGORY));
     private final OutputBuffer outBuffer = new OutputBuffer("IpaacaToBMLRealizerAdapter");
     private final RealizerPort realizerPort;
@@ -179,17 +176,17 @@ public class IpaacaToBMLRealizerAdapter implements BMLFeedbackListener
 			BMLFeedback fb;
 			try
 			{
-				fb = BMLFeedbackParser.parseFeedback(feedback);
+				fb = BMLAFeedbackParser.parseFeedback(feedback);
 			}
 			catch (IOException e)
 			{
 				// shouldn't happen since we parse strings
 				throw new AssertionError(e);
 			}
-			if (fb instanceof BMLBlockProgressFeedback)
+			if (fb instanceof BMLABlockProgressFeedback)
 			{
 				AbstractIU iu_to_update = null;
-				BMLBlockProgressFeedback fbBlock = (BMLBlockProgressFeedback) fb;
+				BMLABlockProgressFeedback fbBlock = (BMLABlockProgressFeedback) fb;
 				if (bmlIdToIuIdMap.containsKey(fbBlock.getBmlId())) {
 					iu_to_update = inBuffer.getIU(bmlIdToIuIdMap.get(fbBlock.getBmlId()));
 					if (fbBlock.getSyncId().equals("end"))
@@ -211,27 +208,25 @@ public class IpaacaToBMLRealizerAdapter implements BMLFeedbackListener
 					}
 				}
 			}
-			else if (fb instanceof BMLPredictionFeedback)
+			else if (fb instanceof BMLAPredictionFeedback)
 			{
-				BMLPredictionFeedback pf = (BMLPredictionFeedback) fb;
+				BMLAPredictionFeedback pf = (BMLAPredictionFeedback) fb;
 				// FIXME: no clue how to obtain the correct bml ID here...
 				//String bmlid = pf.getBmlBehaviorPredictions().get(0).getBmlId();
 				//iu_to_update = inBuffer.getIU(bmlIdToIuIdMap.get(bmlid));
 				double latestPredictedEndTime = -1;
 				double earliestPredictedStartTime = 9999999999999999999999999.9;
-				for (BMLBlockPredictionFeedback bbp : pf.getBmlBlockPredictions())
+				for (BMLABlockPredictionFeedback bbp : pf.getBMLABlockPredictions())
 				{
 					if (bmlIdToIuIdMap.containsKey(bbp.getId())) {
 						AbstractIU iu_to_update = inBuffer.getIU(bmlIdToIuIdMap.get(bbp.getId()));            	
 						//System.out.println("id="+id);
-						double start = bbp.getGlobalStart() + initTime;
-						double end = bbp.getGlobalEnd() + initTime;
+						double start = bbp.getPosixStartTime() / 1000.0;
+						double end = bbp.getPosixEndTime() / 1000.0;
 						if (end>latestPredictedEndTime) { latestPredictedEndTime = end; }
 						if (start<earliestPredictedStartTime) { earliestPredictedStartTime = start; }
 						new_payload_items.put(IpaacaBMLConstants.IU_PREDICTED_START_TIME_KEY, Double.valueOf(start).toString()); 
 						new_payload_items.put(IpaacaBMLConstants.IU_PREDICTED_END_TIME_KEY, Double.valueOf(end).toString());
-						double t = System.currentTimeMillis()/1000.0;
-						//System.out.println("SEND TIME: " + String.format(Locale.ENGLISH, "%.3f", t));
 						if (iu_to_update != null) {
 							try{
 								iu_to_update.getPayload().merge(new_payload_items);
