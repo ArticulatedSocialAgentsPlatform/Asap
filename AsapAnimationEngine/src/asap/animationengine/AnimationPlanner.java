@@ -3,6 +3,7 @@
 package asap.animationengine;
 
 import hmi.animation.SkeletonInterpolator;
+import hmi.util.Resources;
 import hmi.xml.XMLTokenizer;
 
 import java.io.IOException;
@@ -237,7 +238,25 @@ public class AnimationPlanner extends AbstractPlanner<TimedAnimationUnit>
         {
             BMLTProcAnimationGestureBehaviour beh = (BMLTProcAnimationGestureBehaviour) b;
             ProcAnimationMU mup = new ProcAnimationMU();
-            mup.readXML(beh.getContent());
+            if(beh.getContent()!=null)
+            {
+                mup.readXML(beh.getContent());
+            }
+            else if(beh.getFileName()!=null)
+            {
+                try
+                {
+                    mup.readXML(new Resources("").getReader(beh.getFileName()));
+                }
+                catch (IOException e)
+                {
+                    throw new BehaviourPlanningException(b, "BMLTProcAnimationGestureBehaviour " + b.id + " could not be constructed.", e);
+                }
+            }
+            else
+            {
+                throw new BehaviourPlanningException(b, "BMLTProcAnimationGestureBehaviour " + b.id + " could not be constructed, no filename or inner ProcAnimation defined.");
+            }
             ProcAnimationGestureMU mu = new ProcAnimationGestureMU();
           
             try
