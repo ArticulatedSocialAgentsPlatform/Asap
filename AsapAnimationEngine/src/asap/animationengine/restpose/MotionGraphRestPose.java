@@ -138,8 +138,8 @@ public class MotionGraphRestPose implements RestPose
         for (int i = 0; i < motion.size(); i++)
         {
 
-            motion.getConfig(i)[Vec3f.X] = motion.getConfig(i)[Vec3f.X] - config0[Vec3f.X] + 0;
-            motion.getConfig(i)[Vec3f.Z] = motion.getConfig(i)[Vec3f.Z] - config0[Vec3f.Z] + 0;
+            //motion.getConfig(i)[Vec3f.X] = motion.getConfig(i)[Vec3f.X] - config0[Vec3f.X] + 0;
+            //motion.getConfig(i)[Vec3f.Z] = motion.getConfig(i)[Vec3f.Z] - config0[Vec3f.Z] + 0;
             config.addConfig(motion.getTime(i) - startTime + time, motion.getConfig(i));
         }
 
@@ -180,8 +180,8 @@ public class MotionGraphRestPose implements RestPose
         {
             float t[] = Vec3f.getVec3f();
             restPoseTree.getPartBySid(Hanim.HumanoidRoot).getTranslation(t);
-            aniPlayer.getVNextPartBySid(Hanim.HumanoidRoot).setTranslation(t);            
-        }        
+            aniPlayer.getVNextPartBySid(Hanim.HumanoidRoot).setTranslation(t);
+        }
     }
 
     @Override
