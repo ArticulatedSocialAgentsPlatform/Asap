@@ -1,6 +1,7 @@
 package asap.bml.ext.bmlt;
 
 import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertNull;
 import hmi.xml.XMLTokenizer;
 
 import java.io.IOException;
@@ -34,7 +35,7 @@ public class BMLTProcAnimationGestureBehaviourTest extends AbstractBehaviourTest
     }
     
     @Test
-    public void testReadXML() throws IOException
+    public void testReadXMLProcAniInternal() throws IOException
     {
         String bmlString = "<bmlt:procanimationgesture xmlns:bmlt=\"http://hmi.ewi.utwente.nl/bmlt\" id=\"a1\" start=\"nod1:end\">"
                 + "<bmlt:parameter name=\"amplitude\" value=\"10\"/>" +"<ProcAnimation></ProcAnimation>" +"</bmlt:procanimationgesture>";
@@ -45,5 +46,18 @@ public class BMLTProcAnimationGestureBehaviourTest extends AbstractBehaviourTest
         assertEquals("nod1", beh.getSyncPoints().get(0).getRef().sourceId);
         assertEquals("end", beh.getSyncPoints().get(0).getRef().syncId);
         assertEquals("<ProcAnimation></ProcAnimation>", beh.getContent());
+    }
+    
+    @Test
+    public void testReadXMLProcAniFile() throws IOException
+    {
+        String bmlString = "<bmlt:procanimationgesture xmlns:bmlt=\"http://hmi.ewi.utwente.nl/bmlt\" id=\"a1\" fileName=\"procani.xml\" start=\"nod1:end\"/>";                
+        BMLTProcAnimationGestureBehaviour beh = new BMLTProcAnimationGestureBehaviour("bmla", new XMLTokenizer(bmlString));
+        assertEquals("bmla", beh.getBmlId());
+        assertEquals("a1", beh.id);        
+        assertEquals("nod1", beh.getSyncPoints().get(0).getRef().sourceId);
+        assertEquals("end", beh.getSyncPoints().get(0).getRef().syncId);
+        assertNull(beh.getContent());
+        assertEquals("procani.xml",beh.getFileName());
     }
 }

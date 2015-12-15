@@ -1,9 +1,11 @@
 package asap.bml.ext.bmlt;
 
+import hmi.xml.XMLFormatting;
 import hmi.xml.XMLScanException;
 import hmi.xml.XMLTokenizer;
 
 import java.io.IOException;
+import java.util.HashMap;
 import java.util.List;
 
 import lombok.Getter;
@@ -19,8 +21,11 @@ import com.google.common.collect.ImmutableList;
 public class BMLTProcAnimationGestureBehaviour extends BMLTBehaviour
 {
     @Getter
-    private String content = "";
+    private String content = null;
 
+    @Getter
+    private String fileName = null;
+    
     public BMLTProcAnimationGestureBehaviour(String bmlId, XMLTokenizer tokenizer) throws IOException
     {
         super(bmlId);
@@ -55,6 +60,23 @@ public class BMLTProcAnimationGestureBehaviour extends BMLTBehaviour
         return true;
     }
 
+    @Override
+    public void decodeAttributes(HashMap<String, String> attrMap, XMLTokenizer tokenizer)
+    {
+        fileName = getOptionalAttribute("fileName", attrMap, null);
+        super.decodeAttributes(attrMap, tokenizer);        
+    }
+
+    @Override
+    public StringBuilder appendAttributeString(StringBuilder buf, XMLFormatting fmt)
+    {
+        if(fileName!=null)
+        {
+            appendAttribute(buf,"fileName",fileName);
+        }
+        return super.appendAttributeString(buf, fmt);
+    }
+    
     @Override
     public void decodeContent(XMLTokenizer tokenizer) throws IOException
     {
