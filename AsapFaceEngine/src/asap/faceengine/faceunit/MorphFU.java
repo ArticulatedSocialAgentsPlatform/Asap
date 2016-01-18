@@ -43,10 +43,16 @@ public class MorphFU implements FaceUnit
     private AtomicDouble prevIntensity = new AtomicDouble(1f);
 
     private String targetName = "";
+    private String targetWeights = "";
 
     public void setTargetName(String targetName)
     {
         this.targetName = targetName;
+    }
+    
+    public void setTargetWeights(String targetWeights)
+    {
+        this.targetWeights = targetWeights;
     }
 
     @Override
@@ -59,6 +65,7 @@ public class MorphFU implements FaceUnit
     private final KeyPositionManager keyPositionManager = new KeyPositionManagerImpl();
 
     private String[] morphTargets = new String[] { "" };
+    private float[] morphWeights = new float[] { };
 
     private FaceController faceController;
 
@@ -109,6 +116,11 @@ public class MorphFU implements FaceUnit
             targetName = value;
             updateMorphTargets();
         }
+        else if (name.equals("targetweights"))
+        {
+            targetWeights = value;
+            updateMorphTargets();
+        }
         else
         {
             if (StringUtil.isNumeric(value))
@@ -126,6 +138,7 @@ public class MorphFU implements FaceUnit
     public String getParameterValue(String name) throws ParameterException
     {
         if (name.equals("targetname")) return "" + targetName;
+        if (name.equals("targetweights")) return "" + targetWeights;
         return "" + getFloatParameterValue(name);
     }
 
@@ -145,6 +158,22 @@ public class MorphFU implements FaceUnit
     private void updateMorphTargets()
     {
         morphTargets = targetName.split(",");
+        if (targetWeights.length() == 0) {
+            // do not waste time trying to parse
+            // for default-confed morphs, e.g. visemes
+            morphWeights = new float[]{ };
+        } else {
+            String[] stringWeights = targetWeights.split(",");
+            morphWeights = new float[morphTargets.length];
+            try {
+                for (int i = 0; i<morphTargets.length; ++i) {
+                    morphWeights[i] = Float.parseFloat(stringWeights[i]);
+                }
+            } catch (Exception e) {
+                //log.warn("Error parsing morph weight - defaulting all to 1.0");
+                morphWeights = new float[]{ };
+            }
+        }
     }
 
     /**
@@ -167,6 +196,17 @@ public class MorphFU implements FaceUnit
         double relax = getKeyPosition("relax").time;
         float newMorphedWeight = 0;
 
+        boolean applyIndividualWeights = true;
+        if (morphWeights.length == 0) {
+            // targetweights not specified - weight 1.0 for all morphs
+            applyIndividualWeights = false;
+        } else {
+            if (morphWeights.length != morphTargets.length) {
+                log.warn("targetweights does not specify one weight per target - weighing all with 1.0");
+                applyIndividualWeights = false;
+            }
+        }
+
         if (t < attackPeak && t > 0)
         {
             newMorphedWeight = intensity.floatValue() * (float) (t / attackPeak);
@@ -182,7 +222,8 @@ public class MorphFU implements FaceUnit
 
         float[] newWeights = new float[morphTargets.length];
         for (int i = 0; i < newWeights.length; i++)
-            newWeights[i] = newMorphedWeight;
+            //newWeights[i] = newMorphedWeight;
+            newWeights[i] = newMorphedWeight * (applyIndividualWeights ? morphWeights[i] : 1.0f);
         faceController.addMorphTargets(morphTargets, newWeights);
         prevIntensity.set(newMorphedWeight);
     }
