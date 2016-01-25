@@ -11,7 +11,6 @@ import ipaaca.AbstractIU;
 import ipaaca.HandlerFunctor;
 import ipaaca.IUEventHandler;
 import ipaaca.IUEventType;
-import ipaaca.Initializer;
 import ipaaca.InputBuffer;
 import ipaaca.LocalMessageIU;
 import ipaaca.OutputBuffer;
@@ -58,11 +57,6 @@ public class IpaacaEmbodiment implements Embodiment
     @GuardedBy("rootJointLock")
     private VJoint rootJoint;
     
-    static
-    {
-        Initializer.initializeIpaacaRsb();
-    }
-
     public VJoint getRootJointCopy(String prefix)
     {
         VJoint copy;

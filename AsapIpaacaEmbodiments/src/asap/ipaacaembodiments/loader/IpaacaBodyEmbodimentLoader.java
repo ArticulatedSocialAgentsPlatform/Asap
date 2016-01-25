@@ -12,7 +12,6 @@ import hmi.util.Resources;
 import hmi.xml.XMLScanException;
 import hmi.xml.XMLStructureAdapter;
 import hmi.xml.XMLTokenizer;
-import ipaaca.Initializer;
 
 import java.io.IOException;
 import java.util.HashMap;
@@ -34,12 +33,6 @@ public class IpaacaBodyEmbodimentLoader implements EmbodimentLoader
     private XMLStructureAdapter adapter = new XMLStructureAdapter();
     private BiMap<String,String> skeletonRenaming = null;    
 
-    static
-    {
-        Initializer.initializeIpaacaRsb();
-    }
-
-    
     @Override
     public String getId()
     {
