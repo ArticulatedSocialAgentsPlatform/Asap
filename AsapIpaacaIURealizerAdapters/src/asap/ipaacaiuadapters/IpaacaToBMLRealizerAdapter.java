@@ -15,7 +15,13 @@ import ipaaca.util.ComponentNotifier;
 import java.io.IOException;
 import java.util.EnumSet;
 import java.util.HashMap;
+import java.util.Map;
 import java.util.Locale;
+
+import java.nio.file.Files;
+import java.nio.file.Paths;
+import java.nio.charset.Charset;
+import java.nio.charset.StandardCharsets;
 
 import saiba.bml.core.BehaviourBlock;
 import saiba.bml.feedback.BMLFeedback;
@@ -71,27 +77,74 @@ public class IpaacaToBMLRealizerAdapter implements BMLFeedbackListener
             public void handle(AbstractIU iu, IUEventType type, boolean local)
             {
 				synchronized (this) {
-					BehaviourBlock bb = new BehaviourBlock();
-					String requested_bml = iu.getPayload().get(IpaacaBMLConstants.REALIZER_REQUEST_KEY);
-					bb.readXML(requested_bml);
-					String actualBmlId = bb.getBmlId();
-					if (actualBmlId.equals("AUTO")) {
-						String[] path_elements = iu.getOwnerName().split("/");
-						String prefix = "autogen";
-						if (path_elements.length > 1) {
-							prefix = path_elements[path_elements.length - 2];
-						}
-						bb.setBmlId(autoGenerateBmlId(prefix));
-						actualBmlId = bb.getBmlId();
-					}
-					bmlIdToIuIdMap.put(actualBmlId, iu.getUid());
-					iuIdToBmlIdMap.put(iu.getUid(), actualBmlId);
-					String actualBmlString = bb.toXMLString();
-					realizerPort.performBML(actualBmlString);
+					boolean has_errors = false;
+					String error_string = "unspecified";
 					HashMap<String, String> items = new HashMap<String, String>();
-					items.put(IpaacaBMLConstants.REALIZER_REQUEST_KEY, actualBmlString);
-					items.put(IpaacaBMLConstants.BML_ID_KEY, actualBmlId);
-					items.put(IpaacaBMLConstants.IU_STATUS_KEY, "((RECEIVED))");
+					String requested_bml = "";
+					
+					String requestType = iu.getPayload().get(IpaacaBMLConstants.REALIZER_REQUEST_TYPE_KEY);
+					
+					if (requestType.equals(IpaacaBMLConstants.REALIZER_REQUEST_TYPE_BML)) {
+						// bml specified in payload key 'request'
+						requested_bml = iu.getPayload().get(IpaacaBMLConstants.REALIZER_REQUEST_KEY);
+					} else if (requestType.equals(IpaacaBMLConstants.REALIZER_REQUEST_TYPE_BMLFILE)) {
+						// path to bml file specified in 'request'
+						String requested_bml_file = iu.getPayload().get(IpaacaBMLConstants.REALIZER_REQUEST_KEY);
+						try {
+							Map<String, Object> attr = Files.readAttributes(Paths.get(requested_bml_file), "size");
+							if (((long) attr.get("size")) > 4 * 1024 * 1024) {
+								has_errors = true;
+								error_string = "Specified file is too large (>4 MiB)";
+							} else {
+								byte[] encoded = Files.readAllBytes(Paths.get(requested_bml_file));
+								//requested_bml = new String(encoded, Charset.defaultCharset());
+								requested_bml = new String(encoded, StandardCharsets.UTF_8);
+							}
+						} catch (Exception e) {
+							has_errors = true;
+							error_string = "Failed to open specified file";
+						}
+					} else {
+						has_errors = true;
+						error_string = "Unknown request type";
+					}
+					
+					if (has_errors) {
+						items.put(IpaacaBMLConstants.IU_STATUS_KEY, "ERROR");
+						items.put(IpaacaBMLConstants.IU_ERROR_KEY, error_string);
+					} else {
+						BehaviourBlock bb = new BehaviourBlock();
+						try {
+							bb.readXML(requested_bml);
+							String actualBmlId = bb.getBmlId();
+							if (actualBmlId.equals("AUTO")) {
+								String[] path_elements = iu.getOwnerName().split("/");
+								String prefix = "autogen";
+								if (path_elements.length > 1) {
+									prefix = path_elements[path_elements.length - 2];
+								}
+								bb.setBmlId(autoGenerateBmlId(prefix));
+								actualBmlId = bb.getBmlId();
+							}
+							bmlIdToIuIdMap.put(actualBmlId, iu.getUid());
+							iuIdToBmlIdMap.put(iu.getUid(), actualBmlId);
+							String actualBmlString = bb.toXMLString();
+							realizerPort.performBML(actualBmlString);
+							items.put(IpaacaBMLConstants.BML_ID_KEY, actualBmlId);
+							items.put(IpaacaBMLConstants.IU_STATUS_KEY, "((RECEIVED))");
+							if (! requestType.equals(IpaacaBMLConstants.REALIZER_REQUEST_TYPE_BMLFILE)) {
+								// send the actual (amended) bml source, but don't do this
+								// if opening a (potentially large) bml file was requested
+								// (Note: maybe use a dedicated key after all? 'request'
+								//  should possibly be the request as provided before, verbatim... ?)
+								items.put(IpaacaBMLConstants.REALIZER_REQUEST_KEY, actualBmlString);
+							}
+						} catch (Exception e) {
+							error_string = "Had some data but failed to parse BML or execute";
+							items.put(IpaacaBMLConstants.IU_STATUS_KEY, "ERROR");
+							items.put(IpaacaBMLConstants.IU_ERROR_KEY, error_string);
+						}
+					}
 					try{
 						iu.getPayload().merge(items);
 					} catch (ipaaca.IUUpdateFailedException ex) {
