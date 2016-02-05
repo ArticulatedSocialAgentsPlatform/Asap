@@ -23,6 +23,9 @@ import java.nio.file.Paths;
 import java.nio.charset.Charset;
 import java.nio.charset.StandardCharsets;
 
+import java.io.StringWriter;
+import java.io.PrintWriter;
+
 import saiba.bml.core.BehaviourBlock;
 import saiba.bml.feedback.BMLFeedback;
 import asap.bml.ext.bmla.feedback.BMLAFeedbackParser;
@@ -63,6 +66,13 @@ public class IpaacaToBMLRealizerAdapter implements BMLFeedbackListener
     	return prefix+"_"+String.valueOf(nextUsedAutoBmlId++);
     }
     
+	public String getExceptionStackTrace(Throwable t) {
+		StringWriter sw = new StringWriter();
+		PrintWriter pw = new PrintWriter(sw);
+		t.printStackTrace(pw);
+		return sw.toString();
+	}
+
     public IpaacaToBMLRealizerAdapter(RealizerPort port)
     {
     	this.bmlIdToIuIdMap = new HashMap<String, String>();
@@ -102,7 +112,7 @@ public class IpaacaToBMLRealizerAdapter implements BMLFeedbackListener
 							}
 						} catch (Exception e) {
 							has_errors = true;
-							error_string = "Failed to open specified file";
+							error_string = "Exception during file open: "+getExceptionStackTrace(e);
 						}
 					} else {
 						has_errors = true;
@@ -140,7 +150,7 @@ public class IpaacaToBMLRealizerAdapter implements BMLFeedbackListener
 								items.put(IpaacaBMLConstants.REALIZER_REQUEST_KEY, actualBmlString);
 							}
 						} catch (Exception e) {
-							error_string = "Had some data but failed to parse BML or execute";
+							error_string = "Exception during BML parse or perform: "+getExceptionStackTrace(e);
 							items.put(IpaacaBMLConstants.IU_STATUS_KEY, "ERROR");
 							items.put(IpaacaBMLConstants.IU_ERROR_KEY, error_string);
 						}
