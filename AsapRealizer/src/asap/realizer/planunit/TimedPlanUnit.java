@@ -14,7 +14,7 @@ import asap.realizer.scheduler.TimePegAndConstraint;
  * Units of the Unimodal Plan normally used in an Engine.
  * The timing of PlanUnits is linked to TimePegs on the PegBoard.
  * PlanUnits have a state (e.g. pending, lurking, executing, subsiding)
- * and can be executed at a global time moment getStartTime() &lt t &lt getEndime()
+ * and can be executed at a global time moment getStartTime() &lt; t &lt; getEndime()
  * They send BMLSyncPointProgressFeedback feedback on their progress to listeners registered to such feedback.
  * @author hvanwelbergen
  */

@@ -13,8 +13,8 @@ import saiba.bml.BMLGestureSync;
 import com.google.common.base.Objects;
 /**
  * KeyPosition, used to store time and weight of motion unit keys. The time of
- * the keypositions indicates where it is located within a motion unit. 0 &lt
- * time &lt1 0 &lt weight &lt1 KeyPosition can be compared on time and weight.
+ * the keypositions indicates where it is located within a motion unit. 0 &lt;
+ * time &lt;1 0 &lt; weight &lt;1 KeyPosition can be compared on time and weight.
  * Time is more important. If time is equal, the smallest KeyPosition is the one
  * with the smallest weight.
  * 

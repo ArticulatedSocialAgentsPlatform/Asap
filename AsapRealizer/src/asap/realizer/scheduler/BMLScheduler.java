@@ -202,9 +202,6 @@ public final class BMLScheduler
         }
     }
 
-    /**
-     * Get the list of engines
-     */
     public ImmutableSet<Engine> getEngines()
     {
         return ImmutableSet.copyOf(engines);
@@ -260,7 +257,7 @@ public final class BMLScheduler
      * 
      * @param c
      *            behaviour class the engine can plan
-     * @param p
+     * @param e
      *            the engine
      */
     public void addEngine(Class<? extends Behaviour> c, Engine e)
@@ -378,9 +375,6 @@ public final class BMLScheduler
 
     /**
      * Sends feedback to all feedback listeners
-     * 
-     * @param fb
-     *            the feedback
      */
     public void blockStopFeedback(String bmlId, BMLABlockStatus status, double time)
     {

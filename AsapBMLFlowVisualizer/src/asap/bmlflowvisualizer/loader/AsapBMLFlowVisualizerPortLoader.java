@@ -12,9 +12,8 @@ import asap.realizerembodiments.PipeLoader;
 import asap.realizerport.RealizerPort;
 
 /**
- * Loads the AsapBMLFlowVisualizer
+ * Loads the AsapBMLFlowVisualizer in a new JFrame
  * @author hvanwelbergen
- *
  */
 public class AsapBMLFlowVisualizerPortLoader implements PipeLoader
 {

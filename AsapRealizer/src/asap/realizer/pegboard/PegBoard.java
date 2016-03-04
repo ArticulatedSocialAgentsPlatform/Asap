@@ -57,7 +57,7 @@ public final class PegBoard
     }
 
     /**
-     * Get an immutable copy of the BMLBlockPeg map. That is: a map from bmlId->BMLBlockPeg
+     * Get an immutable copy of the BMLBlockPeg map. That is: a map from bmlId-&gt;BMLBlockPeg
      */
     public ImmutableMap<String, BMLBlockPeg> getBMLBlockPegs()
     {

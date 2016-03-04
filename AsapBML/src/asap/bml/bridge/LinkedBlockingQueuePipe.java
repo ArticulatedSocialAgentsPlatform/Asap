@@ -1,5 +1,3 @@
-/*******************************************************************************
- *******************************************************************************/
 package asap.bml.bridge;
 
 import hmi.util.RuntimeExceptionLoggingRunnable;
@@ -17,7 +15,8 @@ import asap.realizerport.BMLFeedbackListener;
 import asap.realizerport.RealizerPort;
 
 /**
- * 
+ * Provides non-blocking access to performBML and manages the list of BML blocks in its own thread.
+ * @TODO Change the name, it is non-blocking for the user (but blocking in the implementation) 
  * @author welberge,reidsma
  */
 public class LinkedBlockingQueuePipe implements RealizerPort

@@ -150,7 +150,6 @@ public final class PlanManager<T extends TimedPlanUnit>
 
     /**
      * Gracefully interrupts a selected collection of planunits.
-     * @throws TimedPlanUnitPlayException
      */
     public void interruptPlanUnits(Collection<T> puInterrupt, double time)
     {

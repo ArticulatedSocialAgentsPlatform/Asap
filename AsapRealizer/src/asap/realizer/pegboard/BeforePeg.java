@@ -6,7 +6,7 @@ import javax.annotation.concurrent.GuardedBy;
 
 /**
  * BeforePegs define TimePegs that remains at a minimum time offset before a 'regular' TimePeg.<br>
- * that is: beforePeg.getGlobalTime() <= linkedPeg.getGlobalTime()+offset
+ * that is: beforePeg.getGlobalTime() &lt;= linkedPeg.getGlobalTime()+offset
  * 
  * if the link's value is TimePeg.VALUE_UNKNOWN, it is ignored.
  * 

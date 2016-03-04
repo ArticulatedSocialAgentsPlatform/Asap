@@ -182,7 +182,7 @@ public class MorphFU implements FaceUnit
      * back to zero from relax till end.
      * 
      * @param t
-     *            execution time, 0 &lt t &lt 1
+     *            execution time, 0 &lt; t &lt; 1
      * @throws FUPlayException
      *             if the play fails for some reason
      */

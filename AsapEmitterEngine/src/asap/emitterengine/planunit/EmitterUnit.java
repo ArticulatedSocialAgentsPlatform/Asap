@@ -27,7 +27,7 @@ public interface EmitterUnit extends KeyPositionManager
         
     /**
      * Executes the emitter unit
-     * @param t execution time, 0 &lt t &lt 1
+     * @param t execution time, 0 &lt; t &lt; 1
      * @throws EUPlayException if the play fails for some reason
      */
     void play(double t)throws EUPlayException;

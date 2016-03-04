@@ -10,6 +10,11 @@ import java.util.Arrays;
 
 import lombok.Getter;
 
+/**
+ * Automatic, incrementally constructed head motion on the basis of speech features (pitch, energy)
+ * @author hvanwelbergen
+ *
+ */
 public class VisualProsody
 {
     private VisualProsodyLeNumericalDiff vpp;

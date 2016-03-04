@@ -18,7 +18,7 @@ import asap.realizer.planunit.ParameterNotFoundException;
 import asap.realizer.planunit.TimedPlanUnitPlayException;
 
 /**
- * Templated class; unit to create an emitter of type <E>
+ * Templated class; unit to create an emitter of type &lt;E&gt;
  * @author Dennis Reidsma
  */
 public class CreateEmitterEU implements EmitterUnit
@@ -105,7 +105,7 @@ public class CreateEmitterEU implements EmitterUnit
     /**
      * 
      * @param t
-     *            execution time, 0 &lt t &lt 1
+     *            execution time, 0 &lt; t &lt; 1
      * @throws EUPlayException
      *             if the play fails for some reason
      */

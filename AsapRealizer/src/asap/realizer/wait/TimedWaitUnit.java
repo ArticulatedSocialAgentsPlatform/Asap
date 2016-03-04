@@ -33,17 +33,11 @@ public class TimedWaitUnit extends TimedAbstractPlanUnit
         super(bfm, bmlPeg, bmlId, id);
     }
 
-    /**
-     * @param startPeg the startPeg to set
-     */
     public void setStartPeg(TimePeg startPeg)
     {
         this.startPeg = startPeg;
     }
 
-    /**
-     * @param startPeg the startPeg to set
-     */
     public void setEndPeg(TimePeg endPeg)
     {
         this.endPeg = endPeg;

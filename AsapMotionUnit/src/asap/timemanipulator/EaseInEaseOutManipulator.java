@@ -24,11 +24,7 @@ public class EaseInEaseOutManipulator implements TimeManipulator
     }
 
     /**
-     * 
-     * @param t  Time [0..1]
-     * @param scale 
-     * @param p turning point
-     * @return
+     * @param t  Time [0..1]    
      */
     public double manip(double t)
     {

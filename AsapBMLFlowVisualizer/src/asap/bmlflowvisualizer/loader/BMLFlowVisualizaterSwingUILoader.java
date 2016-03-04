@@ -17,9 +17,8 @@ import saiba.bmlflowvisualizer.BMLFlowVisualizerPort;
 import asap.realizerembodiments.AsapRealizerEmbodiment;
 
 /**
- * Loader for the BMLFlowVisualizaterSwingUI
+ * Loader for the BMLFlowVisualizaterSwingUI, loads the BMLFlowVisualizerPort in a desired JComponentEmbodiment (e.g. JPanel).
  * @author hvanwelbergen
- * 
  */
 public class BMLFlowVisualizaterSwingUILoader implements Loader
 {

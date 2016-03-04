@@ -14,7 +14,7 @@ public interface MotionUnit extends KeyPositionManager
 {
     /**
      * Executes the motion unit, typically by rotating some VJoints
-     * @param t execution time, 0 &lt t &lt 1
+     * @param t execution time, 0 &lt; t &lt; 1
      * @throws MUPlayException if the play fails for some reason
      */
     void play(double t)throws MUPlayException;    

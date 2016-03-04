@@ -127,7 +127,7 @@ public class RunChoregrapheClipNU implements NaoUnit
      * Constantly monitor whether the current behavior has finished playing on the robot.
      * As soon as the behavior finishes a new keyposition is created which initiates appropriate feedback
      * @param t
-     *            execution time, 0 &lt t &lt 1
+     *            execution time, 0 &lt; t &lt; 1
      * @throws NUPlayException
      *             if the play fails for some reason
      */

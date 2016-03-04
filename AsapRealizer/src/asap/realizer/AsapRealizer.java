@@ -206,7 +206,6 @@ public class AsapRealizer
     /**
      * Schedules piece of BML. This call is blocking.
      * 
-     * @throws IOException
      * @throws XMLScanException if the BML was invalid XML
      */
     public void scheduleBML(XMLTokenizer in)
@@ -284,8 +283,6 @@ public class AsapRealizer
 
     /**
      * Schedules piece of BML. This call is blocking.
-     * 
-     * @throws IOException
      * @throws XMLScanException if the BML was invalid XML
      */
     public void scheduleBML(String blockContent)

@@ -327,11 +327,11 @@ public class PlanUnitTimeManager
     /**
      * Fills out default BML keypositions that are not yet in the TimedMotionUnit. 
      * Conventions:
-     * missing ready => ready = start = 0; 
-     * missing relax => relax = end = 1; 
-     * missing strokeStart => strokeStart = ready 
-     * missing strokeEnd => strokeEnd = relax 
-     * missing stroke => stroke = strokeStart
+     * missing ready =&gt; ready = start = 0; 
+     * missing relax =&gt; relax = end = 1; 
+     * missing strokeStart =&gt; strokeStart = ready 
+     * missing strokeEnd =&gt; strokeEnd = relax 
+     * missing stroke =&gt; stroke = strokeStart
      * 
      */
     public void resolveGestureKeyPositions()

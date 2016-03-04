@@ -83,7 +83,7 @@ public class TimePeg
     
     /**
      * Set the value of the SynchronisationPoint.
-     * @param value the new value
+     * @param v the new value
      */
     public synchronized void setLocalValue(double v)
     {
@@ -98,7 +98,7 @@ public class TimePeg
     
     /**
      * Set the value of the SynchronisationPoint, relative to p.
-     * @param value the new value
+     * @param v the new value
      */
     public final synchronized void setValue(double v, BMLBlockPeg p)
     {
@@ -116,7 +116,7 @@ public class TimePeg
     
     /**
      * Set the value of the SynchronisationPoint.
-     * @param value the new value
+     * @param v the new value
      */
     public final synchronized void setGlobalValue(double v)
     {

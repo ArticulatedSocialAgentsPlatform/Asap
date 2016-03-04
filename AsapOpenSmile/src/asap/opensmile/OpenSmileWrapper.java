@@ -20,6 +20,7 @@ import com.google.common.primitives.Doubles;
 /**
  * Calls OpenSmile
  * @author hvanwelbergen
+ * @FIXME Very hacked: using opensmile over the user interface, parses the resulting .csv and multiplies energy with 0.2. 
  */
 public class OpenSmileWrapper
 {

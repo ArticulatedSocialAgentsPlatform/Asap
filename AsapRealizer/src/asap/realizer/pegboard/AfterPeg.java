@@ -8,7 +8,7 @@ import net.jcip.annotations.ThreadSafe;
 
 /**
  * AfterPegs define TimePegs that remains at a minimum time offset from a 'regular' TimePeg.<br>
- * that is: afterPeg.getGlobalTime() >= linkedPeg.getGlobalTime()+offset
+ * that is: afterPeg.getGlobalTime() &gt;= linkedPeg.getGlobalTime()+offset
  * 
  * if the link's value is TimePeg.VALUE_UNKNOWN, it is ignored.
  * 

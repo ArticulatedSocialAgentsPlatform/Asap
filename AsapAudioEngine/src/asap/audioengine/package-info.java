@@ -1,6 +1,3 @@
-/*******************************************************************************
- *******************************************************************************/
-
 /**
  * The AudioEngine is for playing sound fragments from disk (wav, mp3, etc). 
  * Useful if, for example, you want to use clapping sounds, or 

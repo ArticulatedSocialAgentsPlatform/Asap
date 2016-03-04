@@ -23,11 +23,11 @@ import com.google.common.util.concurrent.AtomicDouble;
 /**
  * A basic facial animation unit consisting of one position on Plutchiks emotion
  * disc (see hmi.faceanimation.converters.EmotionConverter The key positions
- * are: start, attackPeak, relax, end. This descripes an apex-like intensity
+ * are: start, attackPeak, relax, end. This describes an apex-like intensity
  * development: Between start and attackPeak, the face configuration is blended in;
  * between relax and end the face configuration is blended out.
  * 
- * Parameter constraint: 0 <= angle <= 360
+ * Parameter constraint: 0 &lt;= angle &lt;= 360
  * 
  * @author Dennis Reidsma
  */
@@ -130,7 +130,7 @@ public class PlutchikFU implements FaceUnit
      * till relax; then back to zero from relax till end.
      * 
      * @param t
-     *            execution time, 0 &lt t &lt 1
+     *            execution time, 0 &lt; t &lt; 1
      * @throws FUPlayException
      *             if the play fails for some reason
      */

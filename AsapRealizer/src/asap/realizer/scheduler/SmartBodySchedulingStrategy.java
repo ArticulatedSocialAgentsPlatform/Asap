@@ -27,8 +27,7 @@ import asap.realizer.pegboard.TimePeg;
 import asap.realizer.planunit.TimedPlanUnit;
 
 /**
- * Strategy implementing the <a
- * href="http://sourceforge.net/apps/mediawiki/smartbody">SmartBody></a> scheduling algorithm:<br>
+ * Strategy implementing the <a href="http://sourceforge.net/apps/mediawiki/smartbody">SmartBody</a> scheduling algorithm:<br>
  * 
  * The behaviors are processed in BML order. The timing of the first behavior is constrained only by
  * the absolute time constraints it defines and by constraints imposed by Anticipators. Subsequent

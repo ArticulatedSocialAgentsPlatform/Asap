@@ -18,13 +18,11 @@
  ******************************************************************************/
 package asap.srnao.planunit;
 
-import asap.realizer.PlayException;
-
 /**
  * Thrown whenever a NaoUnit fails during play
  * @author Daniel
  */
-public class NUPlayException extends PlayException
+public class NUPlayException extends RuntimeException
 {
     private static final long serialVersionUID = 1423L;
     private final NaoUnit nu;
