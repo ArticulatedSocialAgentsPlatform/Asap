@@ -27,6 +27,7 @@ import asap.bml.ext.bmla.feedback.BMLABlockPredictionFeedback;
 import asap.bml.ext.bmla.feedback.BMLABlockProgressFeedback;
 import asap.bml.ext.bmla.feedback.BMLAFeedbackParser;
 import asap.bml.ext.bmla.feedback.BMLAPredictionFeedback;
+import asap.bml.ext.bmla.feedback.BMLASyncPointProgressFeedback;
 import asap.realizerport.BMLFeedbackListener;
 import asap.realizerport.RealizerPort;
 
@@ -74,7 +75,7 @@ public class IpaacaToBMLRealizerAdapter implements BMLFeedbackListener
     	this.iuIdToBmlIdMap = new HashMap<String, String>();
         this.realizerPort = port;        
         realizerPort.addListeners(this);
-        EnumSet<IUEventType> types = EnumSet.of(IUEventType.ADDED);
+        EnumSet<IUEventType> types = EnumSet.of(IUEventType.ADDED, IUEventType.MESSAGE);
         EnumSet<IUEventType> updated_types = EnumSet.of(IUEventType.UPDATED);
         inBuffer.registerHandler(new IUEventHandler(new HandlerFunctor()
         {
@@ -131,8 +132,11 @@ public class IpaacaToBMLRealizerAdapter implements BMLFeedbackListener
 								bb.setBmlId(autoGenerateBmlId(prefix));
 								actualBmlId = bb.getBmlId();
 							}
-							bmlIdToIuIdMap.put(actualBmlId, iu.getUid());
-							iuIdToBmlIdMap.put(iu.getUid(), actualBmlId);
+							if (type == IUEventType.ADDED) {
+								// only do bookkeeping for IUs proper (not Messages)
+								bmlIdToIuIdMap.put(actualBmlId, iu.getUid());
+								iuIdToBmlIdMap.put(iu.getUid(), actualBmlId);
+							}
 							String actualBmlString = bb.toXMLString();
 							realizerPort.performBML(actualBmlString);
 							items.put(IpaacaBMLConstants.BML_ID_KEY, actualBmlId);
@@ -150,10 +154,13 @@ public class IpaacaToBMLRealizerAdapter implements BMLFeedbackListener
 							items.put(IpaacaBMLConstants.IU_ERROR_KEY, error_string);
 						}
 					}
-					try{
-						iu.getPayload().merge(items);
-					} catch (ipaaca.IUUpdateFailedException ex) {
-						//
+					if (type == IUEventType.ADDED) {
+						// only give feedback for real IUs
+						try {
+							iu.getPayload().merge(items);
+						} catch (ipaaca.IUUpdateFailedException ex) {
+							//
+						}
 					}
 				}
            	}
@@ -173,7 +180,7 @@ public class IpaacaToBMLRealizerAdapter implements BMLFeedbackListener
     public void feedback(String feedback)
     {
 		synchronized (this) {
-			HashMap<String, String> new_payload_items = new HashMap<String, String>();    	
+			HashMap<String, String> new_payload_items = new HashMap<String, String>();
 			BMLFeedback fb;
 			try
 			{
@@ -197,6 +204,7 @@ public class IpaacaToBMLRealizerAdapter implements BMLFeedbackListener
 					else if (fbBlock.getSyncId().equals("start"))
 					{
 						new_payload_items.put(IpaacaBMLConstants.IU_STATUS_KEY, "IN_EXEC");
+						new_payload_items.put(IpaacaBMLConstants.LAST_SYNC_ID_KEY, fbBlock.getSyncId());
 					}
 				} else {
 					// ignore this BML block: it was not added by us
@@ -218,7 +226,7 @@ public class IpaacaToBMLRealizerAdapter implements BMLFeedbackListener
 				for (BMLABlockPredictionFeedback bbp : pf.getBMLABlockPredictions())
 				{
 					if (bmlIdToIuIdMap.containsKey(bbp.getId())) {
-						AbstractIU iu_to_update = inBuffer.getIU(bmlIdToIuIdMap.get(bbp.getId()));            	
+						AbstractIU iu_to_update = inBuffer.getIU(bmlIdToIuIdMap.get(bbp.getId()));
 						double start = bbp.getPosixStartTime() / 1000.0;
 						double end = bbp.getPosixEndTime() / 1000.0;
 						new_payload_items.put(IpaacaBMLConstants.IU_PREDICTED_START_TIME_KEY, Double.valueOf(start).toString()); 
@@ -233,6 +241,25 @@ public class IpaacaToBMLRealizerAdapter implements BMLFeedbackListener
 					} else {
 						// ignore this BML block: it was not added by us
 					}
+				}
+			}
+			else if (fb instanceof BMLASyncPointProgressFeedback)
+			{
+				BMLASyncPointProgressFeedback sppf = (BMLASyncPointProgressFeedback) fb;
+				// cancel if sync point is "start" (already sent in status change, above)
+				if (sppf.getSyncId().equals("start")) return;
+				if (bmlIdToIuIdMap.containsKey(sppf.getBMLId())) {
+					AbstractIU iu_to_update = inBuffer.getIU(bmlIdToIuIdMap.get(sppf.getBMLId()));
+					new_payload_items.put(IpaacaBMLConstants.LAST_SYNC_ID_KEY, sppf.getSyncId());
+					if (iu_to_update != null) {
+						try{
+							iu_to_update.getPayload().merge(new_payload_items);
+						} catch (ipaaca.IUUpdateFailedException ex) {
+							//
+						}
+					}
+				} else {
+					// ignore this BML block: it was not added by us
 				}
 			}
 		}

@@ -20,6 +20,7 @@ public final class IpaacaBMLConstants
     public static final String BML_FEEDBACK_KEY = "bmlfeedback";
     public static final String BML_ID_KEY = "bmlid";
     public static final String IU_STATUS_KEY = "status";
+    public static final String LAST_SYNC_ID_KEY = "lastSyncId";
     public static final String IU_ERROR_KEY = "error";
     public static final String IU_PREDICTED_END_TIME_KEY = "predictedEndTime";
     public static final String IU_PREDICTED_START_TIME_KEY = "predictedStartTime";
