@@ -1,0 +1,4 @@
+for file in ./*.us
+do
+  xsltproc murml_to_bml.xsl $file > $file.xml
+done

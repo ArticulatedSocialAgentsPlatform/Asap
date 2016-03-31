@@ -1,0 +1,91 @@
+<ivy-module version="2.0">
+   <info organisation="Asap" module="AsapRealizerTester"/>
+   <configurations>
+      <include file="${ivy.settings.dir}/configurations.xml"/>
+   </configurations>
+   <dependencies>
+	   <dependency org="Asap"     name="AsapRealizerPort"           rev="latest.${resolve.status}"    />         
+      <dependency org="Asap"     name="AsapBML"            rev="latest.${resolve.status}"  />
+      <dependency org="Asap"     name="AsapMURML"            rev="latest.${resolve.status}"  />
+      <dependency org="Asap"     name="AsapMath"            rev="latest.${resolve.status}"  />
+      <dependency org="Asap"     name="AsapMotionUnit"            rev="latest.${resolve.status}"  />
+      <dependency org="Asap"     name="AsapRealizer"            rev="latest.${resolve.status}"  />
+      <dependency org="Asap"     name="AsapAnimationEngine"            rev="latest.${resolve.status}"  />      
+      <dependency org="Asap"     name="AsapFaceEngine"            rev="latest.${resolve.status}"  />
+      <dependency org="Asap"     name="AsapBinding"            rev="latest.${resolve.status}"  />
+      
+      <dependency org="Asap"   name="AsapAudioEngine"     rev="latest.${resolve.status}"   />    
+      <dependency org="Asap"   name="AsapSpeechEngine"     rev="latest.${resolve.status}"   />    
+      <dependency org="Asap"   name="AsapTextEngine"     rev="latest.${resolve.status}"   />    
+      <dependency org="Asap"   name="AsapPictureEngine"     rev="latest.${resolve.status}"   />    
+      <dependency org="Asap"   name="AsapBinding"      rev="latest.${resolve.status}"   />    
+      <dependency org="Asap"   name="AsapEnvironment"     rev="latest.${resolve.status}"   />
+            <dependency org="Asap"   name="AsapMaryTTS5Binding"     rev="latest.${resolve.status}"   />
+      <!--dependency org="marytts" name="voice-cmu-slt-hsmm"       rev="latest.release"  /-->
+      <dependency org="marytts" name="voice-dfki-prudence-hsmm"       rev="latest.release"  />
+
+      <dependency org="HMI"      name="HmiAnimation"       rev="latest.${resolve.status}"  />
+      <dependency org="HMI"      name="HmiTTSSapi5"        rev="latest.${resolve.status}"  />
+	  <dependency org="HMI"      name="HmiTTSMary5"        rev="latest.{$resolve.status}"  />
+      <dependency org="HMI"      name="HmiNeurophysics"    rev="latest.${resolve.status}"  />
+      <dependency org="HMI"      name="HmiGraphics"        transitive="false" rev="latest.${resolve.status}"  />
+      <dependency org="HMI"      name="HmiFaceGraphics"    transitive="false" rev="latest.${resolve.status}"  />
+      <dependency org="HMI"      name="HmiXml"             rev="latest.${resolve.status}"  />
+      <dependency org="HMI"      name="HmiUtil"            rev="latest.${resolve.status}"  />
+      <dependency org="HMI"      name="HmiTTSnative"       rev="latest.${resolve.status}"  />
+      <dependency org="HMI"   name="HmiJComponentEnvironment"             rev="latest.${resolve.status}"   />
+
+      <dependency org="HMI"   name="HmiEnvironmentBase"     rev="latest.${resolve.status}"   />    
+
+      <dependency org="Asap"   name="AsapRealizer"     rev="latest.${resolve.status}"   />    
+      <dependency org="Asap"   name="AsapRealizerEmbodiments"     rev="latest.${resolve.status}"   />    
+
+	  <dependency org="HMI" name="HmiHumanoidEmbodimentShared" rev="latest.{$resolve.status}"  />
+	  <dependency org="HMI" name="HmiHumanoidEmbodimentArmandia" rev="latest.{$resolve.status}"  />
+	  <dependency org="HMI" name="DefaultShaders" rev="latest.{$resolve.status}"  />
+	  <dependency org="HMI"   name="LogbackConfigs"     rev="latest.${resolve.status}"   />
+      <dependency org="HMI"   name="HmiAnimationEmbodiments"     rev="latest.${resolve.status}"   />    
+      <dependency org="HMI"   name="HmiFaceEmbodiments"     rev="latest.${resolve.status}"   />    
+      <dependency org="HMI"   name="HmiPhysicsEmbodiments"     rev="latest.${resolve.status}"   />    
+      <dependency org="HMI"   name="HmiHeadAndGazeEmbodiments"     rev="latest.${resolve.status}"   />    
+      <dependency org="HMI"   name="HmiTextEmbodiments"     rev="latest.${resolve.status}"   />    
+
+      <dependency org="HMI"   name="HmiMixedAnimationEnvironment"     rev="latest.${resolve.status}"   />    
+      <dependency org="HMI"   name="HmiRenderEnvironment"     rev="latest.${resolve.status}"   />    
+      <dependency org="HMI"   name="HmiPhysicsEnvironment"     rev="latest.${resolve.status}"   />    
+      <dependency org="HMI"   name="HmiFaceAnimation"     rev="latest.${resolve.status}"   />    
+      <dependency org="HMI"   name="HmiAudioEnvironment"     rev="latest.${resolve.status}"   />    
+      <dependency org="HMI"   name="HmiWorldObjectEnvironment"     rev="latest.${resolve.status}"   />    
+
+      <dependency org="HMI"      name="HmiTestUtil" transitive="false" rev="latest.${resolve.status}"/>
+       
+      <!--
+      <dependency org="Asap"   name="AsapEmitterEngine"     rev="latest.${resolve.status}"   /> 	  
+	  -->
+	  
+      
+      <dependency org="odejava"  name="odejava"            rev="latest.release"  />   
+      <dependency org="JogAmp" name="jogl" rev="latest.beta"  />  
+      
+      <dependency org="saiba"     name="openbmlparser"           rev="latest.${resolve.status}"    />
+      <dependency org="jcip"     name="jcip-annotations"   rev="latest.release"  />   
+
+      <dependency org="lwjgl"    name="lwjgl"            rev="latest.release"  />   
+      <dependency org="Sun"      name="jlfgr"              rev="latest.release"  />   
+      <dependency org="singularsystems"   name="jep"       rev="latest.release"  />   
+      <dependency org="slf4j"    name="slf4j-api"          rev="latest.release"  />   
+      <dependency org="slf4j"    name="log4j-over-slf4j"   rev="latest.release"  />   
+      <dependency org="slf4j"    name="jul-to-slf4j"       rev="latest.release"  />   
+      <dependency org="slf4j"    name="jcl-over-slf4j"     rev="latest.release"  />   
+      <dependency org="logback"  name="logback-classic"    rev="latest.release"  />   
+      <dependency org="logback"  name="logback-core"       rev="latest.release"  />   
+      <dependency org="google"   name="guava"                rev="latest.release"  />
+      <dependency org="junit"    name="junit-dep"                rev="latest.release" />
+      <dependency org="hamcrest" name="hamcrest-all"         rev="latest.release"  />
+      <dependency org="saiba" name="realizertester"         rev="latest.${resolve.status}"  />
+      <dependency org="saiba" name="realizertester-utils-bml1"         rev="latest.${resolve.status}"  />
+      <dependency org="lwjgl" name="lwjgl" rev="latest.release"  />
+      <dependency org="reflections"   name="reflections"         rev="latest.release"  />
+
+   </dependencies>
+</ivy-module>

@@ -1,0 +1,8 @@
+<ivy-module version="2.0">
+   <info organisation="Asap" module="AsapOpenSmile"/>
+   <dependencies>
+      <dependency org="HMI"     name="HmiUtil"           rev="latest.${resolve.status}"    />
+      <dependency org="apache"     name="commons-csv"           rev="latest.release"    />
+      <dependency org="lombok" name="lombok"          rev="latest.release"  />
+   </dependencies>
+</ivy-module>

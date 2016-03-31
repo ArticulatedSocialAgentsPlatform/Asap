@@ -1,0 +1,10 @@
+package asap.rsbworldenvironment;
+
+message RSBWorldObject {
+  	required string objectId = 1;
+  	repeated float position = 2 [packed=true];
+}
+
+message RSBWorldObjects {
+	repeated RSBWorldObject worldObjects = 1;
+}

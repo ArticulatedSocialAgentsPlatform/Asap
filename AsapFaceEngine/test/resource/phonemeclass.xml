@@ -1,0 +1,142 @@
+<!-- This file includes all american-english phonemes and the sound-classes they are related to. There are also some more mappings to cover all phonemes used by this software. -->
+<PhonemeClassMapping>
+
+<!-- Those are the standard-american-english phonemes. If someone wants to use them they are already implemented here.
+	But keep in mind that some of the phonemes are equal to those in the second part of this file (S, Z, N, Y, R, T, D, V). -->
+
+  <!--ParamSet phoneme="IY" soundclass="vowel"/>
+  <ParamSet phoneme="IH" soundclass="vowel"/>
+  <ParamSet phoneme="EY" soundclass="vowel"/>
+  <ParamSet phoneme="EH" soundclass="vowel"/>
+  <ParamSet phoneme="AE" soundclass="vowel"/>
+  <ParamSet phoneme="AA" soundclass="vowel"/>
+  <ParamSet phoneme="AO" soundclass="vowel"/>
+  <ParamSet phoneme="OW" soundclass="vowel"/>
+  <ParamSet phoneme="UH" soundclass="vowel"/>
+  <ParamSet phoneme="UW" soundclass="vowel"/>
+  <ParamSet phoneme="AH" soundclass="vowel"/>
+  <ParamSet phoneme="ER" soundclass="vowel"/>
+  <ParamSet phoneme="AX" soundclass="vowel"/>
+
+  <ParamSet phoneme="AY" soundclass="diphthong"/>
+  <ParamSet phoneme="OY" soundclass="diphthong"/>
+  <ParamSet phoneme="AW" soundclass="diphthong"/>
+  <ParamSet phoneme="YU" soundclass="diphthong"/>
+
+  <ParamSet phoneme="Y" soundclass="glide"/>
+  <ParamSet phoneme="W" soundclass="glide"/>
+
+  <ParamSet phoneme="L" soundclass="liquid"/>
+  <ParamSet phoneme="R" soundclass="liquid"/>
+
+  <ParamSet phoneme="M" soundclass="nasal"/>
+  <ParamSet phoneme="N" soundclass="nasal"/>
+  <ParamSet phoneme="AN" soundclass="nasal"/>
+
+  <ParamSet phoneme="F" soundclass="fricative"/>
+  <ParamSet phoneme="V" soundclass="fricative"/>
+  <ParamSet phoneme="TH" soundclass="fricative"/>
+  <ParamSet phoneme="DH" soundclass="fricative"/>
+  <ParamSet phoneme="S" soundclass="fricative"/>
+  <ParamSet phoneme="Z" soundclass="fricative"/>
+  <ParamSet phoneme="SH" soundclass="fricative"/>
+  <ParamSet phoneme="ZH" soundclass="fricative"/>
+  <ParamSet phoneme="H" soundclass="fricative"/>
+
+  <ParamSet phoneme="P" soundclass="stop"/>
+  <ParamSet phoneme="B" soundclass="stop"/>
+  <ParamSet phoneme="T" soundclass="stop"/>
+  <ParamSet phoneme="D" soundclass="stop"/>
+  <ParamSet phoneme="K" soundclass="stop"/>
+  <ParamSet phoneme="G" soundclass="stop"/>
+
+  <ParamSet phoneme="CH" soundclass="affricate"/>
+  <ParamSet phoneme="J" soundclass="affricate"/-->
+
+<!-- Those are the some more phoneme-sound-class-mappings to cover the phonemes used by this software. -->
+
+  <ParamSet phoneme="a" soundclass="vowel"/>
+  <ParamSet phoneme="e" soundclass="vowel"/>
+  <ParamSet phoneme="e:" soundclass="vowel"/>
+  <ParamSet phoneme="o:" soundclass="vowel"/>
+  <ParamSet phoneme="V" soundclass="vowel"/>
+  <ParamSet phoneme="U" soundclass="vowel"/>
+  <ParamSet phoneme="6" soundclass="vowel"/>
+  <ParamSet phoneme="E~" soundclass="vowel"/>
+  <ParamSet phoneme="O~" soundclass="vowel"/>
+  <ParamSet phoneme="9~" soundclass="vowel"/>
+  <ParamSet phoneme="I" soundclass="vowel"/>
+  <ParamSet phoneme="a:" soundclass="vowel"/>
+  <ParamSet phoneme="u:" soundclass="vowel"/>
+  <ParamSet phoneme="@" soundclass="vowel"/>
+  <ParamSet phoneme="{" soundclass="vowel"/>
+  <ParamSet phoneme="A" soundclass="vowel"/>
+  <ParamSet phoneme="aa" soundclass="vowel"/>
+  <ParamSet phoneme="ao" soundclass="vowel"/>
+  <ParamSet phoneme="ax" soundclass="vowel"/>
+  <ParamSet phoneme="iy" soundclass="vowel"/>
+  <ParamSet phoneme="uw" soundclass="vowel"/>
+  <ParamSet phoneme="y" soundclass="vowel"/>
+
+  <ParamSet phoneme="E" soundclass="diphthong"/>
+  <ParamSet phoneme="E:" soundclass="diphthong"/>
+  <ParamSet phoneme="9" soundclass="diphthong"/>
+  <ParamSet phoneme="2:" soundclass="diphthong"/>
+  <ParamSet phoneme="Y" soundclass="diphthong"/>
+  <ParamSet phoneme="y:" soundclass="diphthong"/>
+  <ParamSet phoneme="aI" soundclass="diphthong"/>
+  <ParamSet phoneme="OY" soundclass="diphthong"/>
+  <ParamSet phoneme="aU" soundclass="diphthong"/>
+  <ParamSet phoneme="OI" soundclass="diphthong"/>
+  <ParamSet phoneme="i:" soundclass="diphthong"/>
+  <ParamSet phoneme="O" soundclass="diphthong"/>
+  <ParamSet phoneme="aw" soundclass="diphthong"/>
+  <ParamSet phoneme="ay" soundclass="diphthong"/>
+  <ParamSet phoneme="ey" soundclass="diphthong"/>
+  <ParamSet phoneme="ow" soundclass="diphthong"/>
+  <ParamSet phoneme="oy" soundclass="diphthong"/>
+
+  <ParamSet phoneme="j" soundclass="glide"/>
+  <ParamSet phoneme="w" soundclass="glide"/>
+
+  <ParamSet phoneme="r" soundclass="liquid"/>
+  <ParamSet phoneme="R" soundclass="liquid"/>
+  <ParamSet phoneme="l" soundclass="liquid"/>
+  <ParamSet phoneme="@l" soundclass="liquid"/>
+
+  <ParamSet phoneme="n" soundclass="nasal"/>
+  <ParamSet phoneme="@n" soundclass="nasal"/>
+  <ParamSet phoneme="N" soundclass="nasal"/>
+  <ParamSet phoneme="m" soundclass="nasal"/>
+  <ParamSet phoneme="a~" soundclass="nasal"/>
+
+  <ParamSet phoneme="f" soundclass="fricative"/>
+  <ParamSet phoneme="pf" soundclass="fricative"/>
+  <ParamSet phoneme="v" soundclass="fricative"/>
+  <ParamSet phoneme="s" soundclass="fricative"/>
+  <ParamSet phoneme="z" soundclass="fricative"/>
+  <ParamSet phoneme="S" soundclass="fricative"/>
+  <ParamSet phoneme="Z" soundclass="fricative"/>
+  <ParamSet phoneme="T" soundclass="fricative"/>
+  <ParamSet phoneme="D" soundclass="fricative"/>
+  <ParamSet phoneme="h" soundclass="fricative"/>
+  <ParamSet phoneme="x" soundclass="fricative"/>
+  <ParamSet phoneme="dx" soundclass="fricative"/>
+  <ParamSet phoneme="hh" soundclass="fricative"/>
+  <ParamSet phoneme="th" soundclass="fricative"/>
+
+  <ParamSet phoneme="p" soundclass="stop"/>
+  <ParamSet phoneme="b" soundclass="stop"/>
+  <ParamSet phoneme="t" soundclass="stop"/>
+  <ParamSet phoneme="d" soundclass="stop"/>
+  <ParamSet phoneme="k" soundclass="stop"/>
+  <ParamSet phoneme="g" soundclass="stop"/>
+  <ParamSet phoneme="?" soundclass="stop"/>
+  <ParamSet phoneme="" soundclass="stop"/>
+
+  <ParamSet phoneme="ts" soundclass="affricate"/>
+  <ParamSet phoneme="tS" soundclass="affricate"/>
+  <ParamSet phoneme="dZ" soundclass="affricate"/>
+  <ParamSet phoneme="C" soundclass="affricate"/>
+  <ParamSet phoneme="jh" soundclass="affricate"/>
+</PhonemeClassMapping> 

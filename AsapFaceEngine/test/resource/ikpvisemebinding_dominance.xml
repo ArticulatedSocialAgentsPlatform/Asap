@@ -1,0 +1,15 @@
+<VisemeToMorphMapping>
+  <!-- All available Visemes are included. The intensity of the new visemes is always set to 1 because I modify it in an external file. -->
+
+  <Mapping viseme="0" 	intensity="1" target="KevinHead.mesh-Rest,Teeth Lower.mesh-Rest"/>
+  <Mapping viseme="1" 	intensity="1" target="KevinHead.mesh-A,Teeth Lower.mesh-A"/>
+  <Mapping viseme="2" 	intensity="1" target="KevinHead.mesh-E,Teeth Lower.mesh-E"/>
+  <Mapping viseme="3" 	intensity="1" target="KevinHead.mesh-O,Teeth Lower.mesh-O"/>
+  <Mapping viseme="4" 	intensity="1" target="KevinHead.mesh-U,Teeth Lower.mesh-U"/>
+  <Mapping viseme="5" 	intensity="1" target="KevinHead.mesh-DGKNRSY,Teeth Lower.mesh-DGKNRSY"/>
+  <Mapping viseme="6" 	intensity="1" target="KevinHead.mesh-FV,Teeth Lower.mesh-FV"/>
+  <Mapping viseme="7" 	intensity="1" target="KevinHead.mesh-Th,Teeth Lower.mesh-Th"/>
+  <Mapping viseme="8" 	intensity="1" target="KevinHead.mesh-L,Teeth Lower.mesh-L"/>
+  <Mapping viseme="9" 	intensity="1" target="KevinHead.mesh-MBP,Teeth Lower.mesh-MBP"/>
+  <Mapping viseme="10" 	intensity="1" target="KevinHead.mesh-WOOQ,Teeth Lower.mesh-WOOQ"/>
+</VisemeToMorphMapping>

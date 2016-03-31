@@ -1,0 +1,47 @@
+<?xml version="1.0" standalone="no"?>
+<!DOCTYPE definition SYSTEM "./utterances.dtd">
+
+<definition>
+    <utterance>
+        <behaviorspec>
+            <gesture id="reissverschluss" scope="hand">
+                <timing onset="1.0" end="3.0"/>
+                <constraints>
+                    <parallel>
+                        <static scope="left_arm" slot="HandShape" value="ASLa"/>
+                        <static scope="left_arm" slot="PalmOrientation" value="DirR"/>
+                        <static scope="left_arm" slot="ExtFingerOrientation" value="DirA"/>
+                        <static scope="left_arm" slot="HandLocation" value="LocHip LocCCenterLeft LocNear"/>
+                        <static scope="right_arm" slot="HandShape" value="ASLa"/>
+                        <static scope="right_arm" slot="PalmOrientation" value="DirL"/>
+                        <static scope="right_arm" slot="ExtFingerOrientation" value="DirA"/>
+                        <static slot="GazeDirection" value="-1 0 0" scope="head"/>
+                            <dynamic scope="right_arm" slot="HandLocation">
+                                <dynamicElement scope="right_arm" type="linear" >
+                                    <value name="LocHip LocCCenter LocNear" type="start"/>
+                                    <value name="DirU" type="direction"/>
+                                    <value name="40" type="distance"/>
+                                </dynamicElement>
+                                <dynamicElement scope="right_arm" type="linear" >
+                                    <value name="LocNeck LocCCenter LocNear" type="start"/>
+                                    <value name="DirD" type="direction"/>
+                                    <value name="40" type="distance"/>
+                                </dynamicElement>
+                                <dynamicElement scope="right_arm" type="linear" >
+                                    <value name="LocHip LocCCenter LocNear" type="start"/>
+                                    <value name="DirU" type="direction"/>
+                                    <value name="40" type="distance"/>
+                                </dynamicElement>
+                                <dynamicElement scope="right_arm" type="linear" >
+                                    <value name="LocNeck LocCCenter LocNear" type="start"/>
+                                    <value name="DirD" type="direction"/>
+                                    <value name="40" type="distance"/>
+                                </dynamicElement>
+                            </dynamic>
+                            <static slot="GazeDirection" value="100 0 0" mode="pointTo" scope="head"/>
+                    </parallel>
+                </constraints>
+            </gesture>
+        </behaviorspec>
+    </utterance>
+</definition>

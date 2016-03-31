@@ -1,0 +1,7 @@
+publish.resolver=asap.sftp.publish
+#publish.resolver=asap.filesystem.repository
+resolve.status=beta
+run.jvmargs= -Xms128m -Xmx1024m
+test.resource.path = ources}/AsapBMLTest/resource;
+#rebuild.list=Hmi/HmiUtil, Hmi/HmiXml, Hmi/HmiBML
+rebuild.list=Asap/AsapRealizerPort/java, Asap/AsapMURML

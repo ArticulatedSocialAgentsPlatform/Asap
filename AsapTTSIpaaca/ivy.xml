@@ -1,0 +1,15 @@
+<ivy-module version="2.0">
+   <info organisation="Asap" module="AsapTTSIpaaca"/>
+   <dependencies> 
+      <dependency org="google"   name="guava"     rev="latest.${resolve.status}"   />
+      <dependency org="jcip"      name="jcip-annotations"        rev="latest.release"  />   
+      <dependency org="slf4j"     name="slf4j-api"               rev="latest.release"  />   
+      <dependency org="HMI"       name="HmiUtil"                 rev="latest.${resolve.status}"  />
+      <dependency org="HMI"       name="HmiTTS"                  rev="latest.${resolve.status}"  />
+      <dependency org="HMI"       name="HmiXml"                  rev="latest.${resolve.status}"  />
+      <dependency org="Asap"       name="AsapOpenSmile"                  rev="latest.${resolve.status}"  />
+      <dependency org="ipaaca"       name="ipaaca-java"                  rev="latest.${resolve.status}"  />
+      <dependency org="Asap"       name="AsapSpeechEngine"                  rev="latest.${resolve.status}"  />
+      <dependency org="Asap"   name="AsapBML"            rev="latest.${resolve.status}"   />
+   </dependencies>
+</ivy-module>

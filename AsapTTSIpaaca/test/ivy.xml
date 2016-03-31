@@ -1,0 +1,9 @@
+<ivy-module version="2.0">
+   <info organisation="Asap" module="AsapTTSIpaacaTest"/>
+   <dependencies> 
+      <dependency org="junit"    name="junit-dep"         rev="latest.release" />
+      <dependency org="HMI"      name="HmiTestUtil"   transitive="false" rev="latest.release"/>
+      <dependency org="hamcrest" name="hamcrest-all"       rev="latest.release"  />
+      <dependency org="HMI" name="HmiHumanoidEmbodimentShared" rev="latest.{$resolve.status}"  />                       
+   </dependencies>
+</ivy-module>

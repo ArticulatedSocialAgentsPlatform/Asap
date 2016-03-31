@@ -1,0 +1,6 @@
+<ivy-module version="2.0">
+   <info organisation="Asap" module="AsapTestUtilTest"/>
+   <dependencies >
+      <dependency org="junit" name="junit-dep"  rev="latest.release" />
+   </dependencies>
+</ivy-module>

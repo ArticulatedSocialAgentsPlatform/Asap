@@ -1,0 +1,47 @@
+<?xml version="1.0" standalone="no"?>
+<!DOCTYPE definition SYSTEM "./utterances.dtd">
+
+<definition>
+    <utterance>
+        <behaviorspec id="gesture_part1">
+            <gesture id="erde" scope="hand">
+                <timing onset="1.0" end="3.0"/>
+                <constraints>
+                    <symmetrical center="0 0 0 0 0 0" dominant="right_arm" scope="undef" symmetry="SymMS">
+                        <parallel>
+                            <static scope="right_arm" slot="HandShape" value="ASLb"/>
+                            <sequence>
+                                <dynamic scope="right_arm" slot="HandLocation">
+                                    <dynamicElement scope="right_arm" type="linear" >
+                                        <value type="start" name="LocAboveHead LocCCenterRight LocNorm"/>
+                                        <value type="end" name="LocUpperChest LocRight LocStreched"/>
+                                    </dynamicElement>
+                                    <dynamicElement scope="right_arm" type="linear" >
+                                        <value type="start" name="LocUpperChest LocRight LocStreched"/>
+                                        <value type="end" name="LocHip LocCCenterRight LocNorm"/>
+                                    </dynamicElement>
+                                </dynamic>
+                            </sequence>
+                        </parallel>
+                    </symmetrical>
+                </constraints>
+            </gesture>
+        </behaviorspec>
+        <behaviorspec id="gesture_part2">
+            <gesture id="erde" scope="hand">
+                <timing onset="1.0" end="1.5"/>
+                <constraints>
+                    <static slot="GazeDirection" value="1000 0 1000" scope="head"/>
+                </constraints>
+            </gesture>
+        </behaviorspec>
+        <behaviorspec id="gesture_part3">
+            <gesture id="erde" scope="hand">
+                <timing onset="2.0" end="2.5"/>
+                <constraints>
+                    <static slot="GazeDirection" value="1000 0 0" scope="head"/>
+                </constraints>
+            </gesture>
+        </behaviorspec>
+    </utterance>
+</definition>

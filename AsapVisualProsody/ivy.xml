@@ -1,0 +1,12 @@
+<ivy-module version="2.0">
+   <info organisation="Asap" module="AsapVisualProsody"/>
+   <dependencies>
+		<dependency org="HMI"     name="HmiXml"            rev="latest.${resolve.status}"    />
+  		<dependency org="HMI"     name="HmiMath"            rev="latest.${resolve.status}"    />		
+	  	<dependency org="HMI"     name="HmiAnimation"            rev="latest.${resolve.status}"    />
+		<dependency org="apache"  name="commons-math3"            rev="latest.release"    />
+		<dependency org="lombok"  name="lombok"            rev="latest.release"    />     
+		<dependency org="google"  name="guava"            rev="latest.release"    />
+		<dependency org="weka"  name="weka"            rev="latest.release"    />                    
+   </dependencies>
+</ivy-module>

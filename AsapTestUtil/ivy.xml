@@ -1,0 +1,8 @@
+<ivy-module version="2.0">
+   <info organisation="Asap" module="AsapTestUtil" />
+   <dependencies>
+      <dependency org="junit" name="junit-dep"            rev="latest.release" />            
+	  <dependency org="saiba"     name="openbmlparser"           rev="latest.release"    />
+	  <dependency org="Asap"     name="AsapBML"           rev="latest.release"    />
+   </dependencies>
+</ivy-module>

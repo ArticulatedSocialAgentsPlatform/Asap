@@ -1,0 +1,42 @@
+<?xml version="1.0"?>
+
+    
+        
+            <murml-description xmlns="http://www.techfak.uni-bielefeld.de/ags/soa/murml" scope="hand">
+  <parallel>
+                        <static scope="right_arm" slot="HandLocation" value="LocShoulder LocCenterRight LocNear"/>
+                        <static scope="right_arm" slot="ExtFingerOrientation" value="DirL"/>
+                        <static scope="right_arm" slot="PalmOrientation" value="DirT"/>
+                        <sequence>
+                            <static scope="right_arm" slot="HandShape" value="ASL5"/>
+                            <static scope="right_arm" slot="HandShape" value="ASLcsmall"/>
+                            <static scope="right_arm" slot="HandShape" value="ASL5"/>
+                            <static scope="right_arm" slot="HandShape" value="ASLcsmall"/>
+                            <static scope="right_arm" slot="HandShape" value="ASL5"/>
+                            <static scope="right_arm" slot="HandShape" value="ASLcsmall"/>
+                        </sequence>
+                    </parallel>
+</murml-description>
+        
+        
+            <murml-description xmlns="http://www.techfak.uni-bielefeld.de/ags/soa/murml" scope="head">
+  <static slot="GazeDirection" value="1000 -500 1000" scope="head"/>
+</murml-description>
+        
+        
+            <murml-description xmlns="http://www.techfak.uni-bielefeld.de/ags/soa/murml" scope="head">
+  <static slot="GazeDirection" value="1000 0 1000" scope="head"/>
+</murml-description>
+        
+        
+            <murml-description xmlns="http://www.techfak.uni-bielefeld.de/ags/soa/murml" scope="head">
+  <static slot="GazeDirection" value="1000 500 1000" scope="head"/>
+</murml-description>
+        
+        
+            <murml-description xmlns="http://www.techfak.uni-bielefeld.de/ags/soa/murml" scope="head">
+  <static slot="GazeDirection" value="50 0 50" scope="head"/>
+</murml-description>
+        
+    
+

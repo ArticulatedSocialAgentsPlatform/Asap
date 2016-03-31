@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<murml-description xmlns="http://www.techfak.uni-bielefeld.de/ags/soa/murml"
+                   scope="hand"
+                   pointStroke="true">
+   <symmetrical dominant="right_arm" symmetry="SymMS">
+      <parallel>
+        <dynamic slot="HandLocation">
+	           <dynamicElement type="linear">
+               <value type="start" name="LocUpperStomach LocCenterRRight LocNorm"/>
+	              <value type="direction" name="DirDRD"/>
+	              <value type="distance" name="20.0"/>
+	           </dynamicElement>
+        </dynamic>
+        <static slot="PalmOrientation" value="PalmU"/>
+      </parallel>
+    </symmetrical>
+</murml-description>

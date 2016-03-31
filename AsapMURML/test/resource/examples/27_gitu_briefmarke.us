@@ -1,0 +1,65 @@
+<?xml version="1.0" standalone="no"?>
+<!DOCTYPE definition SYSTEM "./utterances.dtd">
+
+<definition>
+    <utterance>
+        <behaviorspec id="gesture_part1">
+            <gesture id="briefmarke" scope="hand">
+                <timing onset="1.0" end="3.0"/>
+                <constraints>
+                    <parallel>
+                        <static scope="left_arm" slot="HandLocation" value="LocLowerChest LocPeripheryLeft LocNorm"/>
+                        <static scope="left_arm" slot="PalmOrientation" value="DirD"/>
+                        <static scope="left_arm" slot="ExtFingerOrientation" value="DirA"/>
+                        <sequence>
+                            <parallel>
+                                <static scope="right_arm" slot="PalmOrientation" value="DirT"/>
+                                <static scope="right_arm" slot="ExtFingerOrientation" value="DirU"/>
+                                <dynamic scope="right_arm" slot="HandLocation">
+                                    <dynamicElement scope="right_arm" type="linear" >
+                                        <value type="start" name="LocNeck LocCenter LocNear"/>
+                                        <value type="end" name="LocShoulder LocCenter LocNear"/>
+                                    </dynamicElement>
+                                </dynamic>
+                            </parallel>
+                            <parallel>
+                                <static scope="right_arm" slot="PalmOrientation" value="DirD"/>
+                                <static scope="right_arm" slot="ExtFingerOrientation" value="DirL"/>
+                                <dynamic scope="right_arm" slot="HandLocation">
+                                    <dynamicElement scope="right_arm" type="linear" >
+                                        <value type="start" name="LocShoulder LocCenter LocNear"/>
+                                        <value type="end" name="LocLowerChest LocCCenterLeft LocNorm"/>
+                                    </dynamicElement>
+                                </dynamic>
+                            </parallel>
+                        </sequence>
+                    </parallel>
+                </constraints>
+            </gesture>
+        </behaviorspec>
+        <behaviorspec id="gesture_part2">
+            <gesture id="briefmarke" scope="hand">
+                <timing onset="1.0" end="1.5"/>
+                <constraints>
+                    <static slot="GazeDirection" value="1000 0 0" scope="head"/>
+                </constraints>
+            </gesture>
+        </behaviorspec>
+        <behaviorspec id="gesture_part3">
+            <gesture id="briefmarke" scope="hand">
+                <timing onset="2.0" end="3.0"/>
+                <constraints>
+                    <static slot="GazeDirection" value="1000 500 0" scope="head"/>
+                </constraints>
+            </gesture>
+        </behaviorspec>
+        <behaviorspec id="gesture_part4">
+            <gesture id="briefmarke" scope="hand">
+                <timing onset="3.5" end="5.0"/>
+                <constraints>
+                    <static slot="GazeDirection" value="50 0 50" scope="head"/>
+                </constraints>
+            </gesture>
+        </behaviorspec>
+    </utterance>
+</definition>

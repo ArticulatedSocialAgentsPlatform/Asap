@@ -1,0 +1,47 @@
+<?xml version="1.0"?>
+
+    
+        
+            <murml-description xmlns="http://www.techfak.uni-bielefeld.de/ags/soa/murml" scope="hand">
+  <symmetrical dominant="right_arm" symmetry="SymMST">
+                        <parallel>
+                            <static scope="right_arm" slot="HandShape" value="ASLc"/>
+                            <static scope="right_arm" slot="PalmOrientation" value="DirA"/>
+                            <static scope="right_arm" slot="ExtFingerOrientation" value="DirU"/>
+                            <static scope="left_arm" slot="HandShape" value="ASLc"/>
+                            <static scope="left_arm" slot="PalmOrientation" value="DirT"/>
+                            <static scope="right_arm" slot="ExtFingerOrientation" value="DirU"/>
+                            <static slot="GazeDirection" value="1000 -500 1000" scope="head"/>
+                            <dynamic scope="right_arm" slot="HandLocation">
+                                <dynamicElement scope="right_arm" type="linear">
+                                    <value type="start" name="LocShoulder LocPeripheryRight LocNear"/>
+                                    <value type="end" name="LocAboveHead LocRight LocNear"/>
+                                </dynamicElement>
+                                <dynamicElement scope="right_arm" type="linear">
+                                    <value type="start" name="LocAboveHead LocRight LocNear"/>
+                                    <value type="end" name="LocShoulder LocPeripheryRight LocNear"/>
+                                </dynamicElement>
+                                <dynamicElement scope="right_arm" type="linear">
+                                    <value type="start" name="LocShoulder LocPeripheryRight LocNear"/>
+                                    <value type="end" name="LocAboveHead LocRight LocNear"/>
+                                </dynamicElement>
+                                <dynamicElement scope="right_arm" type="linear">
+                                    <value type="start" name="LocAboveHead LocRight LocNear"/>
+                                    <value type="end" name="LocShoulder LocPeripheryRight LocNear"/>
+                                </dynamicElement>
+                                <dynamicElement scope="right_arm" type="linear">
+                                    <value type="start" name="LocShoulder LocPeripheryRight LocNear"/>
+                                    <value type="end" name="LocAboveHead LocRight LocNear"/>
+                                </dynamicElement>
+                            </dynamic>
+                        </parallel>
+                    </symmetrical>
+</murml-description>
+        
+        
+            <murml-description xmlns="http://www.techfak.uni-bielefeld.de/ags/soa/murml" scope="head">
+  <static slot="GazeDirection" value="50 0 50" scope="head"/>
+</murml-description>
+        
+    
+

@@ -1,0 +1,23 @@
+<ivy-module version="2.0">
+   <info organisation="Asap" module="AsapRealizerEmbodiments"/>
+   <configurations>
+      <include file="${ivy.settings.dir}/configurations.xml"/>
+   </configurations>
+   <dependencies>
+      <dependency org="Asap"      name="AsapRealizer"       transitive="false" rev="latest.${resolve.status}"  />
+      <dependency org="Asap"      name="AsapBML"       transitive="false" rev="latest.${resolve.status}"  />
+   	   <dependency org="Asap"     name="AsapRealizerPort"           rev="latest.${resolve.status}"    />
+      
+      <dependency org="HMI"      name="HmiXml"             rev="latest.${resolve.status}"  />
+      <dependency org="HMI"      name="HmiUtil"            rev="latest.${resolve.status}"  />
+      <dependency org="HMI"      name="HmiEnvironmentBase"            rev="latest.${resolve.status}"  />
+      <dependency org="HMI"      name="HmiJComponentEnvironment"            rev="latest.${resolve.status}"  />
+      
+	  <dependency org="saiba"     name="openbmlparser"           rev="latest.release"    />
+      <dependency org="jcip"     name="jcip-annotations"   rev="latest.release"  />   
+      <dependency org="slf4j"    name="slf4j-api"          rev="latest.release"  />
+      <dependency org="google"   name="guava"              rev="latest.release"  />
+      <dependency org="lombok"   name="lombok"             rev="latest.release"  />      
+
+      </dependencies>
+</ivy-module>

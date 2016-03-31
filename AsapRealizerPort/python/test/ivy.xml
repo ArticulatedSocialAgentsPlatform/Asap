@@ -1,0 +1,6 @@
+<ivy-module version="2.0">
+   <info organisation="Asap" module="AsapRealizerPortTestPython"/>
+   <dependencies >
+      <dependency org="nose" name="nose"  rev="latest.release" />
+   </dependencies>
+</ivy-module>

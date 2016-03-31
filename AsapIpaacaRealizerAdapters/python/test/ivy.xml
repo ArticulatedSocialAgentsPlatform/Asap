@@ -1,0 +1,7 @@
+<ivy-module version="2.0">
+   <info organisation="Asap" module="AsapIpaacaRealizerAdaptersTestPython"/>
+   <dependencies >
+      <dependency org="nose" name="nose"  rev="latest.release" />
+      <dependency org="mockito" name="mockito-python"  rev="latest.release" />
+   </dependencies>
+</ivy-module>

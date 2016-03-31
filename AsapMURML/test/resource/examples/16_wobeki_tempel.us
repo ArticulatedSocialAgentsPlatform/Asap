@@ -1,0 +1,45 @@
+<?xml version="1.0" standalone="no"?>
+<!DOCTYPE definition SYSTEM "./utterances.dtd">
+
+<definition>
+    <utterance>
+        <behaviorspec id="gesture_part1">
+            <gesture id="becher" scope="hand">
+                <timing onset="1.0" end="4.0"/>
+                <constraints>
+                    <parallel>
+                        <symmetrical center="0 0 0 0 0 0" dominant="right_arm" scope="undef" symmetry="SymMS">
+                            <parallel>
+                                <static scope="right_arm" slot="HandShape" value="ASLb"/>
+                                <static scope="right_arm" slot="PalmOrientation" value="DirL"/>
+                                <static scope="right_arm" slot="ExtFingerOrientation" value="DirU"/>
+                                <dynamic scope="right_arm" slot="HandLocation">
+                                    <dynamicElement scope="right_arm" type="linear">
+                                        <value type="start" name="LocHip LocPeripheryRight LocNorm"/>
+                                        <value type="end" name="LocUpperChest LocCenter LocNorm"/>
+                                    </dynamicElement>
+                                </dynamic>
+                            </parallel>
+                        </symmetrical>
+                    </parallel>
+                </constraints>
+            </gesture>
+        </behaviorspec>
+        <behaviorspec id="gesture_part2">
+            <gesture id="tempel" scope="hand">
+                <timing onset="2.0" end="3.0"/>
+                <constraints>
+                    <static slot="GazeDirection" value="0 0 0" scope="head"/>
+                </constraints>
+            </gesture>
+        </behaviorspec>
+        <behaviorspec id="gesture_part3">
+            <gesture id="tempel" scope="hand">
+                <timing onset="3.5" end="4.0"/>
+                <constraints>
+                    <static slot="GazeDirection" value="50 0 50" scope="head"/>
+                </constraints>
+            </gesture>
+        </behaviorspec>
+    </utterance>
+</definition>

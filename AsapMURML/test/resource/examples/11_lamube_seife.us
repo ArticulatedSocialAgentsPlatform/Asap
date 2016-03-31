@@ -1,0 +1,118 @@
+<?xml version="1.0" standalone="no"?>
+<!DOCTYPE definition SYSTEM "./utterances.dtd">
+
+<definition>
+    <utterance>
+        <behaviorspec>
+            <gesture id="seife" scope="hand">
+                <constraints>
+                    <parallel>
+                        <sequence>
+                            <parallel>
+                                <static scope="right_arm" slot="HandShape" value="ASLb"/>
+                                <static scope="right_arm" slot="PalmOrientation" value="DirLU"/>
+                                <static scope="right_arm" slot="ExtFingerOrientation" value="DirA"/>
+                                <static scope="left_arm" slot="HandShape" value="ASLb"/>
+                                <static scope="left_arm" slot="PalmOrientation" value="DirRU"/>
+                                <static scope="left_arm" slot="ExtFingerOrientation" value="DirA"/>
+                                <dynamic scope="right_arm" slot="HandLocation">
+                                    <dynamicElement scope="right_arm" type="linear" >
+                                        <value type="start" name="LocHip LocRight LocNear"/>
+                                        <value type="end" name="LocStomach LocCCenterRight LocNear"/>
+                                    </dynamicElement>
+                                </dynamic>
+                                <dynamic scope="left_arm" slot="HandLocation">
+                                    <dynamicElement scope="left_arm" type="linear" >
+                                        <value type="start" name="LocHip LocLeft LocNear"/>
+                                        <value type="end" name="LocStomach LocCCenterLeft LocNear"/>
+                                    </dynamicElement>
+                                </dynamic>
+                            </parallel>
+                            <parallel>
+                                <static scope="right_arm" slot="HandShape" value="ASLb"/>
+                                <static scope="right_arm" slot="PalmOrientation" value="DirAL"/>
+                                <static scope="right_arm" slot="ExtFingerOrientation" value="DirA"/>
+                                <static scope="left_arm" slot="HandShape" value="ASLb"/>
+                                <static scope="left_arm" slot="PalmOrientation" value="DirAR"/>
+                                <static scope="left_arm" slot="ExtFingerOrientation" value="DirA"/>
+                                <sequence>
+                                    <parallel>
+                                        <dynamic scope="right_arm" slot="HandLocation">
+                                            <dynamicElement scope="right_arm" type="linear" >
+                                                <value type="start" name="LocStomach LocCCenterRight LocNear"/>
+                                                <value type="end" name="LocStomach LocCenter LocNorm"/>
+                                            </dynamicElement>
+                                        </dynamic>
+                                        <dynamic scope="left_arm" slot="HandLocation">
+                                            <dynamicElement scope="left_arm" type="linear" >
+                                                <value type="start" name="LocStomach LocCCenterLeft LocNear"/>
+                                                <value type="end" name="LocStomach LocCenter LocNorm"/>
+                                            </dynamicElement>
+                                        </dynamic>
+                                    </parallel>
+                                    <parallel>
+                                        <dynamic scope="right_arm" slot="HandLocation">
+                                            <dynamicElement scope="right_arm" type="linear" >
+                                                <value type="start" name="LocStomach LocCenter LocNorm"/>
+                                                <value type="end" name="LocStomach LocCenter LocFar"/>
+                                            </dynamicElement>
+                                        </dynamic>
+                                        <dynamic scope="left_arm" slot="HandLocation">
+                                            <dynamicElement scope="left_arm" type="linear" >
+                                                <value type="start" name="LocStomach LocCenter LocNorm"/>
+                                                <value type="end" name="LocStomach LocCenter LocNear"/>
+                                            </dynamicElement>
+                                        </dynamic>
+                                    </parallel>
+                                    <parallel>
+                                        <dynamic scope="right_arm" slot="HandLocation">
+                                            <dynamicElement scope="right_arm" type="linear" >
+                                                <value type="start" name="LocStomach LocCenter LocFar"/>
+                                                <value type="end" name="LocStomach LocCenter LocNear"/>
+                                            </dynamicElement>
+                                        </dynamic>
+                                        <dynamic scope="left_arm" slot="HandLocation">
+                                            <dynamicElement scope="left_arm" type="linear" >
+                                                <value type="start" name="LocStomach LocCenter LocNear"/>
+                                                <value type="end" name="LocStomach LocCenter LocFar"/>
+                                            </dynamicElement>
+                                        </dynamic>
+                                    </parallel>
+                                    <parallel>
+                                        <dynamic scope="right_arm" slot="HandLocation">
+                                            <dynamicElement scope="right_arm" type="linear" >
+                                                <value type="start" name="LocStomach LocCenter LocNear"/>
+                                                <value type="end" name="LocStomach LocCenter LocFar"/>
+                                            </dynamicElement>
+                                        </dynamic>
+                                        <dynamic scope="left_arm" slot="HandLocation">
+                                            <dynamicElement scope="left_arm" type="linear" >
+                                                <value type="start" name="LocStomach LocCenter LocFar"/>
+                                                <value type="end" name="LocStomach LocCenter LocNear"/>
+                                            </dynamicElement>
+                                        </dynamic>
+                                    </parallel>
+                                    <parallel>
+                                        <dynamic scope="right_arm" slot="HandLocation">
+                                            <dynamicElement scope="right_arm" type="linear" >
+                                                <value type="start" name="LocStomach LocCenter LocFar"/>
+                                                <value type="end" name="LocStomach LocCenter LocNear"/>
+                                            </dynamicElement>
+                                        </dynamic>
+                                        <dynamic scope="left_arm" slot="HandLocation">
+                                            <dynamicElement scope="left_arm" type="linear" >
+                                                <value type="start" name="LocStomach LocCenter LocNear"/>
+                                                <value type="end" name="LocStomach LocCenter LocFar"/>
+                                            </dynamicElement>
+                                        </dynamic>
+                                    </parallel>
+                                </sequence>
+                            </parallel>
+                        </sequence>
+                        <static slot="GazeDirection" value="100 0 0" scope="head"/>
+                    </parallel>
+                </constraints>
+            </gesture>
+        </behaviorspec>
+    </utterance>
+</definition>

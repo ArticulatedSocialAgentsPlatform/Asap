@@ -1,0 +1,3 @@
+<project name="AsapIpaacaRealizerAdapters" default="build" basedir=".">
+  <import file="../../hmibuild/build-recurse.xml" />
+</project>

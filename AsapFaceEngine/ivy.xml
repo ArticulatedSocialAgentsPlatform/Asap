@@ -1,0 +1,28 @@
+<ivy-module version="2.0">
+   <info organisation="Asap" module="AsapFaceEngine"/>
+   <dependencies>
+	   	   <dependency org="Asap"     name="AsapRealizerPort"           rev="latest.${resolve.status}"    />
+     <dependency org="Asap"   name="AsapMotionUnit"            rev="latest.${resolve.status}"   />
+     <dependency org="Asap"   name="AsapMURML"            rev="latest.${resolve.status}"   />
+     <dependency org="Asap"   name="AsapBinding"            rev="latest.${resolve.status}"   />
+     <dependency org="Asap"   name="AsapBML"            rev="latest.${resolve.status}"   />
+     <dependency org="Asap"   name="AsapMath"            rev="latest.${resolve.status}"   />
+     <dependency org="HMI"   name="HmiUtil"            rev="latest.${resolve.status}"   />
+      <dependency org="HMI"   name="HmiXml"             rev="latest.${resolve.status}"   />
+      <dependency org="HMI"   name="HmiMath"            rev="latest.${resolve.status}"   />
+      <dependency org="HMI"   name="HmiAnimation"       rev="latest.${resolve.status}"   />
+      <dependency org="HMI"   name="HmiFaceAnimation"   rev="latest.${resolve.status}"   />
+      <dependency org="HMI"   name="HmiFaceAnimationUI"   rev="latest.${resolve.status}"   />
+      
+	  <dependency org="HMI"   name="HmiTTS"             transitive="false" rev="latest.${resolve.status}"   />
+	  <dependency org="HMI"   name="HmiEnvironmentBase"             rev="latest.${resolve.status}"   />
+	  <dependency org="HMI"   name="HmiJComponentEnvironment"             rev="latest.${resolve.status}"   />
+	  <dependency org="HMI"   name="HmiFaceEmbodiments"             rev="latest.${resolve.status}"   />
+	  <dependency org="Asap"   name="AsapRealizer"             transitive="false" rev="latest.${resolve.status}"   />
+	  <dependency org="Asap"   name="AsapRealizerEmbodiments"             rev="latest.${resolve.status}"   />
+      
+	  <dependency org="saiba"     name="openbmlparser"           rev="latest.release"    />
+	  <dependency org="lombok"   name="lombok"     rev="latest.${resolve.status}"   />
+	  <dependency org="google"   name="guava"     rev="latest.${resolve.status}"   />
+   </dependencies>
+</ivy-module>

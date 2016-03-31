@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<murml-description xmlns="http://www.techfak.uni-bielefeld.de/ags/soa/murml" scope="body">
+   <dynamic>
+      <keyframing scope="body"
+                  mode="spline"
+                  easescale="5.0"
+                  easeturningpoint="0.4"
+                  priority="50">
+	        <phase>
+	           <frame ftime="1.0">
+	              <posture> (re_eye 3 0 0 0) (le_eye 3 0 0 0) (rh_l_joint3 3 18 0 0) (rh_l_joint2 3 36 0 0) (rh_l_joint1 3 29 -12 0) (rh_r_joint3 3 15 0 0) (rh_r_joint2 3 29 0 0) (rh_r_joint1 3 25 -3 0) (rh_m_joint3 3 15 0 0) (rh_m_joint2 3 30 0 0) (rh_m_joint1 3 29 0 0) (rh_p_joint3 3 12 0 0) (rh_p_joint2 3 23 0 0) (rh_p_joint1 3 40 4 0) (rh_t_joint3 3 14 0 0) (rh_t_joint2 3 11 0 0) (rh_t_joint1 3 0 -20 0) (rh_t_joint0 3 0 45 -32) (r_wrist 3 4 -2 -5) (r_elbow 3 0 5 0) (r_shoulder 3 -1 0 0) (r_clavicle 3 0 0 0)</posture>
+	           </frame>
+	           <frame ftime="2.0">
+	              <posture> (re_eye 3 15 -15 0) (le_eye 3 15 -15 0) (rh_l_joint3 3 34 0 0) (rh_l_joint2 3 100 0 0) (rh_l_joint1 3 90 18 0) (rh_r_joint3 3 55 0 0) (rh_r_joint2 3 100 0 0) (rh_r_joint1 3 90 10 0) (rh_m_joint3 3 15 0 0) (rh_m_joint2 3 100 0 0) (rh_m_joint1 3 90 0 0) (rh_p_joint3 3 29 0 0) (rh_p_joint2 3 19 0 0) (rh_p_joint1 3 50 -11 0) (rh_t_joint3 3 41 0 0) (rh_t_joint2 3 30 0 0) (rh_t_joint1 3 0 1 0) (rh_t_joint0 3 0 45 -17) (r_wrist 3 -11 -19 27) (r_elbow 3 0 132 0) (r_shoulder 3 0 59 -55) (r_clavicle 3 0 -2 0)</posture>
+	           </frame>
+	        </phase>
+	        <phase>
+	           <frame ftime="3.0">
+  	            <posture>(re_eye 3 15 -15 0) (le_eye 3 15 -15 0)	(rh_l_joint3 3 34 0 0) (rh_l_joint2 3 100 0 0) (rh_l_joint1 3 90 18 0) (rh_r_joint3 3 55 0 0) (rh_r_joint2 3 100 0 0) (rh_r_joint1 3 90 10 0) (rh_m_joint3 3 15 0 0) (rh_m_joint2 3 100 0 0) (rh_m_joint1 3 90 0 0) (rh_p_joint3 3 29 0 0) (rh_p_joint2 3 19 0 0) (rh_p_joint1 3 50 -11 0) (rh_t_joint3 3 41 0 0) (rh_t_joint2 3 30 0 0) (rh_t_joint1 3 0 1 0) (rh_t_joint0 3 0 45 -17) (r_wrist 3 -11 -19 27) (r_elbow 3 0 132 0) (r_shoulder 3 0 59 -55) (r_clavicle 3 0 -2 0)</posture>
+	           </frame>
+	           <frame ftime="4.0">
+	              <posture> (re_eye 3 0 0 0) (le_eye 3 0 0 0) (rh_l_joint3 3 18 0 0) (rh_l_joint2 3 36 0 0) (rh_l_joint1 3 29 -12 0) (rh_r_joint3 3 15 0 0) (rh_r_joint2 3 29 0 0) (rh_r_joint1 3 25 -3 0) (rh_m_joint3 3 15 0 0) (rh_m_joint2 3 30 0 0) (rh_m_joint1 3 29 0 0) (rh_p_joint3 3 12 0 0) (rh_p_joint2 3 23 0 0) (rh_p_joint1 3 40 4 0) (rh_t_joint3 3 14 0 0) (rh_t_joint2 3 11 0 0) (rh_t_joint1 3 0 -20 0) (rh_t_joint0 3 0 45 -32) (r_wrist 3 4 -2 -5) (r_elbow 3 0 5 0) (r_shoulder 3 -1 0 0) (r_clavicle 3 0 0 0) </posture>
+	           </frame>
+	        </phase>
+      </keyframing>
+    </dynamic>
+</murml-description>

@@ -1,0 +1,58 @@
+<?xml version="1.0" standalone="no"?>
+<!DOCTYPE definition SYSTEM "./utterances.dtd">
+
+<definition>
+    <utterance>
+        <behaviorspec id="gesture_part1">
+            <gesture id="kruecke" scope="hand">
+                <timing onset="1.0" end="3.0"/>
+                <constraints>
+                    <parallel>
+                        <static scope="right_arm" slot="PalmOrientation" value="DirDL"/>
+                        <static scope="right_arm" slot="ExtFingerOrientation" value="DirDR"/>
+                        <static scope="left_arm" slot="PalmOrientation" value="DirAR"/>
+                        <static scope="left_arm" slot="ExtFingerOrientation" value="DirA"/>
+                        <static scope="left_arm" slot="HandShape" value="ASLcsmall"/>
+                            <dynamic scope="left_arm" slot="HandLocation">
+                                <dynamicElement scope="left_arm" type="linear" >
+                                    <value type="start" name="LocStomach LocExtremePeripheryLeft LocContact"/>
+                                    <value name="DirL" type="direction"/>
+                                    <value name="10" type="distance"/>
+                                </dynamicElement>
+                            </dynamic>
+                            <dynamic scope="right_arm" slot="HandLocation">
+                                <dynamicElement scope="right_arm" type="linear" >
+                                    <value type="start" name="LocStomach LocRight LocNear"/>
+                                    <value type="end" name="LocHip LocRight LocNear"/>
+                                </dynamicElement>
+                                <dynamicElement scope="right_arm" type="linear" >
+                                    <value type="start" name="LocHip LocRight LocNear"/>
+                                    <value type="end" name="LocStomach LocRight LocNear"/>
+                                </dynamicElement>
+                                <dynamicElement scope="right_arm" type="linear" >
+                                    <value type="start" name="LocStomach LocRight LocNear"/>
+                                    <value type="end" name="LocHip LocRight LocNear"/>
+                                </dynamicElement>
+                            </dynamic>
+                    </parallel>
+                </constraints>
+            </gesture>
+        </behaviorspec>
+        <behaviorspec id="gesture_part2">
+            <gesture id="kruecke" scope="hand">
+                <timing onset="1.0" end="3.0"/>
+                <constraints>
+                    <static slot="GazeDirection" value="1000 -500 0" scope="head"/>
+                </constraints>
+            </gesture>
+        </behaviorspec>
+        <behaviorspec id="gesture_part3">
+            <gesture id="kruecke" scope="hand">
+                <timing onset="4.0" end="5.0"/>
+                <constraints>
+                    <static slot="GazeDirection" value="50 0 50" scope="head"/>
+                </constraints>
+            </gesture>
+        </behaviorspec>
+    </utterance>
+</definition>

@@ -1,0 +1,63 @@
+<?xml version="1.0" standalone="no"?>
+<!DOCTYPE definition SYSTEM "./utterances.dtd">
+
+<definition>
+    <utterance>
+        <behaviorspec>
+            <gesture id="fernbedienung" scope="hand">
+                <timing onset="1.0" end="3.0"/>
+                <constraints>
+                    <parallel>
+                            <static scope="left_arm" slot="PalmOrientation" value="DirAR"/>
+                            <static scope="left_arm" slot="ExtFingerOrientation" value="DirA"/>
+                            <static scope="left_arm" slot="HandShape" value="ASLcsmall"/>
+                            <static scope="left_arm" slot="HandLocation" value="LocStomach LocLeft LocContact"/>
+                        <sequence>
+                            <parallel>
+                                <static scope="right_arm" slot="PalmOrientation" value="DirL"/>
+                                <static scope="right_arm" slot="ExtFingerOrientation" value="DirA"/>
+                                <static scope="right_arm" slot="HandShape" value="ASL5"/>
+                                <dynamic scope="right_arm" slot="HandLocation">
+                                    <dynamicElement scope="right_arm" type="linear" >
+                                        <value type="start" name="LocHip LocPeripheryRight LocNorm"/>
+                                        <value type="end" name="LocNeck LocCCenterRight LocStreched"/>
+                                    </dynamicElement>
+                                </dynamic>
+                            </parallel>
+                            <parallel>
+                                <static scope="right_arm" slot="PalmOrientation" value="DirL"/>
+                                <static scope="right_arm" slot="ExtFingerOrientation" value="DirA"/>
+                                <static scope="right_arm" slot="HandShape" value="ASLg"/>
+                                <static scope="right_arm" slot="HandLocation" value="LocNeck LocCCenterRight LocStreched"/>
+                            </parallel>
+                            <parallel>
+                                <static scope="right_arm" slot="PalmOrientation" value="DirL"/>
+                                <static scope="right_arm" slot="ExtFingerOrientation" value="DirA"/>
+                                <static scope="right_arm" slot="HandShape" value="ASL5"/>
+                                <static scope="right_arm" slot="HandLocation" value="LocNeck LocCCenterRight LocStreched"/>
+                            </parallel>
+                            <parallel>
+                                <static scope="right_arm" slot="PalmOrientation" value="DirL"/>
+                                <static scope="right_arm" slot="ExtFingerOrientation" value="DirA"/>
+                                <static scope="right_arm" slot="HandShape" value="ASLg"/>
+                                <static scope="right_arm" slot="HandLocation" value="LocNeck LocCCenterRight LocStreched"/>
+                            </parallel>
+                            <parallel>
+                                <static scope="right_arm" slot="PalmOrientation" value="DirL"/>
+                                <static scope="right_arm" slot="ExtFingerOrientation" value="DirA"/>
+                                <static scope="right_arm" slot="HandShape" value="ASL5"/>
+                                <static scope="right_arm" slot="HandLocation" value="LocNeck LocCCenterRight LocStreched"/>
+                            </parallel>
+                            <parallel>
+                                <static scope="right_arm" slot="PalmOrientation" value="DirL"/>
+                                <static scope="right_arm" slot="ExtFingerOrientation" value="DirA"/>
+                                <static scope="right_arm" slot="HandShape" value="ASLg"/>
+                                <static scope="right_arm" slot="HandLocation" value="LocNeck LocCCenterRight LocStreched"/>
+                            </parallel>
+                        </sequence>
+                    </parallel>
+                </constraints>
+            </gesture>
+        </behaviorspec>
+    </utterance>
+</definition>

@@ -1,0 +1,55 @@
+<ivy-module version="2.0">
+   <info organisation="Asap" module="AsapRealizerIntegrationTestsiSS"/>
+   <dependencies>
+      <dependency org="junit"    name="cpsuite"              rev="latest.release"  />
+      <dependency org="google"    name="junit-ext"              rev="latest.release"  />
+      <dependency org="mockito"   name="mockito-all"            rev="latest.release"  />
+      <dependency org="jboss"			name="javassist" rev="latest.release"  />
+      <dependency org="powermock"			name="powermock-mockito" rev="latest.release"  />
+      <dependency org="hamcrest" name="hamcrest-all"       rev="latest.release"  />
+      <dependency org="odejava" name="odejava"       rev="latest.release"  />
+      <dependency org="HMI"   name="HmiUtil"            rev="latest.${resolve.status}"   />
+      <dependency org="HMI"   name="HmiXml"             rev="latest.${resolve.status}"   />
+      <dependency org="HMI"   name="HmiMath"            rev="latest.${resolve.status}"   />
+      <dependency org="HMI"   name="HmiAnimation"       rev="latest.${resolve.status}"   />      
+      <dependency org="HMI"   name="HmiBML"             rev="latest.${resolve.status}"   />
+	  <dependency org="HMI"   name="HmiPhysics"             rev="latest.${resolve.status}"   />
+	  <dependency org="HMI"   name="HmiNeurophysics"             rev="latest.${resolve.status}"   />
+      <dependency org="HMI"   name="HmiFaceAnimation"     rev="latest.${resolve.status}"   />    
+
+
+      <dependency org="HMI"   name="HmiGraphics"     rev="latest.${resolve.status}"   />    
+      <dependency org="HMI"   name="HmiFaceGraphics"     rev="latest.${resolve.status}"   />    
+
+      <dependency org="HMI"   name="HmiEnvironmentBase"     rev="latest.${resolve.status}"   />    
+      <dependency org="HMI"   name="HmiAnimationEmbodiments"     rev="latest.${resolve.status}"   />    
+      <dependency org="HMI"   name="HmiFaceEmbodiments"     rev="latest.${resolve.status}"   />    
+      <dependency org="HMI"   name="HmiPhysicsEmbodiments"     rev="latest.${resolve.status}"   />    
+      <dependency org="HMI"   name="HmiHeadAndGazeEmbodiments"     rev="latest.${resolve.status}"   />    
+      <dependency org="HMI"   name="HmiTextEmbodiments"     rev="latest.${resolve.status}"   />    
+
+      <dependency org="HMI"   name="HmiMixedAnimationEnvironment"     rev="latest.${resolve.status}"   />    
+      <dependency org="HMI"   name="HmiRenderEnvironment"     rev="latest.${resolve.status}"   />    
+      <dependency org="HMI"   name="HmiPhysicsEnvironment"     rev="latest.${resolve.status}"   />    
+      <dependency org="HMI"   name="HmiWorldObjectEnvironment"     rev="latest.${resolve.status}"   />    
+
+      <dependency org="Asap"     name="AsapRealizerPort"           rev="latest.${resolve.status}"    />
+	  <dependency org="Asap"     name="AsapBML"           rev="latest.${resolve.status}"    />
+      <dependency org="Asap"   name="AsapRealizer"     rev="latest.${resolve.status}"   />    
+      <dependency org="Asap"   name="AsapRealizerEmbodiments"     rev="latest.${resolve.status}"   />    
+      <dependency org="Asap"   name="AsapEnvironment"     rev="latest.${resolve.status}"   />    
+
+      <dependency org="Asap"   name="AsapFaceEngine"     rev="latest.${resolve.status}"   />    
+      <dependency org="Asap"   name="AsapAnimationEngine"     rev="latest.${resolve.status}"   />    
+      <dependency org="Asap"   name="AsapAudioEngine"     rev="latest.${resolve.status}"   />    
+      <dependency org="Asap"   name="AsapIncrementalTTSEngine"     rev="latest.${resolve.status}"   />    
+      <dependency org="Asap"   name="AsapEmitterEngine"     rev="latest.${resolve.status}"   />
+      <dependency org="Asap"   name="AsapRealizerIntegrationTests"     transitive="false" rev="latest.${resolve.status}"   />
+
+      <dependency org="logback" name="logback-classic"     rev="latest.release"  />   
+      <dependency org="logback" name="logback-core"        rev="latest.release"  />   
+      <dependency org="marytts" name="voice-cmu-slt-hsmm"       rev="latest.release"  />
+      
+         
+   </dependencies>
+</ivy-module>

@@ -1,0 +1,88 @@
+<?xml version="1.0" standalone="no"?>
+<!DOCTYPE definition SYSTEM "./utterances.dtd">
+
+<definition>
+    <utterance>
+        <behaviorspec id="gesture_part1">
+            <gesture id="welle" scope="hand">
+                <timing onset="1.0" end="3.0"/>
+                <constraints>
+                    <sequence>
+                        <parallel>
+                            <static scope="left_arm" slot="PalmOrientation" value="DirLD"/>
+                            <static scope="left_arm" slot="ExtFingerOrientation" value="DirRD"/>
+                            <dynamic scope="left_arm" slot="HandLocation">
+                                <dynamicElement scope="left_arm" type="linear" >
+                                    <value type="start" name="LocHead LocLeft LocNorm"/>
+                                    <value type="end" name="LocUpperChest LocCenterLeft LocNorm"/>
+                                </dynamicElement>
+                            </dynamic>
+                        </parallel>
+                        <parallel>
+                            <static scope="left_arm" slot="PalmOrientation" value="DirR"/>
+                            <static scope="left_arm" slot="ExtFingerOrientation" value="DirU"/>
+                            <dynamic scope="left_arm" slot="HandLocation">
+                                <dynamicElement scope="left_arm" type="linear" >
+                                    <value type="start" name="LocUpperChest LocCenterLeft LocNorm"/>
+                                    <value type="end" name="LocHead LocCenter LocNorm"/>
+                                </dynamicElement>
+                            </dynamic>
+                        </parallel>
+                        <parallel>
+                            <static scope="left_arm" slot="PalmOrientation" value="DirLD"/>
+                            <static scope="left_arm" slot="ExtFingerOrientation" value="DirRD"/>
+                            <dynamic scope="left_arm" slot="HandLocation">
+                                <dynamicElement scope="left_arm" type="linear" >
+                                    <value type="start" name="LocHead LocCenter LocNorm"/>
+                                    <value type="end" name="LocUpperChest LocPeripheryRight LocNorm"/>
+                                </dynamicElement>
+                            </dynamic>
+                        </parallel>
+                        <parallel>
+                            <static scope="left_arm" slot="PalmOrientation" value="DirR"/>
+                            <static scope="left_arm" slot="ExtFingerOrientation" value="DirU"/>
+                            <dynamic scope="left_arm" slot="HandLocation">
+                                <dynamicElement scope="left_arm" type="linear" >
+                                    <value type="start" name="LocUpperChest LocPeripheryRight LocNorm"/>
+                                    <value type="end" name="LocHead LocRight LocNorm"/>
+                                </dynamicElement>
+                            </dynamic>
+                        </parallel>
+                    </sequence>
+                </constraints>
+            </gesture>
+        </behaviorspec>
+        <behaviorspec id="gesture_part2">
+            <gesture id="welle" scope="hand">
+                <timing onset="1.0" end="1.5"/>
+                <constraints>
+                    <static slot="GazeDirection" value="1000 500 0" scope="head"/>
+                </constraints>
+            </gesture>
+        </behaviorspec>
+        <behaviorspec id="gesture_part3">
+            <gesture id="welle" scope="hand">
+                <timing onset="2.0" end="2.5"/>
+                <constraints>
+                    <static slot="GazeDirection" value="1000 0 0" scope="head"/>
+                </constraints>
+            </gesture>
+        </behaviorspec>
+        <behaviorspec id="gesture_part4">
+            <gesture id="welle" scope="hand">
+                <timing onset="3.0" end="3.5"/>
+                <constraints>
+                    <static slot="GazeDirection" value="1000 -500 0" scope="head"/>
+                </constraints>
+            </gesture>
+        </behaviorspec>
+        <behaviorspec id="gesture_part5">
+            <gesture id="welle" scope="hand">
+                <timing onset="4.0" end="5.0"/>
+                <constraints>
+                    <static slot="GazeDirection" value="50 0 50" scope="head"/>
+                </constraints>
+            </gesture>
+        </behaviorspec>
+    </utterance>
+</definition>

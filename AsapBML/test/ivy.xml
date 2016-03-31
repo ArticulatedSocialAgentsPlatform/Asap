@@ -1,0 +1,12 @@
+<ivy-module version="2.0">
+   <info organisation="Asap" module="ASAPBmlTest"/>
+   <dependencies>
+      <dependency org="junit" name="junit-dep"   rev="latest.release" />
+      <dependency org="logback" name="logback-classic"   rev="latest.release" />
+      <dependency org="logback" name="logback-core"   rev="latest.release" />
+      <dependency org="saiba" name="openbmlparser-test"       rev="latest.release"  />
+      <dependency org="hamcrest" name="hamcrest-all"       rev="latest.release"  />
+	<dependency org="HMI" name="HmiTestUtil"      rev="latest.${resolve.status}"   />
+	<dependency org="saiba" name="openbmlparser-testresource"  rev="latest.release" />
+   </dependencies>
+</ivy-module>

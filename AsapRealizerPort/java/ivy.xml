@@ -1,0 +1,8 @@
+<ivy-module version="2.0">
+   <info organisation="Asap" module="AsapRealizerPort"/>
+   <dependencies>
+	   <dependency org="saiba"   name="openbmlparser"         rev="latest.release"  />  
+	   <dependency org="lombok"   name="lombok"         rev="latest.release"  />  
+	   <dependency org="HMI"   name="HmiXml"         rev="latest.release"  />  
+   </dependencies>
+</ivy-module>

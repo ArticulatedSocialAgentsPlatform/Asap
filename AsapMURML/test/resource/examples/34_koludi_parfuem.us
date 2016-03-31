@@ -1,0 +1,59 @@
+<?xml version="1.0" standalone="no"?>
+<!DOCTYPE definition SYSTEM "./utterances.dtd">
+
+<definition>
+    <utterance>
+        <behaviorspec id="gesture_part1">
+            <gesture id="parfuem" scope="hand">
+                <timing onset="1.0" end="3.0"/>
+                <constraints>
+                    <parallel>
+                        <static scope="right_arm" slot="HandLocation" value="LocShoulder LocCenterRight LocNear"/>
+                        <static scope="right_arm" slot="ExtFingerOrientation" value="DirL"/>
+                        <static scope="right_arm" slot="PalmOrientation" value="DirT"/>
+                        <sequence>
+                            <static scope="right_arm" slot="HandShape" value="ASL5"/>
+                            <static scope="right_arm" slot="HandShape" value="ASLcsmall"/>
+                            <static scope="right_arm" slot="HandShape" value="ASL5"/>
+                            <static scope="right_arm" slot="HandShape" value="ASLcsmall"/>
+                            <static scope="right_arm" slot="HandShape" value="ASL5"/>
+                            <static scope="right_arm" slot="HandShape" value="ASLcsmall"/>
+                        </sequence>
+                    </parallel>
+                </constraints>
+            </gesture>
+        </behaviorspec>
+        <behaviorspec id="gesture_part2">
+            <gesture id="parfuem" scope="head">
+                <timing onset="1.0" end="1.5"/>
+                <constraints>
+                    <static slot="GazeDirection" value="1000 -500 1000" scope="head"/>
+                </constraints>
+            </gesture>
+        </behaviorspec>
+        <behaviorspec id="gesture_part3">
+            <gesture id="parfuem" scope="head">
+                <timing onset="2.0" end="2.5"/>
+                <constraints>
+                    <static slot="GazeDirection" value="1000 0 1000" scope="head"/>
+                </constraints>
+            </gesture>
+        </behaviorspec>
+        <behaviorspec id="gesture_part4">
+            <gesture id="parfuem" scope="head">
+                <timing onset="3.0" end="3.5"/>
+                <constraints>
+                    <static slot="GazeDirection" value="1000 500 1000" scope="head"/>
+                </constraints>
+            </gesture>
+        </behaviorspec>
+        <behaviorspec id="gesture_part5">
+            <gesture id="parfuem" scope="head">
+                <timing onset="4.0" end="5.0"/>
+                <constraints>
+                    <static slot="GazeDirection" value="50 0 50" scope="head"/>
+                </constraints>
+            </gesture>
+        </behaviorspec>
+    </utterance>
+</definition>

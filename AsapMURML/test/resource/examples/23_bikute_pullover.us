@@ -1,0 +1,41 @@
+<?xml version="1.0" standalone="no"?>
+<!DOCTYPE definition SYSTEM "./utterances.dtd">
+
+<definition>
+    <utterance>
+        <behaviorspec id="gesture_part1">
+            <gesture id="pullover" scope="hand">
+                <timing onset="1.0" end="3.0"/>
+                <constraints scope="right_arm">
+                    <symmetrical center="0 0 0 0 0 0" dominant="right_arm" scope="undef" symmetry="SymMS">
+                        <parallel>
+                            <static scope="right_arm" slot="HandShape" value="ASLcsmall"/>
+                            <dynamic scope="right_arm" slot="HandLocation">
+                                <dynamicElement scope="right_arm" type="linear" >
+                                    <value type="start" name="LocHip LocPeripheryLeft LocContact"/>
+                                    <value type="end" name="LocAboveHead LocRight LocContact"/>
+                                </dynamicElement>
+                            </dynamic>
+                        </parallel>
+                    </symmetrical>
+                </constraints>
+            </gesture>
+        </behaviorspec>
+        <behaviorspec id="gesture_part2">
+            <gesture id="pullover" scope="hand">
+                <timing onset="1.0" end="2.5"/>
+                <constraints>
+                    <static slot="GazeDirection" value="1000 0 1000" scope="head"/>
+                </constraints>
+            </gesture>
+        </behaviorspec>
+        <behaviorspec id="gesture_part3">
+            <gesture id="pullover" scope="hand">
+                <timing onset="3.0" end="6.0"/>
+                <constraints>
+                    <static slot="GazeDirection" value="50 0 50" scope="head"/>
+                </constraints>
+            </gesture>
+        </behaviorspec>
+    </utterance>
+</definition>

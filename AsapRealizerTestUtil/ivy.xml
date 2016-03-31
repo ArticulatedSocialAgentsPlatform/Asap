@@ -1,0 +1,28 @@
+<ivy-module version="2.0">
+   <info organisation="Asap" module="AsapRealizerTestUtil"/>
+   <configurations>
+      <include file="${ivy.settings.dir}/configurations.xml"/>
+   </configurations>
+   <dependencies>
+	   <dependency org="HMI"     name="HmiXml"              rev="latest.${resolve.status}"  />
+	   	   <dependency org="Asap"     name="AsapRealizerPort"           rev="latest.${resolve.status}"    />
+      <dependency org="Asap"     name="AsapRealizer"              rev="latest.${resolve.status}"  />
+      <dependency org="Asap"     name="AsapBML"              rev="latest.${resolve.status}"  />
+
+      <dependency org="Asap"     name="AsapTestUtil"              rev="latest.${resolve.status}"  />
+
+      <dependency org="saiba"     name="openbmlparser"              rev="latest.release}"  />
+      <dependency org="HMI"     name="HmiTestUtil"                 rev="latest.${resolve.status}"  />
+      <dependency org="jcip"    name="jcip-annotations"            rev="latest.release"  />   
+      <dependency org="slf4j"   name="slf4j-api"                   rev="latest.release"  />   
+      <dependency org="logback" name="logback-classic"             rev="latest.release"  />   
+      <dependency org="logback" name="logback-core"                rev="latest.release"  />   
+      <dependency org="Sun"     name="jlfgr"                       rev="latest.release"  /> 
+      <dependency org="junit"   name="junit-dep"                       rev="latest.release" />
+      <dependency org="google"  name="guava"                       rev="latest.release" />
+      <dependency org="mockito"   name="mockito-all"            rev="latest.release"  />
+      <dependency org="jboss"			name="javassist" rev="latest.release"  />
+      <dependency org="powermock"			name="powermock-mockito" rev="latest.release"  />
+	  <dependency org="hamcrest" name="hamcrest-all"       rev="latest.release"  />
+   </dependencies>
+</ivy-module>

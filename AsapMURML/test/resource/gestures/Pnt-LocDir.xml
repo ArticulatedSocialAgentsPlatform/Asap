@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<murml-description xmlns="http://www.techfak.uni-bielefeld.de/ags/soa/murml" scope="hand">
+   <parallel>
+	     <static slot="HandShape" value="BSifinger"/>
+	     <static slot="ExtFingerOrientation" value="$refdir"/>
+	     <static slot="ExtFingerOrientation" value="$refloc" mode="pointTo"/>
+	     <static slot="GazeDirection"
+              value="$refloc"
+              mode="pointTo"
+              scope="head"/>
+    </parallel>
+</murml-description>

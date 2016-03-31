@@ -1,0 +1,41 @@
+<ivy-module version="2.0">
+   <info organisation="Asap" module="AsapIncrementalTTSEngine"/>
+   <dependencies>
+     <dependency org="HMI"   name="HmiUtil"            rev="latest.${resolve.status}"   />
+     <dependency org="HMI"   name="HmiXml"             rev="latest.${resolve.status}"   />
+     <dependency org="HMI"   name="HmiTTS"             rev="latest.${resolve.status}"   />
+     <dependency org="HMI"   name="HmiEnvironmentBase" rev="latest.${resolve.status}"   />
+
+     <dependency org="Asap"   name="AsapRealizerPort" rev="latest.${resolve.status}"   />
+     <dependency org="Asap"   name="AsapBML" rev="latest.${resolve.status}"   />
+     <dependency org="Asap"   name="AsapRealizer" rev="latest.${resolve.status}"   />
+     <dependency org="Asap"   name="AsapRealizerEmbodiments" rev="latest.${resolve.status}"   />
+
+     <dependency org="saiba"     name="openbmlparser"           rev="latest.${resolve.status}"    />
+     <dependency org="lombok"   name="lombok"     rev="latest.${resolve.status}"   />
+     <dependency org="google"   name="guava"     rev="latest.${resolve.status}"   />
+     <dependency org="slf4j"     name="log4j-over-slf4j"        rev="latest.release"  />
+     <dependency org="slf4j"     name="slf4j-api"               rev="latest.release"  />
+
+
+     <dependency org="cmu"   name="sphinx"     rev="latest.${resolve.status}"   />
+	  <dependency org="nist"   name="jrtp"     rev="latest.${resolve.status}"   />
+      <dependency org="apache"   name="commons-lang"     rev="latest.${resolve.status}"   />
+      <dependency org="apache"    name="commons-collections" rev="latest.release"  /> 
+	  <dependency org="apache"    name="commons-io" rev="latest.release"  /> 
+	  <dependency org="freetts"    name="freetts" rev="latest.release"  /> 
+      <dependency org="opennlp"    name="opennlp-tools" rev="latest.release"  />
+      <dependency org="opennlp"    name="opennlp-maxent" rev="latest.release"  />
+	  <dependency org="apache"   name="commons-math3"     rev="latest.${resolve.status}"   />
+      <dependency org="Jama"    name="Jama" rev="latest.release"  /> 
+      <dependency org="twmacinta"    name="fast-md5" rev="latest.release"  /> 
+	  <dependency org="gnu"    name="trove" rev="latest.release"  />
+      <dependency org="apache"    name="xalan" rev="latest.release"  />  
+      <dependency org="marytts"    name="marytts-common" rev="latest.${resolve.status}"  />
+      <dependency org="marytts"    name="marytts-lang-de" rev="latest.${resolve.status}"  />
+      <dependency org="marytts"    name="marytts-lang-en" rev="latest.${resolve.status}"  />
+      <dependency org="marytts"    name="marytts-runtime" rev="latest.${resolve.status}"  />
+	  <dependency org="marytts"    name="marytts-signalproc" rev="latest.${resolve.status}"  />
+	  <dependency org="inpro"    name="inpro_iss" rev="latest.${resolve.status}"  />
+   </dependencies>
+</ivy-module>

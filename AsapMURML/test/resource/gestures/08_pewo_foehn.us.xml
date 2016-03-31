@@ -1,0 +1,76 @@
+<?xml version="1.0"?>
+
+    
+        
+            <murml-description xmlns="http://www.techfak.uni-bielefeld.de/ags/soa/murml" scope="hand">
+  <parallel>
+                        <sequence>
+                            <parallel>
+                                <static slot="GazeDirection" value="1000 -500 0" scope="head"/>
+                                <static scope="right_arm" slot="HandLocation" value="LocAboveHead LocPeripheryRight LocNear"/>
+                                <static scope="right_arm" slot="ExtFingerOrientation" value="DirA"/>
+                                <static scope="right_arm" slot="HandShape" value="ASLcsmall"/>
+                                <static scope="right_arm" slot="PalmOrientation" value="DirL"/>
+                                <static scope="right_arm" slot="ExtFingerOrientation" value="DirAU"/>
+                            </parallel>
+                            <parallel>
+                                <static scope="right_arm" slot="HandLocation" value="LocAboveHead LocPeripheryRight LocNear"/>
+                                <static scope="right_arm" slot="ExtFingerOrientation" value="DirAU"/>
+                            </parallel>
+                            <parallel>
+                                <static scope="right_arm" slot="HandLocation" value="LocAboveHead LocPeripheryRight LocNear"/>
+                                <static scope="right_arm" slot="ExtFingerOrientation" value="DirA"/>
+                            </parallel>
+                            <parallel>
+                                <static scope="right_arm" slot="HandLocation" value="LocAboveHead LocPeripheryRight LocNear"/>
+                                <static scope="right_arm" slot="ExtFingerOrientation" value="DirAU"/>
+                            </parallel>
+                            <parallel>
+                                <static scope="right_arm" slot="HandLocation" value="LocAboveHead LocPeripheryRight LocNear"/>
+                                <static scope="right_arm" slot="ExtFingerOrientation" value="DirA"/>
+                            </parallel>
+                            <parallel>
+                                <static scope="right_arm" slot="HandLocation" value="LocAboveHead LocPeripheryRight LocNear"/>
+                                <static scope="right_arm" slot="ExtFingerOrientation" value="DirAU"/>
+                            </parallel>
+                            <parallel>
+                                <static scope="right_arm" slot="HandLocation" value="LocAboveHead LocPeripheryRight LocNear"/>
+                                <static scope="right_arm" slot="ExtFingerOrientation" value="DirA"/>
+                            </parallel>
+                            <parallel>
+                                <static scope="right_arm" slot="HandLocation" value="LocAboveHead LocPeripheryRight LocNear"/>
+                                <static scope="right_arm" slot="ExtFingerOrientation" value="DirAU"/>
+                            </parallel>
+                            <parallel>
+                                <static scope="right_arm" slot="HandLocation" value="LocAboveHead LocPeripheryRight LocNear"/>
+                                <static scope="right_arm" slot="ExtFingerOrientation" value="DirAU"/>
+                            </parallel>
+                            <parallel>
+                                <static scope="right_arm" slot="HandLocation" value="LocAboveHead LocPeripheryRight LocNear"/>
+                                <static scope="right_arm" slot="ExtFingerOrientation" value="DirA"/>
+                            </parallel>
+                            <parallel>
+                                <static scope="right_arm" slot="HandLocation" value="LocAboveHead LocPeripheryRight LocNear"/>
+                                <static scope="right_arm" slot="ExtFingerOrientation" value="DirAU"/>
+                            </parallel>
+                        </sequence>
+                    </parallel>
+</murml-description>
+        
+        
+            <murml-description xmlns="http://www.techfak.uni-bielefeld.de/ags/soa/murml" scope="head">
+  <static slot="GazeDirection" value="1000 0 0" scope="head"/>
+</murml-description>
+        
+        
+            <murml-description xmlns="http://www.techfak.uni-bielefeld.de/ags/soa/murml" scope="head">
+  <static slot="GazeDirection" value="1000 500 0" scope="head"/>
+</murml-description>
+        
+        
+            <murml-description xmlns="http://www.techfak.uni-bielefeld.de/ags/soa/murml" scope="head">
+  <static slot="GazeDirection" value="1000 0 0" scope="head"/>
+</murml-description>
+        
+    
+

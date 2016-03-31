@@ -1,0 +1,51 @@
+<?xml version="1.0"?>
+
+    
+        
+            <murml-description xmlns="http://www.techfak.uni-bielefeld.de/ags/soa/murml" scope="hand">
+  <parallel>
+                        <static scope="left_arm" slot="HandLocation" value="LocLowerChest LocPeripheryLeft LocNorm"/>
+                        <static scope="left_arm" slot="PalmOrientation" value="DirD"/>
+                        <static scope="left_arm" slot="ExtFingerOrientation" value="DirA"/>
+                        <sequence>
+                            <parallel>
+                                <static scope="right_arm" slot="PalmOrientation" value="DirT"/>
+                                <static scope="right_arm" slot="ExtFingerOrientation" value="DirU"/>
+                                <dynamic scope="right_arm" slot="HandLocation">
+                                    <dynamicElement scope="right_arm" type="linear">
+                                        <value type="start" name="LocNeck LocCenter LocNear"/>
+                                        <value type="end" name="LocShoulder LocCenter LocNear"/>
+                                    </dynamicElement>
+                                </dynamic>
+                            </parallel>
+                            <parallel>
+                                <static scope="right_arm" slot="PalmOrientation" value="DirD"/>
+                                <static scope="right_arm" slot="ExtFingerOrientation" value="DirL"/>
+                                <dynamic scope="right_arm" slot="HandLocation">
+                                    <dynamicElement scope="right_arm" type="linear">
+                                        <value type="start" name="LocShoulder LocCenter LocNear"/>
+                                        <value type="end" name="LocLowerChest LocCCenterLeft LocNorm"/>
+                                    </dynamicElement>
+                                </dynamic>
+                            </parallel>
+                        </sequence>
+                    </parallel>
+</murml-description>
+        
+        
+            <murml-description xmlns="http://www.techfak.uni-bielefeld.de/ags/soa/murml" scope="hand">
+  <static slot="GazeDirection" value="1000 0 0" scope="head"/>
+</murml-description>
+        
+        
+            <murml-description xmlns="http://www.techfak.uni-bielefeld.de/ags/soa/murml" scope="hand">
+  <static slot="GazeDirection" value="1000 500 0" scope="head"/>
+</murml-description>
+        
+        
+            <murml-description xmlns="http://www.techfak.uni-bielefeld.de/ags/soa/murml" scope="hand">
+  <static slot="GazeDirection" value="50 0 50" scope="head"/>
+</murml-description>
+        
+    
+

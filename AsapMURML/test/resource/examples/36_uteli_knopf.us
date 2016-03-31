@@ -1,0 +1,41 @@
+<?xml version="1.0" standalone="no"?>
+<!DOCTYPE definition SYSTEM "./utterances.dtd">
+
+<definition>
+    <utterance>
+        <behaviorspec id="gesture_part1">
+            <gesture id="knopf" scope="hand">
+                <timing onset="1.0" end="3.0"/>
+                <constraints>
+                    <parallel>
+                        <static scope="right_arm" slot="PalmOrientation" value="DirT"/>
+                        <static scope="right_arm" slot="ExtFingerOrientation" value="DirD"/>
+                        <static scope="right_arm" slot="HandShape" value="ASLg"/>
+                        <dynamic scope="right_arm" slot="HandLocation">
+                            <dynamicElement scope="right_arm" type="linear" >
+                                <value type="start" name="LocHead LocPeripheryRight LocNorm"/>
+                                <value type="end" name="LocStomach LocExtremePeripheryRight LocNorm"/>
+                            </dynamicElement>
+                        </dynamic>
+                    </parallel>
+                </constraints>
+            </gesture>
+        </behaviorspec>
+        <behaviorspec id="gesture_part2">
+            <gesture id="knopf" scope="hand">
+                <timing onset="1.0" end="2.5"/>
+                <constraints>
+                    <static slot="GazeDirection" value="200 -100 0" scope="head"/>
+                </constraints>
+            </gesture>
+        </behaviorspec>
+        <behaviorspec id="gesture_part3">
+            <gesture id="knopf" scope="hand">
+                <timing onset="3.0" end="5.0"/>
+                <constraints>
+                    <static slot="GazeDirection" value="50 0 50" scope="head"/>
+                </constraints>
+            </gesture>
+        </behaviorspec>
+    </utterance>
+</definition>

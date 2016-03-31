@@ -1,0 +1,40 @@
+<?xml version="1.0"?>
+
+    
+        
+            <murml-description xmlns="http://www.techfak.uni-bielefeld.de/ags/soa/murml" scope="hand">
+  <parallel>
+                        <static scope="right_arm" slot="PalmOrientation" value="DirT"/>
+                        <static scope="right_arm" slot="ExtFingerOrientation" value="DirL"/>
+                        <static scope="right_arm" slot="HandShape" value="ASLa"/>
+                        <static scope="left_arm" slot="PalmOrientation" value="DirAR"/>
+                        <static scope="left_arm" slot="ExtFingerOrientation" value="DirA"/>
+                        <static scope="left_arm" slot="HandShape" value="ASLcsmall"/>
+                            <dynamic scope="left_arm" slot="HandLocation">
+                                <dynamicElement scope="left_arm" type="linear">
+                                    <value type="start" name="LocStomach LocExtremePeripheryLeft LocContact"/>
+                                    <value name="DirL" type="direction"/>
+                                    <value name="1" type="distance"/>
+                                </dynamicElement>
+                            </dynamic>
+                            <dynamic scope="right_arm" slot="HandLocation">
+                                <dynamicElement scope="right_arm" type="linear">
+                                    <value type="start" name="LocHip LocPeripheryRight LocNorm"/>
+                                    <value type="end" name="LocEyes LocExtremePeripheryRight LocContact"/>
+                                </dynamicElement>
+                            </dynamic>
+                    </parallel>
+</murml-description>
+        
+        
+            <murml-description xmlns="http://www.techfak.uni-bielefeld.de/ags/soa/murml" scope="hand">
+  <static slot="GazeDirection" value="1000 500 1000" scope="head"/>
+</murml-description>
+        
+        
+            <murml-description xmlns="http://www.techfak.uni-bielefeld.de/ags/soa/murml" scope="hand">
+  <static slot="GazeDirection" value="50 0 50" scope="head"/>
+</murml-description>
+        
+    
+

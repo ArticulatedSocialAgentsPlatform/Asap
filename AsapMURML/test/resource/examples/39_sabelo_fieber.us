@@ -1,0 +1,46 @@
+<?xml version="1.0" standalone="no"?>
+<!DOCTYPE definition SYSTEM "./utterances.dtd">
+
+<definition>
+    <utterance>
+        <behaviorspec id="gesture_part1">
+            <gesture id="fieber" scope="hand">
+                <timing onset="1.0" end="3.0"/>
+                <constraints>
+                    <parallel>
+                        <static scope="right_arm" slot="PalmOrientation" value="DirT"/>
+                        <static scope="right_arm" slot="ExtFingerOrientation" value="DirL"/>
+                        <sequence>
+                            <dynamic scope="right_arm" slot="HandLocation">
+                                <dynamicElement scope="right_arm" type="linear" >
+                                    <value type="start" name="LocHip LocPeripheryRight LocNorm"/>
+                                    <value type="end" name="LocHead LocCCenterRight LocContact"/>
+                                </dynamicElement>
+                            </dynamic>
+                            <static scope="right_arm" slot="HandLocation" value="LocHead LocCenter LocContact"/>
+                            <static scope="right_arm" slot="HandLocation" value="LocHead LocCenterRight LocContact"/>
+                            <static scope="right_arm" slot="HandLocation" value="LocHead LocCenter LocContact"/>
+                            <static scope="right_arm" slot="HandLocation" value="LocHead LocCenterRight LocContact"/>
+                        </sequence>
+                    </parallel>
+                </constraints>
+            </gesture>
+        </behaviorspec>
+        <behaviorspec id="gesture_part2">
+            <gesture id="fieber" scope="hand">
+                <timing onset="1.0" end="3.0"/>
+                <constraints>
+                    <static slot="GazeDirection" value="1000 0 1000" scope="head"/>
+                </constraints>
+            </gesture>
+        </behaviorspec>
+        <behaviorspec id="gesture_part3">
+            <gesture id="fieber" scope="hand">
+                <timing onset="3.5" end="5.0"/>
+                <constraints>
+                    <static slot="GazeDirection" value="50 0 50" scope="head"/>
+                </constraints>
+            </gesture>
+        </behaviorspec>
+    </utterance>
+</definition>

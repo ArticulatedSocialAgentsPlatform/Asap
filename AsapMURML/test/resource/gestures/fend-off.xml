@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<murml-description xmlns="http://www.techfak.uni-bielefeld.de/ags/soa/murml" scope="hand">
+   <symmetrical dominant="right_arm" symmetry="SymMS">
+      <parallel>
+        <static slot="HandLocation" value="LocUpperChest LocCenterRight LocFar"/>
+        <static slot="PalmOrientation" value="DirA"/>
+        <static slot="ExtFingerOrientation" value="DirU"/>
+        <static slot="HandShape" value="BSflat"/>
+      </parallel>
+    </symmetrical>
+</murml-description>

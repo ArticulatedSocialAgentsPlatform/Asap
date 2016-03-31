@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<murml-description xmlns="http://www.techfak.uni-bielefeld.de/ags/soa/murml" scope="body">
+   <dynamic>
+       <keyframing scope="body"
+                  mode="spline"
+                  easescale="5.0"
+                  easeturningpoint="0.4"
+                  priority="50">
+	        <phase>
+	           <frame ftime="1.0">		
+	              <posture> (r_elbow 3 0 103 0) (r_shoulder 3 -82 0 0) (l_elbow 3 0 103 0) (l_shoulder 3 82 0 0) (vl5 3 0 0 0) (vt1 3 0 0 0) (vt6 3 0 0 0) </posture>
+	           </frame>
+	           <frame ftime="2.0">
+	              <posture> (r_elbow 3 0 103 0) (r_shoulder 3 -82 0 0) (l_elbow 3 0 103 0) (l_shoulder 3 82 0 0) (vl5 3 10 0 0) (vt1 3 0 0 20) (vt6 3 0 0 40)	</posture>
+	           </frame>
+ 	          <frame ftime="3.0">
+	              <posture> (r_elbow 3 0 0 0) (r_shoulder 3 -82 0 0)(l_elbow 3 0 0 0) (l_shoulder 3 82 0 0) (vl5 3 -10 0 0) (vt1 3 0 0 -20) (vt6 3 0 0 -40)</posture>
+	           </frame>
+	           <frame ftime="4.0">	
+	              <posture> (r_elbow 3 0 103 0) (r_shoulder 3 -60 0 0) (l_elbow 3 0 103 0) (l_shoulder 3 60 0 0)  (vt1 3 0 0 0) (vt6 3 0 0 0) (vl5 3 0 0 0) </posture>
+	           </frame>
+	           <frame ftime="5.0">	
+	              <posture> (r_elbow 3 0 5 0) (r_shoulder 3 -1 0 0) (l_elbow 3 0 5 0) (l_shoulder 3 1 0 0)  (vt1 3 0 0 0) (vt6 3 0 0 0) (vl5 3 0 0 0) </posture>
+	           </frame>
+	        </phase>
+      </keyframing>
+    </dynamic>
+</murml-description>

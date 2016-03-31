@@ -1,0 +1,11 @@
+<ivy-module version="2.0">
+   <info organisation="HMI" module="AsapPegBoardVisualizationTest"/>
+   <dependencies >
+      <dependency org="junit" name="junit-dep"  rev="latest.release" />
+      <dependency org="hamcrest" name="hamcrest-all"       rev="latest.release"  />
+      <dependency org="Asap"      transitive="false" name="AsapRealizerTestUtil"        rev="latest.{$resolve.status}"  />
+      <dependency org="Asap"      transitive="false" name="AsapTestUtil"        rev="latest.{$resolve.status}"  />
+      <dependency org="logback" name="logback-classic"     rev="latest.release"  />
+      <dependency org="logback" name="logback-core"        rev="latest.release"  />
+   </dependencies>
+</ivy-module>
